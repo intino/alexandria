@@ -48,7 +48,7 @@ public class Epoch implements Iterable<Timeline> {
     @Override
     public Iterator<Timeline> iterator() {
 	    return new Iterator<Timeline>() {
-            Iterator<Long> iterator = chainIndex.iterator();
+            final Iterator<Long> iterator = chainIndex.iterator();
             @Override
             public boolean hasNext() {
                 return iterator.hasNext();

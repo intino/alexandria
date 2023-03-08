@@ -218,7 +218,7 @@ def type(authenticationValidator & Custom) trigger(put)
 end
 
 def type(authenticationValidator) trigger(put)
-	context.put("Authorization", manager.fromHeader("Authorization").replace("$type ", ""));
+	context.put("Authorization", manager.fromHeader("Authorization") != null ? manager.fromHeader("Authorization").replace("$type ", "") : null);
 end
 
 def trigger(parameterType)

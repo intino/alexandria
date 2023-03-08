@@ -1,12 +1,12 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "4.23.0") ui-framework-elements
+Artifact("io.intino.alexandria", "4.23.5") ui-framework-elements
 	WebImports
 		WebComponent("@date-io/moment", "^1.3.7")
-		WebComponent("@material-ui/core", "^4.11.0")
-		WebComponent("@material-ui/icons", "^4.9.1")
-		WebComponent("@material-ui/pickers", "^3.2.10")
-		WebComponent("@material-ui/styles", "^4.10.0")
+		WebComponent("@material-ui/core", "^4.12.4")
+		WebComponent("@material-ui/icons", "^4.11.3")
+		WebComponent("@material-ui/pickers", "^3.3.10")
+		WebComponent("@material-ui/styles", "^4.11.5")
 		WebComponent("@material-ui/lab", "^4.0.0-alpha.56")
 		WebComponent("@react-google-maps/api", "^1.5.1")
 		WebComponent("classnames", "^2.2.6")
@@ -37,6 +37,10 @@ Artifact("io.intino.alexandria", "4.23.0") ui-framework-elements
 		WebComponent("react-data-grid", "^6.0.0")
 		WebComponent("react-data-grid-addons", "^5.0.4")
 		WebComponent("immutable", "^4.1.0")
+		WebComponent("highcharts", "^8.1.2")
+		WebComponent("highcharts-react-official", "^3.0.0")
+		WebComponent("react-dnd", "^16.0.1")
+		WebComponent("react-dnd-html5-backend", "^16.0.1")
 
 		Resolution("react", "^16.13.1")
 		Resolution("react-dom", "^16.13.1")

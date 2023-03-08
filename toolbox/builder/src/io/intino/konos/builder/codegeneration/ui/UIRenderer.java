@@ -10,12 +10,15 @@ import io.intino.konos.builder.helpers.CodeGenerationHelper;
 import io.intino.konos.model.*;
 import io.intino.magritte.framework.Layer;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
+import static java.util.stream.Collectors.toList;
 
 public abstract class UIRenderer extends Renderer {
 
@@ -82,6 +85,45 @@ public abstract class UIRenderer extends Renderer {
 		if (resource.path().isEmpty()) return "\\\\/";
 		Stream<String> split = Stream.of(resource.path().split("/"));
 		return split.map(s -> s.startsWith(":") ? "([^\\\\/]*)" : s).collect(Collectors.joining("\\\\/"));
+	}
+
+	protected List<Component> components(PassiveView passiveView) {
+		List<Component> components = new ArrayList<>();
+		if (passiveView.i$(conceptOf(Block.class))) components.addAll(passiveView.a$(Block.class).componentList());
+		if (passiveView.i$(conceptOf(io.intino.konos.model.Template.class)))
+			components.addAll(passiveView.a$(io.intino.konos.model.Template.class).componentList());
+		if (passiveView.i$(conceptOf(OtherComponents.Snackbar.class)))
+			components.addAll(passiveView.a$(OtherComponents.Snackbar.class).componentList());
+		if (passiveView.i$(conceptOf(VisualizationComponents.Stepper.class)))
+			components.addAll(passiveView.a$(VisualizationComponents.Stepper.class).stepList());
+		if (passiveView.i$(conceptOf(VisualizationComponents.Stepper.Step.class)))
+			components.addAll(passiveView.a$(VisualizationComponents.Stepper.Step.class).componentList());
+		if (passiveView.i$(conceptOf(VisualizationComponents.Header.class)))
+			components.addAll(passiveView.a$(VisualizationComponents.Header.class).componentList());
+		if (passiveView.i$(conceptOf(OtherComponents.Selector.class))) {
+			if (passiveView.i$(conceptOf(OtherComponents.Selector.CollectionBox.class)) && passiveView.a$(OtherComponents.Selector.CollectionBox.class).source() != null)
+				components.add(passiveView.a$(OtherComponents.Selector.CollectionBox.class).source());
+			else components.addAll(passiveView.a$(OtherComponents.Selector.class).componentList());
+		}
+		if (passiveView.i$(conceptOf(OtherComponents.User.class)))
+			components.addAll(passiveView.a$(OtherComponents.User.class).componentList());
+		if (passiveView.i$(conceptOf(CatalogComponents.Table.class)))
+			components.addAll(passiveView.a$(CatalogComponents.Table.class).moldList().stream().filter(m -> m.heading() != null).map(CatalogComponents.Moldable.Mold::heading).collect(toList()));
+		if (passiveView.i$(conceptOf(CatalogComponents.DynamicTable.class)))
+			components.addAll(passiveView.a$(CatalogComponents.DynamicTable.class).moldList().stream().filter(m -> m.heading() != null).map(CatalogComponents.Moldable.Mold::heading).collect(toList()));
+		if (passiveView.i$(conceptOf(CatalogComponents.Moldable.Mold.Heading.class)))
+			components.addAll(passiveView.a$(CatalogComponents.Moldable.Mold.Heading.class).componentList());
+		if (passiveView.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class)))
+			components.addAll(passiveView.a$(CatalogComponents.Moldable.Mold.Item.class).componentList());
+		if (passiveView.i$(conceptOf(InteractionComponents.Toolbar.class)))
+			components.addAll(passiveView.a$(InteractionComponents.Toolbar.class).componentList());
+		if (passiveView.i$(conceptOf(OtherComponents.Dialog.class)))
+			components.addAll(passiveView.a$(OtherComponents.Dialog.class).componentList());
+		if (passiveView.i$(conceptOf(OtherComponents.DecisionDialog.class)))
+			components.add(passiveView.a$(OtherComponents.DecisionDialog.class).selector());
+		if (passiveView.i$(conceptOf(OtherComponents.CollectionDialog.class)))
+			components.add(passiveView.a$(OtherComponents.CollectionDialog.class).collection());
+		return components;
 	}
 
 	protected boolean hasConcreteNotifier(PassiveView element) {

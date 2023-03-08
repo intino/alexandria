@@ -1,12 +1,9 @@
 package io.intino.alexandria;
 
 import com.google.gson.*;
+import com.google.gson.stream.JsonWriter;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Type;
+import java.io.*;
 import java.time.Instant;
 import java.util.Date;
 
@@ -14,14 +11,6 @@ public class Json {
 
 	private static final Gson GsonInstance = gsonBuilder().create();
 	private static final Gson GsonPrettyInstance = gsonBuilder().setPrettyPrinting().create();
-
-	public static String toString(Object object) {
-		return toJson(object);
-	}
-
-	public static String toStringPretty(Object object) {
-		return toJson(object);
-	}
 
 	public static String toJson(Object object) {
 		return GsonInstance.toJson(object);
@@ -31,17 +20,38 @@ public class Json {
 		return GsonPrettyInstance.toJson(object);
 	}
 
-	public static <T> T fromString(String json, Class<T> type) {
-		return GsonInstance.fromJson(json, type);
+	public static void toJson(Object object, Writer writer) throws IOException {
+		try(JsonWriter jsonWriter = new JsonWriter(writer)) {
+			GsonInstance.toJson(object, object.getClass(), jsonWriter);
+		}
 	}
 
-	public static <T> T fromString(String json, Type type) {
-		return GsonInstance.fromJson(json, type);
+	public static void toJsonPretty(Object object, Writer writer) throws IOException {
+		try(JsonWriter jsonWriter = new JsonWriter(writer)) {
+			GsonPrettyInstance.toJson(object, object.getClass(), jsonWriter);
+		}
 	}
 
 	public static <T> T fromJson(String json, Class<T> type) {
 		return GsonInstance.fromJson(json, type);
 	}
+
+	public static <T> T fromJson(Reader reader, Class<T> type) {
+		return GsonInstance.fromJson(reader, type);
+	}
+
+	public static String toString(Object object) {
+		return toJson(object);
+	}
+
+	public static String toStringPretty(Object object) {
+		return toJsonPretty(object);
+	}
+
+	public static <T> T fromString(String json, Class<T> type) {
+		return fromJson(json, type);
+	}
+
 
 	private static GsonBuilder gsonBuilder() {
 		return new GsonBuilder()

@@ -1,22 +1,15 @@
 package io.intino.alexandria;
 
+import io.intino.alexandria.event.Event.Format;
+
 import java.io.InputStream;
 
 public interface Session {
 	String SessionExtension = ".session";
-	String EventSessionExtension = ".event.session";
-	String LedSessionExtension = ".led.session";
 
 	String name();
 
-	Type type();
+	Format format();
 
 	InputStream inputStream();
-
-	enum Type {
-		event,
-		set,
-		setMetadata,
-		led
-	}
 }

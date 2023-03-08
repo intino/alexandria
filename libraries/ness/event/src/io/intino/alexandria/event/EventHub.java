@@ -1,9 +1,12 @@
 package io.intino.alexandria.event;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public interface EventHub {
 	void sendEvent(String channel, Event event);
+
+	void sendEvent(String channel, List<Event> event);
 
 	void attachListener(String channel, Consumer<Event> onEventReceived);
 

@@ -293,3 +293,67 @@ Schema GridCellInfo
 	Attribute columnIndex as Integer
 	Attribute row as Text
 	Attribute rowIndex as Integer
+
+Schema TimelineHistory
+	Attribute from as DateTime
+	Attribute to as DateTime
+
+Schema TimelineHistoryEntry
+	Attribute date as DateTime
+	Attribute value as Real
+
+Schema TimelineHistoryFetch
+	Attribute measurement as Text
+	Attribute start as DateTime
+	Attribute end as DateTime
+
+Schema TimelineSetup
+	Attribute name as Text
+	Attribute mode as Text
+	Attribute scales as Text List
+	Attribute measurements as Object(TimelineMeasurement) List
+
+Schema TimelineMeasurementVisibility
+	Attribute name as Text
+	Attribute visible as Bool
+
+Schema TimelineMeasurementSorting
+	Attribute name as Text
+	Attribute position as Integer
+
+Schema TimelineMeasurement
+	Attribute name as Text
+	Attribute label as Text
+	Attribute value as Real
+	Attribute unit as Text
+	Attribute decimalCount as Integer
+	Attribute trend as Word("Increased" "Decreased" "None")
+	Attribute distribution as Object(TimelineDistribution)
+	Attribute summary as Object(TimelineSummary)
+	Attribute serie as Object(TimelineSerie)
+
+Schema TimelineParameterInfo
+	Attribute measurement as Text
+	Attribute scale as Text
+
+Schema TimelineDistribution
+	Attribute value as Real
+	Attribute trend as Word("Upper" "Lower" "None")
+
+Schema TimelineSummary
+	Attribute label as Text
+	Attribute scale as Text
+	Attribute average as Object(TimelineSummaryValue)
+	Attribute max as Object(TimelineSummaryValue)
+	Attribute min as Object(TimelineSummaryValue)
+	Attribute canBefore as Bool
+	Attribute canNext as Bool
+
+Schema TimelineSummaryValue
+	Attribute value as Real
+	Attribute date as DateTime
+
+Schema TimelineSerie
+	Attribute name as Text
+	Attribute categories as Text List
+	Attribute values as Real List

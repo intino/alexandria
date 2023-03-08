@@ -157,6 +157,7 @@ public class ComponentTemplate extends Template {
 			rule().condition((allTypes("properties","appDirectory","fromFile")), (trigger("specific"))).output(expression().output(mark("source", "fileMethod"))),
 			rule().condition((allTypes("properties","appDirectory","fromResource")), (trigger("specific"))).output(expression().output(mark("source", "resourceMethod"))),
 			rule().condition((allTypes("properties","appDirectory","inline")), (trigger("specific"))).output(mark("application").multiple("\n")),
+			rule().condition((allTypes("properties","timeline")), (trigger("specific"))).output(expression().output(literal("_mode(io.intino.alexandria.ui.displays.components.Timeline.Mode.valueOf(\"")).output(mark("mode", "firstUpperCase")).output(literal("\"));"))),
 			rule().condition((type("appDirectoryApplication"))).output(literal("_add(\"")).output(mark("name")).output(literal("\", \"")).output(mark("url")).output(literal("\")")).output(expression().output(mark("translation").multiple(""))).output(literal(";")),
 			rule().condition((type("appDirectoryApplicationTranslation"))).output(literal(".translation(\"")).output(mark("language")).output(literal("\", \"")).output(mark("name")).output(literal("\")")),
 			rule().condition((allTypes("properties","dashboard","shiny")), (trigger("specific"))).output(expression().output(mark("serverScript", "resourceMethod"))).output(literal("\n")).output(expression().output(mark("uiScript", "resourceMethod"))).output(literal("\n")).output(expression().output(mark("resource", "resourceMethod").multiple("\n"))),

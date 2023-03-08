@@ -1,0 +1,213 @@
+def type(command & confirmation)
+    package $package+validPackage.cli.commands;
+
+    import io.intino.alexandria.cli.Cli;
+    import io.intino.alexandria.cli.Context;
+    import io.intino.alexandria.cli.Response;
+    import io.intino.alexandria.cli.command.MessageProperties;
+    import io.intino.alexandria.cli.response.Text;
+    import $package+validPackage.$box+FirstUpperCase~Box;
+    import $package+validPackage.cli.commands.*;
+
+    public class $option+firstUpperCase~Command {
+        private TrooperBox box;
+
+        public $option+firstUpperCase~Command($box+FirstUpperCase~Box box) {
+            this.box = box;
+        }
+
+        public Response execute(MessageProperties properties, String command, String... args) {
+            Context context = properties.context();
+            Cli.CommandInfo lastCommand = context.lastCommand();
+            if (lastCommand == null) return new Text("Command not found");
+            $condition...[$NL]
+            return new Text("Command not found");
+        }
+
+    }
+end
+
+def type(command)
+	package $package+validPackage.cli.commands;
+
+    import io.intino.alexandria.cli.Command;
+    import io.intino.alexandria.cli.Response;
+    import io.intino.alexandria.cli.command.MessageProperties;
+    import io.intino.alexandria.cli.response.Line;
+    import io.intino.alexandria.cli.response.MessageData;
+    import $package+validPackage.$box+FirstUpperCase~Box;
+    import $package+validPackage.actions.$name+firstUppercase~Action;
+
+    import java.util.ArrayList;
+    import java.util.List;
+
+    public class $name+firstUppercase~Command implements Command {
+        private $box+FirstUpperCase~Box box;
+
+        public $name+firstUppercase~Command($box+FirstUpperCase~Box box) {
+            this.box = box;
+        }
+
+        $response+provider
+        $response+definition...[$NL]
+
+        @Override
+        public $response+type execute(MessageProperties properties, String command, String... args) {
+            return $execute;
+        }
+
+        $response+method...[$NL]
+
+        private $name+firstUppercase~Action fill($name+firstUppercase~Action action, MessageProperties properties, String... args) {
+            action.box = this.box;
+            action.state = properties.context().state();
+            action.properties = properties;
+            $parameter...[$NL]
+            return action;
+        }
+
+    }
+end
+
+def type(execute & multiline)
+    new $response+type($response+definitionDeclaration, fill(new $name+firstUppercase~Action(), properties, args).execute())
+end
+
+def type(execute & confirmation)
+    new $response+type("$question", List.of("$option...[", "]"), fill(new $name+firstUppercase~Action(), properties, args).execute())
+end
+
+def type(execute)
+    new $response+type(fill(new $name+firstUppercase~Action(), properties, args).execute())
+end
+
+def type(parameter & list)
+    action.$name = java.util.Arrays.asList(args);
+end
+
+def type(parameter)
+    action.$name = args$[$index$];
+end
+
+def type(response & multiline) trigger(type)
+    io.intino.alexandria.cli.response.MultiLine
+end
+
+def type(response & attachment) trigger(type)
+    io.intino.alexandria.cli.response.Attachment
+end
+
+def type(response & confirmation) trigger(type)
+    io.intino.alexandria.cli.response.Question
+end
+
+def type(response) trigger(type)
+    io.intino.alexandria.cli.response.Text
+end
+
+def type(response & confirmation) trigger(method)
+    $option+method...[$NL]
+end
+
+def type(response) trigger(method)
+end
+
+def type(response & multiline) trigger(provider)
+    public static class MultiLineProvider extends io.intino.alexandria.cli.response.MultiLineProvider {
+        $line+declaration...[$NL]
+
+        $line+method...[$NL]
+        $line+class...[$NL]
+
+        @Override
+        protected MessageData data(String line) {
+            $line+data...[$NL]
+            return null;
+        }
+
+        @Override
+        protected List<MessageData> dataList(String line) {
+            $line+dataList...[$NL]
+            return null;
+        }
+    }
+end
+
+def type(response & multiline) trigger(definition)
+    $line+definition...[$NL]
+end
+
+def type(response & multiline) trigger(definitionDeclaration)
+    List.of($line+definitionDeclaration...[, ])
+end
+
+def type(line & multiple) trigger(declaration)
+    private List<MessageData> $name+firstLowerCase = new ArrayList<>();
+end
+
+def type(line) trigger(declaration)
+    private MessageData $name+firstLowerCase = new MessageData();
+end
+
+def type(line & multiple) trigger(method)
+    public MultiLineProvider add$name+firstUpperCase($name+firstUpperCase value) {
+        this.$name+firstLowerCase.add(value);
+        return this;
+    }
+
+    public MultiLineProvider addAll$name+firstUpperCase(List<$name+firstUpperCase> values) {
+        this.$name+firstLowerCase.addAll(values);
+        return this;
+    }
+end
+
+def type(line) trigger(method)
+    public MultiLineProvider $name+firstLowerCase~Variable(String variable, String value) {
+        this.$name+firstLowerCase.add(variable, value);
+        return this;
+    }
+end
+
+def type(line & multiple) trigger(class)
+    public static class $name+firstUpperCase extends MessageData {
+    }
+end
+
+def type(line) trigger(class)
+end
+
+def type(line & multiple) trigger(data)
+end
+
+def type(line) trigger(data)
+    if (line.equals("$name")) return $name+firstLowerCase;
+end
+
+def type(line & multiple) trigger(dataList)
+    if (line.equals("$name")) return $name+firstLowerCase;
+end
+
+def type(line) trigger(dataList)
+end
+
+def type(line) trigger(definition)
+    private static final Line $name+firstUpperCase~Line = new Line("$name", "$content", $addBreak, $multiple[, "$dependant"]);
+end
+
+def type(line) trigger(definitionDeclaration)
+    $name+firstUpperCase~Line
+end
+
+def type(condition)
+    if (lastCommand.name().equals("$command")) return new $commandName+firstUpperCase~Command(box).when$option+firstUpperCase(properties, lastCommand.name(), lastCommand.parameters().toArray(new String$[0$]));
+end
+
+def type(option)
+    public io.intino.alexandria.cli.response.Text when$value+firstUppercase(MessageProperties properties, String command, String... args) {
+        return fill(new $commandName+firstUppercase~Action(), properties, args).when$value+firstUppercase();
+    }
+end
+
+def type(multiple)
+    new Line.Multiple($value, Line.Multiple.Arrangement.valueOf("$arrangement"))
+end

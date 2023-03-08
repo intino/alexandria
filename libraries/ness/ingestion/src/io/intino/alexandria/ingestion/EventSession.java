@@ -1,15 +1,13 @@
 package io.intino.alexandria.ingestion;
 
 import io.intino.alexandria.Fingerprint;
-import io.intino.alexandria.Session;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.event.Event;
+import io.intino.alexandria.event.Event.Format;
+import io.intino.alexandria.event.EventWriter;
 import io.intino.alexandria.logger.Logger;
-import io.intino.alexandria.message.MessageWriter;
-import org.xerial.snappy.SnappyOutputStream;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,11 +15,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 public class EventSession {
-	private final Map<Fingerprint, MessageWriter> writers = new ConcurrentHashMap<>();
+	private final Map<Fingerprint, EventWriter<Event>> writers = new ConcurrentHashMap<>();
 	private final SessionHandler.Provider provider;
 	private final int autoFlush;
 	private final AtomicInteger count = new AtomicInteger();
-
 
 	public EventSession(SessionHandler.Provider provider) {
 		this(provider, 1_000_000);
@@ -32,30 +29,30 @@ public class EventSession {
 		this.autoFlush = autoFlush;
 	}
 
-	public void put(String tank, Timetag timetag, Event... events) {
-		put(tank, timetag, Arrays.stream(events));
+	public void put(String tank, String source, Timetag timetag, Format format, Event... events) throws IOException {
+		put(tank, source, timetag, format, Arrays.stream(events));
 		if (count.addAndGet(events.length) >= autoFlush) flush();
 	}
 
-	public void put(String tank, Timetag timetag, Stream<Event> eventStream) {
-		put(writerOf(tank, timetag), eventStream);
+	public void put(String tank, String source, Timetag timetag, Format format, Stream<Event> eventStream) throws IOException {
+		put(writerOf(tank, source, timetag, format), eventStream);
 	}
 
 	public void flush() {
-		try {
-			for (MessageWriter w : writers.values())
-				synchronized (w) {
+		for (EventWriter<? extends Event> w : writers.values())
+			synchronized (w) {
+				try {
 					w.flush();
+				} catch (IOException e) {
+					Logger.error(e);
 				}
-			count.set(0);
-		} catch (IOException e) {
-			Logger.error(e);
-		}
+			}
+		count.set(0);
 	}
 
 	public void close() {
 		try {
-			for (MessageWriter w : writers.values())
+			for (EventWriter<? extends Event> w : writers.values())
 				synchronized (w) {
 					w.close();
 				}
@@ -64,36 +61,34 @@ public class EventSession {
 		}
 	}
 
-	private void put(MessageWriter writer, Stream<Event> events) {
+	private void put(EventWriter<Event> writer, Stream<Event> events) {
 		synchronized (writer) {
 			events.forEach(e -> write(writer, e));
 		}
 	}
 
-	private void write(MessageWriter writer, Event event) {
+	private void write(EventWriter<Event> writer, Event event) {
 		try {
-			writer.write(event.toMessage());
+			writer.write(event);
 		} catch (IOException e) {
 			Logger.error(e);
 		}
 	}
 
-	private MessageWriter writerOf(String tank, Timetag timetag) {
-		return writerOf(Fingerprint.of(tank, timetag));
+	private EventWriter<Event> writerOf(String tank, String source, Timetag timetag, Format format) throws IOException {
+		return writerOf(Fingerprint.of(tank, source, timetag, format));
 	}
 
-	private MessageWriter writerOf(Fingerprint fingerprint) {
+	private EventWriter<Event> writerOf(Fingerprint fingerprint) throws IOException {
 		synchronized (writers) {
 			if (!writers.containsKey(fingerprint)) writers.put(fingerprint, createWriter(fingerprint));
 			return writers.get(fingerprint);
 		}
 	}
 
-	private MessageWriter createWriter(Fingerprint fingerprint) {
-		return new MessageWriter(snappyStream(provider.outputStream(fingerprint.name(), Session.Type.event)));
+	private EventWriter<Event> createWriter(Fingerprint fingerprint) throws IOException {
+		return EventWriter.of(fingerprint.format(), provider.outputStream(fingerprint.name(), fingerprint.format()));
 	}
 
-	private SnappyOutputStream snappyStream(OutputStream outputStream) {
-		return new SnappyOutputStream(outputStream, autoFlush * 100);
-	}
+
 }

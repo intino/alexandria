@@ -1,76 +1,47 @@
 package io.intino.alexandria.event;
 
-import io.intino.alexandria.message.Message;
-import io.intino.alexandria.zim.ZimReader;
+import io.intino.alexandria.event.measurement.MeasurementEventReader;
+import io.intino.alexandria.event.message.MessageEventReader;
 
-import java.io.File;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Stream;
 
-import static java.util.Arrays.stream;
-import static java.util.Comparator.comparing;
+import static io.intino.alexandria.event.util.EventFormats.formatOf;
 
-public class EventReader implements EventStream {
-	private final Iterator<Event> iterator;
-	private Event current;
+public interface EventReader<T extends Event> extends Iterator<T>, AutoCloseable {
 
-
-	public EventReader(File file) {
-		this(iteratorOf(new ZimReader(file).iterator()));
+	static <T extends Event> EventReader<T> of(File file) throws IOException {
+		if(!file.exists()) return new Empty<>();
+		return EventReader.of(formatOf(file), IO.open(file));
 	}
 
-	public EventReader(InputStream is) {
-		this(iteratorOf(new ZimReader(is).iterator()));
+	@SuppressWarnings("unchecked")
+	static <T extends Event> EventReader<T> of(Event.Format format, InputStream inputStream) throws IOException {
+		switch(format) {
+			case Message: return (EventReader<T>) new MessageEventReader(inputStream);
+			case Measurement: return (EventReader<T>) new MeasurementEventReader(inputStream);
+		}
+		return new Empty<>(); // TODO: throw exception instead?
 	}
 
-	public EventReader(String text) {
-		this(iteratorOf(new ZimReader(text).iterator()));
+	class IO {
+		public static InputStream open(File file) throws IOException {
+			return new BufferedInputStream(new FileInputStream(file));
+		}
 	}
 
-	public EventReader(Event... events) {
-		this(stream(events));
-	}
+	class Empty<T extends Event> implements EventReader<T> {
+		@Override
+		public void close() {}
 
-	public EventReader(List<Event> events) {
-		this(events.stream());
-	}
+		@Override
+		public boolean hasNext() {
+			return false;
+		}
 
-	public EventReader(Stream<Event> stream) {
-		this(stream.sorted(comparing(Event::ts)).iterator());
-	}
-
-	public EventReader(Iterator<Event> iterator) {
-		this.iterator = iterator;
-	}
-
-	@Override
-	public Event current() {
-		return current;
-	}
-
-	@Override
-	public Event next() {
-		return current = iterator.hasNext() ? iterator.next() : null;
-	}
-
-	@Override
-	public boolean hasNext() {
-		return iterator.hasNext();
-	}
-
-	private static Iterator<Event> iteratorOf(Iterator<Message> iterator) {
-		return new Iterator<>() {
-			@Override
-			public boolean hasNext() {
-				return iterator.hasNext();
-			}
-
-			@Override
-			public Event next() {
-				return new Event(iterator.next());
-			}
-		};
+		@Override
+		public T next() {
+			return null;
+		}
 	}
 }

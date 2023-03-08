@@ -1,12 +1,7 @@
 package io.intino.test;
 
 import io.intino.alexandria.message.MessageReader;
-import io.intino.alexandria.message.parser.InlLexicon;
-import io.intino.alexandria.message.parser.MessageStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.Parser;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.VocabularyImpl;
+import io.intino.performance.impl.MessageStreamOld;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -16,13 +11,13 @@ import java.nio.charset.StandardCharsets;
 public class Parser_ {
 	@Test
 	public void should_split_messages() {
-		MessageStream stream = new MessageStream(new ByteArrayInputStream(inl1.getBytes()), StandardCharsets.UTF_8);
+		MessageStreamOld stream = new MessageStreamOld(new ByteArrayInputStream(inl1.getBytes()), StandardCharsets.UTF_8);
 		while (stream.hasNext()) {
 			System.out.println(stream.next());
 			System.out.println();
 			System.out.println();
 		}
-		stream = new MessageStream(new ByteArrayInputStream(inl2.getBytes()), StandardCharsets.UTF_8);
+		stream = new MessageStreamOld(new ByteArrayInputStream(inl2.getBytes()), StandardCharsets.UTF_8);
 		while (stream.hasNext()) {
 			System.out.println(stream.next());
 			System.out.println();
@@ -32,54 +27,24 @@ public class Parser_ {
 
 	@Test
 	public void simple_message() throws IOException {
-		showLexicon(inl1);
 		messagesFrom(inl1);
 	}
 
 	@Test
 	public void should_read_message_with_components() throws IOException {
-		showLexicon(inl2);
 		messagesFrom(inl2);
 	}
 
 	@Test
 	public void should_read_message_with_multiline_attribute() throws IOException {
-		showLexicon(inl3);
 		messagesFrom(inl3);
 	}
-
 
 	private void messagesFrom(String input) {
 		MessageReader reader = new MessageReader(input);
 		while (reader.hasNext()) {
 			System.out.println(reader.next());
 			System.out.println("------------------------------");
-		}
-	}
-
-	private void showLexicon(String text) throws IOException {
-		InlLexicon lexer = new InlLexicon(CharStreams.fromStream(new ByteArrayInputStream(text.getBytes())));
-		lexer.reset();
-		Token token;
-		while ((token = lexer.nextToken()).getType() != -1) {
-			String name = tokenName(lexer, token);
-			if (name.contains("LINE")) System.out.println();
-			System.out.print(name + ", ");
-		}
-		System.out.println();
-	}
-
-	private String tokenName(InlLexicon lexer, Token token) {
-		if (token.getType() == InlLexicon.VALUE) return "VALUE";
-		String symbolicName = lexer.getVocabulary().getSymbolicName(token.getType());
-		return symbolicName == null ? String.valueOf(token.getType()) : symbolicName;
-	}
-
-	private String getExpectedTokens(Parser recognizer) {
-		try {
-			return recognizer.getExpectedTokens().toString(VocabularyImpl.fromTokenNames(recognizer.getTokenNames()));
-		} catch (Exception e) {
-			return "";
 		}
 	}
 

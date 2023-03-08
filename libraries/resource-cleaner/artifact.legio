@@ -1,0 +1,9 @@
+dsl Legio
+
+Artifact("io.intino.alexandria", "1.0.0") resource-cleaner
+	Imports
+		Test("junit", "junit", "4.13")
+	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
+	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
+
+Repository("intino-maven") > Release("https://artifactory.intino.io/artifactory/releases")

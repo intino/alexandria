@@ -1,32 +1,31 @@
 package io.intino.alexandria.message;
 
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
+import java.nio.charset.Charset;
 
 public class MessageWriter implements AutoCloseable {
-	private final OutputStream os;
+
+	private final BufferedWriter writer;
 
 	public MessageWriter(OutputStream os) {
-		this.os = new BufferedOutputStream(os);
+		this(os, Charset.defaultCharset());
+	}
+
+	public MessageWriter(OutputStream os, Charset charset) {
+		this.writer = new BufferedWriter(new OutputStreamWriter(os, charset));
 	}
 
 	public void write(Message message) throws IOException {
-		write(message.toString());
-		write("\n");
+		writer.write(message.toString());
+		writer.newLine();
 	}
 
 	public void flush() throws IOException {
-		os.flush();
+		writer.flush();
 	}
 
-	private void write(String str) throws IOException {
-		os.write(str.getBytes());
-	}
-
+	@Override
 	public void close() throws IOException {
-		os.close();
+		writer.close();
 	}
-
-
 }

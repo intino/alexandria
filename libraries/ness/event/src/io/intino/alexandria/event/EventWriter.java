@@ -1,75 +1,96 @@
 package io.intino.alexandria.event;
 
-import io.intino.alexandria.logger.Logger;
-import io.intino.alexandria.message.MessageWriter;
-import org.xerial.snappy.SnappyOutputStream;
+import io.intino.alexandria.event.measurement.MeasurementEventWriter;
+import io.intino.alexandria.event.message.MessageEventWriter;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.List;
-import java.util.UUID;
+import java.io.*;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.stream.Stream;
 
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static io.intino.alexandria.event.util.EventFormats.formatOf;
 
-@SuppressWarnings({"WeakerAccess"})
-public class EventWriter {
-	private final File source;
+public interface EventWriter<T extends Event> extends AutoCloseable {
 
-	public EventWriter(File file) {
-		this.source = file;
-		file.getParentFile().mkdirs();
+	static <T extends Event> EventWriter<T> of(File file) throws IOException {
+		return EventWriter.of(file, false);
 	}
 
-	public void put(Event... messages) {
-		put(new EventReader(messages));
+	static <T extends Event> EventWriter<T> of(File file, boolean append) throws IOException {
+		return EventWriter.of(formatOf(file), IO.open(file, append));
 	}
 
-	public void put(List<Event> messages) {
-		put(new EventReader(messages));
+	@SuppressWarnings("unchecked")
+	static <T extends Event> EventWriter<T> of(Event.Format format, OutputStream outputStream) throws IOException {
+		switch(format) {
+			case Message: return (EventWriter<T>) new MessageEventWriter(outputStream);
+			case Measurement: return (EventWriter<T>) new MeasurementEventWriter(outputStream);
+		}
+		return new Empty<>(); // TODO: throw exception instead?
 	}
 
-	public void put(Stream<Event> stream) {
-		put(new EventReader(stream));
+	static <T extends Event> void append(File file, Stream<T> events) throws IOException {
+		write(formatOf(file), IO.open(file, true), events);
 	}
 
-	public void put(EventStream eventStream) {
-		try {
-			Files.move(merge(eventStream).toPath(), source.toPath(), REPLACE_EXISTING);
-		} catch (IOException e) {
-			Logger.error(e);
+	static <T extends Event> void write(File file, Stream<T> events) throws IOException {
+		write(formatOf(file), IO.open(file, false), events);
+	}
+
+	static <T extends Event> void write(Event.Format format, OutputStream destination, Stream<T> events) throws IOException {
+		try(EventWriter<T> writer = EventWriter.of(format, destination)) {
+			writer.write(events);
 		}
 	}
 
-	private File merge(EventStream data) {
-		File file = tempFile();
-		try (MessageWriter writer = new MessageWriter(zipStream(file))) {
-			EventStream stream = mergeFileWith(data);
-			while (stream.hasNext()) writer.write(stream.next().toMessage());
-		} catch (IOException e) {
-			Logger.error(e);
-		}
-		return file;
+	static <T extends Event> void write(File file, Collection<T> events) throws IOException {
+		write(formatOf(file), IO.open(file, false), events);
 	}
 
-	private SnappyOutputStream zipStream(File file) throws IOException {
-		return new SnappyOutputStream(new FileOutputStream(file));
+	static <T extends Event> void append(File file, Collection<T> events) throws IOException {
+		write(formatOf(file), IO.open(file, true), events);
 	}
 
-
-	private File tempFile() {
-		try {
-			return File.createTempFile("eventwriter#", ".zim");
-		} catch (IOException e) {
-			Logger.error(e);
-			return new File("eventwriter#" + UUID.randomUUID().toString() + ".zim");
+	static <T extends Event> void write(Event.Format format, OutputStream destination, Collection<T> events) throws IOException {
+		try(EventWriter<T> writer = EventWriter.of(format, destination)) {
+			writer.write(events);
 		}
 	}
 
-	private EventStream mergeFileWith(EventStream data) {
-		return new EventStream.Merge(new EventReader(source), data);
+	void write(T event) throws IOException;
+
+	default void write(Stream<T> stream) throws IOException {
+		try(stream) {
+			Iterator<T> iterator = stream.iterator();
+			while (iterator.hasNext()) write(iterator.next());
+		}
 	}
 
+	default void write(Collection<T> messages) throws IOException {
+		write(messages.stream());
+	}
+
+	void flush() throws IOException;
+
+	@Override
+	void close() throws IOException;
+
+	class IO {
+		public static OutputStream open(File file, boolean append) throws IOException {
+			return new BufferedOutputStream(new FileOutputStream(file, append));
+		}
+	}
+
+	class Empty<T extends Event> implements EventWriter<T> {
+		@Override
+		public void write(T event) {}
+		@Override
+		public void write(Stream<T> stream) {}
+
+		@Override
+		public void flush() {}
+
+		@Override
+		public void close() {}
+	}
 }

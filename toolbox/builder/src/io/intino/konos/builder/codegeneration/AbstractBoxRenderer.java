@@ -165,6 +165,7 @@ public class AbstractBoxRenderer extends Renderer {
 		slackServices(builder);
 		ui(builder);
 		rest(builder);
+		cli(builder);
 		if (!graph.soapServiceList().isEmpty() || !graph.restServiceList().isEmpty() || !graph.uiServiceList().isEmpty())
 			builder.add("spark", "stop");
 	}
@@ -175,6 +176,16 @@ public class AbstractBoxRenderer extends Renderer {
 		for (Service.REST service : services)
 			frame.add("service",
 					new FrameBuilder("service", "rest")
+							.add("name", service.name$())
+							.add("configuration", boxName())
+							.add("parameter", parameter(service.port())).toFrame());
+	}
+
+	private void cli(FrameBuilder frame) {
+		List<Service.CLI> services = graph.cliServiceList();
+		for (Service.CLI service : services)
+			frame.add("service",
+					new FrameBuilder("service", "cli")
 							.add("name", service.name$())
 							.add("configuration", boxName())
 							.add("parameter", parameter(service.port())).toFrame());

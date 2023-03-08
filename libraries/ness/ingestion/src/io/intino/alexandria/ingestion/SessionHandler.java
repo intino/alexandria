@@ -1,15 +1,17 @@
 package io.intino.alexandria.ingestion;
 
+import io.intino.alexandria.Fingerprint;
 import io.intino.alexandria.Session;
+import io.intino.alexandria.event.Event.Format;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.*;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static io.intino.alexandria.Session.SessionExtension;
 import static java.util.UUID.randomUUID;
 
 public class SessionHandler {
@@ -26,26 +28,12 @@ public class SessionHandler {
 		this.sessions.addAll(loadFileSessions());
 	}
 
-	public SetSession createSetSession() {
-		PrivateProvider provider = new PrivateProvider();
-		return new SetSession(provider);
-	}
-
-	public SetSession createSetSession(int autoFlushSize) {
-		PrivateProvider provider = new PrivateProvider();
-		return new SetSession(provider, autoFlushSize);
-	}
-
 	public EventSession createEventSession() {
 		return new EventSession(new PrivateProvider());
 	}
 
 	public EventSession createEventSession(int autoFlushSize) {
 		return new EventSession(new PrivateProvider(), autoFlushSize);
-	}
-
-	public void pushTo(URI uri) {
-		//TODO
 	}
 
 	public void pushTo(File stageFolder) {
@@ -68,8 +56,8 @@ public class SessionHandler {
 					}
 
 					@Override
-					public Type type() {
-						return s.type();
+					public Format format() {
+						return s.format();
 					}
 
 					@Override
@@ -81,20 +69,19 @@ public class SessionHandler {
 
 	private List<PrivateSession> loadFileSessions() {
 		return sessionFiles()
-				.map(f -> new PrivateSession(name(f), typeOf(f), new FileSessionData(f))).collect(Collectors.toList());
+				.map(f -> new PrivateSession(name(f), format(f), new FileSessionData(f))).collect(Collectors.toList());
 	}
 
 	private Stream<File> sessionFiles() {
-		return this.root == null ? Stream.empty() : FS.allFilesIn(root, path -> path.getName().endsWith(Session.SessionExtension));
+		return this.root == null ? Stream.empty() : FS.allFilesIn(root, path -> path.getName().endsWith(SessionExtension));
 	}
 
 	private String name(File f) {
-		return f.getName().substring(0, f.getName().indexOf(typeOf(f).name()) - 1);
+		return f.getName().substring(0, f.getName().indexOf(format(f).name()) - 1);
 	}
 
-	private Session.Type typeOf(File f) {
-		String[] split = f.getName().split("\\.");
-		return Session.Type.valueOf(split[split.length - 2]);
+	private Format format(File f) {
+		return Fingerprint.of(f).format();
 	}
 
 	private void push(Session session, File stageFolder) {
@@ -106,7 +93,7 @@ public class SessionHandler {
 	}
 
 	private String filename(Session session) {
-		return session.name() + "." + session.type() + Session.SessionExtension;
+		return session.name() + SessionExtension;
 	}
 
 	private interface SessionData {
@@ -118,11 +105,11 @@ public class SessionHandler {
 	}
 
 	public interface Provider {
-		OutputStream outputStream(Session.Type type);
+		OutputStream outputStream(Format format);
 
-		OutputStream outputStream(String name, Session.Type type);
+		OutputStream outputStream(String name, Format format);
 
-		File file(String name, Session.Type type);
+		File file(String name, Format format);
 	}
 
 	private static class FileSessionData implements SessionData {
@@ -189,13 +176,12 @@ public class SessionHandler {
 
 	private static class PrivateSession {
 		private final String name;
-		private final Session.Type type;
+		private final Format format;
 		private final SessionData sessionData;
 
-
-		PrivateSession(String name, Session.Type type, SessionData sessionData) {
+		PrivateSession(String name, Format format, SessionData sessionData) {
 			this.name = name;
-			this.type = type;
+			this.format = format;
 			this.sessionData = sessionData;
 		}
 
@@ -203,8 +189,8 @@ public class SessionHandler {
 			return name;
 		}
 
-		public Session.Type type() {
-			return type;
+		public Format format() {
+			return format;
 		}
 
 		SessionData data() {
@@ -226,41 +212,37 @@ public class SessionHandler {
 
 	private class PrivateProvider implements Provider {
 
-		public OutputStream outputStream(Session.Type type) {
-			return outputStream("", type);
+		public OutputStream outputStream(Format format) {
+			return outputStream("", format);
 		}
 
-		public OutputStream outputStream(String name, Session.Type type) {
-			PrivateSession session = session(name + suffix(), type);
+		public OutputStream outputStream(String name, Format format) {
+			PrivateSession session = session(name + suffix(), format);
 			sessions.add(session);
 			return session.outputStream();
 		}
 
 		@Override
-		public File file(String name, Session.Type type) {
-			PrivateSession session = session(name + suffix(), type);
+		public File file(String name, Format format) {
+			PrivateSession session = session(name + suffix(), format);
 			sessions.add(session);
 			return session.file();
 		}
 
-		private PrivateSession session(String name, Session.Type type) {
-			return new PrivateSession(name, type, root == null ? new MemorySessionData() : new FileSessionData(fileOf(name, type)));
+		private PrivateSession session(String name, Format type) {
+			return new PrivateSession(name, type, root == null ? new MemorySessionData() : new FileSessionData(fileOf(name)));
 		}
 
-		private File fileOf(String name, Session.Type type) {
-			return new File(root, filename(name, type));
+		private File fileOf(String name) {
+			return new File(root, filename(name));
 		}
 
-		private String filename(String name, Session.Type type) {
-			return name + extensionOf(type);
+		private String filename(String name) {
+			return name + SessionExtension;
 		}
 
 		private String suffix() {
-			return "#" + randomUUID().toString();
-		}
-
-		private String extensionOf(Session.Type type) {
-			return "." + type.name() + Session.SessionExtension;
+			return "#" + randomUUID();
 		}
 	}
 }

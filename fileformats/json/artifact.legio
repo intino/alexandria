@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.2.0") json
+Artifact("io.intino.alexandria", "1.2.1") json
 	Imports
 		Compile("com.google.code.gson", "gson", "2.10")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)

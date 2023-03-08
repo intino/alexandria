@@ -1,0 +1,44 @@
+def type(manifest)
+    package $package.mobile.android.displays
+
+    import android.content.Context
+    import $package.mobile.android.displays.*
+    import $package.mobile.android.displays.components.*
+    import $package.mobile.android.displays.templates.*
+    import $package.mobile.android.displays.rows.*
+    import $package.mobile.android.displays.items.*
+    import $package.mobile.displays.notifiers.*
+    import $package.mobile.displays.requesters.*
+    import io.intino.alexandria.mobile.displays.DisplayDefinition
+
+    object $accessible~Displays {
+
+        fun get(definition: DisplayDefinition, context: Context) : PassiveView<*, *> {
+            return when(definition.type()) {
+                $display...[$NL]
+                else -> throw Exception("Display not found for type $type")
+            }
+        }
+
+    }
+end
+
+def type(display & row)
+    "$name+firstUppercase" -> $name+firstUppercase~(context)
+end
+
+def type(display & mold)
+    "$name+firstUppercase" -> $name+firstUppercase~(context)
+end
+
+def type(display & item)
+    "$name+firstUppercase" -> $name+firstUppercase~(context)
+end
+
+def type(display & template)
+    "$name+firstUppercase" -> $name+firstUppercase~(context)
+end
+
+def type(display)
+    "$name+firstUppercase" -> $name+firstUppercase~<$name+firstUppercase~Requester, $name+firstUppercase~Notifier>(context)
+end

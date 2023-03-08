@@ -1,41 +1,52 @@
 package io.intino.alexandria;
 
 
+import io.intino.alexandria.event.Event.Format;
+
+import java.io.File;
+
+import static io.intino.alexandria.Session.SessionExtension;
+
 public class Fingerprint {
 
 	private static final String SEPARATOR = "/";
+	private static final String NAME_SEPARATOR = "~";
 	private final String fingerprint;
 
 	public Fingerprint(String fingerprint) {
 		this.fingerprint = fingerprint;
 	}
 
-	public static Fingerprint of(String tank, Timetag timetag) {
-		return new Fingerprint(tank + SEPARATOR + timetag);
+	public static Fingerprint of(String tank, String source, Timetag timetag, Format format) {
+		return new Fingerprint(tank + SEPARATOR + source + SEPARATOR + timetag + SEPARATOR + format);
 	}
 
-	public static Fingerprint of(String tank, Timetag timetag, String set) {
-		return new Fingerprint(tank + SEPARATOR + timetag + SEPARATOR + set);
+	public static Fingerprint of(File file) {
+		return new Fingerprint(cleanedNameOf(file));
 	}
 
 	public String tank() {
 		return fingerprint.split(SEPARATOR)[0];
 	}
 
-	public Timetag timetag() {
-		return new Timetag(fingerprint.split(SEPARATOR)[1]);
+	public String source() {
+		return fingerprint.split(SEPARATOR)[1];
 	}
 
-	public String set() {
+	public Timetag timetag() {
+		return new Timetag(fingerprint.split(SEPARATOR)[2]);
+	}
+
+	public Format format() {
 		try {
-			return fingerprint.split(SEPARATOR)[2];
+			return Format.valueOf(firstUpperCase(fingerprint.split(SEPARATOR)[3]));
 		} catch (IndexOutOfBoundsException e) {
 			return null;
 		}
 	}
 
-	public int size() {
-		return fingerprint.length();
+	public String name() {
+		return fingerprint.replace("/", NAME_SEPARATOR);
 	}
 
 	@Override
@@ -53,7 +64,15 @@ public class Fingerprint {
 		return fingerprint.hashCode();
 	}
 
-	public String name() {
-		return fingerprint.replace("/", "-");
+
+	private static String cleanedNameOf(File file) {
+		String name = file.getName();
+		if (name.contains("#")) name = name.substring(0, name.lastIndexOf("#"));
+		return name.replace(NAME_SEPARATOR, "/")
+				.replace(SessionExtension, "");
+	}
+
+	public static String firstUpperCase(String value) {
+		return value.isEmpty() ? "" : value.substring(0, 1).toUpperCase() + value.substring(1);
 	}
 }

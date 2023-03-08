@@ -1,49 +1,67 @@
 package io.intino.alexandria.message;
 
-import io.intino.alexandria.message.parser.InlLexicon;
-import io.intino.alexandria.message.parser.MessageStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.Token;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
-import static io.intino.alexandria.message.parser.InlLexicon.*;
+public class MessageReader implements Iterator<Message>, Iterable<Message>, AutoCloseable {
 
-public class MessageReader implements Iterator<Message>, Iterable<Message> {
 	private final MessageStream messageStream;
-	private String current;
+	private final Message[] contextList;
+	private final String[] lines;
+	private int numLines;
 
 	public MessageReader(String str) {
-		this(new ByteArrayInputStream(str.getBytes()));
+		this(new ByteArrayInputStream(str.getBytes()), new Config());
+	}
+
+	public MessageReader(String str, Config config) {
+		this(new ByteArrayInputStream(str.getBytes()), config);
 	}
 
 	public MessageReader(InputStream inputStream) {
-		messageStream = new MessageStream(inputStream);
-		if (messageStream.hasNext()) current = messageStream.next();
+		this(new MessageStream(inputStream), new Config());
 	}
 
+	public MessageReader(InputStream inputStream, Config config) {
+		this(new MessageStream(inputStream), config);
+	}
+
+	public MessageReader(MessageStream messageStream) {
+		this(messageStream, new Config());
+	}
+
+	public MessageReader(MessageStream messageStream, Config config) {
+		this.messageStream = messageStream;
+		this.lines = new String[Math.max(config.linesBufferSize, 1)];
+		this.contextList = new Message[Math.max(config.contextMaxLevels, 1)];
+		init();
+	}
+
+	@Override
 	public boolean hasNext() {
-		return current != null && !current.isEmpty() && !current.isBlank();
+		return numLines > 0;
 	}
 
+	@Override
 	public Message next() {
 		try {
-			if (current == null || current.isEmpty() || current.isBlank()) return null;
-			return nextMessage();
+			return hasNext() ? nextMessage() : null;
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println(e.getMessage() + ":" + current);
-			Logger.getGlobal().severe(e.getMessage() + ":" + current);
-			current = null;
-			return null;
+			throw new MessageException(e.getMessage(),e);
 		}
 	}
 
-	public void close() {
+	@Override
+	public Iterator<Message> iterator() {
+		return this;
+	}
+
+	@Override
+	public void close() throws Exception {
 		try {
 			messageStream.close();
 		} catch (IOException e) {
@@ -52,93 +70,101 @@ public class MessageReader implements Iterator<Message>, Iterable<Message> {
 	}
 
 	private Message nextMessage() {
-		List<Message> messageContexts = new ArrayList<>();
-		messageContexts.add(nextMessage(current).getValue());
-		String next;
-		while ((next = messageStream.next()) != null && isComponent(next)) {
-			Map.Entry<Integer, Message> entry = nextMessage(next);
-			add(messageContexts, entry.getKey(), entry.getValue());
-			messageContexts.get(entry.getKey() - 1).add(entry.getValue());
+		parse(lines, numLines, contextList);
+		while((numLines = messageStream.nextLines(lines)) > 0 && isComponent(lines[0])) {
+			parse(lines, numLines, contextList);
 		}
-		current = next;
-		return messageContexts.get(0);
+		return firstNonNullAndReset(contextList);
 	}
 
-	private void add(List<Message> messageContexts, Integer level, Message value) {
-		if (messageContexts.size() <= level) messageContexts.add(level, value);
-		else messageContexts.set(level, value);
+	private void parse(String[] lines, int size, Message[] contextList) {
+		String type = typeOf(lines[0]);
+		lines[0] = null;
+		String[] context = type.split("\\.", -1);
+		final int level = context.length - 1;
+		Message message = new Message(context[level]);
+		if(level > 0 && contextList[level - 1] != null) {
+			contextList[level - 1].add(message);
+		}
+		contextList[level] = message;
+		readAttributes(message, lines, size);
+	}
+
+	private void readAttributes(Message message, String[] lines, int size) {
+		for(int i = 1;i < size;i++) {
+			String line = lines[i];
+			lines[i] = null;
+			if(line.isBlank()) continue;
+			int attribSep = line.indexOf(':');
+			String name = line.substring(0, attribSep);
+			String value = line.substring(attribSep + 1).trim();
+			if(!value.isEmpty()) {
+				message.set(name, value);
+				continue;
+			}
+			i = readMultilineAttribute(message, lines, size, i, name);
+		}
+	}
+
+	private static int readMultilineAttribute(Message message, String[] lines, int size, int i, String name) {
+		String line;
+		StringBuilder multilineValue = new StringBuilder(128);
+		for(i = i + 1; i < size; i++) {
+			line = lines[i];
+			lines[i] = null;
+			if(!line.startsWith("\t")) {
+				setMultilineAttribute(message, name, multilineValue);
+				return i;
+			}
+			multilineValue.append(line.substring(1)).append('\n');
+		}
+		setMultilineAttribute(message, name, multilineValue);
+		return i;
+	}
+
+	private static void setMultilineAttribute(Message message, String name, StringBuilder multilineValue) {
+		multilineValue.setLength(Math.max(0, multilineValue.length() - 1));
+		message.set(name, multilineValue.toString());
+	}
+
+	private String typeOf(String line) {
+		return line.substring(1, line.lastIndexOf(']'));
 	}
 
 	private boolean isComponent(String next) {
-		return next.substring(0, next.indexOf('\n')).contains(".");
+		return next.indexOf('.') > 0;
 	}
 
-	private Map.Entry<Integer, Message> nextMessage(String next) {
-		return getNextMessage(lexicon(next).iterator());
-	}
-
-	private Map.Entry<Integer, Message> getNextMessage(Iterator<Token> iterator) {
-		Token current;
-		while (iterator.hasNext()) {
-			current = iterator.next();
-			if (current.getType() == LSQUARE) break;
+	private Message firstNonNullAndReset(Message[] messages) {
+		Message message = null;
+		for(int i = 0; i < messages.length; i++) {
+			Message m = messages[i];
+			if (m != null && message == null) {
+				message = m;
+			}
+			messages[i] = null;
 		}
-		String type = readType(iterator);
-		iterator.next();
-		String[] contexts = type.split("\\.");
-		Message message = new Message(contexts[contexts.length - 1]);
-		readAttributes(message, iterator);
-		return new AbstractMap.SimpleEntry<>(contexts.length - 1, message);
+		if(message == null) throw new NoSuchElementException("No messages left");
+		return message;
 	}
 
-	private String readType(Iterator<Token> iterator) {
-		StringBuilder idb = new StringBuilder();
-		Token current;
-		while (iterator.hasNext()) {
-			current = iterator.next();
-			if (current.getType() == RSQUARE) break;
-			else idb.append(current.getText());
+	private void init() {
+		if (this.messageStream.hasNext())
+			this.numLines = this.messageStream.nextLines(lines);
+	}
+
+	public static class Config {
+		private int linesBufferSize = 128;
+		private int contextMaxLevels = 8;
+
+		public Config linesBufferSize(int linesBufferSize) {
+			this.linesBufferSize = linesBufferSize;
+			return this;
 		}
-		return idb.toString();
-	}
 
-	private void readAttributes(Message message, Iterator<Token> iterator) {
-		while (iterator.hasNext()) {
-			Token id = iterator.next();
-			if (id.getType() == NEWLINE) break;
-			String attributeName = id.getText();
-			iterator.next();
-			Token next = iterator.next();
-			String value;
-			if (isInLineValue(next)) {
-				value = next.getText().substring(1);
-				if (iterator.hasNext()) iterator.next();
-			} else value = multiline(iterator, next);
-			message.set(attributeName, value);
+		public Config contextMaxLevels(int contextMaxLevels) {
+			this.contextMaxLevels = contextMaxLevels;
+			return this;
 		}
-	}
-
-	private boolean isInLineValue(Token next) {
-		return next.getType() == VALUE;
-	}
-
-	private String multiline(Iterator<Token> iterator, Token last) {
-		Token current = last;
-		StringBuilder builder = new StringBuilder();
-		while (iterator.hasNext() && current.getType() != NEWLINE) {
-			current = iterator.next();
-			if (current.getType() == VALUE) builder.append("\n").append(current.getText());
-		}
-		return builder.length() == 0 ? "" : builder.substring(1);
-	}
-
-	private List<Token> lexicon(String text) {
-		InlLexicon lexer = new InlLexicon(CharStreams.fromString(text));
-		return (List<Token>) lexer.getAllTokens();
-	}
-
-	@Override
-	public Iterator<Message> iterator() {
-		return this;
 	}
 }

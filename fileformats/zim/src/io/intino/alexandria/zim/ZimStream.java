@@ -1,93 +1,68 @@
 package io.intino.alexandria.zim;
 
+import io.intino.alexandria.iteratorstream.ResourceIteratorStream;
 import io.intino.alexandria.message.Message;
+import io.intino.alexandria.message.MessageReader;
 
+import java.io.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
-import java.util.Objects;
-import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static java.util.Arrays.stream;
+@SuppressWarnings({"all"})
+public class ZimStream extends ResourceIteratorStream<Message> {
 
-public interface ZimStream {
-	@SuppressWarnings("unused")
-	Message current();
-
-	Message next();
-
-	boolean hasNext();
-
-	default void forEachRemaining(Consumer<Message> action) {
-		Objects.requireNonNull(action);
-		while (hasNext())
-			action.accept(next());
+	public static ZimStream sequence(File first, File... rest) throws IOException {
+		ZimStream[] streams = new ZimStream[1 + rest.length];
+		streams[0] = ZimStream.of(first);
+		for (int i = 0; i < rest.length; i++) streams[i + 1] = ZimStream.of(rest[i]);
+		return new ZimStream(Arrays.stream(streams).flatMap(Function.identity()).iterator());
 	}
 
-	class Sequence implements ZimStream {
-		private final Iterator<ZimStream> iterator;
-		private Message currentMessage;
-		private ZimStream current;
-
-		Sequence(ZimStream... inputs) {
-			this.iterator = streamOf(inputs).iterator();
-			this.current = this.iterator.next();
-		}
-
-		private Stream<ZimStream> streamOf(ZimStream[] inputs) {
-			return stream(isEmpty(inputs) ? inputs : emptyInput());
-		}
-
-		private boolean isEmpty(ZimStream[] inputs) {
-			return inputs.length > 0;
-		}
-
-		private ZimStream[] emptyInput() {
-			return new ZimStream[]{new Empty()};
-		}
-
-		@Override
-		public Message current() {
-			return currentMessage;
-		}
-
-		@Override
-		public Message next() {
-			return currentMessage = current.next();
-		}
-
-		@Override
-		public boolean hasNext() {
-			return current.hasNext() || restHasNext();
-		}
-
-		private boolean restHasNext() {
-			while (iterator.hasNext()) {
-				current = iterator.next();
-				if (current.hasNext()) return true;
-			}
-			return false;
-		}
-
-		public static Sequence of(ZimStream... inputs) {
-			return new Sequence(inputs);
-		}
+	public static ZimStream sequence(Stream<Message>... streams) {
+		return new ZimStream(Arrays.stream(streams).flatMap(Function.identity()).iterator());
 	}
 
-	class Empty implements ZimStream {
+	public static ZimStream of(File file) throws IOException {
+		return new ZimStream(!file.exists() ? Collections.emptyIterator() : readerOf(Zim.decompressing(fileInputStream(file))));
+	}
 
-		@Override
-		public Message current() {
-			return null;
-		}
+	public static ZimStream of(InputStream is) throws IOException {
+		return new ZimStream(readerOf(Zim.decompressing(is)));
+	}
 
-		@Override
-		public Message next() {
-			return null;
-		}
+	public static ZimStream of(String text) {
+		return ZimStream.of(new MessageReader(text));
+	}
 
-		@Override
-		public boolean hasNext() {
-			return false;
-		}
+	public static ZimStream of(Message... messages) {
+		return new ZimStream(Arrays.stream(messages).iterator());
+	}
+
+	public static ZimStream of(Collection<Message> messages) {
+		return new ZimStream(messages.iterator());
+	}
+
+	public static ZimStream of(Stream<Message> messages) {
+		return new ZimStream(messages.iterator());
+	}
+
+	public static ZimStream of(MessageReader reader) {
+		return new ZimStream(reader.iterator());
+	}
+
+	public ZimStream(Iterator<Message> iterator) {
+		super(iterator);
+	}
+
+	private static MessageReader readerOf(InputStream is) {
+		return new MessageReader(is);
+	}
+
+	private static BufferedInputStream fileInputStream(File file) throws IOException {
+		return new BufferedInputStream(new FileInputStream(file));
 	}
 }

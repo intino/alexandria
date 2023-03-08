@@ -1,0 +1,16 @@
+dsl Legio
+
+Artifact("io.intino.alexandria", "1.0.1") cli-framework
+	Imports
+		Compile("io.intino.alexandria", "logger", "2.1.0")
+		Compile("io.intino.alexandria", "logger4j", "1.0.1")
+		Compile("io.intino.alexandria", "exceptions", "2.1.1")
+		Compile("io.intino.alexandria", "json", "1.2.0")
+
+		Test("junit", "junit", "4.13")
+
+	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
+	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
+
+Repository("intino-maven")
+	Release("https://artifactory.intino.io/artifactory/releases")

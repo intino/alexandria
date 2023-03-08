@@ -1,51 +1,40 @@
 package io.intino.alexandria.event;
 
-import io.intino.alexandria.message.Message;
-
 import java.time.Instant;
+import java.util.Arrays;
 
-public class Event {
-	private static final String TS = "ts";
-	private static final String SS = "ss";
-	protected Message message;
-	protected Instant ts;
-	protected String ss;
+public interface Event extends Comparable<Event> {
 
-	public Event(String type) {
-		this.message = new Message(type);
-		message.set(TS, this.ts = Instant.now());
-	}
+	String type();
 
-	public Event(Message message) {
-		this.message = message;
-		this.ts = message.get(TS).asInstant();
-		this.ss = message.get(SS).asString();
-	}
+	Instant ts();
 
-	public Instant ts() {
-		return ts;
-	}
+	String ss();
 
-	public String ss() {
-		return ss;
-	}
-
-	public Event ts(Instant ts) {
-		this.message.set(TS, this.ts = ts);
-		return this;
-	}
-
-	public Event ss(String ss) {
-		this.message.set(SS, this.ss = ss);
-		return this;
-	}
-
-	public Message toMessage() {
-		return message;
-	}
+	Format format();
 
 	@Override
-	public String toString() {
-		return message.toString();
+	default int compareTo(Event o) {
+		return ts().compareTo(o.ts());
+	}
+
+	enum Format {
+		Unknown(""),
+		Message(".zim"),
+		Measurement(".zit");
+
+		private final String extension;
+
+		Format(String extension) {
+			this.extension = extension;
+		}
+
+		public String extension() {
+			return extension;
+		}
+
+		public static Format byExtension(String extension) {
+			return Arrays.stream(values()).filter(f -> f.extension.equalsIgnoreCase(extension)).findFirst().orElse(Unknown);
+		}
 	}
 }

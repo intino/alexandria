@@ -1,0 +1,97 @@
+def type(cli & service)
+    package $package+ValidPackage;
+
+    import io.intino.alexandria.cli.CliManager;
+    import io.intino.alexandria.cli.schemas.BotTalk;
+    import io.intino.alexandria.http.AlexandriaSpark;
+    import $package+ValidPackage.$box+FirstUpperCase~Box;
+
+    public class $name+firstUpperCase+snakeCaseToCamelCase~Service {
+
+        private static $name+firstUpperCase+snakeCaseToCamelCase~ServiceAuthenticator authenticator;
+
+        public static void setup(AlexandriaSpark spark, $box+FirstUpperCase~Box box, $name+firstUpperCase+snakeCaseToCamelCase cli) {
+        	authenticator = new $name+firstUpperCase+snakeCaseToCamelCase~ServiceAuthenticator(box);
+            spark.route("/cli/$name+camelCaseToSnakeCase+lowerCase")
+                    .before(manager -> { if (manager.fromHeader("Authorization") == null || !authenticator.isAuthenticated(manager.fromHeader("Authorization").replace("Bearer ", ""))) throw new io.intino.alexandria.exceptions.Unauthorized("Credential not found");})
+                    .post(manager -> manager.write(io.intino.alexandria.rest.ResponseAdapter.adapt(new CliManager(cli, io.intino.alexandria.rest.RequestAdapter.adapt(manager.fromFormParameter("talk"), BotTalk.class)).execute(manager.fromHeader("Authorization").replace("Bearer ", "")))));
+        }
+    }
+end
+
+def type(cli & authenticator)
+	package $package+ValidPackage;
+
+	public class $name+firstUpperCase+SnakeCaseToCamelCase~ServiceAuthenticator {
+	 	private $box+FirstUpperCase~Box box;
+
+	 	public $name+firstUpperCase+SnakeCaseToCamelCase~ServiceAuthenticator($box+FirstUpperCase~Box box) {
+			this.box = box;
+		}
+
+		public boolean isAuthenticated(String token) {
+			return false;
+		}
+	}
+end
+
+def type(cli)
+	package $package+ValidPackage;
+
+	import io.intino.alexandria.cli.Cli;
+	import io.intino.alexandria.cli.command.MessageProperties;
+	import io.intino.alexandria.cli.response.Text;
+	import $package+ValidPackage.cli.commands.*;
+
+	import java.io.IOException;
+	import java.util.Arrays;
+	import java.util.List;
+	import java.util.stream.Collectors;
+
+    import static java.util.Collections.emptyList;
+
+	public class $name+firstUpperCase+snakeCaseToCamelCase extends Cli {
+
+        public $name+firstUpperCase+snakeCaseToCamelCase($box+validname+FirstUpperCase~Box box) {
+            super();
+            add("help", "h", "Show this help", emptyList(), emptyList(), "", (properties, command, args) -> new Text(help(properties)));
+            $command...[$NL]
+            $confirmation...[$NL]
+        }
+
+        @Override
+        protected String initialState() {
+            return "$initialState";
+        }
+
+        private String help(MessageProperties properties) {
+            return this.commandsInfoByState(contexts().get(properties.token()).state()).keySet().stream()
+                    .map((c) -> new StringBuilder().append(formatCommand(c, this.commandsInfoByState(contexts().get(properties.token()).state()).get(c))))
+                    .collect(Collectors.joining("\\n"));
+        }
+
+        private static String formatCommand(String command, CommandInfo info) {
+            return "`" + command.substring(command.lastIndexOf("$$") + 1) + "|" + info.abbr() + helpParameters(info.parameters()) + "` " + info.description();
+        }
+
+        private static String helpParameters(List<String> parameters) {
+            return parameters.isEmpty() ? "" : " <" + String.join("> <", parameters) + ">";
+        }
+    }
+end
+
+def type(confirmation)
+    addQuestionOption("$option", (properties, command, args) -> new $option+firstUpperCase~Command(box).execute(properties, command, args));
+end
+
+def type(command)
+    add("$command", "$abbreviation", "$description", $parameters, $preconditions, "$postcondition", (properties, command, args) -> new $name+firstUpperCase~Command(box).execute(properties, command, args));
+end
+
+def type(list & empty)
+    emptyList()
+end
+
+def type(list)
+    List.of("$item...[", "]")
+end
