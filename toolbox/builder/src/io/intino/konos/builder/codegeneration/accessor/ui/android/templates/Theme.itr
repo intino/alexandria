@@ -1,9 +1,17 @@
 def type(theme)
     <?xml version="1.0" encoding="UTF-8"?>
     <resources>
-        <style name="AppTheme" parent="Theme.Material3.Light"/>
+        <style name="AppTheme" parent="$type"/>
         $format...[$NL]
     </resources>
+end
+
+def type(type & Normal)
+    Theme.Material3.Light
+end
+
+def type(type & Dark)
+    Theme.Material3.Dark
 end
 
 def type(format)

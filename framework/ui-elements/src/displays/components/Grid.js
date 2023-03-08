@@ -130,7 +130,7 @@ class Grid extends AbstractGrid {
                 toolbar={
                     <ToolsPanel.AdvancedToolbar>
                         <div className="layout horizontal flex center">
-                            <div><a className={classes.columnsAction} onClick={this.handleOpenColumnsDialog.bind(this)} disabled={selectorColumnsDisabled}>{this.translate("Select columns...")}</a></div>
+                            <div><a className={classes.columnsAction} onClick={this.handleOpenColumnsDialog.bind(this)} disabled={selectorColumnsDisabled}>{this.translate("Show columns...")}</a></div>
                             {this.renderGroupBySelector()}
                             {this.renderGroupByModes()}
                             {this.renderGroupByOptions()}
@@ -167,7 +167,7 @@ class Grid extends AbstractGrid {
         const styles = { ...SelectorComboBoxStyles, ...SelectorComboBoxTextViewStyles, ...GridSelectorStyles };
         return (
             <Select className={classes.columnSelector} isClearable={true}
-                placeholder={this.translate("Select group by column")} options={this.selectorColumns()}
+                placeholder={this.translate("Group by")} options={this.selectorColumns()}
                 value={this.state.groupBy} onChange={this.handleSelectGroupBy.bind(this)} styles={styles}/>
         );
     };
@@ -180,14 +180,14 @@ class Grid extends AbstractGrid {
         const { classes } = this.props;
         return (
             <Select className={classes.columnSelector} isClearable={false}
-                placeholder={this.translate("Select group by mode")} options={modes}
+                placeholder={this.translate("Group by criteria")} options={modes}
                 value={this.state.groupByMode} onChange={this.handleSelectGroupByMode.bind(this)}
                 styles={styles}/>
         );
     };
 
     renderGroupByOptions = () => {
-        if (this.state.groupBy == null) return (<React.Fragment/>);
+        if (this.state.groupByMode == null) return (<React.Fragment/>);
         const options = this.state.groupByOptions.map((option, idx) => { return { value: option, label: option, index: idx }});
         const styles = { ...SelectorComboBoxStyles, ...SelectorComboBoxTextViewStyles, ...GridSelectorStyles };
         const { classes } = this.props;
@@ -196,7 +196,7 @@ class Grid extends AbstractGrid {
                 {options.length == 0 && <div style={{marginLeft:'10px'}}>{this.translate("No groups available")}</div>}
                 {options.length > 0 &&
                     <Select className={classes.columnSelector} isClearable={true}
-                        placeholder={this.translate("Select group by option")} options={options}
+                        placeholder={this.translate("Group")} options={options}
                         value={this.state.groupByOption} onChange={this.handleSelectGroupByOption.bind(this)}
                         styles={styles}/>
                 }
@@ -208,7 +208,7 @@ class Grid extends AbstractGrid {
         const { classes } = this.props;
         return (
             <Dialog open={this.state.openColumnsDialog} onClose={this.handleCloseColumnsDialog.bind(this)}>
-                <DialogTitle id="alert-dialog-title">{this.translate("Select columns")}</DialogTitle>
+                <DialogTitle id="alert-dialog-title">{this.translate("Show columns")}</DialogTitle>
                 <DialogContent>
                   <DialogContentText id="alert-dialog-description">
                     {this.renderColumnsCheckboxes()}
@@ -249,7 +249,7 @@ class Grid extends AbstractGrid {
         const modes = this.state.modes.filter(m => m.acceptedTypes.indexOf(acceptedType) != -1).map((mode, idx) => { return { value: mode.name, label: mode.name, index: idx }});
         const modeNames = [];
         modes.forEach((mode, idx) => modeNames[mode.value] = mode.value);
-        const mode = this.state.groupByMode != null && modeNames[this.state.groupByMode.name] != null ? this.state.groupByMode : (modes.length > 0 ? { name: modes[0].value, label: modes[0].label } : null);
+        const mode = this.state.groupByMode != null && modeNames[this.state.groupByMode.name] != null ? this.state.groupByMode : null;
         this.saveState("groupBy", null);
         this.setState({ groupBy : groupBy != null ? { name: groupBy.value, label: groupBy.label } : null, groupByMode: mode, groupByOption: null });
         this.requester.updateGroupByOptions({ column: groupBy != null ? groupBy.value : null, mode: mode != null ? mode.name : null });
