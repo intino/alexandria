@@ -1,11 +1,10 @@
-package io.intino.alexandria.datalake.aws;
+package io.intino.alexandria.datalake;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 
 import java.util.stream.Stream;
 
-import static io.intino.alexandria.datalake.aws.file.AwsDatalake.AwsDelimiter;
 
 public class S3 {
     private final AmazonS3 client;
@@ -23,7 +22,7 @@ public class S3 {
     }
 
     public Stream<String> prefixesIn(String bucketName, String prefix) {
-        ListObjectsRequest request = new ListObjectsRequest().withBucketName(bucketName).withPrefix(prefix).withDelimiter(AwsDelimiter);
+        ListObjectsRequest request = new ListObjectsRequest().withBucketName(bucketName).withPrefix(prefix).withDelimiter("AwsDelimiter");
         return client.listObjects(request).getCommonPrefixes().stream();
     }
 
