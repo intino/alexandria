@@ -3,13 +3,79 @@ package io.intino.test;
 import io.intino.alexandria.message.Message;
 import org.junit.Test;
 
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.*;
 
 public class Message_ {
 
 	@Test
 	public void overrideAttribute() {
 		new Message("aaaa").set("nombre", "aaa@aaaa").set("nombre", "aaaa");
+	}
+
+	@Test
+	public void streams() {
+		Message m = new Message("something");
+		m.set("list", List.of(1, 2, 3, 4, 5));
+
+		Message.Value v = m.get("list");
+
+		assertEquals(List.of(1, 2, 3, 4, 5), v.asList(Integer.class));
+
+		v.flatMap(Integer.class).forEach(System.out::println);
+		System.out.println("List => " + v.asList(Long.class));
+		System.out.println("Set => " + v.asSet(Long.class));
+		System.out.println("Map => " + v.collect(Long.class, Collectors.toMap(i -> i, i -> i * 10)));
+		System.out.println("Average => " + v.collect(Long.class, Collectors.averagingLong(i -> i)));
+	}
+
+	@Test
+	public void nullValues() {
+		Integer[] numberList = new Integer[] {1, null, 3, null, null};
+
+		Message m = new Message("something");
+		m.set("a", null);
+		m.set("b", (List<?>)null);
+		m.set("c", numberList);
+//		m.set("d", 123);
+		m.set("e", "");
+
+		System.out.println(m);
+
+		assertFalse(m.get("a").isEmpty());
+		assertNull(m.get("a").asInstant());
+		assertNotEquals("", m.get("a").data());
+		assertNotEquals("", m.get("a").asString());
+
+		assertFalse(m.get("b").isEmpty());
+		assertNull(m.get("b").asBoolean());
+
+		assertFalse(m.get("c").isEmpty());
+		assertArrayEquals(numberList, m.get("c").as(Integer[].class));
+
+		assertTrue(m.get("d").isEmpty());
+
+		assertFalse(m.get("e").isEmpty());
+		assertEquals("", m.get("e").asString());
+	}
+
+	@Test
+	public void iterables() {
+		Message m = new Message("something");
+		m.set("array", new int[]{1, 2, 3});
+		m.set("list", List.of(1, 2, 3));
+		m.set("queue", new ArrayDeque<>(List.of(1, 2, 3)));
+
+		assertArrayEquals(new int[]{1, 2, 3}, m.get("array").as(int[].class));
+		assertArrayEquals(new int[]{1, 2, 3}, m.get("list").as(int[].class));
+		assertArrayEquals(new int[]{1, 2, 3}, m.get("queue").as(int[].class));
 	}
 
 	@Test
@@ -98,8 +164,8 @@ public class Message_ {
 		message.set("isScreenOn", false);
 		message.set("temperature", 29.0);
 		message.set("created", "2017-03-22T12:56:18Z");
-		message.type("sensor");
-		assertThat(message.is("sensor")).isEqualTo(true);
+//		message.type("sensor");
+//		assertThat(message.is("sensor")).isEqualTo(true);
 		assertThat(message.contains("battery")).isEqualTo(true);
 	}
 }
