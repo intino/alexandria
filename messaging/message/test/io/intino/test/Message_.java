@@ -35,7 +35,7 @@ public class Message_ {
 		String str = m.get("ints").stream(int[].class).map(Arrays::toString).findFirst().orElse("");
 		double avg = m.get("ints").flatMap(Integer.class).collect(Collectors.averagingInt(i -> i));
 
-		Message.Value v = m.get("list");
+		Message.Value v = m.get("ints");
 
 		assertEquals(List.of(1, 2, 3, 4, 5), v.asList(Integer.class));
 
