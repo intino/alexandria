@@ -1,5 +1,5 @@
 import io.intino.alexandria.logger.Logger;
-import io.intino.alexandria.zit.ItsReader;
+import io.intino.alexandria.zit.ItlReader;
 import io.intino.alexandria.zit.ZitStream;
 import io.intino.alexandria.zit.ZitWriter;
 import io.intino.alexandria.zit.model.Data;
@@ -21,12 +21,12 @@ import java.util.zip.ZipFile;
 import static java.lang.String.join;
 import static java.util.stream.Collectors.joining;
 
-public class ItsReaderTest {
+public class ItlReaderTest {
 	private ByteArrayInputStream inputStream;
 
 	@Before
 	public void setUp() throws Exception {
-		inputStream = readSource(new File("test-res/kraken.its.zip"));
+		inputStream = readSource(new File("test-res/kraken.itl.zip"));
 	}
 
 	@Test
@@ -35,7 +35,7 @@ public class ItsReaderTest {
 	}
 
 	private String read(InputStream inputStream) {
-		final ItsReader reader = new ItsReader(inputStream);
+		final ItlReader reader = new ItlReader(inputStream);
 		StringBuilder builder = new StringBuilder();
 		builder.append(reader.id()).append("\n");
 		reader.data().limit(50)
@@ -51,7 +51,7 @@ public class ItsReaderTest {
 	@Test
 	public void should_write_read_zit() throws IOException {
 		StringBuilder strBuilder = new StringBuilder();
-		final ItsReader reader = new ItsReader(inputStream);
+		final ItlReader reader = new ItlReader(inputStream);
 		final File tempFile = Files.createTempFile("test", ".zit").toFile();
 		tempFile.deleteOnExit();
 		try (ZitWriter writer = new ZitWriter(tempFile, reader.id(), Period.of(5, ChronoUnit.MINUTES), new String[]{"price", "volume"})) {

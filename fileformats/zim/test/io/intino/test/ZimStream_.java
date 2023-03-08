@@ -1,11 +1,15 @@
 package io.intino.test;
 
 import io.intino.alexandria.message.Message;
+import io.intino.alexandria.message.MessageReader;
 import io.intino.alexandria.zim.ZimStream;
+import io.intino.alexandria.zim.ZimWriter;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
@@ -26,7 +30,7 @@ public class ZimStream_ {
 	}
 
 	@Test
-	public void misc() {
+	public void misc() throws IOException {
 		String inl =
 				"[Status]\n" +
 						"battery: 78.0\n" +
@@ -43,6 +47,14 @@ public class ZimStream_ {
 						"isScreenOn: true\n" +
 						"temperature: 10.0\n" +
 						"created: 2017-03-22T12:56:18Z\n";
+
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		try(ZimWriter writer = new ZimWriter(out)) { // FIXME: Zim.compressinmg!!
+			writer.write(new MessageReader(inl).next());
+		}
+		byte[] bytes = out.toByteArray();
+
+		Message message = ZimStream.of(new ByteArrayInputStream(bytes)).findFirst().get();
 
 		try (Stream<Message> of = ZimStream.of(inl).filter(Objects::nonNull)) {
 			of.mapToDouble(m -> m.get("temperature").asDouble())

@@ -19,8 +19,8 @@ public class ZimWriter implements AutoCloseable {
 		this(Zim.compressing(new BufferedOutputStream(new FileOutputStream(file))));
 	}
 
-	public ZimWriter(OutputStream out) {
-		MessageWriter writer = new MessageWriter(out);
+	public ZimWriter(OutputStream out) throws IOException {
+		MessageWriter writer = new MessageWriter(Zim.compressing(out));
 		this.writer = writer;
 		this.resource = DisposableResource.whenDestroyed(this).thenClose(writer);
 	}

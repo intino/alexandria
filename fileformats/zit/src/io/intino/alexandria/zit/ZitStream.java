@@ -15,7 +15,7 @@ public class ZitStream extends ResourceIteratorStream<Data> {
 		return new ZitStream(readerOf(Zit.decompressing(is)));
 	}
 
-	public static ZitStream of(ItsReader reader) {
+	public static ZitStream of(ItlReader reader) {
 		return new ZitStream(reader);
 	}
 
@@ -23,9 +23,9 @@ public class ZitStream extends ResourceIteratorStream<Data> {
 		return new ZitStream(readerOf(Zit.decompressing(fileInputStream(file))));
 	}
 
-	private final ItsReader reader;
+	private final ItlReader reader;
 
-	public ZitStream(ItsReader reader) {
+	public ZitStream(ItlReader reader) {
 		super(reader.data().iterator());
 		this.reader = requireNonNull(reader);
 	}
@@ -47,8 +47,8 @@ public class ZitStream extends ResourceIteratorStream<Data> {
 		return reader.measurements();
 	}
 
-	private static ItsReader readerOf(InputStream is) {
-		return new ItsReader(is);
+	private static ItlReader readerOf(InputStream is) {
+		return new ItlReader(is);
 	}
 
 	private static BufferedInputStream fileInputStream(File file) throws FileNotFoundException {

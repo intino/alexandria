@@ -8,6 +8,10 @@ public class ComponentTemplate extends Template {
 	public RuleSet ruleSet() {
 		return new RuleSet().add(
 			rule().condition((type("reference"))).output(literal("<Displays")).output(mark("name", "firstUppercase")).output(literal(" context={this._context.bind(this)} owner={this._owner.bind(this)} id=\"")).output(expression().output(mark("parentPath")).output(literal("."))).output(mark("id")).output(literal("\"")).output(mark("properties", "common")).output(mark("properties", "specific")).output(literal("></Displays")).output(mark("name", "firstUppercase")).output(literal(">")),
+			rule().condition((allTypes("header","child")), (trigger("transfer"))).output(literal("val ")).output(mark("parentPath", "dotsWithUnderscore")).output(literal("_")).output(mark("id")).output(literal(" = findViewById<")).output(mark("extends")).output(literal("<*, *>>(R.id.")).output(expression().output(mark("parentPath", "dotsWithUnderscore")).output(literal("_"))).output(mark("id")).output(literal(")\n")).output(mark("parentPath", "dotsWithUnderscore")).output(literal("_")).output(mark("id")).output(literal(".transfer(listOf(")).output(mark("component", "transferFind").multiple(",")).output(literal("))\n")).output(mark("component", "transfer").multiple("\n")),
+			rule().condition((type("child")), (trigger("transfer"))),
+			rule().condition((allTypes("child","basestamp")), (trigger("transferfind"))).output(literal("findViewById<")).output(mark("extends")).output(literal(">(R.id.")).output(expression().output(mark("parentPath", "dotsWithUnderscore")).output(literal("_"))).output(mark("id")).output(literal(")")),
+			rule().condition((type("child")), (trigger("transferfind"))).output(literal("findViewById<")).output(mark("extends")).output(literal("<*, *>>(R.id.")).output(expression().output(mark("parentPath", "dotsWithUnderscore")).output(literal("_"))).output(mark("id")).output(literal(")")),
 			rule().condition((type("child")), (trigger("declaration"))),
 			rule().condition((allTypes("block","child")), (trigger("child"))).output(mark("value")),
 			rule().condition((type("child")), (trigger("child"))).output(mark("value")),

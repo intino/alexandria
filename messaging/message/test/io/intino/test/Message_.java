@@ -3,10 +3,7 @@ package io.intino.test;
 import io.intino.alexandria.message.Message;
 import org.junit.Test;
 
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -22,10 +19,23 @@ public class Message_ {
 
 	@Test
 	public void streams() {
-		Message m = new Message("something");
-		m.set("list", List.of(1, 2, 3, 4, 5));
+		Message m = new Message("MyType");
+		m.set("ints", new int[] {1, 2, 3, 4, 5});
+		m.set("email", null); // -> serializes email as a null value
 
-		Message.Value v = m.get("list");
+		Optional<String> email = m.get("email").asOptional();
+
+		int[] array1 = m.get("ints").as(int[].class);
+		int[] array2 = m.get("ints").orElse(int[].class, new int[0]);
+
+		List<Integer> list = m.get("ints").asList(Integer.class);
+		Set<Integer> set = m.get("ints").asSet(Integer.class);
+		Queue<Integer> queue = m.get("ints").collect(Integer.class, Collectors.toCollection(ArrayDeque::new));
+
+		String str = m.get("ints").stream(int[].class).map(Arrays::toString).findFirst().orElse("");
+		double avg = m.get("ints").flatMap(Integer.class).collect(Collectors.averagingInt(i -> i));
+
+		Message.Value v = m.get("ints");
 
 		assertEquals(List.of(1, 2, 3, 4, 5), v.asList(Integer.class));
 
