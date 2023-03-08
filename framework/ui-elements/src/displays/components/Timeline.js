@@ -16,18 +16,21 @@ import Delayer from 'alexandria-ui-elements/src/util/Delayer';
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import TimelineMeasurement from './timeline/measurement'
+import Theme from "app-elements/gen/Theme";
 
 const styles = theme => ({
-    measurement : { position:'relative', borderRadius:'3px', padding:'5px', margin: '5px 5px' },
-    summaryMeasurement : { minWidth:'60px' },
-    normalMeasurement : { minWidth:'150px' },
+    measurement : { position:'relative', padding:'5px', marginBottom: '1px' },
+    scale : { cursor:'pointer',padding:'0 4px' },
+    selectedScale : { backgroundColor: theme.palette.primary.main, color: 'white' },
+    summaryMeasurement : { minWidth:'60px', paddingRight: '15px' },
+    detailMeasurement : { minWidth:'150px' },
     value : { marginRight: '2px', fontSize: '35pt', lineHeight: 1},
-    normalValue : { fontSize: '35pt' },
+    detailValue : { fontSize: '35pt' },
     summaryValue : { fontSize: '18pt' },
     unit : { marginTop: '3px', fontSize: '14pt', color: theme.palette.grey.A700, paddingLeft: '5px' },
-    normalUnit : { fontSize: '14pt' },
+    detailUnit : { fontSize: '14pt' },
     summaryUnit : { position: 'absolute', fontSize: '9pt', marginLeft: '10px', marginTop: '-1px' },
-    normalTrend : { position: 'absolute', left: '0', top:'0px', marginLeft: '-16px', marginTop: '-15px', width:'40px', height:'40px' },
+    detailTrend : { position: 'absolute', left: '0', top:'0px', marginLeft: '-16px', marginTop: '-15px', width:'40px', height:'40px' },
     summaryTrend : { position: 'absolute', left: '0', bottom:'0px', marginLeft: '-4px', marginBottom: '-6px', width:'24px', height:'24px' },
     increased : { color: '#F44335' },
     decreased : { color: '#4D9A51' },
@@ -47,6 +50,7 @@ class Timeline extends AbstractTimeline {
 		    openConfiguration : false,
 		    history : { visible: true, from: null, to: null, data: [] },
 		    measurement : null,
+		    scales: [],
 		    measurements: [],
 		    measurementsVisibility : {},
 		    measurementsSorting : {},
@@ -60,7 +64,7 @@ class Timeline extends AbstractTimeline {
     setup = (info) => {
         const measurementsVisibility = this.getCookie(info.name + "_visibility") != null ? this.getCookie(info.name + "_visibility") : this.state.measurementsVisibility;
         const measurementsSorting = this.getCookie(info.name + "_sorting") != null ? this.getCookie(info.name + "_sorting") : this.state.measurementsSorting;
-        this.setState({ measurements: info.measurements, measurementsVisibility: measurementsVisibility, measurementsSorting: measurementsSorting, sourceName: info.name });
+        this.setState({ scales: info.scales, measurements: info.measurements, measurementsVisibility: measurementsVisibility, measurementsSorting: measurementsSorting, sourceName: info.name });
     };
 
     refreshMeasurementsVisibility = (visibility) => {
@@ -73,6 +77,11 @@ class Timeline extends AbstractTimeline {
         const newSorting = {};
         for (let i=0; i<sorting.length; i++) newSorting[sorting[i].name] = sorting[i].position;
         this.setState({measurementsSorting: newSorting});
+    };
+
+    refreshSummary = (summary) => {
+        this.selectedMeasurement.summary = summary;
+        this.setState({measurements: this.state.measurements})
     };
 
     showHistoryDialog = (history) => {
@@ -144,14 +153,19 @@ class Timeline extends AbstractTimeline {
 
     renderMeasurement = (measurement, idx) => {
         return (<TimelineMeasurement style={{margin:'5px'}}
+                                     scales={this.state.scales}
                                      measurement={measurement}
-                                     key={measurement.name}
+                                     key={this.props.id + measurement.name}
                                      index={idx}
                                      id={measurement.name}
                                      mode={this.props.mode}
                                      classes={this.props.classes}
                                      openHistory={this.openHistory.bind(this, measurement)}
+                                     translate={this.translate.bind(this)}
                                      moveMeasurement={this.moveMeasurement.bind(this)}
+                                     changeScale={this.changeScale.bind(this, measurement)}
+                                     beforeSummary={this.beforeSummary.bind(this, measurement)}
+                                     nextSummary={this.nextSummary.bind(this, measurement)}
         />);
     };
 
@@ -264,11 +278,28 @@ class Timeline extends AbstractTimeline {
         this.setState({measurements: measurements, measurementsSorting: this.saveMeasurementsSorting()});
     };
 
+	changeScale = (measurement, scale) => {
+	    this.selectedMeasurement = measurement;
+        this.requester.changeScale({measurement: measurement.name, scale: scale});
+    };
+
+	beforeSummary = (measurement, summary) => {
+	    this.selectedMeasurement = measurement;
+        this.requester.beforeSummary({measurement: measurement.name, scale: summary.scale});
+    };
+
+	nextSummary = (measurement, summary) => {
+	    this.selectedMeasurement = measurement;
+        this.requester.nextSummary({measurement: measurement.name, scale: summary.scale});
+    };
+
     renderConfigurationDialog = () => {
         const { classes } = this.props;
+        const theme = Theme.get();
+        const hasMeasurements = this.state.measurements.length > 0;
         return (
-            <React.Fragment>
-                {this.props.mode === "Normal" && <div className="layout horizontal start"><IconButton onClick={this.openConfigurationDialog.bind(this)}><Settings/></IconButton></div>}
+            <div className="layout horizontal center" style={{marginLeft:'5px'}}>
+                {hasMeasurements && <div className="layout horizontal start"><IconButton onClick={this.openConfigurationDialog.bind(this)} size="small"><Settings style={{color:theme.palette.primary.main}}/></IconButton></div>}
                 <Dialog open={this.state.openConfiguration} onClose={this.handleCloseConfigurationDialog.bind(this)}>
                     <DialogTitle id="alert-dialog-title">{this.translate("Measurements")}</DialogTitle>
                     <DialogContent>
@@ -280,7 +311,7 @@ class Timeline extends AbstractTimeline {
                       <Button onClick={this.handleCloseConfigurationDialog.bind(this)} color="primary" autoFocus>{this.translate("Close")}</Button>
                     </DialogActions>
                 </Dialog>
-            </React.Fragment>
+            </div>
         );
     };
 

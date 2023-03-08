@@ -2,6 +2,7 @@ package io.intino.alexandria.zit;
 
 import io.intino.alexandria.iteratorstream.ResourceIteratorStream;
 import io.intino.alexandria.zit.model.Data;
+import io.intino.alexandria.zit.model.Period;
 
 import java.io.*;
 
@@ -29,8 +30,21 @@ public class ZitStream extends ResourceIteratorStream<Data> {
 		this.reader = requireNonNull(reader);
 	}
 
+	public String id() {
+		return reader.id();
+	}
+
+
 	public String sensor() {
 		return reader.sensor();
+	}
+
+	public Period period() {
+		return reader.period();
+	}
+
+	public String[] measurements() {
+		return reader.measurements();
 	}
 
 	private static ItsReader readerOf(InputStream is) {

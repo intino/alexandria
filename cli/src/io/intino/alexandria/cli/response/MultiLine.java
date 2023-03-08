@@ -20,23 +20,32 @@ public class MultiLine extends Response {
 
 	@Override
 	public String toString() {
-		return lines.stream().filter(this::isVisible).map(this::line).filter(l -> !l.isEmpty()).collect(Collectors.joining("\n"));
+		return lines.stream().filter(this::isVisible).map(this::serialize).filter(l -> !l.isEmpty()).collect(Collectors.joining(""));
+	}
+
+	private String serialize(Line line) {
+		String result = line(line);
+		if (result.isEmpty()) return result;
+		return line.addBreak() ? "\n" : " ";
 	}
 
 	private boolean isVisible(Line line) {
 		if (line.dependantLine() == null) return true;
 		Line dependant = findLine(line.dependantLine());
 		if (dependant == null) return false;
-		MessageData data = provider.data(dependant.name());
-		if (dependant.multiple()) return data != null && !data.isEmpty();
-		return data != null;
+		if (dependant.multiple().value()) {
+			List<MessageData> data = provider.dataList(dependant.name());
+			return data != null && !data.isEmpty();
+		}
+		return provider.data(dependant.name()) != null;
 	}
 
 	private String line(Line line) {
 		String template = line.template();
-		List<MessageData> data = line.multiple() ? provider.dataList(line.name()) : singletonList(provider.data(line.name()));
+		List<MessageData> data = line.multiple().value() ? provider.dataList(line.name()) : singletonList(provider.data(line.name()));
+		Line.Multiple.Arrangement arrangement = line.multiple().arrangement();
 		List<String> result = data.stream().map(d -> lineOf(d, template)).filter(Objects::nonNull).collect(Collectors.toList());
-		return String.join("\n", result);
+		return String.join(arrangement == Line.Multiple.Arrangement.Vertical ? "\n" : " ", result);
 	}
 
 	private String lineOf(MessageData data, String template) {
