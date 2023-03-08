@@ -1,4 +1,4 @@
-package io.intino.alexandria.message.parser;
+package io.intino.performance.impl;
 
 import io.intino.alexandria.message.MessageException;
 
@@ -7,17 +7,17 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Iterator;
 
-public class MessageStream implements Iterator<String>, AutoCloseable {
+public class MessageStreamOld implements Iterator<String>, AutoCloseable {
 	private final Reader reader;
 	private char[] buffer;
 	private int index;
 	private int last;
 
-	public MessageStream(InputStream stream) {
+	public MessageStreamOld(InputStream stream) {
 		this(stream, Charset.defaultCharset());
 	}
 
-	public MessageStream(InputStream stream, Charset charset) {
+	public MessageStreamOld(InputStream stream, Charset charset) {
 		this.reader = new BufferedReader(new InputStreamReader(stream, charset));
 		this.buffer = new char[1024];
 		init();

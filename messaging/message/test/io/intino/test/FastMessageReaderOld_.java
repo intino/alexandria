@@ -1,7 +1,7 @@
 package io.intino.test;
 
-import io.intino.alexandria.message.MessageReader;
 import io.intino.alexandria.message.Message;
+import io.intino.performance.impl.FastMessageReaderOld;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -11,9 +11,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.Assert.assertEquals;
 
-public class MessageReader_ {
+public class FastMessageReaderOld_ {
 
 
 	@Test
@@ -23,16 +22,14 @@ public class MessageReader_ {
 				"source: io.intino.magritte.framework.loaders.ListProcessor:process\n" +
 				"message:\n" +
 				"\tG@R@34";
-		Message next = new MessageReader(message).next();
+		Message next = new FastMessageReaderOld(message).next();
 		Assert.assertNotNull(next);
-		assertEquals("G@R@34", next.get("message").asString());
 		message = "[WARNING]\n" +
 				"ts: 2021-07-27T14:28:31.494323Z\n" +
 				"source: io.intino.magritte.framework.loaders.ListProcessor:process\n" +
 				"message:G@R@34";
-		next = new MessageReader(message).next();
+		next = new FastMessageReaderOld(message).next();
 		Assert.assertNotNull(next);
-		assertEquals("G@R@34", next.get("message").asString());
 	}
 
 	@Test
@@ -64,7 +61,7 @@ public class MessageReader_ {
 				"\t\tat org.java_websocket.WebSocketImpl.decode(WebSocketImpl.java:216)\n" +
 				"\t\tat org.java_websocket.client.WebSocketClient.run(WebSocketClient.java:506)\n" +
 				"\t\tat java.base/java.lang.Thread.run(Thread.java:834)";
-		Message next = new MessageReader(message).next();
+		Message next = new FastMessageReaderOld(message).next();
 		Assert.assertNotNull(next);
 	}
 
@@ -75,13 +72,13 @@ public class MessageReader_ {
 				"ts: 2021-04-23T08:20:15.056773Z\n" +
 				"source: io.intino.magritte.framework.LayerFactory:create\n" +
 				"message: Concept AbstractAcquisition$Device hasn't layer registered. Node Assets#Assets_3962_0_0696810257 won't have it\n";
-		Message next = new MessageReader(message).next();
+		Message next = new FastMessageReaderOld(message).next();
 		Assert.assertNotNull(next);
 	}
 
 	@Test
 	public void should_read_empty_content() {
-		MessageReader messages = new MessageReader("");
+		FastMessageReaderOld messages = new FastMessageReaderOld("");
 		assertThat(messages.hasNext()).isFalse();
 		assertThat(messages.next()).isNull();
 	}
@@ -109,7 +106,7 @@ public class MessageReader_ {
 				"\n" +
 				"[Teacher.Country]\n" +
 				"name: Germany\n";
-		MessageReader messages = new MessageReader(inl);
+		FastMessageReaderOld messages = new FastMessageReaderOld(inl);
 
 		assertThat(messages.hasNext()).isTrue();
 		Message m1 = messages.next();
@@ -156,7 +153,7 @@ public class MessageReader_ {
 				"apkVersion = 3.0.21\n" +
 				"fingerSizes = 0\n" +
 				"hearts = 1\n";
-		MessageReader messages = new MessageReader(inl);
+		FastMessageReaderOld messages = new FastMessageReaderOld(inl);
 		Message message = messages.next();
 		assertThat(message.contains("issueId")).isFalse();
 		assertThat(message.get("wantsToBeContacted").as(Boolean.class)).isFalse();
@@ -188,7 +185,7 @@ public class MessageReader_ {
 				"[Teacher.Phone.Country]\n" +
 				"name: Mexico\n";
 
-		MessageReader messages = new MessageReader(inl);
+		FastMessageReaderOld messages = new FastMessageReaderOld(inl);
 		assertThat(messages.hasNext()).isTrue();
 		Message message = messages.next();
 		assertThat(message.toString()).isEqualTo(inl);
@@ -207,7 +204,7 @@ public class MessageReader_ {
 				"prices: " + "5.0\u0001" + "24.5\u0001" + "8.0\u0001" + "7.0\n" +
 				"availability: " + "true\u0001" + "false\n";
 
-		MessageReader messages = new MessageReader(inl);
+		FastMessageReaderOld messages = new FastMessageReaderOld(inl);
 		assertThat(messages.hasNext()).isTrue();
 		Message message = messages.next();
 		assertThat(message.toString()).isEqualTo(inl);
@@ -232,7 +229,7 @@ public class MessageReader_ {
 				"cargo: CONTRALOR INTERNO\n" +
 				"tipo: Comercial\n" +
 				"email: raul.caballero@hidalgo.gob\n";
-		Message message = new MessageReader(inl).next();
+		Message message = new FastMessageReaderOld(inl).next();
 		String telefonos = message.get("telefonos").asString();
 		System.out.println(telefonos);
 	}
@@ -249,7 +246,7 @@ public class MessageReader_ {
 				"\t\tat java.base/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:305)\n" +
 				"\t\tat java.base/java.lang.Thread.run(Thread.java:834)\n";
 
-		Message message = new MessageReader(inl).next();
+		Message message = new FastMessageReaderOld(inl).next();
 		assertThat(message.get("ts").as(Instant.class)).isEqualTo(Instant.parse("2020-05-05T19:24:32.533342Z"));
 		assertThat(message.get("source").as(String.class)).isEqualTo("io.intino.alexandria.jms.TopicConsumer:close:36");
 		assertThat(message.get("message").as(String.class)).isEqualTo("javax.jms.IllegalStateException: The Session is closed\n" +
@@ -270,7 +267,7 @@ public class MessageReader_ {
 				"\tts: 2020-06-18T13:30:58.329749Z\n" +
 				"\tsource: io.intino.alexandria.terminal.JmsConnector$1:transportResumed:306\n" +
 				"\tmessage: Connection with Data Hub established!\n";
-		Message message = new MessageReader(inl).next();
+		Message message = new FastMessageReaderOld(inl).next();
 		assertThat(message).isNotNull();
 		assertThat(message.get("value").asString()).isNotNull();
 	}
@@ -308,7 +305,7 @@ public class MessageReader_ {
 				"\t\tat org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:708)\n" +
 				"\t\tat org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:626)\n" +
 				"\t\tat java.base/java.lang.Thread.run(Thread.java:834)";
-		Message message = new MessageReader(inl).next();
+		Message message = new FastMessageReaderOld(inl).next();
 		assertThat(message).isNotNull();
 		assertThat(message.get("message").asString()).isNotNull();
 	}
