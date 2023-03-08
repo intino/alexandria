@@ -32,14 +32,14 @@ public class MessageEventStore implements Store<MessageEvent> {
     }
 
     private int from(String s) {
-        return s.indexOf(PrefixDelimiter);
+        return s.indexOf(PrefixDelimiter) + 1;
     }
 
     private int to(String s) {
-        return s.indexOf(PrefixDelimiter, from(s) + 1);
+        return s.indexOf(PrefixDelimiter, from(s));
     }
 
-    private static String prefixOf(String name) {
+    private String prefixOf(String name) {
         return MessagePrefix + PrefixDelimiter + name;
     }
 }

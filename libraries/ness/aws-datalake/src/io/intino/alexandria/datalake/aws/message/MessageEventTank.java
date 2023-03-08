@@ -23,24 +23,31 @@ public class MessageEventTank implements Tank<MessageEvent>{
 
     @Override
     public String name() {
-        return prefix.substring(indexOfBucketName());
+        return prefix.substring(indexOfTank());
     }
 
     @Override
     public Datalake.Store.Source<MessageEvent> source(String name) {
-        return null;
+        return new MessageEventSource(s3, bucketName, prefixOf(name));
     }
 
     @Override
     public Stream<Datalake.Store.Source<MessageEvent>> sources() {
-        return null;
+        return s3.keysIn(bucketName, prefix)
+                .map(prefix -> prefix.substring(indexOfTank(), to(prefix)))
+                .distinct()
+                .map(source -> new MessageEventSource(s3, bucketName, prefixOf(source)));
     }
 
-    private static int indexOfBucketName() {
+    private int indexOfTank() {
         return (MessagePrefix + PrefixDelimiter).length() + 1;
     }
 
-    private static int to(String s) {
-        return s.indexOf(PrefixDelimiter, indexOfBucketName() + 1);
+    private int to(String s) {
+        return s.indexOf(PrefixDelimiter, indexOfTank());
+    }
+
+    private String prefixOf(String name) {
+        return prefix + PrefixDelimiter + name;
     }
 }

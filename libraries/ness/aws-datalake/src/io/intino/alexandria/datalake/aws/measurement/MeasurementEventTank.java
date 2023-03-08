@@ -8,7 +8,7 @@ import io.intino.alexandria.event.measurement.MeasurementEvent;
 import java.util.stream.Stream;
 
 import static io.intino.alexandria.datalake.aws.AwsDatalake.PrefixDelimiter;
-import static io.intino.alexandria.datalake.aws.measurement.MeasurementEventStore.MeasurementsPrefix;
+import static io.intino.alexandria.datalake.aws.measurement.MeasurementEventStore.MeasurementPrefix;
 
 
 public class MeasurementEventTank implements Tank<MeasurementEvent> {
@@ -24,27 +24,31 @@ public class MeasurementEventTank implements Tank<MeasurementEvent> {
 
     @Override
     public String name() {
-        return prefix.substring(indexOfBucketName());
+        return prefix.substring(indexOfTank());
     }
 
     @Override
     public Store.Source<MeasurementEvent> source(String name) {
-        return new MeasurementEventSource(s3, bucketName, prefix + PrefixDelimiter + name);
+        return new MeasurementEventSource(s3, bucketName, prefixOf(name));
     }
 
     @Override
     public Stream<Store.Source<MeasurementEvent>> sources() {
         return s3.keysIn(bucketName, prefix)
-                .map(prefix -> prefix.substring(indexOfBucketName(), to(prefix)))
+                .map(prefix -> prefix.substring(indexOfTank(), to()))
                 .distinct()
-                .map(prefix -> new MeasurementEventSource(s3, bucketName, prefix));
+                .map(source -> new MeasurementEventSource(s3, bucketName, prefixOf(source)));
     }
 
-    private static int indexOfBucketName() {
-        return (MeasurementsPrefix + PrefixDelimiter).length() + 1;
+    private int indexOfTank() {
+        return (MeasurementPrefix + PrefixDelimiter).length() + 1;
     }
 
-    private static int to(String s) {
-        return s.indexOf(PrefixDelimiter, indexOfBucketName() + 1);
+    private int to() {
+        return prefix.indexOf(PrefixDelimiter, indexOfTank());
+    }
+
+    private String prefixOf(String name) {
+        return prefix + PrefixDelimiter + name;
     }
 }
