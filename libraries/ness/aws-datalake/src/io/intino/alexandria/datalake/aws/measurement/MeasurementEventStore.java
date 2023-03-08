@@ -1,6 +1,7 @@
 package io.intino.alexandria.datalake.aws.measurement;
 
 import io.intino.alexandria.datalake.Datalake.Store;
+import io.intino.alexandria.datalake.aws.S3;
 import io.intino.alexandria.datalake.file.FileStore;
 import io.intino.alexandria.event.measurement.MeasurementEvent;
 
@@ -8,6 +9,12 @@ import java.io.File;
 import java.util.stream.Stream;
 
 public class MeasurementEventStore implements Store<MeasurementEvent>, FileStore {
+
+
+    public MeasurementEventStore(S3 s3, String bucketName) {
+
+    }
+
     @Override
     public Stream<Tank<MeasurementEvent>> tanks() {
         return null;

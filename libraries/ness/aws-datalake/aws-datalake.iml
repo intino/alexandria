@@ -10,14 +10,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.0.5" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:datalake:6.0.0" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:event:4.0.0" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:iterator-stream:1.0.0" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:resource-cleaner:1.0.0" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:zim:5.0.0" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:message:4.0.0" level="project" />
-    <orderEntry type="library" name="Intino: com.github.luben:zstd-jni:1.5.4-1" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:zit:1.0.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.1.0" level="project" />
     <orderEntry type="library" name="Intino: javax.xml.bind:jaxb-api:2.3.1" level="project" />
     <orderEntry type="library" name="Intino: javax.activation:javax.activation-api:1.2.0" level="project" />
@@ -87,5 +79,7 @@
     <orderEntry type="library" scope="TEST" name="Intino: net.sf.jopt-simple:jopt-simple:5.0.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Intino: org.apache.commons:commons-math3:3.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Intino: org.openjdk.jmh:jmh-generator-annprocess:1.36" level="project" />
+    <orderEntry type="module" module-name="event" />
+    <orderEntry type="module" module-name="datalake" />
   </component>
 </module>
