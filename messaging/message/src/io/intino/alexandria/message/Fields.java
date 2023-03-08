@@ -6,6 +6,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
+@Deprecated // TODO ??
 class Fields {
 
 	static FieldQuery of(Object object) {

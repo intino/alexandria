@@ -1,5 +1,6 @@
 package io.intino.test;
 
+import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageBuilder;
 import io.intino.test.schemas.*;
 import org.junit.Test;
@@ -8,6 +9,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+import static io.intino.alexandria.message.Message.*;
 import static io.intino.test.schemas.Person.Gender.Male;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -89,9 +91,9 @@ public class MessageBuilder_ {
 		Menu menu = new Menu(new String[]{"Soup", null, "Mussels", "Cake"}, new Double[]{5.0, null, 8.0, 7.0}, new Boolean[]{true, false});
 		assertThat(MessageBuilder.toMessage(menu).toString()).isEqualTo(
 				"[Menu]\n" +
-						"meals: " + "Soup\u0001" + "\0\u0001" + "Mussels\u0001" + "Cake\n" +
-						"prices: " + "5.0\u0001" + "\0\u0001" + "8.0\u0001" + "7.0\n" +
-						"availability: " + "true\u0001" + "false\n");
+						"meals: " + "Soup" + ListSep + Message.Null + ListSep + "Mussels" + ListSep + "Cake\n" +
+						"prices: " + "5.0" + ListSep + Message.Null + ListSep + "8.0" + ListSep + "7.0\n" +
+						"availability: " + "true" + ListSep + "false\n");
 	}
 
 	@Test

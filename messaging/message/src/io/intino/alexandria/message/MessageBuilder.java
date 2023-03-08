@@ -11,6 +11,7 @@ import static java.util.Arrays.stream;
 import static java.util.Collections.singletonList;
 import static java.util.Objects.isNull;
 
+@Deprecated // TODO ??
 public class MessageBuilder {
 	private static final String[] primitives = {"java.lang", "java.time"};
 

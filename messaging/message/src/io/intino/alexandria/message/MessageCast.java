@@ -8,6 +8,7 @@ import java.util.*;
 import static java.util.Collections.emptyList;
 
 
+@Deprecated // TODO: ??
 public class MessageCast {
 	private static final Map<Class<?>, String> classNames = new HashMap<>();
 	private static final Map<String, Field> fields = new HashMap<>();
