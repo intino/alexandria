@@ -149,6 +149,16 @@ class CompilationInfoExtractor {
 			}
 
 			@Override
+			public String user() {
+				return null;
+			}
+
+			@Override
+			public String password() {
+				return null;
+			}
+
+			@Override
 			public Configuration root() {
 				return null;
 			}

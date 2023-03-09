@@ -12,7 +12,6 @@ Concept:{0..1} MessageHub
 
 Concept:Named Subscriber
 	var string event
-	var string[] splits = empty
 	Aspect Durable
 		var string subscriberId
 		var word:{ReceiveAll ReceiveAfterLastSeal} subscriptionMode
