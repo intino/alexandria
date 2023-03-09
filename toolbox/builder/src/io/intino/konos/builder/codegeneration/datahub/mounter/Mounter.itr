@@ -22,11 +22,11 @@ def type(mounter)
 end
 
 def trigger(switch)
-	if	(event.toMessage().type().equals("$this")) handle(($this) event);
+	if	(event.type().equals("$name")) handle(($fullType) event);
 end
 
 def trigger(method)
-	public void handle($this event) {
+	public void handle($fullType event) {
 
 	}
 end
