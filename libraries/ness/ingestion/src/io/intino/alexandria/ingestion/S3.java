@@ -1,13 +1,11 @@
-package io.intino.alexandria.datalake.aws;
+package io.intino.alexandria.ingestion;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 
 import java.util.stream.Stream;
 
-
 public class S3 {
-
     public static Stream<String> buckets(AmazonS3 client) {
         return client.listBuckets().stream().map(Bucket::getName);
     }
