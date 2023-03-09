@@ -14,7 +14,6 @@ import io.intino.alexandria.logger.Logger;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.TimeZone;
 
 public class CliManager {
