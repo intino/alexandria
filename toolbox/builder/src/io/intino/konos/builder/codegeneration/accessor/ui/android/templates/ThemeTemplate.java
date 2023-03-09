@@ -7,7 +7,9 @@ public class ThemeTemplate extends Template {
 
 	public RuleSet ruleSet() {
 		return new RuleSet().add(
-			rule().condition((type("theme"))).output(literal("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<resources>\n    <style name=\"AppTheme\" parent=\"Theme.Material3.Light\"/>\n    ")).output(mark("format").multiple("\n")).output(literal("\n</resources>")),
+			rule().condition((type("theme"))).output(literal("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<resources>\n    <style name=\"AppTheme\" parent=\"")).output(mark("type")).output(literal("\"/>\n    ")).output(mark("format").multiple("\n")).output(literal("\n</resources>")),
+			rule().condition((allTypes("type","Normal"))).output(literal("Theme.Material3.Light")),
+			rule().condition((allTypes("type","Dark"))).output(literal("Theme.Material3.Dark")),
 			rule().condition((type("format"))).output(literal("<style name=\"")).output(mark("name")).output(literal("\">\n    ")).output(mark("attribute").multiple("\n")).output(literal("\n</style>")),
 			rule().condition((allTypes("attribute","sizeable"))).output(literal("<item name=\"android:")).output(mark("topName")).output(literal("\">")).output(mark("left")).output(literal("</item>\n<item name=\"android:")).output(mark("rightName")).output(literal("\">")).output(mark("right")).output(literal("</item>\n<item name=\"android:")).output(mark("bottomName")).output(literal("\">")).output(mark("bottom")).output(literal("</item>\n<item name=\"android:")).output(mark("leftName")).output(literal("\">")).output(mark("left")).output(literal("</item>")),
 			rule().condition((type("attribute"))).output(literal("<item name=\"android:")).output(mark("name")).output(literal("\">")).output(mark("value")).output(literal("</item>")),

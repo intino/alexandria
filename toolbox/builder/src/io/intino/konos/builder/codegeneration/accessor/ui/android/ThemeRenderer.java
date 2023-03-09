@@ -39,6 +39,7 @@ public class ThemeRenderer extends UIRenderer {
 
 	private void renderFormats() {
 		FrameBuilder builder = new FrameBuilder("theme");
+		builder.add("type", new FrameBuilder("type", service.graph().theme().type().name()));
 		usedFormats.stream().filter(u -> !u.isEmpty()).forEach(f -> builder.add("format", formatFrameOf(f)));
 		Commons.write(new File(res(Target.AndroidResource) + File.separator + "values" + File.separator + "styles.xml").toPath(), setup(new ThemeTemplate()).render(builder.toFrame()));
 	}
@@ -113,6 +114,17 @@ public class ThemeRenderer extends UIRenderer {
 		if (attribute.equals("fontWeight") && value.equals("bold")) return "700";
 		if (attribute.equals("color") && !value.startsWith("#")) return "@color/" + value;
 		if (attribute.equals("background") && !value.startsWith("#")) return "@color/" + value;
-		return value.replace("px", "dp");
+		if (value.contains("px")) return pixelsToDensityPixels(value);
+		return value;
+	}
+
+	private String pixelsToDensityPixels(String value) {
+		String[] parts = value.split(" ");
+		StringBuilder result = new StringBuilder();
+		for (String part : parts) {
+			if (result.length() > 0) result.append(" ");
+			result.append(part.contains("px") ? Math.round(Integer.parseInt(part.replace("px", "")) * 0.25) + "dp" : part);
+		}
+		return result.toString();
 	}
 }
