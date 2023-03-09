@@ -1,5 +1,6 @@
 package io.intino.alexandria.datalake.aws.measurement;
 
+import com.amazonaws.services.s3.AmazonS3;
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.Datalake;
@@ -14,12 +15,13 @@ import java.util.stream.StreamSupport;
 import static io.intino.alexandria.datalake.aws.AwsDatalake.PrefixDelimiter;
 
 public class MeasurementEventSource implements Datalake.Store.Source<MeasurementEvent> {
-    private final S3 s3;
+
+    private final AmazonS3 client;
     private final String bucketName;
     private final String prefix;
 
-    public MeasurementEventSource(S3 s3, String bucketName, String prefix) {
-        this.s3 = s3;
+    public MeasurementEventSource(AmazonS3 client, String bucketName, String prefix) {
+        this.client = client;
         this.bucketName = bucketName;
         this.prefix = prefix;
     }
@@ -32,7 +34,7 @@ public class MeasurementEventSource implements Datalake.Store.Source<Measurement
 
     @Override
     public Stream<Datalake.Store.Tub<MeasurementEvent>> tubs() {
-        return s3.keysIn(bucketName, prefix).map(key -> new MeasurementEventTub(s3, bucketName, key));
+        return S3.keysIn(client, bucketName, prefix).map(key -> new MeasurementEventTub(client, bucketName, key));
     }
 
     @Override
@@ -48,7 +50,7 @@ public class MeasurementEventSource implements Datalake.Store.Source<Measurement
 
     @Override
     public Datalake.Store.Tub<MeasurementEvent> on(Timetag tag) {
-        return new MeasurementEventTub(s3, bucketName, tubNameOf(tag));
+        return new MeasurementEventTub(client, bucketName, tubNameOf(tag));
     }
 
     private String tubNameOf(Timetag tag) {

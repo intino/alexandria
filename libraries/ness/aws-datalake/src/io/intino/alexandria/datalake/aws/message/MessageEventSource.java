@@ -1,5 +1,6 @@
 package io.intino.alexandria.datalake.aws.message;
 
+import com.amazonaws.services.s3.AmazonS3;
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.Datalake;
@@ -11,12 +12,12 @@ import java.util.stream.Stream;
 import static io.intino.alexandria.datalake.aws.AwsDatalake.PrefixDelimiter;
 
 public class MessageEventSource implements Datalake.Store.Source<MessageEvent> {
-    private final S3 s3;
+    private final AmazonS3 client;
     private final String bucketName;
     private final String prefix;
 
-    public MessageEventSource(S3 s3, String bucketName, String prefix) {
-        this.s3 = s3;
+    public MessageEventSource(AmazonS3 client, String bucketName, String prefix) {
+        this.client = client;
         this.bucketName = bucketName;
         this.prefix = prefix;
     }
@@ -30,7 +31,7 @@ public class MessageEventSource implements Datalake.Store.Source<MessageEvent> {
 
     @Override
     public Stream<Datalake.Store.Tub<MessageEvent>> tubs() {
-        return s3.keysIn(bucketName, prefix).map(key -> new MessageEventTub(s3, bucketName, key));
+        return S3.keysIn(client, bucketName, prefix).map(key -> new MessageEventTub(client, bucketName, key));
     }
 
     @Override
@@ -45,7 +46,7 @@ public class MessageEventSource implements Datalake.Store.Source<MessageEvent> {
 
     @Override
     public Datalake.Store.Tub<MessageEvent> on(Timetag tag) {
-        return new MessageEventTub(s3, bucketName, ""); // TODO
+        return new MessageEventTub(client, bucketName, ""); // TODO
     }
 
     @Override

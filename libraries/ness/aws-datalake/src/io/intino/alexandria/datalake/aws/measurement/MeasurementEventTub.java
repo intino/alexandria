@@ -1,5 +1,6 @@
 package io.intino.alexandria.datalake.aws.measurement;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.S3Object;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.AwsTub;
@@ -21,12 +22,12 @@ import static io.intino.alexandria.event.Event.Format.Measurement;
 
 public class MeasurementEventTub implements Tub<MeasurementEvent>, AwsTub {
 
-    private final S3 s3;
+    private final AmazonS3 client;
     private final String bucketName;
     private final String prefix;
 
-    public MeasurementEventTub(S3 s3, String bucketName, String prefix) {
-        this.s3 = s3;
+    public MeasurementEventTub(AmazonS3 client, String bucketName, String prefix) {
+        this.client = client;
         this.bucketName = bucketName;
         this.prefix = prefix;
     }
@@ -37,7 +38,7 @@ public class MeasurementEventTub implements Tub<MeasurementEvent>, AwsTub {
     }
 
     private String name() {
-        String[] route = prefix.split(AwsDelimiter)[0].split(PrefixDelimiter);
+        String[] route = prefix.substring(0, prefix.indexOf(AwsDelimiter)).split(PrefixDelimiter);
         return route[route.length - 1].replace(Measurement.extension(), "");
     }
 
@@ -62,6 +63,6 @@ public class MeasurementEventTub implements Tub<MeasurementEvent>, AwsTub {
 
     @Override
     public S3Object object() {
-        return s3.getObjectFrom(bucketName, prefix);
+        return S3.getObjectFrom(client, bucketName, prefix);
     }
 }
