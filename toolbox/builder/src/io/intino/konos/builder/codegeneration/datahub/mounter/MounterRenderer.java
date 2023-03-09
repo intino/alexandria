@@ -68,8 +68,12 @@ public class MounterRenderer {
 	private static Frame frameOf(CompilationContext.DataHubManifest manifest, Mounter.Event.Require r) {
 		return new FrameBuilder()
 				.add("fullType", manifest.tankClasses.get(r.tank()))
-				.add("name", r.tank().substring(r.tank().lastIndexOf(".")))
+				.add("name", name(r.tank()))
 				.toFrame();
+	}
+
+	private static String name(String tank) {
+		return tank.contains(".") ? tank.substring(tank.lastIndexOf(".") + 1) : tank;
 	}
 
 	private boolean alreadyRendered(File destination, String action) {

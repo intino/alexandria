@@ -16,13 +16,13 @@ def type(mounter)
 		$type+method...[$NL$NL]
 
 		public void handle(Event event) {
-			$type+switch...[$NL$NL]
+			$type+switch...[$NL~else ]
 		}
 	}
 end
 
 def trigger(switch)
-	if	(event.type().equals("$name")) handle(($fullType) event);
+	if (event.type().equals("$name")) handle(($fullType) event);
 end
 
 def trigger(method)
