@@ -94,21 +94,6 @@ public class AbstractBoxRenderer extends Renderer {
 	}
 
 	private Frame subscriberFrameOf(Subscriber subscriber, DataHubManifest manifest) {
-		String tankClass = manifest.tankClasses.get(subscriber.event());
-		FrameBuilder builder = subscriberFrame(subscriber, manifest);
-		if (!subscriber.splits().isEmpty())
-			subscriber.splits().forEach(s -> splitFrame(tankClass, builder, s));
-		else {
-			if (manifest.messageContexts.get(subscriber.event()).size() > 1) {
-				List<String> strings = manifest.messageContexts.get(subscriber.event());
-				strings.sort(String::compareTo);
-				for (String context : strings) splitFrame(tankClass, builder, context);
-			}
-		}
-		return builder.toFrame();
-	}
-
-	private FrameBuilder subscriberFrame(Subscriber subscriber, DataHubManifest manifest) {
 		FrameBuilder builder = new FrameBuilder("subscriber", "terminal").
 				add("package", packageName()).
 				add("name", subscriber.name$()).
@@ -120,13 +105,7 @@ public class AbstractBoxRenderer extends Renderer {
 			builder.add("durable").add("subscriberId", subscriber.asDurable().subscriberId());
 			if (subscriber.asDurable().subscriptionMode().equals(ReceiveAfterLastSeal)) builder.add("filtered");
 		}
-		return builder;
-	}
-
-	private void splitFrame(String tankClass, FrameBuilder builder, String context) {
-		builder.add("split", new FrameBuilder("split").
-				add("value", Formatters.snakeCaseToCamelCase().format(context.replace(".", "-")).toString()).
-				add("type", tankClass).toFrame());
+		return builder.toFrame();
 	}
 
 	private void connector(FrameBuilder root) {

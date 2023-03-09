@@ -1,8 +1,8 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.2.1") json
+Artifact("io.intino.alexandria", "1.2.2") json
 	Imports
-		Compile("com.google.code.gson", "gson", "2.10")
+		Compile("com.google.code.gson", "gson", "2.10.1")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 

@@ -72,7 +72,7 @@
 			<groupId>io.intino.magritte</groupId>
 			<artifactId>framework</artifactId>
 			<scope>provided</scope>
-			<version>3.0.0</version>
+			<version>3.4.4</version>
 		</dependency>
 <!--		<dependency>-->
 <!--			<groupId>io.intino.tara</groupId>-->
