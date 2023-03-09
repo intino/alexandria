@@ -96,11 +96,16 @@ public class Formatters {
 		template.add("shortType", shortType());
 		template.add("quoted", quoted());
 		template.add("customParameter", customParameter());
+		template.add("dotsWithUnderscore", dotsWithUnderscore());
 		return template;
 	}
 
 	private static Formatter customParameter() {
 		return value -> value.toString().substring(1, value.toString().length() - 1);
+	}
+
+	private static Formatter dotsWithUnderscore() {
+		return value -> value.toString().replaceAll("\\.", "_");
 	}
 
 }

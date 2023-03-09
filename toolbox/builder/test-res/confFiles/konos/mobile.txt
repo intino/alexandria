@@ -27,6 +27,7 @@ def.file
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/Dashboard.konos#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/User.konos#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/Selector.konos#true
+/Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/Timeline.konos#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/Block.konos#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/actionable/DownloadSelection.konos#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/actionable/Export.konos#true

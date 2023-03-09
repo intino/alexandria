@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 
 import static java.lang.Double.NaN;
 
-public class ItsReader implements AutoCloseable {
+public class ItlReader implements AutoCloseable {
 	private final Stream<String> lines;
 	private final DisposableResource resource;
 	private String id;
@@ -24,7 +24,7 @@ public class ItsReader implements AutoCloseable {
 	private Period period = null;
 	private String[] measurements;
 
-	public ItsReader(InputStream is) {
+	public ItlReader(InputStream is) {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 		this.resource = DisposableResource.whenDestroyed(this).thenClose(reader);
 		readHeader(reader);
