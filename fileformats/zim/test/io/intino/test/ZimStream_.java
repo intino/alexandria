@@ -49,7 +49,7 @@ public class ZimStream_ {
 						"created: 2017-03-22T12:56:18Z\n";
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		try(ZimWriter writer = new ZimWriter(out)) { // FIXME: Zim.compressinmg!!
+		try(ZimWriter writer = new ZimWriter(out)) {
 			writer.write(new MessageReader(inl).next());
 		}
 		byte[] bytes = out.toByteArray();
