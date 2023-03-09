@@ -1,5 +1,6 @@
 package io.intino.alexandria;
 
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import io.intino.alexandria.xml.Xml;
 
@@ -13,7 +14,7 @@ public class Soap {
 
 	public String writeEnvelope(Object schema, String xmlns) {
 		if (schema == null) return render(schema, "", xmlns);
-		JsonElement jsonElement = Json.gsonWriter().toJsonTree(schema);
+		JsonElement jsonElement = new GsonBuilder().create().toJsonTree(schema);
 		return render(schema, parameters(jsonElement), xmlns);
 	}
 
