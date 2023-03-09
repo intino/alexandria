@@ -1,9 +1,11 @@
 package io.intino.alexandria;
 
 import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonWriter;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.time.Instant;
 import java.util.Date;
 
@@ -21,13 +23,13 @@ public class Json {
 	}
 
 	public static void toJson(Object object, Writer writer) throws IOException {
-		try(JsonWriter jsonWriter = new JsonWriter(writer)) {
+		try (JsonWriter jsonWriter = new JsonWriter(writer)) {
 			GsonInstance.toJson(object, object.getClass(), jsonWriter);
 		}
 	}
 
 	public static void toJsonPretty(Object object, Writer writer) throws IOException {
-		try(JsonWriter jsonWriter = new JsonWriter(writer)) {
+		try (JsonWriter jsonWriter = new JsonWriter(writer)) {
 			GsonPrettyInstance.toJson(object, object.getClass(), jsonWriter);
 		}
 	}
@@ -36,8 +38,36 @@ public class Json {
 		return GsonInstance.fromJson(json, type);
 	}
 
+	public static <T> T fromJson(String json, Type typeOfT) {
+		return GsonInstance.fromJson(json, typeOfT);
+	}
+
+	public static <T> T fromJson(String json, TypeToken<T> typeOfT) {
+		return GsonInstance.fromJson(json, typeOfT);
+	}
+
+	public static <T> T fromJson(JsonElement json, Class<T> type) {
+		return GsonInstance.fromJson(json, type);
+	}
+
+	public static <T> T fromJson(JsonElement json, Type typeOfT) {
+		return GsonInstance.fromJson(json, typeOfT);
+	}
+
+	public static <T> T fromJson(JsonElement json, TypeToken<T> typeOfT) {
+		return GsonInstance.fromJson(json, typeOfT);
+	}
+
 	public static <T> T fromJson(Reader reader, Class<T> type) {
 		return GsonInstance.fromJson(reader, type);
+	}
+
+	public static <T> T fromJson(Reader json, Type typeOfT) {
+		return GsonInstance.fromJson(json, typeOfT);
+	}
+
+	public static <T> T fromJson(Reader json, TypeToken<T> typeOfT) {
+		return GsonInstance.fromJson(json, typeOfT);
 	}
 
 	public static String toString(Object object) {
@@ -51,7 +81,6 @@ public class Json {
 	public static <T> T fromString(String json, Class<T> type) {
 		return fromJson(json, type);
 	}
-
 
 	private static GsonBuilder gsonBuilder() {
 		return new GsonBuilder()

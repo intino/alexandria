@@ -1,6 +1,5 @@
 package io.intino.alexandria;
 
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import io.intino.alexandria.logger.Logger;
@@ -31,7 +30,7 @@ public class Envelope {
 			try {
 				JsonObject jsonObject = new JsonObject();
 				node.getChildren().get(0).getChildren().stream().filter(Objects::nonNull).forEach(childNode -> jsonObject.add(removeNameSpace(childNode.getNodeName()), new JsonPrimitive(childNode.getTextContent())));
-				return Json.gsonReader().fromJson(jsonObject, t);
+				return Json.fromJson(jsonObject, t);
 			} catch (Exception e) {
 				Logger.error(e);
 				return null;
