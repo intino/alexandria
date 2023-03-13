@@ -1,5 +1,6 @@
 package io.intino.konos.builder.codegeneration.datahub.mounter;
 
+import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
@@ -10,7 +11,6 @@ import io.intino.konos.model.Datamart.Mounter;
 import io.intino.konos.model.KonosGraph;
 
 import java.io.File;
-import java.util.Objects;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
@@ -58,8 +58,22 @@ public class MounterRenderer {
 		}
 	}
 
-	private String[] types(Mounter mounter, CompilationContext.DataHubManifest manifest) {
-		return mounter.asEvent().requireList().stream().map(r -> manifest.tankClasses.get(r.tank())).filter(Objects::nonNull).toArray(String[]::new);
+	private Frame[] types(Mounter mounter, CompilationContext.DataHubManifest manifest) {
+		return mounter.asEvent().requireList().stream()
+				.filter(r -> manifest.tankClasses.containsKey(r.tank()))
+				.map(r -> frameOf(manifest, r))
+				.toArray(Frame[]::new);
+	}
+
+	private static Frame frameOf(CompilationContext.DataHubManifest manifest, Mounter.Event.Require r) {
+		return new FrameBuilder()
+				.add("fullType", manifest.tankClasses.get(r.tank()))
+				.add("name", name(r.tank()))
+				.toFrame();
+	}
+
+	private static String name(String tank) {
+		return tank.contains(".") ? tank.substring(tank.lastIndexOf(".") + 1) : tank;
 	}
 
 	private boolean alreadyRendered(File destination, String action) {
