@@ -17,10 +17,8 @@ import io.intino.alexandria.ui.model.datasource.grid.GridGroupBy;
 import io.intino.alexandria.ui.model.datasource.grid.GridItem;
 import io.intino.alexandria.ui.model.datasource.grid.GridValue;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -63,8 +61,8 @@ public class Grid<DN extends GridNotifier, B extends Box, Item> extends Abstract
         return columns;
     }
 
-    public List<GridColumn> visibleColumns() {
-        return visibleColumns.stream().filter(GridColumn::visible).collect(toList());
+    public List<io.intino.alexandria.ui.model.datasource.grid.GridColumn<Item>> visibleColumns() {
+        return columns.stream().filter(this::isVisible).collect(toList());
     }
 
     public Grid<DN, B, Item> visibleColumns(List<io.intino.alexandria.ui.model.datasource.grid.GridColumn<Item>> columns) {
@@ -236,6 +234,11 @@ public class Grid<DN extends GridNotifier, B extends Box, Item> extends Abstract
     public interface ItemResolver<Item> {
         GridItem build(Item item);
         String address(io.intino.alexandria.ui.model.datasource.grid.GridColumn<Item> column, Item item);
+    }
+
+    private boolean isVisible(io.intino.alexandria.ui.model.datasource.grid.GridColumn<Item> column) {
+        GridColumn result = visibleColumns.stream().filter(c -> c.name().equals(column.name())).findFirst().orElse(null);
+        return result != null ? result.visible() : false;
     }
 
 }
