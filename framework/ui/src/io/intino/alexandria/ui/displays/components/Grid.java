@@ -64,7 +64,7 @@ public class Grid<DN extends GridNotifier, B extends Box, Item> extends Abstract
     }
 
     public List<GridColumn> visibleColumns() {
-        return visibleColumns;
+        return visibleColumns.stream().filter(GridColumn::visible).collect(toList());
     }
 
     public Grid<DN, B, Item> visibleColumns(List<io.intino.alexandria.ui.model.datasource.grid.GridColumn<Item>> columns) {
