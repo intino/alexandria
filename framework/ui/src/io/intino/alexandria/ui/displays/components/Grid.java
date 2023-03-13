@@ -63,6 +63,10 @@ public class Grid<DN extends GridNotifier, B extends Box, Item> extends Abstract
         return columns;
     }
 
+    public List<GridColumn> visibleColumns() {
+        return visibleColumns;
+    }
+
     public Grid<DN, B, Item> visibleColumns(List<io.intino.alexandria.ui.model.datasource.grid.GridColumn<Item>> columns) {
         updateVisibleColumns(schemaOf(columns));
         return this;
