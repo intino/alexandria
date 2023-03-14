@@ -3,10 +3,7 @@ package io.intino.alexandria.scheduler;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.scheduler.directory.DirectorySentinel;
 import io.intino.alexandria.scheduler.directory.DirectoryTask;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
+import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
 import java.io.File;
@@ -49,6 +46,11 @@ public class AlexandriaScheduler {
 
 	public void unscheduleJob(Trigger trigger) throws SchedulerException {
 		scheduler.unscheduleJob(trigger.getKey());
+	}
+
+
+	public void unscheduleJob(TriggerKey triggerKey) throws SchedulerException {
+		scheduler.unscheduleJob(triggerKey);
 	}
 
 	public void watchDirectory(String name, File directory, DirectoryTask task, DirectorySentinel.Event... events) throws SchedulerException {
