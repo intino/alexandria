@@ -81,5 +81,8 @@
     <orderEntry type="library" scope="PROVIDED" name="Intino: software.amazon.awssdk:protocol-core:2.20.4" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Intino: software.amazon.awssdk:auth:2.20.4" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Intino: software.amazon.awssdk:http-client-spi:2.20.4" level="project" />
+    <orderEntry type="module" module-name="aws-datalake" />
+    <orderEntry type="library" name="Intino: javax.xml.bind:jaxb-api:2.3.1" level="project" />
+    <orderEntry type="library" name="Intino: javax.activation:javax.activation-api:1.2.0" level="project" />
   </component>
 </module>

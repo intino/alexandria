@@ -24,10 +24,11 @@ import static junit.framework.TestCase.assertEquals;
 
 @Ignore
 public class EventSessionManagerTest {
-	private final File stageDir = new File("temp/stage");
-	private final File datalakeDir = new File("temp/datalake");
-	private final File treatedDir = new File("temp/treated");
-	private final File sessionDir = new File("temp/session");
+	private final File stageDir = new File("C:/Users/Joel/Desktop/temp/stage");
+	private final File datalakeDir = new File("C:/Users/Joel/Desktop/temp/datalake");
+	private final File treatedDir = new File("C:/Users/Joel/Desktop/temp/treated");
+	private final File sessionDir = new File("C:/Users/Joel/Desktop/temp/session");
+
 
 	@Test
 	public void should_create_an_event_session() throws IOException {
@@ -37,13 +38,14 @@ public class EventSessionManagerTest {
 		for (int i = 0; i < 30; i++) {
 			LocalDateTime now = LocalDateTime.of(2019, 2, 28, 16, 15 + i);
 			Message message = message(now.toInstant(ZoneOffset.UTC), i);
+			System.out.println(message.toString());
 			messageList.add(message);
 			session.put("tank1", "test", new Timetag(now, Scale.Hour), Event.Format.Message, new Tank1(message));
 		}
 		session.close();
 		handler.pushTo(stageDir);
 		new FileSessionSealer(new FileDatalake(datalakeDir), stageDir, treatedDir).seal();
-		ZimStream stream = ZimStream.of(new File("temp/datalake/messages/tank1/test/2019022816.zim"));
+		ZimStream stream = ZimStream.of(new File("C:/Users/Joel/Desktop/temp/datalake/messages/tank1/test/2019022816.zim"));
 		for (int i = 0; i < 30; i++) {
 			Message next = stream.next();
 			assertEquals(next.get("ts").data(), messageList.get(i).get("ts").data());

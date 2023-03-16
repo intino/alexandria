@@ -2,14 +2,16 @@ package io.intino.alexandria.datalake.aws.measurement;
 
 import com.amazonaws.services.s3.AmazonS3;
 import io.intino.alexandria.datalake.Datalake.Store;
+import io.intino.alexandria.datalake.aws.AwsStore;
 import io.intino.alexandria.datalake.aws.S3;
+import io.intino.alexandria.event.Event;
 import io.intino.alexandria.event.measurement.MeasurementEvent;
 
 import java.util.stream.Stream;
 
 import static io.intino.alexandria.datalake.aws.AwsDatalake.PrefixDelimiter;
 
-public class MeasurementEventStore implements Store<MeasurementEvent> {
+public class MeasurementEventStore implements Store<MeasurementEvent>, AwsStore {
     public static final String MeasurementsPrefix = "measurement";
     private final AmazonS3 client;
     private final String bucketName;
@@ -42,5 +44,15 @@ public class MeasurementEventStore implements Store<MeasurementEvent> {
 
     private static String prefixOf(String name) {
         return MeasurementsPrefix + PrefixDelimiter + name;
+    }
+
+    @Override
+    public String fileExtension() {
+        return Event.Format.Measurement.extension();
+    }
+
+    @Override
+    public String prefix() {
+        return "measurement/";
     }
 }

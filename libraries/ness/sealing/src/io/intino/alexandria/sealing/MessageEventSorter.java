@@ -24,7 +24,7 @@ public class MessageEventSorter {
 		this.tuples = new ArrayList<>();
 	}
 
-	void sort() throws IOException {
+	public void sort() throws IOException {
 		sort(file);
 	}
 

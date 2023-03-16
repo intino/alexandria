@@ -32,3 +32,5 @@ temp
 toolbox/swagger-doc/node_modules
 toolbox/swagger-doc/build
 **/credentials.txt
+libraries/ness/aws-datalake/old
+libraries/ness/aws-datalake/test

@@ -2,14 +2,16 @@ package io.intino.alexandria.datalake.aws.message;
 
 import com.amazonaws.services.s3.AmazonS3;
 import io.intino.alexandria.datalake.Datalake.Store;
+import io.intino.alexandria.datalake.aws.AwsStore;
 import io.intino.alexandria.datalake.aws.S3;
+import io.intino.alexandria.event.Event;
 import io.intino.alexandria.event.message.MessageEvent;
 
 import java.util.stream.Stream;
 
 import static io.intino.alexandria.datalake.aws.AwsDatalake.PrefixDelimiter;
 
-public class MessageEventStore implements Store<MessageEvent> {
+public class MessageEventStore implements Store<MessageEvent>, AwsStore {
     public static final String MessagePrefix = "message";
     private final AmazonS3 client;
     private final String bucketName;
@@ -42,5 +44,15 @@ public class MessageEventStore implements Store<MessageEvent> {
 
     private String prefixOf(String name) {
         return MessagePrefix + PrefixDelimiter + name;
+    }
+
+    @Override
+    public String fileExtension() {
+        return Event.Format.Message.extension();
+    }
+
+    @Override
+    public String prefix() {
+        return "message/";
     }
 }
