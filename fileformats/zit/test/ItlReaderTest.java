@@ -54,7 +54,7 @@ public class ItlReaderTest {
 		final ItlReader reader = new ItlReader(inputStream);
 		final File tempFile = Files.createTempFile("test", ".zit").toFile();
 		tempFile.deleteOnExit();
-		try (ZitWriter writer = new ZitWriter(tempFile, reader.id(), Period.of(5, ChronoUnit.MINUTES), new String[]{"price", "volume"})) {
+		try (ZitWriter writer = new ZitWriter(tempFile, reader.id(), reader.sensor(), Period.of(5, ChronoUnit.MINUTES), new String[]{"price", "volume"})) {
 			reader.data().forEach(d -> writer.put(d.ts(), d.values()));
 		} catch (Exception e) {
 			Logger.error(e);
