@@ -9,14 +9,14 @@ public class ConnectionConfig {
 	private final String clientId;
 	private final File keyStore;
 	private final File trustStore;
-	private final char[] keyStorePassword;
-	private final char[] trustStorePassword;
+	private final String keyStorePassword;
+	private final String trustStorePassword;
 
 	public ConnectionConfig(String url, String user, String password, String clientId) {
 		this(url, user, password, clientId, null, null, null, null);
 	}
 
-	public ConnectionConfig(String url, String user, String password, String clientId, File keyStore, File trustStore, char[] keyStorePassword, char[] trustStorePassword) {
+	public ConnectionConfig(String url, String user, String password, String clientId, File keyStore, File trustStore, String keyStorePassword, String trustStorePassword) {
 		this.url = url;
 		this.user = user;
 		this.password = password;
@@ -55,11 +55,11 @@ public class ConnectionConfig {
 		return trustStore;
 	}
 
-	public char[] keyStorePassword() {
+	public String keyStorePassword() {
 		return keyStorePassword;
 	}
 
-	public char[] trustStorePassword() {
+	public String trustStorePassword() {
 		return trustStorePassword;
 	}
 }
