@@ -4,17 +4,14 @@ import java.io.File;
 import java.util.Map;
 
 public abstract class BoxConfiguration {
-
 	protected Map<String, String> args;
 	protected File home;
 
 	public BoxConfiguration(String[] args) {
 		this.args = argsToMap(args);
-		if (home == null) {
-			if (this.args.get("home") != null)
-				home = new java.io.File(this.args.get("home"));
-			else home = new java.io.File("./home");
-		}
+		if (home == null) home = this.args.get("home") != null ?
+				new File(this.args.get("home")) :
+				new File("./home");
 	}
 
 	public String get(String key) {

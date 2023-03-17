@@ -36,7 +36,6 @@ public class JmsConnector implements Connector {
 	private final Map<String, List<MessageConsumer>> messageConsumers;
 	private final Map<Consumer<Event>, Integer> jmsEventConsumers;
 	private final Map<MessageConsumer, Integer> jmsMessageConsumers;
-	private final String brokerUrl;
 	private final ConnectionConfig config;
 	private final boolean transactedSession;
 	private final AtomicBoolean connected = new AtomicBoolean(false);
@@ -48,12 +47,11 @@ public class JmsConnector implements Connector {
 	private ScheduledExecutorService scheduler;
 	private final ExecutorService eventDispatcher;
 
-	public JmsConnector(String brokerUrl, ConnectionConfig config, File messageCacheDirectory) {
-		this(brokerUrl, config, false, messageCacheDirectory);
+	public JmsConnector(ConnectionConfig config, File outboxDirectory) {
+		this(config, false, outboxDirectory);
 	}
 
-	public JmsConnector(String brokerUrl, ConnectionConfig config, boolean transactedSession, File outBoxDirectory) {
-		this.brokerUrl = brokerUrl;
+	public JmsConnector(ConnectionConfig config, boolean transactedSession, File outBoxDirectory) {
 		this.config = config;
 		this.transactedSession = transactedSession;
 		producers = new HashMap<>();
@@ -75,8 +73,8 @@ public class JmsConnector implements Connector {
 	}
 
 	public void start() {
-		if (brokerUrl == null || brokerUrl.isEmpty()) {
-			Logger.warn("Invalid broker URL (" + brokerUrl + "). Connection aborted");
+		if (config.url() == null || config.url().isEmpty()) {
+			Logger.warn("Invalid broker URL (" + config.url() + "). Connection aborted");
 			return;
 		}
 		try {
@@ -92,8 +90,8 @@ public class JmsConnector implements Connector {
 	}
 
 	private void connect() throws JMSException {
-		if (!Broker.isRunning(brokerUrl)) {
-			Logger.warn("Broker (" + brokerUrl + ") unreachable .Connection aborted");
+		if (!Broker.isRunning(config.url())) {
+			Logger.warn("Broker (" + config.url() + ") unreachable .Connection aborted");
 			return;
 		}
 		initConnection();
@@ -476,13 +474,13 @@ public class JmsConnector implements Connector {
 		return new ConnectionListener() {
 			@Override
 			public void transportInterupted() {
-				Logger.warn("Connection with Data Hub (" + brokerUrl + ") interrupted!");
+				Logger.warn("Connection with Data Hub (" + config.url() + ") interrupted!");
 				connected.set(false);
 			}
 
 			@Override
 			public void transportResumed() {
-				Logger.info("Connection with Data Hub (" + brokerUrl + ") established!");
+				Logger.info("Connection with Data Hub (" + config.url() + ") established!");
 				connected.set(true);
 				recoverConsumers();
 			}
@@ -573,7 +571,7 @@ public class JmsConnector implements Connector {
 	}
 
 	private void checkConnection() {
-		if (session != null && brokerUrl.startsWith("failover") && !connected.get()) {
+		if (session != null && config.url().startsWith("failover") && !connected.get()) {
 			Logger.debug("Data-hub currently disconnected. Waiting for reconnection...");
 			return;
 		}
@@ -592,7 +590,7 @@ public class JmsConnector implements Connector {
 
 	private void initConnection() {
 		try {
-			connection = BrokerConnector.createConnection(removeAlexandriaParameters(brokerUrl), config, connectionListener());
+			connection = BrokerConnector.createConnection(config, connectionListener());
 			if (connection != null) {
 				if (config.clientId() != null && !config.clientId().isEmpty())
 					connection.setClientID(config.clientId());
@@ -601,11 +599,6 @@ public class JmsConnector implements Connector {
 		} catch (JMSException e) {
 			Logger.error(e);
 		}
-	}
-
-	private String removeAlexandriaParameters(String brokerUrl) {
-		final String url = brokerUrl.replace("waitUntilConnect=true", "");
-		return url.endsWith("?") ? url.replace("?", "") : url;
 	}
 
 	private String callback(javax.jms.Message m) {

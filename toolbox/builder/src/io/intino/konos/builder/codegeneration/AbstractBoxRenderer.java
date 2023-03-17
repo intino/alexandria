@@ -110,14 +110,19 @@ public class AbstractBoxRenderer extends Renderer {
 
 	private void connector(FrameBuilder root) {
 		if (graph.messagingServiceList().isEmpty() && context.dataHubManifest() == null) return;
-		String[] parameters = new String[]{"datahub_url", "datahub_user", "datahub_password", "datahub_clientId", "datahub_outbox_directory"};
+		List<String> parameters = Objects.requireNonNullElseGet(context.dataHubManifest().connectionParameters, () -> Arrays.asList("datahub_url", "datahub_user", "datahub_password", "datahub_clientId", "keystore_file",
+				"truststore_file", "keystore_password", "trustStore_password", "datahub_outbox_directory"));
+		List<String> additionalParameters = Objects.requireNonNullElseGet(context.dataHubManifest().additionalParameters, () -> List.of("datahub_outbox_directory"));
 		FrameBuilder builder = new FrameBuilder("connector");
 		for (String p : parameters)
-			builder.add("parameter", parameter(p, "conf", p.contains("directory") ? "file" : "standard"));
+			builder.add("parameter", parameter(p, "conf", p.contains("directory") || p.contains("file") ? "file" : "standard"));
+		for (String p : additionalParameters)
+			builder.add("additionalParameter", parameter(p, "conf", p.contains("directory") || p.contains("file") ? "file" : "standard"));
 		builder.add("package", packageName());
 		builder.add("box", boxName());
 		root.add("connector", builder.toFrame());
-		Collections.addAll(konosParameters, parameters);
+		konosParameters.addAll(parameters);
+		konosParameters.addAll(additionalParameters);
 	}
 
 	private void workflow(FrameBuilder root) {

@@ -7,19 +7,18 @@ import org.apache.activemq.ActiveMQSslConnectionFactory;
 
 import javax.jms.Connection;
 import javax.jms.JMSException;
-import java.io.File;
 import java.util.Arrays;
 
 public class BrokerConnector {
 
-	public static Connection createConnection(String url, ConnectionConfig config, ConnectionListener connectionListener) {
-		if (config.hasSSlCredentials()) return createSSLConnection(url, config, connectionListener);
-		return createPlainConnection(url, config, connectionListener);
+	public static Connection createConnection(ConnectionConfig config, ConnectionListener connectionListener) {
+		if (config.hasSSlCredentials()) return createSSLConnection(config, connectionListener);
+		return createPlainConnection(config, connectionListener);
 	}
 
-	private static Connection createPlainConnection(String brokerURL, ConnectionConfig config, ConnectionListener listener) {
+	private static Connection createPlainConnection(ConnectionConfig config, ConnectionListener listener) {
 		try {
-			ActiveMQConnection connection = (ActiveMQConnection) new ActiveMQConnectionFactory(config.user(), config.password(), brokerURL).createConnection();
+			ActiveMQConnection connection = (ActiveMQConnection) new ActiveMQConnectionFactory(config.user(), config.password(), config.url()).createConnection();
 			connection.addTransportListener(listener);
 			return connection;
 		} catch (JMSException e) {
@@ -28,11 +27,11 @@ public class BrokerConnector {
 		}
 	}
 
-	private static Connection createSSLConnection(String brokerURL, ConnectionConfig config, ConnectionListener listener) {
+	private static Connection createSSLConnection(ConnectionConfig config, ConnectionListener listener) {
 		try {
-			ActiveMQSslConnectionFactory factory = new ActiveMQSslConnectionFactory(brokerURL);
-			factory.setKeyStore(new File("../temp/datahub/client.jks").getAbsolutePath());
-			factory.setTrustStore(new File("../temp/datahub/client.jts").getAbsolutePath());
+			ActiveMQSslConnectionFactory factory = new ActiveMQSslConnectionFactory(config.url());
+			factory.setKeyStore(config.keyStore().getAbsolutePath());
+			factory.setTrustStore(config.trustStore().getAbsolutePath());
 			factory.setKeyStorePassword(Arrays.toString(config.keyStorePassword()));
 			factory.setTrustStorePassword(Arrays.toString(config.trustStorePassword()));
 			factory.setUserName(config.user());
