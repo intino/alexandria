@@ -3,7 +3,7 @@ package io.intino.alexandria.jms;
 import java.io.File;
 
 public class ConnectionConfig {
-
+	private final String url;
 	private final String user;
 	private final String password;
 	private final String clientId;
@@ -12,11 +12,12 @@ public class ConnectionConfig {
 	private final char[] keyStorePassword;
 	private final char[] trustStorePassword;
 
-	public ConnectionConfig(String user, String password, String clientId) {
-		this(user, password, clientId, null, null, null, null);
+	public ConnectionConfig(String url, String user, String password, String clientId) {
+		this(url, user, password, clientId, null, null, null, null);
 	}
 
-	public ConnectionConfig(String user, String password, String clientId, File keyStore, File trustStore, char[] keyStorePassword, char[] trustStorePassword) {
+	public ConnectionConfig(String url, String user, String password, String clientId, File keyStore, File trustStore, char[] keyStorePassword, char[] trustStorePassword) {
+		this.url = url;
 		this.user = user;
 		this.password = password;
 		this.clientId = clientId;
@@ -28,6 +29,10 @@ public class ConnectionConfig {
 
 	public boolean hasSSlCredentials() {
 		return keyStore != null;
+	}
+
+	public String url() {
+		return url;
 	}
 
 	public String user() {

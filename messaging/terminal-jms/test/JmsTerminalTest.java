@@ -18,7 +18,7 @@ public class JmsTerminalTest {
 	@Test
 	@Ignore
 	public void testRemoteDatalake() {
-		JmsConnector connector = new JmsConnector("tcp://localhost:62000?jms.blobTransferPolicy.uploadUrl=http://localhost:8081", new ConnectionConfig("monitoring", "monitoring", "test"), null);
+		JmsConnector connector = new JmsConnector( new ConnectionConfig("tcp://localhost:62000?jms.blobTransferPolicy.uploadUrl=http://localhost:8081","monitoring", "monitoring", "test"), null);
 		connector.start();
 		Datalake.Store.Tank<MessageEvent> tank = new RemoteDatalake(connector).messageStore().tank("server.Status");
 		if (tank == null) Assert.fail();
@@ -29,7 +29,7 @@ public class JmsTerminalTest {
 	@Test
 	@Ignore
 	public void testMessageOutBox() throws InterruptedException {
-		JmsConnector connector = new JmsConnector("tcp://localhost:63000", new ConnectionConfig("user1", "1234", ""), new File("outBox"));
+		JmsConnector connector = new JmsConnector( new ConnectionConfig("tcp://localhost:63000","user1", "1234", ""), new File("outBox"));
 		while (true) {
 			connector.sendEvent("lalala", new TestEvent("tt").field1("v1"));
 			Thread.sleep(10000);
@@ -39,7 +39,7 @@ public class JmsTerminalTest {
 	@Test
 	@Ignore
 	public void testPutAndHandle() throws InterruptedException {
-		JmsConnector connector = new JmsConnector("failover:(tcp://localhost:63000)", new ConnectionConfig("comercial.cuentamaestra", "comercial.cuentamaestra", "cobranza"), new File("outBox"));
+		JmsConnector connector = new JmsConnector( new ConnectionConfig("failover:(tcp://localhost:63000)","comercial.cuentamaestra", "comercial.cuentamaestra", "cobranza"), new File("outBox"));
 //		new Thread(() -> connector.attachListener("lalala", m -> System.out.println(m.toString()))).start();
 		while (true) {
 			connector.sendEvent("comercial.cuentamaestra.GestionCobro", new TestEvent("GestionCobro").field1("v1").ts(Instant.now()));
