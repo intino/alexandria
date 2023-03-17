@@ -44,11 +44,11 @@ public class AwsEventSealer {
         seal(datalakePrefix(fingerprint), fingerprint.format(), sort(fingerprint, sessions));
     }
 
-    private void seal(File datalakeFile, Format type, List<File> sessions) throws IOException {
-        try (final EventWriter<Event> writer = EventWriter.of(datalakeFile)) {
+    private void seal(File eventFile, Format type, List<File> sessions) throws IOException {
+        try (final EventWriter<Event> writer = EventWriter.of(eventFile)) {
             writer.write((Stream<Event>) streamOf(type, sessions));
         }
-        updateDatalake(datalakeFile);
+        updateDatalake(eventFile);
     }
 
     private Stream<? extends Event> streamOf(Format type, List<File> files) throws IOException {
@@ -88,43 +88,45 @@ public class AwsEventSealer {
     }
 
     private void updateDatalake(File file) {
-//        String s3Path = createS3PathOf(file);
-//        if (S3.keysIn(client, bucketName, s3Path).count() == 0)
-//            S3.uploadObjectTo(client, bucketName, s3Path, file.getAbsolutePath());
-//        else {
-//            try {
-//                File tempFile = concatFiles(S3.getObjectFrom(client, bucketName, s3Path), file);
-//                new MessageEventSorter(tempFile, tempFolder).sort();
-//                S3.uploadObjectTo(client, bucketName, s3Path, file.getAbsolutePath());
-//                tempFile.delete();
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
+        String s3Path = createS3PathOf(file);
+        S3.uploadObjectTo(client, bucketName, s3Path, merge(file, s3Path));
     }
 
-    private File concatFiles(S3Object object, File file) throws IOException {
-        File tempFile = new File(tempFolder + "/.tempFile");
-        OutputStream out = new FileOutputStream(tempFile);
-        byte[] buf = new byte[N];
-        write(out, buf, new FileInputStream(file));
-        write(out, buf, object.getObjectContent());
+    private String merge(File file, String s3Path) {
+        return (S3.keysIn(client, bucketName, s3Path).findAny().isPresent() ? mergeWithAws(file, s3Path) : file).getAbsolutePath();
+    }
 
-        out.close();
+    private File mergeWithAws(File file, String s3Path) {
+        try {
+            file = concatFiles(S3.getObjectFrom(client, bucketName, s3Path), file);
+            new MessageEventSorter(file, tempFolder).sort();
+            return file;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    private File concatFiles(S3Object objectFromAWS, File file) throws IOException {
+        File tempFile = File.createTempFile("seal", file.getName(), tempFolder);
+        write(Zim.decompressing(objectFromAWS.getObjectContent()), open(tempFile, false));
+        write(read(file), open(tempFile, true));
+        tempFile.deleteOnExit();
         return tempFile;
     }
 
-    private static void write(OutputStream out, byte[] buf, InputStream in) throws IOException {
-        int b;
-        while ( (b = in.read(buf)) >= 0)
-            out.write(buf, 0, b);
-        in.close();
+    private static OutputStream open(File tempFile, boolean append) throws IOException {
+        return Zim.compressing(new BufferedOutputStream(new FileOutputStream(tempFile, append)));
+    }
+
+    private static void write(InputStream source, OutputStream destination) throws IOException {
+        try (destination; source) {
+            source.transferTo(destination);
+        }
     }
 
     private String createS3PathOf(File file) {
         String substring = file.getAbsolutePath().substring((tempFolder + "\\Datalake\\").length(), file.getAbsolutePath().length() - ".zim".length());
-        return substring.replaceAll("\\\\", "_") + "/file.zim";
+        return substring.replaceAll("/", "_") + "/file.zim";
     }
 
     private File datalakePrefix(Fingerprint fingerprint) {

@@ -17,15 +17,25 @@ public class AwsSessionSealer implements SessionSealer {
     private final File stageDir;
     private final File tempDir;
     private final AmazonS3 client;
-    private final File treatedFile;
+    private final File treatedDir;
 
-    public AwsSessionSealer(AwsDatalake datalake, String bucketName, File stageDir, File tempDir, AmazonS3 client, File treatedFile) {
+//    public AwsSessionSealer(AwsDatalake datalake, File stageDir, File treatedDir) {
+//        this(datalake, datalake.client(), datalake.bucketName(), stageDir, treatedDir, tempDir(stageDir));
+//    }
+
+    public AwsSessionSealer(AwsDatalake datalake, AmazonS3 client, String bucketName, File stageDir, File treatedDir, File tempDir) {
         this.datalake = datalake;
+        this.client = client;
         this.bucketName = bucketName;
         this.stageDir = stageDir;
+        this.treatedDir = treatedDir;
         this.tempDir = tempDir;
-        this.client = client;
-        this.treatedFile = treatedFile;
+    }
+
+    private static File tempDir(File stageFolder) {
+        File temp = new File(stageFolder, "temp");
+        temp.mkdir();
+        return temp;
     }
 
     @Override
@@ -38,7 +48,7 @@ public class AwsSessionSealer implements SessionSealer {
     }
 
     private void sealEvents(Predicate<Datalake.Store.Tank<? extends Event>> sortingPolicy) {
-        new AwsEventSessionSealer(datalake, bucketName, stageDir, tempDir, client, treatedFile).seal(t -> check(t, sortingPolicy));
+        new AwsEventSessionSealer(datalake, client, bucketName, stageDir, treatedDir, tempDir).seal(t -> check(t, sortingPolicy));
         tempDir.delete();
     }
 
