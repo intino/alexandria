@@ -37,9 +37,7 @@ public class JmsConnector implements Connector {
 	private final Map<Consumer<Event>, Integer> jmsEventConsumers;
 	private final Map<MessageConsumer, Integer> jmsMessageConsumers;
 	private final String brokerUrl;
-	private final String user;
-	private final String password;
-	private final String clientId;
+	private final ConnectionConfig config;
 	private final boolean transactedSession;
 	private final AtomicBoolean connected = new AtomicBoolean(false);
 	private final AtomicBoolean started = new AtomicBoolean(false);
@@ -50,15 +48,13 @@ public class JmsConnector implements Connector {
 	private ScheduledExecutorService scheduler;
 	private final ExecutorService eventDispatcher;
 
-	public JmsConnector(String brokerUrl, String user, String password, String clientId, File messageCacheDirectory) {
-		this(brokerUrl, user, password, clientId, false, messageCacheDirectory);
+	public JmsConnector(String brokerUrl, ConnectionConfig config, File messageCacheDirectory) {
+		this(brokerUrl, config, false, messageCacheDirectory);
 	}
 
-	public JmsConnector(String brokerUrl, String user, String password, String clientId, boolean transactedSession, File outBoxDirectory) {
+	public JmsConnector(String brokerUrl, ConnectionConfig config, boolean transactedSession, File outBoxDirectory) {
 		this.brokerUrl = brokerUrl;
-		this.user = user;
-		this.password = password;
-		this.clientId = clientId;
+		this.config = config;
 		this.transactedSession = transactedSession;
 		producers = new HashMap<>();
 		consumers = new HashMap<>();
@@ -75,7 +71,7 @@ public class JmsConnector implements Connector {
 
 	@Override
 	public String clientId() {
-		return clientId;
+		return config.clientId();
 	}
 
 	public void start() {
@@ -596,9 +592,10 @@ public class JmsConnector implements Connector {
 
 	private void initConnection() {
 		try {
-			connection = BrokerConnector.createConnection(removeAlexandriaParameters(brokerUrl), user, password, connectionListener());
+			connection = BrokerConnector.createConnection(removeAlexandriaParameters(brokerUrl), config, connectionListener());
 			if (connection != null) {
-				if (clientId != null && !clientId.isEmpty()) connection.setClientID(clientId);
+				if (config.clientId() != null && !config.clientId().isEmpty())
+					connection.setClientID(config.clientId());
 				connection.start();
 			}
 		} catch (JMSException e) {
