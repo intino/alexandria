@@ -19,7 +19,6 @@ import io.intino.alexandria.sealing.MessageEventSorter;
 import io.intino.alexandria.zim.Zim;
 
 import java.io.*;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -76,17 +75,11 @@ class AwsEventSealer {
         return new EventReader.Empty<>();
     }
 
-    private List<File> sort(Fingerprint fingerprint, List<File> files) {
-        try {
-            for (File file : files)
-                if (fingerprint.format().equals(Format.Message) && sortingPolicy.test(fingerprint.tank())) {
-                    new MessageEventSorter(file, tmpDir).sort();
-                }
-            return files;
-        } catch (IOException e) {
-            Logger.error(e);
-            return Collections.emptyList();
-        }
+    private List<File> sort(Fingerprint fingerprint, List<File> files) throws IOException {
+        for (File file : files)
+            if (fingerprint.format().equals(Format.Message) && sortingPolicy.test(fingerprint.tank()))
+                new MessageEventSorter(file, tmpDir).sort();
+        return files;
     }
 
     private void updateDatalake(File file) {
@@ -104,7 +97,7 @@ class AwsEventSealer {
             new MessageEventSorter(file, tmpDir).sort();
             return file;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+throw new RuntimeException(e);
         }
     }
 
