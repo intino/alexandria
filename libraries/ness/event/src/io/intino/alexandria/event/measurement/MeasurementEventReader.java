@@ -76,7 +76,7 @@ public class MeasurementEventReader implements EventReader<MeasurementEvent> {
 		@Override
 		public MeasurementEvent next() {
 			Data next = stream.next();
-			return new MeasurementEvent(stream.id(), stream.id(), next.ts(), next.measurements(), next.values());
+			return new MeasurementEvent(stream.id(), stream.sensor(), next.ts(), next.measurements(), next.values());
 		}
 	}
 }
