@@ -1,4 +1,5 @@
 import io.intino.alexandria.jms.BrokerConnector;
+import io.intino.alexandria.jms.ConnectionConfig;
 import io.intino.alexandria.jms.ConnectionListener;
 import io.intino.alexandria.jms.DurableTopicConsumer;
 
@@ -8,7 +9,7 @@ import javax.jms.Session;
 
 public class ConnectionTest {
 	public static void main(String[] args) throws JMSException, InterruptedException {
-		Connection connection = BrokerConnector.createConnection("failover:(tcp://localhost:63000)", "digestor", "digestor", connectionListener());
+		Connection connection = BrokerConnector.createConnection("failover:(tcp://localhost:63000)", new ConnectionConfig("digestor", "digestor", "digestor"), connectionListener());
 		if (connection == null) return;
 		connection.setClientID("clientId"); //diferente del subscription_id
 		Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
