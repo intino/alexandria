@@ -1,7 +1,6 @@
-package io.intino.alexandria.sealing.aws;
-
 import com.amazonaws.services.s3.AmazonS3;
 import io.intino.alexandria.Session;
+import io.intino.alexandria.awscore.S3;
 import io.intino.alexandria.sealing.Stage;
 
 import java.io.InputStream;
@@ -93,7 +92,7 @@ public class AwsStage implements Stage {
         }
 
         private String extensionOf(Format type) {
-            return "." + type.name().toLowerCase() + SessionExtension;
+            return "." + type.name().toLowerCase() + Session.SessionExtension;
         }
 
         private String fileName(){

@@ -1,5 +1,3 @@
-package io.intino.alexandria.sealing.aws;
-
 import com.amazonaws.services.s3.AmazonS3;
 import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.aws.AwsDatalake;
@@ -10,10 +8,7 @@ import io.intino.alexandria.sealing.SessionSealer;
 import io.intino.alexandria.zim.ZimStream;
 
 import java.io.File;
-import java.time.Instant;
-import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class AwsSessionSealer implements SessionSealer {
 

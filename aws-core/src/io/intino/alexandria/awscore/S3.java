@@ -3,6 +3,7 @@ package io.intino.alexandria.awscore;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 
+import java.io.File;
 import java.util.stream.Stream;
 
 
@@ -28,5 +29,24 @@ public class S3 {
 
     public static Stream<S3Object> getObjectsFrom(AmazonS3 client, String bucketName, String prefix) {
         return keysIn(client, bucketName, prefix).map(key -> getObjectFrom(client, bucketName, key));
+    }
+
+    public static void uploadObjectTo(AmazonS3 client, String bucketName, String key, String fileName) {
+        PutObjectRequest objectRequest = new PutObjectRequest(bucketName, key, new File(fileName));
+        client.putObject(objectRequest);
+    }
+
+    public static void deleteContent(AmazonS3 client, String bucketName) {
+        ObjectListing objectListing = client.listObjects(bucketName);
+        while (true) {
+            deleteObjectSummary(bucketName, client, objectListing);
+            if (!objectListing.isTruncated()) break;
+            objectListing = client.listNextBatchOfObjects(objectListing);
+        }
+    }
+
+    private static void deleteObjectSummary(String bucketName, AmazonS3 client, ObjectListing objectListing) {
+        for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries())
+            client.deleteObject(bucketName, objectSummary.getKey());
     }
 }

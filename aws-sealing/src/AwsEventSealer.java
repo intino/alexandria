@@ -1,8 +1,7 @@
-package io.intino.alexandria.sealing.aws;
-
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.S3Object;
 import io.intino.alexandria.Fingerprint;
+import io.intino.alexandria.awscore.S3;
 import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.Datalake.Store;
 import io.intino.alexandria.datalake.aws.AwsStore;

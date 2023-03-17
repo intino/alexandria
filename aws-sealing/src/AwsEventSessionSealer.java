@@ -1,8 +1,6 @@
-package io.intino.alexandria.sealing.aws;
-
 import com.amazonaws.services.s3.AmazonS3;
 import io.intino.alexandria.Fingerprint;
-import io.intino.alexandria.datalake.Datalake;
+import io.intino.alexandria.Session;
 import io.intino.alexandria.datalake.aws.AwsDatalake;
 import io.intino.alexandria.datalake.file.FS;
 import io.intino.alexandria.logger.Logger;
@@ -14,7 +12,6 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static io.intino.alexandria.Session.SessionExtension;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.groupingBy;
 
@@ -63,7 +60,7 @@ class AwsEventSessionSealer {
 
     private static Stream<File> sessions(File stage) {
         if (!stage.exists()) return Stream.empty();
-        return FS.allFilesIn(stage, f -> f.getName().endsWith(SessionExtension) && f.length() > 0f);
+        return FS.allFilesIn(stage, f -> f.getName().endsWith(Session.SessionExtension) && f.length() > 0f);
     }
 
     private static Fingerprint fingerprintOf(File file) {

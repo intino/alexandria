@@ -3,6 +3,7 @@ package io.intino.alexandria.ingestion;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 
+import java.io.File;
 import java.util.stream.Stream;
 
 public class S3 {
