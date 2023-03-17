@@ -1,0 +1,14 @@
+dsl Legio
+
+Artifact(groupId = "io.intino.alexandria", version = "1.0.0") aws-core
+	Imports
+		Test(groupId = "junit", artifactId = "junit", version = "4.13")
+		Compile("com.amazonaws", "aws-java-sdk-s3", "1.12.398")
+        Compile("software.amazon.awssdk", "s3-transfer-manager", "2.20.4")
+		Compile("software.amazon.awssdk.crt", "aws-crt", "0.13.1")
+	Package(mode = ModulesAndLibrariesLinkedByManifest)
+
+Repository(identifier = "intino-maven")
+	Release("https://artifactory.intino.io/artifactory/releases")
+
+RunConfiguration local

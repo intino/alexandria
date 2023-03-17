@@ -1,4 +1,4 @@
-package io.intino.alexandria.datalake.aws;
+package io.intino.alexandria.awscore;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

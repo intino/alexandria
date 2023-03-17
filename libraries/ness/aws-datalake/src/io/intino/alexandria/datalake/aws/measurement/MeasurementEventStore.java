@@ -1,9 +1,9 @@
 package io.intino.alexandria.datalake.aws.measurement;
 
 import com.amazonaws.services.s3.AmazonS3;
+import io.intino.alexandria.awscore.S3;
 import io.intino.alexandria.datalake.Datalake.Store;
 import io.intino.alexandria.datalake.aws.AwsStore;
-import io.intino.alexandria.datalake.aws.S3;
 import io.intino.alexandria.event.Event;
 import io.intino.alexandria.event.measurement.MeasurementEvent;
 

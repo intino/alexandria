@@ -3,8 +3,8 @@ package io.intino.alexandria.datalake.aws.message;
 import com.amazonaws.services.s3.AmazonS3;
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
+import io.intino.alexandria.awscore.S3;
 import io.intino.alexandria.datalake.Datalake;
-import io.intino.alexandria.datalake.aws.S3;
 import io.intino.alexandria.event.message.MessageEvent;
 
 import java.util.stream.Stream;
