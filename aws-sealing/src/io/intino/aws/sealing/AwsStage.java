@@ -1,3 +1,5 @@
+package io.intino.aws.sealing;
+
 import com.amazonaws.services.s3.AmazonS3;
 import io.intino.alexandria.Session;
 import io.intino.alexandria.awscore.S3;

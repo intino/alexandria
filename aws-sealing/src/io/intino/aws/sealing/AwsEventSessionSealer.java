@@ -1,4 +1,5 @@
-import com.amazonaws.services.s3.AmazonS3;
+package io.intino.aws.sealing;
+
 import io.intino.alexandria.Fingerprint;
 import io.intino.alexandria.Session;
 import io.intino.alexandria.datalake.aws.AwsDatalake;
@@ -18,26 +19,22 @@ import static java.util.stream.Collectors.groupingBy;
 class AwsEventSessionSealer {
 
     private final AwsDatalake datalake;
-    private final String bucketName;
     private final File stageDir;
     private final File tmpDir;
-    private final AmazonS3 client;
     private final File treatedDir;
 
-    AwsEventSessionSealer(AwsDatalake datalake, AmazonS3 client, String bucketName, File stageDir, File treatedDir, File tmpDir) {
+    AwsEventSessionSealer(AwsDatalake datalake, File stageDir, File treatedDir, File tmpDir) {
         this.datalake = datalake;
-        this.client = client;
-        this.bucketName = bucketName;
         this.stageDir = stageDir;
         this.treatedDir = treatedDir;
         this.tmpDir = tmpDir;
     }
 
-    public void seal() {
+    void seal() {
         seal(t -> true);
     }
 
-    public void seal(Predicate<String> mustSortTank) {
+    void seal(Predicate<String> mustSortTank) {
         sessions(stageDir).collect(groupingBy(AwsEventSessionSealer::fingerprintOf)).entrySet()
                 .stream().sorted(comparing(t -> t.getKey().toString()))
                 .parallel()
@@ -46,7 +43,7 @@ class AwsEventSessionSealer {
 
     private void seal(Predicate<String> sorting, Map.Entry<Fingerprint, List<File>> e) {
         try {
-            new AwsEventSealer(datalake, bucketName, sorting, tmpDir, client).seal(e.getKey(), e.getValue());
+            new AwsEventSealer(datalake, sorting, tmpDir).seal(e.getKey(), e.getValue());
             moveTreated(e);
         } catch (IOException ex) {
             Logger.error(ex);

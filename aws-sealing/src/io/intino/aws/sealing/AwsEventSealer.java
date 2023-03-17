@@ -1,9 +1,11 @@
+package io.intino.aws.sealing;
+
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.S3Object;
 import io.intino.alexandria.Fingerprint;
 import io.intino.alexandria.awscore.S3;
-import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.Datalake.Store;
+import io.intino.alexandria.datalake.aws.AwsDatalake;
 import io.intino.alexandria.datalake.aws.AwsStore;
 import io.intino.alexandria.event.Event;
 import io.intino.alexandria.event.Event.Format;
@@ -23,24 +25,24 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public class AwsEventSealer {
+class AwsEventSealer {
 
     public static final int N = 500;
     private final Map<Format, Store<? extends Event>> stores;
     private final String bucketName;
     private final Predicate<String> sortingPolicy;
-    private final File tempFolder;
+    private final File tmpDir;
     private final AmazonS3 client;
 
-    public AwsEventSealer(Datalake datalake, String bucketName, Predicate<String> sortingPolicy, File tempFolder, AmazonS3 client) {
+    AwsEventSealer(AwsDatalake datalake, Predicate<String> sortingPolicy, File tmpDir) {
         this.stores = Map.of(Format.Message, datalake.messageStore(), Format.Measurement, datalake.measurementStore());
-        this.bucketName = bucketName;
+        this.bucketName = datalake.bucketName();
         this.sortingPolicy = sortingPolicy;
-        this.tempFolder = tempFolder;
-        this.client = client;
+        this.tmpDir = tmpDir;
+        this.client = datalake.client();
     }
 
-    public void seal(Fingerprint fingerprint, List<File> sessions) throws IOException {
+    void seal(Fingerprint fingerprint, List<File> sessions) throws IOException {
         seal(datalakePrefix(fingerprint), fingerprint.format(), sort(fingerprint, sessions));
     }
 
@@ -78,7 +80,7 @@ public class AwsEventSealer {
         try {
             for (File file : files)
                 if (fingerprint.format().equals(Format.Message) && sortingPolicy.test(fingerprint.tank())) {
-                    new MessageEventSorter(file, tempFolder).sort();
+                    new MessageEventSorter(file, tmpDir).sort();
                 }
             return files;
         } catch (IOException e) {
@@ -99,7 +101,7 @@ public class AwsEventSealer {
     private File mergeWithAws(File file, String s3Path) {
         try {
             file = concatFiles(S3.getObjectFrom(client, bucketName, s3Path), file);
-            new MessageEventSorter(file, tempFolder).sort();
+            new MessageEventSorter(file, tmpDir).sort();
             return file;
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -107,7 +109,7 @@ public class AwsEventSealer {
     }
 
     private File concatFiles(S3Object objectFromAWS, File file) throws IOException {
-        File tempFile = File.createTempFile("seal", file.getName(), tempFolder);
+        File tempFile = File.createTempFile("seal", file.getName(), tmpDir);
         write(Zim.decompressing(objectFromAWS.getObjectContent()), open(tempFile, false));
         write(read(file), open(tempFile, true));
         tempFile.deleteOnExit();
@@ -129,13 +131,13 @@ public class AwsEventSealer {
     }
 
     private String createS3PathOf(File file) {
-        String substring = file.getAbsolutePath().substring((tempFolder + "\\Datalake\\").length(), file.getAbsolutePath().length() - ".zim".length());
+        String substring = file.getAbsolutePath().substring((tmpDir + "\\Datalake\\").length(), file.getAbsolutePath().length() - ".zim".length());
         return substring.replaceAll("/", "_") + "/file.zim";
     }
 
     private File datalakePrefix(Fingerprint fingerprint) {
         AwsStore store = (AwsStore) stores.get(fingerprint.format());
-        File file = new File(tempFolder + "/Datalake", store.prefix() + fingerprint.tank() + File.separator + fingerprint.source() + File.separator + fingerprint.timetag() + store.fileExtension());
+        File file = new File(tmpDir + "/Datalake", store.prefix() + fingerprint.tank() + File.separator + fingerprint.source() + File.separator + fingerprint.timetag() + store.fileExtension());
         file.getParentFile().mkdirs();
         return file;
     }

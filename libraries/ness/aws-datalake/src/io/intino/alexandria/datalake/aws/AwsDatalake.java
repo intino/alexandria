@@ -19,6 +19,14 @@ public class AwsDatalake implements Datalake {
         this.bucketName = bucketName;
     }
 
+    public String bucketName(){
+        return bucketName;
+    }
+
+    public AmazonS3 client(){
+        return client;
+    }
+
     @Override
     public Store<MessageEvent> messageStore() {
         return new MessageEventStore(client, bucketName);
