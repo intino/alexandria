@@ -7,7 +7,6 @@ import org.apache.activemq.ActiveMQSslConnectionFactory;
 
 import javax.jms.Connection;
 import javax.jms.JMSException;
-import java.util.Arrays;
 
 public class BrokerConnector {
 
@@ -32,8 +31,8 @@ public class BrokerConnector {
 			ActiveMQSslConnectionFactory factory = new ActiveMQSslConnectionFactory(config.url());
 			factory.setKeyStore(config.keyStore().getAbsolutePath());
 			factory.setTrustStore(config.trustStore().getAbsolutePath());
-			factory.setKeyStorePassword(Arrays.toString(config.keyStorePassword()));
-			factory.setTrustStorePassword(Arrays.toString(config.trustStorePassword()));
+			factory.setKeyStorePassword(config.keyStorePassword());
+			factory.setTrustStorePassword(config.trustStorePassword());
 			factory.setUserName(config.user());
 			factory.setPassword(config.password());
 			ActiveMQConnection connection = (ActiveMQConnection) factory.createConnection();
