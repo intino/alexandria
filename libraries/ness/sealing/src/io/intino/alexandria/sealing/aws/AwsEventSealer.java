@@ -77,7 +77,7 @@ public class AwsEventSealer {
     private List<File> sort(Fingerprint fingerprint, List<File> files) {
         try {
             for (File file : files)
-                if (fingerprint.format().equals(Format.Message) && sortingPolicy.test(fingerprint.tank())){
+                if (fingerprint.format().equals(Format.Message) && sortingPolicy.test(fingerprint.tank())) {
                     new MessageEventSorter(file, tempFolder).sort();
                 }
             return files;
