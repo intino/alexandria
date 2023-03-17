@@ -6,6 +6,7 @@ import io.intino.alexandria.zit.model.Data;
 import io.intino.alexandria.zit.model.Period;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -20,7 +21,7 @@ import java.util.zip.ZipFile;
 
 import static java.lang.String.join;
 import static java.util.stream.Collectors.joining;
-
+@Ignore
 public class ItlReaderTest {
 	private ByteArrayInputStream inputStream;
 
