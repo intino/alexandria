@@ -3,6 +3,7 @@ package io.intino.alexandria.sealing;
 import com.github.luben.zstd.ZstdInputStream;
 import com.github.luben.zstd.ZstdOutputStream;
 import io.intino.alexandria.logger.Logger;
+import io.intino.alexandria.zim.Zim;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -112,7 +113,7 @@ public class MessageEventSorter {
 	}
 
 	private InputStream inputStream() throws IOException {
-		return new ZstdInputStream(new FileInputStream(file));
+		return Zim.decompressing(new FileInputStream(file));
 	}
 
 	private static class Tuple {

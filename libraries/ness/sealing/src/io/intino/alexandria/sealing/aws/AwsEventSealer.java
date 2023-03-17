@@ -15,6 +15,7 @@ import io.intino.alexandria.event.measurement.MeasurementEventReader;
 import io.intino.alexandria.event.message.MessageEventReader;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.sealing.MessageEventSorter;
+import io.intino.alexandria.zim.Zim;
 
 import java.io.*;
 import java.util.Collections;
@@ -112,6 +113,10 @@ public class AwsEventSealer {
         write(read(file), open(tempFile, true));
         tempFile.deleteOnExit();
         return tempFile;
+    }
+
+    private InputStream read(File file) throws IOException {
+        return Zim.decompressing(new BufferedInputStream(new FileInputStream(file)));
     }
 
     private static OutputStream open(File tempFile, boolean append) throws IOException {
