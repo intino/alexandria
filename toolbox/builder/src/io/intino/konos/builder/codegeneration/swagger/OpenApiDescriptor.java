@@ -32,7 +32,7 @@ public class OpenApiDescriptor {
 	private SwaggerSpec create() {
 		SwaggerSpec spec = new SwaggerSpec();
 		spec.basePath = service.basePath().isEmpty() ? "/" : service.basePath() + version();
-		spec.host = service.host().contains("{") ? "www.example.org" : service.host();
+		spec.host = service.host() == null || service.host().contains("{") ? "www.example.org" : service.host();
 		spec.schemes = service.protocols().stream().map(Enum::name).collect(Collectors.toList());
 		spec.paths = new LinkedHashMap<>();
 		spec.info = createInfo(service.info());
