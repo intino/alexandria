@@ -5,6 +5,7 @@ import io.intino.alexandria.schemas.*;
 import io.intino.alexandria.ui.displays.notifiers.TimelineNotifier;
 import io.intino.alexandria.ui.model.timeline.MeasurementDefinition;
 import io.intino.alexandria.ui.model.timeline.TimelineDatasource;
+import io.intino.alexandria.ui.model.timeline.TimelineFormatter;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -78,7 +79,9 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	public void beforeSummary(TimelineParameterInfo info) {
 		TimelineDatasource.Measurement measurement = source.measurement(info.measurement());
 		LocalDateTime current = summaryDate(measurement, info);
+		LocalDateTime from = LocalDateTime.ofInstant(measurement.from(), ZoneOffset.UTC);
 		current = current.minus(1, unitOf(info.scale()));
+		if (current.isBefore(from)) current = from;
 		saveSummaryDate(measurement, info, current);
 		notifier.refreshSummary(summaryOf(measurement));
 	}
@@ -86,7 +89,9 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	public void nextSummary(TimelineParameterInfo info) {
 		TimelineDatasource.Measurement measurement = source.measurement(info.measurement());
 		LocalDateTime current = summaryDate(measurement, info);
+		LocalDateTime to = LocalDateTime.ofInstant(measurement.to(), ZoneOffset.UTC);
 		current = current.plus(1, unitOf(info.scale()));
+		if (current.isAfter(to)) current = to;
 		saveSummaryDate(measurement, info, current);
 		notifier.refreshSummary(summaryOf(measurement));
 	}
@@ -149,8 +154,8 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 									.average(summaryValueOf(summary.average(), date))
 									.max(summaryValueOf(summary.max(), date))
 									.min(summaryValueOf(summary.min(), date))
-									.canBefore(!date.isBefore(measurement.from()))
-									.canNext(!date.isAfter(measurement.to()))
+									.canBefore(!TimelineFormatter.summaryLabel(date, scale, language()).equals(TimelineFormatter.summaryLabel(measurement.from(), scale, language())))
+									.canNext(!TimelineFormatter.summaryLabel(date, scale, language()).equals(TimelineFormatter.summaryLabel(measurement.to(), scale, language())))
 									.scale(scale.name());
 	}
 
