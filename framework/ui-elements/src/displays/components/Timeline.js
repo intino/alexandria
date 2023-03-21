@@ -25,12 +25,12 @@ const styles = theme => ({
     summaryMeasurement : { minWidth:'60px', paddingRight: '15px' },
     detailMeasurement : { minWidth:'180px' },
     value : { marginRight: '2px', fontSize: '35pt', lineHeight: 1},
-    detailValue : { fontSize: '35pt' },
-    summaryValue : { fontSize: '18pt' },
+    detailValue : { fontSize: '25pt' },
+    summaryValue : { fontSize: '16pt' },
     unit : { marginTop: '3px', fontSize: '14pt', color: theme.palette.grey.A700, paddingLeft: '5px' },
-    detailUnit : { fontSize: '14pt' },
+    detailUnit : { fontSize: '12pt' },
     summaryUnit : { position: 'absolute', fontSize: '9pt', marginLeft: '10px', marginTop: '-1px' },
-    detailTrend : { position: 'absolute', left: '0', top:'0px', marginLeft: '-8px', marginTop: '15px', width:'40px', height:'40px' },
+    detailTrend : { position: 'absolute', left: '0', top:'0px', marginLeft: '-2px', marginTop: '15px', width:'30px', height:'30px' },
     summaryTrend : { position: 'absolute', left: '0', bottom:'0px', marginLeft: '-4px', marginBottom: '-6px', width:'24px', height:'24px' },
     increased : { color: '#F44335' },
     decreased : { color: '#4D9A51' },
@@ -91,9 +91,10 @@ class Timeline extends AbstractTimeline {
 
     render() {
         if (!this.state.visible) return (<React.Fragment/>);
+        const layoutClassNames = this.props.mode === "Catalog" ? "layout vertical wrap" : "layout horizontal wrap";
         return (
             <DndProvider backend={HTML5Backend}>
-                <div className="layout horizontal wrap" onMouseEnter={this.handleMouseEnter.bind(this)} onMouseLeave={this.handleMouseLeave.bind(this)}>
+                <div className={layoutClassNames} onMouseEnter={this.handleMouseEnter.bind(this)} onMouseLeave={this.handleMouseLeave.bind(this)}>
                     {this.renderMeasurements()}
                     {this.renderHistoryDialog()}
                     {this.renderConfigurationDialog()}
@@ -212,7 +213,7 @@ class Timeline extends AbstractTimeline {
                 series: { data: data, },
                 xAxis: {
                     min: history.from,
-                    max: history.to + (3600 * 1000 * 24), // one day
+                    max: history.to,
                 },
             },
 
@@ -243,13 +244,13 @@ class Timeline extends AbstractTimeline {
     };
 
     openHistory = (measurement) => {
-        this.setState({measurement: measurement});
+        this.setState({measurement: measurement, history: { visible: true, from: null, to: null, data: [] } });
         this.requester.openHistory(measurement.name);
     };
 
 	fetch = (measurement, translate, e) => {
 	    this.chart = e.target;
-	    this.requester.fetch({ measurement: measurement, start: e.min, end: e.max });
+	    this.requester.fetch({ measurement: measurement.name, start: e.min, end: e.max });
 	};
 
 	minValue = (history, measurement) => {
@@ -263,6 +264,13 @@ class Timeline extends AbstractTimeline {
 	    if (unit == "ºC") return 120;
 	    else if (unit == "%") return 120;
 	    return null;
+	};
+
+	refreshHistory = (dataObjects) => {
+	    let data = [];
+	    for (let i=0; i<dataObjects.length; i++) { data.push([dataObjects[i].date, dataObjects[i].value]); }
+	    this.chart.series[0].setData(data);
+	    this.chart.redraw();
 	};
 
 	historyHeight = () => {

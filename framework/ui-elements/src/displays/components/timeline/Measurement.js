@@ -53,12 +53,13 @@ const TimelineMeasurement = ({ scales, measurement, index, id, moveMeasurement, 
         })
     });
     const renderDistribution = (measurement) => {
+        const decimalCount = measurement.decimalCount;
         const style = measurement.distribution.trend === "Lower" ? { color: '#F44335' } : { color: '#4D9A51' };
         return (
             <div style={{width:'150px',height:'100%',margin:'5px'}}>
                 <div style={{fontSize:'12pt',marginBottom:'3px'}}>{translate(measurement.distribution.trend)}</div>
                 <div className="layout horizontal" style={{marginBottom:'3px'}}>
-                    <Typography style={style} className={classnames(classes.value, mode === "Summary" ? classes.summaryValue : classes.detailValue)}>{measurement.distribution.value}</Typography>
+                    <Typography style={style} className={classnames(classes.value, mode === "Summary" ? classes.summaryValue : classes.detailValue)}>{Highcharts.numberFormat(measurement.distribution.value,decimalCount,',', '.')}</Typography>
                     <Typography style={{fontSize:'9pt'}} className={classes.unit}>%</Typography>
                 </div>
                 <div style={{fontSize:'10pt'}}>{translate("of the time")}</div>
@@ -142,7 +143,7 @@ const TimelineMeasurement = ({ scales, measurement, index, id, moveMeasurement, 
                 enabled: true,
                 positioner: positioner,
                 formatter: function() {
-                    return '<div style="font-size:6pt;">' + Highcharts.numberFormat(this.y,decimalCount) + (unit != null ? unit : "") + '  ' + this.x + "</div>";
+                    return '<div style="font-size:6pt;">' + Highcharts.numberFormat(this.y,decimalCount,',', '.') + (unit != null ? unit : "") + '  ' + this.x + "</div>";
                 }
             },
             plotOptions: { spline: { lineWidth: 1, states: { hover: { lineWidth: 2 } }, marker: { enabled: false } } },
@@ -156,11 +157,13 @@ const TimelineMeasurement = ({ scales, measurement, index, id, moveMeasurement, 
         };
     };
     const renderMeasurement = (measurement, mode) => {
+        const decimalCount = measurement.decimalCount;
         const style = fullView ? { backgroundColor: 'white', border: '1px dashed #999' } : { border: '1px solid transparent' };
+        const width = mode === "Catalog" ? "250px" : "150px";
         return (
-            <div style={style} className={classnames("layout vertical center", classes.measurement, mode === "Summary" ? classes.summaryMeasurement : classes.detailMeasurement)}>
+            <div style={{width:width,...style}} className={classnames("layout vertical center", classes.measurement, mode === "Summary" ? classes.summaryMeasurement : classes.detailMeasurement)}>
                 <div className="layout horizontal" >
-                    <Typography className={classnames(classes.value, mode === "Summary" ? classes.summaryValue : classes.detailValue)}>{measurement.value}</Typography>
+                    <Typography className={classnames(classes.value, mode === "Summary" ? classes.summaryValue : classes.detailValue)}>{Highcharts.numberFormat(measurement.value,decimalCount,',', '.')}</Typography>
                     <div className="layout vertical center" style={{position:'relative', height:'24px', marginLeft: '8px'}} >
                         <Typography className={classnames(classes.unit, mode === "Summary" ? classes.summaryUnit : classes.detailUnit)}>{measurement.unit}</Typography>
                         <div>
