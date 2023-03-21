@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "5.1.0") terminal-jms
+Artifact("io.intino.alexandria", "5.1.1") terminal-jms
 	Imports
 		Compile("io.intino.alexandria", "datalake", "6.0.0")
 		Compile("io.intino.alexandria", "json", "1.2.2")

@@ -283,7 +283,7 @@ public class JmsConnector implements Connector {
 
 	@Override
 	public javax.jms.Message requestResponse(String path, javax.jms.Message message) {
-		return requestResponse(path, message, -1, null);
+		return requestResponse(path, message, config.defaultTimeoutAmount(), config.defaultTimeoutUnit());
 	}
 
 	@Override
