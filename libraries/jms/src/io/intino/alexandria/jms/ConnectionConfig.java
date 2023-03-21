@@ -1,6 +1,7 @@
 package io.intino.alexandria.jms;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 public class ConnectionConfig {
 	private final String url;
@@ -11,12 +12,14 @@ public class ConnectionConfig {
 	private final File trustStore;
 	private final String keyStorePassword;
 	private final String trustStorePassword;
+	private final long defaultTimeoutAmount;
+	private final TimeUnit defaultTimeoutUnit;
 
 	public ConnectionConfig(String url, String user, String password, String clientId) {
-		this(url, user, password, clientId, null, null, null, null);
+		this(url, user, password, clientId, null, null, null, null, -1, TimeUnit.MINUTES);
 	}
 
-	public ConnectionConfig(String url, String user, String password, String clientId, File keyStore, File trustStore, String keyStorePassword, String trustStorePassword) {
+	public ConnectionConfig(String url, String user, String password, String clientId, File keyStore, File trustStore, String keyStorePassword, String trustStorePassword, long defaultTimeoutAmount, TimeUnit defaultTimeoutUnit) {
 		this.url = url;
 		this.user = user;
 		this.password = password;
@@ -25,6 +28,8 @@ public class ConnectionConfig {
 		this.trustStore = trustStore;
 		this.keyStorePassword = keyStorePassword;
 		this.trustStorePassword = trustStorePassword;
+		this.defaultTimeoutAmount = defaultTimeoutAmount;
+		this.defaultTimeoutUnit = defaultTimeoutUnit;
 	}
 
 	public boolean hasSSlCredentials() {
@@ -61,5 +66,13 @@ public class ConnectionConfig {
 
 	public String trustStorePassword() {
 		return trustStorePassword;
+	}
+
+	public long defaultTimeoutAmount() {
+		return defaultTimeoutAmount;
+	}
+
+	public TimeUnit defaultTimeoutUnit() {
+		return defaultTimeoutUnit;
 	}
 }
