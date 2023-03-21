@@ -97,17 +97,22 @@ const TimelineMeasurement = ({ scales, measurement, index, id, moveMeasurement, 
             </div>
         );
     };
+    const renderDetail = (measurement) => {
+        return (
+            <div className="layout horizontal flexible wrap" style={{padding:'5px'}}>
+                {renderDistribution(measurement)}
+                {renderSummaries(measurement)}
+                {renderSerie(measurement)}
+            </div>
+        );
+    };
     const renderDialog = (measurement, anchorRef) => {
         return (
             <Popover
                 style={{boxShadow:'none'}}
                 anchorEl={anchorRef.current} open={fullView} onClose={() => setFullView(false)}
                 anchorOrigin={{vertical: 'bottom',horizontal: 'left'}}>
-                <div className="layout horizontal flexible wrap" style={{padding:'5px'}}>
-                    {renderDistribution(measurement)}
-                    {renderSummaries(measurement)}
-                    {renderSerie(measurement)}
-                </div>
+                {renderDetail(measurement)}
             </Popover>
         );
     };
@@ -175,9 +180,12 @@ const TimelineMeasurement = ({ scales, measurement, index, id, moveMeasurement, 
     drag(drop(ref));
     return (
         <div ref={ref} style={{ ...style, opacity, position: 'relative' }} data-handler-id={handlerId} onClick={() => setFullView(!fullView)} onMouseLeave={() => setFullView(false)}>
-            {mode === "Detail" && <Icon style={{position:'absolute',zIndex:1}}><DragIndicator/></Icon>}
-            {renderMeasurement(measurement, mode)}
-            {renderDialog(measurement, ref)}
+            {mode === "Catalog" && <Icon style={{position:'absolute',zIndex:1}}><DragIndicator/></Icon>}
+            <div className="layout horizontal center">
+                {renderMeasurement(measurement, mode)}
+                {mode === "Summary" && renderDialog(measurement, ref)}
+                {mode === "Catalog" && renderDetail(measurement, ref)}
+            </div>
         </div>
     );
 };

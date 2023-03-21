@@ -42,7 +42,7 @@ class Grouping extends AbstractGrouping {
         return (
             <ListItem key={index} className={classes.group} role={undefined} dense button onClick={this.handleToggle(group)}>
                 <Checkbox className={classes.checkbox} checked={this.state.selection.indexOf(group.label) !== -1} tabIndex={-1} disableRipple/>
-                <ListItemText>
+                <ListItemText style={{margin:'0'}}>
                     <div className="layout horizontal center">
                         <div className="layout flex">{group.label}</div>
                         {group.color != null && <Typography className={classes.colorBox} variant="body2" style={{backgroundColor:group.color,marginLeft:'10px'}}></Typography>}
