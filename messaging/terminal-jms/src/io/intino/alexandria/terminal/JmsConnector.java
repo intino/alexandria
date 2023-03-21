@@ -317,6 +317,16 @@ public class JmsConnector implements Connector {
 		}
 	}
 
+	@Override
+	public long defaultTimeoutAmount() {
+		return config.defaultTimeoutAmount();
+	}
+
+	@Override
+	public TimeUnit defaultTimeoutUnit() {
+		return config.defaultTimeoutUnit();
+	}
+
 	private MessageEvent newEvent(javax.jms.Message m, Message ev) {
 		try {
 			return new MessageEvent(ev);
