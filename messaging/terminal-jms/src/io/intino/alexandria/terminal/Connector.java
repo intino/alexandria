@@ -58,6 +58,10 @@ public interface Connector {
 
 	void requestResponse(String path, Message message, String responsePath);
 
+	long defaultTimeoutAmount();
+
+	TimeUnit defaultTimeoutUnit();
+
 	interface MessageConsumer {
 		void accept(String message, String callback);
 	}
