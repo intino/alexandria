@@ -4,7 +4,7 @@ import AbstractTimeline from "../../../gen/displays/components/AbstractTimeline"
 import TimelineNotifier from "../../../gen/displays/notifiers/TimelineNotifier";
 import TimelineRequester from "../../../gen/displays/requesters/TimelineRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { ArrowDropDown, ArrowDropUp, Close, Settings } from "@material-ui/icons";
+import { ArrowDropDown, ArrowDropUp, Close, MoreHoriz } from "@material-ui/icons";
 import { Typography, Dialog, DialogActions, DialogContent, DialogContentText,
          DialogTitle, Button, Slide, IconButton, AppBar, FormControlLabel, Checkbox } from '@material-ui/core';
 import { withSnackbar } from 'notistack';
@@ -23,14 +23,14 @@ const styles = theme => ({
     scale : { cursor:'pointer',padding:'0 4px' },
     selectedScale : { backgroundColor: theme.palette.primary.main, color: 'white' },
     summaryMeasurement : { minWidth:'60px', paddingRight: '15px' },
-    detailMeasurement : { minWidth:'150px' },
+    detailMeasurement : { minWidth:'180px' },
     value : { marginRight: '2px', fontSize: '35pt', lineHeight: 1},
     detailValue : { fontSize: '35pt' },
     summaryValue : { fontSize: '18pt' },
     unit : { marginTop: '3px', fontSize: '14pt', color: theme.palette.grey.A700, paddingLeft: '5px' },
     detailUnit : { fontSize: '14pt' },
     summaryUnit : { position: 'absolute', fontSize: '9pt', marginLeft: '10px', marginTop: '-1px' },
-    detailTrend : { position: 'absolute', left: '0', top:'0px', marginLeft: '-16px', marginTop: '-15px', width:'40px', height:'40px' },
+    detailTrend : { position: 'absolute', left: '0', top:'0px', marginLeft: '-8px', marginTop: '15px', width:'40px', height:'40px' },
     summaryTrend : { position: 'absolute', left: '0', bottom:'0px', marginLeft: '-4px', marginBottom: '-6px', width:'24px', height:'24px' },
     increased : { color: '#F44335' },
     decreased : { color: '#4D9A51' },
@@ -47,6 +47,7 @@ class Timeline extends AbstractTimeline {
 		this.historyContainer = React.createRef();
 		this.state = {
 		    ...this.state,
+		    inside : false,
 		    openConfiguration : false,
 		    history : { visible: true, from: null, to: null, data: [] },
 		    measurement : null,
@@ -92,7 +93,7 @@ class Timeline extends AbstractTimeline {
         if (!this.state.visible) return (<React.Fragment/>);
         return (
             <DndProvider backend={HTML5Backend}>
-                <div className="layout horizontal wrap">
+                <div className="layout horizontal wrap" onMouseEnter={this.handleMouseEnter.bind(this)} onMouseLeave={this.handleMouseLeave.bind(this)}>
                     {this.renderMeasurements()}
                     {this.renderHistoryDialog()}
                     {this.renderConfigurationDialog()}
@@ -100,6 +101,14 @@ class Timeline extends AbstractTimeline {
                 </div>
             </DndProvider>
         );
+    };
+
+    handleMouseEnter = () => {
+        this.setState({inside: true});
+    };
+
+    handleMouseLeave = () => {
+        this.setState({inside: false});
     };
 
     renderMeasurements = () => {
@@ -297,9 +306,10 @@ class Timeline extends AbstractTimeline {
         const { classes } = this.props;
         const theme = Theme.get();
         const hasMeasurements = this.state.measurements.length > 0;
+        const color = this.state.inside ? theme.palette.primary.main : "transparent";
         return (
-            <div className="layout horizontal center" style={{marginLeft:'5px'}}>
-                {hasMeasurements && <div className="layout horizontal start"><IconButton onClick={this.openConfigurationDialog.bind(this)} size="small"><Settings style={{color:theme.palette.primary.main}}/></IconButton></div>}
+            <div className="layout horizontal center">
+                {(hasMeasurements && this.props.mode === "Summary") && <div className="layout horizontal start"><IconButton onClick={this.openConfigurationDialog.bind(this)} size="small"><MoreHoriz style={{color:color}}/></IconButton></div>}
                 <Dialog open={this.state.openConfiguration} onClose={this.handleCloseConfigurationDialog.bind(this)}>
                     <DialogTitle id="alert-dialog-title">{this.translate("Measurements")}</DialogTitle>
                     <DialogContent>

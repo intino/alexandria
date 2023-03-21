@@ -1,6 +1,5 @@
 package io.intino.alexandria.ui.displays.templates;
 
-import io.intino.alexandria.Scale;
 import io.intino.alexandria.UiFrameworkBox;
 import io.intino.alexandria.ui.model.timeline.MeasurementDefinition;
 import io.intino.alexandria.ui.model.timeline.TimelineDatasource;
@@ -22,7 +21,14 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 	@Override
 	public void init() {
 		super.init();
-		timeline.source(new TimelineDatasource() {
+		timeline1.source(source());
+		timeline1.refresh();
+		timeline2.source(source());
+		timeline2.refresh();
+	}
+
+	private TimelineDatasource source() {
+		return new TimelineDatasource() {
 			@Override
 			public String name() {
 				return "tds1";
@@ -43,8 +49,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			public List<TimelineScale> scales() {
 				return List.of(TimelineScale.Hour, TimelineScale.Day, TimelineScale.Week, TimelineScale.Month, TimelineScale.Year);
 			}
-		});
-		timeline.refresh();
+		};
 	}
 
 	private TimelineDatasource.Measurement m1(MeasurementDefinition definition) {
