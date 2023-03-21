@@ -94,21 +94,6 @@ public class AbstractBoxRenderer extends Renderer {
 	}
 
 	private Frame subscriberFrameOf(Subscriber subscriber, DataHubManifest manifest) {
-		String tankClass = manifest.tankClasses.get(subscriber.event());
-		FrameBuilder builder = subscriberFrame(subscriber, manifest);
-		if (!subscriber.splits().isEmpty())
-			subscriber.splits().forEach(s -> splitFrame(tankClass, builder, s));
-		else {
-			if (manifest.messageContexts.get(subscriber.event()).size() > 1) {
-				List<String> strings = manifest.messageContexts.get(subscriber.event());
-				strings.sort(String::compareTo);
-				for (String context : strings) splitFrame(tankClass, builder, context);
-			}
-		}
-		return builder.toFrame();
-	}
-
-	private FrameBuilder subscriberFrame(Subscriber subscriber, DataHubManifest manifest) {
 		FrameBuilder builder = new FrameBuilder("subscriber", "terminal").
 				add("package", packageName()).
 				add("name", subscriber.name$()).
@@ -120,25 +105,24 @@ public class AbstractBoxRenderer extends Renderer {
 			builder.add("durable").add("subscriberId", subscriber.asDurable().subscriberId());
 			if (subscriber.asDurable().subscriptionMode().equals(ReceiveAfterLastSeal)) builder.add("filtered");
 		}
-		return builder;
-	}
-
-	private void splitFrame(String tankClass, FrameBuilder builder, String context) {
-		builder.add("split", new FrameBuilder("split").
-				add("value", Formatters.snakeCaseToCamelCase().format(context.replace(".", "-")).toString()).
-				add("type", tankClass).toFrame());
+		return builder.toFrame();
 	}
 
 	private void connector(FrameBuilder root) {
 		if (graph.messagingServiceList().isEmpty() && context.dataHubManifest() == null) return;
-		String[] parameters = new String[]{"datahub_url", "datahub_user", "datahub_password", "datahub_clientId", "datahub_outbox_directory"};
+		List<String> parameters = Objects.requireNonNullElseGet(context.dataHubManifest().connectionParameters, () -> Arrays.asList("datahub_url", "datahub_user", "datahub_password", "datahub_clientId", "keystore_file",
+				"truststore_file", "keystore_password", "trustStore_password"));
+		List<String> additionalParameters = Objects.requireNonNullElseGet(context.dataHubManifest().additionalParameters, () -> List.of("datahub_outbox_directory"));
 		FrameBuilder builder = new FrameBuilder("connector");
 		for (String p : parameters)
-			builder.add("parameter", parameter(p, "conf", p.contains("directory") ? "file" : "standard"));
+			builder.add("parameter", parameter(p, "conf", p.contains("directory") || p.contains("file") ? "file" : "standard"));
+		for (String p : additionalParameters)
+			builder.add("additionalParameter", parameter(p, "conf", p.contains("directory") || p.contains("file") ? "file" : "standard"));
 		builder.add("package", packageName());
 		builder.add("box", boxName());
 		root.add("connector", builder.toFrame());
-		Collections.addAll(konosParameters, parameters);
+		konosParameters.addAll(parameters);
+		konosParameters.addAll(additionalParameters);
 	}
 
 	private void workflow(FrameBuilder root) {

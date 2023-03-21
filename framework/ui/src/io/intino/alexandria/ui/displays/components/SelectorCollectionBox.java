@@ -118,7 +118,7 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
         notifier.refreshSelection(this.selection.stream().map(this::valueOf).collect(toList()));
     }
 
-    public void select(String... options) {
+    public <T> void select(T... options) {
         updateSelection(Arrays.asList(options));
     }
 

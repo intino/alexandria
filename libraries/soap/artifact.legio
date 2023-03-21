@@ -1,10 +1,10 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.1.0") soap
+Artifact("io.intino.alexandria", "1.1.1") soap
 	Imports
-		Compile("io.intino.alexandria", "http", "1.5.6")
+		Compile("io.intino.alexandria", "http", "1.5.9")
 		Compile("io.intino.alexandria", "xml", "1.0.0")
-		Compile("io.intino.alexandria", "json", "1.1.0")
+		Compile("io.intino.alexandria", "json", "1.2.2")
 
 		Test("junit", "junit", "4.13.2")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)

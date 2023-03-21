@@ -259,7 +259,7 @@ def type(terminal) trigger(setup)
 end
 
 def type(connector) trigger(setup)
-	this.connector = new io.intino.alexandria.terminal.JmsConnector($parameter...[, ]);
+	this.connector = new io.intino.alexandria.terminal.JmsConnector(new io.intino.alexandria.jms.ConnectionConfig($parameter...[, ]), $additionalParameter...[,]);
 end
 
 def type(service & jmx) trigger(jmx)
@@ -531,6 +531,15 @@ def trigger(registerSoul)
 	private void notifySoulsClosed() {
 		soulsClosedListeners.forEach(l -> l.accept());
 	}
+end
+
+
+def type(conf & file) trigger(additionalParameter)
+	configuration().get("$value") == null ? null : new java.io.File(configuration().get("$value"))
+end
+
+def type(conf) trigger(additionalParameter)
+	configuration().get("$value")
 end
 
 def type(conf & file) trigger(parameter)

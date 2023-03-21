@@ -34,7 +34,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		super(box);
 	}
 
-	public enum Mode { Summary, Detail, Evolution }
+	public enum Mode { Summary, Catalog }
 
 	public <DS extends TimelineDatasource> Timeline<DN, B> source(DS source) {
 		this.source = source;
@@ -173,13 +173,13 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 
 	private List<Instant> loadCategories(TimelineDatasource.Serie serie, Instant to) {
 		List<Instant> result = new ArrayList<>(serie.values().keySet());
-		if (mode == Mode.Detail) return reverse(result);
+//		if (mode == Mode.Evolution) return reverse(result);
 		return reverse(fill(result.subList(0, Math.min(result.size(), summaryPointsCount)), to));
 	}
 
 	private List<Double> loadValues(TimelineDatasource.Serie serie) {
 		List<Double> values = new ArrayList<>(serie.values().values());
-		if (mode == Mode.Detail) return reverse(values);
+//		if (mode == Mode.Evolution) return reverse(values);
 		return reverse(fillWithZeros(values.subList(0, Math.min(values.size(), summaryPointsCount))));
 	}
 
@@ -209,7 +209,8 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	}
 
 	private String date(Instant t) {
-		return mode == Mode.Detail ? dayAndHour(t) : hour(t);
+//		return mode == Mode.Detail ? dayAndHour(t) : hour(t);
+		return hour(t);
 	}
 
 	private static final String HourFormat = "HH:mm";

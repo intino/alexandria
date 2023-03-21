@@ -17,7 +17,9 @@ export const BaseGroupingStyles = theme => ({
         color: theme.palette.grey.A700
     },
     group : {
-        paddingLeft : "0"
+        paddingLeft : "0",
+        paddingTop: "0",
+        paddingBottom: "0"
     },
     filter: {
         padding: "0 10px",
@@ -63,9 +65,9 @@ export default class BaseGrouping extends AbstractBaseGrouping {
         const { classes } = this.props;
         return (
             <div className={classes.filter}>
-                <Input style={{width:"100%"}} type="search" placeholder={this.translate("Filter...")} onChange={this.handleFilter.bind(this)}/>
+                <Input style={{width:"100%",fontSize:'8pt'}} type="search" placeholder={this.translate("Filter...")} onChange={this.handleFilter.bind(this)}/>
                 <div className={classNames("layout horizontal end-justified", classes.filterMessage)}>
-                    <div>{this.state.visibleGroups.length}</div>&nbsp;/&nbsp;<div>{this.countFilteredGroups()}&nbsp;{this.translate("groups")}</div>
+                    <div style={{fontSize:'8pt'}}>{this.state.visibleGroups.length}</div>&nbsp;/&nbsp;<div style={{fontSize:'8pt'}}>{this.countFilteredGroups()}&nbsp;{this.translate("groups")}</div>
                 </div>
             </div>
         );

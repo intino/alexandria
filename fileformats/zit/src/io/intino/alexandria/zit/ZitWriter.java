@@ -30,13 +30,14 @@ public class ZitWriter implements AutoCloseable {
 		this.resource = DisposableResource.whenDestroyed(this).thenClose(writer);
 	}
 
-	public ZitWriter(File file, String sensor, Period period, String[] sensorModel) throws IOException {
+	public ZitWriter(File file, String id, String sensor, Period period, String[] sensorModel) throws IOException {
 		this.period = period;
 		boolean exists = file.exists();
 		file.getParentFile().mkdirs();
 		this.writer = new OutputStreamWriter(Zit.compressing(new BufferedOutputStream(new FileOutputStream(file))));
 		if (!exists || file.length() == 0) {
-			writeLine("@id " + sensor);
+			writeLine("@id " + id);
+			writeLine("@sensor " + sensor);
 			writeLine("@period " + period.toString());
 			put(sensorModel);
 		}
