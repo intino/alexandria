@@ -8,23 +8,23 @@ import java.util.Arrays;
 
 public class MeasurementEvent implements Event {
 	protected final String type;
-	protected final Instant ts;
 	protected final String source;
+	protected final Instant ts;
 	protected final Measurement[] measurements;
 	protected final double[] values;
 
 	public MeasurementEvent(String type, String source, Instant ts, String[] measurements, double[] values) {
 		this.type = type;
-		this.ts = ts;
 		this.source = source;
+		this.ts = ts;
 		this.measurements = loadMeasurements(measurements);
 		this.values = values;
 	}
 
-	public MeasurementEvent(String type, Instant ts, String source, Measurement[] measurements, double[] values) {
+	public MeasurementEvent(String type, String source, Instant ts, Measurement[] measurements, double[] values) {
 		this.type = type;
-		this.ts = ts;
 		this.source = source;
+		this.ts = ts;
 		this.measurements = measurements;
 		this.values = values;
 	}
