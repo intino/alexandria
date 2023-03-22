@@ -21,6 +21,14 @@ public class MeasurementEvent implements Event {
 		this.values = values;
 	}
 
+	public MeasurementEvent(String type, Instant ts, String source, Measurement[] measurements, double[] values) {
+		this.type = type;
+		this.ts = ts;
+		this.source = source;
+		this.measurements = measurements;
+		this.values = values;
+	}
+
 	@Override
 	public String type() {
 		return type;
