@@ -82,7 +82,7 @@ public class ResourceEvent implements Event {
 		message.set("ss", ss());
 		message.set("ts", ts());
 		message.set("resource", resource().name());
-		message.set("rei", getREI().toString());
+		message.set("REI", getREI().toString());
 		return message.toString();
 	}
 

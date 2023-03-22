@@ -1,14 +1,15 @@
 package io.intino.alexandria.datalake.file.message;
 
+import io.intino.alexandria.FS;
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.Datalake.Store.Tub;
-import io.intino.alexandria.datalake.file.FS;
 import io.intino.alexandria.event.message.MessageEvent;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -28,7 +29,7 @@ public class MessageEventSource implements Datalake.Store.Source<MessageEvent> {
 
 	@Override
 	public Scale scale() {
-		return first().scale();
+		return Optional.ofNullable(first()).map(Tub::scale).orElse(null);
 	}
 
 	@Override

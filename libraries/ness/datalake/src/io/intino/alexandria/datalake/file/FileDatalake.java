@@ -3,6 +3,7 @@ package io.intino.alexandria.datalake.file;
 import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.file.measurement.MeasurementEventStore;
 import io.intino.alexandria.datalake.file.message.MessageEventStore;
+import io.intino.alexandria.datalake.file.resource.ResourceEventStore;
 import io.intino.alexandria.event.measurement.MeasurementEvent;
 import io.intino.alexandria.event.message.MessageEvent;
 
@@ -19,6 +20,7 @@ public class FileDatalake implements Datalake {
 	private void checkStore() {
 		messageStoreFolder().mkdirs();
 		measurementStoreFolder().mkdirs();
+		resourceStoreFolder().mkdirs();
 	}
 
 	@Override
@@ -29,6 +31,11 @@ public class FileDatalake implements Datalake {
 	@Override
 	public Store<MeasurementEvent> measurementStore() {
 		return new MeasurementEventStore(measurementStoreFolder());
+	}
+
+	@Override
+	public ResourceStore resourceStore() {
+		return new ResourceEventStore(resourceStoreFolder());
 	}
 
 	public File root() {
@@ -43,4 +50,7 @@ public class FileDatalake implements Datalake {
 		return new File(root, MeasurementStoreFolder);
 	}
 
+	private File resourceStoreFolder() {
+		return new File(root, ResourceStoreFolder);
+	}
 }
