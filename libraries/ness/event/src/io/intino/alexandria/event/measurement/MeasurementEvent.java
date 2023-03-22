@@ -2,16 +2,18 @@ package io.intino.alexandria.event.measurement;
 
 import io.intino.alexandria.event.Event;
 import io.intino.alexandria.event.measurement.MeasurementEvent.Measurement.Attribute;
+import io.intino.alexandria.message.Message;
 
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 
 public class MeasurementEvent implements Event {
-	private static final String MEASUREMENT_SEP = "\\|";
+	private static final String MEASUREMENT_SEP = "|";
 	private static final String ATTRIBUTE_SEP = ":";
 
 	protected final String type;
@@ -66,7 +68,7 @@ public class MeasurementEvent implements Event {
 
 	private Measurement[] loadMeasurements(String[] measurements) {
 		return Arrays.stream(measurements)
-				.map(m -> m.split(MEASUREMENT_SEP))
+				.map(m -> m.split("\\" + MEASUREMENT_SEP))
 				.map(fs -> new Measurement(fs[0], fs.length > 1 ? attributesOf(fs) : new Attribute[0]))
 				.toArray(Measurement[]::new);
 	}
@@ -96,7 +98,7 @@ public class MeasurementEvent implements Event {
 		Message message = new Message(type());
 		message.set("ss", ss());
 		message.set("ts", ts());
-		message.set("measurements", measurements);
+		message.set("measurements", Arrays.stream(measurements).map(Measurement::toString).collect(toList()));
 		message.set("values", values);
 		return message.toString();
 	}
@@ -105,7 +107,7 @@ public class MeasurementEvent implements Event {
 		private final String name;
 		private final Attribute[] attributes;
 
-		private Measurement(String name, Attribute[] attributes) {
+		public Measurement(String name, Attribute[] attributes) {
 			this.name = name;
 			this.attributes = attributes;
 		}
@@ -120,15 +122,15 @@ public class MeasurementEvent implements Event {
 
 		@Override
 		public String toString() {
-			String attributes = Arrays.stream(this.attributes).map(a -> a.name + ":" + a.value).collect(joining("|"));
-			return name + (this.attributes.length > 0 ? "|" + attributes : "");
+			String attributes = Arrays.stream(this.attributes).map(Attribute::toString).collect(joining(MEASUREMENT_SEP));
+			return name + (this.attributes.length > 0 ? MEASUREMENT_SEP + attributes : "");
 		}
 
 		public static class Attribute {
 			public final String name;
 			public final String value;
 
-			private Attribute(String[] nameValue) {
+			public Attribute(String[] nameValue) {
 				this.name = nameValue[0];
 				this.value = nameValue.length > 1 ? nameValue[1] : null;
 			}
@@ -143,7 +145,7 @@ public class MeasurementEvent implements Event {
 
 			@Override
 			public String toString() {
-				return name + "=" + value;
+				return name + ATTRIBUTE_SEP + value;
 			}
 		}
 	}
