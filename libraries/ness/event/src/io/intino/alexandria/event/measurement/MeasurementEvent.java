@@ -2,7 +2,6 @@ package io.intino.alexandria.event.measurement;
 
 import io.intino.alexandria.event.Event;
 import io.intino.alexandria.event.measurement.MeasurementEvent.Measurement.Attribute;
-import io.intino.alexandria.message.Message;
 
 import java.time.Instant;
 import java.util.Arrays;
@@ -121,7 +120,8 @@ public class MeasurementEvent implements Event {
 
 		@Override
 		public String toString() {
-			return name + ":{" + Arrays.stream(attributes).map(Object::toString).collect(Collectors.joining(",")) + "}";
+			String attributes = Arrays.stream(this.attributes).map(a -> a.name + ":" + a.value).collect(joining("|"));
+			return name + (this.attributes.length > 0 ? "|" + attributes : "");
 		}
 
 		public static class Attribute {
