@@ -1,7 +1,7 @@
 package io.intino.alexandria.datalake.file.measurement;
 
+import io.intino.alexandria.FS;
 import io.intino.alexandria.datalake.Datalake;
-import io.intino.alexandria.datalake.file.FS;
 import io.intino.alexandria.datalake.file.FileStore;
 import io.intino.alexandria.event.measurement.MeasurementEvent;
 
@@ -19,7 +19,7 @@ public class MeasurementEventStore implements Datalake.Store<MeasurementEvent>, 
 
 	@Override
 	public Stream<Tank<MeasurementEvent>> tanks() {
-		return FS.foldersIn(root).map(MeasurementEventTank::new);
+		return FS.directoriesIn(root).map(MeasurementEventTank::new);
 	}
 
 	public File directory() {

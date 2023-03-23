@@ -2,17 +2,24 @@ package io.intino.alexandria.event;
 
 import io.intino.alexandria.event.measurement.MeasurementEventReader;
 import io.intino.alexandria.event.message.MessageEventReader;
+import io.intino.alexandria.event.resource.ResourceEventReader;
+import io.intino.alexandria.logger.Logger;
 
 import java.io.*;
 import java.util.Iterator;
 
-import static io.intino.alexandria.event.util.EventFormats.formatOf;
-
 public interface EventReader<T extends Event> extends Iterator<T>, AutoCloseable {
 
+	@SuppressWarnings("unchecked")
 	static <T extends Event> EventReader<T> of(File file) throws IOException {
 		if(!file.exists()) return new Empty<>();
-		return EventReader.of(formatOf(file), IO.open(file));
+		switch(Event.Format.of(file)) {
+			case Message: return (EventReader<T>) new MessageEventReader(file);
+			case Measurement: return (EventReader<T>) new MeasurementEventReader(file);
+			case Resource: return (EventReader<T>) new ResourceEventReader(file);
+			default: Logger.error("Unknown event format " + Event.Format.of(file));
+		}
+		return new Empty<>();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -20,8 +27,10 @@ public interface EventReader<T extends Event> extends Iterator<T>, AutoCloseable
 		switch(format) {
 			case Message: return (EventReader<T>) new MessageEventReader(inputStream);
 			case Measurement: return (EventReader<T>) new MeasurementEventReader(inputStream);
+			case Resource: return (EventReader<T>) new ResourceEventReader(inputStream);
+			default: Logger.error("Unknown event format " + format);
 		}
-		return new Empty<>(); // TODO: throw exception instead?
+		return new Empty<>();
 	}
 
 	class IO {

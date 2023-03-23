@@ -1,5 +1,6 @@
 package io.intino.alexandria.event;
 
+import java.io.File;
 import java.time.Instant;
 import java.util.Arrays;
 
@@ -21,7 +22,8 @@ public interface Event extends Comparable<Event> {
 	enum Format {
 		Unknown(""),
 		Message(".zim"),
-		Measurement(".zit");
+		Measurement(".zit"),
+		Resource(".zip");
 
 		private final String extension;
 
@@ -35,6 +37,12 @@ public interface Event extends Comparable<Event> {
 
 		public static Format byExtension(String extension) {
 			return Arrays.stream(values()).filter(f -> f.extension.equalsIgnoreCase(extension)).findFirst().orElse(Unknown);
+		}
+
+		public static Format of(File file) {
+			String name = file.getName();
+			int index = name.lastIndexOf('.');
+			return Format.byExtension(index < 0 ? "" : name.substring(index));
 		}
 	}
 }

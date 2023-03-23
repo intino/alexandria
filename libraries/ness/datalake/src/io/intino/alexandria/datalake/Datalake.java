@@ -5,8 +5,11 @@ import io.intino.alexandria.Timetag;
 import io.intino.alexandria.event.Event;
 import io.intino.alexandria.event.measurement.MeasurementEvent;
 import io.intino.alexandria.event.message.MessageEvent;
+import io.intino.alexandria.event.resource.ResourceEvent;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -19,15 +22,26 @@ import static io.intino.alexandria.event.EventStream.sequence;
 public interface Datalake {
 	String MessageStoreFolder = "messages";
 	String MeasurementStoreFolder = "measurements";
+	String ResourceStoreFolder = "resources";
 
 	Store<MessageEvent> messageStore();
 
 	Store<MeasurementEvent> measurementStore();
 
+	ResourceStore resourceStore();
+
 	interface Store<T extends Event> {
 		Stream<Tank<T>> tanks();
 
 		Tank<T> tank(String name);
+
+		default Stream<T> content() {
+			return tanks().flatMap(Tank::content);
+		}
+
+		default Scale scale() {
+			return tanks().parallel().map(Tank::scale).filter(Objects::nonNull).findAny().orElse(null);
+		}
 
 		interface Tank<T extends Event> {
 			String name();
@@ -83,5 +97,10 @@ public interface Datalake {
 				return events().filter(filter);
 			}
 		}
+	}
+
+	interface ResourceStore extends Store<ResourceEvent> {
+		default Optional<ResourceEvent> find(String rei) {return find(new ResourceEvent.REI(rei));}
+		Optional<ResourceEvent> find(ResourceEvent.REI rei);
 	}
 }
