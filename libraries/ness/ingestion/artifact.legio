@@ -1,9 +1,9 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "5.0.0") ingestion
+Artifact("io.intino.alexandria", "5.0.1-SNAPSHOT") ingestion
 	Imports
-		Compile("io.intino.alexandria", "session", "2.0.0")
-		Compile("io.intino.alexandria", "event", "4.0.0")
+		Compile("io.intino.alexandria", "event", "5.0.0-SNAPSHOT")
+		Compile("io.intino.alexandria", "session", "2.0.0") > Exclude("io.intino.alexandria", "primitives")
 		Test("junit", "junit", "4.13.2")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")

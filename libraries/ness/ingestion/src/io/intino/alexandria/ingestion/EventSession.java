@@ -7,6 +7,7 @@ import io.intino.alexandria.event.Event.Format;
 import io.intino.alexandria.event.EventWriter;
 import io.intino.alexandria.logger.Logger;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
@@ -89,6 +90,4 @@ public class EventSession {
 	private EventWriter<Event> createWriter(Fingerprint fingerprint) throws IOException {
 		return EventWriter.of(fingerprint.format(), provider.outputStream(fingerprint.name(), fingerprint.format()));
 	}
-
-
 }

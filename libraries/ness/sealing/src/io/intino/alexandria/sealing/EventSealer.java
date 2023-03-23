@@ -9,24 +9,27 @@ import io.intino.alexandria.event.EventStream;
 import io.intino.alexandria.event.EventWriter;
 import io.intino.alexandria.event.measurement.MeasurementEventReader;
 import io.intino.alexandria.event.message.MessageEventReader;
+import io.intino.alexandria.event.resource.ResourceEventReader;
 import io.intino.alexandria.logger.Logger;
+import io.intino.alexandria.sealing.SessionSealer.TankNameFilter;
+import io.intino.alexandria.sealing.sorters.MessageEventSorter;
+import io.intino.alexandria.sealing.sorters.ResourceEventSorter;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class EventSealer {
 	private final Map<Event.Format, Datalake.Store<? extends Event>> stores;
-	private final Predicate<String> sortingPolicy;
+	private final TankNameFilter tankNameFilter;
 	private final File tempFolder;
 
-	public EventSealer(Datalake datalake, Predicate<String> sortingPolicy, File tempFolder) {
-		this.stores = Map.of(Event.Format.Message, datalake.messageStore(), Event.Format.Measurement, datalake.measurementStore());
-		this.sortingPolicy = sortingPolicy;
+	public EventSealer(Datalake datalake, TankNameFilter tankNameFilter, File tempFolder) {
+		this.stores = Map.of(Event.Format.Message, datalake.messageStore(), Event.Format.Measurement, datalake.measurementStore(), Event.Format.Resource, datalake.resourceStore());
+		this.tankNameFilter = tankNameFilter;
 		this.tempFolder = tempFolder;
 	}
 
@@ -34,6 +37,7 @@ public class EventSealer {
 		seal(datalakeFile(fingerprint), fingerprint.format(), sort(fingerprint, sessions));
 	}
 
+	@SuppressWarnings("unchecked")
 	private void seal(File datalakeFile, Event.Format type, List<File> sessions) throws IOException {
 		try (final EventWriter<Event> writer = EventWriter.of(datalakeFile)) {
 			writer.write((Stream<Event>) streamOf(type, sessions));
@@ -42,14 +46,23 @@ public class EventSealer {
 
 	private List<File> sort(Fingerprint fingerprint, List<File> files) {
 		try {
-			for (File file : files)
-				if (fingerprint.format().equals(Event.Format.Message) && sortingPolicy.test(fingerprint.tank()))
-					new MessageEventSorter(file, tempFolder).sort();
+			EventSorter.Factory sorter = sorterFactoryOf(fingerprint.format());
+			if(!tankNameFilter.accepts(fingerprint.tank()) || sorter == null) return Collections.emptyList();
+			for (File file : files) sorter.of(file, tempFolder).sort();
 			return files;
 		} catch (IOException e) {
 			Logger.error(e);
 			return Collections.emptyList();
 		}
+	}
+
+	public EventSorter.Factory sorterFactoryOf(Event.Format format) throws IOException {
+		switch(format) {
+			case Message: return MessageEventSorter::new;
+//			case Measurement: return new MessageEventSorter(); TODO?
+			case Resource: return ResourceEventSorter::new;
+		}
+		return null;
 	}
 
 	private Stream<? extends Event> streamOf(Event.Format type, List<File> files) throws IOException {
@@ -71,14 +84,20 @@ public class EventSealer {
 				return new MessageEventReader(file);
 			case Measurement:
 				return new MeasurementEventReader(file);
+			case Resource:
+				return new ResourceEventReader(file);
 		}
 		return new EventReader.Empty<>();
 	}
 
 	private File datalakeFile(Fingerprint fingerprint) {
 		FileStore store = (FileStore) stores.get(fingerprint.format());
-		File zimFile = new File(store.directory(), fingerprint.tank() + File.separator + fingerprint.source() + File.separator + fingerprint.timetag() + store.fileExtension());
-		zimFile.getParentFile().mkdirs();
-		return zimFile;
+		File datalakeFile = new File(store.directory(), filenameOf(fingerprint) + store.fileExtension());
+		datalakeFile.getParentFile().mkdirs();
+		return datalakeFile;
+	}
+
+	private String filenameOf(Fingerprint fp) {
+		return fp.tank() + File.separator + fp.source() + File.separator + fp.timetag();
 	}
 }

@@ -1,12 +1,9 @@
 package io.intino.alexandria.sealing;
 
-import io.intino.alexandria.datalake.Datalake.Store.Tank;
 import io.intino.alexandria.datalake.file.FileDatalake;
-import io.intino.alexandria.event.Event;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.File;
-import java.util.function.Predicate;
 
 public class FileSessionSealer implements SessionSealer {
 	private final File stageDir;
@@ -26,21 +23,22 @@ public class FileSessionSealer implements SessionSealer {
 	}
 
 	@Override
-	public synchronized void seal(Predicate<Tank<? extends Event>> sortingPolicy) {
+	public synchronized void seal(TankFilter tankFilter) {
 		try {
-			sealEvents(sortingPolicy);
+			sealEvents(tankFilter);
 		} catch (Throwable e) {
 			Logger.error(e);
 		}
 	}
 
-	private void sealEvents(Predicate<Tank<? extends Event>> sortingPolicy) {
-		new EventSessionSealer(datalake, stageDir, tempDir, treatedDir).seal(t -> check(t, sortingPolicy));
+	private void sealEvents(TankFilter tankFilter) {
+		new EventSessionSealer(datalake, stageDir, tempDir, treatedDir).seal(t -> check(t, tankFilter));
 	}
 
-	private boolean check(String tank, Predicate<Tank<? extends Event>> sortingPolicy) {
-		return sortingPolicy.test(datalake.messageStore().tank(tank))
-				|| sortingPolicy.test(datalake.measurementStore().tank(tank));
+	private boolean check(String tank, TankFilter tankFilter) {
+		return     tankFilter.accepts(datalake.messageStore().tank(tank))
+				|| tankFilter.accepts(datalake.measurementStore().tank(tank))
+				|| tankFilter.accepts(datalake.resourceStore().tank(tank));
 	}
 
 	private static File tempFolder(File stageFolder) {
