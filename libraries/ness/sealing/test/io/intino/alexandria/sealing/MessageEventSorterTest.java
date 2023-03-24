@@ -1,5 +1,6 @@
 package io.intino.alexandria.sealing;
 
+import io.intino.alexandria.sealing.sorters.MessageEventSorter;
 import org.junit.Ignore;
 import org.junit.Test;
 

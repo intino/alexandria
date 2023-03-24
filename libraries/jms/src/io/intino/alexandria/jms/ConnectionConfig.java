@@ -19,6 +19,10 @@ public class ConnectionConfig {
 		this(url, user, password, clientId, null, null, null, null, -1, TimeUnit.MINUTES);
 	}
 
+	public ConnectionConfig(String url, String user, String password, String clientId, File keyStore, File trustStore, String keyStorePassword, String trustStorePassword) {
+		this(url, user, password, clientId, keyStore, trustStore, keyStorePassword, trustStorePassword, -1, TimeUnit.MINUTES);
+	}
+
 	public ConnectionConfig(String url, String user, String password, String clientId, File keyStore, File trustStore, String keyStorePassword, String trustStorePassword, long defaultTimeoutAmount, TimeUnit defaultTimeoutUnit) {
 		this.url = url;
 		this.user = user;
