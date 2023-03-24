@@ -8,7 +8,7 @@ import 'moment-timezone';
 import Highcharts from 'highcharts';
 
 const TimelineSummaryStyles = {
-    container : { height:'100%',margin:'5px 20px 5px 0' },
+    container : { height:'100%',margin:'2px 20px 5px 0' },
     label : { fontSize:'12pt',marginRight:'5px' },
     field : { color:'#555', width: '55px' },
     value : { width: 'calc(100% - 55px)' },
@@ -17,7 +17,7 @@ const TimelineSummaryStyles = {
     date : { fontSize: '7pt', marginLeft:'3px', color: '#777' },
 };
 
-const TimelineSummary = ({ summary, width, unit, decimalCount, translate, beforeSummary, nextSummary }) => {
+const TimelineSummary = ({ summary, scales, evolution, width, unit, decimalCount, translate, beforeSummary, nextSummary }) => {
     const theme = Theme.get();
     const handleBefore = (e) => {
         e.stopPropagation();
@@ -67,16 +67,24 @@ const TimelineSummary = ({ summary, width, unit, decimalCount, translate, before
     const nextColor = summary.canNext ? theme.palette.primary.main : theme.palette.grey.A900;
     return (
         <div style={{width:width + "px",...TimelineSummaryStyles.container}}>
+            <div className="layout horizontal start">
+                <div className="layout horizontal start flex">
+                    <div className="layout vertical"><Typography style={TimelineSummaryStyles.label}>{summary.label}</Typography></div>
+                    <div className="layout horizontal">
+                        <IconButton disabled={!summary.canBefore} onClick={handleBefore} size="small" style={{color:beforeColor}}><NavigateBefore style={TimelineSummaryStyles.icon}/></IconButton>
+                        <IconButton disabled={!summary.canNext} onClick={handleNext} size="small" style={{color:nextColor}}><NavigateNext style={TimelineSummaryStyles.icon}/></IconButton>
+                    </div>
+                </div>
+                <div style={{marginLeft:'15px'}}>{scales}</div>
+            </div>
             <div className="layout horizontal">
-                <div className="layout vertical"><Typography style={TimelineSummaryStyles.label}>{summary.label}</Typography></div>
-                <div className="layout horizontal">
-                    <IconButton disabled={!summary.canBefore} onClick={handleBefore} size="small" style={{color:beforeColor}}><NavigateBefore style={TimelineSummaryStyles.icon}/></IconButton>
-                    <IconButton disabled={!summary.canNext} onClick={handleNext} size="small" style={{color:nextColor}}><NavigateNext style={TimelineSummaryStyles.icon}/></IconButton>
+                {evolution}
+                <div style={{width:'100%',marginLeft:'15px'}}>
+                    {renderIndicator(translate("Average"), average())}
+                    {renderIndicator("Max", max())}
+                    {renderIndicator("Min", min())}
                 </div>
             </div>
-            {renderIndicator(translate("Average"), average())}
-            {renderIndicator("Max", max())}
-            {renderIndicator("Min", min())}
         </div>
     );
 };

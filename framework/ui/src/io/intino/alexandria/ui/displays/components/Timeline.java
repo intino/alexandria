@@ -83,7 +83,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		current = current.minus(1, unitOf(info.scale()));
 		if (current.isBefore(from)) current = from;
 		saveSummaryDate(measurement, info, current);
-		notifier.refreshSummary(summaryOf(measurement));
+		refreshViews(measurement);
 	}
 
 	public void nextSummary(TimelineParameterInfo info) {
@@ -93,12 +93,13 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		current = current.plus(1, unitOf(info.scale()));
 		if (current.isAfter(to)) current = to;
 		saveSummaryDate(measurement, info, current);
-		notifier.refreshSummary(summaryOf(measurement));
+		refreshViews(measurement);
 	}
 
 	public void changeScale(TimelineParameterInfo info) {
-		measurementScales.put(info.measurement(), TimelineDatasource.TimelineScale.valueOf(info.scale()));
-		notifier.refreshSummary(summaryOf(source.measurement(info.measurement())));
+		TimelineDatasource.TimelineScale scale = TimelineDatasource.TimelineScale.valueOf(info.scale());
+		measurementScales.put(info.measurement(), scale);
+		refreshViews(source.measurement(info.measurement()));
 	}
 
 	@Override
@@ -120,8 +121,8 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 
 	public void fetch(TimelineHistoryFetch fetch) {
 		TimelineDatasource.Measurement measurement = source.measurement(fetch.measurement());
-		Map<Instant, Double> values = measurement.serie(fetch.start(), fetch.end()).values();
-		notifier.refreshHistory(reverse(values.entrySet().stream().map(this::historyEntryOf).collect(Collectors.toList())));
+		Map<Instant, Double> values = measurement.serie(scale(measurement), fetch.start(), fetch.end()).values();
+		notifier.refreshHistory(values.entrySet().stream().map(this::historyEntryOf).collect(Collectors.toList()));
 	}
 
 	private TimelineHistoryEntry historyEntryOf(Map.Entry<Instant, Double> entry) {
@@ -133,17 +134,15 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		return new TimelineMeasurement()
 				.name(definition.name())
 				.value(measurement.value())
+				.min(measurement.min() != null ? String.valueOf(measurement.min()) : null)
+				.max(measurement.max() != null ? String.valueOf(measurement.max()) : null)
+				.percentage(measurement.percentage() != null ? String.valueOf(measurement.percentage()) : null)
 				.label(definition.label(language()))
 				.unit(definition.unit())
 				.decimalCount(definition.decimalCount())
-				.trend(TimelineMeasurement.Trend.valueOf(measurement.trend().name()))
-				.distribution(distributionOf(measurement))
 				.summary(summaryOf(measurement))
-				.serie(serieOf(measurement));
-	}
-
-	private TimelineDistribution distributionOf(TimelineDatasource.Measurement measurement) {
-		return new TimelineDistribution().value(measurement.distribution()).trend(TimelineDistribution.Trend.valueOf(measurement.distributionTrend().name()));
+				.serie(serieOf(measurement))
+				.customView(measurement.customHtmlView(scale(measurement)));
 	}
 
 	private TimelineSummary summaryOf(TimelineDatasource.Measurement measurement) {
@@ -165,7 +164,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 
 	private TimelineSerie serieOf(TimelineDatasource.Measurement measurement) {
 		TimelineSerie result = new TimelineSerie();
-		TimelineDatasource.Serie serie = measurement.serie();
+		TimelineDatasource.Serie serie = measurement.serie(scale(measurement));
 		result.name(serie.name());
 		result.categories(categoriesOf(serie, measurement.to()));
 		result.values(loadValues(serie));
@@ -179,13 +178,13 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	private List<Instant> loadCategories(TimelineDatasource.Serie serie, Instant to) {
 		List<Instant> result = new ArrayList<>(serie.values().keySet());
 //		if (mode == Mode.Evolution) return reverse(result);
-		return reverse(fill(result.subList(0, Math.min(result.size(), summaryPointsCount)), to));
+		return fill(reverse(result).subList(0, Math.min(result.size(), summaryPointsCount)), to);
 	}
 
 	private List<Double> loadValues(TimelineDatasource.Serie serie) {
 		List<Double> values = new ArrayList<>(serie.values().values());
 //		if (mode == Mode.Evolution) return reverse(values);
-		return reverse(fillWithZeros(values.subList(0, Math.min(values.size(), summaryPointsCount))));
+		return fillWithZeros(reverse(values).subList(0, Math.min(values.size(), summaryPointsCount)));
 	}
 
 	private TimelineDatasource.Measurement measurement(MeasurementDefinition definition) {
@@ -271,6 +270,12 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	private void saveSummaryDate(TimelineDatasource.Measurement measurement, TimelineParameterInfo info, LocalDateTime current) {
 		if (!summaryDates.containsKey(info.measurement())) summaryDates.put(info.measurement(), new HashMap<>());
 		summaryDates.get(info.measurement()).put(TimelineDatasource.TimelineScale.valueOf(info.scale()), current);
+	}
+
+	private void refreshViews(TimelineDatasource.Measurement measurement) {
+		notifier.refreshSummary(summaryOf(measurement));
+		notifier.refreshSerie(serieOf(measurement));
+		notifier.refreshCustomView(measurement.customHtmlView(scale(measurement)));
 	}
 
 }

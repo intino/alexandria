@@ -182,6 +182,8 @@ Component timeline
 	Notification refreshMeasurementsVisibility as Object(TimelineMeasurementVisibility) List
 	Notification refreshMeasurementsSorting as Object(TimelineMeasurementSorting) List
 	Notification refreshSummary as Object(TimelineSummary)
+	Notification refreshSerie as Object(TimelineSerie)
+	Notification refreshCustomView as Text
 	Notification showHistoryDialog as Object(TimelineHistory)
 	Request openHistory as Text
 	Request fetch as Object(TimelineHistoryFetch)

@@ -80,7 +80,7 @@ public abstract class SignAction<DN extends SignActionNotifier, B extends Box> e
 
 	public void failure(SignActionSignatureFailure failure) {
 		notifyUser(translate("An error ocurred when signing"), UserMessage.Type.Error);
-		errorListener.accept(new SignErrorEvent(this, failure.code(), failure.message()));
+		errorListener.accept(new SignErrorEvent(this, failure != null ? failure.code() : "-", failure != null ? failure.message() : "-"));
 	}
 
 	public SignAction<DN, B> onSign(SignListener listener) {
