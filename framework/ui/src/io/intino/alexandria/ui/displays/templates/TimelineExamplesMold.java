@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.UiFrameworkBox;
+import io.intino.alexandria.ui.model.TimeScale;
 import io.intino.alexandria.ui.model.timeline.MeasurementDefinition;
 import io.intino.alexandria.ui.model.timeline.TimelineDatasource;
 import io.intino.alexandria.ui.model.timeline.TimelineDatasource.TimelineScale;
@@ -54,21 +55,6 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 
 	private TimelineDatasource.Measurement m1(MeasurementDefinition definition) {
 		return new TimelineDatasource.Measurement() {
-			@Override
-			public Trend trend() {
-				if (speed() == 0) return Trend.None;
-				return speed() > 0 ? Trend.Increased : Trend.Decreased;
-			}
-
-			@Override
-			public double distribution() {
-				return 5;
-			}
-
-			@Override
-			public DistributionTrend distributionTrend() {
-				return DistributionTrend.Lower;
-			}
 
 			@Override
 			public Instant from() {
@@ -131,17 +117,22 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			}
 
 			@Override
-			public double speed() {
-				return 0;
+			public Double min() {
+				return null;
 			}
 
 			@Override
-			public double acceleration() {
-				return 11;
+			public Double max() {
+				return null;
 			}
 
 			@Override
-			public TimelineDatasource.Serie serie() {
+			public Double percentage() {
+				return null;
+			}
+
+			@Override
+			public TimelineDatasource.Serie serie(TimelineScale scale) {
 				return new TimelineDatasource.Serie() {
 					@Override
 					public String name() {
@@ -166,8 +157,13 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			}
 
 			@Override
-			public TimelineDatasource.Serie serie(Instant start, Instant end) {
-				return serie();
+			public TimelineDatasource.Serie serie(TimelineScale scale, Instant start, Instant end) {
+				return serie(scale);
+			}
+
+			@Override
+			public String customHtmlView(TimelineScale scale) {
+				return "<div style=\"width:100%\">soy un custom view</div>";
 			}
 
 		};
@@ -175,21 +171,6 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 
 	private TimelineDatasource.Measurement m2(MeasurementDefinition definition) {
 		return new TimelineDatasource.Measurement() {
-			@Override
-			public Trend trend() {
-				if (acceleration() == 0) return Trend.None;
-				return acceleration() > 0 ? Trend.Increased : Trend.Decreased;
-			}
-
-			@Override
-			public double distribution() {
-				return 10;
-			}
-
-			@Override
-			public DistributionTrend distributionTrend() {
-				return DistributionTrend.Upper;
-			}
 
 			@Override
 			public Instant from() {
@@ -248,21 +229,26 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 
 			@Override
 			public double value() {
-				return 100;
+				return 3300;
 			}
 
 			@Override
-			public double speed() {
-				return 0;
+			public Double min() {
+				return -10000.0;
 			}
 
 			@Override
-			public double acceleration() {
-				return 10;
+			public Double max() {
+				return 10000.0;
 			}
 
 			@Override
-			public TimelineDatasource.Serie serie() {
+			public Double percentage() {
+				return 2.5;
+			}
+
+			@Override
+			public TimelineDatasource.Serie serie(TimelineScale scale) {
 				return new TimelineDatasource.Serie() {
 					@Override
 					public String name() {
@@ -277,7 +263,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			}
 
 			@Override
-			public TimelineDatasource.Serie serie(Instant start, Instant end) {
+			public TimelineDatasource.Serie serie(TimelineScale scale, Instant start, Instant end) {
 				return new TimelineDatasource.Serie() {
 					@Override
 					public String name() {
@@ -289,6 +275,11 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 						return Collections.emptyMap();
 					}
 				};
+			}
+
+			@Override
+			public String customHtmlView(TimelineScale scale) {
+				return null;
 			}
 
 		};

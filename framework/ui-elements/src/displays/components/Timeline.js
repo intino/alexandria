@@ -23,14 +23,16 @@ const styles = theme => ({
     scale : { cursor:'pointer',padding:'0 4px' },
     selectedScale : { backgroundColor: theme.palette.primary.main, color: 'white' },
     summaryMeasurement : { minWidth:'60px', paddingRight: '15px' },
-    detailMeasurement : { minWidth:'180px' },
+    catalogMeasurement : { minWidth:'180px' },
     value : { marginRight: '2px', fontSize: '35pt', lineHeight: 1},
-    detailValue : { fontSize: '25pt' },
+    catalogValue : { fontSize: '25pt' },
     summaryValue : { fontSize: '16pt' },
-    unit : { marginTop: '3px', fontSize: '14pt', color: theme.palette.grey.A700, paddingLeft: '5px' },
-    detailUnit : { fontSize: '12pt' },
+    unit : { marginTop: '1px', fontSize: '14pt', color: theme.palette.grey.A700 },
+    infoUnit : { color: '#555', marginRight: '5px', marginLeft: '1px', fontSize: '8pt' },
+    infoValue : { color:'#555', fontSize:'9pt' },
+    catalogUnit : { fontSize: '12pt' },
     summaryUnit : { position: 'absolute', fontSize: '9pt', marginLeft: '10px', marginTop: '-1px' },
-    detailTrend : { position: 'absolute', left: '0', top:'0px', marginLeft: '-2px', marginTop: '15px', width:'30px', height:'30px' },
+    catalogTrend : { position: 'absolute', left: '0', top:'0px', marginLeft: '-2px', marginTop: '15px', width:'30px', height:'30px' },
     summaryTrend : { position: 'absolute', left: '0', bottom:'0px', marginLeft: '-4px', marginBottom: '-6px', width:'24px', height:'24px' },
     increased : { color: '#F44335' },
     decreased : { color: '#4D9A51' },
@@ -82,6 +84,16 @@ class Timeline extends AbstractTimeline {
 
     refreshSummary = (summary) => {
         this.selectedMeasurement.summary = summary;
+        this.setState({measurements: this.state.measurements})
+    };
+
+    refreshSerie = (serie) => {
+        this.selectedMeasurement.serie = serie;
+        this.setState({measurements: this.state.measurements})
+    };
+
+    refreshCustomView = (view) => {
+        this.selectedMeasurement.customView = view;
         this.setState({measurements: this.state.measurements})
     };
 
@@ -317,7 +329,7 @@ class Timeline extends AbstractTimeline {
         const color = this.state.inside ? theme.palette.primary.main : "transparent";
         return (
             <div className="layout horizontal center">
-                {(hasMeasurements && this.props.mode === "Summary") && <div className="layout horizontal start"><IconButton onClick={this.openConfigurationDialog.bind(this)} size="small"><MoreHoriz style={{color:color}}/></IconButton></div>}
+                {(false && hasMeasurements && this.props.mode === "Summary") && <div className="layout horizontal start"><IconButton onClick={this.openConfigurationDialog.bind(this)} size="small"><MoreHoriz style={{color:color}}/></IconButton></div>}
                 <Dialog open={this.state.openConfiguration} onClose={this.handleCloseConfigurationDialog.bind(this)}>
                     <DialogTitle id="alert-dialog-title">{this.translate("Measurements")}</DialogTitle>
                     <DialogContent>

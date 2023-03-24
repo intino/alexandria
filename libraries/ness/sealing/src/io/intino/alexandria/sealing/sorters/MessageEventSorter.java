@@ -1,8 +1,9 @@
-package io.intino.alexandria.sealing;
+package io.intino.alexandria.sealing.sorters;
 
 import com.github.luben.zstd.ZstdInputStream;
 import com.github.luben.zstd.ZstdOutputStream;
 import io.intino.alexandria.logger.Logger;
+import io.intino.alexandria.sealing.EventSorter;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -13,33 +14,28 @@ import java.util.List;
 
 import static java.time.Instant.parse;
 
-public class MessageEventSorter {
-	private final File file;
-	private final File temp;
+public class MessageEventSorter extends EventSorter {
+
 	private final List<Tuple> tuples;
 
 	public MessageEventSorter(File file, File tempFolder) throws IOException {
-		this.file = file;
-		this.temp = File.createTempFile("event", ".inl", tempFolder);
+		super(file, File.createTempFile("event", ".inl", tempFolder));
 		this.tuples = new ArrayList<>();
 	}
 
-	void sort() throws IOException {
-		sort(file);
-	}
-
-	void sort(File destination) throws IOException {
+	@Override
+	public void sort(File destination) throws IOException {
 		try {
 			read();
-			tuples.sort(Comparator.comparing(t -> t.ts));
+			tuples.sort(Comparator.naturalOrder());
 			write(outputStream(destination));
 			Files.delete(temp.toPath());
-		} catch (IOException io) {
+		} catch (IOException exception) {
 			if (temp.exists()) {
 				Logger.warn("Deleting inl temporal file " + file.getAbsolutePath());
 				Files.delete(temp.toPath());
 			}
-			throw io;
+			throw exception;
 		}
 	}
 
@@ -115,13 +111,18 @@ public class MessageEventSorter {
 		return new ZstdInputStream(new FileInputStream(file));
 	}
 
-	private static class Tuple {
+	private static class Tuple implements Comparable<Tuple> {
 		Instant ts;
 		long next;
 
 		public Tuple(Instant ts, long next) {
 			this.ts = ts;
 			this.next = next;
+		}
+
+		@Override
+		public int compareTo(Tuple o) {
+			return ts.compareTo(o.ts);
 		}
 	}
 }
