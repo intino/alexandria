@@ -12,8 +12,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
+import java.util.Set;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -23,7 +25,11 @@ public class EventSealer_ {
 	@Test
 	public void sealResources() throws IOException {
 		File destinationFile = new File("temp/datalake/resources/Log/ss/20230327.zip");
-		if(destinationFile.exists()) assertSorted(destinationFile);
+		Set<Instant> datalakeEventTsSet = new HashSet<>();
+		if(destinationFile.exists()) {
+			assertSorted(destinationFile);
+			readEventTsSet(destinationFile, datalakeEventTsSet);
+		}
 
 		createResourceFilesToSort(10);
 
@@ -35,8 +41,14 @@ public class EventSealer_ {
 		System.out.println("Sealing...");
 		sealer.seal();
 
+		assertAllPreviousEventsArePresent(destinationFile, datalakeEventTsSet);
 		assertSorted(destinationFile);
 		System.out.println("Test ended. All events sealed and sorted in destination");
+	}
+
+	private void assertAllPreviousEventsArePresent(File file, Set<Instant> tsSet) throws IOException {
+		EventStream.of(file).forEach(e -> tsSet.remove(e.ts()));
+		assertTrue(tsSet.isEmpty());
 	}
 
 	private void createResourceFilesToSort(int count) throws IOException {
@@ -70,5 +82,9 @@ public class EventSealer_ {
 			if(ts != null) assertFalse(ts.isAfter(event.ts()));
 			ts = event.ts();
 		}
+	}
+
+	private void readEventTsSet(File file, Set<Instant> set) throws IOException {
+		EventStream.of(file).forEach(e -> set.add(e.ts()));
 	}
 }
