@@ -15,16 +15,16 @@ import io.intino.alexandria.sealing.SessionSealer.TankNameFilter;
 import io.intino.alexandria.sealing.sorters.MessageEventSorter;
 import io.intino.alexandria.sealing.sorters.ResourceEventSorter;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -57,9 +57,9 @@ public class EventSealer {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void seal(File datalakeFile, Event.Format type, List<File> sessions) throws IOException {
-		try (final EventWriter<Event> writer = EventWriter.of(datalakeFile)) {
-			writer.write((Stream<Event>) streamOf(type, sessions));
+	private void seal(File datalakeFile, Event.Format format, List<File> sortedSessions) throws IOException {
+		try (final EventWriter<Event> writer = EventWriter.of(datalakeFile, true)) {
+			writer.write((Stream<Event>) streamOf(format, sortedSessions));
 		}
 	}
 
@@ -67,7 +67,7 @@ public class EventSealer {
 		try {
 			EventSorter.Factory sorter = sorterFactoryOf(fingerprint.format());
 			if(!tankNameFilter.accepts(fingerprint.tank()) || sorter == null) return Collections.emptyList();
-			return (shouldSortInParallel(files)) ? parallelSort(sorter, files) : sequentialSort(sorter, files);
+			return shouldSortInParallel(files) ? parallelSort(sorter, files) : sequentialSort(sorter, files);
 		} catch (Throwable e) {
 			Logger.error(e);
 			return Collections.emptyList();
@@ -115,29 +115,23 @@ public class EventSealer {
 		return null;
 	}
 
-	private Stream<? extends Event> streamOf(Event.Format type, List<File> files) throws IOException {
-		if (files.size() == 1) return new EventStream<>(readerOf(type, files.get(0)));
-		return EventStream.merge(files.stream().map(file -> {
-			try {
-				return new EventStream<>(readerOf(type, files.get(0)));
-			} catch (IOException e) {
-				Logger.error(e);
-				return Stream.empty();
-			}
-		}));
+	private Stream<? extends Event> streamOf(Event.Format format, List<File> files) throws IOException {
+		if (files.size() == 1) return EventStream.of(files.get(0));
+		return EventStream.merge(files.stream().map(file -> readEventsFromFile(format, file)));
+	}
+
+	private Stream<? extends Event> readEventsFromFile(Event.Format format, File file) {
+		try {
+			return new EventStream<>(readerOf(format, file));
+		} catch (IOException e) {
+			Logger.error(e); // TODO
+			return Stream.empty();
+		}
 	}
 
 	private EventReader<? extends Event> readerOf(Event.Format type, File file) throws IOException {
-		if (!file.exists()) return new EventReader.Empty<>();
-		switch (type) {
-			case Message:
-				return new MessageEventReader(file);
-			case Measurement:
-				return new MeasurementEventReader(file);
-			case Resource:
-				return new ResourceEventReader(file);
-		}
-		return new EventReader.Empty<>();
+		if(!file.exists()) return new EventReader.Empty<>();
+		return EventReader.of(type, new BufferedInputStream(new FileInputStream(file)));
 	}
 
 	private File datalakeFile(Fingerprint fingerprint) {
