@@ -14,6 +14,7 @@ import history from "alexandria-ui-elements/src/util/History";
 import Select from "react-select";
 import {RiseLoader} from "react-spinners";
 import Theme from "app-elements/gen/Theme";
+import classNames from "classnames";
 import { SelectorComboBoxStyles, SelectorComboBoxTextViewStyles } from "./SelectorComboBox";
 
 const GridSelectorStyles = {
@@ -127,6 +128,7 @@ class Grid extends AbstractGrid {
                 sortColumn={this.state.sortColumn}
                 sortDirection={this.state.sortDirection}
                 onGridSort={this.sortColumns.bind(this)}
+                onRowClick={this.handleRowClick.bind(this)}
                 toolbar={
                     <ToolsPanel.AdvancedToolbar>
                         <div className="layout horizontal flex center">
@@ -305,9 +307,24 @@ class Grid extends AbstractGrid {
         const { classes } = this.props;
         const type = column.type;
         const value = this.rowValue(data.value);
-        if (type === "Link") return (<Link className={classes.link} component="button" onClick={this.handleCellClick.bind(this, column, data)}>{value}</Link>);
+        if (type === "Link") return (<Link className={classNames(classes.link)} component="button" onClick={this.handleCellClick.bind(this, column, data)}>{value}</Link>);
         else if (type === "Number" || type === "Date") return (<div style={{textAlign:'right'}}>{value}</div>);
         return (<div>{value}</div>);
+    };
+
+    handleRowClick = (row, data, c, e) => {
+        const columns = this.linkColumns();
+        if (columns.length <= 0) return;
+        const column = columns[0];
+        const dataValue = data[column.name];
+        const value = this.rowValue(dataValue);
+        const address = this.rowAddress(dataValue);
+        if (address != null) history.push(address, {});
+        this.requester.cellClick({ column: column.name, columnIndex: 0, row: value, rowIndex: row });
+    };
+
+    linkColumns = () => {
+        return this.state.columns.filter(c => c.type === "Link");
     };
 
     handleCellClick = (column, data) => {

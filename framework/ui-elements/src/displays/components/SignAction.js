@@ -15,8 +15,6 @@ export default class SignAction extends AbstractSignAction {
 
 	constructor(props) {
 		super(props);
-		this.notifier = new SignActionNotifier(this);
-		this.requester = new SignActionRequester(this);
 		this.behavior = new AutoFirmaBehavior(this);
 		this.initialized = false;
         this.checkProtocol = false;
