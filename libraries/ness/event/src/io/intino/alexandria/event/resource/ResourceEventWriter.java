@@ -1,12 +1,14 @@
 package io.intino.alexandria.event.resource;
 
 import io.intino.alexandria.event.EventWriter;
+import io.intino.alexandria.logger.Logger;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipOutputStream;
 
 import static io.intino.alexandria.event.resource.ResourceHelper.serializeMetadata;
@@ -37,11 +39,19 @@ public class ResourceEventWriter implements EventWriter<ResourceEvent> {
 
 	@Override
 	public void write(ResourceEvent event) throws IOException {
-		ZipEntry entry = new ZipEntry(event.getREI().resourceId());
-		entry.setExtra(serializeMetadata(event, file));
-		zip.putNextEntry(entry);
-		try(InputStream resourceData = event.resource().stream()) {
-			resourceData.transferTo(zip);
+		try {
+			ZipEntry entry = new ZipEntry(event.getREI().resourceId());
+			entry.setExtra(serializeMetadata(event, file));
+			zip.putNextEntry(entry);
+			try(InputStream resourceData = event.resource().stream()) {
+				resourceData.transferTo(zip);
+			}
+		} catch (ZipException e) {
+			if(e.getMessage().toLowerCase().contains("duplicate entry")) {
+				Logger.warn(e.getMessage());
+			} else {
+				throw e;
+			}
 		}
 	}
 

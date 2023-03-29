@@ -7,6 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/test-res" type="java-test-resource" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -34,10 +35,9 @@
     <orderEntry type="library" scope="TEST" name="Intino: commons-io:commons-io:2.11.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:datalake:7.0.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:event:5.0.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.0.6-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:json:1.2.2" level="project" />
     <orderEntry type="library" name="Intino: com.google.code.gson:gson:2.10.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Intino: io.intino.alexandria:primitives:1.1.0-SNAPSHOT" level="project" />
-    <orderEntry type="module" module-name="ingestion" scope="TEST" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: io.intino.alexandria:ingestion:5.0.1-SNAPSHOT" level="project" />
   </component>
 </module>
