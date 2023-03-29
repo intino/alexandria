@@ -7,10 +7,12 @@ import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.FileTub;
 import io.intino.alexandria.event.EventStream;
 import io.intino.alexandria.event.resource.ResourceEvent;
+import io.intino.alexandria.event.resource.ZipFileEntryInputStream;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -77,7 +79,7 @@ public class ResourceEventTub implements Datalake.Store.Tub<ResourceEvent>, File
 	@SuppressWarnings("all")
 	private ResourceEvent toResourceEvent(String resourceName, ZipEntry entry) {
 		Map<String, String> metadata = Json.fromJson(new String(entry.getExtra(), UTF_8), Map.class);
-		io.intino.alexandria.Resource resource = new Resource(resourceName, () -> new ZipFile(zip).getInputStream(entry));
+		io.intino.alexandria.Resource resource = new Resource(resourceName, () -> new ZipFileEntryInputStream(new ZipFile(zip), entry));
 		resource.metadata().putAll(metadata);
 		return ResourceEvent.of(resource);
 	}

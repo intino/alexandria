@@ -9,7 +9,6 @@ import java.io.*;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import static io.intino.alexandria.event.resource.ResourceEvent.REI.ID_SEP;
@@ -87,7 +86,7 @@ public class ZipResourceReader implements Iterator<Resource>, AutoCloseable {
 
 	@SuppressWarnings("all")
 	private Resource.InputStreamProvider openZipFileEntry(String filename, String entryName) {
-		return () -> new ZipFileInputStream(filename, entryName);
+		return () -> new ZipFileEntryInputStream(filename, entryName);
 	}
 
 	@Override
@@ -109,80 +108,4 @@ public class ZipResourceReader implements Iterator<Resource>, AutoCloseable {
 		return inputStream instanceof ZipInputStream ? (ZipInputStream) inputStream : new ZipInputStream(inputStream);
 	}
 
-	private static class ZipFileInputStream extends InputStream {
-
-		private final ZipFile zipFile;
-		private final InputStream inputStream;
-
-		public ZipFileInputStream(String filename, String entryName) throws IOException {
-			zipFile = new ZipFile(filename);
-			inputStream = zipFile.getInputStream(zipFile.getEntry(entryName));
-		}
-
-		@Override
-		public int read() throws IOException {
-			return inputStream.read();
-		}
-
-		@Override
-		public int read(byte[] b) throws IOException {
-			return inputStream.read(b);
-		}
-
-		@Override
-		public int read(byte[] b, int off, int len) throws IOException {
-			return inputStream.read(b, off, len);
-		}
-
-		@Override
-		public byte[] readAllBytes() throws IOException {
-			return inputStream.readAllBytes();
-		}
-
-		@Override
-		public byte[] readNBytes(int len) throws IOException {
-			return inputStream.readNBytes(len);
-		}
-
-		@Override
-		public int readNBytes(byte[] b, int off, int len) throws IOException {
-			return inputStream.readNBytes(b, off, len);
-		}
-
-		@Override
-		public long skip(long n) throws IOException {
-			return inputStream.skip(n);
-		}
-
-		@Override
-		public int available() throws IOException {
-			return inputStream.available();
-		}
-
-		@Override
-		public void close() throws IOException {
-			inputStream.close();
-			zipFile.close();
-		}
-
-		@Override
-		public void mark(int readlimit) {
-			inputStream.mark(readlimit);
-		}
-
-		@Override
-		public void reset() throws IOException {
-			inputStream.reset();
-		}
-
-		@Override
-		public boolean markSupported() {
-			return inputStream.markSupported();
-		}
-
-		@Override
-		public long transferTo(OutputStream out) throws IOException {
-			return inputStream.transferTo(out);
-		}
-	}
 }

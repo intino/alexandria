@@ -1,6 +1,5 @@
 package io.intino.alexandria;
 
-import java.sql.Time;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,7 +13,6 @@ import java.util.stream.StreamSupport;
 
 import static java.lang.Integer.parseInt;
 import static java.util.Collections.singletonList;
-import static java.util.Objects.requireNonNull;
 
 public class Timetag implements Comparable<Timetag> {
 	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
