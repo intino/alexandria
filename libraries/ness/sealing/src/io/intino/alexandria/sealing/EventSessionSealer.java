@@ -36,7 +36,7 @@ public class EventSessionSealer {
 	public void seal(TankNameFilter tankNameFilter) {
 		sessions(stageDir).collect(groupingBy(EventSessionSealer::fingerprintOf)).entrySet()
 				.stream().sorted(comparing(t -> t.getKey().toString()))
-				.parallel()
+//				.parallel()
 				.forEach(e -> seal(tankNameFilter, e));
 	}
 

@@ -19,14 +19,14 @@ import static org.junit.Assert.*;
 
 public class ResourceEventSorterTest {
 
-	private static final File THE_ZIP_FILE = new File("../temp/sorter_test.zip");
+	private static final File THE_ZIP_FILE = new File("temp/sorter_test.zip");
 	private static final int NUM_EVENTS = 100000;
 
 	@BeforeClass
 	public static void createZipFile() {
 		THE_ZIP_FILE.delete();
 		Random random = new Random(System.currentTimeMillis());
-		int[] offsets = random.ints(NUM_EVENTS, 0, 1_000_000).toArray();
+		int[] offsets = random.ints(NUM_EVENTS, 0, 100000).toArray();
 		Instant ts = Instant.now();
 		byte[] bytes = new byte[8 * 1024];
 		try(EventWriter<ResourceEvent> writer = new ResourceEventWriter(THE_ZIP_FILE)) {

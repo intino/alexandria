@@ -16,9 +16,17 @@ public interface EventWriter<T extends Event> extends AutoCloseable {
 		return EventWriter.of(file, false);
 	}
 
-	@SuppressWarnings("unchecked")
+	static <T extends Event> EventWriter<T> of(Event.Format format, File file) throws IOException {
+		return EventWriter.of(format, file, false);
+	}
+
 	static <T extends Event> EventWriter<T> of(File file, boolean append) throws IOException {
-		switch(Event.Format.of(file)) {
+		return EventWriter.of(Event.Format.of(file), file, append);
+	}
+
+	@SuppressWarnings("unchecked")
+	static <T extends Event> EventWriter<T> of(Event.Format format, File file, boolean append) throws IOException {
+		switch(format) {
 			case Message: return (EventWriter<T>) new MessageEventWriter(file, append);
 			case Measurement: return (EventWriter<T>) new MeasurementEventWriter(file, append);
 			case Resource: return (EventWriter<T>) new ResourceEventWriter(file, append);

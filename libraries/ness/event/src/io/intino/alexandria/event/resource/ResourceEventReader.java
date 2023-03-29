@@ -2,6 +2,7 @@ package io.intino.alexandria.event.resource;
 
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.event.EventReader;
+import io.intino.alexandria.resourcecleaner.DisposableResource;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -63,11 +64,12 @@ public class ResourceEventReader implements EventReader<ResourceEvent> {
 		return iterator.next();
 	}
 
-	public static class ResourceToEventIterator implements Iterator<ResourceEvent> {
+	public static class ResourceToEventIterator implements Iterator<ResourceEvent>, AutoCloseable {
 
 		private final Iterator<Resource> iterator;
 
 		public ResourceToEventIterator(Iterator<Resource> iterator) {
+			DisposableResource.whenDestroyed(this).thenClose(iterator);
 			this.iterator = iterator;
 		}
 
@@ -79,6 +81,11 @@ public class ResourceEventReader implements EventReader<ResourceEvent> {
 		@Override
 		public ResourceEvent next() {
 			return ResourceEvent.of(iterator.next());
+		}
+
+		@Override
+		public void close() throws Exception {
+			if(iterator instanceof AutoCloseable) ((AutoCloseable) iterator).close();
 		}
 	}
 }

@@ -3,15 +3,12 @@ package io.intino.alexandria.event.resource;
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.event.EventReader.IO;
 import io.intino.alexandria.logger.Logger;
+import io.intino.alexandria.resourcecleaner.DisposableResource;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import static io.intino.alexandria.event.resource.ResourceEvent.REI.ID_SEP;
@@ -21,6 +18,7 @@ import static java.util.Objects.requireNonNull;
 
 public class ZipResourceReader implements Iterator<Resource>, AutoCloseable {
 
+	private final DisposableResource resource;
 	private final ZipInputStream zip;
 	private final File file;
 	private ZipEntry nextEntry;
@@ -45,6 +43,7 @@ public class ZipResourceReader implements Iterator<Resource>, AutoCloseable {
 
 	/** If file is null, then it forces the ResourceEvent elements to load ALL its content into memory on creation.*/
 	public ZipResourceReader(ZipInputStream zip, File file) throws IOException {
+		this.resource = DisposableResource.whenDestroyed(this).thenClose(zip);
 		this.zip = requireNonNull(zip);
 		this.nextEntry = zip.getNextEntry();
 		this.file = file;
@@ -87,15 +86,13 @@ public class ZipResourceReader implements Iterator<Resource>, AutoCloseable {
 
 	@SuppressWarnings("all")
 	private Resource.InputStreamProvider openZipFileEntry(String filename, String entryName) {
-		return () -> {
-			ZipFile zipFile = new ZipFile(filename);
-			return zipFile.getInputStream(zipFile.getEntry(entryName));
-		};
+		return () -> new ZipFileEntryInputStream(filename, entryName);
 	}
 
 	@Override
 	public void close() throws Exception {
 		zip.close();
+		resource.close();
 	}
 
 	private void tryAdvance() {
@@ -110,4 +107,5 @@ public class ZipResourceReader implements Iterator<Resource>, AutoCloseable {
 	private static ZipInputStream zip(InputStream inputStream) {
 		return inputStream instanceof ZipInputStream ? (ZipInputStream) inputStream : new ZipInputStream(inputStream);
 	}
+
 }

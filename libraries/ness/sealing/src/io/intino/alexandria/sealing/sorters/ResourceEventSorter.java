@@ -3,7 +3,6 @@ package io.intino.alexandria.sealing.sorters;
 import io.intino.alexandria.sealing.EventSorter;
 
 import java.io.*;
-import java.nio.channels.Channels;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.zip.ZipEntry;

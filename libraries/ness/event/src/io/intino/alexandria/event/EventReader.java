@@ -12,8 +12,13 @@ public interface EventReader<T extends Event> extends Iterator<T>, AutoCloseable
 
 	@SuppressWarnings("unchecked")
 	static <T extends Event> EventReader<T> of(File file) throws IOException {
+		return EventReader.of(Event.Format.of(file), file);
+	}
+
+	@SuppressWarnings("unchecked")
+	static <T extends Event> EventReader<T> of(Event.Format format, File file) throws IOException {
 		if(!file.exists()) return new Empty<>();
-		switch(Event.Format.of(file)) {
+		switch(format) {
 			case Message: return (EventReader<T>) new MessageEventReader(file);
 			case Measurement: return (EventReader<T>) new MeasurementEventReader(file);
 			case Resource: return (EventReader<T>) new ResourceEventReader(file);

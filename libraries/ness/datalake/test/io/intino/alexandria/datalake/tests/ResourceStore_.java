@@ -1,6 +1,5 @@
 package io.intino.alexandria.datalake.tests;
 
-import io.intino.alexandria.Resource;
 import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.file.FileDatalake;
 import io.intino.alexandria.event.EventWriter;
