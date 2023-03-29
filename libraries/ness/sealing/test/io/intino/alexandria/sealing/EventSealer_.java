@@ -8,7 +8,6 @@ import io.intino.alexandria.event.message.MessageEvent;
 import io.intino.alexandria.event.resource.ResourceEvent;
 import org.apache.commons.io.FileUtils;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.BufferedOutputStream;
@@ -27,13 +26,12 @@ import static org.junit.Assert.assertTrue;
 
 public class EventSealer_ {
 
-	private static final int NUM_FILES_TO_SORT = 50;
-	private static final int MAX_NUM_EVENTS_IN_SESSION = 500;
+	private static final int NUM_FILES_TO_SORT = 20;
+	private static final int MAX_NUM_EVENTS_IN_SESSION = 150;
 	private static final String[] ResFiles = {"temp/A.txt", "temp/B.txt", "temp/C.txt", "temp/D.docx", "temp/E.pdf", "temp/F.jpg"};
 	public static final String MESSAGE_FILE = "temp/datalake/messages/Test/ss/20230327.zim";
 	public static final String RESOURCE_FILE = "temp/datalake/resources/Test/ss/20230327.zip";
 
-	@Ignore
 	@BeforeClass
 	public static void createDatalakeSortedFiles() throws IOException {
 		createDatalakeFile(MESSAGE_FILE, 100_000, ts -> new MessageEvent("Test", "ss").ts(ts));

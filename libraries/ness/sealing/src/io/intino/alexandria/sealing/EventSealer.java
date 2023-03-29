@@ -22,6 +22,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static java.util.Objects.requireNonNull;
 
@@ -57,7 +58,7 @@ public class EventSealer {
 			try (EventWriter<Event> writer = EventWriter.of(temp)) {
 				writer.write(streamOf(format, datalakeFile, sortedSessions));
 			}
-			Files.move(temp.toPath(), datalakeFile.toPath(), REPLACE_EXISTING);
+			Files.move(temp.toPath(), datalakeFile.toPath(), REPLACE_EXISTING, ATOMIC_MOVE);
 		} finally {
 			temp.delete();
 		}
