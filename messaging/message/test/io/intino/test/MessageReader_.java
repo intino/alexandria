@@ -15,6 +15,38 @@ import static org.junit.Assert.assertEquals;
 
 public class MessageReader_ {
 
+	@Test
+	public void should_read_message_with_empty_attributes() {
+		String inl = "[Ingreso]\n" +
+				"ts: 2020-05-20T15:36:27.046617Z\n" +
+				"id: 202005_003609\n" +
+				"fecha: 2020-05-19T00:00:00Z\n" +
+				"numeroDocumento: 10925023\n" +
+				"division: DC\n" +
+				"referencia: 0000000000130\n" +
+				"observaciones: \n" +
+				"origenIngreso: Banco\n" +
+				"cecodiv: B053\n" +
+				"importe: 130\n" +
+				"ss: default";
+
+		Message m = new MessageReader(inl).next();
+		Assert.assertNotNull(m);
+
+		assertEquals(11, m.attributes().size());
+
+		assertEquals("2020-05-20T15:36:27.046617Z", m.get("ts").asString());
+		assertEquals("202005_003609", m.get("id").asString());
+		assertEquals("2020-05-19T00:00:00Z", m.get("fecha").asString());
+		assertEquals("10925023", m.get("numeroDocumento").asString());
+		assertEquals("DC", m.get("division").asString());
+		assertEquals("0000000000130", m.get("referencia").asString());
+		assertEquals("", m.get("observaciones").asString());
+		assertEquals("Banco", m.get("origenIngreso").asString());
+		assertEquals("B053", m.get("cecodiv").asString());
+		assertEquals("130", m.get("importe").asString());
+		assertEquals("default", m.get("ss").asString());
+	}
 
 	@Test
 	public void should_read_message_multiline2() {
