@@ -97,6 +97,7 @@ public class MessageReader implements Iterator<Message>, Iterable<Message>, Auto
 			String line = lines[i];
 			lines[i] = null;
 			if(line.isBlank()) continue;
+
 			int attribSep = line.indexOf(':');
 			String name = line.substring(0, attribSep);
 			String value = line.substring(attribSep + 1).trim();
@@ -118,12 +119,12 @@ public class MessageReader implements Iterator<Message>, Iterable<Message>, Auto
 		StringBuilder multilineValue = new StringBuilder(128);
 		for(i = i + 1; i < size; i++) {
 			line = lines[i];
-			lines[i] = null;
 			if(!line.startsWith(MULTILINE_ATTRIBUTE_PREFIX)) {
 				setMultilineAttribute(message, name, multilineValue);
-				return i;
+				return i - 1;
 			}
 			multilineValue.append(line.substring(1)).append('\n');
+			lines[i] = null;
 		}
 		setMultilineAttribute(message, name, multilineValue);
 		return i;

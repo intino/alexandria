@@ -12,39 +12,61 @@ import java.time.ZoneId;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class MessageReader_ {
+
+	@Test
+	public void sould_read_message_with_attributes_after_multiline_attribute() {
+		String inl = "[CuentaDestinatarios]\n" +
+				"ts: 2018-01-01T00:00:16Z\n" +
+				"emails:\n" +
+				"\tsomeemail@gmail.com\n" +
+				"\tother_email@outlook.es\n" +
+				"cuenta: ABC\n" +
+				"ss: default";
+
+		Message m = new MessageReader(inl).next();
+		assertNotNull(m);
+
+		assertEquals(4, m.attributes().size());
+
+		assertEquals("2018-01-01T00:00:16Z", m.get("ts").asString());
+		assertEquals("someemail@gmail.com\nother_email@outlook.es", m.get("emails").asString());
+		assertEquals("ABC", m.get("cuenta").asString());
+		assertEquals("default", m.get("ss").asString());
+	}
 
 	@Test
 	public void should_read_message_with_empty_attributes() {
 		String inl = "[Ingreso]\n" +
 				"ts: 2020-05-20T15:36:27.046617Z\n" +
-				"id: 202005_003609\n" +
+				"id: 202005_123456\n" +
 				"fecha: 2020-05-19T00:00:00Z\n" +
-				"numeroDocumento: 10925023\n" +
+				"numeroDocumento: 102345\n" +
 				"division: DC\n" +
-				"referencia: 0000000000130\n" +
+				"referencia: 000234000010\n" +
 				"observaciones: \n" +
 				"origenIngreso: Banco\n" +
-				"cecodiv: B053\n" +
-				"importe: 130\n" +
+				"cecodiv: asrd3\n" +
+				"importe: 1220\n" +
 				"ss: default";
 
 		Message m = new MessageReader(inl).next();
-		Assert.assertNotNull(m);
+		assertNotNull(m);
 
 		assertEquals(11, m.attributes().size());
 
 		assertEquals("2020-05-20T15:36:27.046617Z", m.get("ts").asString());
-		assertEquals("202005_003609", m.get("id").asString());
+		assertEquals("202005_123456", m.get("id").asString());
 		assertEquals("2020-05-19T00:00:00Z", m.get("fecha").asString());
-		assertEquals("10925023", m.get("numeroDocumento").asString());
+		assertEquals("102345", m.get("numeroDocumento").asString());
 		assertEquals("DC", m.get("division").asString());
-		assertEquals("0000000000130", m.get("referencia").asString());
+		assertEquals("000234000010", m.get("referencia").asString());
 		assertEquals("", m.get("observaciones").asString());
 		assertEquals("Banco", m.get("origenIngreso").asString());
-		assertEquals("B053", m.get("cecodiv").asString());
-		assertEquals("130", m.get("importe").asString());
+		assertEquals("asrd3", m.get("cecodiv").asString());
+		assertEquals("1220", m.get("importe").asString());
 		assertEquals("default", m.get("ss").asString());
 	}
 
@@ -56,14 +78,14 @@ public class MessageReader_ {
 				"message:\n" +
 				"\tG@R@34";
 		Message next = new MessageReader(message).next();
-		Assert.assertNotNull(next);
+		assertNotNull(next);
 		assertEquals("G@R@34", next.get("message").asString());
 		message = "[WARNING]\n" +
 				"ts: 2021-07-27T14:28:31.494323Z\n" +
 				"source: io.intino.magritte.framework.loaders.ListProcessor:process\n" +
 				"message:G@R@34";
 		next = new MessageReader(message).next();
-		Assert.assertNotNull(next);
+		assertNotNull(next);
 		assertEquals("G@R@34", next.get("message").asString());
 	}
 
@@ -97,7 +119,7 @@ public class MessageReader_ {
 				"\t\tat org.java_websocket.client.WebSocketClient.run(WebSocketClient.java:506)\n" +
 				"\t\tat java.base/java.lang.Thread.run(Thread.java:834)";
 		Message next = new MessageReader(message).next();
-		Assert.assertNotNull(next);
+		assertNotNull(next);
 	}
 
 
@@ -108,7 +130,7 @@ public class MessageReader_ {
 				"source: io.intino.magritte.framework.LayerFactory:create\n" +
 				"message: Concept AbstractAcquisition$Device hasn't layer registered. Node Assets#Assets_3962_0_0696810257 won't have it\n";
 		Message next = new MessageReader(message).next();
-		Assert.assertNotNull(next);
+		assertNotNull(next);
 	}
 
 	@Test
