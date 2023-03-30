@@ -9,6 +9,8 @@ import java.util.logging.Logger;
 
 public class MessageReader implements Iterator<Message>, Iterable<Message>, AutoCloseable {
 
+	private static final String MULTILINE_ATTRIBUTE_PREFIX = "\t";
+
 	private final MessageStream messageStream;
 	private final Message[] contextList;
 	private final String[] lines;
@@ -98,12 +100,17 @@ public class MessageReader implements Iterator<Message>, Iterable<Message>, Auto
 			int attribSep = line.indexOf(':');
 			String name = line.substring(0, attribSep);
 			String value = line.substring(attribSep + 1).trim();
-			if(!value.isEmpty()) {
+
+			if(isMultilineAttribute(value, i, lines)) {
+				i = readMultilineAttribute(message, lines, size, i, name);
+			} else {
 				message.set(name, value);
-				continue;
 			}
-			i = readMultilineAttribute(message, lines, size, i, name);
 		}
+	}
+
+	private boolean isMultilineAttribute(String value, int i, String[] lines) {
+		return value.isEmpty() && (i < lines.length - 1) && lines[i + 1].startsWith(MULTILINE_ATTRIBUTE_PREFIX);
 	}
 
 	private static int readMultilineAttribute(Message message, String[] lines, int size, int i, String name) {
@@ -112,7 +119,7 @@ public class MessageReader implements Iterator<Message>, Iterable<Message>, Auto
 		for(i = i + 1; i < size; i++) {
 			line = lines[i];
 			lines[i] = null;
-			if(!line.startsWith("\t")) {
+			if(!line.startsWith(MULTILINE_ATTRIBUTE_PREFIX)) {
 				setMultilineAttribute(message, name, multilineValue);
 				return i;
 			}
