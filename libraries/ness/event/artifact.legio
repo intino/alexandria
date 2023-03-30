@@ -1,11 +1,13 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "4.0.0") event
+Artifact("io.intino.alexandria", "5.0.0-SNAPSHOT") event
 	Imports
 		Compile("io.intino.alexandria", "iterator-stream", "1.0.0")
 		Compile("io.intino.alexandria", "zim", "5.0.0")
 		Compile("io.intino.alexandria", "zit", "1.0.0")
 		Compile("io.intino.alexandria", "logger", "2.1.0")
+		Compile("io.intino.alexandria", "primitives", "1.1.0-SNAPSHOT")
+		Compile("io.intino.alexandria", "json", "1.2.2")
 		Test("junit", "junit", "4.13.2")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")

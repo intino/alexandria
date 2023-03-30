@@ -1,10 +1,10 @@
 package io.intino.alexandria.datalake.file.message;
 
 import io.intino.alexandria.datalake.Datalake;
-import io.intino.alexandria.datalake.file.FS;
 import io.intino.alexandria.datalake.file.FileStore;
 import io.intino.alexandria.event.Event;
 import io.intino.alexandria.event.message.MessageEvent;
+import io.intino.alexandria.FS;
 
 import java.io.File;
 import java.util.stream.Stream;
@@ -18,7 +18,7 @@ public class MessageEventStore implements Datalake.Store<MessageEvent>, FileStor
 
 	@Override
 	public Stream<Tank<MessageEvent>> tanks() {
-		return FS.foldersIn(root).map(MessageEventTank::new);
+		return FS.directoriesIn(root).map(MessageEventTank::new);
 	}
 
 	public File directory() {

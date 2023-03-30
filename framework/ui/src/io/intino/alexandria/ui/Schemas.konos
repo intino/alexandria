@@ -325,27 +325,25 @@ Schema TimelineMeasurement
 	Attribute name as Text
 	Attribute label as Text
 	Attribute value as Real
+	Attribute min as Text
+	Attribute max as Text
+	Attribute percentage as Text
 	Attribute unit as Text
 	Attribute decimalCount as Integer
-	Attribute trend as Word("Increased" "Decreased" "None")
-	Attribute distribution as Object(TimelineDistribution)
 	Attribute summary as Object(TimelineSummary)
 	Attribute serie as Object(TimelineSerie)
+	Attribute customView as Text
 
 Schema TimelineParameterInfo
 	Attribute measurement as Text
 	Attribute scale as Text
 
-Schema TimelineDistribution
-	Attribute value as Real
-	Attribute trend as Word("Upper" "Lower" "None")
-
 Schema TimelineSummary
 	Attribute label as Text
 	Attribute scale as Text
 	Attribute average as Object(TimelineSummaryValue)
-	Attribute max as Object(TimelineSummaryValue)
 	Attribute min as Object(TimelineSummaryValue)
+	Attribute max as Object(TimelineSummaryValue)
 	Attribute canBefore as Bool
 	Attribute canNext as Bool
 

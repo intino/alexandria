@@ -52,29 +52,20 @@ const TimelineMeasurement = ({ scales, measurement, index, id, moveMeasurement, 
           isDragging: monitor.isDragging()
         })
     });
-    const renderDistribution = (measurement) => {
-        const style = measurement.distribution.trend === "Lower" ? { color: '#F44335' } : { color: '#4D9A51' };
-        return (
-            <div style={{width:'150px',height:'100%',margin:'5px'}}>
-                <div style={{fontSize:'12pt',marginBottom:'3px'}}>{translate(measurement.distribution.trend)}</div>
-                <div className="layout horizontal" style={{marginBottom:'3px'}}>
-                    <Typography style={style} className={classnames(classes.value, mode === "Summary" ? classes.summaryValue : classes.detailValue)}>{measurement.distribution.value}</Typography>
-                    <Typography style={{fontSize:'9pt'}} className={classes.unit}>%</Typography>
-                </div>
-                <div style={{fontSize:'10pt'}}>{translate("of the time")}</div>
-            </div>
-        );
+    const renderCustomView = (measurement) => {
+        const view = measurement.customView;
+        if (view == null) return (<React.Fragment/>);
+        return (<div dangerouslySetInnerHTML={{__html: view}}></div>);
     };
     const renderSummaries = (measurement) => {
         return (
             <div style={{position:"relative"}}>
-                {renderScales()}
                 {renderSummary(measurement.summary)}
             </div>
         );
     };
     const renderScales = () => {
-        return (<div style={{position:'absolute',right:0,marginTop:'10px',marginRight:'20px'}}>{scales.map((s, idx) => renderScale(s, idx==scales.length-1))}</div>);
+        return (<div>{scales.map((s, idx) => renderScale(s, idx==scales.length-1))}</div>);
     };
     const renderScale = (scale, lastScale) => {
         const style = lastScale ? { border:'1px solid #888' } : { border:'1px solid #888',borderRight:'0' };
@@ -83,7 +74,9 @@ const TimelineMeasurement = ({ scales, measurement, index, id, moveMeasurement, 
     };
     const renderSummary = (summary) => {
         return (<TimelineSummary
-            summary={summary} width={300} translate={translate}
+            scales={renderScales()}
+            evolution={renderSerie(measurement)}
+            summary={summary} width={450} translate={translate}
             unit={measurement.unit} decimalCount={measurement.decimalCount}
             beforeSummary={beforeSummary} nextSummary={nextSummary}
         />);
@@ -91,7 +84,6 @@ const TimelineMeasurement = ({ scales, measurement, index, id, moveMeasurement, 
     const renderSerie = (measurement) => {
         return (
             <div style={{width:'150px',height:'100%',margin:'5px'}}>
-                <div style={{paddingLeft:'5px',fontSize:'12pt'}}>{measurement.serie.name}</div>
                 {measurement.serie.values.length > 0 && <HighchartsReact ref={chart} highcharts={Highcharts} options={serieOptions(measurement)} />}
                 {measurement.serie.values.length == 0 && <div>No data</div>}
             </div>
@@ -100,9 +92,8 @@ const TimelineMeasurement = ({ scales, measurement, index, id, moveMeasurement, 
     const renderDetail = (measurement) => {
         return (
             <div className="layout horizontal flexible wrap" style={{padding:'5px'}}>
-                {renderDistribution(measurement)}
                 {renderSummaries(measurement)}
-                {renderSerie(measurement)}
+                {renderCustomView(measurement)}
             </div>
         );
     };
@@ -112,7 +103,9 @@ const TimelineMeasurement = ({ scales, measurement, index, id, moveMeasurement, 
                 style={{boxShadow:'none'}}
                 anchorEl={anchorRef.current} open={fullView} onClose={() => setFullView(false)}
                 anchorOrigin={{vertical: 'bottom',horizontal: 'left'}}>
-                {renderDetail(measurement)}
+                <div style={{marginLeft:'10px'}}>
+                    {renderDetail(measurement)}
+                </div>
             </Popover>
         );
     };
@@ -142,7 +135,7 @@ const TimelineMeasurement = ({ scales, measurement, index, id, moveMeasurement, 
                 enabled: true,
                 positioner: positioner,
                 formatter: function() {
-                    return '<div style="font-size:6pt;">' + Highcharts.numberFormat(this.y,decimalCount) + (unit != null ? unit : "") + '  ' + this.x + "</div>";
+                    return '<div style="font-size:6pt;">' + Highcharts.numberFormat(this.y,decimalCount,',', '.') + (unit != null ? unit : "") + '  ' + this.x + "</div>";
                 }
             },
             plotOptions: { spline: { lineWidth: 1, states: { hover: { lineWidth: 2 } }, marker: { enabled: false } } },
@@ -155,34 +148,66 @@ const TimelineMeasurement = ({ scales, measurement, index, id, moveMeasurement, 
             navigation: { menuItemStyle: { fontSize: '10px' } }
         };
     };
-    const renderMeasurement = (measurement, mode) => {
-        const style = fullView ? { backgroundColor: 'white', border: '1px dashed #999' } : { border: '1px solid transparent' };
+    const renderValue = (measurement, mode) => {
+        return mode === "Catalog" ? renderCatalogValue(measurement) : renderSummaryValue(measurement);
+    };
+    const renderRange = (measurement) => {
+        if (measurement.min == null && measurement.max == null) return (<React.Fragment/>);
+        const decimalCount = measurement.decimalCount;
         return (
-            <div style={style} className={classnames("layout vertical center", classes.measurement, mode === "Summary" ? classes.summaryMeasurement : classes.detailMeasurement)}>
-                <div className="layout horizontal" >
-                    <Typography className={classnames(classes.value, mode === "Summary" ? classes.summaryValue : classes.detailValue)}>{measurement.value}</Typography>
-                    <div className="layout vertical center" style={{position:'relative', height:'24px', marginLeft: '8px'}} >
-                        <Typography className={classnames(classes.unit, mode === "Summary" ? classes.summaryUnit : classes.detailUnit)}>{measurement.unit}</Typography>
-                        <div>
-                            {increased && <ArrowDropUp className={classnames(trendClass, classes.increased)}/>}
-                            {decreased && <ArrowDropDown className={classnames(trendClass, classes.decreased)}/>}
-                        </div>
+            <React.Fragment>
+                {measurement.min != null && <div className="layout horizontal center"><Typography className={classes.infoValue}>({Highcharts.numberFormat(measurement.min,decimalCount,',', '.')}</Typography><Typography className={classes.infoUnit}>{measurement.unit}</Typography></div>}
+                {measurement.min == null && <div className="layout horizontal center"><Typography className={classes.infoValue}>(-</Typography><Typography style={{color:'#777'}} className={classes.valueInfo}></Typography></div>}
+                {measurement.max != null && <div className="layout horizontal center"><Typography className={classes.infoValue}>{translate("to")} {Highcharts.numberFormat(measurement.max,decimalCount,',', '.')}</Typography><Typography className={classes.infoUnit}>{measurement.unit})</Typography></div>}
+                {measurement.max == null && <div className="layout horizontal center"><Typography className={classes.infoValue}>{translate("to")} -)</Typography></div>}
+            </React.Fragment>
+        );
+    };
+    const renderCatalogValue = (measurement) => {
+        const decimalCount = measurement.decimalCount;
+        return (
+            <div style={{width:"200px"}} className={classnames("layout vertical", classes.measurement, classes.catalogMeasurement)}>
+                <div className="layout horizontal center">
+                    <Icon><DragIndicator/></Icon>
+                    <div style={{paddingLeft:'5px',fontSize:'12pt',marginTop:'3px'}}>{measurement.label}</div>
+                </div>
+                <div className="layout horizontal" style={{marginLeft:'26px',marginTop:'10px'}}>
+                    <Typography className={classnames(classes.value, classes.catalogValue)}>{Highcharts.numberFormat(measurement.value,decimalCount,',', '.')}</Typography>
+                    <div className="layout vertical center" style={{position:'relative', height:'24px', marginLeft: '5px'}} >
+                        <Typography className={classnames(classes.unit, classes.catalogUnit)}>{measurement.unit}</Typography>
                     </div>
                 </div>
+                <div className="layout horizontal wrap" style={{marginLeft:'28px'}}>
+                    {measurement.percentage != null && <div className="layout horizontal center"><Typography className={classes.infoValue}>{Highcharts.numberFormat(measurement.percentage,decimalCount,',', '.')}</Typography><Typography className={classes.infoUnit}>%</Typography></div>}
+                    {renderRange(measurement)}
+                </div>
+            </div>
+        );
+    };
+    const renderSummaryValue = (measurement) => {
+        const decimalCount = measurement.decimalCount;
+        const style = fullView ? { backgroundColor: 'white', border: '1px dashed #999' } : { border: '1px solid transparent' };
+        return (
+            <div style={{width:"150px",...style}} className={classnames("layout vertical", classes.measurement, classes.summaryMeasurement)}>
                 <Typography variant="body2">{measurement.label}</Typography>
+                <div className="layout horizontal" >
+                    <Typography className={classnames(classes.value, classes.summaryValue)}>{Highcharts.numberFormat(measurement.value,decimalCount,',', '.')}</Typography>
+                    <div className="layout vertical center" style={{position:'relative', height:'24px', marginLeft: '5px'}} >
+                        <Typography className={classnames(classes.unit, classes.summaryUnit)}>{measurement.unit}</Typography>
+                    </div>
+                </div>
             </div>
         );
     };
     const opacity = isDragging ? 0 : 1;
     const increased = measurement.trend === "Increased";
     const decreased = measurement.trend === "Decreased";
-    const trendClass = mode === "Summary" ? classes.summaryTrend : classes.detailTrend;
+    const trendClass = mode === "Summary" ? classes.summaryTrend : classes.catalogTrend;
     drag(drop(ref));
     return (
         <div ref={ref} style={{ ...style, opacity, position: 'relative' }} data-handler-id={handlerId} onClick={() => setFullView(!fullView)} onMouseLeave={() => setFullView(false)}>
-            {mode === "Catalog" && <Icon style={{position:'absolute',zIndex:1}}><DragIndicator/></Icon>}
-            <div className="layout horizontal center">
-                {renderMeasurement(measurement, mode)}
+            <div className="layout horizontal">
+                {renderValue(measurement, mode)}
                 {mode === "Summary" && renderDialog(measurement, ref)}
                 {mode === "Catalog" && renderDetail(measurement, ref)}
             </div>

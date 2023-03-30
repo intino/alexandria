@@ -7,78 +7,150 @@ import io.intino.alexandria.event.Event;
 import io.intino.alexandria.event.EventReader;
 import io.intino.alexandria.event.EventStream;
 import io.intino.alexandria.event.EventWriter;
-import io.intino.alexandria.event.measurement.MeasurementEventReader;
-import io.intino.alexandria.event.message.MessageEventReader;
 import io.intino.alexandria.logger.Logger;
+import io.intino.alexandria.sealing.SessionSealer.TankNameFilter;
+import io.intino.alexandria.sealing.sorters.MessageEventSorter;
+import io.intino.alexandria.sealing.sorters.ResourceEventSorter;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Predicate;
+import java.io.*;
+import java.nio.file.Files;
+import java.time.Instant;
+import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static java.util.Objects.requireNonNull;
 
 public class EventSealer {
 	private final Map<Event.Format, Datalake.Store<? extends Event>> stores;
-	private final Predicate<String> sortingPolicy;
+	private final TankNameFilter tankNameFilter;
 	private final File tempFolder;
+	private boolean multithreading;
 
-	public EventSealer(Datalake datalake, Predicate<String> sortingPolicy, File tempFolder) {
-		this.stores = Map.of(Event.Format.Message, datalake.messageStore(), Event.Format.Measurement, datalake.measurementStore());
-		this.sortingPolicy = sortingPolicy;
-		this.tempFolder = tempFolder;
+	public EventSealer(Datalake datalake, TankNameFilter tankNameFilter, File tempFolder) {
+		this(datalake, tankNameFilter, tempFolder, true);
+	}
+
+	public EventSealer(Datalake datalake, TankNameFilter tankNameFilter, File tempFolder, boolean multithreading) {
+		this.stores = Map.of(Event.Format.Message, datalake.messageStore(), Event.Format.Measurement, datalake.measurementStore(), Event.Format.Resource, datalake.resourceStore());
+		this.tankNameFilter = requireNonNull(tankNameFilter, "tankNameFilter cannot be null");
+		this.tempFolder = requireNonNull(tempFolder, "tempFolder cannot be null");
+		this.multithreading = multithreading;
+	}
+
+	public EventSealer multithreading(boolean multithreading) {
+		this.multithreading = multithreading;
+		return this;
 	}
 
 	public void seal(Fingerprint fingerprint, List<File> sessions) throws IOException {
 		seal(datalakeFile(fingerprint), fingerprint.format(), sort(fingerprint, sessions));
 	}
 
-	private void seal(File datalakeFile, Event.Format type, List<File> sessions) throws IOException {
-		try (final EventWriter<Event> writer = EventWriter.of(datalakeFile)) {
-			writer.write((Stream<Event>) streamOf(type, sessions));
+	private void seal(File datalakeFile, Event.Format format, List<File> sortedSessions) throws IOException {
+		File temp = new File(tempFolder, System.nanoTime() + datalakeFile.getName());
+		try {
+			try (EventWriter<Event> writer = EventWriter.of(temp)) {
+				writer.write(streamOf(format, datalakeFile, sortedSessions));
+			}
+			Files.move(temp.toPath(), datalakeFile.toPath(), REPLACE_EXISTING, ATOMIC_MOVE);
+		} finally {
+			temp.delete();
 		}
+	}
+
+	private Stream<Event> streamOf(Event.Format format, File datalakeFile, List<File> files) {
+		return EventStream.merge(Stream.concat(Stream.of(datalakeFile), files.stream()).map(file -> readEvents(format, file)));
+	}
+
+	private Stream<Event> readEvents(Event.Format format, File file) {
+		if(!file.exists()) return Stream.empty();
+		try {
+			return readEvents(format, new BufferedInputStream(new FileInputStream(file)));
+		} catch (IOException e) {
+			Logger.error(e); // TODO
+			return Stream.empty();
+		}
+	}
+
+	private Stream<Event> readEvents(Event.Format format, InputStream inputStream) {
+		try {
+			return new EventStream<>(readerOf(format, inputStream));
+		} catch (IOException e) {
+			Logger.error(e); // TODO
+			return Stream.empty();
+		}
+	}
+
+	private EventReader<Event> readerOf(Event.Format type, InputStream inputStream) throws IOException {
+		return EventReader.of(type, inputStream);
 	}
 
 	private List<File> sort(Fingerprint fingerprint, List<File> files) {
 		try {
-			for (File file : files)
-				if (fingerprint.format().equals(Event.Format.Message) && sortingPolicy.test(fingerprint.tank()))
-					new MessageEventSorter(file, tempFolder).sort();
-			return files;
-		} catch (IOException e) {
+			EventSorter.Factory sorter = sorterFactoryOf(fingerprint.format());
+			if(!tankNameFilter.accepts(fingerprint.tank()) || sorter == null) return Collections.emptyList();
+			return shouldSortInParallel(files) ? parallelSort(sorter, files) : sequentialSort(sorter, files);
+		} catch (Throwable e) {
 			Logger.error(e);
 			return Collections.emptyList();
 		}
 	}
 
-	private Stream<? extends Event> streamOf(Event.Format type, List<File> files) throws IOException {
-		if (files.size() == 1) return new EventStream<>(readerOf(type, files.get(0)));
-		return EventStream.merge(files.stream().map(file -> {
-			try {
-				return new EventStream<>(readerOf(type, files.get(0)));
-			} catch (IOException e) {
-				Logger.error(e);
-				return Stream.empty();
-			}
-		}));
+	private boolean shouldSortInParallel(List<File> files) {
+		return multithreading && files.size() > 1 && Runtime.getRuntime().availableProcessors() > 1;
 	}
 
-	private EventReader<? extends Event> readerOf(Event.Format type, File file) throws IOException {
-		if (!file.exists()) return new EventReader.Empty<>();
-		switch (type) {
-			case Message:
-				return new MessageEventReader(file);
-			case Measurement:
-				return new MeasurementEventReader(file);
+	private List<File> parallelSort(EventSorter.Factory sorter, List<File> files) throws Throwable {
+		ExecutorService threadPool = Executors.newFixedThreadPool(Math.min(4, Runtime.getRuntime().availableProcessors()));
+		Throwable[] error = new Throwable[1];
+
+		threadPool.invokeAll(files.stream().map(file -> sort(sorter, file, error)).collect(Collectors.toList()));
+		threadPool.shutdown();
+
+		if(error[0] != null) throw error[0];
+
+		return files;
+	}
+
+	private Callable<Void> sort(EventSorter.Factory sorter, File file, Throwable[] error) {
+		return () -> {
+			try {
+				sorter.of(file, tempFolder).sort();
+			} catch (Throwable e) {
+				error[0] = new RuntimeException("Error while sorting " + file + ": " + e.getMessage(), e);
+			}
+			return null;
+		};
+	}
+
+	private List<File> sequentialSort(EventSorter.Factory sorter, List<File> files) throws Throwable {
+		for(File file : files) sorter.of(file, tempFolder).sort();
+		return files;
+	}
+
+	public EventSorter.Factory sorterFactoryOf(Event.Format format) {
+		switch(format) {
+			case Message: return MessageEventSorter::new;
+//			case Measurement: return new MessageEventSorter(); TODO?
+			case Resource: return ResourceEventSorter::new;
 		}
-		return new EventReader.Empty<>();
+		return null;
 	}
 
 	private File datalakeFile(Fingerprint fingerprint) {
 		FileStore store = (FileStore) stores.get(fingerprint.format());
-		File zimFile = new File(store.directory(), fingerprint.tank() + File.separator + fingerprint.source() + File.separator + fingerprint.timetag() + store.fileExtension());
-		zimFile.getParentFile().mkdirs();
-		return zimFile;
+		File datalakeFile = new File(store.directory(), filenameOf(fingerprint) + store.fileExtension());
+		datalakeFile.getParentFile().mkdirs();
+		return datalakeFile;
+	}
+
+	private String filenameOf(Fingerprint fp) {
+		return fp.tank() + File.separator + fp.source() + File.separator + fp.timetag();
 	}
 }

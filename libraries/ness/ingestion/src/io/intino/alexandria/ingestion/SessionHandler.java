@@ -1,5 +1,6 @@
 package io.intino.alexandria.ingestion;
 
+import io.intino.alexandria.FS;
 import io.intino.alexandria.Fingerprint;
 import io.intino.alexandria.Session;
 import io.intino.alexandria.event.Event.Format;
@@ -73,7 +74,12 @@ public class SessionHandler {
 	}
 
 	private Stream<File> sessionFiles() {
-		return this.root == null ? Stream.empty() : FS.allFilesIn(root, path -> path.getName().endsWith(SessionExtension));
+		try {
+			return this.root == null ? Stream.empty() : FS.allFilesIn(root, path -> path.getName().endsWith(SessionExtension));
+		} catch (IOException e) {
+			Logger.error(e); // TODO
+			return Stream.empty();
+		}
 	}
 
 	private String name(File f) {
@@ -85,7 +91,11 @@ public class SessionHandler {
 	}
 
 	private void push(Session session, File stageFolder) {
-		FS.copyInto(fileFor(session, stageFolder), session.inputStream());
+		try {
+			FS.copyInto(fileFor(session, stageFolder), session.inputStream());
+		} catch (IOException e) {
+			Logger.error(e); // TODO
+		}
 	}
 
 	private File fileFor(Session session, File stageFolder) {

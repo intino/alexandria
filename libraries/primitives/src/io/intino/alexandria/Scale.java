@@ -10,7 +10,7 @@ public enum Scale {
 	Hour(ChronoUnit.HOURS),
 	Minute(ChronoUnit.MINUTES);
 
-	private TemporalUnit unit;
+	private final TemporalUnit unit;
 
 	Scale(TemporalUnit unit) {
 		this.unit = unit;

@@ -19,13 +19,13 @@ public class MessageEvent implements Event {
 	public MessageEvent(String type, String ss) {
 		this.message = new Message(type);
 		this.message.set(TS, this.ts = Instant.now());
-		this.message.set(SS, this.ss = requireNonNull(ss));
+		this.message.set(SS, this.ss = requireNonNull(ss, "ss cannot be null"));
 	}
 
 	public MessageEvent(Message message) {
 		this.message = message;
-		this.ts = requireNonNull(message.get(TS).asInstant());
-		this.ss = requireNonNull(message.get(SS).asString());
+		this.ts = requireNonNull(message.get(TS).asInstant(), "ts cannot be null");
+		this.ss = requireNonNull(message.get(SS).asString(), "ss cannot be null");
 	}
 
 	@Override

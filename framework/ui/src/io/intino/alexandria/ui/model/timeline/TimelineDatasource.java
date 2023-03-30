@@ -22,19 +22,21 @@ public interface TimelineDatasource {
 
 	interface Measurement {
 		MeasurementDefinition definition();
+
 		double value();
-		double speed();
-		double acceleration();
-		enum Trend { None, Increased, Decreased } Trend trend();
-		double distribution();
-		enum DistributionTrend { None, Lower, Upper } DistributionTrend distributionTrend();
+		Double min();
+		Double max();
+		Double percentage();
+
 		Instant from();
 		Instant to();
 
 		Summary summary(Instant date, TimelineScale scale);
 
-		Serie serie();
-		Serie serie(Instant start, Instant end);
+		Serie serie(TimelineScale scale);
+		Serie serie(TimelineScale scale, Instant start, Instant end);
+
+		String customHtmlView(TimelineScale scale);
 	}
 
 	interface Summary {
@@ -51,4 +53,5 @@ public interface TimelineDatasource {
 		String name();
 		Map<Instant, Double> values();
 	}
+
 }

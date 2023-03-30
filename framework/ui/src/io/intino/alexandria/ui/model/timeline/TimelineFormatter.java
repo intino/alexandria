@@ -31,8 +31,9 @@ public class TimelineFormatter {
 	}
 
 	private static final Map<TimelineDatasource.TimelineScale, Map<String, String>> Formatters = new HashMap<>() {{
+		put(TimelineDatasource.TimelineScale.Hour, Map.of("es", "YYYY-MM-dd HH:00", "en", "dd-MM-YYYY HH:00"));
 		put(TimelineDatasource.TimelineScale.Day, Map.of("es", "YYYY-MM-dd", "en", "dd-MM-YYYY"));
-		put(TimelineDatasource.TimelineScale.Week, Map.of("es", "YYYY-Www", "en", "Www-YYYY"));
+		put(TimelineDatasource.TimelineScale.Week, Map.of("es", "YYYY-'S'ww", "en", "'W'ww-YYYY"));
 		put(TimelineDatasource.TimelineScale.Month, Map.of("es", "YYYY-MM", "en", "MM-YYYY"));
 		put(TimelineDatasource.TimelineScale.Year, Map.of("es", "YYYY", "en", "YYYY"));
 	}};

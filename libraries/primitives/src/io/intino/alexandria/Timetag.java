@@ -3,15 +3,21 @@ package io.intino.alexandria;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static java.lang.Integer.parseInt;
+import static java.util.Collections.singletonList;
 
-public class Timetag {
+public class Timetag implements Comparable<Timetag> {
 	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 	private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd000000");
+
 	private final String tag;
 
 	public Timetag(LocalDateTime dateTime, Scale scale) {
@@ -30,8 +36,26 @@ public class Timetag {
 		this.tag = tag;
 	}
 
+	public static Timetag today() {
+		return now(Scale.Day);
+	}
+
+	public static Timetag now() {
+		return now(Scale.Minute);
+	}
+
+	public static Timetag now(Scale scale) {
+		return new Timetag(LocalDateTime.now(), scale);
+	}
+
 	public static Timetag of(String tag) {
+		if(tag == null) throw new NullPointerException("Tag cannot be null");
+		if(!isTimetag(tag)) throw new IllegalArgumentException(tag + " is not a valid timetag. It should follow the pattern yyyy[MMddhhmmss]");
 		return new Timetag(tag);
+	}
+
+	public static Optional<Timetag> tryParse(String tag) {
+		return isTimetag(tag) ? Optional.of(new Timetag(tag)) : Optional.empty();
 	}
 
 	public static Timetag of(LocalDateTime datetime, Scale scale) {
@@ -44,6 +68,30 @@ public class Timetag {
 
 	public static Timetag of(Instant instant, Scale scale) {
 		return new Timetag(instant, scale);
+	}
+
+	public static boolean isTimetag(String str) {
+		try {
+			new Timetag(str).datetime();
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	public static Stream<Timetag> range(String fromInclusive, String toInclusive) {
+		Timetag from = Timetag.of(fromInclusive);
+		Timetag to = Timetag.of(toInclusive);
+		if(from.scale() != to.scale()) throw new IllegalArgumentException("Both from and to timetags must have the same scale");
+		return range(from, to);
+	}
+
+	public static Stream<Timetag> range(Timetag fromInclusive, Timetag toInclusive) {
+		return StreamSupport.stream(fromInclusive.iterateTo(toInclusive).spliterator(), false);
+	}
+
+	public String value() {
+		return tag;
 	}
 
 	public int year() {
@@ -82,20 +130,24 @@ public class Timetag {
 		return precision() > 3;
 	}
 
-	public LocalDateTime datetime() {
-		return LocalDateTime.of(year(), month(), day(), hour(), minute());
-	}
-
 	public Scale scale() {
 		return Scale.values()[precision()];
 	}
 
 	private int precision() {
-		return (tag.length() - 4) / 2;
+		return (tag.length() - 4) >> 1;
 	}
 
-	public String value() {
-		return tag;
+	public LocalDateTime datetime() {
+		return LocalDateTime.of(year(), month(), day(), hour(), minute());
+	}
+
+	public Instant instant() {
+		return datetime().toInstant(ZoneOffset.UTC);
+	}
+
+	public LocalDate date() {
+		return datetime().toLocalDate();
 	}
 
 	public String label() {
@@ -110,7 +162,7 @@ public class Timetag {
 	}
 
 	public Timetag next(int count) {
-		return new Timetag(calculate(+count), scale());
+		return count == 0 ? this : new Timetag(shift(count), scale());
 	}
 
 	public Timetag previous() {
@@ -118,62 +170,51 @@ public class Timetag {
 	}
 
 	public Timetag previous(int count) {
-		return new Timetag(calculate(-count), scale());
+		return count == 0 ? this : new Timetag(shift(-count), scale());
 	}
 
-	public Iterable<Timetag> iterateTo(Timetag to) {
-		return () -> new Iterator<Timetag>() {
-			Timetag current = Timetag.this;
+	public Iterable<Timetag> iterateTo(String timetag) {
+		return iterateTo(Timetag.of(timetag));
+	}
 
-			@Override
-			public boolean hasNext() {
-				return !current.isAfter(to);
-			}
-
-			@Override
-			public Timetag next() {
-				Timetag result = current;
-				current = current.next();
-				return result;
-			}
-		};
+	public Iterable<Timetag> iterateTo(Timetag toInclusive) {
+		if(equals(toInclusive)) return singletonList(this);
+		if(isBefore(toInclusive)) return () -> TimetagIterator.forward(this, toInclusive);
+		return () -> TimetagIterator.backwards(this, toInclusive);
 	}
 
 	public boolean isAfter(Timetag timetag) {
-		return datetime().isAfter(timetag.datetime());
+		return compareTo(timetag) > 0;
 	}
 
 	public boolean isBefore(Timetag timetag) {
-		return datetime().isBefore(timetag.datetime());
+		return compareTo(timetag) < 0;
 	}
 
-	public int compare(Timetag timetag) {
-		return this.datetime().compareTo(timetag.datetime());
-	}
-
-	private LocalDateTime calculate(int amount) {
+	private LocalDateTime shift(int amount) {
 		return scale().temporalUnit().addTo(datetime(), amount);
 	}
 
+	public boolean isIn(Collection<Timetag> timetags) {
+		return timetags.stream().anyMatch(t -> t.equals(this));
+	}
 
 	private static int sizeOf(Scale scale) {
 		return scale.ordinal() * 2 + 4;
 	}
 
 	private static String toString(Instant instant) {
-		return instant.toString().replaceAll("[-TZ\\.:]","");
+		return instant.toString().replaceAll("[-TZ.:]","");
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof String) return tag.equals(o);
 		if (o instanceof Timetag) return tag.equals(((Timetag) o).tag);
+		if (o instanceof String) return tag.equals(o);
 		if (o instanceof Instant) return tag.equals(new Timetag((Instant) o, scale()).tag);
+		if (o instanceof LocalDateTime) return tag.equals(new Timetag((LocalDateTime) o, scale()).tag);
+		if (o instanceof LocalDate) return tag.equals(new Timetag((LocalDate) o, scale()).tag);
 		return false;
-	}
-
-	public boolean isIn(List<Timetag> timetags) {
-		return timetags.stream().anyMatch(t -> t.equals(this));
 	}
 
 	@Override
@@ -186,4 +227,46 @@ public class Timetag {
 		return tag;
 	}
 
+	@Override
+	public int compareTo(Timetag other) {
+		return tag.compareTo(other.tag);
+	}
+
+	public int compare(Timetag timetag) {
+		return compareTo(timetag);
+	}
+
+	private static class TimetagIterator implements Iterator<Timetag> {
+
+		public static TimetagIterator forward(Timetag from, Timetag to) {
+			return new TimetagIterator(from, to, 1);
+		}
+
+		public static TimetagIterator backwards(Timetag from, Timetag to) {
+			return new TimetagIterator(from, to, -1);
+		}
+
+		private Timetag current;
+		private final Timetag target;
+		private final int direction;
+
+		private TimetagIterator(Timetag current, Timetag target, int direction) {
+			this.current = current;
+			this.target = target;
+			this.direction = direction;
+		}
+
+		@Override
+		public boolean hasNext() {
+			final int cmp = target.compareTo(current);
+			return cmp == 0 || Math.signum(cmp) == direction;
+		}
+
+		@Override
+		public Timetag next() {
+			Timetag result = current;
+			current = current.next(direction);
+			return result;
+		}
+	}
 }
