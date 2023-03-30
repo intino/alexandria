@@ -33,6 +33,10 @@ public interface Datalake {
 	interface Store<T extends Event> {
 		Stream<Tank<T>> tanks();
 
+		default boolean containsTank(String tank) {
+			return tanks().anyMatch(t -> t.name().equals(tank));
+		}
+
 		Tank<T> tank(String name);
 
 		default Stream<T> content() {
