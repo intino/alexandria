@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "4.0.1") message
+Artifact("io.intino.alexandria", "4.0.2") message
 	Imports
 		Test("junit", "junit", "4.13")
 		Test("org.assertj", "assertj-core", "3.15.0")
