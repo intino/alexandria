@@ -2,6 +2,10 @@
     border-right: 0;
 }
 
+.react-grid-Cell {
+    cursor: pointer;
+}
+
 .react-grid-Toolbar {
     height: 32px;
     border-style: solid solid solid;
