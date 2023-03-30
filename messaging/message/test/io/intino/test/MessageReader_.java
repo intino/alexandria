@@ -17,6 +17,37 @@ import static org.junit.Assert.assertNotNull;
 public class MessageReader_ {
 
 	@Test
+	public void sould_read_message_with_attributes_with_line_breaks() {
+//		String inl = "[Something]\n" +
+//				"ts: 2018-01-01T00:00:16Z\n" +
+//				"attribWithLineBreaks: this\n" +
+//				"is not\n" +
+//				"a multiline attrib\n" +
+//				"\n" +
+//				"cuenta: ABC\n" +
+//				"ss: default";
+
+		String inl = new Message("Something")
+				.set("ts", "2018-01-01T00:00:16Z")
+				.set("attribWithLineBreaks", "this\nis not\n\na multiline attrib")
+				.set("cuenta", "ABC")
+				.set("ss", "default")
+				.toString();
+
+		Message m = new MessageReader(inl).next();
+		assertNotNull(m);
+
+		String[] attribWithLineBreaks = m.get("attribWithLineBreaks").asMultiline();
+
+		assertEquals(4, m.attributes().size());
+
+		assertEquals("2018-01-01T00:00:16Z", m.get("ts").asString());
+		assertEquals("this\nis not\n\na multiline attrib", m.get("attribWithLineBreaks").asString());
+		assertEquals("ABC", m.get("cuenta").asString());
+		assertEquals("default", m.get("ss").asString());
+	}
+
+	@Test
 	public void sould_read_message_with_attributes_after_multiline_attribute() {
 		String inl = "[CuentaDestinatarios]\n" +
 				"ts: 2018-01-01T00:00:16Z\n" +
