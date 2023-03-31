@@ -5,6 +5,7 @@ Artifact("io.intino.alexandria", "7.0.0-SNAPSHOT") datalake
 		Compile("io.intino.alexandria", "event", "5.0.0-SNAPSHOT")
 		Test("junit", "junit", "4.13.2")
 		Test("org.assertj", "assertj-core", "3.23.1")
+		Test("commons-io", "commons-io", "2.6")
 	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 
