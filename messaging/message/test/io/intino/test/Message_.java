@@ -13,6 +13,13 @@ import static org.junit.Assert.*;
 public class Message_ {
 
 	@Test
+	public void lists() {
+		Message message = new Message("clmnefrolc");
+		message.set("list", new ArrayList<>());
+		System.out.println(message);
+	}
+
+	@Test
 	public void overrideAttribute() {
 		new Message("aaaa").set("nombre", "aaa@aaaa").set("nombre", "aaaa");
 	}

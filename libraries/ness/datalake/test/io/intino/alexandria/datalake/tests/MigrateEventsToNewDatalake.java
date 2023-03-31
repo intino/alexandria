@@ -6,6 +6,7 @@ import io.intino.alexandria.event.EventWriter;
 import io.intino.alexandria.event.message.MessageEvent;
 import io.intino.alexandria.event.message.MessageEventWriter;
 import io.intino.alexandria.logger.Logger;
+import io.intino.alexandria.message.LegacyMessageReader;
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageReader;
 import org.apache.commons.io.FileUtils;
@@ -87,7 +88,7 @@ public class MigrateEventsToNewDatalake {
 	}
 
 	private void migrate(File zim, File newDatalakeRoot, int total) {
-		try(MessageReader reader = new MessageReader(open(zim))) {
+		try(LegacyMessageReader reader = new LegacyMessageReader(open(zim))) {
 
 			String tankName = zim.getParentFile().getName();
 			Map<String, List<MessageEvent>> events = new HashMap<>();

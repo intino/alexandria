@@ -5,6 +5,7 @@ import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.datalake.file.FileDatalake;
 import io.intino.alexandria.event.message.MessageEvent;
+import io.intino.alexandria.message.LegacyMessageReader;
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageReader;
 import org.apache.commons.io.FileUtils;
@@ -15,11 +16,14 @@ import org.junit.runners.Parameterized;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.nio.file.Files;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
+import static java.nio.file.StandardOpenOption.APPEND;
+import static java.nio.file.StandardOpenOption.CREATE;
 import static org.junit.Assert.*;
 
 @RunWith(Parameterized.class)
@@ -56,7 +60,7 @@ public class ValidateDatalakeAfterMigration {
 	private static void testTub(Datalake.Store.Tank<MessageEvent> newTank, File oldTub) throws Exception {
 		System.out.print("."); System.out.flush();
 
-		try(MessageReader oldReader = new MessageReader(new GZIPInputStream(new FileInputStream(oldTub), 32 * 1024))) {
+		try(LegacyMessageReader oldReader = new LegacyMessageReader(new GZIPInputStream(new FileInputStream(oldTub), 32 * 1024))) {
 			Iterator<MessageEvent> newEvents = newTank.content((ss, ts) -> ts.equals(timetag(oldTub))).iterator();
 			int i = 0;
 			Instant lastTs = null;
@@ -65,8 +69,14 @@ public class ValidateDatalakeAfterMigration {
 				MessageEvent e1 = eventFrom(oldReader.next());
 				MessageEvent e2 = newEvents.next();
 				assertEquals("Events at " + i + " are different in " + oldTub.getName() + ":\n" + e1 + "\n\n" + e2, e1, e2);
-//				if(lastTs != null) assertFalse(lastTs + " > " + e1.ts(), lastTs.isAfter(e1.ts()));
-//				lastTs = e1.ts();
+				if(lastTs != null && lastTs.isAfter(e1.ts())) {
+					File file = new File("temp/cm/errors/" + newTank.name() + ".tsv");
+					file.getParentFile().mkdirs();
+					Files.writeString(file.toPath(),
+							timetag(oldTub) + "\t" + i + "\t" + lastTs + "\t" + e1.ts() + "\n",
+							CREATE, APPEND);
+				}
+				lastTs = e1.ts();
 				++i;
 			}
 		}
