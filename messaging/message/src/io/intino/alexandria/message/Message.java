@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -14,9 +15,11 @@ import static io.intino.alexandria.message.ParserFactory.arrayTypeOf;
 import static java.util.Objects.requireNonNull;
 
 public class Message {
-	public static final char ListSep = '\u0001';
-	public static final String ListSepStr = String.valueOf(ListSep);
-	public static final String Null = "\0"; // 💀
+	static final char ListSep = '\u0001';
+	static final String ListSepStr = String.valueOf(ListSep);
+	static final char MultilineSep = '\u0002';
+	static final String MultilineSepStr = String.valueOf(MultilineSep);
+	static final String Null = "\0";
 
 	private final Map<String, String> attributes;
 	private final String type;
@@ -37,7 +40,7 @@ public class Message {
 	}
 
 	public boolean isComponent() {
-		return type.contains(".");
+		return type.indexOf('.') >= 0;
 	}
 
 	public boolean isComponentOf(String type) {
@@ -53,7 +56,7 @@ public class Message {
 	}
 
 	public Value get(String attribute) {
-		return contains(attribute) ? new DataValue(normalize(attributes.get(attribute))) : Value.Null;
+		return contains(attribute) ? new DataValue(deserialize(attributes.get(attribute))) : Value.Null;
 	}
 
 	public Message set(String attribute, Object value) {
@@ -69,11 +72,19 @@ public class Message {
 	}
 
 	public Message set(String attribute, String value) {
-		if(value == null)
-			attributes.put(attribute, Null);
-		else
-			attributes.put(attribute, value);
+		attributes.put(attribute, serialize(value));
 		return this;
+	}
+
+	private static final Pattern MultilinePattern = Pattern.compile("\r?\n");
+	private String serialize(String value) {
+		if(value == null) return Null;
+		return MultilinePattern.matcher(value).replaceAll(MultilineSepStr);
+	}
+
+	private String deserialize(String value) {
+		if(Null.equals(value)) return null;
+		return value.replace(MultilineSep, '\n');
 	}
 
 	public Message append(String attribute, Object value) {
@@ -89,8 +100,9 @@ public class Message {
 
 	public Message append(String attribute, String value) {
 		if(!contains(attribute)) return set(attribute, value);
+		value = serialize(value);
 		String oldValue = attributes.putIfAbsent(attribute, value);
-		attributes.put(attribute, oldValue + ListSep + (value == null ? Null : value));
+		attributes.put(attribute, oldValue + ListSep + value);
 		return this;
 	}
 
@@ -229,16 +241,16 @@ public class Message {
 		return String.valueOf(value);
 	}
 
-	private String normalize(String value) {
-		return Objects.equals(value, Null) ? null : value;
-	}
-
 	private boolean attributeEquals(Message message, String key) {
 		return message.contains(key) && Objects.equals(message.get(key).data(), get(key).data());
 	}
 
 	private static String indent(String text) {
 		return "\n\t" + text.replaceAll("\\n", "\n\t");
+	}
+
+	public static Set<String> invalidCharacters() {
+		return Set.of(Null, ListSepStr, MultilineSepStr);
 	}
 
 	/**<p>Wraps the value of a Message's attribute</p>*/
@@ -282,6 +294,7 @@ public class Message {
 		default LocalTime asLocalTime() {return as(LocalTime.class);}
 		default LocalDate asLocalDate() {return as(LocalDate.class);}
 		default LocalDateTime asLocalDateTime() {return as(LocalDateTime.class);}
+		default String[] asMultiline() {return data().split("\n", -1);}
 
 		/**
 		 * <p>Returns an Optional wrapping this value's raw data. If the data is null or not set, then an empty Optional is returned.</p>
