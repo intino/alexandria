@@ -40,11 +40,11 @@ const TimelineSummary = ({ summary, scales, evolution, width, unit, decimalCount
         const language = window.Application.configuration.language;
         return (
             <div className="layout vertical flex end-justified">
-                <div className="layout horizontal end-justified">
+                <div className="layout horizontal end-justified center flex">
+                    {date && <div className="layout horizontal start-justified flex" style={{...TimelineSummaryStyles.date,marginRight:'10px'}}><Moment format="DD/MM/YYYY HH:mm" date={date} locale={language}/></div>}
                     <span>{Highcharts.numberFormat(value,decimalCount)}</span>
                     {formattedUnit()}
                 </div>
-                {date && <div className="layout horizontal end-justified" style={TimelineSummaryStyles.date}><Moment format="DD/MM/YYYY HH:mm" date={date} locale={language}/></div>}
             </div>
         );
     };
@@ -69,17 +69,17 @@ const TimelineSummary = ({ summary, scales, evolution, width, unit, decimalCount
         <div style={{width:width + "px",...TimelineSummaryStyles.container}}>
             <div className="layout horizontal start">
                 <div className="layout horizontal start flex">
+                    <div style={{marginRight:'15px',marginTop:'5px'}}>{scales}</div>
                     <div className="layout vertical"><Typography style={TimelineSummaryStyles.label}>{summary.label}</Typography></div>
                     <div className="layout horizontal">
                         <IconButton disabled={!summary.canBefore} onClick={handleBefore} size="small" style={{color:beforeColor}}><NavigateBefore style={TimelineSummaryStyles.icon}/></IconButton>
                         <IconButton disabled={!summary.canNext} onClick={handleNext} size="small" style={{color:nextColor}}><NavigateNext style={TimelineSummaryStyles.icon}/></IconButton>
                     </div>
                 </div>
-                <div style={{marginLeft:'15px'}}>{scales}</div>
             </div>
             <div className="layout horizontal">
                 {evolution}
-                <div style={{width:'100%',marginLeft:'15px'}}>
+                <div style={{width:'100%',marginLeft:'15px',marginTop:'10px'}}>
                     {renderIndicator(translate("Average"), average())}
                     {renderIndicator("Max", max())}
                     {renderIndicator("Min", min())}

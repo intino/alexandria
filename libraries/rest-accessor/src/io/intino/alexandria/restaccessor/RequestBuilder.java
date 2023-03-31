@@ -150,9 +150,18 @@ public class RequestBuilder {
 
 	private HttpEntity multipartEntity() {
 		MultipartEntityBuilder builder = MultipartEntityBuilder.create().setContentType(MULTIPART_FORM_DATA).setMode(BROWSER_COMPATIBLE).setCharset(UTF_8);
-		resources.forEach(r -> builder.addPart(r.name(), new InputStreamBody(r.stream(), r.type() != null ? ContentType.create(r.type()) : APPLICATION_OCTET_STREAM, r.name())));
+		resources.forEach(r -> builder.addPart(r.name(), new InputStreamBody(stream(r), r.type() != null ? ContentType.create(r.type()) : APPLICATION_OCTET_STREAM, r.name())));
 		entityParts.forEach((key, value) -> builder.addPart(key, new StringBody(value, ContentType.APPLICATION_JSON)));
 		return builder.build();
+	}
+
+	private static InputStream stream(Resource r)  {
+		try {
+			return r.stream();
+		} catch (IOException e) {
+			Logger.error(e);
+			return InputStream.nullInputStream();
+		}
 	}
 
 	private HttpEntity stringEntity(String body) {
