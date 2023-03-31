@@ -16,7 +16,11 @@ public class Multipart {
 	private final MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
 	public void addPart(Resource resource) {
-		builder.addBinaryBody(resource.name(), resource.stream(), ContentType.create(resource.metadata().contentType()), resource.name());
+		try {
+			builder.addBinaryBody(resource.name(), resource.stream(), ContentType.create(resource.metadata().contentType()), resource.name());
+		} catch (IOException e) {
+			Logger.error(e);
+		}
 	}
 
 	public void addPart(Object object, String name) {
