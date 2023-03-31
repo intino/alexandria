@@ -2,6 +2,7 @@ package io.intino.alexandria.http.spark;
 
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.exceptions.AlexandriaError;
+import io.intino.alexandria.logger.Logger;
 import spark.Response;
 import spark.utils.IOUtils;
 
@@ -59,7 +60,11 @@ class SparkWriter {
 	}
 
 	private void writeResource(Resource resource, boolean embedded) {
-		writeResponse(resource.name(), resource.stream(), embedded, response.raw());
+		try {
+			writeResponse(resource.name(), resource.stream(), embedded, response.raw());
+		} catch (IOException e) {
+			Logger.error(e);
+		}
 	}
 
 	private void writeBytes(byte[] content, String filename, boolean embedded) {
