@@ -9,8 +9,13 @@ import java.util.Map;
 
 public class TimelineFormatter {
 
-	public static String summaryLabel(Instant date, TimelineDatasource.TimelineScale scale, String language) {
+	public static String label(Instant date, TimelineDatasource.TimelineScale scale, String language) {
 		String format = Formatters.getOrDefault(scale, Formatters.get(TimelineDatasource.TimelineScale.Day)).getOrDefault(language, "en");
+		return date(date, format, language);
+	}
+
+	public static String shortLabel(Instant date, TimelineDatasource.TimelineScale scale, String language) {
+		String format = ShortFormatters.getOrDefault(scale, ShortFormatters.get(TimelineDatasource.TimelineScale.Day)).getOrDefault(language, "en");
 		return date(date, format, language);
 	}
 
@@ -31,10 +36,18 @@ public class TimelineFormatter {
 	}
 
 	private static final Map<TimelineDatasource.TimelineScale, Map<String, String>> Formatters = new HashMap<>() {{
-		put(TimelineDatasource.TimelineScale.Hour, Map.of("es", "YYYY-MM-dd HH:00", "en", "dd-MM-YYYY HH:00"));
+		put(TimelineDatasource.TimelineScale.Hour, Map.of("es", "YYYY-MM-dd HH:mm", "en", "dd-MM-YYYY HH:mm"));
 		put(TimelineDatasource.TimelineScale.Day, Map.of("es", "YYYY-MM-dd", "en", "dd-MM-YYYY"));
 		put(TimelineDatasource.TimelineScale.Week, Map.of("es", "YYYY-'S'ww", "en", "'W'ww-YYYY"));
 		put(TimelineDatasource.TimelineScale.Month, Map.of("es", "YYYY-MM", "en", "MM-YYYY"));
+		put(TimelineDatasource.TimelineScale.Year, Map.of("es", "YYYY", "en", "YYYY"));
+	}};
+
+	private static final Map<TimelineDatasource.TimelineScale, Map<String, String>> ShortFormatters = new HashMap<>() {{
+		put(TimelineDatasource.TimelineScale.Hour, Map.of("es", "HH:mm", "en", "HH:mm"));
+		put(TimelineDatasource.TimelineScale.Day, Map.of("es", "MM-dd", "en", "dd-MM-YYYY"));
+		put(TimelineDatasource.TimelineScale.Week, Map.of("es", "'S'ww", "en", "'W'ww"));
+		put(TimelineDatasource.TimelineScale.Month, Map.of("es", "MM", "en", "MM"));
 		put(TimelineDatasource.TimelineScale.Year, Map.of("es", "YYYY", "en", "YYYY"));
 	}};
 

@@ -207,6 +207,7 @@ class Timeline extends AbstractTimeline {
         const data = history.data;
         const fetch = this.fetch.bind(this, measurement, this.translate.bind(this));
         const translate = this.translate.bind(this);
+        const minRange = this.minRange(measurement);
         if (data.length <= 0) data.push([new Date(history.to), null]);
         return {
             chart: {
@@ -233,19 +234,19 @@ class Timeline extends AbstractTimeline {
             title: { text: '' },
             rangeSelector: {
                 buttons: [
-                    { type: 'hour', count: 1, text: '1h' },
-                    { type: 'day', count: 1, text: '1d' },
-                    { type: 'month', count: 1, text: '1m' },
-                    { type: 'year', count: 1, text: '1y'},
-                    { type: 'all', text: this.translate('All')}
+                    { type: 'hour', count: 24, text: 'H' },
+                    { type: 'day', count: 7, text: 'D' },
+                    { type: 'week', count: 4, text: 'W' },
+                    { type: 'month', count: 12, text: 'M' },
+                    { type: 'year', count: 10, text: 'Y'},
                 ],
                 inputEnabled: false, // it supports only days
-                selected: 4 // All
+                selected: 0
             },
 
             xAxis: {
                 events: { afterSetExtremes: fetch },
-                minRange: 3600 * 1000, // one hour
+                minRange: minRange,
                 min: history.from,
                 max: history.to,
             },
@@ -253,6 +254,16 @@ class Timeline extends AbstractTimeline {
             yAxis: { floor: 0, min: this.minValue(history, measurement), max: this.maxValue(history, measurement) },
             series: [{ data: data, dataGrouping: { enabled: false } }]
         };
+    };
+
+    minRange = (measurement) => {
+        const scale = this.state.scales.length > 0 ? this.state.scales[0] : null;
+        if (scale == "Hour") return 3600 * 1000;
+        else if (scale == "Day") return 3600 * 1000 * 24;
+        else if (scale == "Week") return 3600 * 1000 * 24 * 7;
+        else if (scale == "Month") return 3600 * 1000 * 24 * 7 * 30;
+        else if (scale == "Year") return 3600 * 1000 * 24 * 7 * 30 * 12;
+        return 3600 * 1000;
     };
 
     openHistory = (measurement) => {

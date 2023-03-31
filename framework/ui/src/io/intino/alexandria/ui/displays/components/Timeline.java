@@ -1,5 +1,6 @@
 package io.intino.alexandria.ui.displays.components;
 
+import io.intino.alexandria.Scale;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.*;
 import io.intino.alexandria.ui.displays.notifiers.TimelineNotifier;
@@ -9,6 +10,7 @@ import io.intino.alexandria.ui.model.timeline.TimelineFormatter;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
@@ -121,7 +123,8 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 
 	public void fetch(TimelineHistoryFetch fetch) {
 		TimelineDatasource.Measurement measurement = source.measurement(fetch.measurement());
-		Map<Instant, Double> values = measurement.serie(scale(measurement), fetch.start(), fetch.end()).values();
+		TimelineDatasource.TimelineScale scale = source.scales().size() > 0 ? source.scales().get(0) : TimelineDatasource.TimelineScale.Hour;
+		Map<Instant, Double> values = measurement.serie(scale, fetch.start(), fetch.end()).values();
 		notifier.refreshHistory(values.entrySet().stream().map(this::historyEntryOf).collect(Collectors.toList()));
 	}
 
@@ -151,10 +154,10 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		TimelineDatasource.Summary summary = measurement.summary(date, scale);
 		return new TimelineSummary().label(summary.label())
 									.average(summaryValueOf(summary.average(), date))
-									.max(summaryValueOf(summary.max(), date))
-									.min(summaryValueOf(summary.min(), date))
-									.canBefore(!TimelineFormatter.summaryLabel(date, scale, language()).equals(TimelineFormatter.summaryLabel(measurement.from(), scale, language())))
-									.canNext(!TimelineFormatter.summaryLabel(date, scale, language()).equals(TimelineFormatter.summaryLabel(measurement.to(), scale, language())))
+									.max(summaryValueOf(summary.max(), summary.maxDate()))
+									.min(summaryValueOf(summary.min(), summary.minDate()))
+									.canBefore(!TimelineFormatter.label(date, scale, language()).equals(TimelineFormatter.label(measurement.from(), scale, language())))
+									.canNext(!TimelineFormatter.label(date, scale, language()).equals(TimelineFormatter.label(measurement.to(), scale, language())))
 									.scale(scale.name());
 	}
 
@@ -164,41 +167,49 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 
 	private TimelineSerie serieOf(TimelineDatasource.Measurement measurement) {
 		TimelineSerie result = new TimelineSerie();
-		TimelineDatasource.Serie serie = measurement.serie(scale(measurement));
+		TimelineDatasource.TimelineScale scale = scale(measurement);
+		TimelineDatasource.Serie serie = measurement.serie(scale);
 		result.name(serie.name());
-		result.categories(categoriesOf(serie, measurement.to()));
+		result.categories(categoriesOf(serie, measurement.to(), scale));
 		result.values(loadValues(serie));
 		return result;
 	}
 
-	private List<String> categoriesOf(TimelineDatasource.Serie serie, Instant to) {
-		return loadCategories(serie, to).stream().map(this::date).collect(Collectors.toList());
+	private List<String> categoriesOf(TimelineDatasource.Serie serie, Instant to, TimelineDatasource.TimelineScale scale) {
+		return loadCategories(serie, to, scale).stream().map(d -> date(d, scale)).collect(Collectors.toList());
 	}
 
-	private List<Instant> loadCategories(TimelineDatasource.Serie serie, Instant to) {
+	private List<Instant> loadCategories(TimelineDatasource.Serie serie, Instant to, TimelineDatasource.TimelineScale scale) {
 		List<Instant> result = new ArrayList<>(serie.values().keySet());
-//		if (mode == Mode.Evolution) return reverse(result);
-		return fill(reverse(result).subList(0, Math.min(result.size(), summaryPointsCount)), to);
+		return reverse(fill(reverse(result).subList(0, Math.min(result.size(), summaryPointsCount)), to, scale));
 	}
 
 	private List<Double> loadValues(TimelineDatasource.Serie serie) {
 		List<Double> values = new ArrayList<>(serie.values().values());
-//		if (mode == Mode.Evolution) return reverse(values);
-		return fillWithZeros(reverse(values).subList(0, Math.min(values.size(), summaryPointsCount)));
+		return reverse(fillWithZeros(reverse(values).subList(0, Math.min(values.size(), summaryPointsCount))));
 	}
 
 	private TimelineDatasource.Measurement measurement(MeasurementDefinition definition) {
 		return source.measurement(definition);
 	}
 
-	private List<Instant> fill(List<Instant> result, Instant to) {
+	private List<Instant> fill(List<Instant> result, Instant to, TimelineDatasource.TimelineScale scale) {
 		if (result.size() >= summaryPointsCount) return result;
-		Instant mockInstant = result.isEmpty() ? to : result.get(result.size() - 1);
+		LocalDateTime mockDate = LocalDateTime.ofInstant(result.isEmpty() ? to : result.get(result.size() - 1), ZoneOffset.UTC);
 		while (result.size() < summaryPointsCount) {
-			result.add(mockInstant);
-			mockInstant = mockInstant.minus(1, ChronoUnit.HOURS);
+			mockDate = mockDate.minus(1, chronoUnitOf(scale));
+			result.add(mockDate.toInstant(ZoneOffset.UTC));
 		}
 		return result;
+	}
+
+	private TemporalUnit chronoUnitOf(TimelineDatasource.TimelineScale scale) {
+		if (scale == TimelineDatasource.TimelineScale.Hour) return ChronoUnit.HOURS;
+		if (scale == TimelineDatasource.TimelineScale.Minute) return ChronoUnit.MINUTES;
+		if (scale == TimelineDatasource.TimelineScale.Day) return ChronoUnit.DAYS;
+		if (scale == TimelineDatasource.TimelineScale.Week) return ChronoUnit.WEEKS;
+		if (scale == TimelineDatasource.TimelineScale.Month) return ChronoUnit.MONTHS;
+		return ChronoUnit.YEARS;
 	}
 
 	private List<Double> fillWithZeros(List<Double> result) {
@@ -212,19 +223,8 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		return result;
 	}
 
-	private String date(Instant t) {
-//		return mode == Mode.Detail ? dayAndHour(t) : hour(t);
-		return hour(t);
-	}
-
-	private static final String HourFormat = "HH:mm";
-	private String hour(Instant date) {
-		return date(date, HourFormat, this::translate);
-	}
-
-	private static final String DayAndHourFormat = "dd/MM HH:mm";
-	private String dayAndHour(Instant date) {
-		return date(date, DayAndHourFormat, this::translate);
+	private String date(Instant date, TimelineDatasource.TimelineScale scale) {
+		return TimelineFormatter.shortLabel(date, scale, language());
 	}
 
 	public String date(Instant date, String format, Function<String, String> translator) {
