@@ -76,6 +76,10 @@ public class Message {
 		return this;
 	}
 
+	void setUnsafe(String attribute, String value) {
+		attributes.put(attribute, value);
+	}
+
 	private static final Pattern MultilinePattern = Pattern.compile("\r?\n");
 	private String serialize(String value) {
 		if(value == null) return Null;

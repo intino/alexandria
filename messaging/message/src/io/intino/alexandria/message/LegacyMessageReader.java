@@ -7,34 +7,39 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
-public class MessageReader implements Iterator<Message>, Iterable<Message>, AutoCloseable {
+/**
+ * MessageReader that supports backwards compatibility with old multiline attributes. May be removed in the future.
+ * */
+public class LegacyMessageReader implements Iterator<Message>, Iterable<Message>, AutoCloseable {
+
+	private static final String MULTILINE_ATTRIBUTE_PREFIX = "\t";
 
 	private final MessageStream messageStream;
 	private final Message[] contextList;
 	private final String[] lines;
 	private int numLines;
 
-	public MessageReader(String str) {
+	public LegacyMessageReader(String str) {
 		this(new ByteArrayInputStream(str.getBytes()), new Config());
 	}
 
-	public MessageReader(String str, Config config) {
+	public LegacyMessageReader(String str, Config config) {
 		this(new ByteArrayInputStream(str.getBytes()), config);
 	}
 
-	public MessageReader(InputStream inputStream) {
+	public LegacyMessageReader(InputStream inputStream) {
 		this(new MessageStream(inputStream), new Config());
 	}
 
-	public MessageReader(InputStream inputStream, Config config) {
+	public LegacyMessageReader(InputStream inputStream, Config config) {
 		this(new MessageStream(inputStream), config);
 	}
 
-	public MessageReader(MessageStream messageStream) {
+	public LegacyMessageReader(MessageStream messageStream) {
 		this(messageStream, new Config());
 	}
 
-	public MessageReader(MessageStream messageStream, Config config) {
+	public LegacyMessageReader(MessageStream messageStream, Config config) {
 		this.messageStream = messageStream;
 		this.lines = new String[Math.max(config.linesBufferSize, 1)];
 		this.contextList = new Message[Math.max(config.contextMaxLevels, 1)];
@@ -99,7 +104,14 @@ public class MessageReader implements Iterator<Message>, Iterable<Message>, Auto
 			try {
 				int attribSep = line.indexOf(':');
 				if(attribSep < 0) continue;
-				message.setUnsafe(nameOf(line, attribSep), valueOf(line, attribSep));
+				String name = nameOf(line, attribSep);
+				String value = valueOf(line, attribSep);
+
+				if(isLegacyMultilineAttribute(value, i, lines)) {
+					i = readLegacyMultilineAttribute(message, lines, size, i, name);
+				} else {
+					message.setUnsafe(name, value);
+				}
 			} catch (Exception e) {
 				throw new MessageException("Malformed message attribute at line " + i + ": " + line, e);
 			}
@@ -113,6 +125,31 @@ public class MessageReader implements Iterator<Message>, Iterable<Message>, Auto
 
 	private String nameOf(String line, int attribSep) {
 		return line.substring(0, attribSep);
+	}
+
+	private boolean isLegacyMultilineAttribute(String value, int i, String[] lines) {
+		return value.isEmpty() && (i < lines.length - 1) && lines[i + 1].startsWith(MULTILINE_ATTRIBUTE_PREFIX);
+	}
+
+	private static int readLegacyMultilineAttribute(Message message, String[] lines, int size, int i, String name) {
+		String line;
+		StringBuilder multilineValue = new StringBuilder(128);
+		for(i = i + 1; i < size; i++) {
+			line = lines[i];
+			if(!line.startsWith(MULTILINE_ATTRIBUTE_PREFIX)) {
+				setMultilineAttribute(message, name, multilineValue);
+				return i - 1;
+			}
+			multilineValue.append(line.substring(1)).append('\n');
+			lines[i] = null;
+		}
+		setMultilineAttribute(message, name, multilineValue);
+		return i;
+	}
+
+	private static void setMultilineAttribute(Message message, String name, StringBuilder multilineValue) {
+		multilineValue.setLength(Math.max(0, multilineValue.length() - 1));
+		message.set(name, multilineValue.toString());
 	}
 
 	private String typeOf(String line) {
