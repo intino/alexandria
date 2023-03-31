@@ -552,9 +552,13 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 	}
 
 	private void addResource(MultipartEntityBuilder builder, Resource resource) {
-		if (resource == null) return;
-		ContentType contentType = resource.type() != null ? ContentType.create(resource.type()) : ContentType.APPLICATION_OCTET_STREAM;
-		builder.addPart(resource.name(), new InputStreamBody(resource.stream(), contentType, resource.name()));
+		try {
+			if (resource == null) return;
+			ContentType contentType = resource.type() != null ? ContentType.create(resource.type()) : ContentType.APPLICATION_OCTET_STREAM;
+			builder.addPart(resource.name(), new InputStreamBody(resource.stream(), contentType, resource.name()));
+		} catch (IOException e) {
+			Logger.error(e);
+		}
 	}
 
 	private void addParameters(MultipartEntityBuilder builder, Map<String, String> parameterList) {
