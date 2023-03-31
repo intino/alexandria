@@ -54,7 +54,7 @@ public class Timetag implements Comparable<Timetag> {
 		return new Timetag(tag);
 	}
 
-	public static Optional<Timetag> tryParse(String tag) {
+	public static Optional<Timetag> ofOptional(String tag) {
 		return isTimetag(tag) ? Optional.of(new Timetag(tag)) : Optional.empty();
 	}
 
@@ -196,7 +196,7 @@ public class Timetag implements Comparable<Timetag> {
 	}
 
 	public boolean isIn(Collection<Timetag> timetags) {
-		return timetags.stream().anyMatch(t -> t.equals(this));
+		return timetags.contains(this);
 	}
 
 	private static int sizeOf(Scale scale) {
