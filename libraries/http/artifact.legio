@@ -1,9 +1,9 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.5.11") http
+Artifact("io.intino.alexandria", "1.6.0") http
 	Imports
 		Compile("io.intino.alexandria", "exceptions", "2.1.1")
-		Compile("io.intino.alexandria", "primitives", "1.0.5")
+		Compile("io.intino.alexandria", "primitives", "1.1.0")
 		Compile("io.intino.alexandria", "logger", "2.1.0")
 
 		Compile("com.sparkjava", "spark-core", "2.9.3")
@@ -45,7 +45,7 @@ Artifact("io.intino.alexandria", "1.5.11") http
 		Compile("org.eclipse.jetty.websocket", "websocket-client", "9.4.42.v20210604")
 		Compile("org.eclipse.jetty.websocket", "websocket-api", "9.4.42.v20210604")
 
-		Test("junit", "junit", "4.12")
+		Test("junit", "junit", "4.13.2")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 
