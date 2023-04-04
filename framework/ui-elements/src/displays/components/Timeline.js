@@ -15,15 +15,15 @@ import HighchartsReact from 'highcharts-react-official';
 import Delayer from 'alexandria-ui-elements/src/util/Delayer';
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import TimelineMeasurement from './timeline/measurement'
+import TimelineMagnitude from './timeline/magnitude'
 import Theme from "app-elements/gen/Theme";
 
 const styles = theme => ({
-    measurement : { position:'relative', padding:'5px', marginBottom: '1px' },
+    magnitude : { position:'relative', padding:'5px', marginBottom: '1px' },
     scale : { cursor:'pointer',padding:'0 4px' },
     selectedScale : { backgroundColor: theme.palette.primary.main, color: 'white' },
-    summaryMeasurement : { minWidth:'60px', paddingRight: '15px' },
-    catalogMeasurement : { minWidth:'180px' },
+    summaryMagnitude : { minWidth:'60px', paddingRight: '15px' },
+    catalogMagnitude : { minWidth:'180px' },
     value : { marginRight: '2px', fontSize: '35pt', lineHeight: 1},
     catalogValue : { fontSize: '25pt' },
     summaryValue : { fontSize: '16pt' },
@@ -52,11 +52,11 @@ class Timeline extends AbstractTimeline {
 		    inside : false,
 		    openConfiguration : false,
 		    history : { visible: true, from: null, to: null, data: [] },
-		    measurement : null,
+		    magnitude : null,
 		    scales: [],
-		    measurements: [],
-		    measurementsVisibility : {},
-		    measurementsSorting : {},
+		    magnitudes: [],
+		    magnitudesVisibility : {},
+		    magnitudesSorting : {},
 		}
 	};
 
@@ -65,36 +65,36 @@ class Timeline extends AbstractTimeline {
     });
 
     setup = (info) => {
-        const measurementsVisibility = this.getCookie(info.name + "_visibility") != null ? this.getCookie(info.name + "_visibility") : this.state.measurementsVisibility;
-        const measurementsSorting = this.getCookie(info.name + "_sorting") != null ? this.getCookie(info.name + "_sorting") : this.state.measurementsSorting;
-        this.setState({ scales: info.scales, measurements: info.measurements, measurementsVisibility: measurementsVisibility, measurementsSorting: measurementsSorting, sourceName: info.name });
+        const magnitudesVisibility = this.getCookie(info.name + "_visibility") != null ? this.getCookie(info.name + "_visibility") : this.state.magnitudesVisibility;
+        const magnitudesSorting = this.getCookie(info.name + "_sorting") != null ? this.getCookie(info.name + "_sorting") : this.state.magnitudesSorting;
+        this.setState({ scales: info.scales, magnitudes: info.magnitudes, magnitudesVisibility: magnitudesVisibility, magnitudesSorting: magnitudesSorting, sourceName: info.name });
     };
 
-    refreshMeasurementsVisibility = (visibility) => {
+    refreshMagnitudesVisibility = (visibility) => {
         const newVisibility = {};
         for (let i=0; i<visibility.length; i++) newVisibility[visibility[i].name] = visibility[i].visible;
-        this.setState({measurementsVisibility: newVisibility});
+        this.setState({magnitudesVisibility: newVisibility});
     };
 
-    refreshMeasurementsSorting = (sorting) => {
+    refreshMagnitudesSorting = (sorting) => {
         const newSorting = {};
         for (let i=0; i<sorting.length; i++) newSorting[sorting[i].name] = sorting[i].position;
-        this.setState({measurementsSorting: newSorting});
+        this.setState({magnitudesSorting: newSorting});
     };
 
     refreshSummary = (summary) => {
-        this.selectedMeasurement.summary = summary;
-        this.setState({measurements: this.state.measurements})
+        this.selectedMagnitude.summary = summary;
+        this.setState({magnitudes: this.state.magnitudes})
     };
 
     refreshSerie = (serie) => {
-        this.selectedMeasurement.serie = serie;
-        this.setState({measurements: this.state.measurements})
+        this.selectedMagnitude.serie = serie;
+        this.setState({magnitudes: this.state.magnitudes})
     };
 
     refreshCustomView = (view) => {
-        this.selectedMeasurement.customView = view;
-        this.setState({measurements: this.state.measurements})
+        this.selectedMagnitude.customView = view;
+        this.setState({magnitudes: this.state.magnitudes})
     };
 
     showHistoryDialog = (history) => {
@@ -107,7 +107,7 @@ class Timeline extends AbstractTimeline {
         return (
             <DndProvider backend={HTML5Backend}>
                 <div className={layoutClassNames} onMouseEnter={this.handleMouseEnter.bind(this)} onMouseLeave={this.handleMouseLeave.bind(this)}>
-                    {this.renderMeasurements()}
+                    {this.renderMagnitudes()}
                     {this.renderHistoryDialog()}
                     {this.renderConfigurationDialog()}
                     {this.renderCookieConsent()}
@@ -124,44 +124,44 @@ class Timeline extends AbstractTimeline {
         this.setState({inside: false});
     };
 
-    renderMeasurements = () => {
-        return this.sortedAndVisibleMeasurements().map((m, idx) => this.renderMeasurement(m, idx));
+    renderMagnitudes = () => {
+        return this.sortedAndVisibleMagnitudes().map((m, idx) => this.renderMagnitude(m, idx));
     };
 
-    sortedAndVisibleMeasurements = () => {
-        const measurements = this.state.measurements;
-        const sorting = this.state.measurementsSorting;
-        if (sorting != null) measurements.sort(this.sortingComparator);
-        return measurements.filter(m => this.isMeasurementVisible(m));
+    sortedAndVisibleMagnitudes = () => {
+        const magnitudes = this.state.magnitudes;
+        const sorting = this.state.magnitudesSorting;
+        if (sorting != null) magnitudes.sort(this.sortingComparator);
+        return magnitudes.filter(m => this.isMagnitudeVisible(m));
     };
 
     sortingComparator = (m1, m2) => {
-        const m1Position = this.state.measurementsSorting[m1.name] != null ? this.state.measurementsSorting[m1.name] : 0;
-        const m2Position = this.state.measurementsSorting[m2.name] != null ? this.state.measurementsSorting[m2.name] : 0;
+        const m1Position = this.state.magnitudesSorting[m1.name] != null ? this.state.magnitudesSorting[m1.name] : 0;
+        const m2Position = this.state.magnitudesSorting[m2.name] != null ? this.state.magnitudesSorting[m2.name] : 0;
         if (m1Position < m2Position ) return -1;
         if (m1Position > m2Position ) return 1;
         return 0;
     }
 
     renderHistoryDialog = () => {
-        if (this.state.measurement == null || !this.state.history.visible) return (<React.Fragment/>);
+        if (this.state.magnitude == null || !this.state.history.visible) return (<React.Fragment/>);
         const { classes } = this.props;
         const hasHistoryData = this.state.history.data.length > 0;
         window.setTimeout(() => {
             if (hasHistoryData) return;
-            this.requester.fetch({ measurement: this.state.measurement.name, start: this.state.history.from, end: this.state.history.to })
+            this.requester.fetch({ magnitude: this.state.magnitude.name, start: this.state.history.from, end: this.state.history.to })
         }, 100);
         return (
             <Dialog fullScreen={true} TransitionComponent={Timeline.SlideTransition} open={this.state.history.visible} onClose={this.handleCloseHistoryDialog.bind(this)}>
                 <AppBar className={classes.dialogHeader}>
                     <div className="layout horizontal flex center">
-                        <Typography variant="h5">{this.state.measurement.label}</Typography>
+                        <Typography variant="h5">{this.state.magnitude.label}</Typography>
                         <div className="layout horizontal end-justified flex"><IconButton onClick={this.handleCloseHistoryDialog.bind(this)} className={classes.icon}><Close fontSize="large"/></IconButton></div>
                     </div>
                 </AppBar>
                 <DialogContent style={{marginTop:'60px'}}>
                     {!hasHistoryData && <div className="layout vertical flex center-center" style={{marginTop:'10%'}}><Typography variant="h5">{this.translate("Not enough data yet")}</Typography></div>}
-                    {hasHistoryData && this.renderHistory(this.state.history, this.state.measurement)}
+                    {hasHistoryData && this.renderHistory(this.state.history, this.state.magnitude)}
                 </DialogContent>
             </Dialog>
         );
@@ -181,42 +181,42 @@ class Timeline extends AbstractTimeline {
         this.setState({openConfiguration: false});
     };
 
-    renderMeasurement = (measurement, idx) => {
-        return (<TimelineMeasurement style={{margin:'5px'}}
+    renderMagnitude = (magnitude, idx) => {
+        return (<TimelineMagnitude style={{margin:'5px'}}
                                      scales={this.state.scales}
-                                     measurement={measurement}
-                                     key={this.props.id + measurement.name}
+                                     magnitude={magnitude}
+                                     key={this.props.id + magnitude.name}
                                      index={idx}
-                                     id={measurement.name}
+                                     id={magnitude.name}
                                      mode={this.props.mode}
                                      classes={this.props.classes}
-                                     openHistory={this.openHistory.bind(this, measurement)}
+                                     openHistory={this.openHistory.bind(this, magnitude)}
                                      translate={this.translate.bind(this)}
-                                     moveMeasurement={this.moveMeasurement.bind(this)}
-                                     changeScale={this.changeScale.bind(this, measurement)}
-                                     beforeSummary={this.beforeSummary.bind(this, measurement)}
-                                     nextSummary={this.nextSummary.bind(this, measurement)}
+                                     moveMagnitude={this.moveMagnitude.bind(this)}
+                                     changeScale={this.changeScale.bind(this, magnitude)}
+                                     beforeSummary={this.beforeSummary.bind(this, magnitude)}
+                                     nextSummary={this.nextSummary.bind(this, magnitude)}
         />);
     };
 
-    renderHistory = (history, measurement) => {
+    renderHistory = (history, magnitude) => {
         return (
             <div style={{width:'100%',height:'100%'}} ref={this.historyContainer}>
-                <HighchartsReact highcharts={Highcharts} constructorType={'stockChart'} options={this.historyOptions(history, measurement)} />
+                <HighchartsReact highcharts={Highcharts} constructorType={'stockChart'} options={this.historyOptions(history, magnitude)} />
             </div>
         );
     };
 
-    historyOptions = (history, measurement) => {
-        const decimalCount = measurement.decimalCount;
+    historyOptions = (history, magnitude) => {
+        const decimalCount = magnitude.decimalCount;
         const height = this.historyHeight();
         const width = this.historyWidth();
-        const unit = measurement.unit;
+        const unit = magnitude.unit;
         const data = history.data;
-        const fetch = this.fetch.bind(this, measurement, this.translate.bind(this));
+        const fetch = this.fetch.bind(this, magnitude, this.translate.bind(this));
         const translate = this.translate.bind(this);
-        const minRange = this.minRange(measurement);
-        const formatDate = this.formatDate.bind(this, measurement, translate);
+        const minRange = this.minRange(magnitude);
+        const formatDate = this.formatDate.bind(this, magnitude, translate);
         if (data.length <= 0) data.push([new Date(history.to), null]);
         return {
             chart: {
@@ -250,7 +250,7 @@ class Timeline extends AbstractTimeline {
                     { type: 'year', count: 10, text: 'Y'},
                 ],
                 inputEnabled: false, // it supports only days
-                selected: this.selectionIndex(measurement),
+                selected: this.selectionIndex(magnitude),
                 enabled: false,
             },
 
@@ -261,12 +261,12 @@ class Timeline extends AbstractTimeline {
                 max: history.to,
             },
 
-            yAxis: { floor: this.minValue(history, measurement), min: this.minValue(history, measurement), max: this.maxValue(history, measurement) },
+            yAxis: { floor: this.minValue(history, magnitude), min: this.minValue(history, magnitude), max: this.maxValue(history, magnitude) },
             series: [{ data: data, dataGrouping: { enabled: false } }]
         };
     };
 
-    minRange = (measurement) => {
+    minRange = (magnitude) => {
         const scale = this.state.scales.length > 0 ? this.state.scales[0] : null;
         if (scale == "Hour") return 3600 * 1000;
         else if (scale == "Day") return 3600 * 1000 * 24;
@@ -276,8 +276,8 @@ class Timeline extends AbstractTimeline {
         return 3600 * 1000;
     };
 
-    selectionIndex = (measurement) => {
-        const scale = measurement.summary.scale;
+    selectionIndex = (magnitude) => {
+        const scale = magnitude.summary.scale;
         if (scale == "Hour") return 0;
         else if (scale == "Day") return 1;
         else if (scale == "Week") return 2;
@@ -286,8 +286,8 @@ class Timeline extends AbstractTimeline {
         return 1;
     };
 
-    formatDate = (measurement, translate, value) => {
-        const scale = measurement.summary.scale;
+    formatDate = (magnitude, translate, value) => {
+        const scale = magnitude.summary.scale;
         let format = '%Y/%m/%d %H:%M';
         if (scale == "Day") format = '%Y/%m/%d';
         else if (scale == "Week") format = '%Y/%m/%d';
@@ -296,27 +296,27 @@ class Timeline extends AbstractTimeline {
         return Highcharts.dateFormat(translate(format), value);
     };
 
-    openHistory = (measurement) => {
-        this.setState({measurement: measurement, history: { visible: true, from: null, to: null, data: [] } });
-        this.requester.openHistory(measurement.name);
+    openHistory = (magnitude) => {
+        this.setState({magnitude: magnitude, history: { visible: true, from: null, to: null, data: [] } });
+        this.requester.openHistory(magnitude.name);
     };
 
-	fetch = (measurement, translate, e) => {
+	fetch = (magnitude, translate, e) => {
         this.chart = e.target;
-        this.requester.fetch({ measurement: measurement.name, start: e.min, end: e.max });
+        this.requester.fetch({ magnitude: magnitude.name, start: e.min, end: e.max });
 	};
 
-	minValue = (history, measurement) => {
-	    const unit = measurement.unit;
+	minValue = (history, magnitude) => {
+	    const unit = magnitude.unit;
 	    if (unit == "ºC") return -50;
-	    return measurement.min != null ? measurement.min : 0;
+	    return magnitude.min != null ? magnitude.min : 0;
 	};
 
-	maxValue = (history, measurement) => {
-	    const unit = measurement.unit;
+	maxValue = (history, magnitude) => {
+	    const unit = magnitude.unit;
 	    if (unit == "ºC") return 120;
 	    else if (unit == "%") return 120;
-	    return measurement.max != null ? measurement.max : null;
+	    return magnitude.max != null ? magnitude.max : null;
 	};
 
 	refreshHistory = (dataObjects) => {
@@ -343,42 +343,42 @@ class Timeline extends AbstractTimeline {
 	    return result;
 	};
 
-	moveMeasurement = (dragIndex, hoverIndex) => {
-        const measurements = this.state.measurements;
-        var measurement = measurements[dragIndex];
-        measurements.splice(dragIndex, 1);
-        measurements.splice(hoverIndex, 0, measurement);
-        this.setState({measurements: measurements, measurementsSorting: this.saveMeasurementsSorting()});
+	moveMagnitude = (dragIndex, hoverIndex) => {
+        const magnitudes = this.state.magnitudes;
+        var magnitude = magnitudes[dragIndex];
+        magnitudes.splice(dragIndex, 1);
+        magnitudes.splice(hoverIndex, 0, magnitude);
+        this.setState({magnitudes: magnitudes, magnitudesSorting: this.saveMagnitudesSorting()});
     };
 
-	changeScale = (measurement, scale) => {
-	    this.selectedMeasurement = measurement;
-        this.requester.changeScale({measurement: measurement.name, scale: scale});
+	changeScale = (magnitude, scale) => {
+	    this.selectedMagnitude = magnitude;
+        this.requester.changeScale({magnitude: magnitude.name, scale: scale});
     };
 
-	beforeSummary = (measurement, summary) => {
-	    this.selectedMeasurement = measurement;
-        this.requester.beforeSummary({measurement: measurement.name, scale: summary.scale});
+	beforeSummary = (magnitude, summary) => {
+	    this.selectedMagnitude = magnitude;
+        this.requester.beforeSummary({magnitude: magnitude.name, scale: summary.scale});
     };
 
-	nextSummary = (measurement, summary) => {
-	    this.selectedMeasurement = measurement;
-        this.requester.nextSummary({measurement: measurement.name, scale: summary.scale});
+	nextSummary = (magnitude, summary) => {
+	    this.selectedMagnitude = magnitude;
+        this.requester.nextSummary({magnitude: magnitude.name, scale: summary.scale});
     };
 
     renderConfigurationDialog = () => {
         const { classes } = this.props;
         const theme = Theme.get();
-        const hasMeasurements = this.state.measurements.length > 0;
+        const hasMagnitudes = this.state.magnitudes.length > 0;
         const color = this.state.inside ? theme.palette.primary.main : "transparent";
         return (
             <div className="layout horizontal center">
-                {(false && hasMeasurements && this.props.mode === "Summary") && <div className="layout horizontal start"><IconButton onClick={this.openConfigurationDialog.bind(this)} size="small"><MoreHoriz style={{color:color}}/></IconButton></div>}
+                {(false && hasMagnitudes && this.props.mode === "Summary") && <div className="layout horizontal start"><IconButton onClick={this.openConfigurationDialog.bind(this)} size="small"><MoreHoriz style={{color:color}}/></IconButton></div>}
                 <Dialog open={this.state.openConfiguration} onClose={this.handleCloseConfigurationDialog.bind(this)}>
-                    <DialogTitle id="alert-dialog-title">{this.translate("Measurements")}</DialogTitle>
+                    <DialogTitle id="alert-dialog-title">{this.translate("Magnitudes")}</DialogTitle>
                     <DialogContent>
                       <DialogContentText id="alert-dialog-description">
-                        {this.renderMeasurementsVisibility()}
+                        {this.renderMagnitudesVisibility()}
                       </DialogContentText>
                     </DialogContent>
                     <DialogActions>
@@ -389,47 +389,47 @@ class Timeline extends AbstractTimeline {
         );
     };
 
-    renderMeasurementsVisibility = () => {
-        return this.state.measurements.map((m, index) => this.renderMeasurementVisibility(m, index));
+    renderMagnitudesVisibility = () => {
+        return this.state.magnitudes.map((m, index) => this.renderMagnitudeVisibility(m, index));
     };
 
-    renderMeasurementVisibility = (measurement, index) => {
+    renderMagnitudeVisibility = (magnitude, index) => {
         return (
             <div>
-                <FormControlLabel control={<Checkbox checked={this.isMeasurementVisible(measurement)}
-                                  onChange={this.handleToggleMeasurementVisibility.bind(this, measurement)}
-                                  color="primary" name={measurement.name}/>} label={measurement.label}/>
+                <FormControlLabel control={<Checkbox checked={this.isMagnitudeVisible(magnitude)}
+                                  onChange={this.handleToggleMagnitudeVisibility.bind(this, magnitude)}
+                                  color="primary" name={magnitude.name}/>} label={magnitude.label}/>
             </div>
         );
     };
 
-    isMeasurementVisible = (measurement) => {
-        const name = measurement.name;
-        const visibility = this.state.measurementsVisibility;
+    isMagnitudeVisible = (magnitude) => {
+        const name = magnitude.name;
+        const visibility = this.state.magnitudesVisibility;
         return visibility[name] == null || visibility[name] === true;
     };
 
-    handleToggleMeasurementVisibility = (measurement) => {
-        const measurements = this.state.measurements;
-        const name = measurement.name;
-        if (this.state.measurementsVisibility[name] == null) this.state.measurementsVisibility[name] = true;
-        this.state.measurementsVisibility[name] = !this.state.measurementsVisibility[name];
-        this.updateCookie(this.state.measurementsVisibility, this.state.sourceName + "_visibility");
-        this.setState({measurementsVisibility: this.state.measurementsVisibility});
+    handleToggleMagnitudeVisibility = (magnitude) => {
+        const magnitudes = this.state.magnitudes;
+        const name = magnitude.name;
+        if (this.state.magnitudesVisibility[name] == null) this.state.magnitudesVisibility[name] = true;
+        this.state.magnitudesVisibility[name] = !this.state.magnitudesVisibility[name];
+        this.updateCookie(this.state.magnitudesVisibility, this.state.sourceName + "_visibility");
+        this.setState({magnitudesVisibility: this.state.magnitudesVisibility});
         const list = [];
-        for (var i=0; i<measurements.length; i++) list.push({ name: measurements[i].name, visible: this.state.measurementsVisibility[measurements[i].name] != null ? this.state.measurementsVisibility[measurements[i].name] : true });
-        this.requester.measurementsVisibility(list);
+        for (var i=0; i<magnitudes.length; i++) list.push({ name: magnitudes[i].name, visible: this.state.magnitudesVisibility[magnitudes[i].name] != null ? this.state.magnitudesVisibility[magnitudes[i].name] : true });
+        this.requester.magnitudesVisibility(list);
     };
 
-    saveMeasurementsSorting = () => {
-        const measurements = this.state.measurements;
-        const measurementsSorting = {};
-        for (var i=0; i<measurements.length; i++) measurementsSorting[measurements[i].name] = i;
-        this.updateCookie(measurementsSorting, this.state.sourceName + "_sorting");
+    saveMagnitudesSorting = () => {
+        const magnitudes = this.state.magnitudes;
+        const magnitudesSorting = {};
+        for (var i=0; i<magnitudes.length; i++) magnitudesSorting[magnitudes[i].name] = i;
+        this.updateCookie(magnitudesSorting, this.state.sourceName + "_sorting");
         const list = [];
-        for (var i=0; i<measurements.length; i++) list.push({ name: measurements[i].name, position: i });
-        this.requester.measurementsSorting(list);
-        return measurementsSorting;
+        for (var i=0; i<magnitudes.length; i++) list.push({ name: magnitudes[i].name, position: i });
+        this.requester.magnitudesSorting(list);
+        return magnitudesSorting;
     };
 
 }

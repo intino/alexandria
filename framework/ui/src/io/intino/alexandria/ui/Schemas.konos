@@ -303,7 +303,7 @@ Schema TimelineHistoryEntry
 	Attribute value as Real
 
 Schema TimelineHistoryFetch
-	Attribute measurement as Text
+	Attribute magnitude as Text
 	Attribute start as DateTime
 	Attribute end as DateTime
 
@@ -311,17 +311,17 @@ Schema TimelineSetup
 	Attribute name as Text
 	Attribute mode as Text
 	Attribute scales as Text List
-	Attribute measurements as Object(TimelineMeasurement) List
+	Attribute magnitudes as Object(TimelineMagnitude) List
 
-Schema TimelineMeasurementVisibility
+Schema TimelineMagnitudeVisibility
 	Attribute name as Text
 	Attribute visible as Bool
 
-Schema TimelineMeasurementSorting
+Schema TimelineMagnitudeSorting
 	Attribute name as Text
 	Attribute position as Integer
 
-Schema TimelineMeasurement
+Schema TimelineMagnitude
 	Attribute name as Text
 	Attribute label as Text
 	Attribute value as Real
@@ -335,7 +335,7 @@ Schema TimelineMeasurement
 	Attribute customView as Text
 
 Schema TimelineParameterInfo
-	Attribute measurement as Text
+	Attribute magnitude as Text
 	Attribute scale as Text
 
 Schema TimelineSummary

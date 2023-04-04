@@ -1,17 +1,14 @@
 package io.intino.alexandria.ui.displays.components;
 
-import com.google.gson.JsonObject;
-import io.intino.alexandria.Scale;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.*;
 import io.intino.alexandria.ui.displays.notifiers.TimelineNotifier;
-import io.intino.alexandria.ui.model.timeline.MeasurementDefinition;
+import io.intino.alexandria.ui.model.timeline.MagnitudeDefinition;
 import io.intino.alexandria.ui.model.timeline.TimelineDatasource;
 import io.intino.alexandria.ui.model.timeline.TimelineFormatter;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
@@ -26,10 +23,10 @@ import java.util.stream.Collectors;
 public class Timeline<DN extends TimelineNotifier, B extends Box> extends AbstractTimeline<B> {
 	private TimelineDatasource source;
 	private Mode mode;
-	private List<TimelineMeasurementVisibility> measurementsVisibility;
-	private List<TimelineMeasurementSorting> measurementsSorting;
+	private List<TimelineMagnitudeVisibility> magnitudesVisibility;
+	private List<TimelineMagnitudeSorting> magnitudesSorting;
 	private int summaryPointsCount = DefaultSummaryPointsCount;
-	private final Map<String, TimelineDatasource.TimelineScale> measurementScales = new HashMap<>();
+	private final Map<String, TimelineDatasource.TimelineScale> magnitudeScales = new HashMap<>();
 	private final Map<String, Map<TimelineDatasource.TimelineScale, LocalDateTime>> summaryDates = new HashMap<>();
 
 	private static final int DefaultSummaryPointsCount = 24;
@@ -54,23 +51,23 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		return this;
 	}
 
-	public List<TimelineMeasurementVisibility> measurementsVisibility() {
-		return measurementsVisibility;
+	public List<TimelineMagnitudeVisibility> magnitudesVisibility() {
+		return magnitudesVisibility;
 	}
 
-	public Timeline<DN, B> measurementsVisibility(List<TimelineMeasurementVisibility> measurementsVisibility) {
-		this.measurementsVisibility = measurementsVisibility;
-		notifier.refreshMeasurementsVisibility(measurementsVisibility);
+	public Timeline<DN, B> magnitudesVisibility(List<TimelineMagnitudeVisibility> magnitudesVisibility) {
+		this.magnitudesVisibility = magnitudesVisibility;
+		notifier.refreshMagnitudesVisibility(magnitudesVisibility);
 		return this;
 	}
 
-	public List<TimelineMeasurementSorting> measurementsSorting() {
-		return measurementsSorting;
+	public List<TimelineMagnitudeSorting> magnitudesSorting() {
+		return magnitudesSorting;
 	}
 
-	public Timeline<DN, B> measurementsSorting(List<TimelineMeasurementSorting> measurementsSorting) {
-		this.measurementsSorting = measurementsSorting;
-		notifier.refreshMeasurementsSorting(measurementsSorting);
+	public Timeline<DN, B> magnitudesSorting(List<TimelineMagnitudeSorting> magnitudesSorting) {
+		this.magnitudesSorting = magnitudesSorting;
+		notifier.refreshMagnitudesSorting(magnitudesSorting);
 		return this;
 	}
 
@@ -80,29 +77,29 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	}
 
 	public void beforeSummary(TimelineParameterInfo info) {
-		TimelineDatasource.Measurement measurement = source.measurement(info.measurement());
-		LocalDateTime current = summaryDate(measurement, info);
-		LocalDateTime from = LocalDateTime.ofInstant(measurement.from(), ZoneOffset.UTC);
+		TimelineDatasource.Magnitude magnitude = source.magnitude(info.magnitude());
+		LocalDateTime current = summaryDate(magnitude, info);
+		LocalDateTime from = LocalDateTime.ofInstant(magnitude.from(), ZoneOffset.UTC);
 		current = current.minus(1, unitOf(info.scale()));
 		if (current.isBefore(from)) current = from;
-		saveSummaryDate(measurement, info, current);
-		refreshViews(measurement);
+		saveSummaryDate(magnitude, info, current);
+		refreshViews(magnitude);
 	}
 
 	public void nextSummary(TimelineParameterInfo info) {
-		TimelineDatasource.Measurement measurement = source.measurement(info.measurement());
-		LocalDateTime current = summaryDate(measurement, info);
-		LocalDateTime to = LocalDateTime.ofInstant(measurement.to(), ZoneOffset.UTC);
+		TimelineDatasource.Magnitude magnitude = source.magnitude(info.magnitude());
+		LocalDateTime current = summaryDate(magnitude, info);
+		LocalDateTime to = LocalDateTime.ofInstant(magnitude.to(), ZoneOffset.UTC);
 		current = current.plus(1, unitOf(info.scale()));
 		if (current.isAfter(to)) current = to;
-		saveSummaryDate(measurement, info, current);
-		refreshViews(measurement);
+		saveSummaryDate(magnitude, info, current);
+		refreshViews(magnitude);
 	}
 
 	public void changeScale(TimelineParameterInfo info) {
 		TimelineDatasource.TimelineScale scale = TimelineDatasource.TimelineScale.valueOf(info.scale());
-		measurementScales.put(info.measurement(), scale);
-		refreshViews(source.measurement(info.measurement()));
+		magnitudeScales.put(info.magnitude(), scale);
+		refreshViews(source.magnitude(info.magnitude()));
 	}
 
 	@Override
@@ -113,19 +110,19 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 							.mode(mode.name())
 							.name(source.name())
 							.scales(source.scales().stream().map(Enum::name).collect(Collectors.toList()))
-							.measurements(source.measurements().stream().map(this::schemaOf).collect(Collectors.toList()))
+							.magnitudes(source.magnitudes().stream().map(this::schemaOf).collect(Collectors.toList()))
 		);
 	}
 
-	public void openHistory(String measurementName) {
-		TimelineDatasource.Measurement measurement = source.measurement(measurementName);
-		notifier.showHistoryDialog(new TimelineHistory().from(measurement.from()).to(measurement.to()));
+	public void openHistory(String magnitudeName) {
+		TimelineDatasource.Magnitude magnitude = source.magnitude(magnitudeName);
+		notifier.showHistoryDialog(new TimelineHistory().from(magnitude.from()).to(magnitude.to()));
 	}
 
 	public void fetch(TimelineHistoryFetch fetch) {
-		TimelineDatasource.Measurement measurement = source.measurement(fetch.measurement());
-		TimelineDatasource.TimelineScale scale = scale(measurement);
-		Map<Instant, Double> values = measurement.serie(scale, fetch.start(), fetch.end()).values();
+		TimelineDatasource.Magnitude magnitude = source.magnitude(fetch.magnitude());
+		TimelineDatasource.TimelineScale scale = scale(magnitude);
+		Map<Instant, Double> values = magnitude.serie(scale, fetch.start(), fetch.end()).values();
 		notifier.refreshHistory(fillWithZeros(values, fetch.end(), scale).entrySet().stream().map(this::historyEntryOf).collect(Collectors.toList()));
 	}
 
@@ -133,32 +130,32 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		return new TimelineHistoryEntry().date(entry.getKey()).value(entry.getValue());
 	}
 
-	private TimelineMeasurement schemaOf(MeasurementDefinition definition) {
-		TimelineDatasource.Measurement measurement = measurement(definition);
-		return new TimelineMeasurement()
+	private TimelineMagnitude schemaOf(MagnitudeDefinition definition) {
+		TimelineDatasource.Magnitude magnitude = magnitude(definition);
+		return new TimelineMagnitude()
 				.name(definition.name())
-				.value(measurement.value())
-				.min(measurement.min() != null ? String.valueOf(measurement.min()) : null)
-				.max(measurement.max() != null ? String.valueOf(measurement.max()) : null)
-				.percentage(measurement.percentage() != null ? String.valueOf(measurement.percentage()) : null)
+				.value(magnitude.value())
+				.min(magnitude.min() != null ? String.valueOf(magnitude.min()) : null)
+				.max(magnitude.max() != null ? String.valueOf(magnitude.max()) : null)
+				.percentage(magnitude.percentage() != null ? String.valueOf(magnitude.percentage()) : null)
 				.label(definition.label(language()))
 				.unit(definition.unit())
 				.decimalCount(definition.decimalCount())
-				.summary(summaryOf(measurement))
-				.serie(serieOf(measurement))
-				.customView(measurement.customHtmlView(scale(measurement)));
+				.summary(summaryOf(magnitude))
+				.serie(serieOf(magnitude))
+				.customView(magnitude.customHtmlView(scale(magnitude)));
 	}
 
-	private TimelineSummary summaryOf(TimelineDatasource.Measurement measurement) {
-		TimelineDatasource.TimelineScale scale = scale(measurement);
-		Instant date = summaryDate(measurement, scale).toInstant(ZoneOffset.UTC);
-		TimelineDatasource.Summary summary = measurement.summary(date, scale);
+	private TimelineSummary summaryOf(TimelineDatasource.Magnitude magnitude) {
+		TimelineDatasource.TimelineScale scale = scale(magnitude);
+		Instant date = summaryDate(magnitude, scale).toInstant(ZoneOffset.UTC);
+		TimelineDatasource.Summary summary = magnitude.summary(date, scale);
 		return new TimelineSummary().label(summary.label())
 									.average(summaryValueOf(summary.average(), date))
 									.max(summaryValueOf(summary.max(), summary.maxDate()))
 									.min(summaryValueOf(summary.min(), summary.minDate()))
-									.canBefore(!TimelineFormatter.label(date, scale, language()).equals(TimelineFormatter.label(measurement.from(), scale, language())))
-									.canNext(!TimelineFormatter.label(date, scale, language()).equals(TimelineFormatter.label(measurement.to(), scale, language())))
+									.canBefore(!TimelineFormatter.label(date, scale, language()).equals(TimelineFormatter.label(magnitude.from(), scale, language())))
+									.canNext(!TimelineFormatter.label(date, scale, language()).equals(TimelineFormatter.label(magnitude.to(), scale, language())))
 									.scale(scale.name());
 	}
 
@@ -166,12 +163,12 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		return new TimelineSummaryValue().value(value).date(date);
 	}
 
-	private TimelineSerie serieOf(TimelineDatasource.Measurement measurement) {
+	private TimelineSerie serieOf(TimelineDatasource.Magnitude magnitude) {
 		TimelineSerie result = new TimelineSerie();
-		TimelineDatasource.TimelineScale scale = scale(measurement);
-		TimelineDatasource.Serie serie = measurement.serie(scale);
+		TimelineDatasource.TimelineScale scale = scale(magnitude);
+		TimelineDatasource.Serie serie = magnitude.serie(scale);
 		result.name(serie.name());
-		result.categories(categoriesOf(serie, measurement.to(), scale));
+		result.categories(categoriesOf(serie, magnitude.to(), scale));
 		result.values(loadValues(serie));
 		return result;
 	}
@@ -190,8 +187,8 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		return reverse(fillWithZeros(reverse(values).subList(0, Math.min(values.size(), summaryPointsCount))));
 	}
 
-	private TimelineDatasource.Measurement measurement(MeasurementDefinition definition) {
-		return source.measurement(definition);
+	private TimelineDatasource.Magnitude magnitude(MagnitudeDefinition definition) {
+		return source.magnitude(definition);
 	}
 
 	private List<Instant> fill(List<Instant> result, Instant to, TimelineDatasource.TimelineScale scale) {
@@ -267,28 +264,28 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		return TemporalUnits.getOrDefault(TimelineDatasource.TimelineScale.valueOf(scaleName), ChronoUnit.DAYS);
 	}
 
-	private LocalDateTime summaryDate(TimelineDatasource.Measurement measurement, TimelineParameterInfo info) {
-		return summaryDate(measurement, TimelineDatasource.TimelineScale.valueOf(info.scale()));
+	private LocalDateTime summaryDate(TimelineDatasource.Magnitude magnitude, TimelineParameterInfo info) {
+		return summaryDate(magnitude, TimelineDatasource.TimelineScale.valueOf(info.scale()));
 	}
 
-	private LocalDateTime summaryDate(TimelineDatasource.Measurement measurement, TimelineDatasource.TimelineScale scale) {
-		if (!summaryDates.containsKey(measurement.definition().name())) return LocalDateTime.ofInstant(measurement.to(), ZoneOffset.UTC);
-		return summaryDates.get(measurement.definition().name()).getOrDefault(scale, LocalDateTime.ofInstant(measurement.to(), ZoneOffset.UTC));
+	private LocalDateTime summaryDate(TimelineDatasource.Magnitude magnitude, TimelineDatasource.TimelineScale scale) {
+		if (!summaryDates.containsKey(magnitude.definition().name())) return LocalDateTime.ofInstant(magnitude.to(), ZoneOffset.UTC);
+		return summaryDates.get(magnitude.definition().name()).getOrDefault(scale, LocalDateTime.ofInstant(magnitude.to(), ZoneOffset.UTC));
 	}
 
-	private TimelineDatasource.TimelineScale scale(TimelineDatasource.Measurement measurement) {
-		return measurementScales.getOrDefault(measurement.definition().name(), source.scales().get(0));
+	private TimelineDatasource.TimelineScale scale(TimelineDatasource.Magnitude magnitude) {
+		return magnitudeScales.getOrDefault(magnitude.definition().name(), source.scales().get(0));
 	}
 
-	private void saveSummaryDate(TimelineDatasource.Measurement measurement, TimelineParameterInfo info, LocalDateTime current) {
-		if (!summaryDates.containsKey(info.measurement())) summaryDates.put(info.measurement(), new HashMap<>());
-		summaryDates.get(info.measurement()).put(TimelineDatasource.TimelineScale.valueOf(info.scale()), current);
+	private void saveSummaryDate(TimelineDatasource.Magnitude magnitude, TimelineParameterInfo info, LocalDateTime current) {
+		if (!summaryDates.containsKey(info.magnitude())) summaryDates.put(info.magnitude(), new HashMap<>());
+		summaryDates.get(info.magnitude()).put(TimelineDatasource.TimelineScale.valueOf(info.scale()), current);
 	}
 
-	private void refreshViews(TimelineDatasource.Measurement measurement) {
-		notifier.refreshSummary(summaryOf(measurement));
-		notifier.refreshSerie(serieOf(measurement));
-		notifier.refreshCustomView(measurement.customHtmlView(scale(measurement)));
+	private void refreshViews(TimelineDatasource.Magnitude magnitude) {
+		notifier.refreshSummary(summaryOf(magnitude));
+		notifier.refreshSerie(serieOf(magnitude));
+		notifier.refreshCustomView(magnitude.customHtmlView(scale(magnitude)));
 	}
 
 }
