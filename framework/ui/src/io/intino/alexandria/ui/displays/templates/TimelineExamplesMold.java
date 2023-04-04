@@ -1,8 +1,7 @@
 package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.model.TimeScale;
-import io.intino.alexandria.ui.model.timeline.MeasurementDefinition;
+import io.intino.alexandria.ui.model.timeline.MagnitudeDefinition;
 import io.intino.alexandria.ui.model.timeline.TimelineDatasource;
 import io.intino.alexandria.ui.model.timeline.TimelineDatasource.TimelineScale;
 
@@ -36,12 +35,12 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			}
 
 			@Override
-			public List<MeasurementDefinition> measurements() {
+			public List<MagnitudeDefinition> magnitudes() {
 				return List.of(measurementOf("m1", "%", "Medida 1"), measurementOf("m2", "€", "Medida 2"));
 			}
 
 			@Override
-			public Measurement measurement(MeasurementDefinition definition) {
+			public Magnitude magnitude(MagnitudeDefinition definition) {
 				if (definition.name().equalsIgnoreCase("m1")) return m1(definition);
 				return m2(definition);
 			}
@@ -53,8 +52,8 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 		};
 	}
 
-	private TimelineDatasource.Measurement m1(MeasurementDefinition definition) {
-		return new TimelineDatasource.Measurement() {
+	private TimelineDatasource.Magnitude m1(MagnitudeDefinition definition) {
+		return new TimelineDatasource.Magnitude() {
 
 			@Override
 			public Instant from() {
@@ -107,7 +106,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			}
 
 			@Override
-			public MeasurementDefinition definition() {
+			public MagnitudeDefinition definition() {
 				return definition;
 			}
 
@@ -169,8 +168,8 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 		};
 	}
 
-	private TimelineDatasource.Measurement m2(MeasurementDefinition definition) {
-		return new TimelineDatasource.Measurement() {
+	private TimelineDatasource.Magnitude m2(MagnitudeDefinition definition) {
+		return new TimelineDatasource.Magnitude() {
 
 			@Override
 			public Instant from() {
@@ -223,7 +222,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			}
 
 			@Override
-			public MeasurementDefinition definition() {
+			public MagnitudeDefinition definition() {
 				return definition;
 			}
 
@@ -285,7 +284,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 		};
 	}
 
-	private MeasurementDefinition measurementOf(String name, String unit, String label) {
-		return new MeasurementDefinition().name(name).unit(unit).add("es", label).decimalCount(0);
+	private MagnitudeDefinition measurementOf(String name, String unit, String label) {
+		return new MagnitudeDefinition().name(name).unit(unit).add("es", label).decimalCount(0);
 	}
 }

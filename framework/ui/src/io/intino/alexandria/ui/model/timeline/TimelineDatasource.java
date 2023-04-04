@@ -6,22 +6,22 @@ import java.util.Map;
 
 public interface TimelineDatasource {
 	String name();
-	List<MeasurementDefinition> measurements();
-	Measurement measurement(MeasurementDefinition definition);
+	List<MagnitudeDefinition> magnitudes();
+	Magnitude magnitude(MagnitudeDefinition definition);
 	enum TimelineScale { Minute, Hour, Day, Week, Month, Year }
 	List<TimelineScale> scales();
 
-	default MeasurementDefinition measurementDefinition(String name) {
-		return measurements().stream().filter(d -> d.name().equals(name)).findFirst().orElse(null);
+	default MagnitudeDefinition magnitudeDefinition(String name) {
+		return magnitudes().stream().filter(d -> d.name().equals(name)).findFirst().orElse(null);
 	}
 
-	default Measurement measurement(String measurementName) {
-		MeasurementDefinition measurement = measurementDefinition(measurementName);
-		return measurement != null ? measurement(measurement) : null;
+	default Magnitude magnitude(String magnitudeName) {
+		MagnitudeDefinition magnitude = magnitudeDefinition(magnitudeName);
+		return magnitude != null ? magnitude(magnitude) : null;
 	}
 
-	interface Measurement {
-		MeasurementDefinition definition();
+	interface Magnitude {
+		MagnitudeDefinition definition();
 
 		double value();
 		Double min();

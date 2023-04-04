@@ -1,3 +1,3 @@
 export default {
-  TIMELINE_MEASUREMENT: 'TimelineMeasurement',
+  TIMELINE_MAGNITUDE: 'TimelineMagnitude',
 }
