@@ -231,6 +231,8 @@ public class Message {
 			checkElementTypeIsSupported(item);
 			list.append(item == null ? Null : item).append(ListSep);
 		}
+		int length = list.length();
+		if(length > 1) list.setLength(length - 1);
 		return list.toString();
 	}
 
@@ -301,17 +303,17 @@ public class Message {
 		default String[] asMultiline() {return data().split("\n", -1);}
 
 		/**
-		 * <p>Returns an Optional wrapping this value's raw data. If the data is null or not set, then an empty Optional is returned.</p>
+		 * <p>Returns an Optional wrapping this value's raw data. If the data is null, empty string or is not set, then an empty Optional is returned.</p>
 		 * */
 		default Optional<String> asOptional() {
-			return isEmpty() || isNull() ? Optional.empty() : Optional.ofNullable(data());
+			return (isEmpty() || isNull() || data().isEmpty()) ? Optional.empty() : Optional.ofNullable(data());
 		}
 
 		/**
 		 * <p>Returns an Optional wrapping the result of parsing this value to the specified type. If it fails to parse, an empty Optional is returned.</p>
 		 * */
 		default <T> Optional<T> asOptional(Class<T> type) {
-			try {return isEmpty() || isNull() ? Optional.empty() : Optional.ofNullable(as(type));} catch (Exception ignored) {return Optional.empty();}
+			try {return (isEmpty() || isNull() || data().isEmpty()) ? Optional.empty() : Optional.ofNullable(as(type));} catch (Exception ignored) {return Optional.empty();}
 		}
 
 		/**

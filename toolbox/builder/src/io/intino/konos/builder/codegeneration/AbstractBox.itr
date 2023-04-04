@@ -348,6 +348,7 @@ def type(terminal) trigger(init)
 		java.time.Instant sealStamp = this.terminal.requestLastSeal();
 		Logger.info("Last seal on " + sealStamp.toString());
 		java.util.function.Predicate<java.time.Instant> filter = i -> !i.isBefore(sealStamp);
+		this.terminal.initDatamarts();
 		$subscriber...[$NL]
 	}
 end
