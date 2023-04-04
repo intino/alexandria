@@ -144,8 +144,13 @@ class Timeline extends AbstractTimeline {
     }
 
     renderHistoryDialog = () => {
-        if (this.state.measurement == null) return (<React.Fragment/>);
+        if (this.state.measurement == null || !this.state.history.visible) return (<React.Fragment/>);
         const { classes } = this.props;
+        const hasHistoryData = this.state.history.data.length > 0;
+        window.setTimeout(() => {
+            if (hasHistoryData) return;
+            this.requester.fetch({ measurement: this.state.measurement.name, start: this.state.history.from, end: this.state.history.to })
+        }, 100);
         return (
             <Dialog fullScreen={true} TransitionComponent={Timeline.SlideTransition} open={this.state.history.visible} onClose={this.handleCloseHistoryDialog.bind(this)}>
                 <AppBar className={classes.dialogHeader}>
@@ -154,7 +159,10 @@ class Timeline extends AbstractTimeline {
                         <div className="layout horizontal end-justified flex"><IconButton onClick={this.handleCloseHistoryDialog.bind(this)} className={classes.icon}><Close fontSize="large"/></IconButton></div>
                     </div>
                 </AppBar>
-                <DialogContent style={{marginTop:'60px'}}>{this.renderHistory(this.state.history, this.state.measurement)}</DialogContent>
+                <DialogContent style={{marginTop:'60px'}}>
+                    {!hasHistoryData && <div className="layout vertical flex center-center" style={{marginTop:'10%'}}><Typography variant="h5">{this.translate("Not enough data yet")}</Typography></div>}
+                    {hasHistoryData && this.renderHistory(this.state.history, this.state.measurement)}
+                </DialogContent>
             </Dialog>
         );
     };
@@ -208,6 +216,7 @@ class Timeline extends AbstractTimeline {
         const fetch = this.fetch.bind(this, measurement, this.translate.bind(this));
         const translate = this.translate.bind(this);
         const minRange = this.minRange(measurement);
+        const formatDate = this.formatDate.bind(this, measurement, translate);
         if (data.length <= 0) data.push([new Date(history.to), null]);
         return {
             chart: {
@@ -217,7 +226,7 @@ class Timeline extends AbstractTimeline {
             tooltip: {
                 enabled: true,
                 formatter: function() {
-                    return '<b>' + Highcharts.numberFormat(this.y,decimalCount) + (unit != null ? " " + unit : "") + '</b><br/>' + Highcharts.dateFormat(translate('%Y/%m/%d %H:%M'), this.x);
+                    return '<b>' + Highcharts.numberFormat(this.y,decimalCount) + (unit != null ? " " + unit : "") + '</b><br/>' + formatDate(this.x);
                 }
             },
 
@@ -241,7 +250,8 @@ class Timeline extends AbstractTimeline {
                     { type: 'year', count: 10, text: 'Y'},
                 ],
                 inputEnabled: false, // it supports only days
-                selected: 0
+                selected: this.selectionIndex(measurement),
+                enabled: false,
             },
 
             xAxis: {
@@ -251,7 +261,7 @@ class Timeline extends AbstractTimeline {
                 max: history.to,
             },
 
-            yAxis: { floor: 0, min: this.minValue(history, measurement), max: this.maxValue(history, measurement) },
+            yAxis: { floor: this.minValue(history, measurement), min: this.minValue(history, measurement), max: this.maxValue(history, measurement) },
             series: [{ data: data, dataGrouping: { enabled: false } }]
         };
     };
@@ -266,34 +276,57 @@ class Timeline extends AbstractTimeline {
         return 3600 * 1000;
     };
 
+    selectionIndex = (measurement) => {
+        const scale = measurement.summary.scale;
+        if (scale == "Hour") return 0;
+        else if (scale == "Day") return 1;
+        else if (scale == "Week") return 2;
+        else if (scale == "Month") return 3;
+        else if (scale == "Year") return 4;
+        return 1;
+    };
+
+    formatDate = (measurement, translate, value) => {
+        const scale = measurement.summary.scale;
+        let format = '%Y/%m/%d %H:%M';
+        if (scale == "Day") format = '%Y/%m/%d';
+        else if (scale == "Week") format = '%Y/%m/%d';
+        else if (scale == "Month") format = '%Y/%m';
+        else if (scale == "Year") format = '%Y';
+        return Highcharts.dateFormat(translate(format), value);
+    };
+
     openHistory = (measurement) => {
         this.setState({measurement: measurement, history: { visible: true, from: null, to: null, data: [] } });
         this.requester.openHistory(measurement.name);
     };
 
 	fetch = (measurement, translate, e) => {
-	    this.chart = e.target;
-	    this.requester.fetch({ measurement: measurement.name, start: e.min, end: e.max });
+        this.chart = e.target;
+        this.requester.fetch({ measurement: measurement.name, start: e.min, end: e.max });
 	};
 
 	minValue = (history, measurement) => {
 	    const unit = measurement.unit;
 	    if (unit == "ºC") return -50;
-	    return 0;
+	    return measurement.min != null ? measurement.min : 0;
 	};
 
 	maxValue = (history, measurement) => {
 	    const unit = measurement.unit;
 	    if (unit == "ºC") return 120;
 	    else if (unit == "%") return 120;
-	    return null;
+	    return measurement.max != null ? measurement.max : null;
 	};
 
 	refreshHistory = (dataObjects) => {
-	    let data = [];
-	    for (let i=0; i<dataObjects.length; i++) { data.push([dataObjects[i].date, dataObjects[i].value]); }
-	    this.chart.series[0].setData(data);
-	    this.chart.redraw();
+	    const history = this.state.history;
+	    history.data = [];
+	    for (let i=0; i<dataObjects.length; i++) {
+	        if (history.from > dataObjects[i].date) history.from = dataObjects[i].date;
+	        history.data.push([dataObjects[i].date, dataObjects[i].value]);
+        }
+	    this.setState({history: history});
 	};
 
 	historyHeight = () => {

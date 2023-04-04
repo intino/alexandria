@@ -1,5 +1,6 @@
 package io.intino.alexandria.ui.displays.components;
 
+import com.google.gson.JsonObject;
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.*;
@@ -123,9 +124,9 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 
 	public void fetch(TimelineHistoryFetch fetch) {
 		TimelineDatasource.Measurement measurement = source.measurement(fetch.measurement());
-		TimelineDatasource.TimelineScale scale = source.scales().size() > 0 ? source.scales().get(0) : TimelineDatasource.TimelineScale.Hour;
+		TimelineDatasource.TimelineScale scale = scale(measurement);
 		Map<Instant, Double> values = measurement.serie(scale, fetch.start(), fetch.end()).values();
-		notifier.refreshHistory(values.entrySet().stream().map(this::historyEntryOf).collect(Collectors.toList()));
+		notifier.refreshHistory(fillWithZeros(values, fetch.end(), scale).entrySet().stream().map(this::historyEntryOf).collect(Collectors.toList()));
 	}
 
 	private TimelineHistoryEntry historyEntryOf(Map.Entry<Instant, Double> entry) {
@@ -210,6 +211,18 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		if (scale == TimelineDatasource.TimelineScale.Week) return ChronoUnit.WEEKS;
 		if (scale == TimelineDatasource.TimelineScale.Month) return ChronoUnit.MONTHS;
 		return ChronoUnit.YEARS;
+	}
+
+	private Map<Instant, Double> fillWithZeros(Map<Instant, Double> result, Instant to, TimelineDatasource.TimelineScale scale) {
+		if (result.size() >= summaryPointsCount) return result;
+		LocalDateTime mockDate = LocalDateTime.ofInstant(result.isEmpty() ? to : new ArrayList<>(result.keySet()).get(0), ZoneOffset.UTC);
+		while (result.size() < summaryPointsCount) {
+			mockDate = mockDate.minus(1, chronoUnitOf(scale));
+			result.put(mockDate.toInstant(ZoneOffset.UTC), 0.);
+		}
+		List<Instant> keys = new ArrayList<>(result.keySet());
+		keys.sort(Instant::compareTo);
+		return keys.stream().collect(Collectors.toMap(k -> k, result::get, (k,v) -> k, LinkedHashMap::new));
 	}
 
 	private List<Double> fillWithZeros(List<Double> result) {
