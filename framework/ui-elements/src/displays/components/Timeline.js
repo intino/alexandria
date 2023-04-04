@@ -160,8 +160,10 @@ class Timeline extends AbstractTimeline {
                     </div>
                 </AppBar>
                 <DialogContent style={{marginTop:'60px'}}>
-                    {!hasHistoryData && <div className="layout vertical flex center-center" style={{marginTop:'10%'}}><Typography variant="h5">{this.translate("Not enough data yet")}</Typography></div>}
-                    {hasHistoryData && this.renderHistory(this.state.history, this.state.magnitude)}
+                    <div style={{width:'100%',height:'100%'}} ref={this.historyContainer}>
+                        {!hasHistoryData && <div className="layout vertical flex center-center" style={{marginTop:'10%'}}><Typography variant="h5">{this.translate("Not enough data yet")}</Typography></div>}
+                        {hasHistoryData && this.renderHistory(this.state.history, this.state.magnitude)}
+                    </div>
                 </DialogContent>
             </Dialog>
         );
@@ -201,9 +203,7 @@ class Timeline extends AbstractTimeline {
 
     renderHistory = (history, magnitude) => {
         return (
-            <div style={{width:'100%',height:'100%'}} ref={this.historyContainer}>
-                <HighchartsReact highcharts={Highcharts} constructorType={'stockChart'} options={this.historyOptions(history, magnitude)} />
-            </div>
+            <HighchartsReact highcharts={Highcharts} constructorType={'stockChart'} options={this.historyOptions(history, magnitude)} />
         );
     };
 
