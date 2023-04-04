@@ -10,27 +10,30 @@ def type(factory)
 	import java.util.stream.Stream;
 
 	public class MounterFactory {
-		private Map<Class<? extends Event>, List<Mounter>> mounters = new HashMap<>();
+		private Map<Class<? extends Event>, List<Mounter>> mountersByClass = new HashMap<>();
+		private Map<String, List<Mounter>> mountersByType = new HashMap<>();
 
 		public MounterFactory($box+firstUpperCase~Box box) {
 			$event+put...[$NL]
 		}
 
 		public List<Mounter> mountersOf(Event event) {
-			return mounters.get(event.getClass());
+			List<Mounter> mounters = mountersByClass.getOrDefault(event.getClass(), List.of());
+			if (mounters.isEmpty()) mounters = mountersByType.getOrDefault(event.type(), List.of());
+			return mounters;
 		}
 
 		public void handle(Event... events) {
 			Stream.of(events).forEach(event -> {
-				List<Mounter> mounters = mountersOf(event);
-				if (mounters != null) mounters.forEach(m -> m.handle(event));
+				mountersOf(event).forEach(m -> m.handle(event));
 			});
 		}
 	}
 end
 
 def trigger(put)
-	mounters.put($eventType.class, java.util.List.of($mounter...[, ]));
+	mountersByClass.put($eventType.class, java.util.List.of($mounter...[, ]));
+	mountersByType.put("$type", java.util.List.of($mounter...[, ]));
 end
 
 def trigger(mounter)
