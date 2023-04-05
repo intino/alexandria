@@ -27,7 +27,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	private List<TimelineMagnitudeSorting> magnitudesSorting;
 	private int summaryPointsCount = DefaultSummaryPointsCount;
 	private final Map<String, TimelineDatasource.TimelineScale> magnitudeScales = new HashMap<>();
-	private final Map<String, Map<TimelineDatasource.TimelineScale, LocalDateTime>> summaryDates = new HashMap<>();
+	private final Map<String, Map<TimelineDatasource.TimelineScale, Instant>> currentInstants = new HashMap<>();
 
 	private static final int DefaultSummaryPointsCount = 24;
 
@@ -78,21 +78,21 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 
 	public void beforeSummary(TimelineParameterInfo info) {
 		TimelineDatasource.Magnitude magnitude = source.magnitude(info.magnitude());
-		LocalDateTime current = summaryDate(magnitude, info);
-		LocalDateTime from = LocalDateTime.ofInstant(magnitude.from(), ZoneOffset.UTC);
-		current = current.minus(1, unitOf(info.scale()));
+		Instant current = currentInstant(magnitude, info);
+		Instant from = magnitude.from();
+		current = magnitude.previous(current, scale(magnitude));
 		if (current.isBefore(from)) current = from;
-		saveSummaryDate(magnitude, info, current);
+		saveCurrentInstant(magnitude, info, current);
 		refreshViews(magnitude);
 	}
 
 	public void nextSummary(TimelineParameterInfo info) {
 		TimelineDatasource.Magnitude magnitude = source.magnitude(info.magnitude());
-		LocalDateTime current = summaryDate(magnitude, info);
-		LocalDateTime to = LocalDateTime.ofInstant(magnitude.to(), ZoneOffset.UTC);
-		current = current.plus(1, unitOf(info.scale()));
+		Instant current = currentInstant(magnitude, info);
+		Instant to = magnitude.to();
+		current = magnitude.next(current, scale(magnitude));
 		if (current.isAfter(to)) current = to;
-		saveSummaryDate(magnitude, info, current);
+		saveCurrentInstant(magnitude, info, current);
 		refreshViews(magnitude);
 	}
 
@@ -148,7 +148,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 
 	private TimelineSummary summaryOf(TimelineDatasource.Magnitude magnitude) {
 		TimelineDatasource.TimelineScale scale = scale(magnitude);
-		Instant date = summaryDate(magnitude, scale).toInstant(ZoneOffset.UTC);
+		Instant date = currentInstant(magnitude, scale);
 		TimelineDatasource.Summary summary = magnitude.summary(date, scale);
 		return new TimelineSummary().label(summary.label())
 									.average(summaryValueOf(summary.average(), date))
@@ -166,9 +166,10 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	private TimelineSerie serieOf(TimelineDatasource.Magnitude magnitude) {
 		TimelineSerie result = new TimelineSerie();
 		TimelineDatasource.TimelineScale scale = scale(magnitude);
-		TimelineDatasource.Serie serie = magnitude.serie(scale);
+		Instant current = currentInstant(magnitude, scale);
+		TimelineDatasource.Serie serie = magnitude.serie(scale, current);
 		result.name(serie.name());
-		result.categories(categoriesOf(serie, magnitude.to(), scale));
+		result.categories(categoriesOf(serie, current, scale));
 		result.values(loadValues(serie));
 		return result;
 	}
@@ -253,33 +254,22 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		return new Locale("en", "EN");
 	}
 
-	private static final Map<TimelineDatasource.TimelineScale, TemporalUnit> TemporalUnits = Map.of(
-			TimelineDatasource.TimelineScale.Day, ChronoUnit.DAYS,
-			TimelineDatasource.TimelineScale.Week, ChronoUnit.WEEKS,
-			TimelineDatasource.TimelineScale.Month, ChronoUnit.MONTHS,
-			TimelineDatasource.TimelineScale.Year, ChronoUnit.YEARS
-	);
-
-	private TemporalUnit unitOf(String scaleName) {
-		return TemporalUnits.getOrDefault(TimelineDatasource.TimelineScale.valueOf(scaleName), ChronoUnit.DAYS);
+	private Instant currentInstant(TimelineDatasource.Magnitude magnitude, TimelineParameterInfo info) {
+		return currentInstant(magnitude, TimelineDatasource.TimelineScale.valueOf(info.scale()));
 	}
 
-	private LocalDateTime summaryDate(TimelineDatasource.Magnitude magnitude, TimelineParameterInfo info) {
-		return summaryDate(magnitude, TimelineDatasource.TimelineScale.valueOf(info.scale()));
-	}
-
-	private LocalDateTime summaryDate(TimelineDatasource.Magnitude magnitude, TimelineDatasource.TimelineScale scale) {
-		if (!summaryDates.containsKey(magnitude.definition().name())) return LocalDateTime.ofInstant(magnitude.to(), ZoneOffset.UTC);
-		return summaryDates.get(magnitude.definition().name()).getOrDefault(scale, LocalDateTime.ofInstant(magnitude.to(), ZoneOffset.UTC));
+	private Instant currentInstant(TimelineDatasource.Magnitude magnitude, TimelineDatasource.TimelineScale scale) {
+		if (!currentInstants.containsKey(magnitude.definition().name())) return magnitude.to();
+		return currentInstants.get(magnitude.definition().name()).getOrDefault(scale, magnitude.to());
 	}
 
 	private TimelineDatasource.TimelineScale scale(TimelineDatasource.Magnitude magnitude) {
 		return magnitudeScales.getOrDefault(magnitude.definition().name(), source.scales().get(0));
 	}
 
-	private void saveSummaryDate(TimelineDatasource.Magnitude magnitude, TimelineParameterInfo info, LocalDateTime current) {
-		if (!summaryDates.containsKey(info.magnitude())) summaryDates.put(info.magnitude(), new HashMap<>());
-		summaryDates.get(info.magnitude()).put(TimelineDatasource.TimelineScale.valueOf(info.scale()), current);
+	private void saveCurrentInstant(TimelineDatasource.Magnitude magnitude, TimelineParameterInfo info, Instant value) {
+		if (!currentInstants.containsKey(info.magnitude())) currentInstants.put(info.magnitude(), new HashMap<>());
+		currentInstants.get(info.magnitude()).put(TimelineDatasource.TimelineScale.valueOf(info.scale()), value);
 	}
 
 	private void refreshViews(TimelineDatasource.Magnitude magnitude) {

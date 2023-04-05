@@ -29,11 +29,13 @@ public interface TimelineDatasource {
 		Double percentage();
 
 		Instant from();
+		Instant previous(Instant date, TimelineScale scale);
+		Instant next(Instant date, TimelineScale scale);
 		Instant to();
 
 		Summary summary(Instant date, TimelineScale scale);
 
-		Serie serie(TimelineScale scale);
+		Serie serie(TimelineScale scale, Instant end);
 		Serie serie(TimelineScale scale, Instant start, Instant end);
 
 		String customHtmlView(TimelineScale scale);

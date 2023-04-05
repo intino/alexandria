@@ -6,7 +6,10 @@ import io.intino.alexandria.ui.model.timeline.TimelineDatasource;
 import io.intino.alexandria.ui.model.timeline.TimelineDatasource.TimelineScale;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -58,6 +61,16 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			@Override
 			public Instant from() {
 				return Instant.now().minus(30, ChronoUnit.DAYS);
+			}
+
+			@Override
+			public Instant previous(Instant date, TimelineScale scale) {
+				return LocalDateTime.ofInstant(date, ZoneOffset.UTC).minus(1, unitOf(scale)).toInstant(ZoneOffset.UTC);
+			}
+
+			@Override
+			public Instant next(Instant date, TimelineScale scale) {
+				return LocalDateTime.ofInstant(date, ZoneOffset.UTC).plus(1, unitOf(scale)).toInstant(ZoneOffset.UTC);
 			}
 
 			@Override
@@ -131,7 +144,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			}
 
 			@Override
-			public TimelineDatasource.Serie serie(TimelineScale scale) {
+			public TimelineDatasource.Serie serie(TimelineScale scale, Instant date) {
 				return new TimelineDatasource.Serie() {
 					@Override
 					public String name() {
@@ -141,15 +154,15 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 					@Override
 					public Map<Instant, Double> values() {
 						return new HashMap<>() {{
-							put(Instant.now().minus(8, ChronoUnit.DAYS), 120.0);
-							put(Instant.now().minus(7, ChronoUnit.DAYS), 100.0);
-							put(Instant.now().minus(6, ChronoUnit.DAYS), 10.0);
-							put(Instant.now().minus(5, ChronoUnit.DAYS), 20.0);
-							put(Instant.now().minus(4, ChronoUnit.DAYS), 1220.0);
-							put(Instant.now().minus(3, ChronoUnit.DAYS), 192.0);
-							put(Instant.now().minus(2, ChronoUnit.DAYS), 1232.0);
-							put(Instant.now().minus(1, ChronoUnit.DAYS), 12.0);
-							put(Instant.now(), 12.0);
+							put(date.minus(8, ChronoUnit.DAYS), 120.0);
+							put(date.minus(7, ChronoUnit.DAYS), 100.0);
+							put(date.minus(6, ChronoUnit.DAYS), 10.0);
+							put(date.minus(5, ChronoUnit.DAYS), 20.0);
+							put(date.minus(4, ChronoUnit.DAYS), 1220.0);
+							put(date.minus(3, ChronoUnit.DAYS), 192.0);
+							put(date.minus(2, ChronoUnit.DAYS), 1232.0);
+							put(date.minus(1, ChronoUnit.DAYS), 12.0);
+							put(date, 12.0);
 						}};
 					}
 				};
@@ -157,7 +170,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 
 			@Override
 			public TimelineDatasource.Serie serie(TimelineScale scale, Instant start, Instant end) {
-				return serie(scale);
+				return serie(scale, end);
 			}
 
 			@Override
@@ -174,6 +187,16 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			@Override
 			public Instant from() {
 				return Instant.now().minus(30, ChronoUnit.DAYS);
+			}
+
+			@Override
+			public Instant previous(Instant date, TimelineScale scale) {
+				return LocalDateTime.ofInstant(date, ZoneOffset.UTC).minus(1, unitOf(scale)).toInstant(ZoneOffset.UTC);
+			}
+
+			@Override
+			public Instant next(Instant date, TimelineScale scale) {
+				return LocalDateTime.ofInstant(date, ZoneOffset.UTC).plus(1, unitOf(scale)).toInstant(ZoneOffset.UTC);
 			}
 
 			@Override
@@ -247,7 +270,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			}
 
 			@Override
-			public TimelineDatasource.Serie serie(TimelineScale scale) {
+			public TimelineDatasource.Serie serie(TimelineScale scale, Instant date) {
 				return new TimelineDatasource.Serie() {
 					@Override
 					public String name() {
@@ -287,4 +310,18 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 	private MagnitudeDefinition measurementOf(String name, String unit, String label) {
 		return new MagnitudeDefinition().name(name).unit(unit).add("es", label).decimalCount(0);
 	}
+
+	private static final Map<TimelineDatasource.TimelineScale, TemporalUnit> TemporalUnits = Map.of(
+			TimelineDatasource.TimelineScale.Minute, ChronoUnit.MINUTES,
+			TimelineDatasource.TimelineScale.Hour, ChronoUnit.HOURS,
+			TimelineDatasource.TimelineScale.Day, ChronoUnit.DAYS,
+			TimelineDatasource.TimelineScale.Week, ChronoUnit.WEEKS,
+			TimelineDatasource.TimelineScale.Month, ChronoUnit.MONTHS,
+			TimelineDatasource.TimelineScale.Year, ChronoUnit.YEARS
+	);
+
+	private TemporalUnit unitOf(TimelineDatasource.TimelineScale scale) {
+		return TemporalUnits.getOrDefault(scale, ChronoUnit.HOURS);
+	}
+
 }

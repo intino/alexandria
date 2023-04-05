@@ -35,11 +35,13 @@ const FileService = {
             },
 
             download: (message) => {
-                var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
                 var url = buildUrl(message) + '?' + $.param(buildRequest(message));
-
-                if (isFirefox) window.open(url, 'download_window');
-                else location.href = url;
+                var a = document.createElement('A');
+                a.href = url;
+                a.download = url;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
             }
         };
 
