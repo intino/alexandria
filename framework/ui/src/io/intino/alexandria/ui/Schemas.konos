@@ -302,6 +302,12 @@ Schema TimelineHistoryEntry
 	Attribute date as DateTime
 	Attribute value as Real
 
+Schema TimelineHistoryToolbar
+	Attribute label as Text
+	Attribute scale as Text
+	Attribute canNext as Bool
+	Attribute canPrevious as Bool
+
 Schema TimelineHistoryFetch
 	Attribute magnitude as Text
 	Attribute start as DateTime
@@ -310,8 +316,11 @@ Schema TimelineHistoryFetch
 Schema TimelineSetup
 	Attribute name as Text
 	Attribute mode as Text
-	Attribute scales as Text List
+	Attribute stateLabel as Text
+	Attribute historyLabel as Text
 	Attribute magnitudes as Object(TimelineMagnitude) List
+	Attribute scales as Text List
+	Attribute toolbar as Object(TimelineHistoryToolbar)
 
 Schema TimelineMagnitudeVisibility
 	Attribute name as Text
@@ -324,6 +333,7 @@ Schema TimelineMagnitudeSorting
 Schema TimelineMagnitude
 	Attribute name as Text
 	Attribute label as Text
+	Attribute status as Text
 	Attribute value as Real
 	Attribute min as Text
 	Attribute max as Text
@@ -334,18 +344,10 @@ Schema TimelineMagnitude
 	Attribute serie as Object(TimelineSerie)
 	Attribute customView as Text
 
-Schema TimelineParameterInfo
-	Attribute magnitude as Text
-	Attribute scale as Text
-
 Schema TimelineSummary
-	Attribute label as Text
-	Attribute scale as Text
 	Attribute average as Object(TimelineSummaryValue)
 	Attribute min as Object(TimelineSummaryValue)
 	Attribute max as Object(TimelineSummaryValue)
-	Attribute canBefore as Bool
-	Attribute canNext as Bool
 
 Schema TimelineSummaryValue
 	Attribute value as Real

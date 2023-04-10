@@ -15,14 +15,15 @@ import HighchartsReact from 'highcharts-react-official';
 import Delayer from 'alexandria-ui-elements/src/util/Delayer';
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
+import TimelineToolbar from './timeline/toolbar'
 import TimelineMagnitude from './timeline/magnitude'
 import Theme from "app-elements/gen/Theme";
 
 const styles = theme => ({
-    magnitude : { position:'relative', padding:'5px', marginBottom: '1px' },
+    magnitude : { position:'relative', padding:'5px 0', marginBottom: '1px' },
     scale : { cursor:'pointer',padding:'0 4px' },
     selectedScale : { backgroundColor: theme.palette.primary.main, color: 'white' },
-    summaryMagnitude : { minWidth:'60px', paddingRight: '15px' },
+    summaryMagnitude : { minWidth:'60px', padding: '5px 15px 5px 5px' },
     catalogMagnitude : { minWidth:'180px' },
     value : { marginRight: '2px', fontSize: '35pt', lineHeight: 1},
     catalogValue : { fontSize: '25pt' },
@@ -49,11 +50,14 @@ class Timeline extends AbstractTimeline {
 		this.historyContainer = React.createRef();
 		this.state = {
 		    ...this.state,
+		    stateLabel : "",
+		    historyLabel : "",
 		    inside : false,
 		    openConfiguration : false,
 		    history : { visible: true, from: null, to: null, data: [] },
 		    magnitude : null,
 		    scales: [],
+		    toolbar: { label: '', scale: null, canNext: false, canPrevious: false },
 		    magnitudes: [],
 		    magnitudesVisibility : {},
 		    magnitudesSorting : {},
@@ -67,7 +71,7 @@ class Timeline extends AbstractTimeline {
     setup = (info) => {
         const magnitudesVisibility = this.getCookie(info.name + "_visibility") != null ? this.getCookie(info.name + "_visibility") : this.state.magnitudesVisibility;
         const magnitudesSorting = this.getCookie(info.name + "_sorting") != null ? this.getCookie(info.name + "_sorting") : this.state.magnitudesSorting;
-        this.setState({ scales: info.scales, magnitudes: info.magnitudes, magnitudesVisibility: magnitudesVisibility, magnitudesSorting: magnitudesSorting, sourceName: info.name });
+        this.setState({ scales: info.scales, stateLabel: info.stateLabel, toolbar: info.toolbar, historyLabel: info.historyLabel, magnitudes: info.magnitudes, magnitudesVisibility: magnitudesVisibility, magnitudesSorting: magnitudesSorting, sourceName: info.name });
     };
 
     refreshMagnitudesVisibility = (visibility) => {
@@ -82,19 +86,8 @@ class Timeline extends AbstractTimeline {
         this.setState({magnitudesSorting: newSorting});
     };
 
-    refreshSummary = (summary) => {
-        this.selectedMagnitude.summary = summary;
-        this.setState({magnitudes: this.state.magnitudes})
-    };
-
-    refreshSerie = (serie) => {
-        this.selectedMagnitude.serie = serie;
-        this.setState({magnitudes: this.state.magnitudes})
-    };
-
-    refreshCustomView = (view) => {
-        this.selectedMagnitude.customView = view;
-        this.setState({magnitudes: this.state.magnitudes})
+    refreshMagnitudes = (magnitudes) => {
+        this.setState({magnitudes});
     };
 
     showHistoryDialog = (history) => {
@@ -107,6 +100,7 @@ class Timeline extends AbstractTimeline {
         return (
             <DndProvider backend={HTML5Backend}>
                 <div className={layoutClassNames} onMouseEnter={this.handleMouseEnter.bind(this)} onMouseLeave={this.handleMouseLeave.bind(this)}>
+                    {this.renderHeader()}
                     {this.renderMagnitudes()}
                     {this.renderHistoryDialog()}
                     {this.renderConfigurationDialog()}
@@ -122,6 +116,35 @@ class Timeline extends AbstractTimeline {
 
     handleMouseLeave = () => {
         this.setState({inside: false});
+    };
+
+    renderHeader = () => {
+        if (this.props.mode !== "Catalog") return (<React.Fragment/>);
+        const stateLabel = this.translate(this.state.stateLabel != null ? this.state.stateLabel : "State");
+        const historyLabel = this.translate(this.state.historyLabel != null ? this.state.historyLabel : "History");
+        return (
+            <div className="layout horizontal">
+                <div style={{width:"240px",fontSize:'18pt',fontWeight:'300'}}>{stateLabel}</div>
+                {this.renderToolbar({fontWeight:'300'})}
+            </div>
+        );
+    };
+
+    renderToolbar = (style) => {
+        return (
+            <TimelineToolbar
+                label={{title:this.state.historyLabel, style:style}}
+                scales={this.state.scales}
+                toolbar={this.state.toolbar}
+                onFirst={this.first.bind(this)}
+                onPrevious={this.previous.bind(this)}
+                onNext={this.next.bind(this)}
+                onLast={this.last.bind(this)}
+                onChangeScale={this.changeScale.bind(this)}
+                translate={this.translate.bind(this)}
+                classes={this.props.classes}
+            />
+        );
     };
 
     renderMagnitudes = () => {
@@ -185,7 +208,6 @@ class Timeline extends AbstractTimeline {
 
     renderMagnitude = (magnitude, idx) => {
         return (<TimelineMagnitude style={{margin:'5px'}}
-                                     scales={this.state.scales}
                                      magnitude={magnitude}
                                      key={this.props.id + magnitude.name}
                                      index={idx}
@@ -195,9 +217,7 @@ class Timeline extends AbstractTimeline {
                                      openHistory={this.openHistory.bind(this, magnitude)}
                                      translate={this.translate.bind(this)}
                                      moveMagnitude={this.moveMagnitude.bind(this)}
-                                     changeScale={this.changeScale.bind(this, magnitude)}
-                                     beforeSummary={this.beforeSummary.bind(this, magnitude)}
-                                     nextSummary={this.nextSummary.bind(this, magnitude)}
+                                     toolbar={this.renderToolbar({fontSize:'14pt',fontWeight:'300'})}
         />);
     };
 
@@ -329,6 +349,10 @@ class Timeline extends AbstractTimeline {
 	    this.setState({history: history});
 	};
 
+	refreshHistoryToolbar = (toolbar) => {
+	    this.setState({toolbar});
+	};
+
 	historyHeight = () => {
 	    if (this.containerHeight != null) return this.containerHeight;
 	    const result = this.historyContainer.current != null ? this.historyContainer.current.offsetHeight : "400";
@@ -351,19 +375,24 @@ class Timeline extends AbstractTimeline {
         this.setState({magnitudes: magnitudes, magnitudesSorting: this.saveMagnitudesSorting()});
     };
 
-	changeScale = (magnitude, scale) => {
-	    this.selectedMagnitude = magnitude;
-        this.requester.changeScale({magnitude: magnitude.name, scale: scale});
+	changeScale = (scale) => {
+        this.requester.changeScale(scale);
     };
 
-	beforeSummary = (magnitude, summary) => {
-	    this.selectedMagnitude = magnitude;
-        this.requester.beforeSummary({magnitude: magnitude.name, scale: summary.scale});
+	first = () => {
+        this.requester.first();
+	};
+
+	previous = () => {
+        this.requester.previous();
     };
 
-	nextSummary = (magnitude, summary) => {
-	    this.selectedMagnitude = magnitude;
-        this.requester.nextSummary({magnitude: magnitude.name, scale: summary.scale});
+	next = () => {
+        this.requester.next();
+    };
+
+	last = () => {
+        this.requester.last();
     };
 
     renderConfigurationDialog = () => {

@@ -179,19 +179,20 @@ Component htmlViewer
 Component timeline
 	Notification setup as Object(TimelineSetup)
 	Notification refreshHistory as Object(TimelineHistoryEntry) List
+	Notification refreshHistoryToolbar as Object(TimelineHistoryToolbar)
 	Notification refreshMagnitudesVisibility as Object(TimelineMagnitudeVisibility) List
 	Notification refreshMagnitudesSorting as Object(TimelineMagnitudeSorting) List
-	Notification refreshSummary as Object(TimelineSummary)
-	Notification refreshSerie as Object(TimelineSerie)
-	Notification refreshCustomView as Text
+	Notification refreshMagnitudes as Object(TimelineMagnitude) List
 	Notification showHistoryDialog as Object(TimelineHistory)
 	Request openHistory as Text
 	Request fetch as Object(TimelineHistoryFetch)
 	Request magnitudesVisibility as Object(TimelineMagnitudeVisibility) List
 	Request magnitudesSorting as Object(TimelineMagnitudeSorting) List
-	Request beforeSummary as Object(TimelineParameterInfo)
-	Request nextSummary as Object(TimelineParameterInfo)
-	Request changeScale as Object(TimelineParameterInfo)
+	Request first
+	Request previous
+	Request next
+	Request last
+	Request changeScale as Text
 
 Component frame
 	Notification refresh as Text

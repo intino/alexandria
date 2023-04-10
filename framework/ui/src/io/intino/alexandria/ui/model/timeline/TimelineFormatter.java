@@ -2,6 +2,8 @@ package io.intino.alexandria.ui.model.timeline;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
