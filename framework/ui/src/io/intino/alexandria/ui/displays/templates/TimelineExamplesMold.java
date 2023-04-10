@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.time.ZoneOffset.UTC;
+
 public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFrameworkBox> {
 
 	public TimelineExamplesMold(UiFrameworkBox box) {
@@ -52,6 +54,26 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			public List<TimelineScale> scales() {
 				return List.of(TimelineScale.Hour, TimelineScale.Day, TimelineScale.Week, TimelineScale.Month, TimelineScale.Year);
 			}
+
+			@Override
+			public Instant from(TimelineScale scale) {
+				return LocalDateTime.ofInstant(Instant.now(), UTC).minus(30, unitOf(scale)).toInstant(UTC);
+			}
+
+			@Override
+			public Instant previous(Instant date, TimelineScale scale) {
+				return LocalDateTime.ofInstant(date, UTC).minus(1, unitOf(scale)).toInstant(UTC);
+			}
+
+			@Override
+			public Instant next(Instant date, TimelineScale scale) {
+				return LocalDateTime.ofInstant(date, UTC).plus(1, unitOf(scale)).toInstant(UTC);
+			}
+
+			@Override
+			public Instant to(TimelineScale scale) {
+				return Instant.now();
+			}
 		};
 	}
 
@@ -59,33 +81,8 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 		return new TimelineDatasource.Magnitude() {
 
 			@Override
-			public Instant from() {
-				return Instant.now().minus(30, ChronoUnit.DAYS);
-			}
-
-			@Override
-			public Instant previous(Instant date, TimelineScale scale) {
-				return LocalDateTime.ofInstant(date, ZoneOffset.UTC).minus(1, unitOf(scale)).toInstant(ZoneOffset.UTC);
-			}
-
-			@Override
-			public Instant next(Instant date, TimelineScale scale) {
-				return LocalDateTime.ofInstant(date, ZoneOffset.UTC).plus(1, unitOf(scale)).toInstant(ZoneOffset.UTC);
-			}
-
-			@Override
-			public Instant to() {
-				return Instant.now();
-			}
-
-			@Override
 			public TimelineDatasource.Summary summary(Instant date, TimelineScale scale) {
 				return new TimelineDatasource.Summary() {
-					@Override
-					public String label() {
-						return scale.name();
-					}
-
 					@Override
 					public double average() {
 						return 10;
@@ -124,6 +121,11 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			}
 
 			@Override
+			public Status status() {
+				return Status.Warning;
+			}
+
+			@Override
 			public double value() {
 				return 11;
 			}
@@ -144,7 +146,8 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			}
 
 			@Override
-			public TimelineDatasource.Serie serie(TimelineScale scale, Instant date) {
+			public TimelineDatasource.Serie serie(TimelineScale scale, Instant instant) {
+				LocalDateTime date = LocalDateTime.ofInstant(instant, UTC);
 				return new TimelineDatasource.Serie() {
 					@Override
 					public String name() {
@@ -154,15 +157,15 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 					@Override
 					public Map<Instant, Double> values() {
 						return new HashMap<>() {{
-							put(date.minus(8, ChronoUnit.DAYS), 120.0);
-							put(date.minus(7, ChronoUnit.DAYS), 100.0);
-							put(date.minus(6, ChronoUnit.DAYS), 10.0);
-							put(date.minus(5, ChronoUnit.DAYS), 20.0);
-							put(date.minus(4, ChronoUnit.DAYS), 1220.0);
-							put(date.minus(3, ChronoUnit.DAYS), 192.0);
-							put(date.minus(2, ChronoUnit.DAYS), 1232.0);
-							put(date.minus(1, ChronoUnit.DAYS), 12.0);
-							put(date, 12.0);
+							put(date.minus(8, unitOf(scale)).toInstant(UTC), 120.0);
+							put(date.minus(7, unitOf(scale)).toInstant(UTC), 100.0);
+							put(date.minus(6, unitOf(scale)).toInstant(UTC), 10.0);
+							put(date.minus(5, unitOf(scale)).toInstant(UTC), 20.0);
+							put(date.minus(4, unitOf(scale)).toInstant(UTC), 1220.0);
+							put(date.minus(3, unitOf(scale)).toInstant(UTC), 192.0);
+							put(date.minus(2, unitOf(scale)).toInstant(UTC), 1232.0);
+							put(date.minus(1, unitOf(scale)).toInstant(UTC), 12.0);
+							put(date.toInstant(UTC), 12.0);
 						}};
 					}
 				};
@@ -185,33 +188,8 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 		return new TimelineDatasource.Magnitude() {
 
 			@Override
-			public Instant from() {
-				return Instant.now().minus(30, ChronoUnit.DAYS);
-			}
-
-			@Override
-			public Instant previous(Instant date, TimelineScale scale) {
-				return LocalDateTime.ofInstant(date, ZoneOffset.UTC).minus(1, unitOf(scale)).toInstant(ZoneOffset.UTC);
-			}
-
-			@Override
-			public Instant next(Instant date, TimelineScale scale) {
-				return LocalDateTime.ofInstant(date, ZoneOffset.UTC).plus(1, unitOf(scale)).toInstant(ZoneOffset.UTC);
-			}
-
-			@Override
-			public Instant to() {
-				return Instant.now();
-			}
-
-			@Override
 			public TimelineDatasource.Summary summary(Instant date, TimelineScale scale) {
 				return new TimelineDatasource.Summary() {
-					@Override
-					public String label() {
-						return scale.name();
-					}
-
 					@Override
 					public double average() {
 						return 35;
@@ -247,6 +225,11 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			@Override
 			public MagnitudeDefinition definition() {
 				return definition;
+			}
+
+			@Override
+			public Status status() {
+				return Status.Normal;
 			}
 
 			@Override
