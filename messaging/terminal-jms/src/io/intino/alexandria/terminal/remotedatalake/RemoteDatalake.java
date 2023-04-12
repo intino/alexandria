@@ -27,7 +27,7 @@ public class RemoteDatalake implements Datalake {
 		return new Store<>() {
 			@Override
 			public Stream<Tank<MessageEvent>> tanks() {
-				Message response = accessor.query("eventStore/tanks");
+				Message response = accessor.query("messageStore/tanks");
 				if (response == null) return Stream.empty();
 				JsonArray content = Json.fromString(MessageReader.textFrom(response), JsonArray.class);
 				return StreamSupport.stream(content.spliterator(), false).map(o -> new RemoteMessageTank(accessor, o.getAsJsonObject()));
@@ -45,7 +45,7 @@ public class RemoteDatalake implements Datalake {
 		return new Store<>() {
 			@Override
 			public Stream<Tank<MeasurementEvent>> tanks() {
-				Message response = accessor.query("eventStore/tanks");
+				Message response = accessor.query("measurementStore/tanks");
 				if (response == null) return Stream.empty();
 				JsonArray content = Json.fromString(MessageReader.textFrom(response), JsonArray.class);
 				return StreamSupport.stream(content.spliterator(), false).map(o -> new RemoteMeasurementTank(accessor, o.getAsJsonObject()));
