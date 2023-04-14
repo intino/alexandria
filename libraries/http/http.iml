@@ -40,7 +40,7 @@
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-client:9.4.42.v20210604" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-servlet:9.4.42.v20210604" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:exceptions:2.1.1" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Intino: io.intino.alexandria:primitives:1.1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Intino: junit:junit:4.13.2" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.1.0" level="project" />
   </component>
 </module>
