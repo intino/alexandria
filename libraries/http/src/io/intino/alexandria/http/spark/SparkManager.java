@@ -93,10 +93,6 @@ public class SparkManager<P extends PushService> {
 		return request.raw().getParameterMap();
 	}
 
-	public String fromFormParameter(String name) {
-		return request.raw().getParameter(name);
-	}
-
 	public String fromPath(String name) {
 		return request.params(name);
 	}
@@ -133,29 +129,60 @@ public class SparkManager<P extends PushService> {
 		return body;
 	}
 
-	public Resource fromForm(String name) {
+	public Resource fromFormAsResource(String name) {
 		return fromPartAsResource(name);
 	}
 
+	public Resource fromFormAsResourceOrDefault(String name, Resource defaultValue) {
+		Resource resource = fromPartAsResource(name);
+		return resource != null ? resource : defaultValue;
+	}
 
-	public List<Resource> fromPartsAsResource() {
+	public <X extends Throwable> Resource fromFormAsResourceOrElseThrow(String name, Supplier<? extends X> exceptionSupplier) throws X {
+		Resource resource = fromPartAsResource(name);
+		if (resource == null) throw exceptionSupplier.get();
+		return resource;
+	}
+
+	public String fromFormAsString(String name) {
+		return fromPartAsString(name);
+	}
+
+	public String fromFormAsStringOrDefault(String name, String defaultValue) {
+		String content = fromPartAsString(name);
+		return content != null ? content : defaultValue;
+	}
+
+	public <X extends Throwable> String fromFormAsStringOrElseThrow(String name, Supplier<? extends X> exceptionSupplier) throws X {
+		String resource = fromPartAsString(name);
+		if (resource == null) throw exceptionSupplier.get();
+		return resource;
+	}
+
+	public List<Resource> fromPartsAsResources() {
 		try {
-			return request.raw().getParts().stream().filter(p -> !textContentType(p)).map(p -> fromPartAsResource(p.getName())).collect(Collectors.toList());
+			return request.raw().getParts().stream()
+					.filter(p -> !textContentType(p))
+					.map(p -> fromPartAsResource(p.getName()))
+					.collect(Collectors.toList());
 		} catch (ServletException | IOException e) {
 			return Collections.emptyList();
 		}
 	}
 
-	public List<Resource> fromPartsAsString() {
+	public List<String> fromPartsAsStrings() {
 		try {
-			return request.raw().getParts().stream().filter(this::textContentType).map(p -> fromPartAsResource(p.getName())).collect(Collectors.toList());
+			return request.raw().getParts().stream()
+					.filter(this::textContentType)
+					.map(p -> fromPartAsString(p.getName()))
+					.collect(Collectors.toList());
 		} catch (ServletException | IOException e) {
 			return Collections.emptyList();
 		}
 	}
 
 
-	public Resource fromPartAsResource(String name) {
+	private Resource fromPartAsResource(String name) {
 		try {
 			Part part = request.raw().getPart(name);
 			return part != null ? new Resource(part.getSubmittedFileName() == null ? part.getName() : part.getSubmittedFileName(), part.getInputStream()).metadata().contentType(part.getContentType()) : null;
@@ -164,7 +191,7 @@ public class SparkManager<P extends PushService> {
 		}
 	}
 
-	public String fromPartAsString(String name) {
+	private String fromPartAsString(String name) {
 		try {
 			Part part = request.raw().getPart(name);
 			return part != null ? new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8) : null;
