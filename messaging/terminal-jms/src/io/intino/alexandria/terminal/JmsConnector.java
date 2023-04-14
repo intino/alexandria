@@ -8,11 +8,9 @@ import io.intino.alexandria.message.Message;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQSession;
 import org.apache.activemq.command.ActiveMQDestination;
+import org.apache.activemq.command.ActiveMQTextMessage;
 
-import javax.jms.Connection;
-import javax.jms.JMSException;
-import javax.jms.Session;
-import javax.jms.TemporaryQueue;
+import javax.jms.*;
 import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
@@ -425,7 +423,7 @@ public class JmsConnector implements Connector {
 		try {
 			if (cannotSendMessage()) return false;
 			queueProducer(path);
-			return sendMessage(producers.get(path), serialize(message));
+			return sendMessage(producers.get(path), serialize("", message));
 		} catch (JMSException | IOException e) {
 			Logger.error(e);
 			return false;
@@ -436,7 +434,7 @@ public class JmsConnector implements Connector {
 		try {
 			if (cannotSendMessage()) return false;
 			topicProducer(path);
-			return sendMessage(producers.get(path), serialize(message));
+			return sendMessage(producers.get(path), serialize("", message));
 		} catch (JMSException | IOException e) {
 			Logger.error(e);
 			return false;
@@ -620,22 +618,27 @@ public class JmsConnector implements Connector {
 		}
 	}
 
-	private static javax.jms.Message serialize(String payload) throws IOException, JMSException {
-		return io.intino.alexandria.jms.MessageWriter.write(payload);
+	private static javax.jms.Message serialize(String ss, String payload) throws IOException, JMSException {
+		TextMessage textMessage = new ActiveMQTextMessage();
+		if (ss != null && !ss.isEmpty()) textMessage.setStringProperty("ss", ss);
+		textMessage.setText(payload);
+		return textMessage;
+	}
+
+	private static javax.jms.Message serialize(Event event) throws IOException, JMSException {
+		return serialize(event.ss(), event.toString());
+	}
+
+	private static javax.jms.Message serialize(List<Event> events) throws IOException, JMSException {
+		String ss = events.stream().map(Event::ss).collect(Collectors.joining(";"));
+		String content = events.stream().map(Event::toString).collect(Collectors.joining("\n\n"));
+		return serialize(ss, content);
 	}
 
 	public static String createRandomString() {
 		Random random = new Random(System.currentTimeMillis());
 		long randomLong = random.nextLong();
 		return Long.toHexString(randomLong);
-	}
-
-	private static javax.jms.Message serialize(Event event) throws IOException, JMSException {
-		return serialize(event.toString());
-	}
-
-	private static javax.jms.Message serialize(List<Event> event) throws IOException, JMSException {
-		return serialize(event.stream().map(Event::toString).collect(Collectors.joining("\n\n")));
 	}
 
 	private static class MessageDeserializer {
