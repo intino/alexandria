@@ -1,6 +1,7 @@
 package io.intino.test;
 
 import io.intino.alexandria.message.Message;
+import io.intino.alexandria.message.MessageReader;
 import org.junit.Test;
 
 import java.util.*;
@@ -15,8 +16,23 @@ public class Message_ {
 	@Test
 	public void lists() {
 		Message message = new Message("clmnefrolc");
-		message.set("list", new ArrayList<>());
+		message.set("list", null);
 		System.out.println(message);
+		System.out.println(message.get("list").asList(String.class));
+	}
+
+	@Test
+	public void name() {
+		String inl = "[ConsulAssertion]\n" +
+				"ts: 2023-03-31T15:05:26.541963Z\n" +
+				"ss: MBP-de-Octavio-consul\n" +
+				"id: MBP-de-Octavio-consul\n" +
+				"version: 1.0.0\n" +
+				"installedActivities: io.intino.consul:app-monitor-activity:1.0.0\u0001io.intino.consul:sqlserver-monitor-activity:1.0.0\u0001\n" +
+				"enabledActivities: \n" +
+				"host: MBP-de-Octavio";
+
+		System.out.println(new MessageReader(inl).next());
 	}
 
 	@Test
