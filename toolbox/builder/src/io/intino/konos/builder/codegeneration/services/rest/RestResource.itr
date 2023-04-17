@@ -174,10 +174,6 @@ def type(parameter & defaultvalue) attribute(in:body) trigger(assign)
 	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~OrDefault(null), $parameterType);
 end
 
-def type(parameter & required) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~OrElseThrow("$name", () -> new BadRequest("Parameter missed: $name")), $parameterType);
-end
-
 def type(parameter & defaultvalue) trigger(assign)
 	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~OrDefault("$name", null), $parameterType);
 end
@@ -187,15 +183,19 @@ def type(parameter & file & list) attribute(in:form) trigger(assign)
 end
 
 def type(parameter & file) attribute(in:form) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.fromPartAsResource("$name");
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.from$in+firstUpperCase~AsResource("$name");
+end
+
+def type(parameter & required & file) attribute(in:form) trigger(assign)
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.from$in+firstUpperCase~AsResourceOrElseThrow("$name", () -> new BadRequest("Parameter missed: $name"));
 end
 
 def type(parameter) attribute(in:form) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.fromPartAsString("$name"), $parameterType);
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~AsString("$name"), $parameterType);
 end
 
-def type(parameter) attribute(in:form) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.from$in+firstUpperCase("$name");
+def type(parameter & required) attribute(in:form) trigger(assign)
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~AsStringOrElseThrow("$name", () -> new BadRequest("Parameter missed: $name")), $parameterType);
 end
 
 def type(parameter & file)  attribute(in:body) trigger(assign)
@@ -204,6 +204,10 @@ end
 
 def type(parameter) attribute(in:body) trigger(assign)
 	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase(), $parameterType);
+end
+
+def type(parameter & required) trigger(assign)
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~OrElseThrow("$name", () -> new BadRequest("Parameter missed: $name")), $parameterType);
 end
 
 def type(parameter) trigger(assign)

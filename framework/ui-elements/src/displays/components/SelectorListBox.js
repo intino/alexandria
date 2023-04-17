@@ -7,6 +7,7 @@ import SelectorListBoxRequester from "../../../gen/displays/requesters/SelectorL
 import Divider from './Divider';
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
+import Theme from "app-elements/gen/Theme";
 
 const styles = theme => ({
 	label : {
@@ -54,10 +55,11 @@ class SelectorListBox extends AbstractSelectorListBox {
 		const hidden = this.isHidden(child.props.id);
 		if (hidden) return (<React.Fragment/>);
 		const className = child.props.className;
+		const theme = Theme.get();
 		if (className != null && className.indexOf("divider") !== -1) return (<Divider/>);
 		if (className != null && className.indexOf("sub-header") !== -1) return (<ListSubheader component="div" style={{margin:'0',padding:'0',height:'30px',lineHeight:'30px'}}>{child.props.name}</ListSubheader>);
 		const selected = this.isInSelection(child.props.name);
-		const style = selected ? {background:"#ddd"} : {};
+		const style = selected ? {background:theme.palette.primary.main,color:'white'} : {};
 		style.display = hidden ? "none" : "block";
 		return (<ListItem disabled={this.state.readonly} key={key} style={style} button onClick={this.handleSelect.bind(this, child.props.name)}>{child}</ListItem>);
 	};

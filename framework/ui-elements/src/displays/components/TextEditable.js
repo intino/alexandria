@@ -57,7 +57,7 @@ class TextEditable extends AbstractTextEditable {
 					   error={error != null} helperText={this.state.readonly ? undefined : (error != null ? error : this.props.helperText) }
 					   InputLabelProps={{ shrink: this.props.shrink !== null ? this.props.shrink : undefined }}
 					   inputRef={this.inputRef}
-					   inputProps={{ maxLength: this.props.maxLength != null ? this.props.maxLength : undefined }}
+					   inputProps={{ style: this.style(), maxLength: this.props.maxLength != null ? this.props.maxLength : undefined }}
 					   InputProps={{
 					       readOnly: this.state.readonly,
 						   startAdornment: this.props.prefix !== undefined ? <InputAdornment position="start">{this.props.prefix}</InputAdornment> : undefined,

@@ -23,11 +23,13 @@ import java.util.stream.Collectors;
 public class Timeline<DN extends TimelineNotifier, B extends Box> extends AbstractTimeline<B> {
 	private TimelineDatasource source;
 	private Mode mode;
+	private String stateLabel;
+	private String historyLabel;
 	private List<TimelineMagnitudeVisibility> magnitudesVisibility;
 	private List<TimelineMagnitudeSorting> magnitudesSorting;
 	private int summaryPointsCount = DefaultSummaryPointsCount;
-	private final Map<String, TimelineDatasource.TimelineScale> magnitudeScales = new HashMap<>();
-	private final Map<String, Map<TimelineDatasource.TimelineScale, Instant>> currentInstants = new HashMap<>();
+	private final Map<TimelineDatasource.TimelineScale, Instant> selectedInstants = new HashMap<>();
+	private TimelineDatasource.TimelineScale selectedScale = null;
 
 	private static final int DefaultSummaryPointsCount = 24;
 
@@ -36,6 +38,16 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	}
 
 	public enum Mode { Summary, Catalog }
+
+	public <DS extends TimelineDatasource> Timeline<DN, B> stateLabel(String label) {
+		this.stateLabel = label;
+		return this;
+	}
+
+	public <DS extends TimelineDatasource> Timeline<DN, B> historyLabel(String label) {
+		this.historyLabel = label;
+		return this;
+	}
 
 	public <DS extends TimelineDatasource> Timeline<DN, B> source(DS source) {
 		this.source = source;
@@ -76,30 +88,38 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		return this;
 	}
 
-	public void beforeSummary(TimelineParameterInfo info) {
-		TimelineDatasource.Magnitude magnitude = source.magnitude(info.magnitude());
-		Instant current = currentInstant(magnitude, info);
-		Instant from = magnitude.from();
-		current = magnitude.previous(current, scale(magnitude));
+	public void first() {
+		TimelineDatasource.TimelineScale scale = selectedScale();
+		selectInstant(scale, source.from(scale));
+	}
+
+	public void previous() {
+		TimelineDatasource.TimelineScale scale = selectedScale();
+		Instant current = selectedInstant(scale);
+		Instant from = source.from(scale);
+		current = source.previous(current, selectedScale());
 		if (current.isBefore(from)) current = from;
-		saveCurrentInstant(magnitude, info, current);
-		refreshViews(magnitude);
+		selectInstant(scale, current);
 	}
 
-	public void nextSummary(TimelineParameterInfo info) {
-		TimelineDatasource.Magnitude magnitude = source.magnitude(info.magnitude());
-		Instant current = currentInstant(magnitude, info);
-		Instant to = magnitude.to();
-		current = magnitude.next(current, scale(magnitude));
+	public void next() {
+		TimelineDatasource.TimelineScale scale = selectedScale();
+		Instant current = selectedInstant(scale);
+		Instant to = source.to(scale);
+		current = source.next(current, selectedScale());
 		if (current.isAfter(to)) current = to;
-		saveCurrentInstant(magnitude, info, current);
-		refreshViews(magnitude);
+		selectInstant(scale, current);
 	}
 
-	public void changeScale(TimelineParameterInfo info) {
-		TimelineDatasource.TimelineScale scale = TimelineDatasource.TimelineScale.valueOf(info.scale());
-		magnitudeScales.put(info.magnitude(), scale);
-		refreshViews(source.magnitude(info.magnitude()));
+	public void last() {
+		TimelineDatasource.TimelineScale scale = selectedScale();
+		selectInstant(scale, source.to(scale));
+	}
+
+	public void changeScale(String scale) {
+		selectedScale = TimelineDatasource.TimelineScale.valueOf(scale);
+		refreshToolbar();
+		refreshMagnitudes();
 	}
 
 	@Override
@@ -109,19 +129,33 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		notifier.setup(new TimelineSetup()
 							.mode(mode.name())
 							.name(source.name())
+							.stateLabel(stateLabel)
+							.historyLabel(historyLabel)
 							.scales(source.scales().stream().map(Enum::name).collect(Collectors.toList()))
+							.toolbar(toolbar())
 							.magnitudes(source.magnitudes().stream().map(this::schemaOf).collect(Collectors.toList()))
 		);
 	}
 
+	private TimelineHistoryToolbar toolbar() {
+		TimelineDatasource.TimelineScale scale = selectedScale();
+		Instant date = selectedInstant(scale);
+		TimelineHistoryToolbar result = new TimelineHistoryToolbar();
+		result.label(TimelineFormatter.label(date, scale, language()));
+		result.scale(selectedScale().name());
+		result.canPrevious(!TimelineFormatter.label(date, scale, language()).equals(TimelineFormatter.label(source.from(scale), scale, language())));
+		result.canNext(!TimelineFormatter.label(date, scale, language()).equals(TimelineFormatter.label(source.to(scale), scale, language())));
+		return result;
+	}
+
 	public void openHistory(String magnitudeName) {
-		TimelineDatasource.Magnitude magnitude = source.magnitude(magnitudeName);
-		notifier.showHistoryDialog(new TimelineHistory().from(magnitude.from()).to(magnitude.to()));
+		TimelineDatasource.TimelineScale scale = selectedScale;
+		notifier.showHistoryDialog(new TimelineHistory().from(source.from(scale)).to(source.to(scale)));
 	}
 
 	public void fetch(TimelineHistoryFetch fetch) {
 		TimelineDatasource.Magnitude magnitude = source.magnitude(fetch.magnitude());
-		TimelineDatasource.TimelineScale scale = scale(magnitude);
+		TimelineDatasource.TimelineScale scale = selectedScale();
 		Map<Instant, Double> values = magnitude.serie(scale, fetch.start(), fetch.end()).values();
 		notifier.refreshHistory(fillWithZeros(values, fetch.end(), scale).entrySet().stream().map(this::historyEntryOf).collect(Collectors.toList()));
 	}
@@ -130,33 +164,13 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		return new TimelineHistoryEntry().date(entry.getKey()).value(entry.getValue());
 	}
 
-	private TimelineMagnitude schemaOf(MagnitudeDefinition definition) {
-		TimelineDatasource.Magnitude magnitude = magnitude(definition);
-		return new TimelineMagnitude()
-				.name(definition.name())
-				.value(magnitude.value())
-				.min(magnitude.min() != null ? String.valueOf(magnitude.min()) : null)
-				.max(magnitude.max() != null ? String.valueOf(magnitude.max()) : null)
-				.percentage(magnitude.percentage() != null ? String.valueOf(magnitude.percentage()) : null)
-				.label(definition.label(language()))
-				.unit(definition.unit())
-				.decimalCount(definition.decimalCount())
-				.summary(summaryOf(magnitude))
-				.serie(serieOf(magnitude))
-				.customView(magnitude.customHtmlView(scale(magnitude)));
-	}
-
 	private TimelineSummary summaryOf(TimelineDatasource.Magnitude magnitude) {
-		TimelineDatasource.TimelineScale scale = scale(magnitude);
-		Instant date = currentInstant(magnitude, scale);
+		TimelineDatasource.TimelineScale scale = selectedScale();
+		Instant date = selectedInstant(scale);
 		TimelineDatasource.Summary summary = magnitude.summary(date, scale);
-		return new TimelineSummary().label(summary.label())
-									.average(summaryValueOf(summary.average(), date))
+		return new TimelineSummary().average(summaryValueOf(summary.average(), date))
 									.max(summaryValueOf(summary.max(), summary.maxDate()))
-									.min(summaryValueOf(summary.min(), summary.minDate()))
-									.canBefore(!TimelineFormatter.label(date, scale, language()).equals(TimelineFormatter.label(magnitude.from(), scale, language())))
-									.canNext(!TimelineFormatter.label(date, scale, language()).equals(TimelineFormatter.label(magnitude.to(), scale, language())))
-									.scale(scale.name());
+									.min(summaryValueOf(summary.min(), summary.minDate()));
 	}
 
 	private TimelineSummaryValue summaryValueOf(double value, Instant date) {
@@ -165,8 +179,8 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 
 	private TimelineSerie serieOf(TimelineDatasource.Magnitude magnitude) {
 		TimelineSerie result = new TimelineSerie();
-		TimelineDatasource.TimelineScale scale = scale(magnitude);
-		Instant current = currentInstant(magnitude, scale);
+		TimelineDatasource.TimelineScale scale = selectedScale();
+		Instant current = selectedInstant(scale);
 		TimelineDatasource.Serie serie = magnitude.serie(scale, current);
 		result.name(serie.name());
 		result.categories(categoriesOf(serie, current, scale));
@@ -254,28 +268,51 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		return new Locale("en", "EN");
 	}
 
-	private Instant currentInstant(TimelineDatasource.Magnitude magnitude, TimelineParameterInfo info) {
-		return currentInstant(magnitude, TimelineDatasource.TimelineScale.valueOf(info.scale()));
+	private Instant selectedInstant(String scale) {
+		return selectedInstant(TimelineDatasource.TimelineScale.valueOf(scale));
 	}
 
-	private Instant currentInstant(TimelineDatasource.Magnitude magnitude, TimelineDatasource.TimelineScale scale) {
-		if (!currentInstants.containsKey(magnitude.definition().name())) return magnitude.to();
-		return currentInstants.get(magnitude.definition().name()).getOrDefault(scale, magnitude.to());
+	private Instant selectedInstant(TimelineDatasource.TimelineScale scale) {
+		return selectedInstants.getOrDefault(scale, source.to(selectedScale()));
 	}
 
-	private TimelineDatasource.TimelineScale scale(TimelineDatasource.Magnitude magnitude) {
-		return magnitudeScales.getOrDefault(magnitude.definition().name(), source.scales().get(0));
+	private TimelineDatasource.TimelineScale selectedScale() {
+		return selectedScale != null ? selectedScale : source.scales().get(0);
 	}
 
-	private void saveCurrentInstant(TimelineDatasource.Magnitude magnitude, TimelineParameterInfo info, Instant value) {
-		if (!currentInstants.containsKey(info.magnitude())) currentInstants.put(info.magnitude(), new HashMap<>());
-		currentInstants.get(info.magnitude()).put(TimelineDatasource.TimelineScale.valueOf(info.scale()), value);
+	private void selectInstant(TimelineDatasource.TimelineScale scale, Instant value) {
+		selectedInstants.put(scale, value);
+		refreshToolbar();
+		refreshMagnitudes();
 	}
 
-	private void refreshViews(TimelineDatasource.Magnitude magnitude) {
-		notifier.refreshSummary(summaryOf(magnitude));
-		notifier.refreshSerie(serieOf(magnitude));
-		notifier.refreshCustomView(magnitude.customHtmlView(scale(magnitude)));
+	private void refreshToolbar() {
+		notifier.refreshHistoryToolbar(toolbar());
+	}
+
+	private void refreshMagnitudes() {
+		notifier.refreshMagnitudes(source.magnitudes().stream().map(this::schemaOf).collect(Collectors.toList()));
+	}
+
+	private TimelineMagnitude schemaOf(MagnitudeDefinition definition) {
+		return schemaOf(magnitude(definition));
+	}
+
+	private TimelineMagnitude schemaOf(TimelineDatasource.Magnitude magnitude) {
+		MagnitudeDefinition definition = magnitude.definition();
+		return new TimelineMagnitude()
+				.name(definition.name())
+				.value(magnitude.value())
+				.status(magnitude.status().name())
+				.min(magnitude.min() != null ? String.valueOf(magnitude.min()) : null)
+				.max(magnitude.max() != null ? String.valueOf(magnitude.max()) : null)
+				.percentage(magnitude.percentage() != null ? String.valueOf(magnitude.percentage()) : null)
+				.label(definition.label(language()))
+				.unit(definition.unit())
+				.decimalCount(definition.decimalCount())
+				.summary(summaryOf(magnitude))
+				.serie(serieOf(magnitude))
+				.customView(magnitude.customHtmlView(selectedScale()));
 	}
 
 }

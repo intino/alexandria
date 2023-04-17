@@ -11,6 +11,11 @@ public interface TimelineDatasource {
 	enum TimelineScale { Minute, Hour, Day, Week, Month, Year }
 	List<TimelineScale> scales();
 
+	Instant from(TimelineScale scale);
+	Instant previous(Instant date, TimelineScale scale);
+	Instant next(Instant date, TimelineScale scale);
+	Instant to(TimelineScale scale);
+
 	default MagnitudeDefinition magnitudeDefinition(String name) {
 		return magnitudes().stream().filter(d -> d.name().equals(name)).findFirst().orElse(null);
 	}
@@ -23,15 +28,12 @@ public interface TimelineDatasource {
 	interface Magnitude {
 		MagnitudeDefinition definition();
 
+		enum Status { Normal, Warning, Error }
+		Status status();
 		double value();
 		Double min();
 		Double max();
 		Double percentage();
-
-		Instant from();
-		Instant previous(Instant date, TimelineScale scale);
-		Instant next(Instant date, TimelineScale scale);
-		Instant to();
 
 		Summary summary(Instant date, TimelineScale scale);
 
@@ -42,7 +44,6 @@ public interface TimelineDatasource {
 	}
 
 	interface Summary {
-		String label();
 		double average();
 		Instant averageDate();
 		double max();
