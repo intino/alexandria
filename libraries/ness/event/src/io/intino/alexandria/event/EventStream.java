@@ -6,17 +6,20 @@ import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.stream;
+import static java.util.stream.IntStream.iterate;
 import static java.util.stream.IntStream.range;
 
 public class EventStream<T extends Event> extends ResourceIteratorStream<T> {
 
-	public static <T extends Event> Stream<T> sequence(Stream<Stream<T>> streams) {
-		return streams.flatMap(Function.identity());
+	public static <T extends Event> Stream<T> sequence(List<Supplier<Stream<T>>> streams) {
+		return new EventStream<>(new SequenceIterator<>(streams));
 	}
 
 	public static <T extends Event> Stream<T> merge(Stream<Stream<T>> streams) {
@@ -29,6 +32,17 @@ public class EventStream<T extends Event> extends ResourceIteratorStream<T> {
 
 	public EventStream(Iterator<T> iterator) {
 		super(iterator);
+	}
+
+	private static Exception tryClose(Iterator<?> iterator) {
+		if (iterator instanceof AutoCloseable) {
+			try {
+				((AutoCloseable) iterator).close();
+			} catch (Exception e) {
+				return e;
+			}
+		}
+		return null;
 	}
 
 	@SuppressWarnings({"unchecked", "unused"})
@@ -58,7 +72,9 @@ public class EventStream<T extends Event> extends ResourceIteratorStream<T> {
 		}
 
 		private T next(Iterator<T> input) {
-			return input.hasNext() ? input.next() : null;
+			if(input.hasNext()) return input.next();
+			tryClose(input);
+			return null;
 		}
 
 		private int minIndex() {
@@ -81,16 +97,38 @@ public class EventStream<T extends Event> extends ResourceIteratorStream<T> {
 			}
 			if (e != null) throw e;
 		}
+	}
 
-		private Exception tryClose(Iterator<T> iterator) {
-			if (iterator instanceof AutoCloseable) {
-				try {
-					((AutoCloseable) iterator).close();
-				} catch (Exception e) {
-					return e;
-				}
-			}
-			return null;
+	private static class SequenceIterator<T> implements Iterator<T> {
+
+		private final Iterator<Supplier<Stream<T>>> sources;
+		private Iterator<T> currentIterator;
+
+		public SequenceIterator(List<Supplier<Stream<T>>> streams) {
+			this.sources = streams.iterator();
+			advanceToNextIterator();
+		}
+
+		@Override
+		public boolean hasNext() {
+			return currentIterator != null && currentIterator.hasNext();
+		}
+
+		@Override
+		public T next() {
+			T next = currentIterator.next();
+			advanceToNextIteratorIfNecessary();
+			return next;
+		}
+
+		private void advanceToNextIteratorIfNecessary() {
+			if(!currentIterator.hasNext()) advanceToNextIterator();
+		}
+
+		private void advanceToNextIterator() {
+			if(currentIterator != null) tryClose(currentIterator);
+			currentIterator = null;
+			currentIterator = sources.hasNext() ? sources.next().get().iterator() : null;
 		}
 	}
 }

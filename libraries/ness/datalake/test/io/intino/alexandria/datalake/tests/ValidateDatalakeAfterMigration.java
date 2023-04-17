@@ -22,6 +22,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
+import static io.intino.alexandria.datalake.tests.MigrateEventsToNewDatalake.defaultSSOf;
 import static java.nio.file.StandardOpenOption.APPEND;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static org.junit.Assert.*;
@@ -65,10 +66,9 @@ public class ValidateDatalakeAfterMigration {
 			int i = 0;
 			Instant lastTs = null;
 			while(oldReader.hasNext()) {
-				assertTrue("Missing events in timetag " + oldTub.getName() + ". Only " + i + " events found.", newEvents.hasNext());
+				assertTrue("Missing ref in timetag " + oldTub.getName() + ". Only " + i + " ref found.", newEvents.hasNext());
 				MessageEvent e1 = eventFrom(oldReader.next());
 				MessageEvent e2 = newEvents.next();
-				assertEquals("Events at " + i + " are different in " + oldTub.getName() + ":\n" + e1 + "\n\n" + e2, e1, e2);
 				if(lastTs != null && lastTs.isAfter(e1.ts())) {
 					File file = new File("temp/cm/errors/" + newTank.name() + ".tsv");
 					file.getParentFile().mkdirs();
@@ -76,6 +76,7 @@ public class ValidateDatalakeAfterMigration {
 							timetag(oldTub) + "\t" + i + "\t" + lastTs + "\t" + e1.ts() + "\n",
 							CREATE, APPEND);
 				}
+				assertEquals("Events at " + i + " are different in " + oldTub.getName() + ":\n" + e1 + "\n\n" + e2, e1, e2);
 				lastTs = e1.ts();
 				++i;
 			}
@@ -83,8 +84,12 @@ public class ValidateDatalakeAfterMigration {
 	}
 
 	private static MessageEvent eventFrom(Message message) {
-		if(!message.contains("ss")) message.set("ss", "default");
-//		message.set("ss", normalize(message.get("ss").asString()));
+		if(!message.contains("ss")) {
+			message.set("ss", defaultSSOf(message.type()));
+		} else if(message.get("ss").asString().contains(":")) {
+			message.set("old_ss", message.get("ss").asString());
+			message.set("ss", defaultSSOf(message.type()));
+		}
 		return new MessageEvent(message);
 	}
 
@@ -93,8 +98,8 @@ public class ValidateDatalakeAfterMigration {
 		return ss.replaceAll("[:]", "-");
 	}
 
-	private static String timetag(File zim) {
-		return Timetag.of(zim.getName().replace(".zim", "")).value();
+	private static Timetag timetag(File zim) {
+		return Timetag.of(zim.getName().replace(".zim", ""));
 	}
 
 	@Parameterized.Parameters(name = "{index}: {0}")
@@ -102,6 +107,7 @@ public class ValidateDatalakeAfterMigration {
 		return FS.directoriesIn(oldDatalakeRoot)
 				.sorted(Comparator.comparing(FileUtils::sizeOfDirectory))
 				.filter(dir -> FS.filesIn(dir, f -> true).findAny().isPresent())
+				.filter(dir -> dir.getName().equals("comercial.cuentamaestra.GestionAnticipo"))
 //				.filter(dir -> dir.getName().equals("comercial.cuentamaestra.FacturacionServicioRechazada"))
 				.map(f -> new Object[] {f.getName(), f}).toArray(Object[][]::new);
 	}

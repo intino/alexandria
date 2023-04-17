@@ -1,12 +1,12 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "5.0.0") event
+Artifact("io.intino.alexandria", "5.0.1") event
 	Imports
 		Compile("io.intino.alexandria", "iterator-stream", "1.0.0")
 		Compile("io.intino.alexandria", "zim", "5.1.0")
 		Compile("io.intino.alexandria", "zit", "1.0.0")
 		Compile("io.intino.alexandria", "logger", "2.1.0")
-		Compile("io.intino.alexandria", "primitives", "1.1.0")
+		Compile("io.intino.alexandria", "primitives", "1.1.1")
 		Compile("io.intino.alexandria", "json", "1.2.2")
 		Test("junit", "junit", "4.13.2")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)

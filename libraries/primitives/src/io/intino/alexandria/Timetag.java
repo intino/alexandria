@@ -199,6 +199,14 @@ public class Timetag implements Comparable<Timetag> {
 		return timetags.contains(this);
 	}
 
+	public boolean isBetween(String from, String toInclusive) {
+		return isBetween(Timetag.of(from), Timetag.of(toInclusive));
+	}
+
+	public boolean isBetween(Timetag from, Timetag toInclusive) {
+		return !isBefore(from) && !isAfter(toInclusive);
+	}
+
 	private static int sizeOf(Scale scale) {
 		return scale.ordinal() * 2 + 4;
 	}
