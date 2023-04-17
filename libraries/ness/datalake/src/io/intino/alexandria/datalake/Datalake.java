@@ -12,6 +12,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -60,11 +61,11 @@ public interface Datalake {
 			Stream<Source<T>> sources();
 
 			default Stream<T> content() {
-				return merge(sources().map(s -> sequence(s.tubs().map(Tub::events))));
+				return merge(sources().map(s -> sequence(s.tubs().map(Tub::eventSupplier).collect(Collectors.toList()))));
 			}
 
 			default Stream<T> content(BiPredicate<Source<T>, Timetag> filter) {
-				return merge(sources().map(s -> sequence(s.tubs().filter(t -> filter.test(s, t.timetag())).map(Tub::events))));
+				return merge(sources().map(s -> sequence(s.tubs().filter(t -> filter.test(s, t.timetag())).map(Tub::eventSupplier).collect(Collectors.toList()))));
 			}
 		}
 
@@ -93,12 +94,20 @@ public interface Datalake {
 
 			Stream<T> events();
 
+			default Supplier<Stream<T>> eventSupplier() {
+				return this::events;
+			}
+
 			default Scale scale() {
 				return timetag().scale();
 			}
 
 			default Stream<T> events(Predicate<T> filter) {
 				return events().filter(filter);
+			}
+
+			default Supplier<Stream<T>> eventSupplier(Predicate<T> filter) {
+				return () -> events(filter);
 			}
 		}
 	}

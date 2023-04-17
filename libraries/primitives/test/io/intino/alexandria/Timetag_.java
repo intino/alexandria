@@ -11,6 +11,14 @@ import static org.junit.Assert.*;
 public class Timetag_ {
 
 	@Test
+	public void isBetween() {
+		Timetag timetag = new Timetag("202203");
+		assertTrue(timetag.isBetween("202201", "202204"));
+		assertFalse(timetag.isBetween("202204", "202208"));
+		assertTrue(timetag.isBetween("202203", "202203"));
+	}
+
+	@Test
 	public void datetime() {
 		LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS);
 		Timetag timetag = new Timetag(now, Scale.Minute);
