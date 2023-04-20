@@ -51,7 +51,8 @@ public class AccessibleDisplayActionRenderer extends ActionRenderer {
 		List<String> parameters = display.parameters();
 		return parameters.stream().map(parameter -> new FrameBuilder("parameter")
 				.add("type", "String")
-				.add("name", parameter).toFrame()).toArray(Frame[]::new);
+				.add("name", parameter)
+				.add("resource", display.name$() + "Proxy").toFrame()).toArray(Frame[]::new);
 	}
 
 	@Override

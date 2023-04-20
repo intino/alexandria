@@ -51,8 +51,13 @@ public class AccessibleDisplayRenderer extends UIRenderer {
 	}
 
 	private FrameBuilder[] parameters(Display.Accessible display) {
-		List<FrameBuilder> result = display.parameters().stream().map(parameter -> new FrameBuilder("parameter").add("name", parameter)).collect(Collectors.toList());
-		result.add(new FrameBuilder("parameter").add("name", "personifiedDisplay"));
+		List<FrameBuilder> result = display.parameters().stream().map(this::frameOf).collect(Collectors.toList());
+		result.add(frameOf("personifiedDisplay"));
 		return result.toArray(new FrameBuilder[0]);
 	}
+
+	private FrameBuilder frameOf(String parameter) {
+		return new FrameBuilder("parameter").add("name", parameter).add("resource", display.name$() + "Proxy");
+	}
+
 }
