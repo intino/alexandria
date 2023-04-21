@@ -16,7 +16,7 @@ public class PassiveViewRequesterTemplate extends Template {
 			rule().condition((type("request")), (trigger("request"))).output(literal("if (operation.equals(\"")).output(mark("name")).output(literal("\")) {\n\tdisplay.")).output(mark("name")).output(literal("(")).output(mark("parameter")).output(literal(");\n\treturn;\n}")),
 			rule().condition((allTypes("parameter","accessible")), (trigger("parameter"))).output(literal("display.")).output(mark("value", "firstLowercase")).output(literal("(manager.fromQuery(\"")).output(mark("value")).output(literal("\"));")),
 			rule().condition((type("list")), (trigger("parameter"))).output(literal("java.util.List.of(io.intino.alexandria.Json.fromString(manager.fromQuery(\"v\"), ")).output(mark("value")).output(literal("[].class))")),
-			rule().condition((allTypes("parameter","file")), (trigger("parameter"))).output(literal("manager.fromForm(\"v\")")),
+			rule().condition((allTypes("parameter","file")), (trigger("parameter"))).output(literal("manager.fromFormAsResource(\"v\")")),
 			rule().condition((allTypes("parameter","String")), (trigger("parameter"))).output(literal("manager.fromQuery(\"v\")")),
 			rule().condition((allTypes("parameter","Double")), (trigger("parameter"))).output(literal("Double.parseDouble(manager.fromQuery(\"v\"))")),
 			rule().condition((allTypes("parameter","Integer")), (trigger("parameter"))).output(literal("Integer.parseInt(manager.fromQuery(\"v\"))")),
