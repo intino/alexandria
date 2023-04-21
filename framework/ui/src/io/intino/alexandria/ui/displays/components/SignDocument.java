@@ -21,6 +21,7 @@ public class SignDocument<DN extends SignDocumentNotifier, B extends Box> extend
 
     public interface BeforeSignChecker {
         boolean check();
+        default String checkMessage() { return null; }
     }
 
     public SignDocument(B box) {
@@ -53,7 +54,7 @@ public class SignDocument<DN extends SignDocumentNotifier, B extends Box> extend
             return;
         }
         if (!canSign()) {
-            notifyUser(translate("User can't sign document"), UserMessage.Type.Error);
+            notifyUser(translate(cantSignMessage()), UserMessage.Type.Error);
             return;
         }
         sign(base64(provider.document()));
@@ -62,6 +63,10 @@ public class SignDocument<DN extends SignDocumentNotifier, B extends Box> extend
 
     private boolean canSign() {
         return beforeSignChecker != null && beforeSignChecker.check();
+    }
+
+    private String cantSignMessage() {
+        return beforeSignChecker != null && beforeSignChecker.checkMessage() != null ? beforeSignChecker.checkMessage() : "User can't sign document";
     }
 
     private String base64(InputStream document) {
