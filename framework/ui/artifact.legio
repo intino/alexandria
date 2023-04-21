@@ -1,12 +1,12 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "4.24.6") ui-framework
-	Box("Konos", "10.1.2", targetPackage = "io.intino.alexandria")
+Artifact("io.intino.alexandria", "4.25.0") ui-framework
+	Box("Konos", "10.2.0", targetPackage = "io.intino.alexandria")
 	Imports
 		Compile("io.intino.alexandria", "core-framework", "2.1.2")
-		Compile("io.intino.alexandria", "http", "1.6.0")
+		Compile("io.intino.alexandria", "http", "1.7.1")
 		Compile("io.intino.alexandria", "json", "1.2.2")
-		Compile("io.intino.alexandria", "rest-accessor", "3.1.0")
+		Compile("io.intino.alexandria", "rest-accessor", "3.1.1")
 		Compile("io.intino.alexandria", "logger4j", "1.0.1")
 		Compile("io.intino.alexandria", "zip", "1.0.4")
 		Compile("io.intino.alexandria", "driver-shiny", "1.0.1")
@@ -19,7 +19,7 @@ Artifact("io.intino.alexandria", "4.24.6") ui-framework
 		Compile("org.locationtech.jts", "jts-core", "1.19.0")
 		Compile("io.intino.icod", "standalone", "1.0.2")
 
-		Web("io.intino.alexandria", "ui-framework-elements", "4.24.6")
+		Web("io.intino.alexandria", "ui-framework-elements", "4.25.0")
 
 		Test("junit", "junit", "4.13.2")
 
