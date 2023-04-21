@@ -327,7 +327,8 @@ class Grid extends AbstractGrid {
         return this.state.columns.filter(c => c.type === "Link");
     };
 
-    handleCellClick = (column, data) => {
+    handleCellClick = (column, data, e) => {
+        e.stopPropagation();
         const index = this.rowIndex(data.value);
         const value = this.rowValue(data.value);
         const address = this.rowAddress(data.value);
