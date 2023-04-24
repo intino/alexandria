@@ -14,7 +14,7 @@ def type(cli & service)
         	authenticator = new $name+firstUpperCase+snakeCaseToCamelCase~ServiceAuthenticator(box);
             spark.route("/cli/$name+camelCaseToSnakeCase+lowerCase")
                     .before(manager -> { if (manager.fromHeader("Authorization") == null || !authenticator.isAuthenticated(manager.fromHeader("Authorization").replace("Bearer ", ""))) throw new io.intino.alexandria.exceptions.Unauthorized("Credential not found");})
-                    .post(manager -> manager.write(io.intino.alexandria.rest.ResponseAdapter.adapt(new CliManager(cli, io.intino.alexandria.rest.RequestAdapter.adapt(manager.fromFormParameter("talk"), BotTalk.class)).execute(manager.fromHeader("Authorization").replace("Bearer ", "")))));
+                    .post(manager -> manager.write(io.intino.alexandria.rest.ResponseAdapter.adapt(new CliManager(cli, io.intino.alexandria.rest.RequestAdapter.adapt(manager.fromFormAsString("talk"), BotTalk.class)).execute(manager.fromHeader("Authorization").replace("Bearer ", "")))));
         }
     }
 end
