@@ -31,9 +31,7 @@ public class StubConnector implements Connector {
 	}
 
 	public void start() {
-
 	}
-
 
 	@Override
 	public synchronized void sendEvent(String path, Event event) {
@@ -41,7 +39,6 @@ public class StubConnector implements Connector {
 		for (Consumer<Event> c : consumers) c.accept(event);
 		if (eventOutBox != null) eventOutBox.push(path, event);
 	}
-
 
 	public synchronized void sendEvents(String path, List<Event> events) {
 		ArrayList<Consumer<Event>> consumers = new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList()));
@@ -154,7 +151,6 @@ public class StubConnector implements Connector {
 		this.eventConsumers.putIfAbsent(path, new CopyOnWriteArrayList<>());
 		this.eventConsumers.get(path).add(onEventReceived);
 	}
-
 
 	private void registerMessageConsumer(String path, MessageConsumer onMessageReceived) {
 		this.messageConsumers.putIfAbsent(path, new CopyOnWriteArrayList<>());
