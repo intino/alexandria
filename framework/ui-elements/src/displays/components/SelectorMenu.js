@@ -20,12 +20,12 @@ const styles = theme => ({
 		padding: "6px 16px",
 		'&:focus': {
 			backgroundColor: theme.palette.primary.main,
-			color: theme.palette.common.white
+			color: "white"
 		},
 	},
 	selected : {
 		backgroundColor: theme.palette.primary.main + " !important",
-		color: theme.palette.common.white,
+		color: "white",
 		'&:hover': {
 			backgroundColor: theme.palette.grey.secondary
 		},

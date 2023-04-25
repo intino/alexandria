@@ -17,7 +17,7 @@ const TimelineSummaryStyles = {
     date : { fontSize: '7pt', marginLeft:'3px', color: '#777' },
 };
 
-const TimelineSummary = ({ summary, evolution, width, unit, decimalCount, translate }) => {
+const TimelineSummary = ({ summary, evolution, width, unit, translate }) => {
     const theme = Theme.get();
     const average = () => {
         return formattedValue(summary.average.value, null);
@@ -34,7 +34,7 @@ const TimelineSummary = ({ summary, evolution, width, unit, decimalCount, transl
             <div className="layout vertical flex end-justified">
                 <div className="layout horizontal end-justified center flex">
                     {date && <div className="layout horizontal start-justified flex" style={{...TimelineSummaryStyles.date,marginRight:'10px'}}><Moment format="DD/MM/YYYY HH:mm" date={date} locale={language}/></div>}
-                    <span>{Highcharts.numberFormat(value,decimalCount)}</span>
+                    <span>{value}</span>
                     {formattedUnit()}
                 </div>
             </div>

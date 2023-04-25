@@ -301,6 +301,7 @@ Schema TimelineHistory
 Schema TimelineHistoryEntry
 	Attribute date as DateTime
 	Attribute value as Real
+	Attribute formattedValue as Text
 
 Schema TimelineHistoryToolbar
 	Attribute label as Text
@@ -335,11 +336,13 @@ Schema TimelineMagnitude
 	Attribute label as Text
 	Attribute status as Text
 	Attribute value as Real
+	Attribute formattedValue as Text
 	Attribute min as Text
+	Attribute formattedMin as Text
 	Attribute max as Text
+	Attribute formattedMax as Text
 	Attribute percentage as Text
 	Attribute unit as Text
-	Attribute decimalCount as Integer
 	Attribute summary as Object(TimelineSummary)
 	Attribute serie as Object(TimelineSerie)
 	Attribute customView as Text
@@ -350,10 +353,11 @@ Schema TimelineSummary
 	Attribute max as Object(TimelineSummaryValue)
 
 Schema TimelineSummaryValue
-	Attribute value as Real
+	Attribute value as Text
 	Attribute date as DateTime
 
 Schema TimelineSerie
 	Attribute name as Text
 	Attribute categories as Text List
 	Attribute values as Real List
+	Attribute formattedValues as Text List

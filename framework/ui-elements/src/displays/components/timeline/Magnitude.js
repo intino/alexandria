@@ -68,7 +68,7 @@ const TimelineMagnitude = ({ toolbar, magnitude, index, id, moveMagnitude, class
         return (<TimelineSummary
             evolution={renderSerie(magnitude)}
             summary={summary} width={450} translate={translate}
-            unit={magnitude.unit} decimalCount={magnitude.decimalCount}
+            unit={magnitude.unit}
         />);
     };
     const renderSerie = (magnitude) => {
@@ -109,7 +109,6 @@ const TimelineMagnitude = ({ toolbar, magnitude, index, id, moveMagnitude, class
         };
     }
     const serieOptions = (magnitude) => {
-        const decimalCount = magnitude.decimalCount;
         const serie = magnitude.serie;
         const height = 80;
         const width = 150;
@@ -126,7 +125,7 @@ const TimelineMagnitude = ({ toolbar, magnitude, index, id, moveMagnitude, class
                 enabled: true,
                 positioner: positioner,
                 formatter: function() {
-                    return '<div style="font-size:6pt;">' + Highcharts.numberFormat(this.y,decimalCount,',', '.') + (unit != null ? unit : "") + '  ' + this.x + "</div>";
+                    return '<div style="font-size:6pt;">' + serie.formattedValues[this.point.index] + (unit != null ? unit : "") + '  ' + this.x + "</div>";
                 }
             },
             plotOptions: { spline: { lineWidth: 1, states: { hover: { lineWidth: 2 } }, marker: { enabled: false } } },
@@ -144,12 +143,11 @@ const TimelineMagnitude = ({ toolbar, magnitude, index, id, moveMagnitude, class
     };
     const renderRange = (magnitude) => {
         if (magnitude.min == null && magnitude.max == null) return (<React.Fragment/>);
-        const decimalCount = magnitude.decimalCount;
         return (
             <React.Fragment>
-                {magnitude.min != null && <div className="layout horizontal center"><Typography className={classes.infoValue}>({Highcharts.numberFormat(magnitude.min,decimalCount,',', '.')}</Typography><Typography className={classes.infoUnit}>{magnitude.unit}</Typography></div>}
+                {magnitude.min != null && <div className="layout horizontal center"><Typography className={classes.infoValue}>({magnitude.formattedMin}</Typography><Typography className={classes.infoUnit}>{magnitude.unit}</Typography></div>}
                 {magnitude.min == null && <div className="layout horizontal center"><Typography className={classes.infoValue}>(-</Typography><Typography style={{color:'#777'}} className={classes.valueInfo}></Typography></div>}
-                {magnitude.max != null && <div className="layout horizontal center"><Typography className={classes.infoValue}>{translate("to")} {Highcharts.numberFormat(magnitude.max,decimalCount,',', '.')}</Typography><Typography className={classes.infoUnit}>{magnitude.unit})</Typography></div>}
+                {magnitude.max != null && <div className="layout horizontal center"><Typography className={classes.infoValue}>{translate("to")} {magnitude.formattedMax}</Typography><Typography className={classes.infoUnit}>{magnitude.unit})</Typography></div>}
                 {magnitude.max == null && <div className="layout horizontal center"><Typography className={classes.infoValue}>{translate("to")} -)</Typography></div>}
             </React.Fragment>
         );
@@ -160,7 +158,6 @@ const TimelineMagnitude = ({ toolbar, magnitude, index, id, moveMagnitude, class
         return (<div style={{...baseStyle,backgroundColor:color}}></div>);
     };
     const renderCatalogValue = (magnitude) => {
-        const decimalCount = magnitude.decimalCount;
         return (
             <div style={{width:"240px",position:'relative'}} className={classnames("layout vertical", classes.magnitude, classes.catalogMagnitude)}>
                 <div className="layout horizontal center">
@@ -169,28 +166,27 @@ const TimelineMagnitude = ({ toolbar, magnitude, index, id, moveMagnitude, class
                 </div>
                 {renderStatus(magnitude)}
                 <div className="layout horizontal" style={{marginLeft:'20px',marginTop:'10px'}}>
-                    <Typography className={classnames(classes.value, classes.catalogValue)}>{Highcharts.numberFormat(magnitude.value,decimalCount,',', '.')}</Typography>
+                    <Typography className={classnames(classes.value, classes.catalogValue)}>{magnitude.percentage != null ? magnitude.percentage : magnitude.formattedValue}</Typography>
                     <div className="layout vertical center" style={{position:'relative', height:'24px', marginLeft: '5px'}} >
-                        <Typography className={classnames(classes.unit, classes.catalogUnit)}>{magnitude.unit}</Typography>
+                        <Typography className={classnames(classes.unit, classes.catalogUnit)}>{magnitude.percentage != null ? "%" : magnitude.unit}</Typography>
                     </div>
                 </div>
                 <div className="layout horizontal wrap" style={{marginLeft:'22px'}}>
-                    {magnitude.percentage != null && <div className="layout horizontal center"><Typography className={classes.infoValue}>{Highcharts.numberFormat(magnitude.percentage,decimalCount,',', '.')}</Typography><Typography className={classes.infoUnit}>%</Typography></div>}
+                    {magnitude.percentage != null && <div className="layout horizontal center"><Typography className={classes.infoValue}>{magnitude.formattedValue}</Typography><Typography className={classes.infoUnit}>{magnitude.percentage != null ? magnitude.unit : "%"}</Typography></div>}
                     {renderRange(magnitude)}
                 </div>
             </div>
         );
     };
     const renderSummaryValue = (magnitude) => {
-        const decimalCount = magnitude.decimalCount;
         const style = fullView ? { backgroundColor: 'white', border: '1px dashed #999' } : { border: '1px solid transparent' };
         return (
             <div style={{width:"150px",...style}} className={classnames("layout vertical", classes.magnitude, classes.summaryMagnitude)}>
                 <Typography variant="body2">{magnitude.label}</Typography>
                 <div className="layout horizontal" >
-                    <Typography className={classnames(classes.value, classes.summaryValue)}>{Highcharts.numberFormat(magnitude.value,decimalCount,',', '.')}</Typography>
+                    <Typography className={classnames(classes.value, classes.summaryValue)}>{magnitude.percentage != null ? magnitude.percentage : magnitude.formattedValue}</Typography>
                     <div className="layout vertical center" style={{position:'relative', height:'24px', marginLeft: '5px'}} >
-                        <Typography className={classnames(classes.unit, classes.summaryUnit)}>{magnitude.unit}</Typography>
+                        <Typography className={classnames(classes.unit, classes.summaryUnit)}>{magnitude.percentage != null ? "%" : magnitude.unit}</Typography>
                     </div>
                 </div>
             </div>

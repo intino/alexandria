@@ -1,11 +1,7 @@
 package io.intino.alexandria.terminal;
 
 import io.intino.alexandria.event.Event;
-import io.intino.alexandria.logger.Logger;
 
-import javax.jms.Connection;
-import javax.jms.JMSException;
-import javax.jms.Session;
 import java.io.File;
 import java.time.Instant;
 import java.util.*;
@@ -19,8 +15,6 @@ public class StubConnector implements Connector {
 	private final Map<String, List<MessageConsumer>> messageConsumers;
 	private EventOutBox eventOutBox;
 	private MessageOutBox messageOutBox;
-	private Connection connection;
-	private Session session;
 
 	public StubConnector(File outBoxDirectory) {
 		eventConsumers = new HashMap<>();
@@ -37,9 +31,7 @@ public class StubConnector implements Connector {
 	}
 
 	public void start() {
-
 	}
-
 
 	@Override
 	public synchronized void sendEvent(String path, Event event) {
@@ -48,7 +40,6 @@ public class StubConnector implements Connector {
 		if (eventOutBox != null) eventOutBox.push(path, event);
 	}
 
-
 	public synchronized void sendEvents(String path, List<Event> events) {
 		ArrayList<Consumer<Event>> consumers = new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList()));
 		consumers.forEach(events::forEach);
@@ -56,16 +47,12 @@ public class StubConnector implements Connector {
 	}
 
 	public synchronized void sendEvents(String path, List<Event> events, int expirationInSeconds) {
-		ArrayList<Consumer<Event>> consumers = new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList()));
-		consumers.forEach(events::forEach);
-		if (eventOutBox != null) events.forEach(e -> eventOutBox.push(path, e));
+		sendEvents(path, events);
 	}
 
 	@Override
 	public synchronized void sendEvent(String path, Event event, int expirationInSeconds) {
-		ArrayList<Consumer<Event>> consumers = new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList()));
-		for (Consumer<Event> eventConsumer : consumers) eventConsumer.accept(event);
-		if (eventOutBox != null) eventOutBox.push(path, event);
+		sendEvent(path, event);
 	}
 
 	@Override
@@ -117,15 +104,9 @@ public class StubConnector implements Connector {
 
 	@Override
 	public void createSubscription(String path, String subscriberId) {
-		throw new IllegalCallerException("Not implemented method");
 	}
 
 	public void destroySubscription(String subscriberId) {
-		try {
-			session.unsubscribe(subscriberId);
-		} catch (JMSException e) {
-			Logger.error(e);
-		}
 	}
 
 	@Override
@@ -136,24 +117,21 @@ public class StubConnector implements Connector {
 
 	@Override
 	public void requestResponse(String path, javax.jms.Message message, Consumer<javax.jms.Message> onResponse) {
-		throw new IllegalCallerException("Not implemented method");
 
 	}
 
 	@Override
 	public javax.jms.Message requestResponse(String path, javax.jms.Message message) {
-		throw new IllegalCallerException("Not implemented method");
+		return null;
 	}
 
 	@Override
 	public javax.jms.Message requestResponse(String path, javax.jms.Message message, long timeout, TimeUnit timeUnit) {
-		throw new IllegalCallerException("Not implemented method");
-
+		return null;
 	}
 
 	@Override
 	public void requestResponse(String path, javax.jms.Message message, String responsePath) {
-		throw new IllegalCallerException("Not implemented method");
 	}
 
 	@Override
@@ -167,19 +145,15 @@ public class StubConnector implements Connector {
 	}
 
 	public void stop() {
-
 	}
-
 
 	private void registerEventConsumer(String path, Consumer<Event> onEventReceived) {
 		this.eventConsumers.putIfAbsent(path, new CopyOnWriteArrayList<>());
 		this.eventConsumers.get(path).add(onEventReceived);
 	}
 
-
 	private void registerMessageConsumer(String path, MessageConsumer onMessageReceived) {
 		this.messageConsumers.putIfAbsent(path, new CopyOnWriteArrayList<>());
 		this.messageConsumers.get(path).add(onMessageReceived);
 	}
-
 }
