@@ -3,6 +3,7 @@ package io.intino.alexandria.ui.displays.components;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.*;
 import io.intino.alexandria.ui.displays.notifiers.TimelineNotifier;
+import io.intino.alexandria.ui.model.timeline.Formatter;
 import io.intino.alexandria.ui.model.timeline.MagnitudeDefinition;
 import io.intino.alexandria.ui.model.timeline.TimelineDatasource;
 import io.intino.alexandria.ui.model.timeline.TimelineFormatter;
@@ -157,24 +158,26 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		TimelineDatasource.Magnitude magnitude = source.magnitude(fetch.magnitude());
 		TimelineDatasource.TimelineScale scale = selectedScale();
 		Map<Instant, Double> values = magnitude.serie(scale, fetch.start(), fetch.end()).values();
-		notifier.refreshHistory(fillWithZeros(values, fetch.end(), scale).entrySet().stream().map(this::historyEntryOf).collect(Collectors.toList()));
+		Formatter formatter = magnitude.definition().formatter();
+		notifier.refreshHistory(fillWithZeros(values, fetch.end(), scale).entrySet().stream().map(e -> historyEntryOf(e, formatter)).collect(Collectors.toList()));
 	}
 
-	private TimelineHistoryEntry historyEntryOf(Map.Entry<Instant, Double> entry) {
-		return new TimelineHistoryEntry().date(entry.getKey()).value(entry.getValue());
+	private TimelineHistoryEntry historyEntryOf(Map.Entry<Instant, Double> entry, Formatter formatter) {
+		return new TimelineHistoryEntry().date(entry.getKey()).value(entry.getValue()).formattedValue(formatter.format(entry.getValue()));
 	}
 
 	private TimelineSummary summaryOf(TimelineDatasource.Magnitude magnitude) {
 		TimelineDatasource.TimelineScale scale = selectedScale();
+		Formatter formatter = magnitude.definition().formatter();
 		Instant date = selectedInstant(scale);
 		TimelineDatasource.Summary summary = magnitude.summary(date, scale);
-		return new TimelineSummary().average(summaryValueOf(summary.average(), date))
-									.max(summaryValueOf(summary.max(), summary.maxDate()))
-									.min(summaryValueOf(summary.min(), summary.minDate()));
+		return new TimelineSummary().average(summaryValueOf(summary.average(), date, formatter))
+									.max(summaryValueOf(summary.max(), summary.maxDate(), formatter))
+									.min(summaryValueOf(summary.min(), summary.minDate(), formatter));
 	}
 
-	private TimelineSummaryValue summaryValueOf(double value, Instant date) {
-		return new TimelineSummaryValue().value(value).date(date);
+	private TimelineSummaryValue summaryValueOf(double value, Instant date, Formatter formatter) {
+		return new TimelineSummaryValue().value(adapt(formatter.format(value))).date(date);
 	}
 
 	private TimelineSerie serieOf(TimelineDatasource.Magnitude magnitude) {
@@ -182,9 +185,12 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		TimelineDatasource.TimelineScale scale = selectedScale();
 		Instant current = selectedInstant(scale);
 		TimelineDatasource.Serie serie = magnitude.serie(scale, current);
+		List<Double> values = loadValues(serie);
+		Formatter formatter = magnitude.definition().formatter();
 		result.name(serie.name());
 		result.categories(categoriesOf(serie, current, scale));
-		result.values(loadValues(serie));
+		result.values(values);
+		result.formattedValues(values.stream().map(formatter::format).collect(Collectors.toList()));
 		return result;
 	}
 
@@ -300,19 +306,28 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 
 	private TimelineMagnitude schemaOf(TimelineDatasource.Magnitude magnitude) {
 		MagnitudeDefinition definition = magnitude.definition();
+		Formatter formatter = definition.formatter();
 		return new TimelineMagnitude()
 				.name(definition.name())
 				.value(magnitude.value())
+				.formattedValue(adapt(formatter.format(magnitude.value())))
 				.status(magnitude.status().name())
 				.min(magnitude.min() != null ? String.valueOf(magnitude.min()) : null)
+				.formattedMin(magnitude.min() != null ? adapt(formatter.format(magnitude.min())) : null)
 				.max(magnitude.max() != null ? String.valueOf(magnitude.max()) : null)
-				.percentage(magnitude.percentage() != null ? String.valueOf(magnitude.percentage()) : null)
+				.formattedMax(magnitude.max() != null ? adapt(formatter.format(magnitude.max())) : null)
+				.percentage(magnitude.percentage() != null ? adapt(formatter.format(magnitude.percentage())) : null)
 				.label(definition.label(language()))
 				.unit(definition.unit())
-				.decimalCount(definition.decimalCount())
 				.summary(summaryOf(magnitude))
 				.serie(serieOf(magnitude))
 				.customView(magnitude.customHtmlView(selectedScale()));
+	}
+
+	private static final Set<String> EnglishNotationLanguages = Set.of("mx", "en");
+	private String adapt(String value) {
+		if (!EnglishNotationLanguages.contains(language().toLowerCase())) return value;
+		return value.replace(",", "COMMA").replace(".", ",").replace("COMMA", ".");
 	}
 
 }

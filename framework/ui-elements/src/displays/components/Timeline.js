@@ -228,7 +228,6 @@ class Timeline extends AbstractTimeline {
     };
 
     historyOptions = (history, magnitude) => {
-        const decimalCount = magnitude.decimalCount;
         const height = this.historyHeight();
         const width = this.historyWidth();
         const unit = magnitude.unit;
@@ -246,7 +245,7 @@ class Timeline extends AbstractTimeline {
             tooltip: {
                 enabled: true,
                 formatter: function() {
-                    return '<b>' + Highcharts.numberFormat(this.y,decimalCount) + (unit != null ? " " + unit : "") + '</b><br/>' + formatDate(this.x);
+                    return '<b>' + data[this.points[0].point.index][2] + (unit != null ? " " + unit : "") + '</b><br/>' + formatDate(this.x);
                 }
             },
 
@@ -344,7 +343,7 @@ class Timeline extends AbstractTimeline {
 	    history.data = [];
 	    for (let i=0; i<dataObjects.length; i++) {
 	        if (history.from > dataObjects[i].date) history.from = dataObjects[i].date;
-	        history.data.push([dataObjects[i].date, dataObjects[i].value]);
+	        history.data.push([dataObjects[i].date, dataObjects[i].value, dataObjects[i].formattedValue]);
         }
 	    this.setState({history: history});
 	};

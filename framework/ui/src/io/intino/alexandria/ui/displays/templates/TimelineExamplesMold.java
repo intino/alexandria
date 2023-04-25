@@ -249,7 +249,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 
 			@Override
 			public Double percentage() {
-				return 2.5;
+				return 16.5;
 			}
 
 			@Override
@@ -291,7 +291,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 	}
 
 	private MagnitudeDefinition measurementOf(String name, String unit, String label) {
-		return new MagnitudeDefinition().name(name).unit(unit).add("es", label).decimalCount(0);
+		return new MagnitudeDefinition().name(name).unit(unit).add("es", label);
 	}
 
 	private static final Map<TimelineDatasource.TimelineScale, TemporalUnit> TemporalUnits = Map.of(
