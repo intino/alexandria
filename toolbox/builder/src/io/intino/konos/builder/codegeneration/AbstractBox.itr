@@ -259,7 +259,7 @@ def type(terminal) trigger(setup)
 end
 
 def type(connector) trigger(setup)
-	this.connector = new io.intino.alexandria.terminal.JmsConnector(new io.intino.alexandria.jms.ConnectionConfig($parameter...[, ]), $additionalParameter...[,]);
+	this.connector = io.intino.alexandria.terminal.ConnectorFactory.createConnector(new io.intino.alexandria.jms.ConnectionConfig($parameter...[, ]), $additionalParameter...[,]);
 end
 
 def type(service & jmx) trigger(jmx)
@@ -332,7 +332,7 @@ def type(datalake & mirror) trigger(init)
 end
 
 def type(connector) trigger(init)
-	if ((this.connector instanceof io.intino.alexandria.terminal.JmsConnector) && ((io.intino.alexandria.terminal.JmsConnector) this.connector).connection() != null) return;
+	if (!(this.connector instanceof io.intino.alexandria.terminal.JmsConnector) || ((io.intino.alexandria.terminal.JmsConnector) this.connector).connection() != null) return;
 	final io.intino.alexandria.terminal.JmsConnector connector = (io.intino.alexandria.terminal.JmsConnector) this.connector;
 	if (connector.connection() == null) connector.start();
 	if (configuration().get("datahub_url") != null)
