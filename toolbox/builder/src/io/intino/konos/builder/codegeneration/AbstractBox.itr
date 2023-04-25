@@ -58,6 +58,7 @@ def type(box)
 		public abstract void beforeStart();
 
 		public io.intino.alexandria.core.Box start() {
+			initConnector();
 			if (owner != null) owner.beforeStart();
 			beforeStart();
 			if (owner != null) owner.startServices();
@@ -92,7 +93,6 @@ def type(box)
 		@Override
 		public void startServices() {
 			initUI();
-			initConnector();
 			initRestServices();
 			initSoapServices();
 			initJmxServices();
@@ -335,7 +335,7 @@ def type(connector) trigger(init)
 	if ((this.connector instanceof io.intino.alexandria.terminal.JmsConnector) && ((io.intino.alexandria.terminal.JmsConnector) this.connector).connection() != null) return;
 	final io.intino.alexandria.terminal.JmsConnector connector = (io.intino.alexandria.terminal.JmsConnector) this.connector;
 	if (connector.connection() == null) connector.start();
-	if (configuration().get("datahub_url") != null && configuration().get("datahub_url").contains("waitUntilConnect=true"))
+	if (configuration().get("datahub_url") != null)
 		while (connector.connection() == null) try {
 			Thread.sleep(1000 * 30);
 			connector.start();
