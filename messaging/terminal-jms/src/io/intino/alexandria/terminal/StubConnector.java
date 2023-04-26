@@ -1,6 +1,7 @@
 package io.intino.alexandria.terminal;
 
 import io.intino.alexandria.event.Event;
+import io.intino.alexandria.logger.Logger;
 
 import java.io.File;
 import java.time.Instant;
@@ -127,6 +128,11 @@ public class StubConnector implements Connector {
 
 	@Override
 	public javax.jms.Message requestResponse(String path, javax.jms.Message message, long timeout, TimeUnit timeUnit) {
+		try {
+			Thread.sleep(TimeUnit.MILLISECONDS.convert(timeout,timeUnit));
+		} catch (InterruptedException e) {
+			Logger.error(e);
+		}
 		return null;
 	}
 
