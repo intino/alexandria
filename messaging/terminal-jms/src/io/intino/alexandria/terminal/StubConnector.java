@@ -1,7 +1,15 @@
 package io.intino.alexandria.terminal;
 
 import io.intino.alexandria.event.Event;
+import io.intino.alexandria.jms.ConnectionConfig;
+import io.intino.alexandria.logger.Logger;
+import io.intino.alexandria.terminal.remotedatalake.DatalakeAccessor;
+import org.apache.activemq.command.ActiveMQTextMessage;
 
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageNotWriteableException;
+import javax.jms.TextMessage;
 import java.io.File;
 import java.time.Instant;
 import java.util.*;
@@ -9,14 +17,19 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class StubConnector implements Connector {
 	private final Map<String, List<Consumer<Event>>> eventConsumers;
 	private final Map<String, List<MessageConsumer>> messageConsumers;
+	private final ConnectionConfig config;
+	private final Map<String, String> urlParameters;
 	private EventOutBox eventOutBox;
 	private MessageOutBox messageOutBox;
 
-	public StubConnector(File outBoxDirectory) {
+	public StubConnector(ConnectionConfig config, File outBoxDirectory) {
+		this.config = config;
+		urlParameters = parameters(config.url());
 		eventConsumers = new HashMap<>();
 		messageConsumers = new HashMap<>();
 		if (outBoxDirectory != null) {
@@ -127,7 +140,38 @@ public class StubConnector implements Connector {
 
 	@Override
 	public javax.jms.Message requestResponse(String path, javax.jms.Message message, long timeout, TimeUnit timeUnit) {
-		return null;
+		return path.equals(DatalakeAccessor.PATH) && isDatalakeRequest(message) ? datalakeArgument() : null;
+	}
+
+	private Message datalakeArgument() {
+		try {
+			String datalake = parameters(config.url()).get("datalake");
+			if (datalake == null) return null;
+			ActiveMQTextMessage message;
+			message = new ActiveMQTextMessage();
+			message.setText(datalake);
+			return message;
+		} catch (MessageNotWriteableException e) {
+			Logger.error(e);
+			return null;
+		}
+	}
+
+	private Map<String, String> parameters(String url) {
+		if (!url.contains("?")) return Map.of();
+		String substring = url.substring(url.indexOf("?") + 1);
+		return Arrays.stream(substring.split(";")).collect(Collectors.toMap(p -> p.split("=")[0], p -> p.split("=")[1]));
+	}
+
+	private boolean isDatalakeRequest(Message message) {
+		if (!(message instanceof TextMessage)) return false;
+		try {
+			String text = ((TextMessage) message).getText();
+			return text.startsWith("[Datalake]");
+		} catch (JMSException e) {
+			Logger.error(e);
+			return false;
+		}
 	}
 
 	@Override
