@@ -145,7 +145,7 @@ public class StubConnector implements Connector {
 
 	private Message datalakeArgument() {
 		try {
-			String datalake = parameters(config.url()).get("datalake");
+			String datalake = urlParameters.get("datalake");
 			if (datalake == null) return null;
 			ActiveMQTextMessage message;
 			message = new ActiveMQTextMessage();
