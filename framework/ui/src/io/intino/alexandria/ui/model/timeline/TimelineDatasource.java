@@ -1,5 +1,7 @@
 package io.intino.alexandria.ui.model.timeline;
 
+import io.intino.alexandria.Scale;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -8,13 +10,12 @@ public interface TimelineDatasource {
 	String name();
 	List<MagnitudeDefinition> magnitudes();
 	Magnitude magnitude(MagnitudeDefinition definition);
-	enum TimelineScale { Minute, Hour, Day, Week, Month, Year }
-	List<TimelineScale> scales();
+	List<Scale> scales();
 
-	Instant from(TimelineScale scale);
-	Instant previous(Instant date, TimelineScale scale);
-	Instant next(Instant date, TimelineScale scale);
-	Instant to(TimelineScale scale);
+	Instant from(Scale scale);
+	Instant previous(Instant date, Scale scale);
+	Instant next(Instant date, Scale scale);
+	Instant to(Scale scale);
 
 	default MagnitudeDefinition magnitudeDefinition(String name) {
 		return magnitudes().stream().filter(d -> d.name().equals(name)).findFirst().orElse(null);
@@ -35,12 +36,12 @@ public interface TimelineDatasource {
 		Double max();
 		Double percentage();
 
-		Summary summary(Instant date, TimelineScale scale);
+		Summary summary(Instant date, Scale scale);
 
-		Serie serie(TimelineScale scale, Instant end);
-		Serie serie(TimelineScale scale, Instant start, Instant end);
+		Serie serie(Scale scale, Instant end);
+		Serie serie(Scale scale, Instant start, Instant end);
 
-		String customHtmlView(TimelineScale scale);
+		String customHtmlView(Scale scale);
 	}
 
 	interface Summary {

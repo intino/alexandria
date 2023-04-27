@@ -30,9 +30,6 @@ Concept OtherComponents
 	Concept HtmlViewer extends Component
 		var string content = empty
 
-	Concept Timeline extends Component
-		var word:{Summary Catalog} mode = Summary
-
 	Concept BaseStamp extends Component
 		Aspect Multiple
 		Aspect Editable

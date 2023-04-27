@@ -22,6 +22,7 @@ Format("background:'white',borderRadius:'3px',height:'100%'") whiteBackground
 Format("padding:'10px 20px'") air
 Format("marginTop:'10px'") airTop
 Format("marginBottom:'10px'") airBottom
+Format("marginBottom:'20px'") doubleAirBottom
 Format("marginRight:'10px'") airLeft
 Format("marginRight:'10px'") airRight
 Format("fontWeight:'bold'") bold

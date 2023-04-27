@@ -4,19 +4,14 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.model.VisualizationComponents;
+import io.intino.konos.model.VisualizationComponents.Reel;
 import io.intino.konos.model.VisualizationComponents.Timeline;
 
-public class TimelineRenderer extends ComponentRenderer<Timeline> {
+public class ReelRenderer extends ComponentRenderer<Reel> {
 
-	public TimelineRenderer(CompilationContext compilationContext, Timeline component, RendererWriter provider) {
+	public ReelRenderer(CompilationContext compilationContext, Reel component, RendererWriter provider) {
 		super(compilationContext, component, provider);
-	}
-
-	@Override
-	public FrameBuilder properties() {
-		FrameBuilder properties = super.properties();
-		if (element.mode() != null) properties.add("mode", element.mode().name());
-		return properties;
 	}
 
 }

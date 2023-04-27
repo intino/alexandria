@@ -7,7 +7,6 @@ public class MagnitudeDefinition {
 	private String name;
 	private String unit;
 	private Formatter formatter = defaultFormatter();
-
 	private final Map<String, String> labelMap = new HashMap<>();
 
 	public String name() {

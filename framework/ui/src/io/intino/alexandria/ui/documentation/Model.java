@@ -23,7 +23,7 @@ public class Model {
 		Download, DownloadSelection,
 		Grouping, GroupingToolbar, Sorting, SearchBox, Map, Slider, Selector,
 		Dashboard, AppDirectory, DigitalSignature, Dialog, Layer, Divider, User, Stepper,
-		Frame, MicroSite, HtmlViewer, Timeline;
+		Frame, MicroSite, HtmlViewer, Timeline, Reel;
 
 		public static WidgetType from(String type) {
 			WidgetType[] values = values();
@@ -77,6 +77,7 @@ public class Model {
 		map.put(WidgetType.MicroSite, new MicroSiteWidget());
 		map.put(WidgetType.HtmlViewer, new HtmlViewerWidget());
 		map.put(WidgetType.Timeline, new TimelineWidget());
+		map.put(WidgetType.Reel, new ReelWidget());
 	}
 
 	public static Widget widget(WidgetType type) {

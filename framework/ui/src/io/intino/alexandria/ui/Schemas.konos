@@ -303,7 +303,7 @@ Schema TimelineHistoryEntry
 	Attribute value as Real
 	Attribute formattedValue as Text
 
-Schema TimelineHistoryToolbar
+Schema TimelineToolbarInfo
 	Attribute label as Text
 	Attribute scale as Text
 	Attribute canNext as Bool
@@ -321,7 +321,7 @@ Schema TimelineSetup
 	Attribute historyLabel as Text
 	Attribute magnitudes as Object(TimelineMagnitude) List
 	Attribute scales as Text List
-	Attribute toolbar as Object(TimelineHistoryToolbar)
+	Attribute toolbar as Object(TimelineToolbarInfo)
 
 Schema TimelineMagnitudeVisibility
 	Attribute name as Text
@@ -361,3 +361,35 @@ Schema TimelineSerie
 	Attribute categories as Text List
 	Attribute values as Real List
 	Attribute formattedValues as Text List
+
+Schema ReelSetup
+	Attribute name as Text
+	Attribute signals as Object(ReelSignal) List
+	Attribute scales as Text List
+	Attribute toolbar as Object(ReelToolbarInfo)
+
+Schema ReelSignal
+	Attribute name as Text
+	Attribute label as Text
+	Attribute color as Text
+	Attribute type as Text
+	Attribute steps as Object(ReelSignalStep) List
+
+Schema ReelSignalStep
+	Attribute value as Text
+	Attribute date as Text
+
+Schema ReelToolbarInfo
+	Attribute label as Text
+	Attribute scale as Text
+	Attribute canNext as Bool
+	Attribute canPrevious as Bool
+
+Schema ReelSignalSorting
+	Attribute name as Text
+	Attribute position as Integer
+
+Schema ReelFetch
+	Attribute signal as Text
+	Attribute start as DateTime
+	Attribute end as DateTime
