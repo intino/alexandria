@@ -6,6 +6,7 @@ import java.time.temporal.TemporalUnit;
 public enum Scale {
 	Year(ChronoUnit.YEARS),
 	Month(ChronoUnit.MONTHS),
+	Week(ChronoUnit.WEEKS),
 	Day(ChronoUnit.DAYS),
 	Hour(ChronoUnit.HOURS),
 	Minute(ChronoUnit.MINUTES);

@@ -247,6 +247,7 @@ export default class Actionable extends AbstractActionable {
 	renderSign = () => {
 		if (!this.requireSign()) return;
 		const openSign = this.state.openSign != null ? this.state.openSign : false;
+		const isOneTimePasswordSignMode = this.props.signed.mode === "OneTimePassword";
 		return (
 		    <Dialog onClose={this.handleSignClose} open={openSign}>
 				<DialogTitle onClose={this.handleSignClose}>{this.translate("Sign")}</DialogTitle>
@@ -262,7 +263,7 @@ export default class Actionable extends AbstractActionable {
                     }
                 </DialogContent>
 				<DialogActions>
-				    <div className="layout horizontal flexible" style={{width:'100%'}} >
+				    <div className="layout horizontal flexible" style={{width:'100%',display:isOneTimePasswordSignMode?'block':'none'}}>
 				        <Button onClick={this.handleSignSetup} color="primary">{this.translate(this.state.signInfo.setupRequired ? "Enable" : "Setup")}</Button>
 				    </div>
 				    <div className="layout horizontal end-justified">

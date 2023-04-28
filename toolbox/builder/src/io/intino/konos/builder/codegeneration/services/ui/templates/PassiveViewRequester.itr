@@ -97,7 +97,7 @@ def type(list) trigger(parameter)
 end
 
 def type(parameter & file) trigger(parameter)
-	manager.fromForm("v")
+	manager.fromFormAsResource("v")
 end
 
 def type(parameter & String) trigger(parameter)

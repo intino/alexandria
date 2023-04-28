@@ -1,11 +1,13 @@
 package io.intino.alexandria.ui.displays.components;
 
+import io.intino.alexandria.Scale;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.*;
 import io.intino.alexandria.ui.displays.notifiers.TimelineNotifier;
+import io.intino.alexandria.ui.model.timeline.Formatter;
 import io.intino.alexandria.ui.model.timeline.MagnitudeDefinition;
 import io.intino.alexandria.ui.model.timeline.TimelineDatasource;
-import io.intino.alexandria.ui.model.timeline.TimelineFormatter;
+import io.intino.alexandria.ui.model.ScaleFormatter;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -28,8 +30,8 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	private List<TimelineMagnitudeVisibility> magnitudesVisibility;
 	private List<TimelineMagnitudeSorting> magnitudesSorting;
 	private int summaryPointsCount = DefaultSummaryPointsCount;
-	private final Map<TimelineDatasource.TimelineScale, Instant> selectedInstants = new HashMap<>();
-	private TimelineDatasource.TimelineScale selectedScale = null;
+	private final Map<Scale, Instant> selectedInstants = new HashMap<>();
+	private Scale selectedScale = null;
 
 	private static final int DefaultSummaryPointsCount = 24;
 
@@ -89,12 +91,12 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	}
 
 	public void first() {
-		TimelineDatasource.TimelineScale scale = selectedScale();
+		Scale scale = selectedScale();
 		selectInstant(scale, source.from(scale));
 	}
 
 	public void previous() {
-		TimelineDatasource.TimelineScale scale = selectedScale();
+		Scale scale = selectedScale();
 		Instant current = selectedInstant(scale);
 		Instant from = source.from(scale);
 		current = source.previous(current, selectedScale());
@@ -103,7 +105,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	}
 
 	public void next() {
-		TimelineDatasource.TimelineScale scale = selectedScale();
+		Scale scale = selectedScale();
 		Instant current = selectedInstant(scale);
 		Instant to = source.to(scale);
 		current = source.next(current, selectedScale());
@@ -112,12 +114,12 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	}
 
 	public void last() {
-		TimelineDatasource.TimelineScale scale = selectedScale();
+		Scale scale = selectedScale();
 		selectInstant(scale, source.to(scale));
 	}
 
 	public void changeScale(String scale) {
-		selectedScale = TimelineDatasource.TimelineScale.valueOf(scale);
+		selectedScale = Scale.valueOf(scale);
 		refreshToolbar();
 		refreshMagnitudes();
 	}
@@ -137,62 +139,67 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		);
 	}
 
-	private TimelineHistoryToolbar toolbar() {
-		TimelineDatasource.TimelineScale scale = selectedScale();
+	private TimelineToolbarInfo toolbar() {
+		Scale scale = selectedScale();
 		Instant date = selectedInstant(scale);
-		TimelineHistoryToolbar result = new TimelineHistoryToolbar();
-		result.label(TimelineFormatter.label(date, scale, language()));
+		TimelineToolbarInfo result = new TimelineToolbarInfo();
+		result.label(ScaleFormatter.label(date, scale, language()));
 		result.scale(selectedScale().name());
-		result.canPrevious(!TimelineFormatter.label(date, scale, language()).equals(TimelineFormatter.label(source.from(scale), scale, language())));
-		result.canNext(!TimelineFormatter.label(date, scale, language()).equals(TimelineFormatter.label(source.to(scale), scale, language())));
+		result.canPrevious(!ScaleFormatter.label(date, scale, language()).equals(ScaleFormatter.label(source.from(scale), scale, language())));
+		result.canNext(!ScaleFormatter.label(date, scale, language()).equals(ScaleFormatter.label(source.to(scale), scale, language())));
 		return result;
 	}
 
 	public void openHistory(String magnitudeName) {
-		TimelineDatasource.TimelineScale scale = selectedScale;
+		Scale scale = selectedScale;
 		notifier.showHistoryDialog(new TimelineHistory().from(source.from(scale)).to(source.to(scale)));
 	}
 
 	public void fetch(TimelineHistoryFetch fetch) {
 		TimelineDatasource.Magnitude magnitude = source.magnitude(fetch.magnitude());
-		TimelineDatasource.TimelineScale scale = selectedScale();
+		Scale scale = selectedScale();
 		Map<Instant, Double> values = magnitude.serie(scale, fetch.start(), fetch.end()).values();
-		notifier.refreshHistory(fillWithZeros(values, fetch.end(), scale).entrySet().stream().map(this::historyEntryOf).collect(Collectors.toList()));
+		Formatter formatter = magnitude.definition().formatter();
+		notifier.refreshHistory(fillWithZeros(values, fetch.end(), scale).entrySet().stream().map(e -> historyEntryOf(e, formatter)).collect(Collectors.toList()));
 	}
 
-	private TimelineHistoryEntry historyEntryOf(Map.Entry<Instant, Double> entry) {
-		return new TimelineHistoryEntry().date(entry.getKey()).value(entry.getValue());
+	private TimelineHistoryEntry historyEntryOf(Map.Entry<Instant, Double> entry, Formatter formatter) {
+		return new TimelineHistoryEntry().date(entry.getKey()).value(entry.getValue()).formattedValue(formatter.format(entry.getValue()));
 	}
 
 	private TimelineSummary summaryOf(TimelineDatasource.Magnitude magnitude) {
-		TimelineDatasource.TimelineScale scale = selectedScale();
+		Scale scale = selectedScale();
+		Formatter formatter = magnitude.definition().formatter();
 		Instant date = selectedInstant(scale);
 		TimelineDatasource.Summary summary = magnitude.summary(date, scale);
-		return new TimelineSummary().average(summaryValueOf(summary.average(), date))
-									.max(summaryValueOf(summary.max(), summary.maxDate()))
-									.min(summaryValueOf(summary.min(), summary.minDate()));
+		return new TimelineSummary().average(summaryValueOf(summary.average(), date, formatter))
+									.max(summaryValueOf(summary.max(), summary.maxDate(), formatter))
+									.min(summaryValueOf(summary.min(), summary.minDate(), formatter));
 	}
 
-	private TimelineSummaryValue summaryValueOf(double value, Instant date) {
-		return new TimelineSummaryValue().value(value).date(date);
+	private TimelineSummaryValue summaryValueOf(double value, Instant date, Formatter formatter) {
+		return new TimelineSummaryValue().value(adapt(formatter.format(value))).date(date);
 	}
 
 	private TimelineSerie serieOf(TimelineDatasource.Magnitude magnitude) {
 		TimelineSerie result = new TimelineSerie();
-		TimelineDatasource.TimelineScale scale = selectedScale();
+		Scale scale = selectedScale();
 		Instant current = selectedInstant(scale);
 		TimelineDatasource.Serie serie = magnitude.serie(scale, current);
+		List<Double> values = loadValues(serie);
+		Formatter formatter = magnitude.definition().formatter();
 		result.name(serie.name());
 		result.categories(categoriesOf(serie, current, scale));
-		result.values(loadValues(serie));
+		result.values(values);
+		result.formattedValues(values.stream().map(formatter::format).collect(Collectors.toList()));
 		return result;
 	}
 
-	private List<String> categoriesOf(TimelineDatasource.Serie serie, Instant to, TimelineDatasource.TimelineScale scale) {
+	private List<String> categoriesOf(TimelineDatasource.Serie serie, Instant to, Scale scale) {
 		return loadCategories(serie, to, scale).stream().map(d -> date(d, scale)).collect(Collectors.toList());
 	}
 
-	private List<Instant> loadCategories(TimelineDatasource.Serie serie, Instant to, TimelineDatasource.TimelineScale scale) {
+	private List<Instant> loadCategories(TimelineDatasource.Serie serie, Instant to, Scale scale) {
 		List<Instant> result = new ArrayList<>(serie.values().keySet());
 		return reverse(fill(reverse(result).subList(0, Math.min(result.size(), summaryPointsCount)), to, scale));
 	}
@@ -206,7 +213,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		return source.magnitude(definition);
 	}
 
-	private List<Instant> fill(List<Instant> result, Instant to, TimelineDatasource.TimelineScale scale) {
+	private List<Instant> fill(List<Instant> result, Instant to, Scale scale) {
 		if (result.size() >= summaryPointsCount) return result;
 		LocalDateTime mockDate = LocalDateTime.ofInstant(result.isEmpty() ? to : result.get(result.size() - 1), ZoneOffset.UTC);
 		while (result.size() < summaryPointsCount) {
@@ -216,16 +223,16 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		return result;
 	}
 
-	private TemporalUnit chronoUnitOf(TimelineDatasource.TimelineScale scale) {
-		if (scale == TimelineDatasource.TimelineScale.Hour) return ChronoUnit.HOURS;
-		if (scale == TimelineDatasource.TimelineScale.Minute) return ChronoUnit.MINUTES;
-		if (scale == TimelineDatasource.TimelineScale.Day) return ChronoUnit.DAYS;
-		if (scale == TimelineDatasource.TimelineScale.Week) return ChronoUnit.WEEKS;
-		if (scale == TimelineDatasource.TimelineScale.Month) return ChronoUnit.MONTHS;
+	private TemporalUnit chronoUnitOf(Scale scale) {
+		if (scale == Scale.Hour) return ChronoUnit.HOURS;
+		if (scale == Scale.Minute) return ChronoUnit.MINUTES;
+		if (scale == Scale.Day) return ChronoUnit.DAYS;
+		if (scale == Scale.Week) return ChronoUnit.WEEKS;
+		if (scale == Scale.Month) return ChronoUnit.MONTHS;
 		return ChronoUnit.YEARS;
 	}
 
-	private Map<Instant, Double> fillWithZeros(Map<Instant, Double> result, Instant to, TimelineDatasource.TimelineScale scale) {
+	private Map<Instant, Double> fillWithZeros(Map<Instant, Double> result, Instant to, Scale scale) {
 		if (result.size() >= summaryPointsCount) return result;
 		LocalDateTime mockDate = LocalDateTime.ofInstant(result.isEmpty() ? to : new ArrayList<>(result.keySet()).get(0), ZoneOffset.UTC);
 		while (result.size() < summaryPointsCount) {
@@ -248,8 +255,8 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		return result;
 	}
 
-	private String date(Instant date, TimelineDatasource.TimelineScale scale) {
-		return TimelineFormatter.shortLabel(date, scale, language());
+	private String date(Instant date, Scale scale) {
+		return ScaleFormatter.shortLabel(date, scale, language());
 	}
 
 	public String date(Instant date, String format, Function<String, String> translator) {
@@ -269,18 +276,18 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	}
 
 	private Instant selectedInstant(String scale) {
-		return selectedInstant(TimelineDatasource.TimelineScale.valueOf(scale));
+		return selectedInstant(Scale.valueOf(scale));
 	}
 
-	private Instant selectedInstant(TimelineDatasource.TimelineScale scale) {
+	private Instant selectedInstant(Scale scale) {
 		return selectedInstants.getOrDefault(scale, source.to(selectedScale()));
 	}
 
-	private TimelineDatasource.TimelineScale selectedScale() {
+	private Scale selectedScale() {
 		return selectedScale != null ? selectedScale : source.scales().get(0);
 	}
 
-	private void selectInstant(TimelineDatasource.TimelineScale scale, Instant value) {
+	private void selectInstant(Scale scale, Instant value) {
 		selectedInstants.put(scale, value);
 		refreshToolbar();
 		refreshMagnitudes();
@@ -300,19 +307,28 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 
 	private TimelineMagnitude schemaOf(TimelineDatasource.Magnitude magnitude) {
 		MagnitudeDefinition definition = magnitude.definition();
+		Formatter formatter = definition.formatter();
 		return new TimelineMagnitude()
 				.name(definition.name())
 				.value(magnitude.value())
+				.formattedValue(adapt(formatter.format(magnitude.value())))
 				.status(magnitude.status().name())
 				.min(magnitude.min() != null ? String.valueOf(magnitude.min()) : null)
+				.formattedMin(magnitude.min() != null ? adapt(formatter.format(magnitude.min())) : null)
 				.max(magnitude.max() != null ? String.valueOf(magnitude.max()) : null)
-				.percentage(magnitude.percentage() != null ? String.valueOf(magnitude.percentage()) : null)
+				.formattedMax(magnitude.max() != null ? adapt(formatter.format(magnitude.max())) : null)
+				.percentage(magnitude.percentage() != null ? adapt(formatter.format(magnitude.percentage())) : null)
 				.label(definition.label(language()))
 				.unit(definition.unit())
-				.decimalCount(definition.decimalCount())
 				.summary(summaryOf(magnitude))
 				.serie(serieOf(magnitude))
 				.customView(magnitude.customHtmlView(selectedScale()));
+	}
+
+	private static final Set<String> EnglishNotationLanguages = Set.of("mx", "en");
+	private String adapt(String value) {
+		if (!EnglishNotationLanguages.contains(language().toLowerCase())) return value;
+		return value.replace(",", "COMMA").replace(".", ",").replace("COMMA", ".");
 	}
 
 }

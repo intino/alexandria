@@ -6,7 +6,7 @@ import java.util.Map;
 public class MagnitudeDefinition {
 	private String name;
 	private String unit;
-	private Integer decimalCount = 8;
+	private Formatter formatter = defaultFormatter();
 	private final Map<String, String> labelMap = new HashMap<>();
 
 	public String name() {
@@ -27,12 +27,12 @@ public class MagnitudeDefinition {
 		return this;
 	}
 
-	public Integer decimalCount() {
-		return decimalCount;
+	public Formatter formatter() {
+		return formatter;
 	}
 
-	public MagnitudeDefinition decimalCount(Integer decimalCount) {
-		this.decimalCount = decimalCount;
+	public MagnitudeDefinition formatter(Formatter formatter) {
+		this.formatter = formatter;
 		return this;
 	}
 
@@ -43,6 +43,10 @@ public class MagnitudeDefinition {
 	public MagnitudeDefinition add(String language, String label) {
 		labelMap.put(language, label);
 		return this;
+	}
+
+	private Formatter defaultFormatter() {
+		return value -> String.format("%,.0f", value);
 	}
 
 }

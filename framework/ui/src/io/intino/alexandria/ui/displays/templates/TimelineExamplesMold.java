@@ -1,13 +1,12 @@
 package io.intino.alexandria.ui.displays.templates;
 
+import io.intino.alexandria.Scale;
 import io.intino.alexandria.UiFrameworkBox;
 import io.intino.alexandria.ui.model.timeline.MagnitudeDefinition;
 import io.intino.alexandria.ui.model.timeline.TimelineDatasource;
-import io.intino.alexandria.ui.model.timeline.TimelineDatasource.TimelineScale;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.Collections;
@@ -51,27 +50,27 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			}
 
 			@Override
-			public List<TimelineScale> scales() {
-				return List.of(TimelineScale.Hour, TimelineScale.Day, TimelineScale.Week, TimelineScale.Month, TimelineScale.Year);
+			public List<Scale> scales() {
+				return List.of(Scale.Hour, Scale.Day, Scale.Week, Scale.Month, Scale.Year);
 			}
 
 			@Override
-			public Instant from(TimelineScale scale) {
-				return LocalDateTime.ofInstant(Instant.now(), UTC).minus(30, unitOf(scale)).toInstant(UTC);
+			public Instant from(Scale scale) {
+				return LocalDateTime.ofInstant(Instant.now(), UTC).minus(30, scale.temporalUnit()).toInstant(UTC);
 			}
 
 			@Override
-			public Instant previous(Instant date, TimelineScale scale) {
-				return LocalDateTime.ofInstant(date, UTC).minus(1, unitOf(scale)).toInstant(UTC);
+			public Instant previous(Instant date, Scale scale) {
+				return LocalDateTime.ofInstant(date, UTC).minus(1, scale.temporalUnit()).toInstant(UTC);
 			}
 
 			@Override
-			public Instant next(Instant date, TimelineScale scale) {
-				return LocalDateTime.ofInstant(date, UTC).plus(1, unitOf(scale)).toInstant(UTC);
+			public Instant next(Instant date, Scale scale) {
+				return LocalDateTime.ofInstant(date, UTC).plus(1, scale.temporalUnit()).toInstant(UTC);
 			}
 
 			@Override
-			public Instant to(TimelineScale scale) {
+			public Instant to(Scale scale) {
 				return Instant.now();
 			}
 		};
@@ -81,7 +80,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 		return new TimelineDatasource.Magnitude() {
 
 			@Override
-			public TimelineDatasource.Summary summary(Instant date, TimelineScale scale) {
+			public TimelineDatasource.Summary summary(Instant date, Scale scale) {
 				return new TimelineDatasource.Summary() {
 					@Override
 					public double average() {
@@ -146,7 +145,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			}
 
 			@Override
-			public TimelineDatasource.Serie serie(TimelineScale scale, Instant instant) {
+			public TimelineDatasource.Serie serie(Scale scale, Instant instant) {
 				LocalDateTime date = LocalDateTime.ofInstant(instant, UTC);
 				return new TimelineDatasource.Serie() {
 					@Override
@@ -157,14 +156,14 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 					@Override
 					public Map<Instant, Double> values() {
 						return new HashMap<>() {{
-							put(date.minus(8, unitOf(scale)).toInstant(UTC), 120.0);
-							put(date.minus(7, unitOf(scale)).toInstant(UTC), 100.0);
-							put(date.minus(6, unitOf(scale)).toInstant(UTC), 10.0);
-							put(date.minus(5, unitOf(scale)).toInstant(UTC), 20.0);
-							put(date.minus(4, unitOf(scale)).toInstant(UTC), 1220.0);
-							put(date.minus(3, unitOf(scale)).toInstant(UTC), 192.0);
-							put(date.minus(2, unitOf(scale)).toInstant(UTC), 1232.0);
-							put(date.minus(1, unitOf(scale)).toInstant(UTC), 12.0);
+							put(date.minus(8, scale.temporalUnit()).toInstant(UTC), 120.0);
+							put(date.minus(7, scale.temporalUnit()).toInstant(UTC), 100.0);
+							put(date.minus(6, scale.temporalUnit()).toInstant(UTC), 10.0);
+							put(date.minus(5, scale.temporalUnit()).toInstant(UTC), 20.0);
+							put(date.minus(4, scale.temporalUnit()).toInstant(UTC), 1220.0);
+							put(date.minus(3, scale.temporalUnit()).toInstant(UTC), 192.0);
+							put(date.minus(2, scale.temporalUnit()).toInstant(UTC), 1232.0);
+							put(date.minus(1, scale.temporalUnit()).toInstant(UTC), 12.0);
 							put(date.toInstant(UTC), 12.0);
 						}};
 					}
@@ -172,12 +171,12 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			}
 
 			@Override
-			public TimelineDatasource.Serie serie(TimelineScale scale, Instant start, Instant end) {
+			public TimelineDatasource.Serie serie(Scale scale, Instant start, Instant end) {
 				return serie(scale, end);
 			}
 
 			@Override
-			public String customHtmlView(TimelineScale scale) {
+			public String customHtmlView(Scale scale) {
 				return "<div style=\"width:100%\">soy un custom view</div>";
 			}
 
@@ -188,7 +187,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 		return new TimelineDatasource.Magnitude() {
 
 			@Override
-			public TimelineDatasource.Summary summary(Instant date, TimelineScale scale) {
+			public TimelineDatasource.Summary summary(Instant date, Scale scale) {
 				return new TimelineDatasource.Summary() {
 					@Override
 					public double average() {
@@ -249,11 +248,11 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 
 			@Override
 			public Double percentage() {
-				return 2.5;
+				return 16.5;
 			}
 
 			@Override
-			public TimelineDatasource.Serie serie(TimelineScale scale, Instant date) {
+			public TimelineDatasource.Serie serie(Scale scale, Instant date) {
 				return new TimelineDatasource.Serie() {
 					@Override
 					public String name() {
@@ -268,7 +267,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			}
 
 			@Override
-			public TimelineDatasource.Serie serie(TimelineScale scale, Instant start, Instant end) {
+			public TimelineDatasource.Serie serie(Scale scale, Instant start, Instant end) {
 				return new TimelineDatasource.Serie() {
 					@Override
 					public String name() {
@@ -283,7 +282,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			}
 
 			@Override
-			public String customHtmlView(TimelineScale scale) {
+			public String customHtmlView(Scale scale) {
 				return null;
 			}
 
@@ -291,20 +290,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 	}
 
 	private MagnitudeDefinition measurementOf(String name, String unit, String label) {
-		return new MagnitudeDefinition().name(name).unit(unit).add("es", label).decimalCount(0);
-	}
-
-	private static final Map<TimelineDatasource.TimelineScale, TemporalUnit> TemporalUnits = Map.of(
-			TimelineDatasource.TimelineScale.Minute, ChronoUnit.MINUTES,
-			TimelineDatasource.TimelineScale.Hour, ChronoUnit.HOURS,
-			TimelineDatasource.TimelineScale.Day, ChronoUnit.DAYS,
-			TimelineDatasource.TimelineScale.Week, ChronoUnit.WEEKS,
-			TimelineDatasource.TimelineScale.Month, ChronoUnit.MONTHS,
-			TimelineDatasource.TimelineScale.Year, ChronoUnit.YEARS
-	);
-
-	private TemporalUnit unitOf(TimelineDatasource.TimelineScale scale) {
-		return TemporalUnits.getOrDefault(scale, ChronoUnit.HOURS);
+		return new MagnitudeDefinition().name(name).unit(unit).add("es", label);
 	}
 
 }

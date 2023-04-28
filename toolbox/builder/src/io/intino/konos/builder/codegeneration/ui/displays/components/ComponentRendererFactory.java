@@ -30,6 +30,8 @@ public class ComponentRendererFactory {
 		map.put(conceptOf(Date.class), config -> new DateRenderer(config.context(), config.component().a$(Date.class), config.provider()));
 		map.put(conceptOf(File.class), config -> new FileRenderer(config.context(), config.component().a$(File.class), config.provider()));
 		map.put(conceptOf(Image.class), config -> new ImageRenderer(config.context(), config.component().a$(Image.class), config.provider()));
+		map.put(conceptOf(Reel.class), config -> new ReelRenderer(config.context(), config.component().a$(Reel.class), config.provider()));
+		map.put(conceptOf(Timeline.class), config -> new TimelineRenderer(config.context(), config.component().a$(Timeline.class), config.provider()));
 		map.put(conceptOf(DataComponents.Number.class), config -> new NumberRenderer(config.context(), config.component().a$(DataComponents.Number.class), config.provider()));
 		map.put(conceptOf(DataComponents.Location.class), config -> new LocationRenderer(config.context(), config.component().a$(DataComponents.Location.class), config.provider()));
 		map.put(conceptOf(Spinner.class), config -> new SpinnerRenderer(config.context(), config.component().a$(Spinner.class), config.provider()));
@@ -46,7 +48,6 @@ public class ComponentRendererFactory {
 		map.put(conceptOf(OtherComponents.Frame.class), config -> new FrameRenderer(config.context(), config.component().a$(OtherComponents.Frame.class), config.provider()));
 		map.put(conceptOf(OtherComponents.MicroSite.class), config -> new MicroSiteRenderer(config.context(), config.component().a$(OtherComponents.MicroSite.class), config.provider()));
 		map.put(conceptOf(OtherComponents.HtmlViewer.class), config -> new HtmlViewerRenderer(config.context(), config.component().a$(OtherComponents.HtmlViewer.class), config.provider()));
-		map.put(conceptOf(OtherComponents.Timeline.class), config -> new TimelineRenderer(config.context(), config.component().a$(OtherComponents.Timeline.class), config.provider()));
 		map.put(conceptOf(Stepper.class), config -> new StepperRenderer(config.context(), config.component().a$(Stepper.class), config.provider()));
 		map.put(conceptOf(Stepper.Step.class), config -> new StepRenderer(config.context(), config.component().a$(Stepper.Step.class), config.provider()));
 		map.put(conceptOf(Template.class), config -> new TemplateRenderer(config.context(), config.component().a$(Template.class), config.provider()));

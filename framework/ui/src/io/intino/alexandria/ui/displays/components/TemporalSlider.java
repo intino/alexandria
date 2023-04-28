@@ -80,7 +80,7 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
     @Override
     String format(long value) {
         Ordinal ordinal = ordinal();
-        return ordinal != null ? (customFormatter != null ? customFormatter.format(value) : ordinal.formatter(language()).format(millisOf(value))) : String.valueOf(value);
+        return ordinal != null ? (customFormatter != null ? customFormatter.format(millisOf(value)) : ordinal.formatter(language()).format(millisOf(value))) : String.valueOf(millisOf(value));
     }
 
     @Override
