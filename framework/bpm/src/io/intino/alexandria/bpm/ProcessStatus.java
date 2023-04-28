@@ -9,6 +9,7 @@ import static io.intino.alexandria.bpm.Workflow.EventType;
 
 public class ProcessStatus extends MessageEvent {
 
+
 	private static final String Owner = "owner";
 	private static final String Task = "Task";
 	private static final String State = "State";
@@ -17,12 +18,15 @@ public class ProcessStatus extends MessageEvent {
 	private static final String Name = "name";
 	private static final String Status = "status";
 	private static final String Ts = "ts";
+	private static final String SS = "ss";
 	private static final String Id = "id";
 	private static final String CallbackProcess = "callbackProcess";
 	private static final String CallbackState = "callbackState";
+	private static final String BPM_SS = "bpm";
 
 	public ProcessStatus(String id, String name, Process.Status processStatus) {
 		super(new Message(EventType)
+				.set(SS, BPM_SS)
 				.set(Ts, Instant.now().toString())
 				.set(Id, id)
 				.set(Name, name)
@@ -31,6 +35,7 @@ public class ProcessStatus extends MessageEvent {
 
 	public ProcessStatus(String id, String name, Process.Status processStatus, String owner, String callbackProcess, String callbackState) {
 		super(new Message(EventType)
+				.set(SS, BPM_SS)
 				.set(Ts, Instant.now().toString())
 				.set(Id, id)
 				.set(Name, name)
@@ -41,11 +46,11 @@ public class ProcessStatus extends MessageEvent {
 	}
 
 	public ProcessStatus(MessageEvent event) {
-		super(event.toMessage());
+		this(event.toMessage());
 	}
 
 	public ProcessStatus(Message message) {
-		super(message);
+		super(message.set(SS, BPM_SS)); // TODO: check
 	}
 
 	public Instant ts() {
