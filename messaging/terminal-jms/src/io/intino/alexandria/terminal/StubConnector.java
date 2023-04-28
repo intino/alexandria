@@ -147,6 +147,7 @@ public class StubConnector implements Connector {
 		try {
 			String datalake = urlParameters.get("datalake");
 			if (datalake == null) return null;
+			createDirectoryIfNotExists(datalake);
 			ActiveMQTextMessage message;
 			message = new ActiveMQTextMessage();
 			message.setText(datalake);
@@ -154,6 +155,14 @@ public class StubConnector implements Connector {
 		} catch (MessageNotWriteableException e) {
 			Logger.error(e);
 			return null;
+		}
+	}
+
+	private void createDirectoryIfNotExists(String datalake) {
+		try {
+			new File(datalake).mkdirs();
+		} catch (Exception e) {
+			Logger.error("Could not create directory " + datalake + ": " + e.getMessage(), e);
 		}
 	}
 
