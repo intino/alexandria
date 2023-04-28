@@ -191,7 +191,7 @@ public class Grid<DN extends GridNotifier, B extends Box, Item> extends Abstract
 
     @Override
     public List<Display> insert(List<Item> items, int from) {
-        this.items.addAll(from, items);
+        this.items.addAll(Math.min(from, this.items.size()), items);
         notifier.addRows(items.stream().map(this::schemaOf).collect(Collectors.toList()));
         return null;
     }
