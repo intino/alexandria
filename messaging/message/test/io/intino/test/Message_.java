@@ -15,10 +15,15 @@ public class Message_ {
 
 	@Test
 	public void lists() {
-		Message message = new Message("clmnefrolc");
-		message.set("list", null);
-		System.out.println(message);
-		System.out.println(message.get("list").asList(String.class));
+		Message message = new Message("ABC");
+		message.set("list", List.of());
+		List<String> list = message.get("list").asList(String.class);
+		List<String> list2 = Arrays.asList(message.get("list").as(String[].class));
+
+		System.out.println(message.toString());
+
+		message = new MessageReader(message.toString()).next();
+		System.out.println(message.get("list").asList(String.class).size());
 	}
 
 	@Test
