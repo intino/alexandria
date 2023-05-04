@@ -120,9 +120,9 @@ class ParserFactory {
 		@Override
 		public Object parse(String text) {
 			Parser parser = Parser.of(elementType);
-			String[] items = text.split(ListSepStr);
+			String[] items = text.isEmpty() ? new String[0] : text.split(ListSepStr);
 			Object result = Array.newInstance(elementType, items.length);
-			for (int i = 0; i < items.length; i++) {// TODO: trim items?
+			for (int i = 0; i < items.length; i++) {
 				String item = items[i];
 				Array.set(result, i, (Null.equals(item) ? null : parser.parse(item)));
 			}

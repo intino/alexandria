@@ -1,15 +1,12 @@
 package io.intino.alexandria.bpm;
 
-import io.intino.alexandria.Timetag;
 import io.intino.alexandria.message.Message;
 import org.junit.Test;
 
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.intino.alexandria.Scale.Month;
 import static io.intino.alexandria.bpm.Link.Type.Inclusive;
 import static io.intino.alexandria.bpm.State.Type.Initial;
 import static io.intino.alexandria.bpm.State.Type.Terminal;
