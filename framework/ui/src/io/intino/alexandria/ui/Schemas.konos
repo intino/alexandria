@@ -367,6 +367,7 @@ Schema ReelSetup
 	Attribute signals as Object(ReelSignal) List
 	Attribute scales as Text List
 	Attribute toolbar as Object(ReelToolbarInfo)
+	Attribute navigation as Object(ReelNavigationInfo)
 
 Schema ReelSignal
 	Attribute name as Text
@@ -384,6 +385,9 @@ Schema ReelToolbarInfo
 	Attribute scale as Text
 	Attribute canNext as Bool
 	Attribute canPrevious as Bool
+
+Schema ReelNavigationInfo
+	Attribute steps as Integer
 
 Schema ReelSignalSorting
 	Attribute name as Text

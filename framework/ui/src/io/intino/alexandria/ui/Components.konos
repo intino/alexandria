@@ -199,6 +199,7 @@ Component reel
 	Notification refreshToolbar as Object(ReelToolbarInfo)
 	Notification refreshSignalsSorting as Object(ReelSignalSorting) List
 	Notification refreshSignals as Object(ReelSignal) List
+	Notification refreshNavigation as Object(ReelNavigationInfo)
 	Request fetch as Object(ReelFetch)
 	Request signalsSorting as Object(ReelSignalSorting) List
 	Request first

@@ -10,7 +10,7 @@ const DefaultStyle = {
   cursor: "move"
 };
 
-const ReelSignal = ({ signal, index, id, moveSignal, classes, translate, style }) => {
+const ReelSignal = ({ signal, index, id, moveSignal, classes, translate, style, stepWidth }) => {
     const ref = useRef(null);
     const [fullView, setFullView] = useState(false);
     const [selection, setSelection] = useState(null);
@@ -61,7 +61,7 @@ const ReelSignal = ({ signal, index, id, moveSignal, classes, translate, style }
         if (block.length == 0) return (<React.Fragment/>);
         const isEmpty = block[0].value === "" || block[0].value === " ";
         const background = isEmpty ? "transparent" : color;
-        const style = { width: (20*block.length) + "px", borderRadius: isEmpty ? '0' : '3px', backgroundColor: background, position: 'relative' };
+        const style = { width: (stepWidth*block.length) + "px", borderRadius: isEmpty ? '0' : '3px', backgroundColor: background, position: 'relative' };
         return (
             <div className={classes.signalStep} style={style} onClick={e => handlePopoverOpen(block, e)}>
             </div>
@@ -75,11 +75,11 @@ const ReelSignal = ({ signal, index, id, moveSignal, classes, translate, style }
         let current = null;
         for (i=0; i<steps.length; i++) {
             const value = steps[i].value;
+            block.push({ value: value, date: steps[i].date });
             if (i == steps.length-1 || (current != null && value != current)) {
                 result.push(renderBlock(block, signal.color));
                 block = [];
             }
-            block.push({ value: value, date: steps[i].date });
             current = value;
         }
         return result;

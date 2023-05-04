@@ -56,7 +56,7 @@ public class ReelExamplesMold extends AbstractReelExamplesMold<UiFrameworkBox> {
 					public String reel(Scale scale, Instant start, Instant end) {
 						String result = "";
 						for (int i=0; i<24; i++) {
-							result += Math.random() < 0.5 ? " " : "-";
+							result += i%2 != 0 ? " " : "-";
 						}
 						return result;
 					}
@@ -70,7 +70,7 @@ public class ReelExamplesMold extends AbstractReelExamplesMold<UiFrameworkBox> {
 
 			@Override
 			public Instant from(Scale scale) {
-				return LocalDateTime.ofInstant(Instant.now(), UTC).minus(30, scale.temporalUnit()).toInstant(UTC);
+				return LocalDateTime.ofInstant(Instant.now(), UTC).minus(500, scale.temporalUnit()).toInstant(UTC);
 			}
 
 			@Override
