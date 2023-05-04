@@ -50,7 +50,7 @@ def type(resource & html)
 			<script src="$$url/res/js/jquery-3.6.1.min.js"></script>
 			<script src="$$url/res/js/materialize-1.0.0.min.js"></script>
 
-			<style>
+			<style nonce="main_style">
 				html, body {
 					min-height: 100vh;
 					height: 100%;
@@ -65,7 +65,7 @@ def type(resource & html)
 
 		<body>
 			<div class="page" id="$pageDisplay+firstUpperCase"></div>
-			<script>
+			<script nonce="main_script">
 				document.configuration = {};
 				document.configuration.googleApiKey = "$$googleApiKey";
 				document.configuration.pushConnections = "$$pushConnections".split(",");

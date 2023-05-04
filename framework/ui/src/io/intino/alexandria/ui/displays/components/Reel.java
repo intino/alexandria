@@ -9,6 +9,9 @@ import io.intino.alexandria.ui.model.reel.SignalDefinition;
 import io.intino.alexandria.ui.model.ScaleFormatter;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +23,9 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 	private List<ReelSignalSorting> signalsSorting;
 	private final Map<Scale, Instant> selectedInstants = new HashMap<>();
 	private Scale selectedScale = null;
+	private int stepsCount = DefaultStepsCount;
+
+	private static final int DefaultStepsCount = 24;
 
 	public Reel(B box) {
 		super(box);
@@ -37,6 +43,11 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 	public Reel<DN, B> signalsSorting(List<ReelSignalSorting> signalsSorting) {
 		this.signalsSorting = signalsSorting;
 		notifier.refreshSignalsSorting(signalsSorting);
+		return this;
+	}
+
+	public Reel<DN, B> stepsCount(int count) {
+		this.stepsCount = count;
 		return this;
 	}
 
@@ -72,6 +83,7 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 		selectedScale = Scale.valueOf(scale);
 		refreshToolbar();
 		refreshSignals();
+		refreshNavigation();
 	}
 
 	@Override
@@ -82,7 +94,8 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 				.name(source.name())
 				.scales(source.scales().stream().map(Enum::name).collect(Collectors.toList()))
 				.toolbar(toolbar())
-				.signals(source.signals().stream().map(this::schemaOf).collect(Collectors.toList())));
+				.signals(source.signals().stream().map(this::schemaOf).collect(Collectors.toList()))
+				.navigation(navigation()));
 	}
 
 	public void fetch(ReelFetch fetch) {
@@ -106,6 +119,22 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 		notifier.refreshSignals(source.signals().stream().map(this::schemaOf).collect(Collectors.toList()));
 	}
 
+	private void refreshNavigation() {
+		notifier.refreshNavigation(navigation());
+	}
+
+	private ReelNavigationInfo navigation() {
+		Scale scale = selectedScale();
+		Instant current = source.from(scale);
+		Instant to = source.to(scale);
+		int steps = 0;
+		while (current != to && current.isBefore(to)) {
+			steps++;
+			current = source.next(current, scale);
+		}
+		return new ReelNavigationInfo().steps(steps);
+	}
+
 	private ReelSignal schemaOf(SignalDefinition definition) {
 		return schemaOf(signal(definition));
 	}
@@ -113,13 +142,19 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 	private ReelSignal schemaOf(ReelDatasource.Signal signal) {
 		SignalDefinition definition = signal.definition();
 		Scale scale = selectedScale();
-		String reel = signal.reel(scale, source.from(scale), source.to(scale));
+		Instant to = selectedInstant(scale);
+		Instant from = LocalDateTime.ofInstant(to, ZoneId.of("UTC")).minus(stepsCount, scale.temporalUnit()).toInstant(ZoneOffset.UTC);
+		String reel = signal.reel(scale, from, to);
 		return new ReelSignal()
 				.name(definition.name())
 				.type(definition.type().name())
 				.label(definition.label(language()))
 				.color(definition.color())
-				.steps(stepsOf(reel, source.from(scale)));
+				.steps(stepsOf(fillWithZeros(reel), from));
+	}
+
+	private String fillWithZeros(String reel) {
+		return String.format("%1$" + stepsCount + "s", reel);
 	}
 
 	private List<ReelSignalStep> stepsOf(String reel, Instant from) {
@@ -146,6 +181,10 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 		result.canPrevious(!ScaleFormatter.label(date, scale, language()).equals(ScaleFormatter.label(source.from(scale), scale, language())));
 		result.canNext(!ScaleFormatter.label(date, scale, language()).equals(ScaleFormatter.label(source.to(scale), scale, language())));
 		return result;
+	}
+
+	private Instant selectedInstant() {
+		return selectedInstant(selectedScale());
 	}
 
 	private Instant selectedInstant(Scale scale) {

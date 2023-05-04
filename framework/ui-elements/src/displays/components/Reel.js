@@ -11,9 +11,12 @@ import ReelToolbar from './reel/toolbar'
 import ReelSignal from './reel/signal'
 import Theme from "app-elements/gen/Theme";
 
+const ReelStepWidth = 20;
+const ReelStepLabelWidth = 200;
+
 const styles = theme => ({
     signal : { position:'relative', padding:'5px 0', marginBottom: '1px', minWidth:'180px' },
-    signalLabel : { width:'200px',fontWeight:'bold',textOverflow:'ellipsis',overflow:'hidden',whiteSpace:'nowrap' },
+    signalLabel : { width: ReelStepLabelWidth + 'px',fontWeight:'bold',textOverflow:'ellipsis',overflow:'hidden',whiteSpace:'nowrap' },
     signalStep : { height:'14px' },
     signalStepBlock: { padding: theme.spacing(1) },
     signalStepBlockLink: { width: '100%', display: 'block', height: '100%', cursor: 'pointer' },
@@ -34,6 +37,7 @@ class Reel extends AbstractReel {
 		    scales: [],
 		    inside : false,
 		    toolbar: { label: '', scale: null, canNext: false, canPrevious: false },
+		    navigation: { steps: 0 },
 		    signals: [],
 		    signalsSorting : {},
 		}
@@ -44,8 +48,9 @@ class Reel extends AbstractReel {
         return (
             <DndProvider backend={HTML5Backend}>
                 <div className="layout vertical wrap" onMouseEnter={this.handleMouseEnter.bind(this)} onMouseLeave={this.handleMouseLeave.bind(this)} style={this.style()}>
-                    {this.renderToolbar({fontSize:'14pt',fontWeight:'300'})}
+                    {this.renderToolbar({fontWeight:'300'})}
                     {this.renderSignals()}
+                    {this.renderNavigation()}
                     {this.renderCookieConsent()}
                 </div>
             </DndProvider>
@@ -54,17 +59,34 @@ class Reel extends AbstractReel {
 
     renderSignals = () => {
         const signals = this.sortedSignals().map((s, idx) => this.renderSignal(s, idx));
-        return (
-            <React.Fragment>
-                <div style={{marginBottom:'2px',borderBottom:'1px solid #ddd'}}></div>
-                {signals}
-            </React.Fragment>
-        );
+        return (<div style={{marginTop:'10px'}}>{signals}</div>);
+    };
+
+    renderNavigation = () => {
+        return (<React.Fragment/>);
+//        if (this.state.navigation.steps == 0) return (<React.Fragment/>);
+//        const steps = [];
+//        for (let i=0; i<this.state.navigation.steps; i++) steps.push(this.navigationStep());
+//        return (
+//            <div style={{position:'relative'}}>
+//                <div className="layout horizontal flex" style={{position:'absolute',width:'100%',overflow:'auto'}} onScroll={this.handleMove.bind(this)}>
+//                    {steps}
+//                </div>
+//            </div>
+//        );
+    };
+
+    handleMove = (e) => {
+        console.log(Math.round(e.target.scrollLeft/ReelStepWidth));
+    };
+
+    navigationStep = () => {
+        return (<div><div style={{width:ReelStepWidth+"px",height:'20px',border:'1px solid blue',display:'block'}}></div></div>);
     };
 
     setup = (info) => {
         const signalsSorting = this.getCookie(info.name + "_sorting") != null ? this.getCookie(info.name + "_sorting") : this.state.signalsSorting;
-        this.setState({ scales: info.scales, toolbar: info.toolbar, signals: info.signals, signalsSorting: signalsSorting, sourceName: info.name });
+        this.setState({ scales: info.scales, toolbar: info.toolbar, signals: info.signals, navigation: info.navigation, signalsSorting: signalsSorting, sourceName: info.name });
     };
 
     refreshSignalsSorting = (sorting) => {
@@ -79,6 +101,10 @@ class Reel extends AbstractReel {
 
 	refreshToolbar = (toolbar) => {
 	    this.setState({toolbar});
+	};
+
+	refreshNavigation = (navigation) => {
+	    this.setState({navigation});
 	};
 
     sortedSignals = () => {
@@ -114,8 +140,9 @@ class Reel extends AbstractReel {
     };
 
     renderSignal = (signal, idx) => {
+        const width = (signal.steps.length*ReelStepWidth)+ReelStepLabelWidth;
         return (
-            <ReelSignal style={{paddingBottom:'2px',borderBottom:'1px solid #ddd'}}
+            <ReelSignal style={{paddingBottom:'2px',borderBottom:'1px solid #ddd',width:width+"px"}}
                  signal={signal}
                  key={this.props.id + signal.name}
                  index={idx}
@@ -123,6 +150,7 @@ class Reel extends AbstractReel {
                  classes={this.props.classes}
                  translate={this.translate.bind(this)}
                  moveSignal={this.moveSignal.bind(this)}
+                 stepWidth={ReelStepWidth}
             />
         );
     };
