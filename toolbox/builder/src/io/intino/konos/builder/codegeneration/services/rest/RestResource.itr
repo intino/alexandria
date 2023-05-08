@@ -215,7 +215,7 @@ def type(parameter) trigger(assign)
 end
 
 def type(list) trigger(parameterType)
-	com.google.gson.reflect.TypeToken.getParameterized(java.util.ArrayList.class, $value.class).getType()
+	com.google.gson.reflect.TypeToken<java.util.List<$value>>(){}.getType();
 end
 
 def type(authenticationValidator & Custom) trigger(put)

@@ -5,8 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/framework/allotropy/allotropy.iml" filepath="$PROJECT_DIR$/framework/allotropy/allotropy.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/framework/bot/bot.iml" filepath="$PROJECT_DIR$/framework/bot/bot.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/framework/bpm/bpm.iml" filepath="$PROJECT_DIR$/framework/bpm/bpm.iml" group="framework" />
-      <module fileurl="file://$PROJECT_DIR$/toolbox/builder/builder.iml" filepath="$PROJECT_DIR$/toolbox/builder/builder.iml" group="toolbox" />
-      <module fileurl="file://$PROJECT_DIR$/toolbox/builder-constants/builder-constants.iml" filepath="$PROJECT_DIR$/toolbox/builder-constants/builder-constants.iml" group="toolbox" />
+      <module fileurl="file://$PROJECT_DIR$/toolbox/builder/builder.iml" filepath="$PROJECT_DIR$/toolbox/builder/builder.iml" group="toolbox"/>
       <module fileurl="file://$PROJECT_DIR$/cli/cli.iml" filepath="$PROJECT_DIR$/cli/cli.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/framework/core/core.iml" filepath="$PROJECT_DIR$/framework/core/core.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/libraries/ness/datalake/datalake.iml" filepath="$PROJECT_DIR$/libraries/ness/datalake/datalake.iml" group="eventsourcing" />
@@ -22,7 +21,6 @@
       <module fileurl="file://$PROJECT_DIR$/libraries/jms/jms.iml" filepath="$PROJECT_DIR$/libraries/jms/jms.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/jmx/jmx.iml" filepath="$PROJECT_DIR$/libraries/jmx/jmx.iml" group="services" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/json/json.iml" filepath="$PROJECT_DIR$/fileformats/json/json.iml" group="fileformats" />
-      <module fileurl="file://$PROJECT_DIR$/toolbox/konos-dsl/konos-dsl.iml" filepath="$PROJECT_DIR$/toolbox/konos-dsl/konos-dsl.iml" group="toolbox" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/led/led.iml" filepath="$PROJECT_DIR$/fileformats/led/led.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/libraries/logger/logger.iml" filepath="$PROJECT_DIR$/libraries/logger/logger.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/logger4j/logger4j.iml" filepath="$PROJECT_DIR$/libraries/logger4j/logger4j.iml" group="libraries" />
