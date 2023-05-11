@@ -5,7 +5,7 @@
 	<groupId>io.intino.konos</groupId>
 	<artifactId>builder</artifactId>
 	<name>Builder</name>
-	<version>10.2.4</version>
+	<version>10.3.1</version>
 	<properties>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
@@ -13,6 +13,8 @@
 	</properties>
 
 	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<testSourceDirectory>test</testSourceDirectory>
 		<outputDirectory>../../out/production/builder</outputDirectory>
 		<testOutputDirectory>../../out/test/builder</testOutputDirectory>
 		<directory>../../out/build/builder</directory>
@@ -21,6 +23,11 @@
 				<directory>res</directory>
 			</resource>
 		</resources>
+		<testResources>
+			<testResource>
+				<directory>test-res</directory>
+			</testResource>
+		</testResources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

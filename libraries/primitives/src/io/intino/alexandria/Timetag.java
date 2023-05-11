@@ -208,7 +208,7 @@ public class Timetag implements Comparable<Timetag> {
 	}
 
 	private static int sizeOf(Scale scale) {
-		return scale.ordinal() * 2 + 4;
+		return scale.digits();
 	}
 
 	private static String toString(Instant instant) {
