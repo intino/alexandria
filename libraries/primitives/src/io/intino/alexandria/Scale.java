@@ -2,6 +2,7 @@ package io.intino.alexandria;
 
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
+import java.util.Arrays;
 
 public enum Scale {
 	Year(ChronoUnit.YEARS, 4),
@@ -19,6 +20,10 @@ public enum Scale {
 		this.digits = digits;
 	}
 
+	public static Scale of(int length) {
+		return Arrays.stream(Scale.values()).filter(s -> s.digits == length).findFirst().orElse(null);
+	}
+
 	public TemporalUnit temporalUnit() {
 		return unit;
 	}
@@ -26,4 +31,5 @@ public enum Scale {
 	public int digits() {
 		return digits;
 	}
+
 }
