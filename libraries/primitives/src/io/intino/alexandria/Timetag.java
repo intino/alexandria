@@ -115,23 +115,23 @@ public class Timetag implements Comparable<Timetag> {
 	}
 
 	public boolean hasMonth() {
-		return precision() > 0;
+		return tag.length() >= Scale.Month.digits();
 	}
 
 	public boolean hasDay() {
-		return precision() > 1;
+		return tag.length() >= Scale.Day.digits();
 	}
 
 	public boolean hasHour() {
-		return precision() > 2;
+		return tag.length() >= Scale.Hour.digits();
 	}
 
 	public boolean hasMinute() {
-		return precision() > 3;
+		return tag.length() >= Scale.Minute.digits();
 	}
 
 	public Scale scale() {
-		return Scale.values()[precision()];
+		return Scale.of(tag.length());
 	}
 
 	private int precision() {
@@ -208,7 +208,7 @@ public class Timetag implements Comparable<Timetag> {
 	}
 
 	private static int sizeOf(Scale scale) {
-		return scale.ordinal() * 2 + 4;
+		return scale.digits();
 	}
 
 	private static String toString(Instant instant) {

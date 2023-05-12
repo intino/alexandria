@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.1.1") pdf-builder
+Artifact("io.intino.alexandria", "1.1.2") pdf-builder
 	Imports
 		Compile("fr.opensagres.xdocreport", "fr.opensagres.poi.xwpf.converter.core", "2.0.2")
 		Compile("fr.opensagres.xdocreport", "fr.opensagres.poi.xwpf.converter.pdf", "2.0.2")
