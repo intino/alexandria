@@ -20,7 +20,7 @@ public class MessageReader_ {
 
 	@Test
 	public void read_huge_message() throws Exception {
-		try(var reader = new MessageReader(new FileInputStream("C:\\Users\\naits\\Downloads\\SSBA_000118081.rechazada"))) {
+		try(var reader = new MessageReader(new FileInputStream("C:\\Users\\naits\\Downloads\\huge.message"))) {
 			while(reader.hasNext()) {
 				Message m = reader.next();
 				System.out.println(m);
