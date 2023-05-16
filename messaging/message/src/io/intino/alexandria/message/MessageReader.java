@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
@@ -11,8 +12,7 @@ public class MessageReader implements Iterator<Message>, Iterable<Message>, Auto
 
 	private final MessageStream messageStream;
 	private final Message[] contextList;
-	private final String[] lines;
-	private int numLines;
+	private List<String> lines;
 
 	public MessageReader(String str) {
 		this(new ByteArrayInputStream(str.getBytes()), new Config());
@@ -36,14 +36,13 @@ public class MessageReader implements Iterator<Message>, Iterable<Message>, Auto
 
 	public MessageReader(MessageStream messageStream, Config config) {
 		this.messageStream = messageStream;
-		this.lines = new String[Math.max(config.linesBufferSize, 1)];
 		this.contextList = new Message[Math.max(config.contextMaxLevels, 1)];
 		init();
 	}
 
 	@Override
 	public boolean hasNext() {
-		return numLines > 0;
+		return lines != null && lines.size() > 0;
 	}
 
 	@Override
@@ -72,16 +71,15 @@ public class MessageReader implements Iterator<Message>, Iterable<Message>, Auto
 	}
 
 	private Message nextMessage() {
-		parse(lines, numLines, contextList);
-		while((numLines = messageStream.nextLines(lines)) > 0 && isComponent(lines[0])) {
-			parse(lines, numLines, contextList);
+		parse(lines, contextList);
+		while((lines = messageStream.nextLines()).size() > 0 && isComponent(lines.get(0))) {
+			parse(lines, contextList);
 		}
 		return firstNonNullAndReset(contextList);
 	}
 
-	private void parse(String[] lines, int size, Message[] contextList) {
-		String type = typeOf(lines[0]);
-		lines[0] = null;
+	private void parse(List<String> lines, Message[] contextList) {
+		String type = typeOf(lines.get(0));
 		String[] context = type.split("\\.", -1);
 		final int level = context.length - 1;
 		Message message = new Message(context[level]);
@@ -89,13 +87,13 @@ public class MessageReader implements Iterator<Message>, Iterable<Message>, Auto
 			contextList[level - 1].add(message);
 		}
 		contextList[level] = message;
-		readAttributes(message, lines, size);
+		readAttributes(message, lines);
 	}
 
-	private void readAttributes(Message message, String[] lines, int size) {
+	private void readAttributes(Message message, List<String> lines) {
+		final int size = lines.size();
 		for(int i = 1;i < size;i++) {
-			String line = lines[i];
-			lines[i] = null;
+			String line = lines.get(i);
 			try {
 				int attribSep = line.indexOf(':');
 				if(attribSep < 0) continue;
@@ -138,7 +136,7 @@ public class MessageReader implements Iterator<Message>, Iterable<Message>, Auto
 
 	private void init() {
 		if (this.messageStream.hasNext())
-			this.numLines = this.messageStream.nextLines(lines);
+			this.lines = this.messageStream.nextLines();
 	}
 
 	public static class Config {
