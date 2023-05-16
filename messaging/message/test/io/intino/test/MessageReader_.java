@@ -6,6 +6,8 @@ import io.intino.alexandria.message.Message;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -15,6 +17,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class MessageReader_ {
+
+	@Test
+	public void read_huge_message() throws Exception {
+		try(var reader = new MessageReader(new FileInputStream("C:\\Users\\naits\\Downloads\\SSBA_000118081.rechazada"))) {
+			while(reader.hasNext()) {
+				Message m = reader.next();
+				System.out.println(m);
+			}
+		}
+	}
 
 	@Test
 	public void sould_ignore_lines_without_colon_or_multiline_indentation() {
