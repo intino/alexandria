@@ -5,13 +5,12 @@ import io.intino.alexandria.office.components.ImageView;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class Example2Docxbuilder {
 
-	public static void main(String[] args) throws IOException, URISyntaxException {
+	public static void main(String[] args) throws IOException {
 		new File("temp").mkdirs();
 
 		DocxBuilder docx = DocxBuilder.create(new File("temp/ARML.docx"));
