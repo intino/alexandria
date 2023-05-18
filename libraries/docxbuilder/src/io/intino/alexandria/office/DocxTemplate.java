@@ -89,7 +89,7 @@ public class DocxTemplate {
 		}
 	}
 
-	private static final Pattern FieldPattern = Pattern.compile(FIELD_START + "[\\w-_.:+]+" + FIELD_END);
+	private static final Pattern FieldPattern = Pattern.compile(FIELD_START + "[\\w-_.:+$]+" + FIELD_END);
 	private static List<FieldDefinition> findFieldsFrom(DocxBuilder.Zip zip) throws IOException {
 		List<FieldDefinition> fieldDefinitions = new ArrayList<>();
 		for (Map.Entry<String, Document> docEntry : zip.documents().entrySet()) {
