@@ -1,11 +1,14 @@
 package io.intino.alexandria.message;
 
-import io.intino.alexandria.message.MessageException;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 public class MessageStream implements Iterator<String>, AutoCloseable {
 
@@ -52,30 +55,25 @@ public class MessageStream implements Iterator<String>, AutoCloseable {
 		}
 	}
 
-	public int nextLines(String[] lines) {
+	public List<String> nextLines() {
 		try {
-			if(buffer.length() == 0) return 0;
+			if(buffer.length() == 0) return new ArrayList<>(0);
+			List<String> lines = new ArrayList<>();
 			setFirstLine(lines);
-			int i = 1;
 			String next;
 			while((next = reader.readLine()) != null && isNotANewMessage(next)) {
-				addLine(next, i++, lines);
+				lines.add(next);
 			}
 			saveNextLineForLaterOrCloseReader(next);
-			return i;
+			return lines;
 		} catch (Exception e) {
 			throw new MessageException(e.getMessage(), e);
 		}
 	}
 
-	private void setFirstLine(String[] lines) {
+	private void setFirstLine(List<String> lines) {
 		buffer.setLength(buffer.length() - 1);
-		lines[0] = buffer.toString();
-	}
-
-	private void addLine(String next, int i, String[] lines) {
-		if(i >= lines.length) lines = Arrays.copyOf(lines, lines.length * 2);
-		lines[i] = next;
+		lines.add(buffer.toString());
 	}
 
 	@Override
