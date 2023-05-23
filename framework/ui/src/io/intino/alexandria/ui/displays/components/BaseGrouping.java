@@ -144,7 +144,9 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 
 	private void loadGroups() {
 		if (collections.size() <= 0) return;
-		_groups(collections.get(0).source().groups(key()));
+		Collection collection = collections.get(0);
+		if (collection.source() == null) return;
+		_groups(collection.source().groups(key()));
 		refreshGroups();
 	}
 

@@ -13,6 +13,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.sql.Array;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -192,7 +193,7 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	}
 
 	private void removeAndNotify(String container) {
-		children(container).ifPresent(children -> children.forEach(d -> repository.remove(d)));
+		children(container).ifPresent(children -> new ArrayList<>(children).forEach(d -> repository.remove(d)));
 		children.remove(container);
 		promisedChildren.remove(container);
 		notifier.clearContainer(container);
