@@ -10,6 +10,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 
+import static io.intino.alexandria.zit.Zit.DELIMITER;
 import static java.util.stream.Collectors.joining;
 
 public class ZitWriter implements AutoCloseable {
@@ -45,7 +46,7 @@ public class ZitWriter implements AutoCloseable {
 	}
 
 	public void put(String[] sensorModel) {
-		writeLine("@measurements " + String.join(",", sensorModel).stripTrailing());
+		writeLine("@measurements " + String.join(DELIMITER, sensorModel).stripTrailing());
 	}
 
 	private void loadHeader(File file) throws IOException {
