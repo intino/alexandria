@@ -1,5 +1,7 @@
 package io.intino.alexandria.office.components;
 
+import java.util.regex.Pattern;
+
 public class Text extends Run {
 
 	private String text = "";
@@ -8,7 +10,7 @@ public class Text extends Run {
 	}
 
 	public Text(String text) {
-		this.text = text;
+		this.text(text);
 	}
 
 	public String text() {
@@ -16,7 +18,7 @@ public class Text extends Run {
 	}
 
 	public Text text(String text) {
-		this.text = text;
+		this.text = normalizeXmlText(text);
 		return this;
 	}
 
@@ -33,5 +35,10 @@ public class Text extends Run {
 	@Override
 	protected String getValueXML() {
 		return "<w:t xml:space=\"preserve\">" + text + "</w:t>";
+	}
+
+	private static final Pattern AMP_Pattern = Pattern.compile("&(?!amp;)");
+	public static String normalizeXmlText(String s) {
+		return AMP_Pattern.matcher(s).replaceAll("&amp;");
 	}
 }
