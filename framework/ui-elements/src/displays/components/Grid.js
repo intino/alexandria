@@ -99,10 +99,12 @@ class Grid extends AbstractGrid {
     };
 
     restoreHorizontalScroll() {
+        if (this.horizontalScroll == null) return;
         var selectedColumn = this.state.sortColumn;
         if (selectedColumn == null) return;
     	var gridCanvas = this.grid.getDataGridDOMNode().querySelector('.react-grid-Canvas');
     	if (gridCanvas != null) gridCanvas.scrollLeft = this.horizontalScroll;
+    	this.horizontalScroll = null;
     };
 
     renderGrid = () => {
