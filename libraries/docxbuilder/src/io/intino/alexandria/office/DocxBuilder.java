@@ -19,6 +19,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.attribute.FileTime;
+import java.time.Instant;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -395,10 +397,18 @@ public class DocxBuilder {
 		}
 
 		void to(File result) throws IOException {
+			FileTime ts = FileTime.from(Instant.now());
 			try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(result))) {
-				for (ZipEntry entry : entries) create(zos, new ZipEntry(entry.getName()));
+				for (ZipEntry entry : entries) {
+					ZipEntry newEntry = new ZipEntry(entry.getName());
+					newEntry.setCreationTime(ts);
+					newEntry.setLastModifiedTime(ts);
+					newEntry.setLastAccessTime(ts);
+					create(zos, newEntry);
+				}
 			}
 			close();
+			result.setLastModified(ts.toMillis());
 		}
 
 		private Map<String, String> findImageReferencesInDocuments() {
