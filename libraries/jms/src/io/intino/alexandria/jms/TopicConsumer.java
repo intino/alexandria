@@ -8,9 +8,13 @@ import javax.jms.Session;
 public class TopicConsumer extends JmsConsumer {
 
 	public TopicConsumer(Session session, String topic) throws JMSException {
+		this(session, topic, null);
+	}
+
+	public TopicConsumer(Session session, String topic, String messageSelector) throws JMSException {
 		super(session, session.createTopic(topic));
 		try {
-			this.consumer = session.createConsumer(destination, null, true);
+			this.consumer = session.createConsumer(destination, messageSelector, true);
 		} catch (JMSException ex) {
 			Logger.error(ex);
 		}
