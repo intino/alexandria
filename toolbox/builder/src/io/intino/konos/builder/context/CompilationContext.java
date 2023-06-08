@@ -279,6 +279,8 @@ public class CompilationContext {
 		public Map<String, String> tankClasses;
 		public List<String> connectionParameters;
 		public List<String> additionalParameters;
+		public boolean datamartsAutoLoad;
+
 	}
 
 }

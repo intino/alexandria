@@ -65,16 +65,24 @@ const AutoFirmaBehavior = (element) => {
             AutoScript.cargarAppAfirma();
         },
 
-        setDownloadUrl : function(downloadUrl) {
-            this.downloadUrl = downloadUrl;
+        setDownloadUrl : function(url) {
+            this.downloadUrl = url;
         },
 
-        setStorageUrl : function(storageUrl) {
-            this.storageUrl = storageUrl;
+        setStorageUrl : function(url) {
+            this.storageUrl = url;
         },
 
-        setRetrieveUrl : function(retrieveUrl) {
-            this.retrieveUrl = retrieveUrl;
+        setRetrieveUrl : function(url) {
+            this.retrieveUrl = url;
+        },
+
+        setBatchPreSignerUrl : function(url) {
+            this.batchPreSignerUrl = url;
+        },
+
+        setBatchPostSignerUrl : function(url) {
+            this.batchPostSignerUrl = url;
         },
 
         checkSignatoryAppInstalled: function (successCallback, failureCallback) {
@@ -118,6 +126,22 @@ const AutoFirmaBehavior = (element) => {
 
                 behavior._updateServlets();
                 AutoScript.sign(dataB64, element.algorithm, format, params, successCallback, function(code, message, intention) {
+                    behavior.checkFailureCallback(code, message, intention, failureCallback);
+                });
+            });
+        },
+
+        signBatch: function (documents, successCallback, failureCallback) {
+            const behavior = this;
+            this.execute(function(element) {
+                var format = "CAdES";
+                var params = "format=CAdES" +
+                        "\nmode=implicit" +
+                        "\nsignatureSubFilter=ETSI.CAdES.detached" +
+                        "\nreferencesDigestMethod=http://www.w3.org/2001/04/xmlenc#sha256";
+
+                behavior._updateServlets();
+                AutoScript.signBatch(behavior.batchSchema(documents, format), behavior.batchPreSignerUrl, behavior.batchPostSignerUrl, params, successCallback, function(code, message, intention) {
                     behavior.checkFailureCallback(code, message, intention, failureCallback);
                 });
             });
@@ -230,6 +254,25 @@ const AutoFirmaBehavior = (element) => {
 
         _updateServlets : function() {
             AutoScript.setServlets(this.storageUrl, this.retrieveUrl);
+        },
+
+        batchSchema : function(documents, format) {
+            let result = "<?xml version='1.0' encoding='UTF-8' ?>";
+            result += "<signbatch stoponerror='false' algorithm='SHA256withRSA' concurrenttimeout='30'>";
+            for (let i=0; i<documents.length; i++) result += this.batchDocumentSchema(documents[i], format);
+            result += "</signbatch>";
+            return result;
+        },
+
+        batchDocumentSchema : function(document, format) {
+            let result = "<singlesign Id='" + document.id + "'>";
+            result += "<datasource>" + document.url + "</datasource>";
+            result += "<format>" + format + "</format>";
+            result += "<suboperation>sign</suboperation>";
+            result += "<extraparams></extraparams>";
+            result += "<signsaver><class>es.gob.afirma.signers.batch.SignSaverFile</class><config></config></signsaver>";
+            result += "</singlesign>";
+            return result;
         }
 
     };
