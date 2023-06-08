@@ -13,11 +13,15 @@ public class DurableTopicConsumer extends JmsConsumer {
 	private final String subscriberId;
 
 	public DurableTopicConsumer(Session session, String topic, String subscriberId) throws JMSException {
+		this(session, topic, null, subscriberId);
+	}
+
+	public DurableTopicConsumer(Session session, String topic, String messageSelector, String subscriberId) throws JMSException {
 		super(session, session.createTopic(topic));
 		this.subscriberId = subscriberId;
 		this.listeners = new ArrayList<>();
 		try {
-			this.consumer = session.createDurableSubscriber((Topic) destination, subscriberId, null, true);
+			this.consumer = session.createDurableSubscriber((Topic) destination, subscriberId, messageSelector, true);
 		} catch (JMSException ex) {
 			Logger.error(ex);
 		}

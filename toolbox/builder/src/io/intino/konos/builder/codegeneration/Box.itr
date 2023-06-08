@@ -35,6 +35,8 @@ def type(box)
 
 		[$hasUi+authService]
 
+		[$terminal+datamartSourceSelector]
+
 		[$rest]
 		[$authenticationValidator]
 	}
@@ -56,6 +58,12 @@ def trigger(rest)
 		//TODO add your authService
 		return null;
 	}	
+end
+
+def type(datamartsLoad) trigger(datamartSourceSelector)
+	protected String $datamartsLoad() {
+		return null;//TODO add ss selector using SQL syntax
+	}
 end
 
 def trigger(authenticationValidator)
