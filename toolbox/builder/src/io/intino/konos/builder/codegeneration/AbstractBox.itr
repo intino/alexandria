@@ -356,7 +356,7 @@ def type(terminal) trigger(init)
 end
 
 def type(datamartsLoad) trigger(datamartSourceSelector)
-	protected abstract $datamartsLoad();
+	protected abstract String $datamartsLoad();
 end
 
 def type(subscriber & durable & filtered) trigger(subscriber)
