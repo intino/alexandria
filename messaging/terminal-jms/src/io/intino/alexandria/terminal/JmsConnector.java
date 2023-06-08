@@ -141,13 +141,16 @@ public class JmsConnector implements Connector {
 
 	@Override
 	public void attachListener(String path, Consumer<Event> onEventReceived) {
-		registerEventConsumer(path, onEventReceived);
-		JmsConsumer consumer = this.consumers.get(path);
-		if (consumer == null) return;
-		Consumer<javax.jms.Message> eventConsumer = m -> MessageDeserializer.deserialize(m).forEachRemaining(ev -> onEventReceived.accept(newEvent(m, ev)));
-		jmsEventConsumers.put(onEventReceived, eventConsumer.hashCode());
-		consumer.listen(eventConsumer);
+		registerEventConsumer(path, null, onEventReceived);
+		attach(path, onEventReceived);
 	}
+
+	@Override
+	public void attachListener(String path, Consumer<Event> onEventReceived, String messageSelector) {
+		registerEventConsumer(path, messageSelector, onEventReceived);
+		attach(path, onEventReceived);
+	}
+
 
 	@Override
 	public void sendQueueMessage(String path, String message) {
@@ -163,17 +166,13 @@ public class JmsConnector implements Connector {
 
 	@Override
 	public void attachListener(String path, String subscriberId, Consumer<Event> onEventReceived) {
-		registerEventConsumer(path, subscriberId, onEventReceived);
-		JmsConsumer consumer = this.consumers.get(path);
-		if (consumer == null) return;
-		Consumer<javax.jms.Message> eventConsumer = m -> MessageDeserializer.deserialize(m).forEachRemaining(ev -> onEventReceived.accept(newEvent(m, ev)));
-		jmsEventConsumers.put(onEventReceived, eventConsumer.hashCode());
-		consumer.listen(eventConsumer);
+		registerEventConsumer(path, subscriberId, null, onEventReceived);
+		attach(path, onEventReceived);
 	}
 
 	@Override
 	public void attachListener(String path, String subscriberId, Consumer<Event> onEventReceived, Predicate<Instant> filter) {
-		registerEventConsumer(path, subscriberId, onEventReceived);
+		registerEventConsumer(path, subscriberId, null, onEventReceived);
 		JmsConsumer consumer = this.consumers.get(path);
 		if (consumer == null) return;
 		Consumer<javax.jms.Message> eventConsumer = m -> MessageDeserializer.deserialize(m).forEachRemaining(ev -> {
@@ -185,8 +184,24 @@ public class JmsConnector implements Connector {
 	}
 
 	@Override
+	public void attachListener(String path, String subscriberId, Consumer<Event> onEventReceived, String messageSelector) {
+		registerEventConsumer(path, subscriberId, messageSelector, onEventReceived);
+		attach(path, onEventReceived);
+	}
+
+	@Override
 	public void attachListener(String path, MessageConsumer onMessageReceived) {
 		registerMessageConsumer(path, onMessageReceived);
+		attach(path, onMessageReceived);
+	}
+
+	@Override
+	public void attachListener(String path, String subscriberId, MessageConsumer onMessageReceived) {
+		registerMessageConsumer(path, subscriberId, onMessageReceived);
+		attach(path, onMessageReceived);
+	}
+
+	private void attach(String path, MessageConsumer onMessageReceived) {
 		JmsConsumer consumer = this.consumers.get(path);
 		if (consumer == null) return;
 		Consumer<javax.jms.Message> messageConsumer = m -> onMessageReceived.accept(textFrom(m), callback(m));
@@ -194,14 +209,12 @@ public class JmsConnector implements Connector {
 		consumer.listen(messageConsumer);
 	}
 
-	@Override
-	public void attachListener(String path, String subscriberId, MessageConsumer onMessageReceived) {
-		registerMessageConsumer(path, subscriberId, onMessageReceived);
+	private void attach(String path, Consumer<Event> onEventReceived) {
 		JmsConsumer consumer = this.consumers.get(path);
 		if (consumer == null) return;
-		Consumer<javax.jms.Message> messageConsumer = m -> onMessageReceived.accept(textFrom(m), callback(m));
-		jmsMessageConsumers.put(onMessageReceived, messageConsumer.hashCode());
-		consumer.listen(messageConsumer);
+		Consumer<javax.jms.Message> eventConsumer = m -> MessageDeserializer.deserialize(m).forEachRemaining(ev -> onEventReceived.accept(newEvent(m, ev)));
+		jmsEventConsumers.put(onEventReceived, eventConsumer.hashCode());
+		consumer.listen(eventConsumer);
 	}
 
 	private Instant timestamp(javax.jms.Message m) {
@@ -216,29 +229,27 @@ public class JmsConnector implements Connector {
 	@Override
 	public void detachListeners(Consumer<Event> consumer) {
 		eventConsumers.values().forEach(list -> list.remove(consumer));
-		Integer code = jmsEventConsumers.get(consumer);
-		if (code == null) return;
-		for (JmsConsumer jc : consumers.values()) {
-			List<Consumer<javax.jms.Message>> toRemove = jc.listeners().stream().filter(l -> l.hashCode() == code).collect(Collectors.toList());
-			toRemove.forEach(jc::removeListener);
-		}
+		detach(jmsEventConsumers.get(consumer));
 	}
 
 	@Override
 	public void detachListeners(MessageConsumer consumer) {
-		Integer code = jmsMessageConsumers.get(consumer);
-		if (code == null) return;
+		messageConsumers.values().forEach(list -> list.remove(consumer));
+		detach(jmsMessageConsumers.get(consumer));
+	}
+
+	private void detach(Integer consumerCode) {
+		if (consumerCode == null) return;
 		for (JmsConsumer jc : consumers.values()) {
-			List<Consumer<javax.jms.Message>> toRemove = jc.listeners().stream().filter(l -> l.hashCode() == code).collect(Collectors.toList());
+			List<Consumer<javax.jms.Message>> toRemove = jc.listeners().stream().filter(l -> l.hashCode() == consumerCode).collect(Collectors.toList());
 			toRemove.forEach(jc::removeListener);
 		}
-		messageConsumers.values().forEach(list -> list.remove(consumer));
 	}
 
 	@Override
 	public void createSubscription(String path, String subscriberId) {
 		if (session != null && !this.consumers.containsKey(path))
-			this.consumers.put(path, durableTopicConsumer(path, subscriberId));
+			this.consumers.put(path, durableTopicConsumer(path, subscriberId, null));
 	}
 
 	public void destroySubscription(String subscriberId) {
@@ -361,17 +372,18 @@ public class JmsConnector implements Connector {
 		return connection.createSession(transactedSession, transactedSession ? SESSION_TRANSACTED : AUTO_ACKNOWLEDGE);
 	}
 
-	private void registerEventConsumer(String path, Consumer<Event> onEventReceived) {
-		this.eventConsumers.putIfAbsent(path, new CopyOnWriteArrayList<>());
-		this.eventConsumers.get(path).add(onEventReceived);
-		if (session != null && !this.consumers.containsKey(path)) this.consumers.put(path, topicConsumer(path));
-	}
-
-	private void registerEventConsumer(String path, String subscriberId, Consumer<Event> onEventReceived) {
+	private void registerEventConsumer(String path, String messageSelector, Consumer<Event> onEventReceived) {
 		this.eventConsumers.putIfAbsent(path, new CopyOnWriteArrayList<>());
 		this.eventConsumers.get(path).add(onEventReceived);
 		if (session != null && !this.consumers.containsKey(path))
-			this.consumers.put(path, durableTopicConsumer(path, subscriberId));
+			this.consumers.put(path, topicConsumer(path, messageSelector));
+	}
+
+	private void registerEventConsumer(String path, String subscriberId, String messageSelector, Consumer<Event> onEventReceived) {
+		this.eventConsumers.putIfAbsent(path, new CopyOnWriteArrayList<>());
+		this.eventConsumers.get(path).add(onEventReceived);
+		if (session != null && !this.consumers.containsKey(path))
+			this.consumers.put(path, durableTopicConsumer(path, subscriberId, messageSelector));
 	}
 
 	private void registerMessageConsumer(String path, MessageConsumer onMessageReceived) {
@@ -384,7 +396,7 @@ public class JmsConnector implements Connector {
 		this.messageConsumers.putIfAbsent(path, new CopyOnWriteArrayList<>());
 		this.messageConsumers.get(path).add(onMessageReceived);
 		if (session != null && !this.consumers.containsKey(path))
-			this.consumers.put(path, durableTopicConsumer(path, subscriberId));
+			this.consumers.put(path, durableTopicConsumer(path, subscriberId, null));
 	}
 
 	private boolean doSendEvent(String path, Event event) {
@@ -505,18 +517,18 @@ public class JmsConnector implements Connector {
 		consumers.clear();
 	}
 
-	private JmsConsumer topicConsumer(String path) {
+	private JmsConsumer topicConsumer(String path, String messageSelector) {
 		try {
-			return new TopicConsumer(session, path);
+			return new TopicConsumer(session, path, messageSelector);
 		} catch (JMSException e) {
 			Logger.error(e);
 			return null;
 		}
 	}
 
-	private JmsConsumer durableTopicConsumer(String path, String subscriberId) {
+	private JmsConsumer durableTopicConsumer(String path, String subscriberId, String messageSelector) {
 		try {
-			return new DurableTopicConsumer(session, path, subscriberId);
+			return new DurableTopicConsumer(session, path, messageSelector, subscriberId);
 		} catch (JMSException e) {
 			Logger.error(e);
 			return null;
@@ -535,7 +547,7 @@ public class JmsConnector implements Connector {
 	private void recoverConsumers() {
 		if (!started.get()) return;
 		if (!eventConsumers.isEmpty() && consumers.isEmpty())
-			for (String path : eventConsumers.keySet()) consumers.put(path, topicConsumer(path));
+			for (String path : eventConsumers.keySet()) consumers.put(path, topicConsumer(path, path));
 		if (!messageConsumers.isEmpty() && consumers.isEmpty())
 			for (String path : messageConsumers.keySet()) {
 				if (!consumers.containsKey(path) && session != null) consumers.put(path, queueConsumer(path));
