@@ -124,6 +124,7 @@ def type(box)
 
 		$service+setupMethod...[$NL$NL]
 
+		[$terminal+datamartSourceSelector]
 
 		private void initRestServices() {
 			$service+rest...[$NL]
@@ -343,14 +344,19 @@ def type(connector) trigger(init)
 			Logger.error(e);
 		}
 end
+
 def type(terminal) trigger(init)
 	if (this.terminal != null) {
 		java.time.Instant sealStamp = this.terminal.requestLastSeal();
 		Logger.info("Last seal on " + sealStamp.toString());
 		java.util.function.Predicate<java.time.Instant> filter = i -> !i.isBefore(sealStamp);
-		this.terminal.initDatamarts();
+		this.terminal.initDatamarts([$datamartsLoad()]);
 		$subscriber...[$NL]
 	}
+end
+
+def type(datamartsLoad) trigger(datamartSourceSelector)
+	protected abstract $datamartsLoad();
 end
 
 def type(subscriber & durable & filtered) trigger(subscriber)
