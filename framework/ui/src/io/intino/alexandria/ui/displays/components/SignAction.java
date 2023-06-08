@@ -16,11 +16,11 @@ import io.intino.icod.core.SignatureInfo;
 import io.intino.icod.core.XadesSignatureHelper;
 
 public abstract class SignAction<DN extends SignActionNotifier, B extends Box> extends AbstractSignAction<DN, B> {
-	private AutoFirmaServer server;
-	private SignListener signListener;
+	public boolean readonly = false;
+	protected AutoFirmaServer server;
+	protected SignListener signListener;
 	private SignErrorListener errorListener;
 	private SignAction.SignFormat format = SignAction.SignFormat.XAdES;
-	public boolean readonly = false;
 
 	public enum SignFormat { PAdES, XAdES, CAdES }
 
@@ -108,6 +108,8 @@ public abstract class SignAction<DN extends SignActionNotifier, B extends Box> e
 		result.downloadUrl(server.downloadUrl());
 		result.storageUrl(server.storageUrl());
 		result.retrieveUrl(server.retrieveUrl());
+		result.batchPreSignerUrl(server.batchPreSignerUrl());
+		result.batchPostSignerUrl(server.batchPostSignerUrl());
 		return result;
 	}
 

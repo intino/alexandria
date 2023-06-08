@@ -64,6 +64,8 @@ export default class SignAction extends AbstractSignAction {
         this.behavior.setDownloadUrl(data.downloadUrl);
         this.behavior.setStorageUrl(data.storageUrl);
         this.behavior.setRetrieveUrl(data.retrieveUrl);
+        this.behavior.setBatchPreSignerUrl(data.batchPreSignerUrl);
+        this.behavior.setBatchPostSignerUrl(data.batchPostSignerUrl);
     };
 
     format = (format) => {

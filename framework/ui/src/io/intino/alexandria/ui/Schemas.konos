@@ -230,6 +230,8 @@ Schema SignActionSetup
 	Attribute downloadUrl as Text
 	Attribute storageUrl as Text
 	Attribute retrieveUrl as Text
+	Attribute batchPreSignerUrl as Text
+	Attribute batchPostSignerUrl as Text
 
 Schema SignActionParams
 	Attribute content as Text
@@ -242,6 +244,14 @@ Schema SignActionSignatureSuccess
 Schema SignActionSignatureFailure
 	Attribute code as Text
 	Attribute message as Text
+
+Schema SignDocumentBatchEntry
+	Attribute id as Text
+	Attribute url as Text
+
+Schema SignDocumentBatchSuccess
+	Attribute id as Text
+	Attribute success as Bool
 
 Schema GridInfo
 	Attribute name as Text

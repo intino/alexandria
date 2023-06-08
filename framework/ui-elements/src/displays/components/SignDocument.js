@@ -25,6 +25,30 @@ class SignDocument extends AbstractSignDocument {
         this.requester.signing();
         this.behavior.signDocument(content, this._successCallback.bind(this), this._failureCallback.bind(this));
     };
+
+    signBatch = (documents) => {
+        this.requester.signing();
+        this.behavior.signBatch(documents, this._batchSuccessCallback.bind(this), this._failureCallback.bind(this));
+    };
+
+    _batchSuccessCallback = (signatures) => {
+        this.success = true;
+        this.requester.batchSuccess(this._readSignaturesResult(signatures));
+        this.setState({ readonly: false });
+    };
+
+    _readSignaturesResult = (content) => {
+        const node = new DOMParser().parseFromString(content, "application/xml");
+        const signNodeResults = node.childNodes[0].childNodes;
+        const result = [];
+        for (let i=0; i<signNodeResults.length; i++) {
+            const id = signNodeResults[i].attributes["id"].value;
+            const resultInfo = signNodeResults[i].attributes["result"].value;
+            result.push({id: id, success: resultInfo === "DONE_AND_SAVED"});
+        }
+        return result;
+    };
+
 }
 
 export default withStyles(Actionable.Styles, { withTheme: true })(withSnackbar(SignDocument));
