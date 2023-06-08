@@ -74,6 +74,12 @@ public class StubConnector implements Connector {
 	}
 
 	@Override
+	public void attachListener(String path, Consumer<Event> onEventReceived, String messageSelector) {
+		registerEventConsumer(path, onEventReceived);
+
+	}
+
+	@Override
 	public void sendQueueMessage(String path, String message) {
 		if (messageOutBox != null) messageOutBox.push(path, message);
 	}
@@ -90,6 +96,11 @@ public class StubConnector implements Connector {
 
 	@Override
 	public void attachListener(String path, String subscriberId, Consumer<Event> onEventReceived, Predicate<Instant> filter) {
+		registerEventConsumer(path, onEventReceived);
+	}
+
+	@Override
+	public void attachListener(String path, String subscriberId, Consumer<Event> onEventReceived, String messageSelector) {
 		registerEventConsumer(path, onEventReceived);
 	}
 
