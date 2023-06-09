@@ -90,7 +90,7 @@ public class AbstractBoxRenderer extends Renderer {
 				add("box", boxName());
 		if (!manifest.datamartsAutoLoad) {
 			builder.add("datamartsLoad");
-			builder.add("datamartsLoad", "datamartsSurceSelector");
+			builder.add("datamartsLoad", "datamartsSourceSelector");
 		}
 		Frame[] subscriber = graph.subscriberList().stream().filter(s -> manifest.tankClasses.containsKey(s.event())).map(s -> subscriberFrameOf(s, manifest)).toArray(Frame[]::new);
 		if (subscriber.length != 0) builder.add("subscriber", subscriber);
