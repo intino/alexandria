@@ -182,7 +182,7 @@ const TimelineMagnitude = ({ toolbar, magnitude, index, id, moveMagnitude, class
         const style = fullView ? { backgroundColor: 'white', border: '1px dashed #999' } : { border: '1px solid transparent' };
         return (
             <div style={{width:"150px",...style}} className={classnames("layout vertical", classes.magnitude, classes.summaryMagnitude)}>
-                <Typography variant="body2">{magnitude.label}</Typography>
+                <Typography variant="body2" title={magnitude.label} style={{width:'140px',fontWeight:'bold',textOverflow:'ellipsis',overflow:'hidden',whiteSpace:'nowrap'}}>{magnitude.label}</Typography>
                 <div className="layout horizontal" >
                     <Typography className={classnames(classes.value, classes.summaryValue)}>{magnitude.percentage != null ? magnitude.percentage : magnitude.formattedValue}</Typography>
                     <div className="layout vertical center" style={{position:'relative', height:'24px', marginLeft: '5px'}} >

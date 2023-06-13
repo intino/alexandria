@@ -86,7 +86,7 @@ def type(parameter & list)
 end
 
 def type(parameter)
-    action.$name = args$[$index$];
+    action.$name = args.length > $index ? args$[$index$] : null;
 end
 
 def type(response & multiline) trigger(type)
