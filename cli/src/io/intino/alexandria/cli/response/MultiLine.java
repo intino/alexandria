@@ -25,8 +25,7 @@ public class MultiLine extends Response {
 
 	private String serialize(Line line) {
 		String result = line(line);
-		if (result.isEmpty()) return result;
-		return line.addBreak() ? "\n" : " ";
+		return (line.addBreak() ? "\n" : " ") + result;
 	}
 
 	private boolean isVisible(Line line) {

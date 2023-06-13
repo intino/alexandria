@@ -50,14 +50,14 @@ public class Cli {
 
 	protected void add(String name, String abbr, String description, List<String> parameters, List<String> preConditions, String postCondition, Command command) {
 		register(name, command, new CommandInfo(name, abbr, description, preConditions, postCondition, parameters));
-		preConditions.forEach(p -> register(key(p, name), command, new CommandInfo(key(p, name), abbr, description, preConditions, postCondition, parameters)));
+//		preConditions.forEach(p -> register(key(p, name), command, new CommandInfo(key(p, name), abbr, description, preConditions, postCondition, parameters)));
 	}
 
 	private void updateState(String token, CommandInfo info) {
-		String newState = info != null ? info.postCondition : "";
+		String newState = info != null ? info.postCondition : null;
 		Context context = contexts().get(token);
 		context.lastCommand(info);
-		context.state(newState);
+		if (newState != null && !newState.isEmpty()) context.state(newState);
 	}
 
 	private CommandInfo findCommandInfo(String tokenState, String cmd) {

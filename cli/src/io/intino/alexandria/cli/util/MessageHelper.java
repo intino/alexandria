@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class MessageHelper {
 
-	private static final Pattern TagPattern = Pattern.compile("\\$([^\\$ \\)`~]*)");
+	private static final Pattern TagPattern = Pattern.compile("\\$([^\\$ \\:)`~]*)");
 	public static String replaceVariables(String message, MessageData data) {
 		try {
 			if (data == null || data.isEmpty()) return !hasVariables(message) ? message : null;
