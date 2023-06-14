@@ -1,13 +1,19 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.1.2") pdf-builder
+Artifact("io.intino.alexandria", "1.2.0") pdf-builder
 	Imports
-		Compile("fr.opensagres.xdocreport", "fr.opensagres.poi.xwpf.converter.core", "2.0.2")
-		Compile("fr.opensagres.xdocreport", "fr.opensagres.poi.xwpf.converter.pdf", "2.0.2")
-		Compile("fr.opensagres.xdocreport", "fr.opensagres.xdocreport.itext.extension", "2.0.2")
+		Compile("fr.opensagres.xdocreport", "fr.opensagres.poi.xwpf.converter.pdf", "2.0.4")
+		Compile("org.docx4j", "docx4j-JAXB-Internal", "8.3.9")
+		Compile("org.docx4j", "docx4j-JAXB-ReferenceImpl", "8.3.9")
+		Compile("org.docx4j", "docx4j-JAXB-MOXy", "8.3.9")
+		Compile("org.docx4j", "docx4j-export-fo", "8.3.9")
 		Compile("org.apache.pdfbox", "pdfbox", "2.0.25")
+
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 
 Repository("intino-maven")
 	Release("https://artifactory.intino.io/artifactory/releases")
+
+Repository("groupdocs-artifacts-repository")
+	Release("https://repository.groupdocs.com/repo/")
