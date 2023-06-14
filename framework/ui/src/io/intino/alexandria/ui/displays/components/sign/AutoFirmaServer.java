@@ -1,14 +1,21 @@
 package io.intino.alexandria.ui.displays.components.sign;
 
+import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.DisplayRouteManager;
 import io.intino.alexandria.ui.services.push.UISession;
 import io.intino.alexandria.ui.spark.UISparkManager;
+import io.intino.icod.core.DefaultConfiguration;
+import io.intino.icod.core.ServerDocumentManager;
 import io.intino.icod.services.DownloadService;
 import io.intino.icod.services.RetrieveService;
 import io.intino.icod.services.StorageService;
 import io.intino.icod.services.spark.RequestInputMessage;
 import io.intino.icod.services.spark.SparkOutputMessage;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 
 public class AutoFirmaServer {
 	private final AlexandriaUiBox box;
@@ -19,6 +26,9 @@ public class AutoFirmaServer {
 	private static final String DownloadPattern = "/digitalsignatures/autofirma/app";
 	private static final String StoragePattern = "/digitalsignatures/autofirma/store";
 	private static final String RetrievePattern = "/digitalsignatures/autofirma/retrieve";
+	private static final String BatchPreSignerPattern = "/digitalsignatures/autofirma/batch/pre";
+	private static final String BatchPostSignerPattern = "/digitalsignatures/autofirma/batch/post";
+	private static final String RepositoryPattern = "/digitalsignatures/autofirma/repository";
 
 	public AutoFirmaServer(AlexandriaUiBox box, UISession session) {
 		this.box = box;
@@ -31,6 +41,9 @@ public class AutoFirmaServer {
 		routeManager.get(DownloadPattern, this::download);
 		routeManager.post(StoragePattern, this::store);
 		routeManager.post(RetrievePattern, this::retrieve);
+		routeManager.post(BatchPreSignerPattern, this::batchPreSigner);
+		routeManager.post(BatchPostSignerPattern, this::batchPostSigner);
+		routeManager.get(RepositoryPattern, this::document);
 		ready = true;
 		return this;
 	}
@@ -47,6 +60,39 @@ public class AutoFirmaServer {
 		return session.browser().baseUrl() + RetrievePattern;
 	}
 
+	public String batchPreSignerUrl() {
+		return session.browser().baseUrl() + BatchPreSignerPattern;
+	}
+
+	public String batchPostSignerUrl() {
+		return session.browser().baseUrl() + BatchPostSignerPattern;
+	}
+
+	public String repositoryUrl(String id) {
+		return session.browser().baseUrl() + RepositoryPattern + "?id=" + id;
+	}
+
+	public String signature(String id) {
+		try {
+			ServerDocumentManager documentManager = new ServerDocumentManager(new DefaultConfiguration());
+			return Files.readString(documentManager.getSignature(id).toPath());
+		} catch (IOException e) {
+			Logger.error(e);
+			return null;
+		}
+	}
+
+	public SignDocument store(String id, InputStream document) {
+		try {
+			ServerDocumentManager documentManager = new ServerDocumentManager(new DefaultConfiguration());
+			documentManager.putRepositoryDocument(id, document);
+			return new SignDocument(id, repositoryUrl(id));
+		} catch (IOException e) {
+			Logger.error(e);
+			return null;
+		}
+	}
+
 	private boolean listening() {
 		return ready;
 	}
@@ -61,6 +107,19 @@ public class AutoFirmaServer {
 
 	private void retrieve(UISparkManager manager) {
 		new RetrieveService().retrieve(new RequestInputMessage(manager.request()), new SparkOutputMessage(manager.response()));
+	}
+
+	private void document(UISparkManager manager) {
+		ServerDocumentManager documentManager = new ServerDocumentManager(new DefaultConfiguration());
+		manager.write(documentManager.getRepositoryDocument(manager.fromQuery("id")));
+	}
+
+	private void batchPreSigner(UISparkManager manager) {
+		// TODO
+	}
+
+	private void batchPostSigner(UISparkManager manager) {
+		// TODO
 	}
 
 }

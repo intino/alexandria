@@ -1,7 +1,7 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "4.25.8") ui-framework
-	Box("Konos", "10.2.3", targetPackage = "io.intino.alexandria")
+Artifact("io.intino.alexandria", "4.25.13") ui-framework
+	Box("Konos", "10.4.2", targetPackage = "io.intino.alexandria")
 	Imports
 		Compile("io.intino.alexandria", "core-framework", "2.1.2")
 		Compile("io.intino.alexandria", "http", "1.7.2")
@@ -17,9 +17,9 @@ Artifact("io.intino.alexandria", "4.25.8") ui-framework
 		Compile("org.hashids", "hashids", "1.0.3")
 		Compile("com.auth0", "java-jwt", "4.3.0") // Json Web token (Metabase)
 		Compile("org.locationtech.jts", "jts-core", "1.19.0")
-		Compile("io.intino.icod", "standalone", "1.1.0")
+		Compile("io.intino.icod", "standalone", "1.1.2")
 
-		Web("io.intino.alexandria", "ui-framework-elements", "4.25.8")
+		Web("io.intino.alexandria", "ui-framework-elements", "4.25.13")
 
 		Test("junit", "junit", "4.13.2")
 

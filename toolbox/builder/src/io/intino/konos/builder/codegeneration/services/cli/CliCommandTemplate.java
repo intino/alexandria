@@ -13,7 +13,7 @@ public class CliCommandTemplate extends Template {
 			rule().condition((allTypes("execute","confirmation"))).output(literal("new ")).output(mark("response", "type")).output(literal("(\"")).output(mark("question")).output(literal("\", List.of(\"")).output(mark("option").multiple("\", \"")).output(literal("\"), fill(new ")).output(mark("name", "firstUppercase")).output(literal("Action(), properties, args).execute())")),
 			rule().condition((type("execute"))).output(literal("new ")).output(mark("response", "type")).output(literal("(fill(new ")).output(mark("name", "firstUppercase")).output(literal("Action(), properties, args).execute())")),
 			rule().condition((allTypes("parameter","list"))).output(literal("action.")).output(mark("name")).output(literal(" = java.util.Arrays.asList(args);")),
-			rule().condition((type("parameter"))).output(literal("action.")).output(mark("name")).output(literal(" = args[")).output(mark("index")).output(literal("];")),
+			rule().condition((type("parameter"))).output(literal("action.")).output(mark("name")).output(literal(" = args.length > ")).output(mark("index")).output(literal(" ? args[")).output(mark("index")).output(literal("] : null;")),
 			rule().condition((allTypes("response","multiline")), (trigger("type"))).output(literal("io.intino.alexandria.cli.response.MultiLine")),
 			rule().condition((allTypes("response","attachment")), (trigger("type"))).output(literal("io.intino.alexandria.cli.response.Attachment")),
 			rule().condition((allTypes("response","confirmation")), (trigger("type"))).output(literal("io.intino.alexandria.cli.response.Question")),

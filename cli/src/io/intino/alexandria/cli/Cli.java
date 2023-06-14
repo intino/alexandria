@@ -4,6 +4,10 @@ import io.intino.alexandria.cli.command.MessageProperties;
 import io.intino.alexandria.cli.response.Text;
 
 import java.util.*;
+import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -28,7 +32,7 @@ public class Cli {
 	}
 
 	public Response talk(String token, String message, MessageProperties properties) {
-		String[] content = Arrays.stream(message.split(" ")).filter(s -> !s.trim().isEmpty()).map(this::decode).toArray(String[]::new);
+		String[] content = parts(message).stream().filter(s -> !s.trim().isEmpty()).map(this::decode).toArray(String[]::new);
 		if (content.length == 0) return new Text(COMMAND_NOT_FOUND);
 		String cmd = translate(content[0].toLowerCase());
 		String state = contexts().get(token).state().isEmpty() || isBundledCommand(cmd) ? "" : contexts().get(token).state();
@@ -38,6 +42,20 @@ public class Cli {
 		Response response = command.execute(properties, commandName, content.length > 1 ? Arrays.copyOfRange(content, 1, content.length) : new String[0]);
 		updateState(token, commandInfo);
 		return response;
+	}
+
+	private static final Pattern PartsPattern = Pattern.compile("\"[^\"]+\"|\\S+");
+	private List<String> parts(String message) {
+		return PartsPattern.matcher(message)
+				.results()
+				.map(MatchResult::group)
+				.map(this::clean)
+				.collect(Collectors.toList());
+	}
+
+	private String clean(String parameter) {
+		parameter = parameter.trim();
+		return parameter.startsWith("\"") ? parameter.substring(1, parameter.length()-1) : parameter;
 	}
 
 	protected String initialState() {
@@ -50,14 +68,14 @@ public class Cli {
 
 	protected void add(String name, String abbr, String description, List<String> parameters, List<String> preConditions, String postCondition, Command command) {
 		register(name, command, new CommandInfo(name, abbr, description, preConditions, postCondition, parameters));
-		preConditions.forEach(p -> register(key(p, name), command, new CommandInfo(key(p, name), abbr, description, preConditions, postCondition, parameters)));
+//		preConditions.forEach(p -> register(key(p, name), command, new CommandInfo(key(p, name), abbr, description, preConditions, postCondition, parameters)));
 	}
 
 	private void updateState(String token, CommandInfo info) {
-		String newState = info != null ? info.postCondition : "";
+		String newState = info != null ? info.postCondition : null;
 		Context context = contexts().get(token);
 		context.lastCommand(info);
-		context.state(newState);
+		if (newState != null && !newState.isEmpty()) context.state(newState);
 	}
 
 	private CommandInfo findCommandInfo(String tokenState, String cmd) {

@@ -32,9 +32,13 @@ public interface Connector {
 
 	void attachListener(String path, Consumer<Event> onEventReceived);
 
+	void attachListener(String path, Consumer<Event> onEventReceived, String messageSelector);
+
 	void attachListener(String path, String subscriberId, Consumer<Event> onEventReceived);
 
 	void attachListener(String path, String subscriberId, Consumer<Event> onEventReceived, Predicate<Instant> filter);
+
+	void attachListener(String path, String subscriberId, Consumer<Event> onEventReceived, String messageSelector);
 
 	void attachListener(String path, MessageConsumer consumer);
 
