@@ -177,7 +177,7 @@ export default class Display extends PassiveView {
         if (Display.CookieConsentRendered != undefined && Display.CookieConsentRendered != this.props.id) return (<React.Fragment/>);
         Display.CookieConsentRendered = this.props.id;
         return (
-            <CookieConsent cookieName={this._traceConsentVariable()} buttonText={this.translate("I understand")} buttonStyle={{fontSize:'11pt'}}>
+            <CookieConsent onAccept={this._handleCookieConsentAccepted.bind(this)} cookieName={this._traceConsentVariable()} buttonText={this.translate("I understand")} buttonStyle={{fontSize:'11pt'}}>
                 <div style={{textAlign:'left',fontSize:'11pt'}}>{this.translate("This website uses cookies to enhance the user experience.")}</div>
             </CookieConsent>
         );
@@ -205,5 +205,10 @@ export default class Display extends PassiveView {
 
     _traceConsentVariable = () => {
         return Application.configuration.url.replace(/[^\w\s]/gi, '');
+    };
+
+    _handleCookieConsentAccepted = () => {
+        const elements = window.document.querySelectorAll(".CookieConsent");
+        for(let i=0; i<elements.length; i++) elements[i].style.display = "none";
     };
 }
