@@ -72,7 +72,6 @@ public class ItlReader implements AutoCloseable {
 		return values;
 	}
 
-
 	private static boolean isAnnotation(String line) {
 		return line.startsWith("@");
 	}
