@@ -435,8 +435,8 @@ public class JmsConnector implements Connector {
 		try {
 			if (cannotSendMessage()) return false;
 			queueProducer(path);
-			return sendMessage(producers.get(path), serialize("", message));
-		} catch (JMSException | IOException e) {
+			return sendMessage(producers.get(path), serialize("", "", message));
+		} catch (JMSException e) {
 			Logger.error(e);
 			return false;
 		}
@@ -446,8 +446,8 @@ public class JmsConnector implements Connector {
 		try {
 			if (cannotSendMessage()) return false;
 			topicProducer(path);
-			return sendMessage(producers.get(path), serialize("", message));
-		} catch (JMSException | IOException e) {
+			return sendMessage(producers.get(path), serialize("", "", message));
+		} catch (JMSException e) {
 			Logger.error(e);
 			return false;
 		}
@@ -630,21 +630,23 @@ public class JmsConnector implements Connector {
 		}
 	}
 
-	private static javax.jms.Message serialize(String ss, String payload) throws IOException, JMSException {
+	private static javax.jms.Message serialize(String type, String ss, String payload) throws JMSException {
 		TextMessage textMessage = new ActiveMQTextMessage();
 		if (ss != null && !ss.isEmpty()) textMessage.setStringProperty("ss", ss);
+		if (type != null && !type.isEmpty()) textMessage.setStringProperty("type", type);
 		textMessage.setText(payload);
 		return textMessage;
 	}
 
 	private static javax.jms.Message serialize(Event event) throws IOException, JMSException {
-		return serialize(event.ss(), event.toString());
+		return serialize(event.type(), event.ss(), event.toString());
 	}
 
 	private static javax.jms.Message serialize(List<Event> events) throws IOException, JMSException {
-		String ss = events.stream().map(Event::ss).collect(Collectors.joining(";"));
+		String ss = events.stream().map(Event::ss).distinct().collect(Collectors.joining(";"));
+		String types = events.stream().map(Event::type).distinct().collect(Collectors.joining(";"));
 		String content = events.stream().map(Event::toString).collect(Collectors.joining("\n\n"));
-		return serialize(ss, content);
+		return serialize(types, ss, content);
 	}
 
 	public static String createRandomString() {
