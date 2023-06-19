@@ -1,9 +1,10 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.12") xls-builder
+Artifact("io.intino.alexandria", "1.0.14") xls-builder
 	Imports
-		Compile("org.apache.poi", "poi-ooxml", "4.0.1")
+		Compile("org.apache.poi", "poi-ooxml", "5.2.0")
 		Compile("org.apache.poi", "ooxml-schemas", "1.4")
+
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 
