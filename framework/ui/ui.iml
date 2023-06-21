@@ -94,5 +94,6 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.1.2" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:rest-accessor:3.1.2" level="project" />
     <orderEntry type="library" name="Intino: io.intino.icod:standalone:1.1.2" level="project" />
+    <orderEntry type="module" module-name="ui-elements" />
   </component>
 </module>

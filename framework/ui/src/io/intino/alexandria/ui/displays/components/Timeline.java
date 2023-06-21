@@ -4,10 +4,10 @@ import io.intino.alexandria.Scale;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.*;
 import io.intino.alexandria.ui.displays.notifiers.TimelineNotifier;
+import io.intino.alexandria.ui.model.ScaleFormatter;
 import io.intino.alexandria.ui.model.timeline.Formatter;
 import io.intino.alexandria.ui.model.timeline.MagnitudeDefinition;
 import io.intino.alexandria.ui.model.timeline.TimelineDatasource;
-import io.intino.alexandria.ui.model.ScaleFormatter;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -151,20 +151,27 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	}
 
 	public void openHistory(String magnitudeName) {
-		Scale scale = selectedScale;
+		Scale scale = selectedScale();
 		notifier.showHistoryDialog(new TimelineHistory().from(source.from(scale)).to(source.to(scale)));
 	}
 
 	public void fetch(TimelineHistoryFetch fetch) {
 		TimelineDatasource.Magnitude magnitude = source.magnitude(fetch.magnitude());
 		Scale scale = selectedScale();
-		Map<Instant, Double> values = magnitude.serie(scale, fetch.start(), fetch.end()).values();
+		TimelineDatasource.Serie serie = magnitude.serie(scale, fetch.start(), fetch.end());
+		Map<Instant, Double> values = serie.values();
+		Map<Instant, TimelineDatasource.Annotation> annotations = serie.annotations();
 		Formatter formatter = magnitude.definition().formatter();
-		notifier.refreshHistory(fillWithZeros(values, fetch.end(), scale).entrySet().stream().map(e -> historyEntryOf(e, formatter)).collect(Collectors.toList()));
+		notifier.refreshHistory(fillWithZeros(values, fetch.end(), scale).entrySet().stream().map(e -> historyEntryOf(e, formatter, annotations)).collect(Collectors.toList()));
 	}
 
-	private TimelineHistoryEntry historyEntryOf(Map.Entry<Instant, Double> entry, Formatter formatter) {
-		return new TimelineHistoryEntry().date(entry.getKey()).value(entry.getValue()).formattedValue(formatter.format(entry.getValue()));
+	private TimelineHistoryEntry historyEntryOf(Map.Entry<Instant, Double> entry, Formatter formatter, Map<Instant, TimelineDatasource.Annotation> annotations) {
+		TimelineHistoryEntry result = new TimelineHistoryEntry();
+		result.date(entry.getKey());
+		result.value(entry.getValue());
+		result.formattedValue(formatter.format(entry.getValue()));
+		result.annotation(annotations.containsKey(entry.getKey()) ? annotationOf(date(entry.getKey(), selectedScale()), annotations.get(entry.getKey())) : null);
+		return result;
 	}
 
 	private TimelineSummary summaryOf(TimelineDatasource.Magnitude magnitude) {
@@ -191,12 +198,24 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		result.name(serie.name());
 		result.categories(categoriesOf(serie, current, scale));
 		result.values(values);
+		result.annotations(annotationsOf(serie, current, scale));
 		result.formattedValues(values.stream().map(formatter::format).collect(Collectors.toList()));
 		return result;
 	}
 
 	private List<String> categoriesOf(TimelineDatasource.Serie serie, Instant to, Scale scale) {
 		return loadCategories(serie, to, scale).stream().map(d -> date(d, scale)).collect(Collectors.toList());
+	}
+
+	private List<TimelineAnnotation> annotationsOf(TimelineDatasource.Serie serie, Instant to, Scale scale) {
+		List<Instant> instantList = loadCategories(serie, to, scale);
+		Map<Instant, TimelineDatasource.Annotation> annotationList = serie.annotations();
+		return instantList.stream().map(i -> annotationOf(date(i, scale), annotationList.getOrDefault(i, null))).collect(Collectors.toList());
+	}
+
+	private TimelineAnnotation annotationOf(String category, TimelineDatasource.Annotation annotation) {
+		if (annotation == null) return null;
+		return new TimelineAnnotation().category(category).label(annotation.label()).color(annotation.color()).symbol(annotation.symbol().name().toLowerCase());
 	}
 
 	private List<Instant> loadCategories(TimelineDatasource.Serie serie, Instant to, Scale scale) {

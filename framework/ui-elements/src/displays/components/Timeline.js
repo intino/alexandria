@@ -232,6 +232,7 @@ class Timeline extends AbstractTimeline {
         const width = this.historyWidth();
         const unit = magnitude.unit;
         const data = history.data;
+        const annotations = history.annotations;
         const fetch = this.fetch.bind(this, magnitude, this.translate.bind(this));
         const translate = this.translate.bind(this);
         const minRange = this.minRange(magnitude);
@@ -245,13 +246,27 @@ class Timeline extends AbstractTimeline {
             tooltip: {
                 enabled: true,
                 formatter: function() {
-                    return '<b>' + data[this.points[0].point.index][2] + (unit != null ? " " + unit : "") + '</b><br/>' + formatDate(this.x);
-                }
+                    if (this.points[0] == null) return;
+                    const index = this.points[0].point.index;
+                    let annotation = null;
+                    for (let i=0; i<annotations.length; i++) {
+                        if (annotations[i].idx == index) {
+                            annotation = annotations[i];
+                            break;
+                        }
+                    }
+                    const annotationText = annotation != null ? "<b style='color:" + annotation.color + "'>" + annotation.text + "</b><br/>" : "";
+                    return annotationText + '<b>' + data[index][2] + (unit != null ? " " + unit : "") + '</b><br/>' + formatDate(this.x);
+                },
+                shared: true
             },
 
             navigator: {
                 adaptToUpdatedData: false,
-                series: { data: data, },
+                series: [
+                    { data: data, id: 'dataseries_nav' },
+                    { type: 'flags', data: annotations, onSeries: 'dataseries_nav', shape: 'circlepin', width: 16 },
+                ],
                 xAxis: {
                     min: history.from,
                     max: history.to,
@@ -281,7 +296,10 @@ class Timeline extends AbstractTimeline {
             },
 
             yAxis: { floor: this.minValue(history, magnitude), min: this.minValue(history, magnitude), max: this.maxValue(history, magnitude) },
-            series: [{ data: data, dataGrouping: { enabled: false } }]
+            series: [
+                { data: data, dataGrouping: { enabled: false }, id: 'dataseries' },
+                { type: 'flags', data: annotations, onSeries: 'dataseries', shape: 'circlepin', width: 16 },
+            ]
         };
     };
 
@@ -332,20 +350,32 @@ class Timeline extends AbstractTimeline {
 	};
 
 	maxValue = (history, magnitude) => {
-	    const unit = magnitude.unit;
-	    if (unit == "ºC") return 120;
-	    else if (unit == "%") return 120;
 	    return magnitude.max != null ? magnitude.max : null;
 	};
 
 	refreshHistory = (dataObjects) => {
 	    const history = this.state.history;
+	    this.refreshHistoryData(history, dataObjects);
+	    this.refreshHistoryAnnotations(history, dataObjects);
+	    this.setState({history: history});
+	};
+
+	refreshHistoryData = (history, dataObjects) => {
 	    history.data = [];
 	    for (let i=0; i<dataObjects.length; i++) {
-	        if (history.from > dataObjects[i].date) history.from = dataObjects[i].date;
-	        history.data.push([dataObjects[i].date, dataObjects[i].value, dataObjects[i].formattedValue]);
+	        const entry = dataObjects[i];
+	        if (history.from > entry.date) history.from = entry.date;
+	        history.data.push([entry.date, entry.value, entry.formattedValue, entry.annotation]);
         }
-	    this.setState({history: history});
+	};
+
+	refreshHistoryAnnotations = (history, dataObjects) => {
+	    history.annotations = [];
+	    for (let i=0; i<dataObjects.length; i++) {
+	        const entry = dataObjects[i];
+	        if (entry.annotation == null) continue;
+	        history.annotations.push({ x: entry.date, title: history.annotations.length+1, idx: i, text: entry.annotation.label, color: entry.annotation.color });
+        }
 	};
 
 	refreshHistoryToolbar = (toolbar) => {

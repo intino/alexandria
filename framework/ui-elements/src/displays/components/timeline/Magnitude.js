@@ -100,12 +100,13 @@ const TimelineMagnitude = ({ toolbar, magnitude, index, id, moveMagnitude, class
             </Popover>
         );
     };
-    const summaryPositioner = (chartRef, labelWidth, labelHeight, point) => {
+    const summaryPositioner = (chartRef, hasAnnotations, labelWidth, labelHeight, point) => {
         var chart = chartRef.current != null ? chartRef.current.chart : null;
         if (chart == null) return { x: 0, y: 0 };
+        const offset = hasAnnotations ? 30 : 0;
         return {
             x: chart.plotLeft + chart.plotSizeX/2 - labelWidth/2,
-            y: chart.plotTop + chart.plotSizeY - 4
+            y: chart.plotTop + chart.plotSizeY - 4 - offset
         };
     }
     const serieOptions = (magnitude) => {
@@ -113,7 +114,8 @@ const TimelineMagnitude = ({ toolbar, magnitude, index, id, moveMagnitude, class
         const height = 80;
         const width = 150;
         const unit = magnitude.unit;
-        const positioner = summaryPositioner.bind(this, chart);
+        const positioner = summaryPositioner.bind(this, chart, hasAnnotations(serie));
+        const data = valuesWithAnnotations(serie);
         return {
             chart: { type: 'spline', height: height, width: width, backgroundColor: 'transparent' },
             title: { text: '' },
@@ -125,18 +127,37 @@ const TimelineMagnitude = ({ toolbar, magnitude, index, id, moveMagnitude, class
                 enabled: true,
                 positioner: positioner,
                 formatter: function() {
-                    return '<div style="font-size:6pt;">' + serie.formattedValues[this.point.index] + (unit != null ? unit : "") + '  ' + this.x + "</div>";
-                }
+                    const annotation = serie.annotations[this.point.index] != null ? "<div>" + serie.annotations[this.point.index].label + "</div><br/>" : "";
+                    return annotation + '<div style="font-size:6pt;">' + serie.formattedValues[this.point.index] + (unit != null ? unit : "") + '  ' + this.x + "</div>";
+                },
             },
             plotOptions: { spline: { lineWidth: 1, states: { hover: { lineWidth: 2 } }, marker: { enabled: false } } },
             series: [{
                 name: '',
-                data: serie.values,
+                data: data,
                 cursor: 'pointer',
                 point: { events: { click: function(e) { openHistory(); } } },
             }],
+            annotations: [{
+                labelOptions: { crop: false, overflow: 'allow' },
+            }],
             navigation: { menuItemStyle: { fontSize: '10px' } }
         };
+    };
+    const hasAnnotations = (serie) => {
+        for (let i=0; i<serie.annotations.length; i++) {
+            if (serie.annotations[i] != null) return true;
+        }
+        return false;
+    };
+    const valuesWithAnnotations = (serie) => {
+        const result = [];
+        for (let i=0; i<serie.annotations.length; i++) {
+            const annotation = serie.annotations[i];
+            const value = serie.values[i];
+            result.push(annotation != null ? { y: value, marker: { symbol: annotation.symbol, fillColor: annotation.color, enabled: true }, text: annotation.label } : value);
+        }
+        return result;
     };
     const renderValue = (magnitude, mode) => {
         return mode === "Catalog" ? renderCatalogValue(magnitude) : renderSummaryValue(magnitude);
