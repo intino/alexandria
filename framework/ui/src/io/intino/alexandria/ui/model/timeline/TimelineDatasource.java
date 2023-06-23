@@ -13,8 +13,8 @@ public interface TimelineDatasource {
 	List<Scale> scales();
 
 	Instant from(Scale scale);
-	Instant previous(Instant date, Scale scale);
-	Instant next(Instant date, Scale scale);
+	Instant previous(Scale scale, Instant date);
+	Instant next(Scale scale, Instant date);
 	Instant to(Scale scale);
 
 	default MagnitudeDefinition magnitudeDefinition(String name) {

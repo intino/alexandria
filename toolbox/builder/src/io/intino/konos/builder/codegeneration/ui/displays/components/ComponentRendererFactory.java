@@ -31,6 +31,7 @@ public class ComponentRendererFactory {
 		map.put(conceptOf(File.class), config -> new FileRenderer(config.context(), config.component().a$(File.class), config.provider()));
 		map.put(conceptOf(Image.class), config -> new ImageRenderer(config.context(), config.component().a$(Image.class), config.provider()));
 		map.put(conceptOf(Reel.class), config -> new ReelRenderer(config.context(), config.component().a$(Reel.class), config.provider()));
+		map.put(conceptOf(Eventline.class), config -> new EventlineRenderer(config.context(), config.component().a$(Eventline.class), config.provider()));
 		map.put(conceptOf(Timeline.class), config -> new TimelineRenderer(config.context(), config.component().a$(Timeline.class), config.provider()));
 		map.put(conceptOf(DataComponents.Number.class), config -> new NumberRenderer(config.context(), config.component().a$(DataComponents.Number.class), config.provider()));
 		map.put(conceptOf(DataComponents.Location.class), config -> new LocationRenderer(config.context(), config.component().a$(DataComponents.Location.class), config.provider()));

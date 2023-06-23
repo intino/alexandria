@@ -61,7 +61,7 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 		Scale scale = selectedScale();
 		Instant current = selectedInstant(scale);
 		Instant from = source.from(scale);
-		current = source.previous(current, selectedScale());
+		current = source.previous(selectedScale(), current);
 		if (current.isBefore(from)) current = from;
 		selectInstant(scale, current);
 	}
@@ -70,7 +70,7 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 		Scale scale = selectedScale();
 		Instant current = selectedInstant(scale);
 		Instant to = source.to(scale);
-		current = source.next(current, selectedScale());
+		current = source.next(selectedScale(), current);
 		if (current.isAfter(to)) current = to;
 		selectInstant(scale, current);
 	}
@@ -131,7 +131,7 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 		int steps = 0;
 		while (current != to && current.isBefore(to)) {
 			steps++;
-			current = source.next(current, scale);
+			current = source.next(scale, current);
 		}
 		return new ReelNavigationInfo().steps(steps);
 	}
@@ -166,7 +166,7 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 		List<ReelSignalStep> result = new ArrayList<>();
 		for (int i = 0; i < reel.length(); i++) {
 			result.add(new ReelSignalStep().value(String.valueOf(reel.charAt(i))).date(ScaleFormatter.label(current, scale, language())));
-			current = source.next(current, scale);
+			current = source.next(scale, current);
 		}
 		return result;
 	}

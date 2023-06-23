@@ -1,7 +1,6 @@
 package io.intino.alexandria.ui.model.reel;
 
 import io.intino.alexandria.Scale;
-import io.intino.alexandria.ui.model.timeline.TimelineDatasource;
 
 import java.time.Instant;
 import java.util.List;
@@ -15,8 +14,8 @@ public interface ReelDatasource {
 
 	Instant from(Scale scale);
 	Instant to(Scale scale);
-	Instant previous(Instant date, Scale scale);
-	Instant next(Instant date, Scale scale);
+	Instant previous(Scale scale, Instant date);
+	Instant next(Scale scale, Instant date);
 
 	default SignalDefinition signalDefinition(String name) {
 		return signals().stream().filter(d -> d.name().equals(name)).findFirst().orElse(null);

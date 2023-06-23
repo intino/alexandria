@@ -230,6 +230,10 @@ def type(properties & timeline) trigger(specific)
 	[ mode="$mode"]
 end
 
+def type(properties & eventline) trigger(specific)
+	[ arrangement="$arrangement"]
+end
+
 def type(properties & microsite) trigger(specific)
 	[ downloadOperations={$["$downloadOperation...[","]"$]}]
 end

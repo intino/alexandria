@@ -33,6 +33,9 @@ Format("background:'#efefef',minHeight:'200px'") filledNoAir
 Format("background:'#efefef',minHeight:'400px'") filledNoAirLarge
 Format("background:'#efefef',minHeight:'670px'") filledNoAirExtraLarge
 Format("overflow:'auto',height:'200px'") autoHeight
+Format("overflow:'auto'") autoOverflow
+Format("height:'400px'") extraHeight
+Format("height:'900px'") verticalExtraHeight
 Format("marginTop:'10px'") headerToolbar
 Format("textAlign:'center'") textCentered
 Format("color:'#888',fontSize:'10px'") facetsAbsolute

@@ -862,6 +862,10 @@ def type(properties & timeline) trigger(specific)
 	[_mode(io.intino.alexandria.ui.displays.components.Timeline.Mode.valueOf("$mode+firstUpperCase"));]
 end
 
+def type(properties & eventline) trigger(specific)
+	[_arrangement(io.intino.alexandria.ui.displays.components.Eventline.Arrangement.valueOf("$arrangement+firstUpperCase"));]
+end
+
 def type(appDirectoryApplication)
 	_add("$name", "$url")[$translation...[]];
 end

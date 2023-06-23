@@ -380,6 +380,32 @@ Schema TimelineAnnotation
 	Attribute color as Text
 	Attribute symbol as Text
 
+Schema EventlineSetup
+	Attribute name as Text
+	Attribute label as Text
+	Attribute toolbar as Object(EventlineToolbarInfo)
+	Attribute events as Object(EventlineEventGroup) List
+
+Schema EventlineToolbarInfo
+	Attribute label as Text
+	Attribute page as LongInteger
+	Attribute countPages as LongInteger
+	Attribute canNext as Bool
+	Attribute canPrevious as Bool
+
+Schema EventlineEventGroup
+	Attribute shortDate as Text
+	Attribute longDate as Text
+	Attribute events as Object(EventlineEvent) List
+
+Schema EventlineEvent
+	Attribute shortDate as Text
+	Attribute longDate as Text
+	Attribute label as Text
+	Attribute description as Text
+	Attribute color as Text
+	Attribute icon as Text
+
 Schema ReelSetup
 	Attribute name as Text
 	Attribute signals as Object(ReelSignal) List
