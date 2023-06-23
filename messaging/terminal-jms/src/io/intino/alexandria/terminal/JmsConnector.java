@@ -172,6 +172,7 @@ public class JmsConnector implements Connector {
 
 	@Override
 	public void attachListener(String path, String subscriberId, Consumer<Event> onEventReceived, Predicate<Instant> filter, String messageSelector) {
+		if (filter == null) attachListener(path, subscriberId, onEventReceived, messageSelector);
 		registerEventConsumer(path, subscriberId, messageSelector, onEventReceived);
 		JmsConsumer consumer = this.consumers.get(path);
 		if (consumer == null) return;
