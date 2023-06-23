@@ -95,7 +95,7 @@ public class StubConnector implements Connector {
 	}
 
 	@Override
-	public void attachListener(String path, String subscriberId, Consumer<Event> onEventReceived, Predicate<Instant> filter) {
+	public void attachListener(String path, String subscriberId, Consumer<Event> onEventReceived, Predicate<Instant> filter, String messageSelector) {
 		registerEventConsumer(path, onEventReceived);
 	}
 
