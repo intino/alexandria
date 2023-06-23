@@ -51,21 +51,33 @@ const ReelSignal = ({ signal, index, id, moveSignal, classes, translate, style, 
           isDragging: monitor.isDragging()
         })
     });
-	const handlePopoverOpen = (block, event) => {
-	    setSelection({block: block, anchorEl: event.currentTarget});
+	const handlePopoverOpen = (block, annotation, event) => {
+	    setSelection({block: block, annotation: annotation, anchorEl: event.currentTarget});
 	};
 	const handlePopoverClose = (event) => {
 	    setSelection(null);
 	};
-    const renderBlock = (block, color) => {
+	const renderAnnotation = (annotation, color) => {
+	    return (<div style={{color:color,fontWeight:'bold',textAlign:'center',marginTop:'-2px'}} title={annotation.label}>{annotation.index+1}</div>);
+	};
+    const renderBlock = (block, color, annotation) => {
         if (block.length == 0) return (<React.Fragment/>);
         const isEmpty = block[0].value === "" || block[0].value === " ";
         const background = isEmpty ? "transparent" : color;
-        const style = { width: (stepWidth*block.length) + "px", borderRadius: isEmpty ? '0' : '3px', backgroundColor: background, position: 'relative' };
+        const style = { position: 'relative', width: (stepWidth*block.length) + "px", borderRadius: isEmpty ? '0' : '3px', backgroundColor: background, position: 'relative' };
         return (
-            <div className={classes.signalStep} style={style} onClick={e => handlePopoverOpen(block, e)}>
+            <div className={classes.signalStep} style={style} onClick={e => handlePopoverOpen(block, annotation, e)}>
+                {annotation != null && renderAnnotation(annotation, isEmpty ? "black" : "white")}
             </div>
         );
+    };
+    const findAnnotation = (signal, date) => {
+        const annotations = signal.annotations;
+        for (let i=0; i<annotations.length; i++) {
+            annotations[i].index = i;
+            if (annotations[i].date == date) return annotations[i];
+        }
+        return null;
     };
     const renderSteps = (signal) => {
         let i=0;
@@ -75,9 +87,10 @@ const ReelSignal = ({ signal, index, id, moveSignal, classes, translate, style, 
         let current = null;
         for (i=0; i<steps.length; i++) {
             const value = steps[i].value;
+            const date = steps[i].date;
             block.push({ value: value, date: steps[i].date });
             if (i == steps.length-1 || (current != null && value != current)) {
-                result.push(renderBlock(block, signal.color));
+                result.push(renderBlock(block, signal.color, findAnnotation(signal, date)));
                 block = [];
             }
             current = value;
@@ -104,6 +117,9 @@ const ReelSignal = ({ signal, index, id, moveSignal, classes, translate, style, 
                     transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
                     onClose={e => handlePopoverClose(e)}
                     disableRestoreFocus>
+                { (selection != null && selection.annotation != null) &&
+                    <div style={{color:selection.annotation.color}}>{selection.annotation.label}</div>
+                }
                 { (selection != null && selection.block.length > 1) &&
                     <React.Fragment>
                         <div className="layout horizontal center">

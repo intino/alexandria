@@ -5,6 +5,7 @@ import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.*;
 import io.intino.alexandria.ui.displays.notifiers.ReelNotifier;
 import io.intino.alexandria.ui.model.reel.ReelDatasource;
+import io.intino.alexandria.ui.model.reel.ReelDatasource.Annotation;
 import io.intino.alexandria.ui.model.reel.SignalDefinition;
 import io.intino.alexandria.ui.model.ScaleFormatter;
 
@@ -145,12 +146,14 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 		Instant to = selectedInstant(scale);
 		Instant from = LocalDateTime.ofInstant(to, ZoneId.of("UTC")).minus(stepsCount, scale.temporalUnit()).toInstant(ZoneOffset.UTC);
 		String reel = signal.reel(scale, from, to);
+		Map<Instant, Annotation> annotations = signal.annotations(scale, from, to);
 		return new ReelSignal()
 				.name(definition.name())
 				.type(definition.type().name())
 				.label(definition.label(language()))
 				.color(definition.color())
-				.steps(stepsOf(fillWithZeros(reel), from));
+				.steps(stepsOf(fillWithZeros(reel), from))
+				.annotations(annotationsOf(annotations));
 	}
 
 	private String fillWithZeros(String reel) {
@@ -166,6 +169,16 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 			current = source.next(current, scale);
 		}
 		return result;
+	}
+
+	private List<ReelSignalAnnotation> annotationsOf(Map<Instant, Annotation> annotations) {
+		return annotations.entrySet().stream().map(this::annotationOf).collect(Collectors.toList());
+	}
+
+	private ReelSignalAnnotation annotationOf(Map.Entry<Instant, Annotation> entry) {
+		Scale scale = selectedScale();
+		Annotation annotation = entry.getValue();
+		return new ReelSignalAnnotation().date(ScaleFormatter.label(entry.getKey(), scale, language())).label(annotation.label()).color(annotation.color());
 	}
 
 	private ReelDatasource.Signal signal(SignalDefinition definition) {

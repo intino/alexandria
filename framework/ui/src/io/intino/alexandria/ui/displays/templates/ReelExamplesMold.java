@@ -4,10 +4,13 @@ import io.intino.alexandria.Scale;
 import io.intino.alexandria.UiFrameworkBox;
 import io.intino.alexandria.ui.model.reel.ReelDatasource;
 import io.intino.alexandria.ui.model.reel.SignalDefinition;
+import io.intino.alexandria.ui.model.timeline.TimelineDatasource;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.time.ZoneOffset.UTC;
 
@@ -60,6 +63,16 @@ public class ReelExamplesMold extends AbstractReelExamplesMold<UiFrameworkBox> {
 						}
 						return result;
 					}
+
+					@Override
+					public Map<Instant, Annotation> annotations(Scale scale, Instant start, Instant end) {
+						LocalDateTime date = LocalDateTime.ofInstant(end, UTC);
+						return new LinkedHashMap<>() {{
+							put(date.minus(18, scale.temporalUnit()).toInstant(UTC), new Annotation("Warning value"));
+							put(date.minus(10, scale.temporalUnit()).toInstant(UTC), new Annotation("Out of range", "red"));
+							put(date.minus(1, scale.temporalUnit()).toInstant(UTC), new Annotation("Value is not valid", "green"));
+						}};
+					}
 				};
 			}
 
@@ -87,6 +100,7 @@ public class ReelExamplesMold extends AbstractReelExamplesMold<UiFrameworkBox> {
 			public Instant next(Instant date, Scale scale) {
 				return LocalDateTime.ofInstant(date, UTC).plus(1, scale.temporalUnit()).toInstant(UTC);
 			}
+
 		};
 	}
 

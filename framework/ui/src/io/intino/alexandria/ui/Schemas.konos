@@ -312,6 +312,7 @@ Schema TimelineHistoryEntry
 	Attribute date as DateTime
 	Attribute value as Real
 	Attribute formattedValue as Text
+	Attribute annotation as Object(TimelineAnnotation)
 
 Schema TimelineToolbarInfo
 	Attribute label as Text
@@ -370,7 +371,14 @@ Schema TimelineSerie
 	Attribute name as Text
 	Attribute categories as Text List
 	Attribute values as Real List
+	Attribute annotations as Object(TimelineAnnotation) List
 	Attribute formattedValues as Text List
+
+Schema TimelineAnnotation
+	Attribute category as Text
+	Attribute label as Text
+	Attribute color as Text
+	Attribute symbol as Text
 
 Schema ReelSetup
 	Attribute name as Text
@@ -385,10 +393,16 @@ Schema ReelSignal
 	Attribute color as Text
 	Attribute type as Text
 	Attribute steps as Object(ReelSignalStep) List
+	Attribute annotations as Object(ReelSignalAnnotation) List
 
 Schema ReelSignalStep
 	Attribute value as Text
 	Attribute date as Text
+
+Schema ReelSignalAnnotation
+	Attribute date as Text
+	Attribute label as Text
+	Attribute color as Text
 
 Schema ReelToolbarInfo
 	Attribute label as Text

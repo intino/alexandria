@@ -171,8 +171,8 @@ public class JmsConnector implements Connector {
 	}
 
 	@Override
-	public void attachListener(String path, String subscriberId, Consumer<Event> onEventReceived, Predicate<Instant> filter) {
-		registerEventConsumer(path, subscriberId, null, onEventReceived);
+	public void attachListener(String path, String subscriberId, Consumer<Event> onEventReceived, Predicate<Instant> filter, String messageSelector) {
+		registerEventConsumer(path, subscriberId, messageSelector, onEventReceived);
 		JmsConsumer consumer = this.consumers.get(path);
 		if (consumer == null) return;
 		Consumer<javax.jms.Message> eventConsumer = m -> MessageDeserializer.deserialize(m).forEachRemaining(ev -> {

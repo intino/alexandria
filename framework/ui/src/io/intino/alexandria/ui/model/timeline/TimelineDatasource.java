@@ -56,6 +56,40 @@ public interface TimelineDatasource {
 	interface Serie {
 		String name();
 		Map<Instant, Double> values();
+		Map<Instant, Annotation> annotations();
 	}
 
+	class Annotation {
+		private final String label;
+		private final String color;
+		private final Symbol symbol;
+
+		public enum Symbol { Circle, Square, Diamond, Triangle }
+
+		public Annotation(String label) {
+			this(label, "#ed6c02", Symbol.Circle); // green
+		}
+
+		public Annotation(String label, String color) {
+			this(label, color, Symbol.Circle);
+		}
+
+		private Annotation(String label, String color, Symbol symbol) {
+			this.label = label;
+			this.color = color;
+			this.symbol = symbol;
+		}
+
+		public String label() {
+			return label;
+		}
+
+		public String color() {
+			return color;
+		}
+
+		public Symbol symbol() {
+			return symbol;
+		}
+	}
 }

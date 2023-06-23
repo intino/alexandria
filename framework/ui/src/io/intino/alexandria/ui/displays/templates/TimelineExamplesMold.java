@@ -7,10 +7,8 @@ import io.intino.alexandria.ui.model.timeline.TimelineDatasource;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -73,6 +71,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			public Instant to(Scale scale) {
 				return Instant.now();
 			}
+
 		};
 	}
 
@@ -155,7 +154,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 
 					@Override
 					public Map<Instant, Double> values() {
-						return new HashMap<>() {{
+						return new LinkedHashMap<>() {{
 							put(date.minus(8, scale.temporalUnit()).toInstant(UTC), 120.0);
 							put(date.minus(7, scale.temporalUnit()).toInstant(UTC), 100.0);
 							put(date.minus(6, scale.temporalUnit()).toInstant(UTC), 10.0);
@@ -165,6 +164,15 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 							put(date.minus(2, scale.temporalUnit()).toInstant(UTC), 1232.0);
 							put(date.minus(1, scale.temporalUnit()).toInstant(UTC), 12.0);
 							put(date.toInstant(UTC), 12.0);
+						}};
+					}
+
+					@Override
+					public Map<Instant, TimelineDatasource.Annotation> annotations() {
+						return new LinkedHashMap<>() {{
+							put(date.minus(5, scale.temporalUnit()).toInstant(UTC), new TimelineDatasource.Annotation("Warning value"));
+							put(date.minus(4, scale.temporalUnit()).toInstant(UTC), new TimelineDatasource.Annotation("Out of range", "red"));
+							put(date.minus(1, scale.temporalUnit()).toInstant(UTC), new TimelineDatasource.Annotation("Value is not valid", "green"));
 						}};
 					}
 				};
@@ -263,6 +271,11 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 					public Map<Instant, Double> values() {
 						return Collections.emptyMap();
 					}
+
+					@Override
+					public Map<Instant, TimelineDatasource.Annotation> annotations() {
+						return Collections.emptyMap();
+					}
 				};
 			}
 
@@ -276,6 +289,11 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 
 					@Override
 					public Map<Instant, Double> values() {
+						return Collections.emptyMap();
+					}
+
+					@Override
+					public Map<Instant, TimelineDatasource.Annotation> annotations() {
 						return Collections.emptyMap();
 					}
 				};
