@@ -251,6 +251,9 @@ Concept:{0..1} VisualizationComponents
 	Concept Timeline extends Component
 		var word:{Summary Catalog} mode = Summary
 
+	Concept Eventline extends Component
+		var word:{Vertical Horizontal} arrangement = Horizontal
+
 	Concept Reel extends Component
 
 Concept HelperComponents

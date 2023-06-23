@@ -99,7 +99,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		Scale scale = selectedScale();
 		Instant current = selectedInstant(scale);
 		Instant from = source.from(scale);
-		current = source.previous(current, selectedScale());
+		current = source.previous(selectedScale(), current);
 		if (current.isBefore(from)) current = from;
 		selectInstant(scale, current);
 	}
@@ -108,7 +108,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		Scale scale = selectedScale();
 		Instant current = selectedInstant(scale);
 		Instant to = source.to(scale);
-		current = source.next(current, selectedScale());
+		current = source.next(selectedScale(), current);
 		if (current.isAfter(to)) current = to;
 		selectInstant(scale, current);
 	}

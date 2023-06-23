@@ -194,6 +194,18 @@ Component timeline
 	Request last
 	Request changeScale as Text
 
+Component eventline
+	Notification setup as Object(EventlineSetup)
+	Notification refreshToolbar as Object(EventlineToolbarInfo)
+	Notification resetEvents
+	Notification addEventsBefore as Object(EventlineEventGroup) List
+	Notification addEventsAfter as Object(EventlineEventGroup) List
+	Request first
+	Request previous
+	Request next
+	Request last
+	Request page as Integer
+
 Component reel
 	Notification setup as Object(ReelSetup)
 	Notification refreshToolbar as Object(ReelToolbarInfo)
