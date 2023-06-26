@@ -26,7 +26,7 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 	private long page;
 	private final Set<Long> loadedPages = new HashSet<>();
 
-	private static final int DefaultStepsCount = 24;
+	private static final int DefaultStepsCount = 8;
 
 	public enum Arrangement { Vertical, Horizontal }
 
@@ -46,42 +46,41 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 	public void page(long page) {
 		this.page = page;
 		if (page < 0) page = 0;
-		if (page > countPages()) page = countPages()-1;
+		if (page > countPages()) this.page = countPages()-1;
 		resetPages();
 		refreshToolbar();
-		notifier.addEventsAfter(events());
+		List<EventlineEventGroup> result = nextEvents();
+		notifier.addEventsAfter(result);
+		if (result.size() < stepsCount) notifier.addEventsBefore(previousEvents());
 	}
 
 	public void first() {
-		page = 0;
+		page = -1;
 		resetPages();
 		refreshToolbar();
-		notifier.addEventsAfter(events());
+		notifier.addEventsAfter(nextEvents());
 	}
 
 	public void previous() {
 		if (page <= 0) return;
-		while(page > 0 && loadedPages.contains(page)) page--;
 		refreshToolbar();
-		if (loadedPages.contains(page)) return;
-		if (arrangement == Arrangement.Horizontal) notifier.addEventsBefore(events());
-		else notifier.addEventsAfter(events());
+		if (arrangement == Arrangement.Horizontal) notifier.addEventsBefore(previousEvents());
+		else notifier.addEventsAfter(nextEvents());
 	}
 
 	public void next() {
 		if (page >= countPages()-1) return;
-		while(page < countPages() && loadedPages.contains(page)) page++;
 		refreshToolbar();
-		if (loadedPages.contains(page)) return;
-		if (arrangement == Arrangement.Horizontal) notifier.addEventsAfter(events());
-		else notifier.addEventsBefore(events());
+		if (arrangement == Arrangement.Horizontal) notifier.addEventsAfter(nextEvents());
+		else notifier.addEventsBefore(previousEvents());
 	}
 
 	public void last() {
-		page = countPages()-1;
+		page = countPages();
 		resetPages();
 		refreshToolbar();
-		notifier.addEventsAfter(events());
+		notifier.addEventsAfter(previousEvents());
+		notifier.scrollToEnd();
 	}
 
 	@Override
@@ -93,28 +92,48 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 				.name(source.name())
 				.label(label())
 				.toolbar(toolbar())
-				.events(events()));
+				.events(previousEvents()));
 	}
 
 	protected void _arrangement(Arrangement arrangement) {
 		this.arrangement = arrangement;
 	}
 
-	private List<EventlineEventGroup> events() {
+	private List<EventlineEventGroup> nextEvents() {
+		List<EventlineEventGroup> result = new ArrayList<>();
+		while (result.size() < stepsCount && page < countPages()) {
+			page++;
+			result.addAll(load());
+		}
+		return result.stream().sorted(eventsComparator()).collect(Collectors.toList());
+	}
+
+	private List<EventlineEventGroup> previousEvents() {
+		List<EventlineEventGroup> result = new ArrayList<>();
+		while (result.size() < stepsCount && page > 0) {
+			page--;
+			result.addAll(0, load());
+		}
+		return result.stream().sorted(eventsComparator()).collect(Collectors.toList());
+	}
+
+	private List<EventlineEventGroup> load() {
+		if (loadedPages.contains(page)) return Collections.emptyList();
 		Scale scale = selectedScale();
 		Instant from = from();
 		Instant to = LocalDateTime.ofInstant(from, ZoneId.of("UTC")).plus(stepsCount, scale.temporalUnit()).toInstant(ZoneOffset.UTC);
 		loadedPages.add(page);
-		return source.events(from, to).entrySet().stream().sorted(eventsComparator()).map(this::schemaOf).collect(Collectors.toList());
+		return source.events(from, to).entrySet().stream().map(this::schemaOf).collect(Collectors.toList());
 	}
 
-	private Comparator<Map.Entry<Instant, List<EventlineDatasource.Event>>> eventsComparator() {
-		if (arrangement == Arrangement.Vertical) return (o1, o2) -> o2.getKey().compareTo(o1.getKey());
-		return Map.Entry.comparingByKey();
+	private Comparator<EventlineEventGroup> eventsComparator() {
+		if (arrangement == Arrangement.Vertical) return (o1, o2) -> o2.date().compareTo(o1.date());
+		return Comparator.comparing(EventlineEventGroup::date);
 	}
 
 	private EventlineEventGroup schemaOf(Map.Entry<Instant, List<EventlineDatasource.Event>> entry) {
 		EventlineEventGroup result = new EventlineEventGroup();
+		result.date(entry.getKey());
 		result.shortDate(ScaleFormatter.shortLabel(entry.getKey(), selectedScale(), language()));
 		result.longDate(ScaleFormatter.label(entry.getKey(), selectedScale(), language()));
 		result.events(entry.getValue().stream().map(e -> schemaOf(entry.getKey(), e)).collect(Collectors.toList()));
@@ -175,7 +194,7 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 	}
 
 	private long firstPage() {
-		return arrangement == Arrangement.Horizontal ? 0 : countPages()-1;
+		return countPages();
 	}
 
 	private void resetPages() {

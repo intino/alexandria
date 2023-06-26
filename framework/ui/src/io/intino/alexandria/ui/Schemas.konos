@@ -394,6 +394,7 @@ Schema EventlineToolbarInfo
 	Attribute canPrevious as Bool
 
 Schema EventlineEventGroup
+	Attribute date as DateTime
 	Attribute shortDate as Text
 	Attribute longDate as Text
 	Attribute events as Object(EventlineEvent) List

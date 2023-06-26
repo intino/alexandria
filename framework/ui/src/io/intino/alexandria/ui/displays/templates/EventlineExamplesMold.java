@@ -6,9 +6,7 @@ import io.intino.alexandria.ui.model.eventline.EventlineDatasource;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.time.ZoneOffset.UTC;
 
@@ -40,18 +38,15 @@ public class EventlineExamplesMold extends AbstractEventlineExamplesMold<UiFrame
 
 			@Override
 			public Map<Instant, List<Event>> events(Instant start, Instant end) {
-				LocalDateTime date = LocalDateTime.ofInstant(end, UTC);
-				Scale scale = scale();
-				return new HashMap<>() {{
-					put(date.minus(22, scale.temporalUnit()).toInstant(UTC), List.of(event("Event 1")));
-					put(date.minus(21, scale.temporalUnit()).toInstant(UTC), List.of(event("Event 2"), event("Event 3")));
-					put(date.minus(20, scale.temporalUnit()).toInstant(UTC), List.of(event("Event 4")));
-					put(date.minus(19, scale.temporalUnit()).toInstant(UTC), List.of(event("Event 5"), event("Event 6"), event("Event 7")));
-					put(date.minus(17, scale.temporalUnit()).toInstant(UTC), List.of(event("Event 8")));
-					put(date.minus(2, scale.temporalUnit()).toInstant(UTC), List.of(event("Event 9", "This is an event description")));
-					put(date.minus(1, scale.temporalUnit()).toInstant(UTC), List.of(event("Event 10", "This is an event description")));
-					put(date.minus(0, scale.temporalUnit()).toInstant(UTC), List.of(event("Event 11")));
-				}};
+				Random random = new Random();
+//				if (random.nextInt(2) == 0) return Collections.emptyMap();
+				Instant current = start;
+				Map<Instant, List<Event>> result = new HashMap<>();
+				while (current.isBefore(end)) {
+					result.put(current, RandomEvents.get(random.nextInt(RandomEvents.size())));
+					current = current.plus(1, scale().temporalUnit());
+				}
+				return result;
 			}
 
 			@Override
@@ -69,14 +64,26 @@ public class EventlineExamplesMold extends AbstractEventlineExamplesMold<UiFrame
 				return Instant.now();
 			}
 
-			private Event event(String label) {
-				return new Event(label);
-			}
-
-			private Event event(String label, String color) {
-				return new Event(label, color);
-			}
-
 		};
 	}
+
+	private static final List<List<EventlineDatasource.Event>> RandomEvents = new ArrayList<>() {{
+		add(List.of(event("Event 1")));
+		add(List.of(event("Event 2"), event("Event 3")));
+		add(List.of(event("Event 4")));
+		add(List.of(event("Event 5"), event("Event 6"), event("Event 7")));
+		add(List.of(event("Event 8")));
+		add(List.of(event("Event 9", "This is an event description")));
+		add(List.of(event("Event 10", "This is an event description")));
+		add(List.of(event("Event 11")));
+	}};
+
+	private static EventlineDatasource.Event event(String label) {
+		return new EventlineDatasource.Event(label);
+	}
+
+	private static EventlineDatasource.Event event(String label, String color) {
+		return new EventlineDatasource.Event(label, color);
+	}
+
 }

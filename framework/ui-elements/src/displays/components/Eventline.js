@@ -184,6 +184,11 @@ class Eventline extends AbstractEventline {
 	previous = () => { this.requester.page(this.state.toolbar.page-1); };
 	next = () => { this.requester.page(this.state.toolbar.page+1); };
 	last = () => { this.requester.last(); };
+	scrollToEnd = () => {
+	    if (this.groups.current == null) return;
+	    this.resetScroll = false;
+	    this.groups.current.scrollTo(this.groups.current.scrollWidth, 0);
+	};
 
     handleScroll = (width, height, e) => {
         const target = e.target;
