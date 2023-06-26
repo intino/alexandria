@@ -397,7 +397,7 @@ public class JmsConnector implements Connector {
 		this.messageConsumers.putIfAbsent(path, new CopyOnWriteArrayList<>());
 		this.messageConsumers.get(path).add(onMessageReceived);
 		if (session != null && !this.consumers.containsKey(path))
-			this.consumers.put(path, durableTopicConsumer(path, subscriberId, null));
+			this.consumers.put(path, subscriberId == null ? topicConsumer(path, null) : durableTopicConsumer(path, subscriberId, null));
 	}
 
 	private boolean doSendEvent(String path, Event event) {
