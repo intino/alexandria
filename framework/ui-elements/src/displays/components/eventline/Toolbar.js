@@ -19,14 +19,16 @@ const EventlineToolbar = ({ label, toolbar, onPrevious, onNext, onFirst, onLast,
     const nextColor = toolbar.canNext ? theme.palette.primary.main : theme.palette.grey.A900;
     const title = translate(label.title != null ? label.title : "Events");
     return (
-        <div className="layout horizontal start center">
+        <div className="layout horizontal end">
             <div style={{marginRight:'15px',fontSize:'18pt',display: title === "" ? "none" : "block",...label.style}}>{title}</div>
-            <div className="layout vertical"><Typography style={EventlineToolbarStyles.label}>{toolbar.label}</Typography></div>
-            <div className="layout horizontal">
-                <IconButton disabled={!toolbar.canPrevious} onClick={handleFirst} size="small" style={{color:previousColor}}><FirstPage style={EventlineToolbarStyles.icon}/></IconButton>
-                <IconButton disabled={!toolbar.canPrevious} onClick={handlePrevious} size="small" style={{color:previousColor}}><NavigateBefore style={EventlineToolbarStyles.icon}/></IconButton>
-                <IconButton disabled={!toolbar.canNext} onClick={handleNext} size="small" style={{color:nextColor}}><NavigateNext style={EventlineToolbarStyles.icon}/></IconButton>
-                <IconButton disabled={!toolbar.canNext} onClick={handleLast} size="small" style={{color:nextColor}}><LastPage style={EventlineToolbarStyles.icon}/></IconButton>
+            <div style={{marginBottom:'1px'}} className="layout horizontal">
+                <div className="layout vertical"><Typography style={EventlineToolbarStyles.label}>{toolbar.label}</Typography></div>
+                <div className="layout horizontal">
+                    <IconButton disabled={!toolbar.canPrevious} onClick={handleFirst} size="small" style={{color:previousColor}}><FirstPage style={EventlineToolbarStyles.icon}/></IconButton>
+                    <IconButton disabled={!toolbar.canPrevious} onClick={handlePrevious} size="small" style={{color:previousColor}}><NavigateBefore style={EventlineToolbarStyles.icon}/></IconButton>
+                    <IconButton disabled={!toolbar.canNext} onClick={handleNext} size="small" style={{color:nextColor}}><NavigateNext style={EventlineToolbarStyles.icon}/></IconButton>
+                    <IconButton disabled={!toolbar.canNext} onClick={handleLast} size="small" style={{color:nextColor}}><LastPage style={EventlineToolbarStyles.icon}/></IconButton>
+                </div>
             </div>
         </div>
     );

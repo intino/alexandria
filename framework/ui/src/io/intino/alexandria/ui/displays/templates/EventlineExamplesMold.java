@@ -21,9 +21,11 @@ public class EventlineExamplesMold extends AbstractEventlineExamplesMold<UiFrame
 	@Override
 	public void init() {
 		super.init();
+		eventline1.label("Events");
 		eventline1.source(source());
 		eventline1.refresh();
 		eventline1.page(2);
+		eventline2.label("Events");
 		eventline2.source(source());
 		eventline2.refresh();
 		eventline2.page(2);

@@ -110,7 +110,7 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 
 	private Comparator<Map.Entry<Instant, List<EventlineDatasource.Event>>> eventsComparator() {
 		if (arrangement == Arrangement.Vertical) return (o1, o2) -> o2.getKey().compareTo(o1.getKey());
-		return Comparator.comparing(Map.Entry::getKey);
+		return Map.Entry.comparingByKey();
 	}
 
 	private EventlineEventGroup schemaOf(Map.Entry<Instant, List<EventlineDatasource.Event>> entry) {
