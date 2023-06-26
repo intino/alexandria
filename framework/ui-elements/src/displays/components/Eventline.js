@@ -28,6 +28,7 @@ class Eventline extends AbstractEventline {
 		this.container = React.createRef();
 		this.groups = React.createRef();
 		this.resetScroll = true;
+		this.toolbarInfo = [];
 		this.lastScrollInfo = null;
 		this.state = {
 		    ...this.state,
@@ -43,6 +44,7 @@ class Eventline extends AbstractEventline {
 
 	resetEvents = (events) => {
 	    this.resetScroll = true;
+	    this.toolbarInfo = [];
 	    this.setState({events: []});
 	};
 
@@ -74,7 +76,7 @@ class Eventline extends AbstractEventline {
         const widthValue = this.container.current != null ? width + "px" : width + "%";
         const height = this.container.current != null ? this.container.current.offsetHeight : 100;
         const heightValue = this.container.current != null ? height + "px" : height + "%";
-        const groupsStyle = this.state.arrangement.toLowerCase() == "horizontal" ? {overflowX:'scroll',width:widthValue} : {overflowY:'scroll',height:((this.groups.current != null && this.groups.current.offsetHeight != null) ? this.groups.current.offsetHeight : heightValue)};
+        const groupsStyle = this.state.arrangement.toLowerCase() == "horizontal" ? {overflowX:'auto',width:widthValue} : {overflowY:'auto',height:((this.groups.current != null && this.groups.current.offsetHeight != null) ? this.groups.current.offsetHeight : heightValue)};
         window.setTimeout(() => {
             if (this.groups.current == null || !this.resetScroll) return;
             this.resetScroll = false;
@@ -86,7 +88,7 @@ class Eventline extends AbstractEventline {
                 {this.renderToolbar({fontWeight:'300'})}
                 {this.state.events.length == 0 && <Typography variant="body1">{this.translate("No events found")}</Typography>}
                 {this.state.events.length > 0 &&
-                    <div ref={this.groups} className={"layout " + arrangement + " " + flex} style={groupsStyle} onScroll={this.handleScroll.bind(this, width, height)}>
+                    <div ref={this.groups} className={"layout " + arrangement + " " + flex} style={{marginTop:'5px',...groupsStyle}} onScroll={this.handleScroll.bind(this, width, height)}>
                         {this.renderBeforeScroller()}
                         {this.renderEventsGroups()}
                     </div>
@@ -131,11 +133,12 @@ class Eventline extends AbstractEventline {
         const { classes } = this.props;
         const arrangement = this.state.arrangement.toLowerCase() == "horizontal" ? "vertical" : "horizontal";
         const blockClass = this.state.arrangement.toLowerCase() == "horizontal" ? classes.groupBlockHorizontal : classes.groupBlockVertical;
+        this.toolbarInfo[index] = group.longDate;
         return (
-            <div id={this.props.id + "groups"} className={"layout " + arrangement} style={{position:'relative'}}>
+            <div id={this.props.id + "_eventgroup_" + index} className={classnames("layout", arrangement, "eventgroup")} style={{position:'relative'}}>
                 <div className={blockClass}>{this.renderGroupHeader(group)}</div>
                 <div>{this.renderGroupIcon(group)}</div>
-                <div className={blockClass}>{this.renderEvents(group)}</div>
+                <div className={blockClass}>{this.renderEvents(group, index)}</div>
             </div>
         );
     };
@@ -161,11 +164,11 @@ class Eventline extends AbstractEventline {
         );
     };
 
-    renderEvents = (group) => {
-        return group.events.map((event, index) => this.renderEvent(event, index));
+    renderEvents = (group, index) => {
+        return group.events.map((event, eventIndex) => this.renderEvent(event, index));
     };
 
-    renderEvent = (event) => {
+    renderEvent = (event, index) => {
         const { classes } = this.props;
         const arrangement = this.state.arrangement.toLowerCase();
         const clazz = arrangement == "horizontal" ? classes.eventHorizontal : classes.eventVertical;
@@ -187,12 +190,31 @@ class Eventline extends AbstractEventline {
         const horizontalArrangement = this.state.arrangement.toLowerCase() == "horizontal";
         if (this.scrollTimeout != null) window.clearTimeout(this.scrollTimeout);
         this.scrollTimeout = window.setTimeout(() => {
+            this.updateToolbarDate();
             const threshold = horizontalArrangement ? width * 0.1 : height * 0.1;
             const requestPreviousPage = horizontalArrangement ? target.scrollLeft < 200 : (target.scrollHeight - height - target.scrollTop) <= threshold;
             const requestNextPage = horizontalArrangement ? (target.scrollWidth - width - target.scrollLeft) <= threshold : target.scrollTop < 200;
             if (requestPreviousPage) this.requester.previous();
             else if (requestNextPage) this.requester.next();
         }, 100);
+    };
+
+    updateToolbarDate = () => {
+        const newDate = this.findCurrentElementDate();
+        if (newDate == null) return;
+        const toolbar = this.state.toolbar;
+        toolbar.label = newDate;
+        this.setState({toolbar});
+    };
+
+    findCurrentElementDate = () => {
+        if (this.groups.current == null) return null;
+        const events = this.groups.current.querySelectorAll(".eventgroup");
+        for (let i=0; i<events.length; i++) {
+            if (events[i].getBoundingClientRect().left <= 0) continue;
+            return this.toolbarInfo[events[i].id.substr(events[i].id.lastIndexOf("_")+1)];
+        }
+        return null;
     };
 }
 
