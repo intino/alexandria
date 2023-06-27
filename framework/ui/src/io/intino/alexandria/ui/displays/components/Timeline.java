@@ -168,7 +168,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	private TimelineHistoryEntry historyEntryOf(Map.Entry<Instant, Double> entry, Formatter formatter, Map<Instant, TimelineDatasource.Annotation> annotations) {
 		TimelineHistoryEntry result = new TimelineHistoryEntry();
 		result.date(entry.getKey());
-		result.value(entry.getValue());
+		result.value(Double.isNaN(entry.getValue()) ? null : String.valueOf(entry.getValue()));
 		result.formattedValue(formatter.format(entry.getValue()));
 		result.annotation(annotations.containsKey(entry.getKey()) ? annotationOf(date(entry.getKey(), selectedScale()), annotations.get(entry.getKey())) : null);
 		return result;
@@ -197,10 +197,14 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		Formatter formatter = magnitude.definition().formatter();
 		result.name(serie.name());
 		result.categories(categoriesOf(serie, current, scale));
-		result.values(values);
+		result.values(replaceNaNs(values));
 		result.annotations(annotationsOf(serie, current, scale));
 		result.formattedValues(values.stream().map(formatter::format).collect(Collectors.toList()));
 		return result;
+	}
+
+	private List<Double> replaceNaNs(List<Double> values) {
+		return values.stream().map(v -> Double.isNaN(v) ? null : v).collect(Collectors.toList());
 	}
 
 	private List<String> categoriesOf(TimelineDatasource.Serie serie, Instant to, Scale scale) {

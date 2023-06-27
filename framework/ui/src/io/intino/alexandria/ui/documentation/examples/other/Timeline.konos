@@ -18,7 +18,7 @@ Template(layout=Vertical, spacing=DP8) timelineExamplesMold
 	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=100%, height=100%)
 			Text(format=h6, value="No facets (Catalog mode)")
-			Block(format=filledNoAirExtraLarge)
+			Block(format=filledNoAirExtraLarge) as Absolute(height=500px)
 				Timeline(mode=Catalog) timeline2
 				Block > Text as Code(language=Html)
 						value
