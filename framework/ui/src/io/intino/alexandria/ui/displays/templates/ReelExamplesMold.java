@@ -64,13 +64,22 @@ public class ReelExamplesMold extends AbstractReelExamplesMold<UiFrameworkBox> {
 					}
 
 					@Override
-					public Map<Instant, Annotation> annotations(Scale scale, Instant start, Instant end) {
+					public Map<Instant, List<Annotation>> annotations(Scale scale, Instant start, Instant end) {
 						LocalDateTime date = LocalDateTime.ofInstant(end, UTC);
 						return new LinkedHashMap<>() {{
-							put(date.minus(18, scale.temporalUnit()).toInstant(UTC), new Annotation("Warning value"));
-							put(date.minus(10, scale.temporalUnit()).toInstant(UTC), new Annotation("Out of range", "red"));
-							put(date.minus(1, scale.temporalUnit()).toInstant(UTC), new Annotation("Value is not valid", "green"));
-						}};
+							put(date.minus(18, scale.temporalUnit()).toInstant(UTC), List.of(annotationOf("Warning value")));
+							put(date.minus(10, scale.temporalUnit()).toInstant(UTC), List.of(annotationOf("Out of range")));
+							put(date.minus(1, scale.temporalUnit()).toInstant(UTC), List.of(annotationOf("Value is not valid", "green")));
+						}
+
+							private Annotation annotationOf(String label) {
+								return new Annotation(label);
+							}
+
+							private Annotation annotationOf(String label, String color) {
+								return new Annotation(label, color);
+							}
+						};
 					}
 				};
 			}

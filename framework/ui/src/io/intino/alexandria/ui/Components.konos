@@ -202,6 +202,7 @@ Component eventline
 	Notification addEventsAfter as Object(EventlineEventGroup) List
 	Notification scrollTo as Text
 	Notification scrollToEnd
+	Request update as DateTime
 	Request first
 	Request previous
 	Request next

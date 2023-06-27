@@ -56,7 +56,7 @@ public interface TimelineDatasource {
 	interface Serie {
 		String name();
 		Map<Instant, Double> values();
-		Map<Instant, Annotation> annotations();
+		Map<Instant, List<Annotation>> annotations();
 	}
 
 	class Annotation {

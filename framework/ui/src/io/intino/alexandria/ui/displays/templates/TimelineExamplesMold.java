@@ -168,12 +168,21 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 					}
 
 					@Override
-					public Map<Instant, TimelineDatasource.Annotation> annotations() {
+					public Map<Instant, List<TimelineDatasource.Annotation>> annotations() {
 						return new LinkedHashMap<>() {{
-							put(date.minus(5, scale.temporalUnit()).toInstant(UTC), new TimelineDatasource.Annotation("Warning value"));
-							put(date.minus(4, scale.temporalUnit()).toInstant(UTC), new TimelineDatasource.Annotation("Out of range", "red"));
-							put(date.minus(1, scale.temporalUnit()).toInstant(UTC), new TimelineDatasource.Annotation("Value is not valid", "green"));
-						}};
+							put(date.minus(5, scale.temporalUnit()).toInstant(UTC), List.of(annotationOf("Warning value")));
+							put(date.minus(4, scale.temporalUnit()).toInstant(UTC), List.of(annotationOf("Out of range", "red"), annotationOf("Other error", "red")));
+							put(date.minus(1, scale.temporalUnit()).toInstant(UTC), List.of(annotationOf("Value is not valid", "green")));
+						}
+
+							private TimelineDatasource.Annotation annotationOf(String label) {
+								return new TimelineDatasource.Annotation(label);
+							}
+
+							private TimelineDatasource.Annotation annotationOf(String label, String color) {
+								return new TimelineDatasource.Annotation(label, color);
+							}
+						};
 					}
 				};
 			}
@@ -273,7 +282,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 					}
 
 					@Override
-					public Map<Instant, TimelineDatasource.Annotation> annotations() {
+					public Map<Instant, List<TimelineDatasource.Annotation>> annotations() {
 						return Collections.emptyMap();
 					}
 				};
@@ -293,7 +302,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 					}
 
 					@Override
-					public Map<Instant, TimelineDatasource.Annotation> annotations() {
+					public Map<Instant, List<TimelineDatasource.Annotation>> annotations() {
 						return Collections.emptyMap();
 					}
 				};

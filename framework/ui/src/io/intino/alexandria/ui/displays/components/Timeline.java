@@ -1,8 +1,12 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.Scale;
+import io.intino.alexandria.Timetag;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.*;
+import io.intino.alexandria.ui.displays.events.SelectEvent;
+import io.intino.alexandria.ui.displays.events.SelectListener;
+import io.intino.alexandria.ui.displays.events.SelectionListener;
 import io.intino.alexandria.ui.displays.notifiers.TimelineNotifier;
 import io.intino.alexandria.ui.model.ScaleFormatter;
 import io.intino.alexandria.ui.model.timeline.Formatter;
@@ -22,6 +26,8 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toMap;
+
 public class Timeline<DN extends TimelineNotifier, B extends Box> extends AbstractTimeline<B> {
 	private TimelineDatasource source;
 	private Mode mode;
@@ -32,6 +38,8 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	private int summaryPointsCount = DefaultSummaryPointsCount;
 	private final Map<Scale, Instant> selectedInstants = new HashMap<>();
 	private Scale selectedScale = null;
+	private SelectListener selectListener;
+	private SelectListener selectScaleListener;
 
 	private static final int DefaultSummaryPointsCount = 24;
 
@@ -62,6 +70,23 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 
 	protected Timeline<DN, B> _mode(Mode mode) {
 		this.mode = mode;
+		return this;
+	}
+
+	public Timeline<DN, B> onSelect(SelectListener listener) {
+		this.selectListener = listener;
+		return this;
+	}
+
+	public Timeline<DN, B> onSelectScale(SelectListener listener) {
+		this.selectScaleListener = listener;
+		return this;
+	}
+
+	public Timeline<DN, B> select(Instant instant) {
+		if (source == null) return this;
+		if (selectedInstant(selectedScale()) == instant) return this;
+		selectInstant(selectedScale(), instant);
 		return this;
 	}
 
@@ -118,10 +143,20 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		selectInstant(scale, source.to(scale));
 	}
 
+	public void select(Scale scale) {
+		changeScale(scale);
+	}
+
 	public void changeScale(String scale) {
-		selectedScale = Scale.valueOf(scale);
+		changeScale(Scale.valueOf(scale));
+	}
+
+	public void changeScale(Scale scale) {
+		if (selectedScale == scale) return;
+		selectedScale = scale;
 		refreshToolbar();
 		refreshMagnitudes();
+		if (selectScaleListener != null) selectScaleListener.accept(new SelectEvent(this, selectedScale));
 	}
 
 	@Override
@@ -160,12 +195,12 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		Scale scale = selectedScale();
 		TimelineDatasource.Serie serie = magnitude.serie(scale, fetch.start(), fetch.end());
 		Map<Instant, Double> values = serie.values();
-		Map<Instant, TimelineDatasource.Annotation> annotations = serie.annotations();
+		Map<Instant, List<TimelineDatasource.Annotation>> annotations = serie.annotations();
 		Formatter formatter = magnitude.definition().formatter();
 		notifier.refreshHistory(fillWithZeros(values, fetch.end(), scale).entrySet().stream().map(e -> historyEntryOf(e, formatter, annotations)).collect(Collectors.toList()));
 	}
 
-	private TimelineHistoryEntry historyEntryOf(Map.Entry<Instant, Double> entry, Formatter formatter, Map<Instant, TimelineDatasource.Annotation> annotations) {
+	private TimelineHistoryEntry historyEntryOf(Map.Entry<Instant, Double> entry, Formatter formatter, Map<Instant, List<TimelineDatasource.Annotation>> annotations) {
 		TimelineHistoryEntry result = new TimelineHistoryEntry();
 		result.date(entry.getKey());
 		result.value(Double.isNaN(entry.getValue()) ? null : String.valueOf(entry.getValue()));
@@ -213,13 +248,22 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 
 	private List<TimelineAnnotation> annotationsOf(TimelineDatasource.Serie serie, Instant to, Scale scale) {
 		List<Instant> instantList = loadCategories(serie, to, scale);
-		Map<Instant, TimelineDatasource.Annotation> annotationList = serie.annotations();
-		return instantList.stream().map(i -> annotationOf(date(i, scale), annotationList.getOrDefault(i, null))).collect(Collectors.toList());
+		Map<Instant, List<TimelineDatasource.Annotation>> annotationList = serie.annotations().entrySet().stream().collect(toMap(e -> normalize(e.getKey()), Map.Entry::getValue, (a, b) -> a, LinkedHashMap::new));
+		return instantList.stream().map(i -> annotationOf(date(i, scale), annotationList.getOrDefault(normalize(i), Collections.emptyList()))).collect(Collectors.toList());
 	}
 
-	private TimelineAnnotation annotationOf(String category, TimelineDatasource.Annotation annotation) {
-		if (annotation == null) return null;
-		return new TimelineAnnotation().category(category).label(annotation.label()).color(annotation.color()).symbol(annotation.symbol().name().toLowerCase());
+	private Instant normalize(Instant instant) {
+		return new Timetag(instant, selectedScale()).instant();
+	}
+
+	private TimelineAnnotation annotationOf(String category, List<TimelineDatasource.Annotation> annotationList) {
+		if (annotationList.isEmpty()) return null;
+		TimelineDatasource.Annotation annotation = annotationList.get(0);
+		return new TimelineAnnotation().category(category).color(annotation.color()).symbol(annotation.symbol().name().toLowerCase()).entries(annotationEntriesOf(annotationList));
+	}
+
+	private List<String> annotationEntriesOf(List<TimelineDatasource.Annotation> annotationList) {
+		return annotationList.stream().map(TimelineDatasource.Annotation::label).collect(Collectors.toList());
 	}
 
 	private List<Instant> loadCategories(TimelineDatasource.Serie serie, Instant to, Scale scale) {
@@ -264,7 +308,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		}
 		List<Instant> keys = new ArrayList<>(result.keySet());
 		keys.sort(Instant::compareTo);
-		return keys.stream().collect(Collectors.toMap(k -> k, result::get, (k,v) -> k, LinkedHashMap::new));
+		return keys.stream().collect(toMap(k -> k, result::get, (k, v) -> k, LinkedHashMap::new));
 	}
 
 	private List<Double> fillWithZeros(List<Double> result) {
@@ -314,6 +358,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		selectedInstants.put(scale, value);
 		refreshToolbar();
 		refreshMagnitudes();
+		if (selectListener != null) selectListener.accept(new SelectEvent(this, value));
 	}
 
 	private void refreshToolbar() {

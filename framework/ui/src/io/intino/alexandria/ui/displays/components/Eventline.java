@@ -6,6 +6,8 @@ import io.intino.alexandria.schemas.EventlineEvent;
 import io.intino.alexandria.schemas.EventlineEventGroup;
 import io.intino.alexandria.schemas.EventlineSetup;
 import io.intino.alexandria.schemas.EventlineToolbarInfo;
+import io.intino.alexandria.ui.displays.events.SelectEvent;
+import io.intino.alexandria.ui.displays.events.SelectListener;
 import io.intino.alexandria.ui.displays.notifiers.EventlineNotifier;
 import io.intino.alexandria.ui.model.ScaleFormatter;
 import io.intino.alexandria.ui.model.eventline.EventlineDatasource;
@@ -28,6 +30,8 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 	private Arrangement arrangement = Arrangement.Horizontal;
 	private long page;
 	private final Set<Long> loadedPages = new HashSet<>();
+	private Instant selectedInstant;
+	private SelectListener selectListener = null;
 
 	private static final int DefaultStepsCount = 8;
 
@@ -42,7 +46,14 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 		return this;
 	}
 
+	public Eventline<DN, B> onSelect(SelectListener listener) {
+		this.selectListener = listener;
+		return this;
+	}
+	
 	public void select(Instant instant) {
+		if (source == null) return;
+		if (selectedInstant == instant) return;
 		long page = pageOf(instant);
 		Instant min = min(load(page));
 		while (min != null && instant.isBefore(min) && page > 0) {
@@ -50,6 +61,7 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 			min = min(load(page));
 		}
 		page(page-1);
+		update(instant);
 		DelayerUtil.execute(this, v -> notifier.scrollTo(ScaleFormatter.label(instant, selectedScale(), language())), 50);
 	}
 
@@ -62,35 +74,42 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 		List<EventlineEventGroup> result = nextEvents();
 		notifier.addEventsAfter(result);
 		if (result.size() < stepsCount) notifier.addEventsBefore(previousEvents());
+		updateSelected(result);
 	}
 
 	public void first() {
 		page = -1;
 		resetPages();
 		refreshToolbar();
-		notifier.addEventsAfter(nextEvents());
+		notifier.addEventsAfter(updateSelected(nextEvents()));
 	}
 
 	public void previous() {
 		if (page <= 0) return;
 		refreshToolbar();
-		if (arrangement == Arrangement.Horizontal) notifier.addEventsBefore(previousEvents());
-		else notifier.addEventsAfter(previousEvents());
+		if (arrangement == Arrangement.Horizontal) notifier.addEventsBefore(updateSelected(previousEvents()));
+		else notifier.addEventsAfter(updateSelected(previousEvents()));
 	}
 
 	public void next() {
 		if (page >= countPages()-1) return;
 		refreshToolbar();
-		if (arrangement == Arrangement.Horizontal) notifier.addEventsAfter(nextEvents());
-		else notifier.addEventsBefore(nextEvents());
+		if (arrangement == Arrangement.Horizontal) notifier.addEventsAfter(updateSelected(nextEvents()));
+		else notifier.addEventsBefore(updateSelected(nextEvents()));
 	}
 
 	public void last() {
 		page = countPages();
 		resetPages();
 		refreshToolbar();
-		notifier.addEventsAfter(previousEvents());
+		notifier.addEventsAfter(updateSelected(previousEvents()));
 		notifier.scrollToEnd();
+	}
+
+	public void update(Instant instant) {
+		if (selectedInstant == instant) return;
+		selectedInstant = instant;
+		if (selectListener != null) selectListener.accept(new SelectEvent(this, instant));
 	}
 
 	@Override
@@ -155,7 +174,7 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 		result.shortDate(ScaleFormatter.shortLabel(date, selectedScale(), language()));
 		result.longDate(ScaleFormatter.label(date, selectedScale(), language()));
 		result.label(event.label());
-		result.description(event.description());
+		result.category(event.category());
 		result.color(event.color());
 		result.icon(event.icon());
 		return result;
@@ -220,6 +239,12 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 	private Instant max(List<EventlineEventGroup> groups) {
 		if (groups.size() <= 0) return null;
 		return groups.get(groups.size()-1).date();
+	}
+
+	private List<EventlineEventGroup> updateSelected(List<EventlineEventGroup> events) {
+		if (events.isEmpty()) return events;
+		update(events.get(0).date());
+		return events;
 	}
 
 }
