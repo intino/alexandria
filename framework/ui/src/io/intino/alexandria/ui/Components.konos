@@ -200,6 +200,7 @@ Component eventline
 	Notification resetEvents
 	Notification addEventsBefore as Object(EventlineEventGroup) List
 	Notification addEventsAfter as Object(EventlineEventGroup) List
+	Notification scrollTo as Text
 	Notification scrollToEnd
 	Request first
 	Request previous

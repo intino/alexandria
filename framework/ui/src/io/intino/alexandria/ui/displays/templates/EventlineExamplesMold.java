@@ -22,7 +22,10 @@ public class EventlineExamplesMold extends AbstractEventlineExamplesMold<UiFrame
 		eventline1.label("Events");
 		eventline1.source(source());
 		eventline1.refresh();
-		eventline1.page(2);
+		//eventline1.page(2);
+		Instant instant = new ArrayList<>(source().events(source().from(), source().to()).keySet()).get(10);
+		System.out.println(instant);
+		eventline1.select(instant);
 		eventline2.label("Events");
 		eventline2.source(source());
 		eventline2.refresh();

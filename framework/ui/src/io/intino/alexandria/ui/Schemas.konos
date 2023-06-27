@@ -310,7 +310,7 @@ Schema TimelineHistory
 
 Schema TimelineHistoryEntry
 	Attribute date as DateTime
-	Attribute value as Real
+	Attribute value as Text
 	Attribute formattedValue as Text
 	Attribute annotation as Object(TimelineAnnotation)
 

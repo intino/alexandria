@@ -365,7 +365,7 @@ class Timeline extends AbstractTimeline {
 	    for (let i=0; i<dataObjects.length; i++) {
 	        const entry = dataObjects[i];
 	        if (history.from > entry.date) history.from = entry.date;
-	        history.data.push([entry.date, entry.value, entry.formattedValue, entry.annotation]);
+	        history.data.push([entry.date, entry.value != null ? parseFloat(entry.value) : null, entry.formattedValue, entry.annotation]);
         }
 	};
 
