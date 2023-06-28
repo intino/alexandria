@@ -17,7 +17,7 @@ const ReelStepLabelWidth = 200;
 const styles = theme => ({
     signal : { position:'relative', padding:'5px 0', marginBottom: '1px', minWidth:'180px' },
     signalLabel : { width: ReelStepLabelWidth + 'px',fontWeight:'bold',textOverflow:'ellipsis',overflow:'hidden',whiteSpace:'nowrap' },
-    signalStep : { height:'14px' },
+    signalStep : { height:'11px', opacity: '0.7' },
     signalStepBlock: { padding: theme.spacing(1) },
     signalStepBlockLink: { width: '100%', display: 'block', height: '100%', cursor: 'pointer' },
     emptySignal : { width:'100%', height:'20px' },

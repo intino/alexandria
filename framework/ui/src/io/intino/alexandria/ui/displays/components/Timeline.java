@@ -85,7 +85,9 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 
 	public Timeline<DN, B> select(Instant instant) {
 		if (source == null) return this;
-		if (selectedInstant(selectedScale()) == instant) return this;
+		if (selectedInstant(selectedScale()) != null && selectedInstant(selectedScale()).equals(instant)) return this;
+		if (instant.isBefore(source.from(selectedScale()))) instant = source.from(selectedScale());
+		if (instant.isAfter(source.to(selectedScale()))) instant = source.to(selectedScale());
 		selectInstant(selectedScale(), instant);
 		return this;
 	}
@@ -205,7 +207,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		result.date(entry.getKey());
 		result.value(Double.isNaN(entry.getValue()) ? null : String.valueOf(entry.getValue()));
 		result.formattedValue(formatter.format(entry.getValue()));
-		result.annotation(annotations.containsKey(entry.getKey()) ? annotationOf(date(entry.getKey(), selectedScale()), annotations.get(entry.getKey())) : null);
+		result.annotation(annotations.containsKey(entry.getKey()) ? annotationOf(date(normalize(entry.getKey()), selectedScale()), annotations.get(entry.getKey())) : null);
 		return result;
 	}
 

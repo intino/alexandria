@@ -150,7 +150,7 @@ const TimelineMagnitude = ({ toolbar, magnitude, index, id, moveMagnitude, class
         for (let i=0; i<serie.annotations.length; i++) {
             const annotation = serie.annotations[i];
             const value = serie.values[i];
-            result.push(annotation != null ? { y: value, marker: { symbol: annotation.symbol, fillColor: annotation.color, enabled: true }, text: annotation.entries.join("; ") } : value);
+            result.push(annotation != null ? { y: value, marker: { symbol: annotation.symbol, fillColor: annotation.color, enabled: true }, text: annotation.entries.join("; ") } : { y: value, marker: null });
         }
         return result;
     };

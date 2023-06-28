@@ -201,11 +201,14 @@ Component eventline
 	Notification addEventsBefore as Object(EventlineEventGroup) List
 	Notification addEventsAfter as Object(EventlineEventGroup) List
 	Notification scrollTo as Text
-	Notification scrollToEnd
+	Notification scrollToStart as Bool
+	Notification scrollToEnd as Bool
 	Request update as DateTime
 	Request first
 	Request previous
+	Request previousPage
 	Request next
+	Request nextPage
 	Request last
 	Request page as Integer
 

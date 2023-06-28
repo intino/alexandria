@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.Scale;
+import io.intino.alexandria.Timetag;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.*;
 import io.intino.alexandria.ui.displays.events.SelectEvent;
@@ -69,7 +70,9 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 
 	public Reel<DN, B> select(Instant instant) {
 		if (source == null) return this;
-		if (selectedInstant(selectedScale()) == instant) return this;
+		if (selectedInstant(selectedScale()) != null && selectedInstant(selectedScale()).equals(instant)) return this;
+		if (instant.isBefore(source.from(selectedScale()))) instant = source.from(selectedScale());
+		if (instant.isAfter(source.to(selectedScale()))) instant = source.to(selectedScale());
 		selectInstant(selectedScale(), instant);
 		return this;
 	}
@@ -212,7 +215,11 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 		Scale scale = selectedScale();
 		List<Annotation> annotationList = entry.getValue();
 		if (annotationList.isEmpty()) return null;
-		return new ReelSignalAnnotation().date(ScaleFormatter.label(entry.getKey(), scale, language())).entries(entriesOf(annotationList)).color(annotationList.get(0).color());
+		return new ReelSignalAnnotation().date(ScaleFormatter.label(normalize(entry.getKey(), scale), scale, language())).entries(entriesOf(annotationList)).color(annotationList.get(0).color());
+	}
+
+	private Instant normalize(Instant date, Scale scale) {
+		return new Timetag(date, scale).instant();
 	}
 
 	private List<String> entriesOf(List<Annotation> annotationList) {

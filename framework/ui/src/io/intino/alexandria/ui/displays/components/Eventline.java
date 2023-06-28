@@ -32,6 +32,8 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 	private final Set<Long> loadedPages = new HashSet<>();
 	private Instant selectedInstant;
 	private SelectListener selectListener = null;
+	private List<EventlineEventGroup> currentEvents = new ArrayList<>();
+	private int currentEventsIndex = 0;
 
 	private static final int DefaultStepsCount = 8;
 
@@ -53,8 +55,10 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 	
 	public void select(Instant instant) {
 		if (source == null) return;
-		if (selectedInstant == instant) return;
+		if (selectedInstant != null && selectedInstant.equals(instant)) return;
 		long page = pageOf(instant);
+		if (page < 0) { first(false); return; }
+		if (page > countPages()) { last(false); return;}
 		Instant min = min(load(page));
 		while (min != null && instant.isBefore(min) && page > 0) {
 			page--;
@@ -78,13 +82,29 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 	}
 
 	public void first() {
+		first(true);
+	}
+
+	public void first(boolean highlight) {
 		page = -1;
 		resetPages();
 		refreshToolbar();
 		notifier.addEventsAfter(updateSelected(nextEvents()));
+		DelayerUtil.execute(this, v -> notifier.scrollToStart(highlight), 50);
 	}
 
 	public void previous() {
+		currentEventsIndex--;
+		if (currentEventsIndex < 0) {
+			previousPage();
+			currentEventsIndex = currentEvents.isEmpty() ? 0 : currentEvents.size()-1;
+		}
+		if (currentEvents.isEmpty()) return;
+		update(currentEvents.get(currentEventsIndex).date());
+		DelayerUtil.execute(this, v -> notifier.scrollTo(ScaleFormatter.label(currentEvents.get(currentEventsIndex).date(), selectedScale(), language())), 50);
+	}
+
+	public void previousPage() {
 		if (page <= 0) return;
 		refreshToolbar();
 		if (arrangement == Arrangement.Horizontal) notifier.addEventsBefore(updateSelected(previousEvents()));
@@ -92,6 +112,17 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 	}
 
 	public void next() {
+		currentEventsIndex++;
+		if (currentEventsIndex >= currentEvents.size()) {
+			nextPage();
+			currentEventsIndex = 0;
+		}
+		if (currentEvents.isEmpty()) return;
+		update(currentEvents.get(currentEventsIndex).date());
+		DelayerUtil.execute(this, v -> notifier.scrollTo(ScaleFormatter.label(currentEvents.get(currentEventsIndex).date(), selectedScale(), language())), 50);
+	}
+
+	public void nextPage() {
 		if (page >= countPages()-1) return;
 		refreshToolbar();
 		if (arrangement == Arrangement.Horizontal) notifier.addEventsAfter(updateSelected(nextEvents()));
@@ -99,17 +130,31 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 	}
 
 	public void last() {
+		last(true);
+	}
+
+	public void last(boolean highlight) {
 		page = countPages();
 		resetPages();
 		refreshToolbar();
 		notifier.addEventsAfter(updateSelected(previousEvents()));
-		notifier.scrollToEnd();
+		DelayerUtil.execute(this, v -> notifier.scrollToEnd(highlight), 50);
 	}
 
 	public void update(Instant instant) {
 		if (selectedInstant == instant) return;
 		selectedInstant = instant;
+		updateCurrentEventsIndex(instant);
+		//notifier.scrollTo(ScaleFormatter.label(instant, selectedScale(), language()));
 		if (selectListener != null) selectListener.accept(new SelectEvent(this, instant));
+	}
+
+	private void updateCurrentEventsIndex(Instant instant) {
+		for (int i = 0; i < currentEvents.size(); i++) {
+			if (currentEvents.get(i).date().getEpochSecond() != instant.getEpochSecond()) continue;
+			currentEventsIndex = i;
+			break;
+		}
 	}
 
 	@Override
@@ -134,7 +179,10 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 			page++;
 			result.addAll(load(page));
 		}
-		return result.stream().sorted(eventsComparator()).collect(Collectors.toList());
+		currentEvents = result.stream().sorted(eventsComparator()).collect(Collectors.toList());
+		currentEventsIndex = 0;
+		if (!result.isEmpty()) selectedInstant = result.get(0).date();
+		return currentEvents;
 	}
 
 	private List<EventlineEventGroup> previousEvents() {
@@ -143,7 +191,10 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 			page--;
 			result.addAll(0, load(page));
 		}
-		return result.stream().sorted(eventsComparator()).collect(Collectors.toList());
+		currentEvents = result.stream().sorted(eventsComparator()).collect(Collectors.toList());
+		currentEventsIndex = 0;
+		if (!result.isEmpty()) selectedInstant = result.get(0).date();
+		return currentEvents;
 	}
 
 	private List<EventlineEventGroup> load(long page) {
@@ -195,14 +246,14 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 		result.label(ScaleFormatter.label(date, scale, language()));
 		result.page(page);
 		result.countPages(countPages());
-		result.canPrevious(page >= 0);
-		result.canNext(page < countPages());
+		result.canPrevious(page > 0);
+		result.canNext(page < countPages()-1);
 		return result;
 	}
 
 	private long countPages() {
 		Scale scale = selectedScale();
-		long steps = scale.temporalUnit().between(source.from(), source.to());
+		long steps = scale.temporalUnit().between(source.from(), source.to())+1;
 		return pageOf(steps);
 	}
 
