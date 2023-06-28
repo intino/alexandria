@@ -36,7 +36,7 @@ public interface EventlineDatasource {
 
 	class Event {
 		private final String label;
-		private final String description;
+		private final String category;
 		private final String color;
 		private final String icon;
 
@@ -46,17 +46,17 @@ public interface EventlineDatasource {
 			this(label, null, "#ed6c02", null); // green
 		}
 
-		public Event(String label, String description) {
-			this(label, description, "#ed6c02", null); // green
+		public Event(String label, String category) {
+			this(label, category, "#ed6c02", null); // green
 		}
 
-		public Event(String label, String description, String color) {
-			this(label, description, color, null);
+		public Event(String label, String category, String color) {
+			this(label, category, color, null);
 		}
 
-		private Event(String label, String description, String color, String icon) {
+		private Event(String label, String category, String color, String icon) {
 			this.label = label;
-			this.description = description;
+			this.category = category;
 			this.color = color;
 			this.icon = icon;
 		}
@@ -65,8 +65,8 @@ public interface EventlineDatasource {
 			return label;
 		}
 
-		public String description() {
-			return description;
+		public String category() {
+			return category;
 		}
 
 		public String color() {

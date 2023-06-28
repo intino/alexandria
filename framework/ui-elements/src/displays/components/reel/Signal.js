@@ -57,8 +57,13 @@ const ReelSignal = ({ signal, index, id, moveSignal, classes, translate, style, 
 	const handlePopoverClose = (event) => {
 	    setSelection(null);
 	};
-	const renderAnnotation = (annotation, color) => {
-	    return (<div style={{color:color,fontWeight:'bold',textAlign:'center',marginTop:'-2px'}} title={annotation.label}>{annotation.index+1}</div>);
+	const annotationLabel = (annotation) => {
+        let result = "";
+        annotation.entries.forEach(a => result += (a + "\n"));
+        return result;
+	};
+	const renderAnnotation = (annotation, color, paddingTop) => {
+	    return (<div style={{color:color,fontWeight:'bold',textAlign:'center',marginTop:'-2px',paddingTop:paddingTop}} title={annotationLabel(annotation)}>&#8226;&#8226;&#8226;</div>);
 	};
     const renderBlock = (block, color, annotation) => {
         if (block.length == 0) return (<React.Fragment/>);
@@ -67,7 +72,7 @@ const ReelSignal = ({ signal, index, id, moveSignal, classes, translate, style, 
         const style = { position: 'relative', width: (stepWidth*block.length) + "px", borderRadius: isEmpty ? '0' : '3px', backgroundColor: background, position: 'relative' };
         return (
             <div className={classes.signalStep} style={style} onClick={e => handlePopoverOpen(block, annotation, e)}>
-                {annotation != null && renderAnnotation(annotation, isEmpty ? "black" : "white")}
+                {annotation != null && renderAnnotation(annotation, isEmpty ? "#ed6c03" : "white", isEmpty ? '3px' : '2px')}
             </div>
         );
     };
@@ -105,7 +110,10 @@ const ReelSignal = ({ signal, index, id, moveSignal, classes, translate, style, 
                 <Tooltip title={signal.label} placement="top">
                     <Typography variant="body2" className={classes.signalLabel}>{signal.label}</Typography>
                 </Tooltip>
-                {renderSteps(signal)}
+                <div style={{position:'relative'}} className="layout horizontal center">
+                    <div style={{borderTop:"1px solid",position:'absolute',width:'calc(100% + 5px)',marginLeft:'-5px'}}></div>
+                    {renderSteps(signal)}
+                </div>
             </div>
         );
     };
@@ -118,7 +126,7 @@ const ReelSignal = ({ signal, index, id, moveSignal, classes, translate, style, 
                     onClose={e => handlePopoverClose(e)}
                     disableRestoreFocus>
                 { (selection != null && selection.annotation != null) &&
-                    <div style={{color:selection.annotation.color}}>{selection.annotation.label}</div>
+                    <div style={{color:selection.annotation.color}} dangerouslySetInnerHTML={{__html: annotationLabel(selection.annotation).replaceAll("\n", "<br/>")}}></div>
                 }
                 { (selection != null && selection.block.length > 1) &&
                     <React.Fragment>

@@ -1,8 +1,13 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.Scale;
+import io.intino.alexandria.Timetag;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.*;
+import io.intino.alexandria.ui.displays.events.SelectEvent;
+import io.intino.alexandria.ui.displays.events.SelectListener;
+import io.intino.alexandria.ui.displays.events.SelectionEvent;
+import io.intino.alexandria.ui.displays.events.SelectionListener;
 import io.intino.alexandria.ui.displays.notifiers.ReelNotifier;
 import io.intino.alexandria.ui.model.reel.ReelDatasource;
 import io.intino.alexandria.ui.model.reel.ReelDatasource.Annotation;
@@ -13,8 +18,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,6 +29,8 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 	private final Map<Scale, Instant> selectedInstants = new HashMap<>();
 	private Scale selectedScale = null;
 	private int stepsCount = DefaultStepsCount;
+	private SelectListener selectListener;
+	private SelectListener selectScaleListener;
 
 	private static final int DefaultStepsCount = 24;
 
@@ -49,6 +55,25 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 
 	public Reel<DN, B> stepsCount(int count) {
 		this.stepsCount = count;
+		return this;
+	}
+
+	public Reel<DN, B> onSelect(SelectListener listener) {
+		this.selectListener = listener;
+		return this;
+	}
+
+	public Reel<DN, B> onSelectScale(SelectListener listener) {
+		this.selectScaleListener = listener;
+		return this;
+	}
+
+	public Reel<DN, B> select(Instant instant) {
+		if (source == null) return this;
+		if (selectedInstant(selectedScale()) != null && selectedInstant(selectedScale()).equals(instant)) return this;
+		if (instant.isBefore(source.from(selectedScale()))) instant = source.from(selectedScale());
+		if (instant.isAfter(source.to(selectedScale()))) instant = source.to(selectedScale());
+		selectInstant(selectedScale(), instant);
 		return this;
 	}
 
@@ -80,11 +105,21 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 		selectInstant(scale, source.to(scale));
 	}
 
+	public void select(Scale scale) {
+		changeScale(scale);
+	}
+
 	public void changeScale(String scale) {
-		selectedScale = Scale.valueOf(scale);
+		changeScale(Scale.valueOf(scale));
+	}
+
+	public void changeScale(Scale scale) {
+		if (selectedScale == scale) return;
+		selectedScale = scale;
 		refreshToolbar();
 		refreshSignals();
 		refreshNavigation();
+		if (selectScaleListener != null) selectScaleListener.accept(new SelectEvent(this, selectedScale));
 	}
 
 	@Override
@@ -110,6 +145,7 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 		selectedInstants.put(scale, value);
 		refreshToolbar();
 		refreshSignals();
+		if (selectListener != null) selectListener.accept(new SelectEvent(this, value));
 	}
 
 	private void refreshToolbar() {
@@ -146,7 +182,7 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 		Instant to = selectedInstant(scale);
 		Instant from = LocalDateTime.ofInstant(to, ZoneId.of("UTC")).minus(stepsCount, scale.temporalUnit()).toInstant(ZoneOffset.UTC);
 		String reel = signal.reel(scale, from, to);
-		Map<Instant, Annotation> annotations = signal.annotations(scale, from, to);
+		Map<Instant, List<Annotation>> annotations = signal.annotations(scale, from, to);
 		return new ReelSignal()
 				.name(definition.name())
 				.type(definition.type().name())
@@ -171,14 +207,23 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 		return result;
 	}
 
-	private List<ReelSignalAnnotation> annotationsOf(Map<Instant, Annotation> annotations) {
-		return annotations.entrySet().stream().map(this::annotationOf).collect(Collectors.toList());
+	private List<ReelSignalAnnotation> annotationsOf(Map<Instant, List<Annotation>> annotations) {
+		return annotations.entrySet().stream().map(this::annotationOf).filter(Objects::nonNull).collect(Collectors.toList());
 	}
 
-	private ReelSignalAnnotation annotationOf(Map.Entry<Instant, Annotation> entry) {
+	private ReelSignalAnnotation annotationOf(Map.Entry<Instant, List<Annotation>> entry) {
 		Scale scale = selectedScale();
-		Annotation annotation = entry.getValue();
-		return new ReelSignalAnnotation().date(ScaleFormatter.label(entry.getKey(), scale, language())).label(annotation.label()).color(annotation.color());
+		List<Annotation> annotationList = entry.getValue();
+		if (annotationList.isEmpty()) return null;
+		return new ReelSignalAnnotation().date(ScaleFormatter.label(normalize(entry.getKey(), scale), scale, language())).entries(entriesOf(annotationList)).color(annotationList.get(0).color());
+	}
+
+	private Instant normalize(Instant date, Scale scale) {
+		return new Timetag(date, scale).instant();
+	}
+
+	private List<String> entriesOf(List<Annotation> annotationList) {
+		return annotationList.stream().map(Annotation::label).collect(Collectors.toList());
 	}
 
 	private ReelDatasource.Signal signal(SignalDefinition definition) {

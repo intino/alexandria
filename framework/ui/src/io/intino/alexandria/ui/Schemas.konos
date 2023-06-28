@@ -376,9 +376,9 @@ Schema TimelineSerie
 
 Schema TimelineAnnotation
 	Attribute category as Text
-	Attribute label as Text
 	Attribute color as Text
 	Attribute symbol as Text
+	Attribute entries as Text List
 
 Schema EventlineSetup
 	Attribute name as Text
@@ -403,7 +403,7 @@ Schema EventlineEvent
 	Attribute shortDate as Text
 	Attribute longDate as Text
 	Attribute label as Text
-	Attribute description as Text
+	Attribute category as Text
 	Attribute color as Text
 	Attribute icon as Text
 
@@ -428,8 +428,8 @@ Schema ReelSignalStep
 
 Schema ReelSignalAnnotation
 	Attribute date as Text
-	Attribute label as Text
 	Attribute color as Text
+	Attribute entries as Text List
 
 Schema ReelToolbarInfo
 	Attribute label as Text

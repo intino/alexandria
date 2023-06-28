@@ -18,6 +18,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import TimelineToolbar from './timeline/toolbar'
 import TimelineMagnitude from './timeline/magnitude'
 import Theme from "app-elements/gen/Theme";
+import 'alexandria-ui-elements/res/styles/components/timeline/styles.css';
 
 const styles = theme => ({
     magnitude : { position:'relative', padding:'5px 0', marginBottom: '1px' },
@@ -246,7 +247,7 @@ class Timeline extends AbstractTimeline {
             tooltip: {
                 enabled: true,
                 formatter: function() {
-                    if (this.points[0] == null) return;
+                    if (this.points == null || this.points[0] == null) return;
                     const index = this.points[0].point.index;
                     let annotation = null;
                     for (let i=0; i<annotations.length; i++) {
@@ -255,7 +256,7 @@ class Timeline extends AbstractTimeline {
                             break;
                         }
                     }
-                    const annotationText = annotation != null ? "<b style='color:" + annotation.color + "'>" + annotation.text + "</b><br/>" : "";
+                    const annotationText = annotation != null ? "<div style='color:" + annotation.color + "'>" + annotation.text + "</div><br/>" : "";
                     return annotationText + '<b>' + data[index][2] + (unit != null ? " " + unit : "") + '</b><br/>' + formatDate(this.x);
                 },
                 shared: true
@@ -374,9 +375,15 @@ class Timeline extends AbstractTimeline {
 	    for (let i=0; i<dataObjects.length; i++) {
 	        const entry = dataObjects[i];
 	        if (entry.annotation == null) continue;
-	        history.annotations.push({ x: entry.date, title: history.annotations.length+1, idx: i, text: entry.annotation.label, color: entry.annotation.color });
+	        history.annotations.push({ x: entry.date, title: history.annotations.length+1, idx: i, text: this.annotationLabel(entry.annotation), color: entry.annotation.color });
         }
 	};
+
+    annotationLabel = (annotation) => {
+        let result = "";
+        annotation.entries.forEach(a => result += "<span style='color:" + annotation.color + "'>" + a + "</span><br/>");
+        return "<div>" + result + "</div>";
+    };
 
 	refreshHistoryToolbar = (toolbar) => {
 	    this.setState({toolbar});

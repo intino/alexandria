@@ -29,7 +29,7 @@ public interface ReelDatasource {
 	interface Signal {
 		SignalDefinition definition();
 		String reel(Scale scale, Instant start, Instant end);
-		Map<Instant, Annotation> annotations(Scale scale, Instant start, Instant end);
+		Map<Instant, List<Annotation>> annotations(Scale scale, Instant start, Instant end);
 	}
 
 	class Annotation {

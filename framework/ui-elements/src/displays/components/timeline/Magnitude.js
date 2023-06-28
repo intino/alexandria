@@ -100,21 +100,16 @@ const TimelineMagnitude = ({ toolbar, magnitude, index, id, moveMagnitude, class
             </Popover>
         );
     };
-    const summaryPositioner = (chartRef, hasAnnotations, labelWidth, labelHeight, point) => {
-        var chart = chartRef.current != null ? chartRef.current.chart : null;
-        if (chart == null) return { x: 0, y: 0 };
-        const offset = hasAnnotations ? 30 : 0;
-        return {
-            x: chart.plotLeft + chart.plotSizeX/2 - labelWidth/2,
-            y: chart.plotTop + chart.plotSizeY - 4 - offset
-        };
-    }
+    const annotationLabel = (annotation) => {
+        let result = "";
+        annotation.entries.forEach(a => result += result.length < 200 ? "<span style='color:" + annotation.color + "'>" + a + "</span><br/>" : result.endsWith("...") ? "" : "...");
+        return "<div>" + result + "</div>";
+    };
     const serieOptions = (magnitude) => {
         const serie = magnitude.serie;
         const height = 80;
         const width = 150;
         const unit = magnitude.unit;
-        const positioner = summaryPositioner.bind(this, chart, hasAnnotations(serie));
         const data = valuesWithAnnotations(serie);
         return {
             chart: { type: 'spline', height: height, width: width, backgroundColor: 'transparent' },
@@ -125,9 +120,9 @@ const TimelineMagnitude = ({ toolbar, magnitude, index, id, moveMagnitude, class
             yAxis: { visible: false, title: { text: '' }, minorGridLineWidth: 0, gridLineWidth: 0, alternateGridColor: null, },
             tooltip: {
                 enabled: true,
-                positioner: positioner,
+                outside: true,
                 formatter: function() {
-                    const annotation = serie.annotations[this.point.index] != null ? "<div>" + serie.annotations[this.point.index].label + "</div><br/>" : "";
+                    const annotation = serie.annotations[this.point.index] != null ? "<div>" + annotationLabel(serie.annotations[this.point.index]) + "</div><br/>" : "";
                     return annotation + '<div style="font-size:6pt;">' + serie.formattedValues[this.point.index] + (unit != null ? unit : "") + '  ' + this.x + "</div>";
                 },
             },
@@ -155,7 +150,7 @@ const TimelineMagnitude = ({ toolbar, magnitude, index, id, moveMagnitude, class
         for (let i=0; i<serie.annotations.length; i++) {
             const annotation = serie.annotations[i];
             const value = serie.values[i];
-            result.push(annotation != null ? { y: value, marker: { symbol: annotation.symbol, fillColor: annotation.color, enabled: true }, text: annotation.label } : value);
+            result.push(annotation != null ? { y: value, marker: { symbol: annotation.symbol, fillColor: annotation.color, enabled: true }, text: annotation.entries.join("; ") } : { y: value, marker: null });
         }
         return result;
     };

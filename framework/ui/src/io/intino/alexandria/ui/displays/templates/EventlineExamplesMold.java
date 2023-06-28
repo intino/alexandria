@@ -71,13 +71,13 @@ public class EventlineExamplesMold extends AbstractEventlineExamplesMold<UiFrame
 	}
 
 	private static final List<List<EventlineDatasource.Event>> RandomEvents = new ArrayList<>() {{
-		add(List.of(event("Event 1")));
-		add(List.of(event("Event 2"), event("Event 3")));
+		add(List.of(event("infrequent-value.1 hour. Trigger value 112846.0")));
+		add(List.of(event("Event 2", "Anomalies"), event("Event 3", "Data wrong")));
 		add(List.of(event("Event 4")));
-		add(List.of(event("Event 5"), event("Event 6"), event("Event 7")));
+		add(List.of(event("Event 5"), event("Event 6", "Data wrong"), event("Event 7")));
 		add(List.of(event("Event 8")));
-		add(List.of(event("Event 9", "This is an event description")));
-		add(List.of(event("Event 10", "This is an event description")));
+		add(List.of(event("Event 9. This is an event description", "Anomalies")));
+		add(List.of(event("Event 10. This is an event description")));
 		add(List.of(event("Event 11")));
 	}};
 
@@ -85,8 +85,8 @@ public class EventlineExamplesMold extends AbstractEventlineExamplesMold<UiFrame
 		return new EventlineDatasource.Event(label);
 	}
 
-	private static EventlineDatasource.Event event(String label, String color) {
-		return new EventlineDatasource.Event(label, color);
+	private static EventlineDatasource.Event event(String label, String category) {
+		return new EventlineDatasource.Event(label, category);
 	}
 
 }
