@@ -129,7 +129,7 @@ class Eventline extends AbstractEventline {
 
     renderBeforeScroller = () => {
         const horizontalArrangement = this.state.arrangement.toLowerCase() == "horizontal"
-        if (horizontalArrangement && this.state.toolbar.page == 0) return;
+        if (horizontalArrangement && this.state.toolbar.page <= 0) return;
         if (!horizontalArrangement && this.state.toolbar.page == this.state.toolbar.countPages-1) return;
         const style = this.state.arrangement.toLowerCase() == "horizontal" ? {minWidth:'200px',display:'block'} : {minHeight:'200px',display:'block'};
         return (<div style={style}>&nbsp;</div>);
