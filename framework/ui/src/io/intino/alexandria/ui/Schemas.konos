@@ -390,6 +390,7 @@ Schema EventlineToolbarInfo
 	Attribute label as Text
 	Attribute page as LongInteger
 	Attribute countPages as LongInteger
+	Attribute loadedPages as LongInteger List
 	Attribute canNext as Bool
 	Attribute canPrevious as Bool
 
@@ -397,15 +398,30 @@ Schema EventlineEventGroup
 	Attribute date as DateTime
 	Attribute shortDate as Text
 	Attribute longDate as Text
+	Attribute page as LongInteger
 	Attribute events as Object(EventlineEvent) List
 
 Schema EventlineEvent
+	Attribute id as Text
+	Attribute date as DateTime
 	Attribute shortDate as Text
 	Attribute longDate as Text
 	Attribute label as Text
 	Attribute category as Text
 	Attribute color as Text
 	Attribute icon as Text
+	Attribute iconTitle as Text
+	Attribute comments as Text
+	Attribute operations as Text List
+
+Schema EventlineSelectEventParams
+	Attribute date as DateTime
+	Attribute event as Text
+
+Schema EventlineExecuteEventParams
+	Attribute date as DateTime
+	Attribute event as Text
+	Attribute operation as Text
 
 Schema ReelSetup
 	Attribute name as Text

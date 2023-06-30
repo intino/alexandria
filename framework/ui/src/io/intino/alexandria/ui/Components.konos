@@ -197,12 +197,15 @@ Component timeline
 Component eventline
 	Notification setup as Object(EventlineSetup)
 	Notification refreshToolbar as Object(EventlineToolbarInfo)
+	Notification refreshEvent as Object(EventlineEvent)
 	Notification resetEvents
 	Notification addEventsBefore as Object(EventlineEventGroup) List
 	Notification addEventsAfter as Object(EventlineEventGroup) List
 	Notification scrollTo as Text
 	Notification scrollToStart as Bool
 	Notification scrollToEnd as Bool
+	Notification showLoading
+	Notification hideLoading
 	Request update as DateTime
 	Request first
 	Request previous
@@ -211,6 +214,8 @@ Component eventline
 	Request nextPage
 	Request last
 	Request page as Integer
+	Request selectEvent as Object(EventlineSelectEventParams)
+	Request executeEvent as Object(EventlineExecuteEventParams)
 
 Component reel
 	Notification setup as Object(ReelSetup)

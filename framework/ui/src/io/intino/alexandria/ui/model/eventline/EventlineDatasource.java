@@ -1,10 +1,10 @@
 package io.intino.alexandria.ui.model.eventline;
 
 import io.intino.alexandria.Scale;
-import io.intino.alexandria.ui.model.reel.SignalDefinition;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -35,30 +35,40 @@ public interface EventlineDatasource {
 	}
 
 	class Event {
+		private final String id;
+		private final Instant date;
 		private final String label;
 		private final String category;
-		private final String color;
-		private final String icon;
+		private String color;
+		private String icon = "CheckBoxOutlineBlank";
+		private String iconTitle = "";
+		private String comments;
+		private List<String> operationList = new ArrayList<>();
 
 		public enum Symbol { Circle, Square, Diamond, Triangle }
 
-		public Event(String label) {
-			this(label, null, "#ed6c02", null); // green
+		public Event(String id, Instant date, String label) {
+			this(id, date, label, null, "#ed6c02"); // green
 		}
 
-		public Event(String label, String category) {
-			this(label, category, "#ed6c02", null); // green
+		public Event(String id, Instant date, String label, String category) {
+			this(id, date, label, category, "#ed6c02"); // green
 		}
 
-		public Event(String label, String category, String color) {
-			this(label, category, color, null);
-		}
-
-		private Event(String label, String category, String color, String icon) {
+		public Event(String id, Instant date, String label, String category, String color) {
+			this.id = id;
+			this.date = date;
 			this.label = label;
 			this.category = category;
 			this.color = color;
-			this.icon = icon;
+		}
+
+		public String id() {
+			return id;
+		}
+
+		public Instant date() {
+			return date;
 		}
 
 		public String label() {
@@ -73,8 +83,41 @@ public interface EventlineDatasource {
 			return color;
 		}
 
+		public Event color(String color) {
+			this.color = color;
+			return this;
+		}
+
+		public Event icon(String icon, String title) {
+			this.icon = icon;
+			this.iconTitle = title;
+			return this;
+		}
+
 		public String icon() {
 			return icon;
+		}
+
+		public String iconTitle() {
+			return iconTitle;
+		}
+
+		public String comments() {
+			return comments;
+		}
+
+		public Event comments(String comments) {
+			this.comments = comments;
+			return this;
+		}
+
+		public Event operations(List<String> operationList) {
+			this.operationList = operationList;
+			return this;
+		}
+
+		public List<String> operations() {
+			return operationList;
 		}
 	}
 

@@ -2,12 +2,12 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.schemas.EventlineEvent;
-import io.intino.alexandria.schemas.EventlineEventGroup;
-import io.intino.alexandria.schemas.EventlineSetup;
-import io.intino.alexandria.schemas.EventlineToolbarInfo;
+import io.intino.alexandria.schemas.*;
 import io.intino.alexandria.ui.displays.events.SelectEvent;
 import io.intino.alexandria.ui.displays.events.SelectListener;
+import io.intino.alexandria.ui.displays.events.eventline.ExecuteEvent;
+import io.intino.alexandria.ui.displays.events.eventline.ExecuteEventListener;
+import io.intino.alexandria.ui.displays.events.eventline.SelectEventListener;
 import io.intino.alexandria.ui.displays.notifiers.EventlineNotifier;
 import io.intino.alexandria.ui.model.ScaleFormatter;
 import io.intino.alexandria.ui.model.eventline.EventlineDatasource;
@@ -29,11 +29,14 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 	private int stepsCount = DefaultStepsCount;
 	private Arrangement arrangement = Arrangement.Horizontal;
 	private long page;
+	private List<EventlineEventGroup> pageGroups = new ArrayList<>();
+	private final Map<String, List<EventlineDatasource.Event>> events = new HashMap<>();
+	private int selectedPageGroupIndex = 0;
 	private final Set<Long> loadedPages = new HashSet<>();
 	private Instant selectedInstant;
 	private SelectListener selectListener = null;
-	private List<EventlineEventGroup> currentEvents = new ArrayList<>();
-	private int currentEventsIndex = 0;
+	private SelectEventListener selectEventListener = null;
+	private ExecuteEventListener executeEventOperationListener = null;
 
 	private static final int DefaultStepsCount = 8;
 
@@ -41,6 +44,10 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 
 	public Eventline(B box) {
 		super(box);
+	}
+
+	public <DS extends EventlineDatasource> DS source() {
+		return (DS) source;
 	}
 
 	public <DS extends EventlineDatasource> Eventline<DN, B> source(DS source) {
@@ -52,7 +59,25 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 		this.selectListener = listener;
 		return this;
 	}
+
+	public Eventline<DN, B> onSelectEvent(SelectEventListener listener) {
+		this.selectEventListener = listener;
+		return this;
+	}
 	
+	public Eventline<DN, B> onExecuteEventOperation(ExecuteEventListener listener) {
+		this.executeEventOperationListener = listener;
+		return this;
+	}
+
+	public void showLoading() {
+		notifier.showLoading();
+	}
+
+	public void hideLoading() {
+		notifier.hideLoading();
+	}
+
 	public void select(Instant instant) {
 		if (source == null) return;
 		if (selectedInstant != null && selectedInstant.equals(instant)) return;
@@ -74,10 +99,10 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 		if (page < 0) page = 0;
 		if (page > countPages()) this.page = countPages()-1;
 		resetPages();
-		refreshToolbar();
 		List<EventlineEventGroup> result = nextEvents();
 		notifier.addEventsAfter(result);
 		if (result.size() < stepsCount) notifier.addEventsBefore(previousEvents());
+		refreshToolbar(page);
 		updateSelected(result);
 	}
 
@@ -86,47 +111,49 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 	}
 
 	public void first(boolean highlight) {
+		notifier.showLoading();
 		page = -1;
 		resetPages();
-		refreshToolbar();
 		notifier.addEventsAfter(updateSelected(nextEvents()));
+		refreshToolbar(0);
+		notifier.hideLoading();
 		DelayerUtil.execute(this, v -> notifier.scrollToStart(highlight), 50);
 	}
 
 	public void previous() {
-		currentEventsIndex--;
-		if (currentEventsIndex < 0) {
+		selectedPageGroupIndex--;
+		if (selectedPageGroupIndex < 0) {
 			previousPage();
-			currentEventsIndex = currentEvents.isEmpty() ? 0 : currentEvents.size()-1;
+			selectedPageGroupIndex = pageGroups.isEmpty() ? 0 : pageGroups.size()-1;
 		}
-		if (currentEvents.isEmpty()) return;
-		update(currentEvents.get(currentEventsIndex).date());
-		DelayerUtil.execute(this, v -> notifier.scrollTo(ScaleFormatter.label(currentEvents.get(currentEventsIndex).date(), selectedScale(), language())), 50);
+		if (pageGroups.isEmpty()) return;
+		update(pageGroups.get(selectedPageGroupIndex).date());
+		DelayerUtil.execute(this, v -> notifier.scrollTo(ScaleFormatter.label(pageGroups.get(selectedPageGroupIndex).date(), selectedScale(), language())), 50);
 	}
 
 	public void previousPage() {
 		if (page <= 0) return;
-		refreshToolbar();
 		if (arrangement == Arrangement.Horizontal) notifier.addEventsBefore(updateSelected(previousEvents()));
 		else notifier.addEventsAfter(updateSelected(previousEvents()));
+		refreshToolbar(page);
 	}
 
 	public void next() {
-		currentEventsIndex++;
-		if (currentEventsIndex >= currentEvents.size()) {
+		selectedPageGroupIndex++;
+		if (selectedPageGroupIndex >= pageGroups.size()) {
 			nextPage();
-			currentEventsIndex = 0;
+			selectedPageGroupIndex = 0;
 		}
-		if (currentEvents.isEmpty()) return;
-		update(currentEvents.get(currentEventsIndex).date());
-		DelayerUtil.execute(this, v -> notifier.scrollTo(ScaleFormatter.label(currentEvents.get(currentEventsIndex).date(), selectedScale(), language())), 50);
+		if (pageGroups.isEmpty()) return;
+		update(pageGroups.get(selectedPageGroupIndex).date());
+		DelayerUtil.execute(this, v -> notifier.scrollTo(ScaleFormatter.label(pageGroups.get(selectedPageGroupIndex).date(), selectedScale(), language())), 50);
 	}
 
 	public void nextPage() {
 		if (page >= countPages()-1) return;
-		refreshToolbar();
 		if (arrangement == Arrangement.Horizontal) notifier.addEventsAfter(updateSelected(nextEvents()));
 		else notifier.addEventsBefore(updateSelected(nextEvents()));
+		refreshToolbar(page);
 	}
 
 	public void last() {
@@ -134,10 +161,12 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 	}
 
 	public void last(boolean highlight) {
+		notifier.showLoading();
 		page = countPages();
 		resetPages();
-		refreshToolbar();
 		notifier.addEventsAfter(updateSelected(previousEvents()));
+		refreshToolbar(countPages());
+		notifier.hideLoading();
 		DelayerUtil.execute(this, v -> notifier.scrollToEnd(highlight), 50);
 	}
 
@@ -149,12 +178,22 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 		if (selectListener != null) selectListener.accept(new SelectEvent(this, instant));
 	}
 
-	private void updateCurrentEventsIndex(Instant instant) {
-		for (int i = 0; i < currentEvents.size(); i++) {
-			if (currentEvents.get(i).date().getEpochSecond() != instant.getEpochSecond()) continue;
-			currentEventsIndex = i;
-			break;
-		}
+	public void selectEvent(EventlineSelectEventParams params) {
+		if (selectEventListener == null) return;
+		EventlineDatasource.Event event = eventOf(params.date(), params.event());
+		if (event == null) return;
+		selectEventListener.accept(new io.intino.alexandria.ui.displays.events.eventline.SelectEvent(this, event));
+	}
+
+	public void executeEvent(EventlineExecuteEventParams params) {
+		if (executeEventOperationListener == null) return;
+		EventlineDatasource.Event event = eventOf(params.date(), params.event());
+		if (event == null) return;
+		executeEventOperationListener.accept(new ExecuteEvent(this, event, params.operation()));
+	}
+
+	public void refresh(EventlineDatasource.Event event) {
+		notifier.refreshEvent(schemaOf(event));
 	}
 
 	@Override
@@ -165,8 +204,8 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 		notifier.setup(new EventlineSetup()
 				.name(source.name())
 				.label(label())
-				.toolbar(toolbar())
-				.events(previousEvents()));
+				.events(previousEvents())
+				.toolbar(toolbar(countPages())));
 	}
 
 	protected void _arrangement(Arrangement arrangement) {
@@ -179,10 +218,10 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 			page++;
 			result.addAll(load(page));
 		}
-		currentEvents = result.stream().sorted(eventsComparator()).collect(Collectors.toList());
-		currentEventsIndex = 0;
+		pageGroups = result.stream().sorted(eventsComparator()).collect(Collectors.toList());
+		selectedPageGroupIndex = 0;
 		if (!result.isEmpty()) selectedInstant = result.get(0).date();
-		return currentEvents;
+		return pageGroups;
 	}
 
 	private List<EventlineEventGroup> previousEvents() {
@@ -191,10 +230,10 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 			page--;
 			result.addAll(0, load(page));
 		}
-		currentEvents = result.stream().sorted(eventsComparator()).collect(Collectors.toList());
-		currentEventsIndex = 0;
+		pageGroups = result.stream().sorted(eventsComparator()).collect(Collectors.toList());
+		selectedPageGroupIndex = 0;
 		if (!result.isEmpty()) selectedInstant = result.get(0).date();
-		return currentEvents;
+		return pageGroups;
 	}
 
 	private List<EventlineEventGroup> load(long page) {
@@ -203,7 +242,7 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 		Instant from = from(page);
 		Instant to = LocalDateTime.ofInstant(from, ZoneId.of("UTC")).plus(stepsCount, scale.temporalUnit()).toInstant(ZoneOffset.UTC);
 		loadedPages.add(page);
-		return source.events(from, to).entrySet().stream().map(this::schemaOf).collect(Collectors.toList());
+		return register(source.events(from, to)).entrySet().stream().map(e -> schemaOf(e, page)).collect(Collectors.toList());
 	}
 
 	private Comparator<EventlineEventGroup> eventsComparator() {
@@ -211,23 +250,29 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 		return Comparator.comparing(EventlineEventGroup::date);
 	}
 
-	private EventlineEventGroup schemaOf(Map.Entry<Instant, List<EventlineDatasource.Event>> entry) {
+	private EventlineEventGroup schemaOf(Map.Entry<Instant, List<EventlineDatasource.Event>> entry, long page) {
 		EventlineEventGroup result = new EventlineEventGroup();
+		result.page(page);
 		result.date(entry.getKey());
 		result.shortDate(ScaleFormatter.shortLabel(entry.getKey(), selectedScale(), language()));
 		result.longDate(ScaleFormatter.label(entry.getKey(), selectedScale(), language()));
-		result.events(entry.getValue().stream().map(e -> schemaOf(entry.getKey(), e)).collect(Collectors.toList()));
+		result.events(entry.getValue().stream().map(this::schemaOf).collect(Collectors.toList()));
 		return result;
 	}
 
-	private EventlineEvent schemaOf(Instant date, EventlineDatasource.Event event) {
+	private EventlineEvent schemaOf(EventlineDatasource.Event event) {
 		EventlineEvent result = new EventlineEvent();
-		result.shortDate(ScaleFormatter.shortLabel(date, selectedScale(), language()));
-		result.longDate(ScaleFormatter.label(date, selectedScale(), language()));
+		result.id(event.id());
+		result.date(event.date());
+		result.shortDate(ScaleFormatter.shortLabel(event.date(), selectedScale(), language()));
+		result.longDate(ScaleFormatter.label(event.date(), selectedScale(), language()));
 		result.label(event.label());
 		result.category(event.category());
 		result.color(event.color());
 		result.icon(event.icon());
+		result.iconTitle(event.iconTitle());
+		result.comments(event.comments());
+		result.operations(event.operations());
 		return result;
 	}
 
@@ -235,17 +280,18 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 		return source.scale();
 	}
 
-	private void refreshToolbar() {
-		notifier.refreshToolbar(toolbar());
+	private void refreshToolbar(long page) {
+		notifier.refreshToolbar(toolbar(page));
 	}
 
-	private EventlineToolbarInfo toolbar() {
+	private EventlineToolbarInfo toolbar(long page) {
 		Scale scale = selectedScale();
 		Instant date = from(page);
 		EventlineToolbarInfo result = new EventlineToolbarInfo();
 		result.label(ScaleFormatter.label(date, scale, language()));
 		result.page(page);
 		result.countPages(countPages());
+		result.loadedPages(new ArrayList<>(loadedPages));
 		result.canPrevious(page > 0);
 		result.canNext(page < countPages()-1);
 		return result;
@@ -279,6 +325,8 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 
 	private void resetPages() {
 		loadedPages.clear();
+		pageGroups.clear();
+		events.clear();
 		notifier.resetEvents();
 	}
 
@@ -298,4 +346,35 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 		return events;
 	}
 
+	private void updateCurrentEventsIndex(Instant instant) {
+		int index = pageGroupIndex(instant);
+		if (index > 0) selectedPageGroupIndex = index;
+	}
+
+	private int pageGroupIndex(Instant instant) {
+		for (int i = 0; i < pageGroups.size(); i++) {
+			if (pageGroups.get(i).date().getEpochSecond() != instant.getEpochSecond()) continue;
+			return i;
+		}
+		return -1;
+	}
+
+	private EventlineDatasource.Event eventOf(Instant instant, String id) {
+		List<EventlineDatasource.Event> events = this.events.getOrDefault(label(instant), Collections.emptyList());
+		if (events.isEmpty()) return null;
+		return events.stream().filter(e -> e.id().equals(id)).findFirst().orElse(null);
+	}
+
+	private Map<Instant, List<EventlineDatasource.Event>> register(Map<Instant, List<EventlineDatasource.Event>> eventList) {
+		eventList.forEach((key, value) -> {
+			String date = label(key);
+			if (!events.containsKey(date)) events.put(date, new ArrayList<>());
+			events.get(date).addAll(value);
+		});
+		return eventList;
+	}
+
+	private String label(Instant instant) {
+		return ScaleFormatter.label(instant, selectedScale(), language());
+	}
 }
