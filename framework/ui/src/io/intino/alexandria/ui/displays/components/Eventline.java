@@ -256,7 +256,7 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 		result.date(entry.getKey());
 		result.shortDate(ScaleFormatter.shortLabel(entry.getKey(), selectedScale(), language()));
 		result.longDate(ScaleFormatter.label(entry.getKey(), selectedScale(), language()));
-		result.events(entry.getValue().stream().map(this::schemaOf).collect(Collectors.toList()));
+		result.events(entry.getValue().stream().map(this::schemaOf).sorted(Comparator.comparing(EventlineEvent::label)).collect(Collectors.toList()));
 		return result;
 	}
 
