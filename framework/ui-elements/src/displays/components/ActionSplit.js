@@ -62,7 +62,7 @@ class ActionSplit extends AbstractActionSplit {
 
 	renderDialog = () => {
 	    return (
-            <Popper open={this.state.open} anchorEl={this.anchorRef.current} role={undefined} transition disablePortal style={{zIndex:1}}>
+            <Popper open={this.state.open} anchorEl={this.anchorRef.current} role={undefined} transition disablePortal style={{zIndex:1,marginRight:'20px'}}>
               {({ TransitionProps, placement }) => (
                 <Grow {...TransitionProps} style={{transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'}}>
                   <Paper>
@@ -71,7 +71,7 @@ class ActionSplit extends AbstractActionSplit {
                         {this.state.options.map((option, index) => (
                           <MenuItem key={option} selected={index === this.state.selectedIndex}
                                     onClick={this.handleMenuItemClick.bind(this, index)}>
-                            {option}
+                            <div style={{whiteSpace:'wrap'}}>{option}</div>
                           </MenuItem>
                         ))}
                       </MenuList>

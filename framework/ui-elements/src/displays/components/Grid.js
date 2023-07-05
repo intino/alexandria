@@ -309,12 +309,13 @@ class Grid extends AbstractGrid {
         const { classes } = this.props;
         const type = column.type;
         const value = this.rowValue(data.value);
-        if (type === "Link") return (<Link className={classNames(classes.link)} component="button" onClick={this.handleCellClick.bind(this, column, data)}>{value}</Link>);
+        if (type === "Link" && data.row.selectable) return (<Link className={classNames(classes.link)} component="button" onClick={this.handleCellClick.bind(this, column, data)}>{value}</Link>);
         else if (type === "Number" || type === "Date") return (<div style={{textAlign:'right'}}>{value}</div>);
         return (<div>{value}</div>);
     };
 
     handleRowClick = (row, data, c, e) => {
+        if (!data.selectable) return;
         const columns = this.linkColumns();
         if (columns.length <= 0) return;
         const column = columns[0];
@@ -385,7 +386,7 @@ class Grid extends AbstractGrid {
         let rows = this.state.rows;
         let offset = rows.length;
         for (let i=0; i<newRows.length; i++) {
-            let row = {};
+            let row = { selectable: newRows[i].selectable };
             for (let j=0; j<columns.length; j++) {
                 const address = newRows[i].cells[j].address != null ? newRows[i].cells[j].address : null;
                 row[columns[j].name] = this.rowInfo(i+offset, newRows[i].cells[j].value, address);

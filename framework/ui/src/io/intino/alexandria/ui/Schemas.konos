@@ -278,6 +278,7 @@ Schema GridColumnMode
 	Attribute acceptedTypes as Word("Link" "Text" "Number" "Date") List
 
 Schema GridRow
+	Attribute selectable as Bool
 	Attribute cells as Object(GridCell) List
 
 Schema GridCell
