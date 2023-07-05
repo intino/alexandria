@@ -218,7 +218,7 @@ public class Grid<DN extends GridNotifier, B extends Box, Item> extends Abstract
             GridCell schemaOf = schemaOf(gridItem.values().get(i), i, item);
             cells.add(schemaOf);
         }
-        return new GridRow().cells(cells);
+        return new GridRow().cells(cells).selectable(gridItem.selectable());
     }
 
     @SuppressWarnings("unchecked")
