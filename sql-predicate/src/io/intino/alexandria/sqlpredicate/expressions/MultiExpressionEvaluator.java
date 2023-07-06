@@ -100,15 +100,15 @@ public class MultiExpressionEvaluator {
 	}
 
 	interface ExpressionListener {
-		void evaluateResultEvent(Expression selector, EvaluationContext context, Object result);
+		void evaluateResultEvent(Expression expression, EvaluationContext context, Object result);
 	}
 
-	public void addExpressionListener(Expression selector, ExpressionListener c) {
-		ExpressionListenerSet data = rootExpressions.get(selector.toString());
+	public void addExpressionListener(Expression expression, ExpressionListener c) {
+		ExpressionListenerSet data = rootExpressions.get(expression.toString());
 		if (data == null) {
 			data = new ExpressionListenerSet();
-			data.expression = addToCache(selector);
-			rootExpressions.put(selector.toString(), data);
+			data.expression = addToCache(expression);
+			rootExpressions.put(expression.toString(), data);
 		}
 		data.listeners.add(c);
 	}
