@@ -41,6 +41,7 @@
       <module fileurl="file://$PROJECT_DIR$/drivers/shiny/shiny.iml" filepath="$PROJECT_DIR$/drivers/shiny/shiny.iml" group="drivers" />
       <module fileurl="file://$PROJECT_DIR$/framework/slack/slack.iml" filepath="$PROJECT_DIR$/framework/slack/slack.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/libraries/soap/soap.iml" filepath="$PROJECT_DIR$/libraries/soap/soap.iml" group="services" />
+      <module fileurl="file://$PROJECT_DIR$/sql-predicate/sql-predicate.iml" filepath="$PROJECT_DIR$/sql-predicate/sql-predicate.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/tabb/tabb.iml" filepath="$PROJECT_DIR$/fileformats/tabb/tabb.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/framework/telegram/telegram.iml" filepath="$PROJECT_DIR$/framework/telegram/telegram.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/messaging/terminal-jms/terminal-jms.iml" filepath="$PROJECT_DIR$/messaging/terminal-jms/terminal-jms.iml" group="eventsourcing" />
