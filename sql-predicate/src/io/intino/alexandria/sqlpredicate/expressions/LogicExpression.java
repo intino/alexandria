@@ -31,12 +31,6 @@ public abstract class LogicExpression implements BooleanExpression {
 		throw new IllegalStateException("This expression is not binary: " + this);
 	}
 
-	/**
-	 * Returns the symbol that represents this binary expression.  For example, addition is
-	 * represented by "+"
-	 *
-	 * @return
-	 */
 	public abstract String getExpressionSymbol();
 
 	@Override

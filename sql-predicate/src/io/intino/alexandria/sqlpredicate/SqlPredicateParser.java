@@ -1084,7 +1084,7 @@ public class SqlPredicateParser implements SelectorParserConstants {
 
 	public void reInit(InputStream stream, String encoding) {
 		try {
-			jjInputStream.ReInit(stream, encoding, 1, 1);
+			jjInputStream.reInit(stream, encoding, 1, 1);
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}
@@ -1097,7 +1097,7 @@ public class SqlPredicateParser implements SelectorParserConstants {
 		if (jjInputStream == null) {
 			jjInputStream = new SimpleCharStream(stream, 1, 1);
 		} else {
-			jjInputStream.ReInit(stream, 1, 1);
+			jjInputStream.reInit(stream, 1, 1);
 		}
 		if (toketSource == null) {
 			toketSource = new SelectorParserTokenManager(jjInputStream);

@@ -1,19 +1,3 @@
-/**
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- * <p>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package io.intino.alexandria.sqlpredicate.expressions;
 
 import io.intino.alexandria.sqlpredicate.context.EvaluationContext;
@@ -25,19 +9,19 @@ import java.util.*;
  * A MultiExpressionEvaluator is used to evaluate multiple expressions in single
  * method call. <p/> Multiple Expression/ExpressionListener pairs can be added
  * to a MultiExpressionEvaluator object. When the MultiExpressionEvaluator
- * object is evaluated, all the registed Expressions are evaluated and then the
+ * object is evaluated, all the registered Expressions are evaluated and then the
  * associated ExpressionListener is invoked to inform it of the evaluation
  * result. <p/> By evaluating multiple expressions at one time, some
  * optimizations can be made to reduce the number of computations normally
  * required to evaluate all the expressions. <p/> When this class adds an
- * Expression it wrapps each node in the Expression's AST with a CacheExpression
+ * Expression it wraps each node in the Expression's AST with a CacheExpression
  * object. Then each CacheExpression object (one for each node) is placed in the
  * cachedExpressions map. The cachedExpressions map allows us to find the sub
  * expressions that are common across two different expressions. When adding an
- * Expression in, if a sub Expression of the Expression is allready in the
+ * Expression in, if a sub Expression of the Expression is already in the
  * cachedExpressions map, then instead of wrapping the sub expression in a new
- * CacheExpression object, we reuse the CacheExpression allready int the map.
- * <p/> To help illustrate what going on, lets try to give an exmample: If we
+ * CacheExpression object, we reuse the CacheExpression already int the map.
+ * <p/> To help illustrate what going on, lets try to give an example: If we
  * denote the AST of a Expression as follows:
  * [AST-Node-Type,Left-Node,Right-Node], then A expression like: "3*5+6" would
  * result in "[*,3,[+,5,6]]" <p/> If the [*,3,[+,5,6]] expression is added to

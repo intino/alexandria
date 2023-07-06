@@ -303,8 +303,7 @@ public abstract class ComparisonExpression extends BinaryExpression implements B
 		if (lc != rc) {
 			try {
 				if (lc == Boolean.class) {
-					if (convertStringExpressions && rc == String.class)
-						lv = Boolean.valueOf((String) lv);
+					if (convertStringExpressions && rc == String.class) lv = Boolean.valueOf((String) lv);
 					else return FALSE;
 				} else if (lc == Byte.class) {
 					if (rc == Short.class) lv = ((Number) lv).shortValue();
