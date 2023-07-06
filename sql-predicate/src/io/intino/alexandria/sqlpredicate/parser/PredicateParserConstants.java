@@ -1,6 +1,6 @@
 package io.intino.alexandria.sqlpredicate.parser;
 
-public interface SelectorParserConstants {
+public interface PredicateParserConstants {
 
 	/**
 	 * End of File.

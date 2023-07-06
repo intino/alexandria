@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 @SuppressWarnings("unused")
-public class SelectorParserTokenManager implements SelectorParserConstants {
+public class PredicateParserTokenManager implements PredicateParserConstants {
 
 	public PrintStream debugStream = System.out;
 
@@ -964,13 +964,13 @@ public class SelectorParserTokenManager implements SelectorParserConstants {
 		do jjCheckNAdd(jjnextStates[start]); while (start++ != end);
 	}
 
-	public SelectorParserTokenManager(SimpleCharStream stream) {
+	public PredicateParserTokenManager(SimpleCharStream stream) {
 		if (SimpleCharStream.staticFlag)
 			throw new Error("ERROR: Cannot use a static CharStream class with a non-static lexical analyzer.");
 		input_stream = stream;
 	}
 
-	public SelectorParserTokenManager(SimpleCharStream stream, int lexState) {
+	public PredicateParserTokenManager(SimpleCharStream stream, int lexState) {
 		ReInit(stream);
 		SwitchTo(lexState);
 	}

@@ -3,6 +3,7 @@ package io.intino.alexandria.sqlpredicate;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.sqlpredicate.context.EvaluationContext;
 import io.intino.alexandria.sqlpredicate.expressions.*;
+import io.intino.alexandria.sqlpredicate.expressions.functions.FilterFunction;
 import io.intino.alexandria.sqlpredicate.parser.*;
 
 import java.io.InputStream;
@@ -15,8 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
+import static io.intino.alexandria.sqlpredicate.parser.PredicateParserConstants.*;
 
-public class SqlPredicateParser implements SelectorParserConstants {
+public class SqlPredicate {
 	private static final Map<String, Object> cache = Collections.synchronizedMap(new LRUCache<>(100));
 	private static final String CONVERT_STRING_EXPRESSIONS_PREFIX = "convert_string_expressions:";
 
@@ -33,6 +35,10 @@ public class SqlPredicateParser implements SelectorParserConstants {
 		};
 	}
 
+	public static void registerFunction(String name, FilterFunction function) {
+		FunctionCallExpression.registerFunction(name, function);
+	}
+
 
 	static BooleanExpression parseSQL(String sql) throws InvalidExpressionException {
 		Object result = cache.get(sql);
@@ -46,7 +52,7 @@ public class SqlPredicateParser implements SelectorParserConstants {
 			}
 			if (convertStringExpressions) ComparisonExpression.CONVERT_STRING_EXPRESSIONS.set(true);
 			try {
-				BooleanExpression e = new SqlPredicateParser(sql).parse();
+				BooleanExpression e = new SqlPredicate(sql).parse();
 				cache.put(sql, e);
 				return e;
 			} catch (InvalidExpressionException t) {
@@ -67,7 +73,7 @@ public class SqlPredicateParser implements SelectorParserConstants {
 
 	private String sql;
 
-	protected SqlPredicateParser(String sql) {
+	protected SqlPredicate(String sql) {
 		this(new StringReader(sql));
 		this.sql = sql;
 	}
@@ -1049,40 +1055,36 @@ public class SqlPredicateParser implements SelectorParserConstants {
 		return jj_3R_comparisonExpression_305_5_45();
 	}
 
-	private SelectorParserTokenManager toketSource;
+	private PredicateParserTokenManager toketSource;
 	SimpleCharStream jjInputStream;
 	private Token token;
 	private int jjNtk;
 	private Token jjScanPos, jjLastPos;
 	private int jjLa;
 
-	public SqlPredicateParser(Reader stream) {
+	SqlPredicate(Reader stream) {
 		jjInputStream = new SimpleCharStream(stream, 1, 1);
-		toketSource = new SelectorParserTokenManager(jjInputStream);
+		toketSource = new PredicateParserTokenManager(jjInputStream);
 		token = new Token();
 		jjNtk = -1;
 	}
 
-	public SqlPredicateParser(InputStream stream) {
-		this(stream, null);
-	}
-
-	public SqlPredicateParser(InputStream stream, String encoding) {
+	SqlPredicate(InputStream stream, String encoding) {
 		try {
 			jjInputStream = new SimpleCharStream(stream, encoding, 1, 1);
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}
-		toketSource = new SelectorParserTokenManager(jjInputStream);
+		toketSource = new PredicateParserTokenManager(jjInputStream);
 		token = new Token();
 		jjNtk = -1;
 	}
 
-	public void reInit(InputStream stream) {
+	private void reInit(InputStream stream) {
 		reInit(stream, null);
 	}
 
-	public void reInit(InputStream stream, String encoding) {
+	private void reInit(InputStream stream, String encoding) {
 		try {
 			jjInputStream.reInit(stream, encoding, 1, 1);
 		} catch (UnsupportedEncodingException e) {
@@ -1093,14 +1095,14 @@ public class SqlPredicateParser implements SelectorParserConstants {
 		jjNtk = -1;
 	}
 
-	public void reInit(Reader stream) {
+	private void reInit(Reader stream) {
 		if (jjInputStream == null) {
 			jjInputStream = new SimpleCharStream(stream, 1, 1);
 		} else {
 			jjInputStream.reInit(stream, 1, 1);
 		}
 		if (toketSource == null) {
-			toketSource = new SelectorParserTokenManager(jjInputStream);
+			toketSource = new PredicateParserTokenManager(jjInputStream);
 		}
 
 		toketSource.ReInit(jjInputStream);
@@ -1140,23 +1142,6 @@ public class SqlPredicateParser implements SelectorParserConstants {
 		return false;
 	}
 
-
-	final public Token getNextToken() {
-		if (token.next != null) token = token.next;
-		else token = token.next = toketSource.getNextToken();
-		jjNtk = -1;
-		return token;
-	}
-
-	final public Token getToken(int index) {
-		Token t = token;
-		for (int i = 0; i < index; i++) {
-			if (t.next != null) t = t.next;
-			else t = t.next = toketSource.getNextToken();
-		}
-		return t;
-	}
-
 	private int jj_ntk_f() {
 		Token jj_nt;
 		if ((jj_nt = token.next) == null)
@@ -1165,7 +1150,7 @@ public class SqlPredicateParser implements SelectorParserConstants {
 			return (jjNtk = jj_nt.kind);
 	}
 
-	public ParseException generateParseException() {
+	private ParseException generateParseException() {
 		Token errortok = token.next;
 		int line = errortok.beginLine, column = errortok.beginColumn;
 		String mess = (errortok.kind == 0) ? tokenImage[0] : errortok.image;

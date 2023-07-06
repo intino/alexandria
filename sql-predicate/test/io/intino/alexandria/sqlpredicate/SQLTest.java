@@ -267,14 +267,14 @@ public class SQLTest extends TestCase {
 
 	protected void assertInvalidSelector(String text) {
 		try {
-			SqlPredicateParser.parseSQL(text);
+			SqlPredicate.parseSQL(text);
 			fail("Created a valid selector");
 		} catch (InvalidExpressionException ignored) {
 		}
 	}
 
 	protected void assertPredicate(EvaluationContext context, String text, boolean expected) throws Exception {
-		BooleanExpression selector = SqlPredicateParser.parseSQL(text);
+		BooleanExpression selector = SqlPredicate.parseSQL(text);
 		assertNotNull("Created a valid selector", selector);
 		boolean value = selector.matches(context);
 		assertEquals("Selector for: " + text, expected, value);
