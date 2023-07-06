@@ -18,8 +18,8 @@ public abstract class UnaryExpression implements Expression {
 
 	public static Expression createNegate(Expression left) {
 		return new UnaryExpression(left) {
-			public Object evaluate(EvaluationContext message) throws Exception {
-				Object rvalue = right.evaluate(message);
+			public Object evaluate(EvaluationContext context) throws Exception {
+				Object rvalue = right.evaluate(context);
 				if (rvalue == null) return null;
 				if (rvalue instanceof Number) return negate((Number) rvalue);
 				return null;
@@ -38,8 +38,8 @@ public abstract class UnaryExpression implements Expression {
 		else t = new HashSet<>(elements);
 		final Collection<Object> inList = t;
 		return new BooleanUnaryExpression(right) {
-			public Object evaluate(EvaluationContext message) throws Exception {
-				Object rvalue = right.evaluate(message);
+			public Object evaluate(EvaluationContext context) throws Exception {
+				Object rvalue = right.evaluate(context);
 				if (rvalue == null) return null;
 				if (rvalue.getClass() != String.class) return null;
 				if ((inList != null && inList.contains(rvalue)) ^ not) return Boolean.TRUE;
@@ -70,8 +70,8 @@ public abstract class UnaryExpression implements Expression {
 			super(left);
 		}
 
-		public boolean matches(EvaluationContext message) throws Exception {
-			Object object = evaluate(message);
+		public boolean matches(EvaluationContext context) throws Exception {
+			Object object = evaluate(context);
 			return object == Boolean.TRUE;
 		}
 	}
@@ -82,8 +82,8 @@ public abstract class UnaryExpression implements Expression {
 
 	public static BooleanExpression createBooleanCast(Expression left) {
 		return new BooleanUnaryExpression(left) {
-			public Object evaluate(EvaluationContext message) throws Exception {
-				Object rvalue = right.evaluate(message);
+			public Object evaluate(EvaluationContext context) throws Exception {
+				Object rvalue = right.evaluate(context);
 				if (rvalue == null) return null;
 				if (!rvalue.getClass().equals(Boolean.class)) return Boolean.FALSE;
 				return (Boolean) rvalue ? Boolean.TRUE : Boolean.FALSE;
@@ -142,15 +142,15 @@ public abstract class UnaryExpression implements Expression {
 			super(right);
 		}
 
-		public Object evaluate(EvaluationContext message) throws Exception {
-			Boolean lvalue = (Boolean) right.evaluate(message);
+		public Object evaluate(EvaluationContext context) throws Exception {
+			Boolean lvalue = (Boolean) right.evaluate(context);
 			if (lvalue == null) return null;
 			return lvalue ? Boolean.FALSE : Boolean.TRUE;
 		}
 
 		@Override
-		public boolean matches(EvaluationContext message) throws Exception {
-			Boolean lvalue = (Boolean) right.evaluate(message);
+		public boolean matches(EvaluationContext context) throws Exception {
+			Boolean lvalue = (Boolean) right.evaluate(context);
 			return lvalue != null && !lvalue;
 		}
 

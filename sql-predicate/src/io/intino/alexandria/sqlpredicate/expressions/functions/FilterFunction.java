@@ -8,6 +8,6 @@ public interface FilterFunction {
 
 	boolean returnsBoolean(FunctionCallExpression expr);
 
-	Object evaluate(FunctionCallExpression expr, EvaluationContext message) throws Exception;
+	Object evaluate(FunctionCallExpression expr, EvaluationContext context) throws Exception;
 }
 

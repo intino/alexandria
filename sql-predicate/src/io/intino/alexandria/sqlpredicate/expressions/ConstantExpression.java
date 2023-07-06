@@ -11,8 +11,8 @@ public class ConstantExpression implements Expression {
 			super(value);
 		}
 
-		public boolean matches(EvaluationContext message) throws Exception {
-			Object object = evaluate(message);
+		public boolean matches(EvaluationContext context) throws Exception {
+			Object object = evaluate(context);
 			return object == Boolean.TRUE;
 		}
 	}
@@ -59,7 +59,7 @@ public class ConstantExpression implements Expression {
 		return new ConstantExpression(value);
 	}
 
-	public Object evaluate(EvaluationContext message) throws Exception {
+	public Object evaluate(EvaluationContext context) throws Exception {
 		return value;
 	}
 

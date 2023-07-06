@@ -69,9 +69,9 @@ public class MultiExpressionEvaluator {
 			cachedHashCode = realExpression.hashCode();
 		}
 
-		public Object evaluate(EvaluationContext message) throws Exception {
+		public Object evaluate(EvaluationContext context) throws Exception {
 			if (view == cview) return cachedValue;
-			cachedValue = right.evaluate(message);
+			cachedValue = right.evaluate(context);
 			cview = view;
 			return cachedValue;
 		}
@@ -100,10 +100,10 @@ public class MultiExpressionEvaluator {
 	}
 
 	interface ExpressionListener {
-		void evaluateResultEvent(Expression selector, EvaluationContext message, Object result);
+		void evaluateResultEvent(Expression selector, EvaluationContext context, Object result);
 	}
 
-	public void addExpressionListner(Expression selector, ExpressionListener c) {
+	public void addExpressionListener(Expression selector, ExpressionListener c) {
 		ExpressionListenerSet data = rootExpressions.get(selector.toString());
 		if (data == null) {
 			data = new ExpressionListenerSet();
@@ -150,12 +150,12 @@ public class MultiExpressionEvaluator {
 		if (realExpr instanceof BinaryExpression bn) removeFromCache((CacheExpression) bn.getRight());
 	}
 
-	public void evaluate(EvaluationContext message) {
+	public void evaluate(EvaluationContext context) {
 		Collection<ExpressionListenerSet> expressionListeners = rootExpressions.values();
 		for (ExpressionListenerSet els : expressionListeners) {
 			try {
-				Object result = els.expression.evaluate(message);
-				els.listeners.forEach(l -> l.evaluateResultEvent(els.expression, message, result));
+				Object result = els.expression.evaluate(context);
+				els.listeners.forEach(l -> l.evaluateResultEvent(els.expression, context, result));
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}

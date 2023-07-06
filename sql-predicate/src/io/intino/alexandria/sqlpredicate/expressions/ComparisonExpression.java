@@ -94,15 +94,15 @@ public abstract class ComparisonExpression extends BinaryExpression implements B
 			return "LIKE";
 		}
 
-		public Object evaluate(EvaluationContext message) throws Exception {
-			Object rv = this.getRight().evaluate(message);
+		public Object evaluate(EvaluationContext context) throws Exception {
+			Object rv = this.getRight().evaluate(context);
 			if (rv == null) return null;
 			if (!(rv instanceof String)) return FALSE;
 			return likePattern.matcher((String) rv).matches() ? Boolean.TRUE : FALSE;
 		}
 
-		public boolean matches(EvaluationContext message) throws Exception {
-			Object object = evaluate(message);
+		public boolean matches(EvaluationContext context) throws Exception {
+			Object object = evaluate(context);
 			return object == Boolean.TRUE;
 		}
 	}
@@ -168,9 +168,9 @@ public abstract class ComparisonExpression extends BinaryExpression implements B
 			super(left, right);
 		}
 
-		public Object evaluate(EvaluationContext message) throws Exception {
-			Object lv = left.evaluate(message);
-			Object rv = right.evaluate(message);
+		public Object evaluate(EvaluationContext context) throws Exception {
+			Object lv = left.evaluate(context);
+			Object rv = right.evaluate(context);
 			if (lv == null ^ rv == null) return lv == null ? null : FALSE;
 			if (lv == rv || lv.equals(rv)) return Boolean.TRUE;
 			if (lv instanceof Comparable && rv instanceof Comparable) return compare((Comparable) lv, (Comparable) rv);
@@ -178,9 +178,9 @@ public abstract class ComparisonExpression extends BinaryExpression implements B
 		}
 
 		@Override
-		public boolean matches(EvaluationContext message) throws Exception {
-			Object lv = left.evaluate(message);
-			Object rv = right.evaluate(message);
+		public boolean matches(EvaluationContext context) throws Exception {
+			Object lv = left.evaluate(context);
+			Object rv = right.evaluate(context);
 			if (lv == null ^ rv == null) return false;
 			if (lv == rv || lv.equals(rv)) return true;
 			if (lv.getClass() == rv.getClass()) return false;
@@ -284,12 +284,12 @@ public abstract class ComparisonExpression extends BinaryExpression implements B
 	}
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
-	public Object evaluate(EvaluationContext message) throws Exception {
-		Comparable<Comparable> lv = (Comparable) left.evaluate(message);
+	public Object evaluate(EvaluationContext context) throws Exception {
+		Comparable<Comparable> lv = (Comparable) left.evaluate(context);
 		if (lv == null) {
 			return null;
 		}
-		Comparable rv = (Comparable) right.evaluate(message);
+		Comparable rv = (Comparable) right.evaluate(context);
 		if (rv == null) {
 			return null;
 		}
@@ -363,7 +363,7 @@ public abstract class ComparisonExpression extends BinaryExpression implements B
 
 	protected abstract boolean asBoolean(int answer);
 
-	public boolean matches(EvaluationContext message) throws Exception {
-		return evaluate(message) == Boolean.TRUE;
+	public boolean matches(EvaluationContext context) throws Exception {
+		return evaluate(context) == Boolean.TRUE;
 	}
 }

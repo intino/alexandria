@@ -133,10 +133,10 @@ public abstract class ArithmeticExpression extends BinaryExpression {
 		else throw new RuntimeException("Cannot convert value: " + value + " into a number");
 	}
 
-	public Object evaluate(EvaluationContext message) throws Exception {
-		Object lvalue = left.evaluate(message);
+	public Object evaluate(EvaluationContext context) throws Exception {
+		Object lvalue = left.evaluate(context);
 		if (lvalue == null) return null;
-		Object rvalue = right.evaluate(message);
+		Object rvalue = right.evaluate(context);
 		if (rvalue == null) return null;
 		return evaluate(lvalue, rvalue);
 	}

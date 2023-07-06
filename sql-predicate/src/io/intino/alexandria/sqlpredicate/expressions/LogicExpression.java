@@ -63,10 +63,10 @@ public abstract class LogicExpression implements BooleanExpression {
 	}
 
 	@Override
-	public abstract Object evaluate(EvaluationContext message) throws Exception;
+	public abstract Object evaluate(EvaluationContext context) throws Exception;
 
 	@Override
-	public abstract boolean matches(EvaluationContext message) throws Exception;
+	public abstract boolean matches(EvaluationContext context) throws Exception;
 
 	public static class ORExpression extends LogicExpression {
 
@@ -75,10 +75,10 @@ public abstract class LogicExpression implements BooleanExpression {
 		}
 
 		@Override
-		public Object evaluate(EvaluationContext message) throws Exception {
+		public Object evaluate(EvaluationContext context) throws Exception {
 			boolean someNulls = false;
 			for (BooleanExpression expression : expressions) {
-				Boolean lv = (Boolean) expression.evaluate(message);
+				Boolean lv = (Boolean) expression.evaluate(context);
 				if (lv != null && lv.booleanValue()) {
 					return Boolean.TRUE;
 				}
@@ -93,9 +93,9 @@ public abstract class LogicExpression implements BooleanExpression {
 		}
 
 		@Override
-		public boolean matches(EvaluationContext message) throws Exception {
+		public boolean matches(EvaluationContext context) throws Exception {
 			for (BooleanExpression expression : expressions) {
-				boolean lv = expression.matches(message);
+				boolean lv = expression.matches(context);
 				if (lv) {
 					return true;
 				}
@@ -116,10 +116,10 @@ public abstract class LogicExpression implements BooleanExpression {
 		}
 
 		@Override
-		public Object evaluate(EvaluationContext message) throws Exception {
+		public Object evaluate(EvaluationContext context) throws Exception {
 			boolean someNulls = false;
 			for (BooleanExpression expression : expressions) {
-				Boolean lv = (Boolean) expression.evaluate(message);
+				Boolean lv = (Boolean) expression.evaluate(context);
 				if (lv != null && !lv.booleanValue()) {
 					return Boolean.FALSE;
 				}
@@ -134,9 +134,9 @@ public abstract class LogicExpression implements BooleanExpression {
 		}
 
 		@Override
-		public boolean matches(EvaluationContext message) throws Exception {
+		public boolean matches(EvaluationContext context) throws Exception {
 			for (BooleanExpression expression : expressions) {
-				boolean lv = expression.matches(message);
+				boolean lv = expression.matches(context);
 				if (!lv) {
 					return false;
 				}

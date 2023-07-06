@@ -28,12 +28,12 @@ public class RegexMatchFunction implements FilterFunction {
 		return true;
 	}
 
-	public Object evaluate(FunctionCallExpression expr, EvaluationContext message) throws Exception {
+	public Object evaluate(FunctionCallExpression expr, EvaluationContext context) throws Exception {
 		Pattern pat;
-		Object reg = expr.getArgument(0).evaluate(message);
+		Object reg = expr.getArgument(0).evaluate(context);
 		if (reg != null) {
 			String reg_str = reg instanceof String ? (String) reg : reg.toString();
-			Object cand = expr.getArgument(1).evaluate(message);
+			Object cand = expr.getArgument(1).evaluate(context);
 			if (cand != null) {
 				pat = getCompiledPattern(reg_str);
 				Matcher matchEng = pat.matcher(cand instanceof String ? (String) cand : cand.toString());

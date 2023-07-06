@@ -6,8 +6,8 @@ import io.intino.alexandria.sqlpredicate.context.EvaluationContext;
 public record PropertyExpression(String name) implements Expression {
 
 	@Override
-	public Object evaluate(EvaluationContext message) throws Exception {
-		return message.getProperty(name);
+	public Object evaluate(EvaluationContext context) throws Exception {
+		return context.getProperty(name);
 	}
 
 	@Override
