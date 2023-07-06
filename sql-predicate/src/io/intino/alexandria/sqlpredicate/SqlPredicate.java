@@ -92,13 +92,13 @@ public class SqlPredicate {
 		throw new ParseException("Expression will not result in a boolean value: " + value);
 	}
 
-	final public BooleanExpression JmsSelector() throws ParseException {
+	private BooleanExpression JmsSelector() throws ParseException {
 		Expression left = orExpression();
 		jj_consume_token(0);
 		return asBooleanExpression(left);
 	}
 
-	final public Expression orExpression() throws ParseException {
+	private Expression orExpression() throws ParseException {
 		Expression left = andExpression();
 		Expression right;
 		while (((jjNtk == -1) ? jj_ntk_f() : jjNtk) == OR) {
@@ -109,7 +109,7 @@ public class SqlPredicate {
 		return left;
 	}
 
-	final public Expression andExpression() throws ParseException {
+	private Expression andExpression() throws ParseException {
 		Expression left;
 		Expression right;
 		left = equalityExpression();
@@ -121,7 +121,7 @@ public class SqlPredicate {
 		return left;
 	}
 
-	final public Expression equalityExpression() throws ParseException {
+	private Expression equalityExpression() throws ParseException {
 		Expression left;
 		Expression right;
 		left = comparisonExpression();
@@ -169,7 +169,7 @@ public class SqlPredicate {
 		return left;
 	}
 
-	final public Expression comparisonExpression() throws ParseException {
+	private Expression comparisonExpression() throws ParseException {
 		Expression left;
 		Expression right;
 		Expression low;
@@ -292,7 +292,7 @@ public class SqlPredicate {
 		return left;
 	}
 
-	final public Expression addExpression() throws ParseException {
+	private Expression addExpression() throws ParseException {
 		Expression left;
 		Expression right;
 		left = multExpr();
@@ -317,7 +317,7 @@ public class SqlPredicate {
 		return left;
 	}
 
-	final public Expression multExpr() throws ParseException {
+	private Expression multExpr() throws ParseException {
 		Expression left;
 		Expression right;
 		left = unaryExpr();
@@ -356,7 +356,7 @@ public class SqlPredicate {
 		return left;
 	}
 
-	final public Expression unaryExpr() throws ParseException {
+	private Expression unaryExpr() throws ParseException {
 		Expression left;
 		if (jj_2_6()) {
 			jj_consume_token(37);
@@ -393,7 +393,7 @@ public class SqlPredicate {
 		return left;
 	}
 
-	final public Expression functionCallExpr() throws ParseException {
+	private Expression functionCallExpr() throws ParseException {
 		Token func_name;
 		Expression arg;
 		List<Expression> args = new ArrayList<>();
@@ -414,7 +414,7 @@ public class SqlPredicate {
 		}
 	}
 
-	final public Expression primaryExpr() throws ParseException {
+	private Expression primaryExpr() throws ParseException {
 		Expression left;
 		switch ((jjNtk == -1) ? jj_ntk_f() : jjNtk) {
 			case TRUE, FALSE, NULL, DECIMAL_LITERAL, HEX_LITERAL, OCTAL_LITERAL, FLOATING_POINT_LITERAL, STRING_LITERAL ->
@@ -433,7 +433,7 @@ public class SqlPredicate {
 		return left;
 	}
 
-	final public ConstantExpression literal() throws ParseException {
+	private ConstantExpression literal() throws ParseException {
 		String s;
 		ConstantExpression left;
 		Token t;
@@ -478,7 +478,7 @@ public class SqlPredicate {
 		return left;
 	}
 
-	final public String stringLiteral() throws ParseException {
+	private String stringLiteral() throws ParseException {
 		Token t;
 		StringBuilder rc = new StringBuilder();
 		t = jj_consume_token(STRING_LITERAL);
@@ -492,7 +492,7 @@ public class SqlPredicate {
 		return rc.toString();
 	}
 
-	final public PropertyExpression variable() throws ParseException {
+	private PropertyExpression variable() throws ParseException {
 		Token t;
 		PropertyExpression left;
 		t = jj_consume_token(ID);
