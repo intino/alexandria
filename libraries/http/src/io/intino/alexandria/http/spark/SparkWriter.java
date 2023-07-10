@@ -88,7 +88,7 @@ class SparkWriter {
 	private void writeResponse(File file, boolean embedded, HttpServletResponse response) {
 		try {
 			response.setContentType(MimeTypes.getFromFile(file));
-			response.setHeader("Content-Disposition", (embedded ? "inline" : "attachment") + ";filename=" + file.getName());
+			response.setHeader("Content-Disposition", (embedded ? "inline" : "attachment") + ";filename=\"" + file.getName() + "\"");
 			writeResponse(readFile(file), response);
 		} catch (IOException ignored) {
 		}
@@ -99,7 +99,7 @@ class SparkWriter {
 			byte[] content = IOUtils.toByteArray(stream);
 			String contentType = filename != null ? MimeTypes.getFromFilename(filename) : MimeTypes.getFromStream(new ByteArrayInputStream(content));
 			response.setContentType(contentType);
-			response.setHeader("Content-Disposition", (embedded ? "inline" : "attachment") + ";filename=" + (filename != null ? filename : ("resource." + MimeTypes.getExtension(contentType))));
+			response.setHeader("Content-Disposition", (embedded ? "inline" : "attachment") + ";filename=\"" + (filename != null ? filename : ("resource." + MimeTypes.getExtension(contentType))) + "\"");
 			writeResponse(content, response);
 		} catch (IOException ignored) {
 		}
@@ -107,7 +107,7 @@ class SparkWriter {
 
 	private void writeResponse(String filename, byte[] content, boolean embedded, HttpServletResponse response) {
 		response.setContentType(MimeTypes.getFromFilename(filename));
-		response.setHeader("Content-Disposition", (embedded ? "inline" : "attachment") + "attachment; filename=" + filename);
+		response.setHeader("Content-Disposition", (embedded ? "inline" : "attachment") + "attachment; filename=\"" + filename + "\"");
 		this.writeResponse(content, response);
 	}
 

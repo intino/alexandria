@@ -46,6 +46,7 @@ class SelectorMenu extends AbstractSelectorMenu {
 	};
 
 	render() {
+	    if (!this.state.visible) return (<React.Fragment/>);
 		const children = this.children();
 		this._index = -1;
 		return (

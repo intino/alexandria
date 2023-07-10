@@ -85,6 +85,8 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 	};
 
 	render() {
+	    if (!this.state.visible) return (<React.Fragment/>);
+
 		const { classes, theme } = this.props;
 		const multiple = this.state.multipleSelection;
 		const label = this.props.label;
