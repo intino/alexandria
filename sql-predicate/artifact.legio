@@ -1,9 +1,9 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.4") zip
+Artifact("io.intino.alexandria", "1.0.0") sql-predicate
 	Imports
 		Compile("io.intino.alexandria", "logger", "2.1.0")
-	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
+		Test("junit", "junit", "4.13.2")
+	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
-
 Repository("intino-maven") > Release("https://artifactory.intino.io/artifactory/releases")

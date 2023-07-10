@@ -1,27 +1,26 @@
-package io.intino.konos.builder.utils;
+package io.intino.alexandria.sqlpredicate.parser;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class LRUCache<K, V> extends LinkedHashMap<K, V> {
-	protected int maxCacheSize;
+	protected int maxCacheSize = 10000;
 
 	public LRUCache() {
-		this(0, 10000, 0.75F, true);
+		this(0, 10000, 0.75f, true);
 	}
 
 	public LRUCache(int maximumCacheSize) {
-		this(0, maximumCacheSize, 0.75F, true);
+		this(0, maximumCacheSize, 0.75f, true);
 	}
 
 	public LRUCache(int initialCapacity, int maximumCacheSize, float loadFactor, boolean accessOrder) {
 		super(initialCapacity, loadFactor, accessOrder);
-		this.maxCacheSize = 10000;
 		this.maxCacheSize = maximumCacheSize;
 	}
 
 	public int getMaxCacheSize() {
-		return this.maxCacheSize;
+		return maxCacheSize;
 	}
 
 	public void setMaxCacheSize(int maxCacheSize) {
@@ -29,15 +28,14 @@ public class LRUCache<K, V> extends LinkedHashMap<K, V> {
 	}
 
 	protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
-		if (this.size() > this.maxCacheSize) {
-			this.onCacheEviction(eldest);
+		if (size() > maxCacheSize) {
+			onCacheEviction(eldest);
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	protected void onCacheEviction(Map.Entry<K, V> eldest) {
 	}
-}
 
+}
