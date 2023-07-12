@@ -4,6 +4,7 @@ import io.intino.alexandria.Scale;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -11,18 +12,19 @@ import java.util.Map;
 
 public class ScaleFormatter {
 
-	public static String label(Instant date, Scale scale, String language) {
+	public static String label(Instant date, int zoneOffset, Scale scale, String language) {
 		String format = Formatters.getOrDefault(scale, Formatters.get(Scale.Day)).getOrDefault(language, "en");
-		return date(date, format, language);
+		return date(date, zoneOffset, format, language);
 	}
 
-	public static String shortLabel(Instant date, Scale scale, String language) {
+	public static String shortLabel(Instant date, int zoneOffset, Scale scale, String language) {
 		String format = ShortFormatters.getOrDefault(scale, ShortFormatters.get(Scale.Day)).getOrDefault(language, "en");
-		return date(date, format, language);
+		return date(date, zoneOffset, format, language);
 	}
 
-	private static String date(Instant date, String format, String language) {
+	private static String date(Instant date, int zoneOffset, String format, String language) {
 		if (date == null) return null;
+		date = date.plus(zoneOffset, ChronoUnit.HOURS);
 		return formatDate(format, date, locale(language));
 	}
 

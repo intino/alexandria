@@ -180,7 +180,7 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 		SignalDefinition definition = signal.definition();
 		Scale scale = selectedScale();
 		Instant to = selectedInstant(scale);
-		Instant from = LocalDateTime.ofInstant(to, ZoneId.of("UTC")).minus(stepsCount, scale.temporalUnit()).toInstant(ZoneOffset.UTC);
+		Instant from = LocalDateTime.ofInstant(to, ZoneId.of("UTC")).minus(stepsCount-1, scale.temporalUnit()).toInstant(ZoneOffset.UTC);
 		String reel = signal.reel(scale, from, to);
 		Map<Instant, List<Annotation>> annotations = signal.annotations(scale, from, to);
 		return new ReelSignal()
@@ -201,7 +201,7 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 		Instant current = from;
 		List<ReelSignalStep> result = new ArrayList<>();
 		for (int i = 0; i < reel.length(); i++) {
-			result.add(new ReelSignalStep().value(String.valueOf(reel.charAt(i))).date(ScaleFormatter.label(current, scale, language())));
+			result.add(new ReelSignalStep().value(String.valueOf(reel.charAt(i))).date(ScaleFormatter.label(current, timezoneOffset(), scale, language())));
 			current = source.next(scale, current);
 		}
 		return result;
@@ -215,7 +215,7 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 		Scale scale = selectedScale();
 		List<Annotation> annotationList = entry.getValue();
 		if (annotationList.isEmpty()) return null;
-		return new ReelSignalAnnotation().date(ScaleFormatter.label(normalize(entry.getKey(), scale), scale, language())).entries(entriesOf(annotationList)).color(annotationList.get(0).color());
+		return new ReelSignalAnnotation().date(ScaleFormatter.label(normalize(entry.getKey(), scale), timezoneOffset(), scale, language())).entries(entriesOf(annotationList)).color(annotationList.get(0).color());
 	}
 
 	private Instant normalize(Instant date, Scale scale) {
@@ -234,10 +234,10 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 		Scale scale = selectedScale();
 		Instant date = selectedInstant(scale);
 		ReelToolbarInfo result = new ReelToolbarInfo();
-		result.label(ScaleFormatter.label(date, scale, language()));
+		result.label(ScaleFormatter.label(date, timezoneOffset(), scale, language()));
 		result.scale(selectedScale().name());
-		result.canPrevious(!ScaleFormatter.label(date, scale, language()).equals(ScaleFormatter.label(source.from(scale), scale, language())));
-		result.canNext(!ScaleFormatter.label(date, scale, language()).equals(ScaleFormatter.label(source.to(scale), scale, language())));
+		result.canPrevious(!ScaleFormatter.label(date, timezoneOffset(), scale, language()).equals(ScaleFormatter.label(source.from(scale), timezoneOffset(), scale, language())));
+		result.canNext(!ScaleFormatter.label(date, timezoneOffset(), scale, language()).equals(ScaleFormatter.label(source.to(scale), timezoneOffset(), scale, language())));
 		return result;
 	}
 
