@@ -17,6 +17,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.List;
 import java.util.Map;
@@ -91,7 +92,7 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 		}
 		page(page-1);
 		update(instant);
-		DelayerUtil.execute(this, v -> notifier.scrollTo(ScaleFormatter.label(instant, selectedScale(), language())), 50);
+		DelayerUtil.execute(this, v -> notifier.scrollTo(ScaleFormatter.label(instant, timezoneOffset(), selectedScale(), language())), 50);
 	}
 
 	public void page(long page) {
@@ -128,7 +129,7 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 		}
 		if (pageGroups.isEmpty()) return;
 		update(pageGroups.get(selectedPageGroupIndex).date());
-		DelayerUtil.execute(this, v -> notifier.scrollTo(ScaleFormatter.label(pageGroups.get(selectedPageGroupIndex).date(), selectedScale(), language())), 50);
+		DelayerUtil.execute(this, v -> notifier.scrollTo(ScaleFormatter.label(pageGroups.get(selectedPageGroupIndex).date(), timezoneOffset(), selectedScale(), language())), 50);
 	}
 
 	public void previousPage() {
@@ -146,7 +147,7 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 		}
 		if (pageGroups.isEmpty()) return;
 		update(pageGroups.get(selectedPageGroupIndex).date());
-		DelayerUtil.execute(this, v -> notifier.scrollTo(ScaleFormatter.label(pageGroups.get(selectedPageGroupIndex).date(), selectedScale(), language())), 50);
+		DelayerUtil.execute(this, v -> notifier.scrollTo(ScaleFormatter.label(pageGroups.get(selectedPageGroupIndex).date(), timezoneOffset(), selectedScale(), language())), 50);
 	}
 
 	public void nextPage() {
@@ -254,8 +255,8 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 		EventlineEventGroup result = new EventlineEventGroup();
 		result.page(page);
 		result.date(entry.getKey());
-		result.shortDate(ScaleFormatter.shortLabel(entry.getKey(), selectedScale(), language()));
-		result.longDate(ScaleFormatter.label(entry.getKey(), selectedScale(), language()));
+		result.shortDate(ScaleFormatter.shortLabel(entry.getKey(), timezoneOffset(), selectedScale(), language()));
+		result.longDate(ScaleFormatter.label(entry.getKey(), timezoneOffset(), selectedScale(), language()));
 		result.events(entry.getValue().stream().map(this::schemaOf).sorted(Comparator.comparing(EventlineEvent::label)).collect(Collectors.toList()));
 		return result;
 	}
@@ -264,8 +265,8 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 		EventlineEvent result = new EventlineEvent();
 		result.id(event.id());
 		result.date(event.date());
-		result.shortDate(ScaleFormatter.shortLabel(event.date(), selectedScale(), language()));
-		result.longDate(ScaleFormatter.label(event.date(), selectedScale(), language()));
+		result.shortDate(ScaleFormatter.shortLabel(event.date(), timezoneOffset(), selectedScale(), language()));
+		result.longDate(ScaleFormatter.label(event.date(), timezoneOffset(), selectedScale(), language()));
 		result.label(event.label());
 		result.category(event.category());
 		result.color(event.color());
@@ -288,7 +289,7 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 		Scale scale = selectedScale();
 		Instant date = from(page);
 		EventlineToolbarInfo result = new EventlineToolbarInfo();
-		result.label(ScaleFormatter.label(date, scale, language()));
+		result.label(ScaleFormatter.label(date, timezoneOffset(), scale, language()));
 		result.page(page);
 		result.countPages(countPages());
 		result.loadedPages(new ArrayList<>(loadedPages));
@@ -375,6 +376,7 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 	}
 
 	private String label(Instant instant) {
-		return ScaleFormatter.label(instant, selectedScale(), language());
+		return ScaleFormatter.label(instant, timezoneOffset(), selectedScale(), language());
 	}
+
 }

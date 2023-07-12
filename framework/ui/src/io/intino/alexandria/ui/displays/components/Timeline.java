@@ -180,10 +180,10 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		Scale scale = selectedScale();
 		Instant date = selectedInstant(scale);
 		TimelineToolbarInfo result = new TimelineToolbarInfo();
-		result.label(ScaleFormatter.label(date, scale, language()));
+		result.label(ScaleFormatter.label(date, timezoneOffset(), scale, language()));
 		result.scale(selectedScale().name());
-		result.canPrevious(!ScaleFormatter.label(date, scale, language()).equals(ScaleFormatter.label(source.from(scale), scale, language())));
-		result.canNext(!ScaleFormatter.label(date, scale, language()).equals(ScaleFormatter.label(source.to(scale), scale, language())));
+		result.canPrevious(!ScaleFormatter.label(date, timezoneOffset(), scale, language()).equals(ScaleFormatter.label(source.from(scale), timezoneOffset(), scale, language())));
+		result.canNext(!ScaleFormatter.label(date, timezoneOffset(), scale, language()).equals(ScaleFormatter.label(source.to(scale), timezoneOffset(), scale, language())));
 		return result;
 	}
 
@@ -325,7 +325,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	}
 
 	private String date(Instant date, Scale scale) {
-		return ScaleFormatter.shortLabel(date, scale, language());
+		return ScaleFormatter.shortLabel(date, timezoneOffset(), scale, language());
 	}
 
 	public String date(Instant date, String format, Function<String, String> translator) {

@@ -51,8 +51,8 @@ const ReelSignal = ({ signal, index, id, moveSignal, classes, translate, style, 
           isDragging: monitor.isDragging()
         })
     });
-	const handlePopoverOpen = (block, annotation, event) => {
-	    setSelection({block: block, annotation: annotation, anchorEl: event.currentTarget});
+	const handlePopoverOpen = (block, endDate, annotation, event) => {
+	    setSelection({block: block, endDate: endDate, annotation: annotation, anchorEl: event.currentTarget});
 	};
 	const handlePopoverClose = (event) => {
 	    setSelection(null);
@@ -65,13 +65,13 @@ const ReelSignal = ({ signal, index, id, moveSignal, classes, translate, style, 
 	const renderAnnotation = (annotation, color, paddingTop) => {
 	    return (<div style={{color:color,fontWeight:'bold',textAlign:'center',marginTop:'-2px',paddingTop:paddingTop}} title={annotationLabel(annotation)}>&#8226;&#8226;&#8226;</div>);
 	};
-    const renderBlock = (block, color, annotation) => {
+    const renderBlock = (block, endDate, color, annotation) => {
         if (block.length == 0) return (<React.Fragment/>);
         const isEmpty = block[0].value === "" || block[0].value === " ";
         const background = isEmpty ? "transparent" : color;
         const style = { position: 'relative', width: (stepWidth*block.length) + "px", borderRadius: isEmpty ? '0' : '3px', backgroundColor: background, position: 'relative' };
         return (
-            <div className={classes.signalStep} style={style} onClick={e => handlePopoverOpen(block, annotation, e)}>
+            <div className={classes.signalStep} style={style} onClick={e => handlePopoverOpen(block, endDate, annotation, e)}>
                 {annotation != null && renderAnnotation(annotation, isEmpty ? "#ed6c03" : "white", isEmpty ? '3px' : '2px')}
             </div>
         );
@@ -95,7 +95,7 @@ const ReelSignal = ({ signal, index, id, moveSignal, classes, translate, style, 
             const date = steps[i].date;
             block.push({ value: value, date: steps[i].date });
             if (i == steps.length-1 || (current != null && value != current)) {
-                result.push(renderBlock(block, signal.color, findAnnotation(signal, date)));
+                result.push(renderBlock(block, i < steps.length-1 ? steps[i+1].date : date, signal.color, findAnnotation(signal, date)));
                 block = [];
             }
             current = value;
@@ -111,7 +111,7 @@ const ReelSignal = ({ signal, index, id, moveSignal, classes, translate, style, 
                     <Typography variant="body2" className={classes.signalLabel}>{signal.label}</Typography>
                 </Tooltip>
                 <div style={{position:'relative'}} className="layout horizontal center">
-                    <div style={{borderTop:"1px solid",position:'absolute',width:'calc(100% + 5px)',marginLeft:'-5px'}}></div>
+                    <div style={{borderTop:"1px solid",position:'absolute',width:'100%'}}></div>
                     {renderSteps(signal)}
                 </div>
             </div>
@@ -136,7 +136,7 @@ const ReelSignal = ({ signal, index, id, moveSignal, classes, translate, style, 
                         </div>
                         <div className="layout horizontal center">
                             <Typography variant="body2" style={{marginRight:'5px',color:'#777',width:'60px'}}>{translate("until")}</Typography>
-                            {selection.block[selection.block.length-1].date}
+                            {selection.endDate}
                         </div>
                     </React.Fragment>
                 }
