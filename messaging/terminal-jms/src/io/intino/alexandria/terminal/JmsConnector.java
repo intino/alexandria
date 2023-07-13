@@ -1,12 +1,15 @@
 package io.intino.alexandria.terminal;
 
+import io.intino.alexandria.Json;
 import io.intino.alexandria.event.Event;
 import io.intino.alexandria.event.message.MessageEvent;
+import io.intino.alexandria.event.resource.ResourceEvent;
 import io.intino.alexandria.jms.*;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.Message;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQSession;
+import org.apache.activemq.command.ActiveMQBytesMessage;
 import org.apache.activemq.command.ActiveMQDestination;
 import org.apache.activemq.command.ActiveMQTextMessage;
 
@@ -436,7 +439,7 @@ public class JmsConnector implements Connector {
 		try {
 			if (cannotSendMessage()) return false;
 			queueProducer(path);
-			return sendMessage(producers.get(path), serialize("", "", message));
+			return sendMessage(producers.get(path), serialize(null, "", "", message));
 		} catch (JMSException e) {
 			Logger.error(e);
 			return false;
@@ -447,7 +450,7 @@ public class JmsConnector implements Connector {
 		try {
 			if (cannotSendMessage()) return false;
 			topicProducer(path);
-			return sendMessage(producers.get(path), serialize("", "", message));
+			return sendMessage(producers.get(path), serialize(null, "", "", message));
 		} catch (JMSException e) {
 			Logger.error(e);
 			return false;
@@ -631,8 +634,9 @@ public class JmsConnector implements Connector {
 		}
 	}
 
-	private static javax.jms.Message serialize(String type, String ss, String payload) throws JMSException {
+	private static javax.jms.Message serialize(String ts, String type, String ss, String payload) throws JMSException {
 		TextMessage textMessage = new ActiveMQTextMessage();
+		if (ts != null) textMessage.setStringProperty("ts", ts);
 		if (ss != null && !ss.isEmpty()) textMessage.setStringProperty("ss", ss);
 		if (type != null && !type.isEmpty()) textMessage.setStringProperty("type", type);
 		textMessage.setText(payload);
@@ -640,14 +644,29 @@ public class JmsConnector implements Connector {
 	}
 
 	private static javax.jms.Message serialize(Event event) throws IOException, JMSException {
-		return serialize(event.type(), event.ss(), event.toString());
+		if (event instanceof ResourceEvent) return serializeAsResource((ResourceEvent) event);
+		return serialize(event.ts().toString(), event.type(), event.ss(), event.toString());
+	}
+
+	private static javax.jms.Message serializeAsResource(ResourceEvent event) throws JMSException, IOException {
+		BytesMessage message = new ActiveMQBytesMessage();
+		if (event.ts() != null) message.setLongProperty("ts", event.ts().toEpochMilli());
+		if (event.ss() != null && !event.ss().isEmpty()) message.setStringProperty("ss", event.ss());
+		if (event.type() != null && !event.type().isEmpty()) message.setStringProperty("type", event.type());
+		byte[] bytes = event.resource().bytes();
+		message.setStringProperty("resource.name", event.resource().name());
+		message.setStringProperty("resource.metadata", Json.toJson(event.resource().metadata()));
+		message.setIntProperty("resource.data.length", bytes.length);
+		message.writeBytes(bytes);
+		return message;
 	}
 
 	private static javax.jms.Message serialize(List<Event> events) throws IOException, JMSException {
 		String ss = events.stream().map(Event::ss).distinct().collect(Collectors.joining(";"));
+		String ts = events.stream().map(Event::ts).map(Objects::toString).collect(Collectors.joining(";"));
 		String types = events.stream().map(Event::type).distinct().collect(Collectors.joining(";"));
 		String content = events.stream().map(Event::toString).collect(Collectors.joining("\n\n"));
-		return serialize(types, ss, content);
+		return serialize(ts, types, ss, content);
 	}
 
 	public static String createRandomString() {
