@@ -106,13 +106,18 @@ public class ExcelReportGenerator extends ReportGenerator {
 	}
 
 	private void fillCell(Workbook book, Cell cell, Column column, CellValue value) {
-		if (column.isNumber()) {
-			String data = (String) value.data();
-			if (data != null && !data.isEmpty()) cell.setCellValue(Double.parseDouble(data));
-			else cell.setCellValue("");
-		}
+		if (column.isNumber()) fillCellNumber(cell, value);
 		else cell.setCellValue(column.valueOf(value.data()));
 		fillCellStyle(book, cell, column, value);
+	}
+
+	private static void fillCellNumber(Cell cell, CellValue value) {
+		try {
+			cell.setCellValue(Double.parseDouble((String) value.data()));
+		}
+		catch (Throwable ex) {
+			cell.setCellValue((String)value.data());
+		}
 	}
 
 	private void fillCellStyle(Workbook book, Cell cell, Column column, CellValue value) {
