@@ -36,7 +36,7 @@ class Layer extends AbstractLayer {
             title: this.props.title,
             toolbar: { homeButton: { visible: false, enabled: false}, previousButton : { visible: false, enabled: false }, nextButton : { visible: false, enabled: false }},
             opened: false,
-            closeAddress: document.location.pathname,
+            closeAddress: Application.configuration.basePath,
         };
 	};
 
@@ -105,7 +105,7 @@ class Layer extends AbstractLayer {
 	};
 
 	open = () => {
-		this.setState({ opened: true });
+		this.setState({ opened: true, closeAddress: document.location.pathname });
 	};
 
 	close = () => {
@@ -115,6 +115,7 @@ class Layer extends AbstractLayer {
 	handleClose = () => {
         history.stopListening();
 	    if (this.state.closeAddress !== document.location.pathname) history.push(this.state.closeAddress, {});
+	    else history.push(Application.configuration.basePath, {});
 	    history.continueListening();
 		this.requester.close();
 	};
