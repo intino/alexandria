@@ -309,13 +309,14 @@ public class JmsConnector implements Connector {
 			CompletableFuture<javax.jms.Message> future = new CompletableFuture<>();
 			requestResponse(path, message, future::complete);
 			return waitFor(future, timeout, timeUnit);
-		} catch (Exception e) {
-			Logger.error(e);
-			return null;
+		} catch (TimeoutException ignored) {
+		} catch (ExecutionException | InterruptedException e) {
+			Logger.error(e.getMessage());
 		}
+		return null;
 	}
 
-	private static javax.jms.Message waitFor(Future<javax.jms.Message> future, long timeout, TimeUnit timeUnit) throws Exception {
+	private static javax.jms.Message waitFor(Future<javax.jms.Message> future, long timeout, TimeUnit timeUnit) throws ExecutionException, InterruptedException, TimeoutException {
 		return timeout <= 0 || timeUnit == null ? future.get() : future.get(timeout, timeUnit);
 	}
 
