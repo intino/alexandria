@@ -49,13 +49,10 @@ public class EventSealer {
 	}
 
 	public void seal(Fingerprint fingerprint, List<File> sessions) throws IOException {
-		seal(datalakeFile(fingerprint), fingerprint.format(), sort(fingerprint, sessions));
-	}
-
-	private void seal(File datalakeFile, Event.Format format, List<File> sessions) throws IOException {
+		File datalakeFile = datalakeFile(fingerprint);
 		File temp = new File(tempFolder, System.nanoTime() + datalakeFile.getName());
-		if (format.equals(Event.Format.Resource)) sealResources(datalakeFile, sessions, temp);
-		else sealMessages(datalakeFile, format, sessions, temp);
+		if (fingerprint.format().equals(Event.Format.Resource)) sealResources(datalakeFile, sessions, temp);
+		else sealMessages(datalakeFile, Event.Format.Message, sort(fingerprint, sessions), temp);
 	}
 
 	private void sealResources(File datalakeFile, List<File> sessions, File temp) {
