@@ -52,7 +52,7 @@ public class EventSealer {
 		File datalakeFile = datalakeFile(fingerprint);
 		File temp = new File(tempFolder, System.nanoTime() + datalakeFile.getName());
 		if (fingerprint.format().equals(Event.Format.Resource)) sealResources(datalakeFile, sessions, temp);
-		else sealMessages(datalakeFile, Event.Format.Message, sort(fingerprint, sessions), temp);
+		else sealMessages(datalakeFile, fingerprint.format(), sort(fingerprint, sessions), temp);
 	}
 
 	private void sealResources(File datalakeFile, List<File> sessions, File temp) {

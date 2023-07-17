@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "7.0.2") sealing
+Artifact("io.intino.alexandria", "7.0.3") sealing
 	Imports
 		Compile("io.intino.alexandria", "datalake", "7.0.3")
 		Compile("io.intino.alexandria", "ingestion", "5.0.4")
