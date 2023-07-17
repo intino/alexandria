@@ -85,8 +85,7 @@ public class Zip {
 
 	public void write(Map<String, String> entries) throws IOException {
 		if (!file.exists()) create();
-		FileOutputStream fos = new FileOutputStream(file);
-		ZipOutputStream zos = new ZipOutputStream(fos);
+		ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(file));
 		entries.forEach((key, value) -> {
 			try {
 				zos.putNextEntry(new ZipEntry(key));

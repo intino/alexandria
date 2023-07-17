@@ -97,7 +97,7 @@ public class ResourceEvent implements Event {
 	// TODO: TS is in milliseconds precision. This could lead to collisions between events with same ts in ms.
 	public static class REI {
 		public static final String SEP = "/";
-		public static final String ID_SEP = "$";
+		public static final String ID_SEP = "#";
 		public static final int SIZE = 4;
 
 		private final String[] components;

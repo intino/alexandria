@@ -4,17 +4,12 @@ import io.intino.alexandria.Resource;
 import io.intino.alexandria.event.EventReader;
 import io.intino.alexandria.resourcecleaner.DisposableResource;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.time.Instant;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.stream;
 
 public class ResourceEventReader implements EventReader<ResourceEvent> {
@@ -23,14 +18,6 @@ public class ResourceEventReader implements EventReader<ResourceEvent> {
 
 	public ResourceEventReader(File file) throws IOException {
 		this(new ResourceToEventIterator(new ZipResourceReader(file)));
-	}
-
-	public ResourceEventReader(InputStream inputStream) throws IOException {
-		this(new ResourceToEventIterator(new ZipResourceReader(inputStream)));
-	}
-
-	public ResourceEventReader(String text) throws IOException {
-		this(new ResourceToEventIterator(new ZipResourceReader(new ByteArrayInputStream(text.getBytes(UTF_8)))));
 	}
 
 	public ResourceEventReader(ResourceEvent... events) {

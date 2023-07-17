@@ -1,13 +1,13 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "7.0.2") datalake
+Artifact("io.intino.alexandria", "7.0.3") datalake
 	Imports
-		Compile("io.intino.alexandria", "event", "5.0.2")
+		Compile("io.intino.alexandria", "event", "5.0.3")
 		Test("junit", "junit", "4.13.2")
-		Test("org.assertj", "assertj-core", "3.23.1")
-		Test("commons-io", "commons-io", "2.6")
-		Test("org.openjdk.jmh", "jmh-core", "1.35")
-        Test("org.openjdk.jmh", "jmh-generator-annprocess", "1.35")
+		Test("org.assertj", "assertj-core", "3.24.2")
+		Test("commons-io", "commons-io", "2.9.0")
+		Test("org.openjdk.jmh", "jmh-core", "1.36")
+        Test("org.openjdk.jmh", "jmh-generator-annprocess", "1.36")
 	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 

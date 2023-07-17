@@ -87,6 +87,6 @@ public class EventSession {
 	}
 
 	private EventWriter<Event> createWriter(Fingerprint fingerprint) throws IOException {
-		return EventWriter.of(fingerprint.format(), provider.outputStream(fingerprint.name(), fingerprint.format()));
+		return EventWriter.of(fingerprint.format(), provider.file(fingerprint.name(), fingerprint.format()));
 	}
 }

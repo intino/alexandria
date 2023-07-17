@@ -1,111 +1,72 @@
 package io.intino.alexandria.event.resource;
 
 import io.intino.alexandria.Resource;
-import io.intino.alexandria.event.EventReader.IO;
 import io.intino.alexandria.logger.Logger;
-import io.intino.alexandria.resourcecleaner.DisposableResource;
 
-import java.io.*;
-import java.util.Iterator;
-import java.util.Map;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import java.util.zip.ZipFile;
 
 import static io.intino.alexandria.event.resource.ResourceEvent.REI.ID_SEP;
 import static io.intino.alexandria.event.resource.ResourceHelper.METADATA_FILE;
-import static io.intino.alexandria.event.resource.ResourceHelper.deserializeMetadata;
-import static java.util.Objects.requireNonNull;
 
 public class ZipResourceReader implements Iterator<Resource>, AutoCloseable {
 
-	private final DisposableResource resource;
-	private final ZipInputStream zip;
 	private final File file;
-	private ZipEntry nextEntry;
+	private final ZipFile zipFile;
+	private final Map<Object, ZipEntry> entries;
+	private final Iterator<? extends ZipEntry> iterator;
 
 	public ZipResourceReader(File file) throws IOException {
-		this(IO.open(file), file);
-	}
-
-	/** Using this constructor forces the ResourceEvent elements to load ALL its content into memory on creation.*/
-	public ZipResourceReader(InputStream inputStream) throws IOException {
-		this(zip(inputStream));
-	}
-
-	public ZipResourceReader(InputStream inputStream, File file) throws IOException {
-		this(zip(inputStream), file);
-	}
-
-	/** Using this constructor forces the ResourceEvent elements to load ALL its content into memory on creation.*/
-	public ZipResourceReader(ZipInputStream zip) throws IOException {
-		this(zip, null);
-	}
-
-	/** If file is null, then it forces the ResourceEvent elements to load ALL its content into memory on creation.*/
-	public ZipResourceReader(ZipInputStream zip, File file) throws IOException {
-		this.resource = DisposableResource.whenDestroyed(this).thenClose(zip);
-		this.zip = requireNonNull(zip);
-		this.nextEntry = zip.getNextEntry();
 		this.file = file;
+		zipFile = new ZipFile(file);
+		entries = Collections.list(zipFile.entries()).stream().collect(Collectors.toMap(ZipEntry::getName, e -> e));
+		iterator = entries.values().stream().filter(e -> !e.getName().endsWith(".metadata")).sorted(Comparator.comparing(ZipEntry::getName)).iterator();
 	}
 
 	@Override
 	public boolean hasNext() {
-		return nextEntry != null;
+		return iterator.hasNext();
 	}
 
 	@Override
 	public Resource next() {
-		ZipEntry next = nextEntry;
-		tryAdvance();
-		return toResource(next);
+		return toResource(iterator.next());
 	}
 
 	private Resource toResource(ZipEntry entry) {
-		Map<String, String> metadata = deserializeMetadata(entry.getExtra());
-		if(file != null) metadata.put(METADATA_FILE, file.getAbsolutePath());
-		String name = entry.getName().substring(entry.getName().indexOf(ID_SEP) + 1);
-		Resource resource = new Resource(name, inputStreamProviderOf(metadata, entry.getName()));
+		Map<String, String> metadata = deserializeMetadata(entry);
+		String name = entry.getName().substring(entry.getName().indexOf(ID_SEP) + 1).replace("$", "/");
+		Resource resource = new Resource(name, inputStreamProviderOf(entry));
 		resource.metadata().putAll(metadata);
 		return resource;
 	}
 
-	private Resource.InputStreamProvider inputStreamProviderOf(Map<String, String> metadata, String entryName) {
-		try {
-			return metadata.containsKey(METADATA_FILE) ? openZipFileEntry(metadata.get(METADATA_FILE), entryName) : readFromMemory();
-		} catch (Exception e) {
-			Logger.error(e);
-			return () -> new ByteArrayInputStream(new byte[0]);
+	private Map<String, String> deserializeMetadata(ZipEntry entry) {
+		ZipEntry metadataEntry = entries.get(entry.getName() + ".metadata");
+		if (metadataEntry != null) {
+			try {
+				Map<String, String> metadata = ResourceHelper.deserializeMetadata(new String(zipFile.getInputStream(metadataEntry).readAllBytes(), StandardCharsets.UTF_8));
+				if (metadata == null) return new HashMap<>();
+				if (file != null) metadata.put(METADATA_FILE, file.getAbsolutePath());
+				return metadata;
+			} catch (IOException e) {
+				Logger.error(e);
+			}
 		}
+		return new HashMap<>();
 	}
 
-	private Resource.InputStreamProvider readFromMemory() throws IOException {
-		byte[] bytes = zip.readAllBytes();
-		return () -> new ByteArrayInputStream(bytes);
-	}
-
-	@SuppressWarnings("all")
-	private Resource.InputStreamProvider openZipFileEntry(String filename, String entryName) {
-		return () -> new ZipFileEntryInputStream(filename, entryName);
+	private Resource.InputStreamProvider inputStreamProviderOf(ZipEntry entry) {
+		return () -> zipFile.getInputStream(entry);
 	}
 
 	@Override
 	public void close() throws Exception {
-		zip.close();
-		resource.close();
+		zipFile.close();
 	}
-
-	private void tryAdvance() {
-		this.nextEntry = null;
-		try {
-			this.nextEntry = zip.getNextEntry();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	private static ZipInputStream zip(InputStream inputStream) {
-		return inputStream instanceof ZipInputStream ? (ZipInputStream) inputStream : new ZipInputStream(inputStream);
-	}
-
 }
