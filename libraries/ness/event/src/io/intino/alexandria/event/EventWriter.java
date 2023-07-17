@@ -29,7 +29,7 @@ public interface EventWriter<T extends Event> extends AutoCloseable {
 		switch(format) {
 			case Message: return (EventWriter<T>) new MessageEventWriter(file, append);
 			case Measurement: return (EventWriter<T>) new MeasurementEventWriter(file, append);
-			case Resource: return (EventWriter<T>) new ResourceEventWriter(file, append);
+			case Resource: return (EventWriter<T>) new ResourceEventWriter(file);
 			default: Logger.error("Unknown event format " + Event.Format.of(file));
 		}
 		return new Empty<>();
@@ -40,7 +40,7 @@ public interface EventWriter<T extends Event> extends AutoCloseable {
 		switch(format) {
 			case Message: return (EventWriter<T>) new MessageEventWriter(outputStream);
 			case Measurement: return (EventWriter<T>) new MeasurementEventWriter(outputStream);
-			case Resource: return (EventWriter<T>) new ResourceEventWriter(outputStream);
+			case Resource: Logger.error("Resource event format not supported for outputStream");
 			default: Logger.error("Unknown event format " + format);
 		}
 		return new Empty<>();
@@ -51,7 +51,7 @@ public interface EventWriter<T extends Event> extends AutoCloseable {
 	}
 
 	static <T extends Event> void append(File file, Collection<T> events) throws IOException {
-		write(Event.Format.of(file), IO.open(file, true), events);
+		write(file, true, events.stream());
 	}
 
 	static <T extends Event> void write(File file, Stream<T> events) throws IOException {

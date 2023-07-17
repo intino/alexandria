@@ -1,6 +1,5 @@
 package io.intino.alexandria;
 
-
 import io.intino.alexandria.event.Event.Format;
 
 import java.io.File;
@@ -8,7 +7,6 @@ import java.io.File;
 import static io.intino.alexandria.Session.SessionExtension;
 
 public class Fingerprint {
-
 	private static final String SEPARATOR = "/";
 	private static final String NAME_SEPARATOR = "~";
 	private final String fingerprint;
