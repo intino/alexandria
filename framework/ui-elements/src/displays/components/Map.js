@@ -7,6 +7,7 @@ import {CollectionStyles} from "./Collection";
 import { GoogleMap, MarkerClusterer, HeatmapLayer, KmlLayer } from '@react-google-maps/api'
 import 'alexandria-ui-elements/res/styles/layout.css';
 import PlaceMark from "./geo/PlaceMark";
+import SearchDialog from "./geo/SearchDialog";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import GeoBehavior from "./behaviors/GeoBehavior";
 import GeometryUtil from "../../util/GeometryUtil";
@@ -24,7 +25,7 @@ export const MapStyles = theme => ({
 		padding: "5px 10px",
 		borderRadius: "4px",
 		border: "1px solid",
-	}
+	},
 });
 
 export class EmbeddedMap extends AbstractMap {
@@ -34,6 +35,7 @@ export class EmbeddedMap extends AbstractMap {
 		this.notifier = new MapNotifier(this);
 		this.requester = new MapRequester(this);
 		this.container = React.createRef();
+        this.map = null;
         this.state = {
             ...this.state,
             placeMarks: [],
@@ -41,7 +43,7 @@ export class EmbeddedMap extends AbstractMap {
             zoom: this.props.zoom,
             placeMark: null,
             kmlLayer: null,
-            closeAllInfoWindows: true
+            closeAllInfoWindows: true,
         };
 	};
 
@@ -49,7 +51,8 @@ export class EmbeddedMap extends AbstractMap {
 		const container = this.container.current;
 		let height = $(container).height();
 		return (
-			<div ref={this.container} className="layout flex">
+			<div ref={this.container} className="layout flex" style={{position:'relative'}}>
+			    {this.renderSearch()}
 				<GoogleMap
 				    className="map"
 				    mapContainerStyle={{height:"100%"}}
@@ -57,14 +60,23 @@ export class EmbeddedMap extends AbstractMap {
 				    center={GeoBehavior.center(this)}
 				    onLoad={this.registerMap.bind(this)}
 				    options={this.mapOptions()}>
-					<div style={{height: height, width: '100%'}}/>
+					<div style={{height: height - 100, width: '100%'}}/>
 					{this.renderLayer()}
 				</GoogleMap>
 			</div>
 		);
 	};
 
+	renderSearch = () => {
+	    return (<SearchDialog map={this.getMap.bind(this)} classes={this.props.classes} mapOptions={this.mapOptions()}/>);
+	};
+
+	getMap = () => {
+	    return this.map;
+	};
+
 	registerMap = (map) => {
+	    this.map = map;
 		map.addListener("click", this.hideActiveMarker.bind(this));
 	};
 
