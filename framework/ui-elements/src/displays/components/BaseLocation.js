@@ -4,6 +4,7 @@ import BaseLocationNotifier from "../../../gen/displays/notifiers/BaseLocationNo
 import BaseLocationRequester from "../../../gen/displays/requesters/BaseLocationRequester";
 import { GoogleMap } from '@react-google-maps/api'
 import PlaceMark from "./geo/PlaceMark";
+import SearchDialog from "./geo/SearchDialog";
 import GeoBehavior from "./behaviors/GeoBehavior";
 import 'alexandria-ui-elements/res/styles/layout.css';
 
@@ -36,15 +37,29 @@ export default class BaseLocation extends AbstractBaseLocation {
 		window.setTimeout(() => this.resize(), 100);
 
 		return (
-			<div ref={this.container} className="layout flex" style={{height:"100%"}}>
+			<div ref={this.container} className="layout flex" style={{position:'relative',height:"100%"}}>
+			    {this.renderSearch()}
 				<GoogleMap className={classes.map} zoom={GeoBehavior.zoom(this).defaultZoom}
-						   center={GeoBehavior.center(this)} options={this.mapOptions()}>
+						   center={GeoBehavior.center(this)} options={this.mapOptions()}
+						   onLoad={this.registerMap.bind(this)}>
 					<div ref={this.googleMapLayer} style={{width:'100%'}}/>
 					{this.renderPlaceMark()}
 					{content != null && content()}
 				</GoogleMap>
 			</div>
 		);
+	};
+
+	renderSearch = () => {
+	    return (<SearchDialog map={this.getMap.bind(this)} classes={this.props.classes} mapOptions={this.mapOptions()}/>);
+	};
+
+	getMap = () => {
+	    return this.map;
+	};
+
+	registerMap = (map) => {
+	    this.map = map;
 	};
 
 	resize = function() {
@@ -90,15 +105,15 @@ export default class BaseLocation extends AbstractBaseLocation {
     };
 
     mapOptions = () => {
-        const options = this.props.options != null ? this.props.options : "";
-        const all = options.indexOf("all") != -1;
+        const controls = this.props.controls != null ? this.props.controls : "";
+        const all = controls.indexOf("all") != -1;
 		return {
-            zoomControl: options.indexOf("zoom") != -1 || all,
-            mapTypeControl: options.indexOf("maptype") != -1 || all,
-            scaleControl: options.indexOf("scale") != -1 || all,
-            streetViewControl: options.indexOf("streetview") != -1 || all,
-            rotateControl: options.indexOf("rotate") != -1 || all,
-            fullscreenControl: options.indexOf("fullscreen") != -1 || all
+            zoomControl: controls.indexOf("zoom") != -1 || all,
+            mapTypeControl: controls.indexOf("maptype") != -1 || all,
+            scaleControl: controls.indexOf("scale") != -1 || all,
+            streetViewControl: controls.indexOf("streetview") != -1 || all,
+            rotateControl: controls.indexOf("rotate") != -1 || all,
+            fullscreenControl: controls.indexOf("fullscreen") != -1 || all
         };
     };
 }

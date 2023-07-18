@@ -14,8 +14,12 @@ const styles = theme => ({
 		position: "absolute",
 		top: "0",
 		margin: "10px",
-		padding: "0 8px",
-		fontSize: "8pt",
+        padding: "16px",
+        fontFamily: "Roboto, Arial, sans-serif",
+		fontSize: "11pt",
+        background: "white",
+        height: "40px",
+        borderRadius: "1px",
 	}
 });
 
@@ -50,12 +54,13 @@ class LocationEditable extends AbstractLocationEditable {
 
 		return (
 			<div>
-				<DrawingManager options={drawingOptions}
-								onMarkerComplete={this.handleMarkerChange.bind(this)}
-								onPolylineComplete={this.handlePolylineChange.bind(this)}
-								onRectangleComplete={this.handleRectangleChange.bind(this)}
-								onPolygonComplete={this.handlePolygonChange.bind(this)} />
-				{!this.state.drawingControl && <Button className={classes.remove} onClick={this.handleRemove.bind(this)} variant="contained">{this.translate("Remove location")}</Button>}
+                <DrawingManager options={drawingOptions}
+                    onMarkerComplete={this.handleMarkerChange.bind(this)}
+                    onPolylineComplete={this.handlePolylineChange.bind(this)}
+                    onRectangleComplete={this.handleRectangleChange.bind(this)}
+                    onPolygonComplete={this.handlePolygonChange.bind(this)}
+                />
+				{!this.state.drawingControl && <Button className={classes.remove} style={this._removeButtonStyle()} onClick={this.handleRemove.bind(this)} variant="contained">{this.translate("Remove location")}</Button>}
 			</div>
 		);
 	};
@@ -117,6 +122,10 @@ class LocationEditable extends AbstractLocationEditable {
 		this.setState({ focused });
 	};
 
+    _removeButtonStyle = () => {
+        const options = this.mapOptions();
+        return {marginLeft: (options.mapTypeControl ? 200 : 10) +"px"};
+    };
 }
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(LocationEditable));
