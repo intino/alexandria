@@ -5,14 +5,10 @@ import io.intino.alexandria.Timetag;
 import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.event.EventStream;
 import io.intino.alexandria.event.resource.ResourceEvent;
-import io.intino.alexandria.event.resource.ResourceEventReader;
-import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.terminal.remotedatalake.DatalakeAccessor;
-import org.apache.activemq.BlobMessage;
 
-import javax.jms.JMSException;
+import javax.jms.BytesMessage;
 import javax.jms.Message;
-import java.io.IOException;
 import java.util.List;
 
 import static io.intino.alexandria.terminal.remotedatalake.DatalakeAccessor.reflowSchema;
@@ -39,15 +35,10 @@ public class RemoteResourceTub implements Datalake.Store.Tub<ResourceEvent> {
 	public EventStream<ResourceEvent> events() {
 		JsonObject jsonObject = reflowSchema(tank, source, List.of(tub));
 		Message response = accessor.query(jsonObject.toString());
-		return response instanceof BlobMessage ? openStream((BlobMessage) response) : null;
+		return response instanceof BytesMessage ? openStream((BytesMessage) response) : null;
 	}
 
-	private static EventStream<ResourceEvent> openStream(BlobMessage message) {
-		try {
-			return new EventStream<>(new ResourceEventReader(message.getInputStream()));
-		} catch (IOException | JMSException e) {
-			Logger.error(e);
-			return null;
-		}
+	private static EventStream<ResourceEvent> openStream(BytesMessage message) {
+		throw new UnsupportedOperationException("");
 	}
 }

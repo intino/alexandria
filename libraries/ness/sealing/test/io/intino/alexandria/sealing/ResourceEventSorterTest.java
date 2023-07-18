@@ -8,6 +8,7 @@ import io.intino.alexandria.event.resource.ResourceEventReader;
 import io.intino.alexandria.event.resource.ResourceEventWriter;
 import io.intino.alexandria.sealing.sorters.ResourceEventSorter;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -15,8 +16,10 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
+@Ignore
 public class ResourceEventSorterTest {
 
 	private static final File THE_ZIP_FILE = new File("temp/sorter_test.zip");

@@ -32,7 +32,7 @@ public interface EventReader<T extends Event> extends Iterator<T>, AutoCloseable
 		switch(format) {
 			case Message: return (EventReader<T>) new MessageEventReader(inputStream);
 			case Measurement: return (EventReader<T>) new MeasurementEventReader(inputStream);
-			case Resource: return (EventReader<T>) new ResourceEventReader(inputStream);
+			case Resource: Logger.error("Resource event format not supported for outputStream");
 			default: Logger.error("Unknown event format " + format);
 		}
 		return new Empty<>();
