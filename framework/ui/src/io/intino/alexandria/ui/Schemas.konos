@@ -465,3 +465,12 @@ Schema ReelFetch
 	Attribute signal as Text
 	Attribute start as DateTime
 	Attribute end as DateTime
+
+Schema TextEditablePattern
+	Attribute value as Text
+	Attribute maskCharacter as Text
+	Attribute rules as Object(TextEditablePatternRule) List
+
+Schema TextEditablePatternRule
+	Attribute name as Text
+	Attribute value as Text

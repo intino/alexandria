@@ -39,8 +39,10 @@ Component textCode as ExtensionOf(baseText)
 Component textEditable as ExtensionOf(baseText)
 	Notification refreshReadonly as Bool
 	Notification refreshFocused as Bool
+	Notification refreshPattern as Object(TextEditablePattern)
 	Request notifyChange as Text
 	Request notifyKeyPress as Object(KeyPressEventData)
+	Request notifyBlur as Text
 Component textEditableCode as ExtensionOf(baseText)
 	Notification refreshReadonly as Bool
 	Request notifyChange as Text

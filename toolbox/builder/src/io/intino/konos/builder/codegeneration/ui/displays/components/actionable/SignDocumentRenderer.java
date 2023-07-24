@@ -4,18 +4,19 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ActionableRenderer;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.model.ActionableComponents;
 import io.intino.konos.model.InteractionComponents;
 
 public class SignDocumentRenderer extends ActionableRenderer {
 
-	public SignDocumentRenderer(CompilationContext context, InteractionComponents.Actionable component, RendererWriter provider) {
+	public SignDocumentRenderer(CompilationContext context, ActionableComponents.Actionable component, RendererWriter provider) {
 		super(context, component, provider);
 	}
 
 	@Override
 	public FrameBuilder properties() {
 		FrameBuilder properties = super.properties();
-		InteractionComponents.Actionable.SignDocument signDocument = element.asSignDocument();
+		ActionableComponents.Actionable.SignDocument signDocument = element.asSignDocument();
 		if (signDocument.document() != null) properties.add("document", fixResourceValue(signDocument.document()));
 		return properties;
 	}

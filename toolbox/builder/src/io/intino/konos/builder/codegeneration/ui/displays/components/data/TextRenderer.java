@@ -86,6 +86,8 @@ public class TextRenderer extends ComponentRenderer<Text> {
 	private void addValidation(FrameBuilder builder) {
 		Text.Editable.Validation validation = element.asEditable().validation();
 		if (validation == null) return;
+		String pattern = validation.pattern();
+		if (pattern != null) builder.add("pattern", pattern);
 		Text.Editable.Validation.Length length = validation.length();
 		if (length == null) return;
 		builder.add("maxLength", length.max());

@@ -4,12 +4,13 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ActionableRenderer;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.model.ActionableComponents;
 import io.intino.konos.model.Block;
 import io.intino.konos.model.InteractionComponents;
 
 public class OpenDrawerRenderer extends ActionableRenderer {
 
-	public OpenDrawerRenderer(CompilationContext context, InteractionComponents.Actionable component, RendererWriter provider) {
+	public OpenDrawerRenderer(CompilationContext context, ActionableComponents.Actionable component, RendererWriter provider) {
 		super(context, component, provider);
 	}
 

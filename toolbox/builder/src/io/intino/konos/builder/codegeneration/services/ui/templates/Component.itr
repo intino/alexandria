@@ -936,6 +936,7 @@ end
 def type(properties & text) trigger(specific)
 	[_value("$defaultValue");]
 	[_readonly($readonly);]
+	[_pattern("$pattern");]
 end
 
 def type(properties & location & multiple & componentClass) trigger(specific)

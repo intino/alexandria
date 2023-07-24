@@ -23,9 +23,8 @@ Concept DataComponents
 			var boolean shrink = false
 
         	Concept:{0..1} Validation
-        		var string[] allowedValues = empty
-        		var string[] disallowedValues = empty
-        		var boolean disallowEmptySpaces = false
+        		var string pattern = empty
+
         		Concept:{0..1} Length
         			var integer min
         			var integer max
