@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "4.25.27") ui-framework-elements
+Artifact("io.intino.alexandria", "4.26.0") ui-framework-elements
 	WebImports
 		WebComponent("@date-io/moment", "^1.3.7")
 		WebComponent("@material-ui/core", "^4.12.4")
@@ -41,6 +41,7 @@ Artifact("io.intino.alexandria", "4.25.27") ui-framework-elements
 		WebComponent("highcharts-react-official", "^3.0.0")
 		WebComponent("react-dnd", "^16.0.1")
 		WebComponent("react-dnd-html5-backend", "^16.0.1")
+		WebComponent("react-input-mask", "^2.0.4")
 
 		Resolution("react", "^16.13.1")
 		Resolution("react-dom", "^16.13.1")

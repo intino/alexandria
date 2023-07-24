@@ -4,11 +4,12 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ActionableRenderer;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.model.ActionableComponents;
 import io.intino.konos.model.InteractionComponents;
 
 public class OpenSiteRenderer extends ActionableRenderer {
 
-	public OpenSiteRenderer(CompilationContext context, InteractionComponents.Actionable component, RendererWriter provider) {
+	public OpenSiteRenderer(CompilationContext context, ActionableComponents.Actionable component, RendererWriter provider) {
 		super(context, component, provider);
 	}
 

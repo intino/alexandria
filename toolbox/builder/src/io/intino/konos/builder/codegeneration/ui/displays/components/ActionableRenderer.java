@@ -3,13 +3,14 @@ package io.intino.konos.builder.codegeneration.ui.displays.components;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.model.ActionableComponents;
 import io.intino.konos.model.InteractionComponents;
 
 import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
 
-public class ActionableRenderer extends ComponentRenderer<InteractionComponents.Actionable> {
+public class ActionableRenderer extends ComponentRenderer<ActionableComponents.Actionable> {
 
-	public ActionableRenderer(CompilationContext context, InteractionComponents.Actionable component, RendererWriter provider) {
+	public ActionableRenderer(CompilationContext context, ActionableComponents.Actionable component, RendererWriter provider) {
 		super(context, component, provider);
 	}
 
@@ -32,62 +33,62 @@ public class ActionableRenderer extends ComponentRenderer<InteractionComponents.
 		if (element.isReadonly() || isSelectionContext()) properties.add("readonly", "true");
 		if (element.isAffirmed()) properties.add("affirmed", element.asAffirmed().affirmText());
 		if (element.isSigned()) {
-			InteractionComponents.Actionable.Signed signed = element.asSigned();
+			ActionableComponents.Actionable.Signed signed = element.asSigned();
 			properties.add("signMode", signed.mode().name());
 			properties.add("signText", signed.signText());
-			if (signed.mode() == InteractionComponents.Actionable.Signed.Mode.OneTimePassword) properties.add("signChecker", "oneTimePassword");
+			if (signed.mode() == ActionableComponents.Actionable.Signed.Mode.OneTimePassword) properties.add("signChecker", "oneTimePassword");
 			if (signed.reasonText() != null) properties.add("reasonText", signed.reasonText());
 		}
-		if (element.i$(conceptOf(InteractionComponents.MaterialIconButton.class))) properties.add("icon", element.a$(InteractionComponents.MaterialIconButton.class).icon());
-		else if (element.i$(conceptOf(InteractionComponents.MaterialIconToggle.class))) properties.add("icon", element.a$(InteractionComponents.MaterialIconToggle.class).icon());
+		if (element.i$(conceptOf(ActionableComponents.MaterialIconButton.class))) properties.add("icon", element.a$(ActionableComponents.MaterialIconButton.class).icon());
+		else if (element.i$(conceptOf(ActionableComponents.MaterialIconToggle.class))) properties.add("icon", element.a$(ActionableComponents.MaterialIconToggle.class).icon());
 		return properties;
 	}
 
 	private void addHighlight(FrameBuilder properties) {
-		if (!element.i$(conceptOf(InteractionComponents.AbstractButton.class))) return;
-		InteractionComponents.AbstractButton button = element.a$(InteractionComponents.AbstractButton.class);
-		if (button.highlight() == InteractionComponents.AbstractButton.Highlight.None) return;
+		if (!element.i$(conceptOf(ActionableComponents.AbstractButton.class))) return;
+		ActionableComponents.AbstractButton button = element.a$(ActionableComponents.AbstractButton.class);
+		if (button.highlight() == ActionableComponents.AbstractButton.Highlight.None) return;
 		properties.add("highlighted", button.highlight().name());
 	}
 
 	private boolean isSelectionContext() {
-		return element.isAction() && element.asAction().context() == InteractionComponents.Actionable.Action.Context.Selection ||
-			   element.isDownload() && element.asDownload().context() == InteractionComponents.Actionable.Download.Context.Selection;
+		return element.isAction() && element.asAction().context() == ActionableComponents.Actionable.Action.Context.Selection ||
+			   element.isDownload() && element.asDownload().context() == ActionableComponents.Actionable.Download.Context.Selection;
 	}
 
 	private FrameBuilder modeFrame() {
 		FrameBuilder result = new FrameBuilder("actionableMode", mode());
 		result.add("mode", mode());
-		if (element.i$(conceptOf(InteractionComponents.IconButton.class))) result.add("icon", element.a$(InteractionComponents.IconButton.class).icon());
-		else if (element.i$(conceptOf(InteractionComponents.MaterialIconButton.class))) result.add("icon", element.a$(InteractionComponents.MaterialIconButton.class).icon());
-		else if (element.i$(conceptOf(InteractionComponents.IconToggle.class))) result.add("icon", element.a$(InteractionComponents.IconToggle.class).icon());
-		else if (element.i$(conceptOf(InteractionComponents.MaterialIconToggle.class))) result.add("icon", element.a$(InteractionComponents.MaterialIconToggle.class).icon());
-		else if (element.i$(conceptOf(InteractionComponents.AbstractSplitButton.class))) {
-			result.add("option", element.a$(InteractionComponents.AbstractSplitButton.class).options().toArray());
-			result.add("default", element.a$(InteractionComponents.AbstractSplitButton.class).defaultOption());
-			if (element.i$(conceptOf(InteractionComponents.IconSplitButton.class))) result.add("icon", element.a$(InteractionComponents.IconSplitButton.class).icon());
-			else if (element.i$(conceptOf(InteractionComponents.MaterialIconSplitButton.class))) result.add("icon", element.a$(InteractionComponents.MaterialIconSplitButton.class).icon());
+		if (element.i$(conceptOf(ActionableComponents.IconButton.class))) result.add("icon", element.a$(ActionableComponents.IconButton.class).icon());
+		else if (element.i$(conceptOf(ActionableComponents.MaterialIconButton.class))) result.add("icon", element.a$(ActionableComponents.MaterialIconButton.class).icon());
+		else if (element.i$(conceptOf(ActionableComponents.IconToggle.class))) result.add("icon", element.a$(ActionableComponents.IconToggle.class).icon());
+		else if (element.i$(conceptOf(ActionableComponents.MaterialIconToggle.class))) result.add("icon", element.a$(ActionableComponents.MaterialIconToggle.class).icon());
+		else if (element.i$(conceptOf(ActionableComponents.AbstractSplitButton.class))) {
+			result.add("option", element.a$(ActionableComponents.AbstractSplitButton.class).options().toArray());
+			result.add("default", element.a$(ActionableComponents.AbstractSplitButton.class).defaultOption());
+			if (element.i$(conceptOf(ActionableComponents.IconSplitButton.class))) result.add("icon", element.a$(ActionableComponents.IconSplitButton.class).icon());
+			else if (element.i$(conceptOf(ActionableComponents.MaterialIconSplitButton.class))) result.add("icon", element.a$(ActionableComponents.MaterialIconSplitButton.class).icon());
 		}
 		return result;
 	}
 
 	private String mode() {
-		if (element.i$(conceptOf(InteractionComponents.IconButton.class))) return InteractionComponents.IconButton.class.getSimpleName();
-		else if (element.i$(conceptOf(InteractionComponents.MaterialIconButton.class))) return InteractionComponents.MaterialIconButton.class.getSimpleName();
-		else if (element.i$(conceptOf(InteractionComponents.Button.class))) return InteractionComponents.Button.class.getSimpleName();
-		else if (element.i$(conceptOf(InteractionComponents.IconToggle.class))) return InteractionComponents.IconToggle.class.getSimpleName();
-		else if (element.i$(conceptOf(InteractionComponents.MaterialIconToggle.class))) return InteractionComponents.MaterialIconToggle.class.getSimpleName();
-		else if (element.i$(conceptOf(InteractionComponents.Toggle.class))) return InteractionComponents.Toggle.class.getSimpleName();
-		else if (element.i$(conceptOf(InteractionComponents.SplitButton.class))) return InteractionComponents.SplitButton.class.getSimpleName();
-		else if (element.i$(conceptOf(InteractionComponents.IconSplitButton.class))) return InteractionComponents.IconSplitButton.class.getSimpleName();
-		else if (element.i$(conceptOf(InteractionComponents.MaterialIconSplitButton.class))) return InteractionComponents.MaterialIconSplitButton.class.getSimpleName();
-		else if (element.i$(conceptOf(InteractionComponents.AvatarIconButton.class))) return InteractionComponents.AvatarIconButton.class.getSimpleName();
-		return InteractionComponents.Link.class.getSimpleName();
+		if (element.i$(conceptOf(ActionableComponents.IconButton.class))) return ActionableComponents.IconButton.class.getSimpleName();
+		else if (element.i$(conceptOf(ActionableComponents.MaterialIconButton.class))) return ActionableComponents.MaterialIconButton.class.getSimpleName();
+		else if (element.i$(conceptOf(ActionableComponents.Button.class))) return ActionableComponents.Button.class.getSimpleName();
+		else if (element.i$(conceptOf(ActionableComponents.IconToggle.class))) return ActionableComponents.IconToggle.class.getSimpleName();
+		else if (element.i$(conceptOf(ActionableComponents.MaterialIconToggle.class))) return ActionableComponents.MaterialIconToggle.class.getSimpleName();
+		else if (element.i$(conceptOf(ActionableComponents.Toggle.class))) return ActionableComponents.Toggle.class.getSimpleName();
+		else if (element.i$(conceptOf(ActionableComponents.SplitButton.class))) return ActionableComponents.SplitButton.class.getSimpleName();
+		else if (element.i$(conceptOf(ActionableComponents.IconSplitButton.class))) return ActionableComponents.IconSplitButton.class.getSimpleName();
+		else if (element.i$(conceptOf(ActionableComponents.MaterialIconSplitButton.class))) return ActionableComponents.MaterialIconSplitButton.class.getSimpleName();
+		else if (element.i$(conceptOf(ActionableComponents.AvatarIconButton.class))) return ActionableComponents.AvatarIconButton.class.getSimpleName();
+		return ActionableComponents.Link.class.getSimpleName();
 	}
 
 	private void addSignedMethods(FrameBuilder builder) {
 		if (!element.isSigned()) return;
-		FrameBuilder result = addOwner(buildBaseFrame()).add("method").add(InteractionComponents.Actionable.Signed.class.getSimpleName());
+		FrameBuilder result = addOwner(buildBaseFrame()).add("method").add(ActionableComponents.Actionable.Signed.class.getSimpleName());
 		result.add("name", nameOf(element));
 		builder.add("methods", result);
 	}

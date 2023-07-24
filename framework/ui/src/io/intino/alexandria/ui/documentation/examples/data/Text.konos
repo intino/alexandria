@@ -38,9 +38,20 @@ Template(layout=Vertical, spacing=DP8) textExamplesMold
 
 	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Editable facet with pattern")
+			Block(spacing=DP8, format=filled)
+				Text(format=body1 widgetDemo) text4 as Editable(helperText="Some important helper text") Labeled("campo editable")
+					Validation(pattern="0N0/00")
+				Block > Text as Code(language=Html)
+						value
+							=========
+							Text(value\="lorem ipsum") text3 as Editable(helperText\="Some important helper text",pattern\="AAAAAAAA") Labeled("campo editable")
+							=========
+
+		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="Editable facet with error")
 			Block(spacing=DP8, format=filled)
-				Text(format=body1 widgetDemo) text4 as Editable Labeled("campo editable")
+				Text(format=body1 widgetDemo) text5 as Editable Labeled("campo editable")
 				Block > Text as Code(language=Html)
 						value
 							=========
@@ -64,6 +75,8 @@ Template(layout=Vertical, spacing=DP8) textExamplesMold
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="lorem") text1<br/>
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\=\=\=\=\=\=\=\=\=<br/>
 							=========
+
+	Block(layout=Horizontal, spacing=DP24)
 
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="Code and Editable facet")

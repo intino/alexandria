@@ -4,12 +4,13 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ActionableRenderer;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.model.ActionableComponents;
 import io.intino.konos.model.Addressable;
 import io.intino.konos.model.InteractionComponents;
 
 public class OpenLayerRenderer extends ActionableRenderer {
 
-	public OpenLayerRenderer(CompilationContext context, InteractionComponents.Actionable component, RendererWriter provider) {
+	public OpenLayerRenderer(CompilationContext context, ActionableComponents.Actionable component, RendererWriter provider) {
 		super(context, component, provider);
 	}
 
@@ -33,7 +34,7 @@ public class OpenLayerRenderer extends ActionableRenderer {
 	}
 
 	private FrameBuilder addressedMethod() {
-		FrameBuilder result = addOwner(buildBaseFrame()).add("method").add(InteractionComponents.Actionable.OpenLayer.class.getSimpleName()).add("addressable");
+		FrameBuilder result = addOwner(buildBaseFrame()).add("method").add(ActionableComponents.Actionable.OpenLayer.class.getSimpleName()).add("addressable");
 		result.add("name", nameOf(element));
 		return result;
 	}

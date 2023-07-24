@@ -6,6 +6,7 @@ import TextEditableRequester from "../../../gen/displays/requesters/TextEditable
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
+import InputMask from "react-input-mask";
 import { withSnackbar } from 'notistack';
 import Delayer from '../../util/Delayer';
 import TextBehavior from "./behaviors/TextBehavior";
@@ -26,6 +27,7 @@ class TextEditable extends AbstractTextEditable {
 		this.state = {
 			...this.state,
 			value: '',
+			pattern: null,
 			readonly : this.props.readonly
 		};
 	};
@@ -40,9 +42,30 @@ class TextEditable extends AbstractTextEditable {
 		this.setState({ value: e.target.value });
 	};
 
+	handleBlur(e) {
+	    Delayer.stop(this);
+		this.requester.notifyBlur(this.state.value);
+	};
+
 	render() {
 		if (!this.state.visible) return (<React.Fragment/>);
+	    if (!this.state.readonly && this.state.pattern != null) return this.renderWithMask();
+	    return this.renderField({value: this.state.value, onChange: this.handleChange.bind(this), maxLength: this.props.maxLength != null ? this.props.maxLength : undefined});
+	};
 
+	renderWithMask = () => {
+	    const formatChars = this._formatChars();
+	    return (
+	        <InputMask mask={this.state.pattern.value} formatChars={formatChars}
+	                   value={this.state.value} onChange={this.handleChange.bind(this)} /*disabled={this.state.readonly}*/
+	                   alwaysShowMask={true} maskChar={this.state.pattern.maskCharacter}
+	                   onBlur={this.handleBlur.bind(this)}>
+                {() => this.renderField()}
+            </InputMask>
+        );
+	};
+
+	renderField = (props) => {
 		const { classes } = this.props;
 		const label = this.props.label !== "" ? this.translate(this.props.label) : undefined;
 		const placeholder = this.props.placeholder !== "" ? this.translate(this.props.placeholder) : undefined;
@@ -50,14 +73,13 @@ class TextEditable extends AbstractTextEditable {
 		const error = this.state.error;
 
 		return (
-			<TextField format={this.variant("body1")} style={this.style()} className={classes.default} label={label} type="text"
-					   value={this.state.value} onChange={this.handleChange.bind(this)} /*disabled={this.state.readonly}*/
+			<TextField {...props} format={this.variant("body1")} style={this.style()} className={classes.default} label={label} type="text"
 					   onKeyPress={this.handleKeypress.bind(this)} type={type} autoFocus={this.props.focused}
 					   placeholder={placeholder} multiline={this._multiline()} rows={this._rowsCount()}
 					   error={error != null} helperText={this.state.readonly ? undefined : (error != null ? error : this.props.helperText) }
 					   InputLabelProps={{ shrink: this.props.shrink !== null ? this.props.shrink : undefined }}
 					   inputRef={this.inputRef}
-					   inputProps={{ style: {...this.style(), margin:'0'}, maxLength: this.props.maxLength != null ? this.props.maxLength : undefined }}
+					   inputProps={{ style: {...this.style(), margin:'0'}, maxLength: props != null ? props.maxLength : undefined }}
 					   InputProps={{
 					       readOnly: this.state.readonly,
 						   startAdornment: this.props.prefix !== undefined ? <InputAdornment position="start">{this.props.prefix}</InputAdornment> : undefined,
@@ -87,6 +109,18 @@ class TextEditable extends AbstractTextEditable {
             else this.inputRef.current.focus();
 	    }, 100);
 	};
+
+	refreshPattern = (pattern) => {
+	    this.setState({pattern});
+	};
+
+	_formatChars = () => {
+	    const rules = this.state.pattern.rules;
+	    const result = {};
+	    for (let i=0; i<rules.length; i++) result[rules[i].name] = rules[i].value;
+	    return result;
+	};
+
 }
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(TextEditable));

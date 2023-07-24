@@ -9,10 +9,10 @@ import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.model.*;
-import io.intino.konos.model.InteractionComponents.IconToggle;
-import io.intino.konos.model.InteractionComponents.MaterialIconToggle;
-import io.intino.konos.model.InteractionComponents.Switch;
-import io.intino.konos.model.InteractionComponents.Toggle;
+import io.intino.konos.model.ActionableComponents.IconToggle;
+import io.intino.konos.model.ActionableComponents.MaterialIconToggle;
+import io.intino.konos.model.ActionableComponents.Switch;
+import io.intino.konos.model.ActionableComponents.Toggle;
 import io.intino.konos.model.OtherComponents.DisplayStamp;
 import io.intino.konos.model.OtherComponents.OwnerTemplateStamp;
 import io.intino.konos.model.OtherComponents.Selector;
@@ -143,7 +143,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	private List<String> facets(PassiveView passiveView) {
 		List<String> result = new ArrayList<>();
 		if (passiveView.i$(conceptOf(Switch.class))) result.add("Switch");
-		if (passiveView.i$(conceptOf(InteractionComponents.AbstractSplitButton.class))) result.add("Split");
+		if (passiveView.i$(conceptOf(ActionableComponents.AbstractSplitButton.class))) result.add("Split");
 		if (passiveView.i$(conceptOf(Toggle.class)) || passiveView.i$(conceptOf(IconToggle.class)) || passiveView.i$(conceptOf(MaterialIconToggle.class)))
 			result.add("Toggle");
 		if (passiveView.i$(conceptOf(Editable.class))) result.add("Editable");

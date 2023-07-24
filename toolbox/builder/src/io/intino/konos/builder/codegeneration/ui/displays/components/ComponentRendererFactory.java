@@ -12,7 +12,7 @@ import io.intino.konos.model.DataComponents.Date;
 import io.intino.konos.model.DataComponents.File;
 import io.intino.konos.model.DataComponents.Image;
 import io.intino.konos.model.DataComponents.Text;
-import io.intino.konos.model.InteractionComponents.Actionable;
+import io.intino.konos.model.ActionableComponents.Actionable;
 import io.intino.konos.model.InteractionComponents.Toolbar;
 
 import java.util.LinkedHashMap;

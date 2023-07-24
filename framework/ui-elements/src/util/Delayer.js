@@ -7,6 +7,11 @@ const Delayer = (function () {
                 component.delayer = null;
             }
             component.delayer = window.setTimeout(() => callback(), delay);
+        },
+        stop : (component) => {
+            if (component.delayer == null) return;
+            window.clearTimeout(component.delayer);
+            component.delayer = null;
         }
     }
 })();

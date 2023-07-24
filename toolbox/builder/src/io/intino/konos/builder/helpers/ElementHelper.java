@@ -2,6 +2,7 @@ package io.intino.konos.builder.helpers;
 
 import cottons.utils.StringHelper;
 import io.intino.konos.builder.codegeneration.ElementReference;
+import io.intino.konos.model.ActionableComponents;
 import io.intino.konos.model.InteractionComponents;
 import io.intino.konos.model.KonosGraph;
 import io.intino.magritte.framework.Layer;
@@ -84,42 +85,42 @@ public class ElementHelper {
 
 	public String typeOf(Layer element) {
 		if (!typeMap.containsKey(element)) {
-			String type = element.i$(InteractionComponents.Actionable.class) ?
-					typeOfActionable(element.a$(InteractionComponents.Actionable.class)) :
+			String type = element.i$(ActionableComponents.Actionable.class) ?
+					typeOfActionable(element.a$(ActionableComponents.Actionable.class)) :
 					element.getClass().getSimpleName();
 			typeMap.put(element, type);
 		}
 		return typeMap.get(element);
 	}
 
-	private String typeOfActionable(InteractionComponents.Actionable actionable) {
-		String result = InteractionComponents.Actionable.Action.class.getSimpleName();
+	private String typeOfActionable(ActionableComponents.Actionable actionable) {
+		String result = ActionableComponents.Actionable.Action.class.getSimpleName();
 		if (actionable.isAction()) {
-			String context = actionable.asAction().context() == InteractionComponents.Actionable.Action.Context.Selection ? "Selection" : "";
-			result = context + InteractionComponents.Actionable.Action.class.getSimpleName();
+			String context = actionable.asAction().context() == ActionableComponents.Actionable.Action.Context.Selection ? "Selection" : "";
+			result = context + ActionableComponents.Actionable.Action.class.getSimpleName();
 		}
-		if (actionable.isOpenDrawer()) result = InteractionComponents.Actionable.OpenDrawer.class.getSimpleName();
-		if (actionable.isCloseDrawer()) result = InteractionComponents.Actionable.CloseDrawer.class.getSimpleName();
-		if (actionable.isOpenPage()) result = InteractionComponents.Actionable.OpenPage.class.getSimpleName();
-		if (actionable.isOpenSite()) result = InteractionComponents.Actionable.OpenSite.class.getSimpleName();
-		if (actionable.isOpenBlock()) result = InteractionComponents.Actionable.OpenBlock.class.getSimpleName();
-		if (actionable.isCloseBlock()) result = InteractionComponents.Actionable.CloseBlock.class.getSimpleName();
-		if (actionable.isOpenDialog()) result = InteractionComponents.Actionable.OpenDialog.class.getSimpleName();
-		if (actionable.isOpenLayer()) result = InteractionComponents.Actionable.OpenLayer.class.getSimpleName();
-		if (actionable.isCloseLayer()) result = InteractionComponents.Actionable.CloseLayer.class.getSimpleName();
-		if (actionable.isOpenPopover()) result = InteractionComponents.Actionable.OpenPopover.class.getSimpleName();
-		if (actionable.isCloseDialog()) result = InteractionComponents.Actionable.CloseDialog.class.getSimpleName();
-		if (actionable.isCopyToClipboard()) result = InteractionComponents.Actionable.CopyToClipboard.class.getSimpleName();
-		if (actionable.isSignText()) result = InteractionComponents.Actionable.SignText.class.getSimpleName();
-		if (actionable.isSignDocument()) result = InteractionComponents.Actionable.SignDocument.class.getSimpleName();
+		if (actionable.isOpenDrawer()) result = ActionableComponents.Actionable.OpenDrawer.class.getSimpleName();
+		if (actionable.isCloseDrawer()) result = ActionableComponents.Actionable.CloseDrawer.class.getSimpleName();
+		if (actionable.isOpenPage()) result = ActionableComponents.Actionable.OpenPage.class.getSimpleName();
+		if (actionable.isOpenSite()) result = ActionableComponents.Actionable.OpenSite.class.getSimpleName();
+		if (actionable.isOpenBlock()) result = ActionableComponents.Actionable.OpenBlock.class.getSimpleName();
+		if (actionable.isCloseBlock()) result = ActionableComponents.Actionable.CloseBlock.class.getSimpleName();
+		if (actionable.isOpenDialog()) result = ActionableComponents.Actionable.OpenDialog.class.getSimpleName();
+		if (actionable.isOpenLayer()) result = ActionableComponents.Actionable.OpenLayer.class.getSimpleName();
+		if (actionable.isCloseLayer()) result = ActionableComponents.Actionable.CloseLayer.class.getSimpleName();
+		if (actionable.isOpenPopover()) result = ActionableComponents.Actionable.OpenPopover.class.getSimpleName();
+		if (actionable.isCloseDialog()) result = ActionableComponents.Actionable.CloseDialog.class.getSimpleName();
+		if (actionable.isCopyToClipboard()) result = ActionableComponents.Actionable.CopyToClipboard.class.getSimpleName();
+		if (actionable.isSignText()) result = ActionableComponents.Actionable.SignText.class.getSimpleName();
+		if (actionable.isSignDocument()) result = ActionableComponents.Actionable.SignDocument.class.getSimpleName();
 		if (actionable.isSelectPreviousItem())
-			result = InteractionComponents.Actionable.SelectPreviousItem.class.getSimpleName();
+			result = ActionableComponents.Actionable.SelectPreviousItem.class.getSimpleName();
 		if (actionable.isSelectNextItem())
-			result = InteractionComponents.Actionable.SelectNextItem.class.getSimpleName();
-		if (actionable.isExport()) result = InteractionComponents.Actionable.Export.class.getSimpleName();
+			result = ActionableComponents.Actionable.SelectNextItem.class.getSimpleName();
+		if (actionable.isExport()) result = ActionableComponents.Actionable.Export.class.getSimpleName();
 		if (actionable.isDownload()) {
-			String context = actionable.asDownload().context() == InteractionComponents.Actionable.Download.Context.Selection ? "Selection" : "";
-			result = InteractionComponents.Actionable.Download.class.getSimpleName() + context;
+			String context = actionable.asDownload().context() == ActionableComponents.Actionable.Download.Context.Selection ? "Selection" : "";
+			result = ActionableComponents.Actionable.Download.class.getSimpleName() + context;
 		}
 		return result;
 	}

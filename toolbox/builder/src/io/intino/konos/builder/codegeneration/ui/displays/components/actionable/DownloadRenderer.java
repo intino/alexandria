@@ -4,12 +4,13 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ActionableRenderer;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.model.ActionableComponents;
 import io.intino.konos.model.CatalogComponents;
 import io.intino.konos.model.InteractionComponents;
 
 public class DownloadRenderer extends ActionableRenderer {
 
-	public DownloadRenderer(CompilationContext context, InteractionComponents.Actionable component, RendererWriter provider) {
+	public DownloadRenderer(CompilationContext context, ActionableComponents.Actionable component, RendererWriter provider) {
 		super(context, component, provider);
 	}
 
@@ -21,9 +22,9 @@ public class DownloadRenderer extends ActionableRenderer {
 	@Override
 	public FrameBuilder properties() {
 		FrameBuilder result = super.properties();
-		InteractionComponents.Actionable.Download download = element.asDownload();
+		ActionableComponents.Actionable.Download download = element.asDownload();
 		download.options().forEach(o -> result.add("option", o));
-		if (download.context() == InteractionComponents.Actionable.Download.Context.Selection) result.add("selection");
+		if (download.context() == ActionableComponents.Actionable.Download.Context.Selection) result.add("selection");
 		return result;
 	}
 

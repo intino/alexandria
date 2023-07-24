@@ -76,7 +76,9 @@ Concept InteractionComponents
 		has Component
 		Aspect Linked
         	var CatalogComponents.Collection to
-        	has Actionable
+        	has ActionableComponents.Actionable
+
+Concept ActionableComponents
 
 	Concept Actionable extends Component is abstract
 		var string title
