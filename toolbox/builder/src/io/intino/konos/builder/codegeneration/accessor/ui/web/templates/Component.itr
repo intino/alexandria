@@ -206,6 +206,10 @@ def type(properties & slider) trigger(specific)
 	[ range={{min:$min,max:$max}}][ value={$value}]
 end
 
+def type(properties & rangeslider) trigger(specific)
+	[ range={{min:$min,max:$max}}][ value={$[$from,$to$]}][ minimumDistance={$minimumDistance}]
+end
+
 def type(properties & grouping) trigger(specific)
 	[ pageSize={$pageSize}][ placeholder="$placeholder"]
 end

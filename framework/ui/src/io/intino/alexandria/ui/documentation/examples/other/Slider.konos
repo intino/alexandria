@@ -95,3 +95,15 @@ Template(layout=Vertical, spacing=DP8) sliderExamplesMold
 						Slider(position\=SliderBottom)<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Range(min\=1,max\=100)
 						=========
+
+		Block as Relative(width=33%, height=100%)
+			Text(format=h6, value="Range slider. No facets")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				RangeSlider(format=containerAirLarge, from=-80, to=3000, minimumDistance=10) slider8
+					Range(min=-100,max=10000)
+			Block > Text as Code(language=Html)
+					value
+						=========
+						RangeSlider(from\=5,to\=30,minimumDistance\=10)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Range(min\=1,max\=100)
+						=========

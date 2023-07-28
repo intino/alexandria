@@ -142,23 +142,35 @@ Component spinner
 
 Component baseSlider
 	Notification refreshOrdinals as Object(Ordinal) List
-	Notification refreshSelected as Object(Selected)
 	Notification refreshSelectedOrdinal as Text
 	Notification refreshToolbar as Object(ToolbarState)
 	Notification refreshRange as Object(Range)
 	Notification refreshReadonly as Bool
 	Notification refreshMarks as Object(Mark) List
 
-	Request moved as LongInteger
-	Request update as LongInteger
 	Request selectOrdinal as Text
-	Request previous
-	Request next
 	Request play
 	Request pause
+	Request previous
+	Request next
 
 Component slider as ExtensionOf(baseSlider)
+	Notification refreshSelected as Object(Selected)
+
+	Request moved as LongInteger
+	Request update as LongInteger
+
+Component rangeSlider as ExtensionOf(baseSlider)
+	Notification refreshSelected as Object(RangeSelected)
+
+	Request moved as Object(RangeValue)
+	Request update as Object(RangeValue)
+
 Component temporalSlider as ExtensionOf(baseSlider)
+	Notification refreshSelected as Object(Selected)
+
+	Request moved as LongInteger
+	Request update as LongInteger
 
 Component templateStamp
 Component templateStampEditable

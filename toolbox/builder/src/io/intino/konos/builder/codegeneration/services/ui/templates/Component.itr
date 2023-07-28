@@ -975,6 +975,14 @@ def type(properties & slider) trigger(specific)
 	[$ordinal+ordinalMethod...[$NL]]
 end
 
+def type(properties & rangeslider) trigger(specific)
+	[_value($from,$to);]
+	[_range($min,$max);]
+	[_animation($interval,$loop);]
+	[_readonly($readonly);]
+	[$ordinal+ordinalMethod...[$NL]]
+end
+
 def type(properties & temporalslider) trigger(specific)
 	[_value($value);]
 	[_range(java.time.Instant.ofEpochMilli($min~L),java.time.Instant.ofEpochMilli($max~L));]

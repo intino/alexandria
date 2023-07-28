@@ -27,14 +27,23 @@ public class SliderRenderer extends BindingCollectionRenderer<AbstractSlider> {
 		FrameBuilder result = super.properties();
 		result.add("abstractslider");
 		if (element.arrangement() != null) result.add("arrangement", element.arrangement().name());
-		if (element.value() != -1) result.add("value", element.value());
 		if (element.isReadonly()) result.add("readonly", element.isReadonly());
+		addValue(result);
 		addRange(result);
 		addAnimation(result);
 		addOrdinals(result);
 		addPosition(result);
 		addStyle(result);
 		return result;
+	}
+
+	private void addValue(FrameBuilder builder) {
+		if (element.i$(conceptOf(Slider.class))) {
+			builder.add("value", element.a$(Slider.class).value());
+		}
+		else if (element.i$(conceptOf(TemporalSlider.class))) {
+			builder.add("value", element.a$(TemporalSlider.class).value());
+		}
 	}
 
 	private void addRange(FrameBuilder builder) {

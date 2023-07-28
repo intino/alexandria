@@ -149,6 +149,12 @@ Schema ToolbarState
 Schema Selected
 	Attribute value as LongInteger
 	Attribute formattedValue as Text
+Schema RangeSelected as ExtensionOf(Selected)
+	Attribute to as LongInteger
+	Attribute formattedTo as Text
+Schema RangeValue
+	Attribute from as LongInteger
+	Attribute to as LongInteger
 
 Schema UserInfo
 	Attribute fullName as Text
