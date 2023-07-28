@@ -231,17 +231,26 @@ Concept:{0..1} VisualizationComponents
 		var word:{Vertical Horizontal} arrangement = Horizontal
 		var word:{Full ToolbarOnly SliderOnly NavigationOnly OrdinalSelectorOnly} style = Full
 		var word:{SliderTop SliderBottom} position = SliderTop
-		var integer value = -1
 		Concept:{0..1} Animation
 			var integer:{Millis} interval
 			var boolean loop = false
 
 		sub Slider
+			var long value = -1
+			Concept:{1..1} Range
+				var integer min
+				var integer max
+
+		sub RangeSlider
+			var long from = -1
+			var long to = -1
+			var integer minimumDistance = -1
 			Concept:{1..1} Range
 				var integer min
 				var integer max
 
 		sub TemporalSlider
+			var long value = -1
 			var CatalogComponents.Collection[] collections
 			var word[]:{Year QuarterOfYear Month Week Day SixHours Hour FifteenMinutes Minute Second} scales
 

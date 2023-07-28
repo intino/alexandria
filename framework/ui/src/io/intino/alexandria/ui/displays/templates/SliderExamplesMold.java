@@ -1,5 +1,6 @@
 package io.intino.alexandria.ui.displays.templates;
 
+import io.intino.alexandria.schemas.RangeValue;
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.components.slider.Ordinal;
@@ -38,8 +39,11 @@ public class SliderExamplesMold extends AbstractSliderExamplesMold<AlexandriaUiB
         slider6.refresh();
 
         slider7.add(ordinal());
-        slider7.onChange(event -> slider6.notifyUser(String.format("Se ha seleccionado el valor %d", (Long)event.value()), UserMessage.Type.Info));
+        slider7.onChange(event -> slider7.notifyUser(String.format("Se ha seleccionado el valor %d", (Long)event.value()), UserMessage.Type.Info));
         slider7.refresh();
+
+        slider8.onChange(event -> slider8.notifyUser(String.format("Se ha seleccionado el rango %d - %d", ((RangeValue)event.value()).from(), ((RangeValue)event.value()).to()), UserMessage.Type.Info));
+        slider8.refresh();
     }
 
     private Ordinal ordinal() {

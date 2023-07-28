@@ -37,7 +37,9 @@ public class ComponentRendererFactory {
 		map.put(conceptOf(DataComponents.Location.class), config -> new LocationRenderer(config.context(), config.component().a$(DataComponents.Location.class), config.provider()));
 		map.put(conceptOf(Spinner.class), config -> new SpinnerRenderer(config.context(), config.component().a$(Spinner.class), config.provider()));
 		map.put(conceptOf(OtherComponents.Selector.class), config -> new SelectorRenderer(config.context(), config.component().a$(OtherComponents.Selector.class), config.provider()));
-		map.put(conceptOf(AbstractSlider.class), config -> new SliderRenderer(config.context(), config.component().a$(AbstractSlider.class), config.provider()));
+		map.put(conceptOf(RangeSlider.class), config -> new RangeSliderRenderer(config.context(), config.component().a$(RangeSlider.class), config.provider()));
+		map.put(conceptOf(Slider.class), config -> new SliderRenderer(config.context(), config.component().a$(AbstractSlider.class), config.provider()));
+		map.put(conceptOf(TemporalSlider.class), config -> new SliderRenderer(config.context(), config.component().a$(AbstractSlider.class), config.provider()));
 		map.put(conceptOf(Block.class), config -> new BlockRenderer(config.context(), config.component().a$(Block.class), config.provider()));
 		map.put(conceptOf(Chart.class), config -> new ChartRenderer(config.context(), config.component().a$(Chart.class), config.provider()));
 		map.put(conceptOf(Dashboard.class), config -> new DashboardRenderer(config.context(), config.component().a$(Dashboard.class), config.provider()));

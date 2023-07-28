@@ -3,7 +3,9 @@ package io.intino.alexandria.ui.displays.components;
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.schemas.Selected;
 import io.intino.alexandria.ui.displays.components.slider.Ordinal;
+import io.intino.alexandria.ui.displays.components.slider.Range;
 import io.intino.alexandria.ui.displays.components.slider.ordinals.*;
 import io.intino.alexandria.ui.displays.events.ChangeEvent;
 import io.intino.alexandria.ui.displays.notifiers.TemporalSliderNotifier;
@@ -24,6 +26,7 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
 
     public TemporalSlider(B box) {
         super(box);
+        _value(0);
     }
 
     @Override
@@ -42,6 +45,11 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
 
     public void value(Instant instant) {
         value(toLong(instant));
+    }
+
+    @Override
+    public void reset() {
+        _value(range().min());
     }
 
     @Override
@@ -66,13 +74,21 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
         return this;
     }
 
+    public void moved(long value) {
+        notifier.refreshSelected(schemaOf(value));
+        notifier.refreshToolbar(toolbarState());
+    }
+
+    public void update(long value) {
+        value(value);
+    }
+
     @Override
     void notifyChange() {
         super.notifyChange();
         notifyCollections();
     }
 
-    @Override
     public String formattedValue(long value) {
         return format(value);
     }
@@ -80,6 +96,7 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
     @Override
     String format(long value) {
         Ordinal ordinal = ordinal();
+        if (ordinal == null) ordinal = defaultOrdinals().get(0);
         return ordinal != null ? (customFormatter != null ? customFormatter.format(millisOf(value)) : ordinal.formatter(language()).format(millisOf(value))) : String.valueOf(millisOf(value));
     }
 
@@ -104,7 +121,12 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
         return Scale.Day;
     }
 
-    protected TemporalSlider _range(Instant min, Instant max) {
+    @Override
+    protected void _value(Object value) {
+        this.value = value instanceof Integer ? Long.valueOf((int)value) : value;
+    }
+
+    protected TemporalSlider<DN, B> _range(Instant min, Instant max) {
         this.min = min;
         this.max = max;
         updateRange();
@@ -144,9 +166,65 @@ public class TemporalSlider<DN extends TemporalSliderNotifier, B extends Box> ex
     }
 
     @Override
+    <T extends Selected> void refreshSelected(T schema) {
+        notifier.refreshSelected(schema);
+    }
+
+    @Override
+    Selected schemaOf(Object value) {
+        String formattedValue = formattedValue((Long) value);
+        return new Selected().value((Long)value).formattedValue(formattedValue);
+    }
+
+    @Override
     void notifyListener() {
         if (changeListener() == null) return;
         changeListener().accept(new ChangeEvent(this, toInstant(millisOf(value()))));
+    }
+
+    @Override
+    boolean checkRange(Object value) {
+        if ((Long)value > range.max) return false;
+        if ((Long)value < range.min) return false;
+        return true;
+    }
+
+    @Override
+    public void previous() {
+        value((Long)value()-1);
+    }
+
+    @Override
+    public void next() {
+        value((Long)value()+1);
+    }
+
+    @Override
+    boolean canPrevious() {
+        return (Long)value() > range.min;
+    }
+
+    @Override
+    boolean canNext() {
+        return (Long)value() < range.max;
+    }
+
+    @Override
+    void nextValue() {
+        Long value = value();
+        if (value >= range.max) {
+            if (canLoop()) value(range.min()-1);
+            else return;
+        }
+        value(value +1);
+    }
+
+    @Override
+    void _range(long min, long max) {
+        this.range = new Range().min(min).max(max);
+        long value = value();
+        if (value < min) _value(min);
+        if (value > max) _value(max);
     }
 
     private long toLong(Instant instant) {

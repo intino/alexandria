@@ -829,7 +829,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
     };
 
     isColumnVisible = (index) => {
-        return this.state.visibleColumns[index] == null || this.state.visibleColumns[index] === true;
+        return this.state.visibleColumns[index] == null || this.state.visibleColumns[index] === true || (this.state.column != null && this.state.column.index == index);
     };
 
     handleToggleColumn = (index) => {

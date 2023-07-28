@@ -128,6 +128,7 @@ export default class BaseSlider extends AbstractBaseSlider {
 
 		return (<StyledSlider disabled={this.state.readonly} valueLabelDisplay="auto" min={range.min} max={range.max}
 							  value={this.getValue()} step={ordinal.step} marks={marks}
+							  disableSwap={this.props.minimumDistance != -1}
 							  onChange={this.handleMoved.bind(this)}
 							  onChangeCommitted={this.handleChange.bind(this)}
 							  valueLabelFormat={this.handleFormattedValue.bind(this)}
@@ -172,11 +173,11 @@ export default class BaseSlider extends AbstractBaseSlider {
 	};
 
 	getValue = () => {
-		return this.state.selected != null && this.state.selected.value !== undefined && this.state.selected.value !== -1 ? this.state.selected.value : 0;
+		return this.state.selected != null && this.state.selected.value !== undefined ? this.state.selected.value : 0;
 	};
 
 	getFormattedValue = () => {
-		return this.state.selected != null && this.state.selected.value !== undefined && this.state.selected.value !== -1 ? this.state.selected.formattedValue : 0;
+		return this.state.selected != null && this.state.selected.value !== undefined ? this.state.selected.formattedValue : 0;
 	};
 
 	renderOrdinals = () => {
