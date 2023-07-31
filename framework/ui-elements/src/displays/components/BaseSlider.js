@@ -1,7 +1,7 @@
 import React from "react";
 import Slider from '@material-ui/core/Slider';
 import { withStyles } from '@material-ui/core';
-import { Tooltip, MenuItem, Select, IconButton } from '@material-ui/core';
+import { Tooltip, MenuItem, Select, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@material-ui/core';
 import { PlayCircleFilled, PauseCircleFilled, NavigateBefore, NavigateNext } from '@material-ui/icons';
 import AbstractBaseSlider from "../../../gen/displays/components/AbstractBaseSlider";
 import Delayer from "../../util/Delayer";
@@ -169,7 +169,63 @@ export default class BaseSlider extends AbstractBaseSlider {
 
 	renderValue = () => {
 		const { theme } = this.props;
-		return (<div style={{color: this.state.readonly ? theme.palette.grey.A700 : "black"}}>{this.getFormattedValue()}</div>);
+		return (
+		    <React.Fragment>
+		        <div style={{color: this.state.readonly ? theme.palette.grey.A700 : "black", cursor: "pointer"}} onClick={this.showValueDialog.bind(this)}>{this.getFormattedValue()}</div>
+		        {this.renderValueDialog()}
+		    </React.Fragment>
+        );
+	};
+
+	showValueDialog = () => {
+	    this.setState({openValueDialog: true, editorValue: this.state.selected != null ? this.state.selected.value : this.state.range.min });
+	};
+
+	renderValueDialog = () => {
+		const openValueDialog = this.state.openValueDialog != null ? this.state.openValueDialog : false;
+		return (<Dialog onClose={this.handleCloseValueDialog.bind(this)} open={openValueDialog}>
+				<DialogTitle onClose={this.handleCloseValueDialog.bind(this)}>{this.translate("Select value")}</DialogTitle>
+				<DialogContent style={{position:"relative",overflow:"hidden"}}>
+					{this.renderValueEditor()}
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={this.handleCloseValueDialog.bind(this)} color="primary">{this.translate("Cancel")}</Button>
+					<Button variant="contained" onClick={this.handleValueChange.bind(this)} color="primary">{this.translate("OK")}</Button>
+				</DialogActions>
+			</Dialog>
+		);
+	};
+
+	renderValueEditor = () => {
+		const range = this.state.range;
+		return (
+			<TextField format={this.variant("body1")} type="number"
+					   value={this.state.editorValue} onChange={this.handleValueEditorChange.bind(this)} onKeyPress={this.handleValueEditorKeyPress.bind(this)}
+					   style={{width:'100%'}} autoFocus={true}
+					   inputProps={{
+						   min: range.min !== -1 ? range.min : undefined,
+						   max: range.max !== -1 ? range.max : undefined,
+						   step: 1
+					   }}/>
+		);
+	};
+
+	handleValueEditorChange = (e) => {
+	    this.setState({editorValue: e.target.value});
+	};
+
+	handleValueEditorKeyPress = (e) => {
+	    if (e.key != "Enter") return;
+	    this.handleValueChange();
+	};
+
+	handleValueChange = () => {
+		this.requester.update(this.state.editorValue);
+		this.setState({openValueDialog: false});
+	};
+
+	handleCloseValueDialog = () => {
+	    this.setState({openValueDialog: false});
 	};
 
 	getValue = () => {

@@ -21,6 +21,9 @@ class TemporalSlider extends AbstractTemporalSlider {
 		return this.renderComponent();
 	};
 
+	showValueDialog = () => {
+	};
+
 }
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(TemporalSlider));
