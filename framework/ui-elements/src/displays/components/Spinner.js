@@ -17,7 +17,6 @@ class Spinner extends AbstractSpinner {
 		this.requester = new SpinnerRequester(this);
 		this.state = {
 		    ...this.state,
-            loading: true
 		}
 	};
 
@@ -36,10 +35,6 @@ class Spinner extends AbstractSpinner {
 
 	_size = (defaultSize) => {
 	    return this.props.size != 0 && this.props.size !== undefined ? this.props.size : defaultSize;
-	};
-
-	refreshLoading = (value) => {
-		this.setState({ loading : value });
 	};
 
 	color = () => {
