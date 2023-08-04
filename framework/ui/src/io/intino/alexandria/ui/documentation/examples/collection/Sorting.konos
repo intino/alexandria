@@ -4,8 +4,8 @@ use Theme
 
 Template(layout=Vertical, spacing=DP8) sortingExamplesMold
 
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=49%, height=100%)
+	Block(layout=Horizontal Wrap, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filledNoAir)
 				Block(format=air,layout=Horizontal)
@@ -31,7 +31,7 @@ Template(layout=Vertical, spacing=DP8) sortingExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) age as Labeled("age")
 						=========
 
-		Block as Relative(width=49%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Sortings inside Selector")
 			Block(spacing=DP8, format=filledNoAir)
 				Selector(format=air) selector as ComboBox

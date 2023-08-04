@@ -6,8 +6,8 @@ Dataframe iris as CSV("data/iris.csv")
 
 Template(layout=Vertical, spacing=DP8) chartExamplesMold
 
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=32%, height=100%)
+	Block(layout=Horizontal Wrap, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets with Html output")
 			Block(spacing=DP8, format=filled)
 				Chart(input=iris) chart1
@@ -28,7 +28,7 @@ Template(layout=Vertical, spacing=DP8) chartExamplesMold
 							Chart(input\=iris, query\="") chart
 							=========
 
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets with Image output")
 			Block(spacing=DP8, format=filled)
 				Chart(input=iris, output = Image) chart2

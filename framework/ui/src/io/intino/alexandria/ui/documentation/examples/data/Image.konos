@@ -4,8 +4,8 @@ use Theme
 
 Template(layout=Vertical, spacing=DP8) imageExamplesMold
 
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=32%, height=100%)
+	Block(layout=Horizontal Wrap, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filled)
 				Image(defaultValue="images/image.jpg", format=widgetDemo) image1 as Absolute(width=200px, height=150px)
@@ -15,7 +15,7 @@ Template(layout=Vertical, spacing=DP8) imageExamplesMold
 							Image(defaultValue\="images/image.jpg", format\=widgetDemo) image1 as Absolute(width\=300px, height\=150px)
 							=========
 
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Avatar facet")
 			Block(spacing=DP8, format=filled)
 				Image image2 as Avatar("Intino avatar", format=widgetDemo, color="#3F52B5") Absolute(width=75px, height=75px)
@@ -25,7 +25,7 @@ Template(layout=Vertical, spacing=DP8) imageExamplesMold
 							Image image2 as Avatar("Intino avatar", format\=widgetDemo, color\="#3F52B5") Absolute(width\=75px, height\=75px)
 							=========
 
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Editable facet")
 			Block(spacing=DP8, format=filled)
 				Image(defaultValue="images/image.jpg") image3 as Editable(format=widgetDemo) Absolute(width=200px, height=200px)
@@ -35,9 +35,7 @@ Template(layout=Vertical, spacing=DP8) imageExamplesMold
 							Image(defaultValue\="images/image.jpg") image3 as Editable(format\=widgetDemo) Absolute(width\=200px, height\=200px)
 							=========
 
-	Block(layout=Horizontal, spacing=DP24)
-
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets (allowFullscreen)")
 			Block(spacing=DP8, format=filled)
 				Image(defaultValue="images/image.jpg", format=widgetDemo, allowFullscreen=true) as Absolute(width=200px, height=150px)

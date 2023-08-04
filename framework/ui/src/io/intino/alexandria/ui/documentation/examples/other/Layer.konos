@@ -4,8 +4,8 @@ use Theme
 
 Template(layout=Vertical, spacing=DP8) layerExamplesMold
 
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=33%, height=100%)
+	Block(layout=Horizontal Wrap, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Button(title="open layer") openLayerTrigger as OpenLayer
@@ -15,7 +15,7 @@ Template(layout=Vertical, spacing=DP8) layerExamplesMold
 						Button(title\="open layer") as OpenLayer
 						=========
 
-		Block as Relative(width=33%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Button(title="close layer") closeLayerTrigger as CloseLayer

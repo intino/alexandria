@@ -4,8 +4,8 @@ use Theme
 
 Template(layout=Vertical, spacing=DP8) dialogExamplesMold
 
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=33%, height=100%)
+	Block(layout=Horizontal Wrap, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Button(title="custom dialog") as OpenDialog(dialog=dialog1)
@@ -27,7 +27,7 @@ Template(layout=Vertical, spacing=DP8) dialogExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Button(title\="Accept") as Action
 						=========
 
-		Block as Relative(width=33%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets. Decision dialog")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Button(title="decision dialog") as OpenDialog(dialog=dialog2)
@@ -49,7 +49,7 @@ Template(layout=Vertical, spacing=DP8) dialogExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text option2 as Option Labeled("Option 2")
 						=========
 
-		Block as Relative(width=33%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets. Alert dialog")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Button(title="alert dialog") as OpenDialog(dialog=dialog3)
@@ -65,8 +65,7 @@ Template(layout=Vertical, spacing=DP8) dialogExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;acceptLabel \= "OK!"
 						=========
 
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=33%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets. Collection dialog")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Button(title="collection dialog") as OpenDialog(dialog=dialog4)
@@ -83,7 +82,7 @@ Template(layout=Vertical, spacing=DP8) dialogExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;List list1 as Selectable > Mold > Item(height \= 100px) itemMold
 						=========
 
-		Block as Relative(width=33%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Fullscreen facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Button(title="fullscreen dialog") as OpenDialog(dialog=dialog5)
@@ -100,7 +99,7 @@ Template(layout=Vertical, spacing=DP8) dialogExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;acceptLabel \= "OK!"
 						=========
 
-		Block as Relative(width=33%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Modal facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Button(title="modal dialog") as OpenDialog(dialog=dialog6)

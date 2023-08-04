@@ -4,7 +4,6 @@ import io.intino.alexandria.exceptions.*;
 import java.time.*;
 import java.util.*;
 import io.intino.alexandria.ui.displays.templates.*;
-import io.intino.alexandria.ui.documentation.Model;
 
 public class MicroSiteMobilePage extends AbstractMicroSiteMobilePage {
 	public String page;
@@ -14,10 +13,8 @@ public class MicroSiteMobilePage extends AbstractMicroSiteMobilePage {
 			@Override
 			public void personify() {
 				WidgetTypeTemplate component = new WidgetTypeTemplate(box);
-				component.type(Model.WidgetType.MicroSite.name().toLowerCase());
 				register(component);
 				component.init();
-				component.widget().microSiteExamples.microSiteExamplesMold.page(page);
 			}
 		};
 	}

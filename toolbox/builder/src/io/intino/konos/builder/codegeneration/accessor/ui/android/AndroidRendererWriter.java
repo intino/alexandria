@@ -58,7 +58,7 @@ public class AndroidRendererWriter extends UiRendererWriter {
 		if (template == null) return;
 		final String newDisplay = displayFilename(element.name$(), isAccessible(builder) ? "Proxy" : "");
 		File file = displayFile(src(), newDisplay, type, target);
-		if (file.exists()) return;
+		if (!element.i$(io.intino.konos.model.Template.class) && file.exists()) return;
 		writeFrame(displayFolder(src(), type, target), element, newDisplay, template.render(builder.toFrame()));
 	}
 

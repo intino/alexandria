@@ -33,7 +33,7 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 	@Override
 	public void execute() throws KonosException {
 		File displayFile = CodeGenerationHelper.fileOf(displayFolder(gen(writer.target()), typeOf(element), writer.target()), displayName(false), writer.target());
-		if (writer.target() != Target.Accessor && isRendered(element) && displayFile.exists()) return;
+		if (writer.target() != Target.Accessor && writer.target() != Target.Android && isRendered(element) && displayFile.exists()) return;
 		super.execute();
 	}
 

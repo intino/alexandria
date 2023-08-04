@@ -4,7 +4,7 @@ use Theme
 
 Template(layout=Vertical, spacing=DP8) timelineExamplesMold
 
-	Block(layout=Horizontal, spacing=DP24)
+	Block(layout=Horizontal Wrap, spacing=DP24)
 		Block(format=autoHeight) as Relative(width=100%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(format=filledNoAirExtraLarge)
@@ -15,7 +15,6 @@ Template(layout=Vertical, spacing=DP8) timelineExamplesMold
 							Timeline
 							=========
 
-	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=100%, height=100%)
 			Text(format=h6, value="No facets (Catalog mode)")
 			Block(format=filledNoAirExtraLarge) as Absolute(height=500px)

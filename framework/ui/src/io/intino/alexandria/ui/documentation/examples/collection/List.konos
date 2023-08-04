@@ -5,7 +5,7 @@ use Theme
 
 Template(layout=Vertical, spacing=DP8) listExamplesMold
 
-	Block(layout=Horizontal, spacing=DP24)
+	Block(layout=Horizontal Wrap, spacing=DP24)
 		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filledNoAir)
@@ -35,7 +35,6 @@ Template(layout=Vertical, spacing=DP8) listExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) listMold > Text firstName as Editable
 						=========
 
-	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Navigable facet with position Bottom")
 			Block(spacing=DP8, format=filledNoAir)

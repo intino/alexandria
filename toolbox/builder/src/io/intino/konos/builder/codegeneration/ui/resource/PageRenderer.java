@@ -77,7 +77,7 @@ public class PageRenderer extends ActionRenderer {
 	private void writeMobilePage(FrameBuilder builder) {
 		Target target = Target.MobileShared;
 		compilationContext.classes().put(resource.getClass().getSimpleName() + "#" + firstUpperCase(resource.core$().name()), "actions" + "." + firstUpperCase(snakeCaseToCamelCase(resource.name$())) + suffix(Target.MobileShared));
-		if (!alreadyRendered(src(target), resource.name$() + suffix(target), target)) {
+		if (!alreadyRendered(src(Target.Server), resource.name$(), target)) {
 			writeFrame(destinationPackage(src(Target.Server)), resource.name$() + suffix(target), template().render(builder.toFrame()));
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(resource), javaFile(destinationPackage(src(Target.Server)), resource.name$() + suffix(target)).getAbsolutePath()));
 		}
