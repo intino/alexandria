@@ -102,11 +102,15 @@ public class Message {
 		return append(attribute, serializedListFromIterable(value));
 	}
 
-	public Message append(String attribute, String value) {
-		if(!contains(attribute)) return set(attribute, value);
-		value = serialize(value);
-		String oldValue = attributes.putIfAbsent(attribute, value);
-		attributes.put(attribute, oldValue + ListSep + value);
+	public Message append(String attribute, String newValue) {
+		if(!contains(attribute)) return set(attribute, newValue);
+		newValue = serialize(newValue);
+		String oldValue = attributes.putIfAbsent(attribute, newValue);
+		if(oldValue == null || oldValue.isEmpty() || oldValue.equals(ListSepStr)) {
+			attributes.put(attribute, newValue);
+		} else {
+			attributes.put(attribute, oldValue + ListSepStr + newValue);
+		}
 		return this;
 	}
 

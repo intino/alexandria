@@ -1,6 +1,7 @@
 package io.intino.alexandria.message;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
