@@ -16,6 +16,7 @@ end
 
 def type(format)
     <style name="$name">
+        [<item name="android:textSize">$defaultTextSize</item>]
         $attribute...[$NL]
     </style>
 end

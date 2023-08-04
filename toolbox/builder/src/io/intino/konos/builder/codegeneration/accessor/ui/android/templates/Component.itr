@@ -12,7 +12,7 @@ def type(child) trigger(transfer)
 end
 
 def type(child & basestamp) trigger(transferFind)
-    findViewById<$extends>(R.id.[$parentPath+dotsWithUnderscore~_]$id)
+    findViewById<$extends<*, *>>(R.id.[$parentPath+dotsWithUnderscore~_]$id)
 end
 
 def type(child) trigger(transferFind)
@@ -92,7 +92,7 @@ def type(properties & dashboard) trigger(common)
 end
 
 def type(properties) trigger(common)
-	[ alexandria:alexandria_name="$name"][ alexandria:alexandria_label="$label"][ style="@style/$format...[_]"][ alexandria:alexandria_color="$color"][ alexandria:alexandria_visible="$visible"][ alexandria:alexandria_traceable="$traceable"][ alexandria:alexandria_multiple="{instances:'$instances',arrangement:'$multipleArrangement',noItemsMessage:'$multipleNoItemsMessage',spacing:$multipleSpacing,editable:$multipleEditable,wrap:$multipleWrapItems,collapsed:$multipleCollapsed,count:{min:$multipleMin,max:$multipleMax}}"][ alexandria:alexandria_style="$style"]
+    [ alexandria:alexandria_name="$name"][ alexandria:alexandria_label="$label"][ style="@style/$format...[_]"][ alexandria:alexandria_color="$color"][ alexandria:alexandria_visible="$visible"][ alexandria:alexandria_traceable="$traceable"][ alexandria:alexandria_multiple_instances="$instances"][ alexandria:alexandria_multiple_arrangement="$multipleArrangement"][ alexandria:alexandria_multiple_no_items_message="$multipleNoItemsMessage"][ alexandria:alexandria_multiple_spacing="$multipleSpacing"][ alexandria:alexandria_multiple_editable="$multipleEditable"][ alexandria:alexandria_multiple_wrap="$multipleWrapItems"][ alexandria:alexandria_multiple_collapsed="$multipleCollapsed"][ alexandria:alexandria_multiple_count_min="$multipleMin"][ alexandria:alexandria_multiple_count_max="$multipleMax"][ alexandria:alignContent="$multipleAlign" alexandria:alignItems="$multipleAlign" alexandria:showDivider="middle"][ alexandria:alexandria_style="$style"]
 end
 
 def type(properties & openpopover) trigger(specific)
@@ -140,7 +140,7 @@ def type(properties & abstractdialog) trigger(specific)
 end
 
 def type(properties & block) trigger(specific)
-	[ alexandria:block_layout="$layout...[ ]"][ alexandria:block_width="$width"][ alexandria:block_height="$height"][ android:showDividers="middle" android:divider="@drawable/spacing_$spacing"][ $paper="true"][ $badge][ $drawer][ $popover][ alexandria:block_animation="{mode:'$mode',direction:'$transitionDirection',duration:'$transitionDuration'}"][ alexandria:block_hidden="$hidden"][ alexandria:auto_size="$autoSize"]
+	[ alexandria:block_layout="$layout...[ ]"][ alexandria:block_width="$width"][ alexandria:block_height="$height"][ alexandria:showDivider="middle"][ alexandria:dividerDrawable="@drawable/spacing_$spacing"][ alexandria:block_paper="$paperBoolean"][ android:background="@drawable/$paper"][ $badge][ $drawer][ $popover][ alexandria:block_animation="{mode:'$mode',direction:'$transitionDirection',duration:'$transitionDuration'}"][ alexandria:block_hidden="$hidden"][ alexandria:auto_size="$autoSize"][ android:visibility="$conditional~gone"]
 end
 
 def type(properties & date) trigger(specific)
@@ -164,7 +164,7 @@ def type(properties & code) trigger(specific)
 end
 
 def type(properties & text) trigger(specific)
-	[ alexandria:text_mode="$mode"][ alexandria:text_edition_mode="$editionMode"][ alexandria:text_max_length="$maxLength"][ alexandria:text_rows="$rows"][ alexandria:text_prefix="$prefix"][ alexandria:text_suffix="$suffix"][ alexandria:text_translate="$translate"][ alexandria:text_crop_with_ellipsis="$cropWithEllipsis"][ alexandria:text_value="$defaultValue+escapeHtml"][ alexandria:text_placeholder="$placeholder"][ alexandria:text_readonly="$readonly"][ alexandria:text_focused="$focused"][ alexandria:text_highlighted=$highlighted][ alexandria:text_type="$type"][ alexandria:text_helper_text="$helperText"][ alexandria:text_shrink="$shrink"]
+	[ alexandria:text_mode="$mode"][ alexandria:text_edition_mode="$editionMode"][ alexandria:text_max_length="$maxLength"][ alexandria:text_rows="$rows"][ alexandria:text_prefix="$prefix"][ alexandria:text_suffix="$suffix"][ alexandria:text_translate="$translate"][ alexandria:text_crop_with_ellipsis="$cropWithEllipsis"][ alexandria:text_value="$defaultValue+escapeHtml"][ alexandria:text_placeholder="$placeholder"][ alexandria:text_readonly="$readonly"][ alexandria:text_focused="$focused"][ $highlighted][ alexandria:text_type="$type"][ alexandria:text_helper_text="$helperText"][ alexandria:text_shrink="$shrink"]
 end
 
 def type(properties & location) trigger(specific)
@@ -267,7 +267,7 @@ def type(code)
 end
 
 def type(highlighted)
-	"{text:'$text',background:'$background'}"
+	alexandria:alexandria_highlighted="$text" alexandria:alexandria_highlighted_background="$background"
 end
 
 def type(actionableMode)

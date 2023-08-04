@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays.components;
 
 import io.intino.itrules.FrameBuilder;
+import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.Absolute;
@@ -39,4 +40,5 @@ public class SizedRenderer<C extends Component> extends ComponentRenderer<C> {
 	private String relativeSizeOf(double size, int offset) {
 		return offset != -1 ? String.format(OffsetSize, size, offset) : size + "%";
 	}
+
 }
