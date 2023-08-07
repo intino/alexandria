@@ -17,9 +17,15 @@ public class TextEditableCode<DN extends TextEditableCodeNotifier, B extends Box
 		return this;
 	}
 
-	public void notifyChange(String value) {
+	public void update(String value) {
+		if (!notifyChange(value)) return;
+		super.value(value);
+	}
+
+	public boolean notifyChange(String value) {
 		_value(value != null ? value.replaceAll("&plus;", "+") : null);
 		if (changeListener != null) changeListener.accept(new ChangeEvent(this, value()));
+		return true;
 	}
 
 	@Override

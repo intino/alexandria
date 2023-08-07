@@ -82,10 +82,16 @@ public class TextEditable<DN extends TextEditableNotifier, B extends Box> extend
         return this;
     }
 
-    public void notifyChange(String value) {
-        if (invalid(value)) return;
+    public void update(String value) {
+        if (!notifyChange(value)) return;
+        super.value(value);
+    }
+
+    public boolean notifyChange(String value) {
+        if (invalid(value)) return false;
         _value(value);
         if (changeListener != null) changeListener.accept(new ChangeEvent(this, value()));
+        return true;
     }
 
     @Override
