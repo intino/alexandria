@@ -4,8 +4,8 @@ use Theme
 
 Template(layout=Vertical, spacing=DP8) frameExamplesMold
 
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=33%, height=100%)
+	Block(layout=Horizontal Wrap, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(format=filledNoAirExtraLarge) as Absolute(height=670px)
 				Frame(url="https://intino.io") as Relative(height=100%)

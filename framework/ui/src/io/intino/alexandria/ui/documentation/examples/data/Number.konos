@@ -4,8 +4,8 @@ use Theme
 
 Template(layout=Vertical, spacing=DP8) numberExamplesMold
 
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=32%, height=100%)
+	Block(layout=Horizontal Wrap, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filled)
 				Number(format=body1 widgetDemo, value = 0) number1
@@ -15,7 +15,7 @@ Template(layout=Vertical, spacing=DP8) numberExamplesMold
 							Number(value\=10, label\="Campo numérico") number1<br/>
 							in java called to number1.countDecimals(10)
 							=========
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets with prefix and suffix")
 			Block(spacing=DP8, format=filled)
 				Number(format=body1 widgetDemo, value = 0, prefix = "Amount", suffix = "$") number2
@@ -24,7 +24,7 @@ Template(layout=Vertical, spacing=DP8) numberExamplesMold
 							=========
 							Number(format\=body1 widgetDemo, value\=0, prefix\="Amount", suffix\="$")
 							=========
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Editable facet")
 			Block(spacing=DP8, format=filled)
 				Number(format=body1 widgetDemo, value = 0, min=0, max=100, step=10, prefix="Price:", suffix="$") number3 as Editable(helperText="Some important helper text")
@@ -34,8 +34,7 @@ Template(layout=Vertical, spacing=DP8) numberExamplesMold
 							Number(format\=body1 widgetDemo, value\=0, min\=0, max\=100, step\=10, prefix\="Price:", suffix\="$") as Editable(helperText\="Some important helper text")
 							=========
 
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Editable facet with error")
 			Block(spacing=DP8, format=filled)
 				Number(format=body1 widgetDemo, value = 0, min=0, max=100, step=10, prefix="Price:", suffix="$") number7 as Editable
@@ -45,7 +44,7 @@ Template(layout=Vertical, spacing=DP8) numberExamplesMold
 							Number(format\=body1 widgetDemo, value\=0, min\=0, max\=100, step\=10, prefix\="Price:", suffix\="$") as Editable
 							=========
 
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets, Currency style")
 			Block(spacing=DP8, format=filled)
 				Number(format=body1 widgetDemo, value=100000000, style=Currency, countDecimals=2)
@@ -55,7 +54,7 @@ Template(layout=Vertical, spacing=DP8) numberExamplesMold
 							Number(value\=100000000, style\=Currency, countDecimals\=2)
 							=========
 
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets, Bytes style")
 			Block(spacing=DP8, format=filled)
 				Number(format=body1 widgetDemo, value=23232323, style=Bytes, countDecimals=2, expanded=false)
@@ -65,8 +64,7 @@ Template(layout=Vertical, spacing=DP8) numberExamplesMold
 							Number(value\=23232323, style\=Bytes, countDecimals\=2, expanded\=false)
 							=========
 
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets, Exponential style")
 			Block(spacing=DP8, format=filled)
 				Number(format=body1 widgetDemo, value=12398734.202, style=Exponential, countDecimals=2, expanded=false)

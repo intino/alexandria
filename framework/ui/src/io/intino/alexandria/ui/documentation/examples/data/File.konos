@@ -4,8 +4,8 @@ use Theme
 
 Template(layout=Vertical, spacing=DP8) fileExamplesMold
 
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=50%, height=100%)
+	Block(layout=Horizontal Wrap, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filled)
 				Block as Absolute(height=600px)
@@ -15,7 +15,7 @@ Template(layout=Vertical, spacing=DP8) fileExamplesMold
 							=========
 							File(value\="data/example.pdf") as Relative(width\=100%, height\=100%)
 							=========
-		Block as Relative(width=50%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Editable facet with drop zone")
 			Block(spacing=DP8, format=filled)
 				Block as Absolute(height=600px)

@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration.ui.displays;
 
 import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.codegeneration.services.ui.templates.RouteDispatcherTemplate;
@@ -34,9 +35,9 @@ public class RouteDispatcherRenderer extends UIRenderer {
 		createIfNotExists(displaysFolder(src(target), target));
 		createIfNotExists(displaysFolder(gen(target), target));
 		File routeDispatcher = fileOf(displaysFolder(src(target), target), "RouteDispatcher", target);
-		if (!routeDispatcher.exists())
-			Commons.write(routeDispatcher.toPath(), setup(new RouteDispatcherTemplate()).render(builder.toFrame()));
-		Commons.write(fileOf(displaysFolder(gen(target), target), "AbstractRouteDispatcher", target).toPath(), setup(new RouteDispatcherTemplate()).render(builder.add("gen").toFrame()));
+		if (target != Target.Android && !routeDispatcher.exists())
+			Commons.write(routeDispatcher.toPath(), setup(template()).render(builder.toFrame()));
+		Commons.write(fileOf(displaysFolder(gen(target), target), target != Target.Android ? "AbstractRouteDispatcher" : "RouteDispatcher", target).toPath(), setup(template()).render(builder.add("gen").toFrame()));
 		if (target.equals(Target.Server))
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), fileOf(displaysFolder(gen(target), target), "AbstractRouteDispatcher", target).getAbsolutePath()));
 	}
@@ -87,6 +88,11 @@ public class RouteDispatcherRenderer extends UIRenderer {
 
 	private List<String> queryParams(Service.UI.Resource resource) {
 		return resource.parameterList().stream().map(Layer::name$).collect(Collectors.toList());
+	}
+
+	private Template template() {
+		if (target == Target.Android) return new io.intino.konos.builder.codegeneration.accessor.ui.android.templates.RouteDispatcherTemplate();
+		return new RouteDispatcherTemplate();
 	}
 
 }

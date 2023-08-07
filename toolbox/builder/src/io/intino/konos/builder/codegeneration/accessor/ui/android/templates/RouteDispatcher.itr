@@ -1,0 +1,100 @@
+def type(dispatcher)
+    package $package.mobile.android.displays
+
+    import android.content.Context
+    import android.content.Intent
+    import android.os.Bundle
+    import $package.mobile.android.pages.HomeActivity
+    import $package.mobile.android.pages.MicroSiteActivity
+    import $package.mobile.android.pages.WidgetTypeActivity
+    import $package.mobile.android.pages.WidgetsActivity
+    import java.util.regex.Matcher
+    import java.util.regex.Pattern
+
+    class RouteDispatcher {
+        private var info : HashMap<String, RouteInfo> = hashMapOf()
+
+        init {
+            [$resource+patternRegister...[$NL]]
+        }
+
+        fun dispatch(context: Context, address: String) : Intent? {
+            val info = infoOf(address) ?: return null
+            val intent = Intent(context, info.activityClass)
+            addParameters(intent, address, info)
+            return intent
+        }
+
+        private fun infoOf(address: String): RouteInfo? {
+            [$resource+info...[$NL]]
+            return null
+        }
+
+        private fun matches(address: String, info: RouteInfo): Boolean {
+            if (address.matches(info.pattern)) return true
+            if (!address.endsWith("/")) return false
+            return address.substring(0, address.length-1).matches(info.pattern)
+        }
+
+        private fun addParameters(intent: Intent, address: String, info: RouteInfo) {
+            val b = Bundle()
+            val parameters = paramsOf(address, info)
+            for (i in 0 until info.parameterNames.size) {
+                b.putString(info.parameterNames$[i$], parameters.get(i))
+            }
+            intent.putExtras(b)
+        }
+
+        private fun paramsOf(address: String, info: RouteInfo?): List<String?> {
+            if (info == null) return emptyList<String>()
+            val p: Pattern = Pattern.compile(info.pattern.pattern)
+            val m: Matcher = matcherOf(p, address) ?: return emptyList()
+            val result: MutableList<String?> = ArrayList()
+            for (i in 1..m.groupCount()) result.add(m.group(i)?.split("\\\\?")!!.get(0))
+            return addQueryStringParams(address, result)
+        }
+
+        private fun matcherOf(pattern: Pattern, address: String): Matcher? {
+            var result: Matcher = pattern.matcher(address)
+            if (result.find()) return result
+            if (!address.endsWith("/")) return null
+            result = pattern.matcher(address.substring(0, address.length-1))
+            return if (result.find()) result else null
+        }
+
+        private fun addQueryStringParams(address: String, result: MutableList<String?>): List<String?> {
+            if (address.indexOf("?") == -1) return result
+            val parameters = address.split("\\\\?".toRegex()).dropLastWhile { it.isEmpty() }
+                .toTypedArray()$[1$].split("&".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            for (i in parameters.indices) {
+                result.add(parameters$[i$].split("=".toRegex()).dropLastWhile { it.isEmpty() }
+                    .toTypedArray()$[1$])
+            }
+            return result
+        }
+
+        private class RouteInfo(pattern: String, var activityClass: Class<*>, var parameterNames: List<String>) {
+            var pattern : Regex = pattern.toRegex()
+        }
+
+    }
+end
+
+def type(resource & main) trigger(patternRegister)
+end
+
+def type(resource) trigger(patternRegister)
+    info.put("$name", RouteInfo("$pattern", $name+firstUpperCase~Activity::class.java, listOf($param...[,])))
+end
+
+def type(resource & main) trigger(info)
+    if (matches(address, info.get("$name")!!)) return info.get("$name")
+end
+
+def type(resource) trigger(info)
+    else if (matches(address, info.get("$name")!!)) return info.get("$name")
+end
+
+def type(param)
+	"$name"
+end

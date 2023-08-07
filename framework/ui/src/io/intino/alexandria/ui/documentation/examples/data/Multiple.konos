@@ -4,8 +4,8 @@ use Theme
 
 Template(layout=Vertical, spacing=DP8) multipleExamplesMold
 
-	Block(layout=Horizontal, spacing=DP24) content
-		Block as Relative(width=32%, height=100%)
+	Block(layout=Horizontal Wrap, spacing=DP24) content
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filled)
 				Text multiple1 as Multiple(noItemsMessage="No elements found")
@@ -15,7 +15,7 @@ Template(layout=Vertical, spacing=DP8) multipleExamplesMold
 							Text as Multiple<br/>
 							=========
 
-		Block multiple2Block as Relative(width=32%, height=100%)
+		Block multiple2Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets with collapsed")
 			Block(spacing=DP8, format=filled) multiple2Content
 				TemplateStamp(template=multiple2Template) multiple2 as Multiple(collapsed=true)
@@ -27,8 +27,7 @@ Template(layout=Vertical, spacing=DP8) multipleExamplesMold
 								Text field1 as Editable
 							=========
 
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets with Image")
 			Block(spacing=DP8, format=filled)
 				Image multiple3 as Multiple(noItemsMessage="No elements found") Editable

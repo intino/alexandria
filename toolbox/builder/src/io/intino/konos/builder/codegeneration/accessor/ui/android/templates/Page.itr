@@ -20,39 +20,18 @@ def type(resource & main)
     package $package+validPackage.mobile.android.pages
 
     import android.os.Bundle
-    import androidx.activity.ComponentActivity
     import io.intino.alexandria.mobile.Application
-    import io.intino.alexandria.mobile.services.PushService
-    import io.intino.alexandria.mobile.services.RestService
-    import io.intino.alexandria.mobile.util.Uuid
+    import io.intino.alexandria.mobile.android.AlexandriaActivity
     import $package+validPackage.mobile.android.R
 
-    class $name+snakecaseToCamelCase+firstUpperCase~Activity : ComponentActivity() {
+    class $name+snakecaseToCamelCase+firstUpperCase~Activity : AlexandriaActivity("$name") {
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
-            Application.start(pushService("http://10.0.2.2:9000$path"))
+            Application.start("$name", pushService(withParams("http://10.0.2.2:9000$path")))
             setContentView(R.layout.$name+camelCaseToUnderscoreCase+lowerCase~_activity)
         }
 
-        private fun pushService(url: String) : PushService {
-            val pushService = PushService();
-            appConnectionChains(url) { chains ->
-                chains.forEach { chain ->
-                    pushService.connect(
-                        chain.app(),
-                        chain.socketUrl()
-                    )
-                }
-            };
-            return pushService
-        }
-
-        private val appConnectionChains = fun(url: String, callback: ((List<RestService.ConnectionChain>) -> Unit)) {
-            val restService = RestService(url);
-            restService.context(this)
-            restService.appConnectionChains(Uuid.randomUuid(), callback)
-        }
 
     }
 end
@@ -61,13 +40,16 @@ def type(resource)
     package $package+validPackage.mobile.android.pages
 
     import android.os.Bundle
-    import androidx.activity.ComponentActivity
+    import io.intino.alexandria.mobile.Application
+    import io.intino.alexandria.mobile.android.AlexandriaActivity
     import $package+validPackage.mobile.android.R
 
-    class $name+snakecaseToCamelCase+firstUpperCase~Activity : ComponentActivity() {
+    class $name+snakecaseToCamelCase+firstUpperCase~Activity : AlexandriaActivity("$name") {
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
+            Application.close("$name")
+            Application.open("$name", pushService(withParams("http://10.0.2.2:9000$path")))
             setContentView(R.layout.$name+camelCaseToUnderscoreCase+lowerCase~_activity)
         }
 

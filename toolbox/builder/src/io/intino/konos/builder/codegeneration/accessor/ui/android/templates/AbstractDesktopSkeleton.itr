@@ -11,6 +11,7 @@ def type(desktop)
 
 		constructor(props) {
 			super(props);[
+			loadActivity()
 			this.notifier = new $notDecorated+firstUpperCase~Notifier(this);][
 			this.requester = new $notDecorated+firstUpperCase~Requester(this);]
 		};

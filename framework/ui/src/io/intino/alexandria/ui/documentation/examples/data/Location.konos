@@ -4,7 +4,7 @@ use Theme
 
 Template(layout=Vertical, spacing=DP8) locationExamplesMold
 
-	Block(layout=Horizontal, spacing=DP24)
+	Block(layout=Horizontal Wrap, spacing=DP24)
 		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filledNoAirLarge)
@@ -34,7 +34,6 @@ Template(layout=Vertical, spacing=DP8) locationExamplesMold
 							&nbsp;&nbsp;&nbsp;&nbsp;Center(latitude\=28.146773457066104, longitude\=-15.418557420532238)
 							=========
 
-	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Editable facet")
 			Block(spacing=DP8, format=filledNoAirLarge)

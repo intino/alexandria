@@ -5,7 +5,7 @@ use Theme
 
 Template(layout=Vertical, spacing=DP8) mapExamplesMold
 
-	Block(layout=Horizontal, spacing=DP24)
+	Block(layout=Horizontal Wrap, spacing=DP24)
 		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filledNoAirLarge)
@@ -50,7 +50,6 @@ Template(layout=Vertical, spacing=DP8) mapExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text label
 						=========
 
-	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Heatmap facet")
 			Block(spacing=DP8, format=filledNoAirLarge)

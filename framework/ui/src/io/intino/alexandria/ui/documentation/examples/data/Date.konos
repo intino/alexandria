@@ -4,8 +4,8 @@ use Theme
 
 Template(layout=Vertical, spacing=DP8) dateExamplesMold
 
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=32%, height=100%)
+	Block(layout=Horizontal Wrap, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filled)
 				Date(pattern="MM/DD/YYYY", format=body1 widgetDemo) date1
@@ -16,7 +16,7 @@ Template(layout=Vertical, spacing=DP8) dateExamplesMold
 							<i>pattern</i> is defined using <a href\="https://momentjs.com/docs/#/displaying/format/" target\="_blank">momentjs format</a>
 							=========
 
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets with Mode")
 			Block(spacing=DP8, format=filled)
 				Date(mode=FromNow, format=body1 widgetDemo) date2
@@ -26,7 +26,7 @@ Template(layout=Vertical, spacing=DP8) dateExamplesMold
 							Date(mode\=FromNow) date2
 							=========
 
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Editable facet")
 			Block(spacing=DP8, format=filled)
 				Date(format=body1 widgetDemo) date3 as Editable
@@ -36,8 +36,7 @@ Template(layout=Vertical, spacing=DP8) dateExamplesMold
 							Date date3 as Editable
 							=========
 
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Editable facet with timePicker")
 			Block(spacing=DP8, format=filled)
 				Date(format=body1 widgetDemo) date4 as Editable(timePicker=true)
@@ -48,7 +47,7 @@ Template(layout=Vertical, spacing=DP8) dateExamplesMold
 							Date date4 as Editable(timePicker\=true)
 							=========
 
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Editable facet allowing empty")
 			Block(spacing=DP8, format=filled)
 				Date(format=body1 widgetDemo) date5 as Editable(allowEmpty=true)
@@ -59,7 +58,7 @@ Template(layout=Vertical, spacing=DP8) dateExamplesMold
 							Date date as Editable(allowEmpty\=true)
 							=========
 
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Editable facet and embedded")
 			Block(spacing=DP8, format=filled)
 				Date(format=body1 widgetDemo) date6 as Editable(embedded=true)

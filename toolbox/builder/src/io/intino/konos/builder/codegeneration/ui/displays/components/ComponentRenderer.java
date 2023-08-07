@@ -166,6 +166,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			result.add("multipleCollapsed", element.a$(Multiple.class).collapsed());
 			result.add("multipleMin", abstractMultiple.count() != null ? abstractMultiple.count().min() : 0);
 			result.add("multipleMax", abstractMultiple.count() != null ? abstractMultiple.count().max() : -1);
+			result.add("multipleAlign", "stretch");
 		}
 		if (element.format() != null) {
 			String[] format = element.format().stream().map(Layer::name$).sorted().toArray(String[]::new);

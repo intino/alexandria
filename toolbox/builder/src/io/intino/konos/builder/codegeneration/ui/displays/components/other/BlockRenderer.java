@@ -18,6 +18,7 @@ public class BlockRenderer extends SizedRenderer<Block> {
 	@Override
 	public void fill(FrameBuilder builder) {
 		if (element.isConditional()) builder.add("conditional");
+		if (element.isPaper()) builder.add("paper");
 		addBinding(builder);
 	}
 
@@ -33,6 +34,7 @@ public class BlockRenderer extends SizedRenderer<Block> {
 		addPopover(result);
 		addTransition(result);
 		addSplitter(result);
+		if (element.isConditional()) result.add("conditional", "");
 		if (element.isAutoSize()) result.add("autoSize", true);
 		if (element.hidden() != null && element.hidden() != Block.Hidden.Never)
 			result.add("hidden", element.hidden().name());
@@ -51,6 +53,7 @@ public class BlockRenderer extends SizedRenderer<Block> {
 	private void addPaper(FrameBuilder builder) {
 		if (!element.isPaper()) return;
 		builder.add("paper", "paper");
+		builder.add("paperBoolean", "true");
 	}
 
 	private void addBadge(FrameBuilder builder) {

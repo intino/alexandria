@@ -7,19 +7,30 @@ def type(manifest)
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
-            <activity
-                android:name=".pages.$main+snakecaseToCamelCase+firstUpperCase~Activity"
-                android:exported="true">
-                <intent-filter>
-                    <action android:name="android.intent.action.MAIN" />
-                    <category android:name="android.intent.category.LAUNCHER" />
-                </intent-filter>
-            </activity>
+            $resource...[$NL]
         </application>
 
         <uses-permission android:name="android.permission.INTERNET" />
 
     </manifest>
+end
+
+def type(resource & main)
+    <activity
+        android:name=".pages.$name+snakecaseToCamelCase+firstUpperCase~Activity"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+end
+
+def type(resource)
+    <activity
+        android:name=".pages.$name+snakecaseToCamelCase+firstUpperCase~Activity"
+        android:exported="true">
+    </activity>
 end
 
 def type(gradle & settings)
@@ -63,7 +74,7 @@ def type(gradle & android)
             compose = true
         }
         composeOptions {
-            kotlinCompilerExtensionVersion = "1.3.0"
+            kotlinCompilerExtensionVersion = "1.4.4"
         }
         packagingOptions {
             resources {
@@ -79,15 +90,16 @@ def type(gradle & android)
 
     dependencies {
         implementation(project(":shared"))
-        implementation("androidx.compose.ui:ui:1.2.1")
-        implementation("androidx.compose.ui:ui-tooling:1.2.1")
-        implementation("androidx.compose.ui:ui-tooling-preview:1.2.1")
-        implementation("androidx.compose.foundation:foundation:1.2.1")
-        implementation("androidx.compose.material:material:1.2.1")
-        implementation("androidx.activity:activity-compose:1.5.1")
-        implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-        implementation("com.google.android.material:material:1.7.0")
+        implementation("androidx.compose.ui:ui:1.4.3")
+        implementation("androidx.compose.ui:ui-tooling:1.4.3")
+        implementation("androidx.compose.ui:ui-tooling-preview:1.4.3")
+        implementation("androidx.compose.foundation:foundation:1.4.3")
+        implementation("androidx.compose.material:material:1.4.3")
+        implementation("androidx.activity:activity-compose:1.7.2")
+        implementation("com.google.android.material:material:1.9.0")
+        implementation("com.google.android.flexbox:flexbox:3.0.0")
         implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+        implementation("androidx.databinding:databinding-runtime:8.1.0")
     }
 end
 
@@ -116,7 +128,7 @@ def type(gradle & shared)
                 dependencies {
                     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
                     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-                    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.7.21")
+                    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.8.10")
                     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
                 }
             }
@@ -127,7 +139,8 @@ def type(gradle & shared)
             }
             val androidMain by getting {
                 dependencies {
-                    implementation("com.google.android.material:material:1.7.0")
+                    implementation("com.google.android.material:material:1.9.0")
+                    implementation("com.google.android.flexbox:flexbox:3.0.0")
                     implementation("com.squareup.okhttp3:okhttp:4.9.0")
                     implementation("com.android.volley:volley:1.2.1")
                 }

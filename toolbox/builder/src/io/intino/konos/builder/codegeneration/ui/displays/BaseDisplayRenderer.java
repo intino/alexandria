@@ -15,7 +15,10 @@ import io.intino.konos.model.OtherComponents.Dialog;
 import io.intino.konos.model.OtherComponents.OwnerTemplateStamp;
 import io.intino.konos.model.OtherComponents.ProxyStamp;
 import io.intino.konos.model.OtherComponents.TemplateStamp;
+import io.intino.konos.model.rules.Layout;
 import io.intino.magritte.framework.Layer;
+
+import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
@@ -66,11 +69,20 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		result.add("notifier", notifierName(element));
 		result.add("requester", requesterName(element));
 		result.add("componentType", element.components().stream().map(this::typeOf).distinct().map(type -> new FrameBuilder().add("componentType", type).toFrame()).toArray(Frame[]::new));
+		result.add("layout", layoutFrame());
 		if (element.parentDisplay() != null) addParent(element, result);
 		if (!element.graph().schemaList().isEmpty())
 			result.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()));
 		if (element.isAccessible())
 			result.add("parameter", element.asAccessible().parameters().stream().map(p -> new FrameBuilder("parameter", "accessible").add("value", p).toFrame()).toArray(Frame[]::new));
+		return result;
+	}
+
+	private FrameBuilder layoutFrame() {
+		if (!element.i$(Template.class)) return new FrameBuilder("layout", "vertical");
+		FrameBuilder result = new FrameBuilder("layout");
+		List<Layout> layout = element.a$(Template.class).layout();
+		result.add(layout.contains(Layout.Horizontal) ? "horizontal" : "vertical");
 		return result;
 	}
 

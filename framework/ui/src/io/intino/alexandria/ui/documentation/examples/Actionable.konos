@@ -4,8 +4,8 @@ use Theme
 
 Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=32%, height=100%)
+	Block(layout=Horizontal Wrap, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Link")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Link(title="operation") operation1 as Action
@@ -15,7 +15,7 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 						Link(title\="operation") as Action
 						=========
 
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Button")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Button(title="operation") operation2 as Action
@@ -25,7 +25,7 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 						Button(title\="operation") as Action
 						=========
 
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="IconButton")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				IconButton(title="operation", icon="/icons/operation.png") operation3 as Action
@@ -35,9 +35,7 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 						IconButton(title\="operation", icon\="/icons/operation.png") as Action
 						=========
 
-	Block(layout=Horizontal, spacing=DP24)
-
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="MaterialIconButton")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				MaterialIconButton(title="operation", icon="Add", size=Medium) operation4 as Action
@@ -48,7 +46,7 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 						for icons gallery, refer to <a href\="https://material.io/tools/icons" target\="_blank">material.io</a>
 						=========
 
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Affirmed facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Button(title="operation") operation5 as Action Affirmed("Are you sure you want to execute operation?")
@@ -58,7 +56,7 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 						Button(title\="operation") as Action Affirmed("Are you sure you want to execute operation?")
 						=========
 
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Highlight attribute")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Button(title="operation 1", highlight=Outline) operation6 as Action
@@ -70,9 +68,7 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 						Button(title\="operation 2", highlight\="Fill") as Action<br/>
 						=========
 
-	Block(layout=Horizontal, spacing=DP24)
-
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Switch")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Switch(title="edition", state=Off) operation8 as Action
@@ -82,7 +78,7 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 						Switch(title\="edition", state\=Off) as Action
 						=========
 
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Signed facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Button(title="edition") operation9 as Action Signed(signText="Fill your password before continue")
@@ -92,7 +88,7 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 						Button(title\="edition") as Action Signed(signText\="Fill your password before continue")
 						=========
 
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Signed facet with reason property")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Button(title="edition") operation10 as Action Signed(signText="Fill your password before continue", reasonText="Fill reason")
@@ -102,9 +98,7 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 						Button(title\="edition") as Action Signed(signText\="Fill your password before continue", reasonText\="Fill reason")
 						=========
 
-	Block(layout=Horizontal, spacing=DP24)
-
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Toggle")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Toggle(title="edition", state=Off) operation11 as Action
@@ -114,7 +108,7 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 						Toggle(title\="edition", state\=Off) as Action
 						=========
 
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="IconToggle")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				IconToggle(title="operation", icon="/icons/operation.png") operation13 as Action
@@ -124,7 +118,7 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 						IconToggle(title\="operation", icon\="/icons/operation.png") as Action
 						=========
 
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="MaterialIconToggle")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				MaterialIconToggle(title="edition", state=On, icon="FilterList") operation12 as Action
@@ -134,9 +128,7 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 						MaterialIconToggle(title\="edition", state\=On, icon\="FilterList") as Action
 						=========
 
-	Block(layout=Horizontal, spacing=DP24)
-
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="SplitButton")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				SplitButton(title="edition", options = "option 1" "option 2", defaultOption="option 1") operation14 as Action
@@ -146,7 +138,7 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 						SplitButton(title\="edition", options\="option 1" "option 2", defaultOption\="option 1") as Action
 						=========
 
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="MaterialIconSplitButton")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				MaterialIconSplitButton(title="edition", icon="Add", options = "option 1" "option 2", defaultOption="option 1") operation15 as Action
@@ -156,7 +148,7 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 						MaterialIconSplitButton(title\="edition", icon\="Add", options\="option 1" "option 2", defaultOption\="option 1") as Action
 						=========
 
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="AvatarIconButton")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				AvatarIconButton(title="I am avatar", highlight=Fill) operation16 as Action
@@ -166,9 +158,7 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 						AvatarIconButton(title\="I am avatar") as Action
 						=========
 
-	Block(layout=Horizontal, spacing=DP24)
-
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="CopyToClipboard")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Link(title="Copy to clipboard") operation17 as CopyToClipboard(text="I am text")
@@ -178,7 +168,7 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 						Link(title\="Copy to clipboard", text\="I am text") as CopyToClipboard(text\="I am text")
 						=========
 
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="OneTimePassword")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Link(title="One time password") operation18 as Action Signed(signText="Password required", mode=OneTimePassword)

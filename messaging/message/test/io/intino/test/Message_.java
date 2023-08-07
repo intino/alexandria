@@ -14,6 +14,29 @@ import static org.junit.Assert.*;
 public class Message_ {
 
 	@Test
+	public void append_to_list() {
+		Message m = new Message("A");
+		m.set("list", List.of(""));
+		assertEquals(new ArrayList<>(), m.get("list").asList(String.class)); // Lists of 1 empty string = empty lists
+
+		m.append("list", "x");
+		assertEquals(List.of("x"), m.get("list").asList(String.class));
+
+		m = new Message("A");
+		m.set("list", new ArrayList<>());
+		assertTrue(m.get("list").asList(String.class).isEmpty());
+
+		m.append("list", "x");
+		assertEquals(List.of("x"), m.get("list").asList(String.class));
+
+		m.set("list", "");
+		assertEquals(new ArrayList<>(), m.get("list").asList(String.class));
+
+		m.append("list", "x");
+		assertEquals(List.of("x"), m.get("list").asList(String.class));
+	}
+
+	@Test
 	public void lists() {
 		Message message = new Message("ABC");
 		message.set("list", List.of());
