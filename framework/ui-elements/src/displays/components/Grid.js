@@ -317,8 +317,8 @@ class Grid extends AbstractGrid {
     handleRowClick = (row, data, c, e) => {
         if (!data.selectable) return;
         const columns = this.linkColumns();
-        if (columns.length <= 0) return;
-        const column = columns[0];
+        const column = columns.length > 0 ? columns[0] : (this.state.columns.length > 0 ? this.state.columns[0] : null);
+        if (column == null) return;
         const dataValue = data[column.name];
         const value = this.rowValue(dataValue);
         const address = this.rowAddress(dataValue);
