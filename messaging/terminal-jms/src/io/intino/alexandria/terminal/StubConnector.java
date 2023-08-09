@@ -140,11 +140,6 @@ public class StubConnector implements Connector {
 	}
 
 	@Override
-	public void requestResponse(String path, javax.jms.Message message, Consumer<javax.jms.Message> onResponse) {
-
-	}
-
-	@Override
 	public javax.jms.Message requestResponse(String path, javax.jms.Message message) {
 		return null;
 	}
