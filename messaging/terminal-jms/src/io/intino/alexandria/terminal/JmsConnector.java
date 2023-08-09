@@ -7,10 +7,7 @@ import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQSession;
 import org.apache.activemq.command.ActiveMQDestination;
 
-import javax.jms.Connection;
-import javax.jms.JMSException;
-import javax.jms.Session;
-import javax.jms.TemporaryQueue;
+import javax.jms.*;
 import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
@@ -305,10 +302,19 @@ public class JmsConnector implements Connector {
 		}
 		try {
 			CompletableFuture<javax.jms.Message> future = new CompletableFuture<>();
-			requestResponse(path, message, future::complete);
-			return waitFor(future, timeout, timeUnit);
+			QueueProducer producer = new QueueProducer(session, path);
+			TemporaryQueue temporaryQueue = session.createTemporaryQueue();
+			javax.jms.MessageConsumer consumer = session.createConsumer(temporaryQueue);
+			consumer.setMessageListener(m -> acceptMessage(future::complete, consumer, m));
+			message.setJMSReplyTo(temporaryQueue);
+			message.setJMSCorrelationID(createRandomString());
+			sendMessage(producer, message, 100);
+			producer.close();
+			Message response = waitFor(future, timeout, timeUnit);
+			consumer.close();
+			return response;
 		} catch (TimeoutException ignored) {
-		} catch (ExecutionException | InterruptedException e) {
+		} catch (ExecutionException | InterruptedException | JMSException e) {
 			Logger.error(e.getMessage());
 		}
 		return null;
