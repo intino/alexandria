@@ -273,26 +273,6 @@ public class JmsConnector implements Connector {
 	}
 
 	@Override
-	public void requestResponse(String path, javax.jms.Message message, Consumer<javax.jms.Message> onResponse) {
-		if (session == null) {
-			Logger.error("Connection lost. Invalid session");
-			return;
-		}
-		try {
-			QueueProducer producer = new QueueProducer(session, path);
-			TemporaryQueue temporaryQueue = session.createTemporaryQueue();
-			javax.jms.MessageConsumer consumer = session.createConsumer(temporaryQueue);
-			consumer.setMessageListener(m -> acceptMessage(onResponse, consumer, m));
-			message.setJMSReplyTo(temporaryQueue);
-			message.setJMSCorrelationID(createRandomString());
-			sendMessage(producer, message, 100);
-			producer.close();
-		} catch (JMSException e) {
-			Logger.error(e);
-		}
-	}
-
-	@Override
 	public javax.jms.Message requestResponse(String path, javax.jms.Message message) {
 		return requestResponse(path, message, config.defaultTimeoutAmount(), config.defaultTimeoutUnit());
 	}
@@ -312,6 +292,8 @@ public class JmsConnector implements Connector {
 			producer.close();
 			try (javax.jms.MessageConsumer consumer = session.createConsumer(temporaryQueue)) {
 				return consumer.receive(timeUnit.toMillis(timeout));
+			} catch (JMSException e) {
+				Logger.error(e.getMessage());
 			}
 		} catch (JMSException e) {
 			Logger.error(e.getMessage());
