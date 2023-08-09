@@ -263,7 +263,7 @@ def type(popover)
 end
 
 def type(code)
-	value="$value+escapeHtml"
+	alexandria:text_value="$value+escapeHtml"
 end
 
 def type(highlighted)

@@ -25,10 +25,10 @@ public class PassiveViewNotifierTemplate extends Template {
 			rule().condition((allTypes("parameter","integer"))).output(literal("((it[\"v\"]!! as JsonPrimitive).content).toInt()")),
 			rule().condition((allTypes("parameter","boolean"))).output(literal("((it[\"v\"]!! as JsonPrimitive).content).toBoolean()")),
 			rule().condition((allTypes("parameter","object"))).output(literal("io.intino.alexandria.mobile.util.Json.parse((it[\"v\"]!! as JsonObject).toString()) as ")).output(mark("package")).output(literal(".mobile.schemas.")).output(mark("value", "firstUpperCase")),
-			rule().condition((type("parameter"))).output(literal("(it[\"v\"]!! as JsonPrimitive).content")),
+			rule().condition((type("parameter"))).output(literal("if (it.containsKey(\"v\")) (it[\"v\"] as JsonPrimitive).content else \"\"")),
 			rule().condition((attribute("", "Display")), (trigger("target"))).output(literal(".toSelf()")),
 			rule().condition((trigger("target"))),
-			rule().condition((type("event"))).output(literal("onMessage(\"")).output(mark("name", "firstLowerCase")).output(literal("\").toSelf().execute { whenReady { element.")).output(mark("name", "firstLowerCase")).output(literal("((it[\"v\"]!! as JsonPrimitive).content) } }"))
+			rule().condition((type("event"))).output(literal("onMessage(\"")).output(mark("name", "firstLowerCase")).output(literal("\").toSelf().execute { whenReady { element.")).output(mark("name", "firstLowerCase")).output(literal("(if (it.containsKey(\"v\")) (it[\"v\"] as JsonPrimitive).content else \"\") } }"))
 		);
 	}
 }
