@@ -7,7 +7,10 @@ import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQSession;
 import org.apache.activemq.command.ActiveMQDestination;
 
-import javax.jms.*;
+import javax.jms.Connection;
+import javax.jms.JMSException;
+import javax.jms.Session;
+import javax.jms.TemporaryQueue;
 import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
@@ -303,14 +306,13 @@ public class JmsConnector implements Connector {
 		try {
 			QueueProducer producer = new QueueProducer(session, path);
 			TemporaryQueue temporaryQueue = session.createTemporaryQueue();
-			javax.jms.MessageConsumer consumer = session.createConsumer(temporaryQueue);
 			message.setJMSReplyTo(temporaryQueue);
 			message.setJMSCorrelationID(createRandomString());
 			sendMessage(producer, message, 100);
 			producer.close();
-			Message response = consumer.receive(timeUnit.toMillis(timeout));
-			consumer.close();
-			return response;
+			try (javax.jms.MessageConsumer consumer = session.createConsumer(temporaryQueue)) {
+				return consumer.receive(timeUnit.toMillis(timeout));
+			}
 		} catch (JMSException e) {
 			Logger.error(e.getMessage());
 		}
