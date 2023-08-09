@@ -288,9 +288,9 @@ public class JmsConnector implements Connector {
 			TemporaryQueue temporaryQueue = session.createTemporaryQueue();
 			message.setJMSReplyTo(temporaryQueue);
 			message.setJMSCorrelationID(createRandomString());
-			sendMessage(producer, message, 100);
-			producer.close();
 			try (javax.jms.MessageConsumer consumer = session.createConsumer(temporaryQueue)) {
+				sendMessage(producer, message, 100);
+				producer.close();
 				return consumer.receive(timeUnit.toMillis(timeout));
 			} catch (JMSException e) {
 				Logger.error(e.getMessage());
