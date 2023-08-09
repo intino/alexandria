@@ -90,7 +90,7 @@ def type(parameter & object)
 end
 
 def type(parameter)
-	(it$["v"$]!! as JsonPrimitive).content
+    if (it.containsKey("v")) (it$["v"$] as JsonPrimitive).content else ""
 end
 
 def attribute(this:Display) trigger(target)
@@ -101,5 +101,5 @@ def trigger(target)
 end
 
 def type(event)
-    onMessage("$name+firstLowerCase").toSelf().execute { whenReady { element.$name+firstLowerCase((it$["v"$]!! as JsonPrimitive).content) } }
+    onMessage("$name+firstLowerCase").toSelf().execute { whenReady { element.$name+firstLowerCase(if (it.containsKey("v")) (it$["v"$] as JsonPrimitive).content else "") } }
 end

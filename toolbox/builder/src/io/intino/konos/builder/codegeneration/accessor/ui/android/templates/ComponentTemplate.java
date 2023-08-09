@@ -73,7 +73,7 @@ public class ComponentTemplate extends Template {
 			rule().condition((type("badge"))).output(literal("mode=\"")).output(mark("mode")).output(literal("\"")).output(expression().output(literal(" value=\"")).output(mark("value")).output(literal("\""))).output(expression().output(literal(" max=\"")).output(mark("max")).output(literal("\""))).output(expression().output(literal(" showZero=\"")).output(mark("showZero")).output(literal("\""))),
 			rule().condition((type("drawer"))).output(literal("position=\"")).output(mark("position")).output(literal("\" variant=\"")).output(mark("variant")).output(literal("\"")),
 			rule().condition((type("popover"))).output(literal("position=\"")).output(mark("position")).output(literal("\"")),
-			rule().condition((type("code"))).output(literal("value=\"")).output(mark("value", "escapeHtml")).output(literal("\"")),
+			rule().condition((type("code"))).output(literal("alexandria:text_value=\"")).output(mark("value", "escapeHtml")).output(literal("\"")),
 			rule().condition((type("highlighted"))).output(literal("alexandria:alexandria_highlighted=\"")).output(mark("text")).output(literal("\" alexandria:alexandria_highlighted_background=\"")).output(mark("background")).output(literal("\"")),
 			rule().condition((type("actionableMode"))).output(mark("mode")),
 			rule().condition((type("histogram"))).output(literal("{alwaysVisible:")).output(mark("alwaysVisible")).output(literal(",type:\"")).output(mark("type")).output(literal("\"}"))
