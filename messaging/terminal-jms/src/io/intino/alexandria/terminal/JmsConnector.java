@@ -301,20 +301,17 @@ public class JmsConnector implements Connector {
 			return null;
 		}
 		try {
-			CompletableFuture<javax.jms.Message> future = new CompletableFuture<>();
 			QueueProducer producer = new QueueProducer(session, path);
 			TemporaryQueue temporaryQueue = session.createTemporaryQueue();
 			javax.jms.MessageConsumer consumer = session.createConsumer(temporaryQueue);
-			consumer.setMessageListener(m -> acceptMessage(future::complete, consumer, m));
 			message.setJMSReplyTo(temporaryQueue);
 			message.setJMSCorrelationID(createRandomString());
 			sendMessage(producer, message, 100);
 			producer.close();
-			Message response = waitFor(future, timeout, timeUnit);
+			Message response = consumer.receive(timeUnit.toMillis(timeout));
 			consumer.close();
 			return response;
-		} catch (TimeoutException ignored) {
-		} catch (ExecutionException | InterruptedException | JMSException e) {
+		} catch (JMSException e) {
 			Logger.error(e.getMessage());
 		}
 		return null;
