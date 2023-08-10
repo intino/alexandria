@@ -94,7 +94,7 @@ def attribute(download) trigger(method)
 end
 
 def trigger(method)
-	Application.pushService()!!.send
+	Application.pushService(element.activity())!!.send
 end
 
 def type(schemaImport)

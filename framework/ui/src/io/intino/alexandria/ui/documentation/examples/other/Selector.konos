@@ -4,8 +4,8 @@ use Theme
 
 Template(layout=Vertical, spacing=DP8) selectorExamplesMold
 
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=33%, height=100%)
+	Block(layout=Horizontal Wrap, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Tabs facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Selector selector1 as Tabs(scrollButtons=On)
@@ -23,7 +23,7 @@ Template(layout=Vertical, spacing=DP8) selectorExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") tabOption3 as Option
 						=========
 
-		Block as Relative(width=33%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Menu facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Selector selector2 as Menu(layout=Vertical)
@@ -39,7 +39,7 @@ Template(layout=Vertical, spacing=DP8) selectorExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") menuOption3 as Option
 						=========
 
-		Block as Relative(width=33%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="ComboBox facet with Traceable (cookie is used)")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Selector selector3 as ComboBox Traceable
@@ -55,8 +55,7 @@ Template(layout=Vertical, spacing=DP8) selectorExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") comboBoxOption3 as Option
 						=========
 
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=33%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="ListBox facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Selector selector4 as ListBox
@@ -72,7 +71,7 @@ Template(layout=Vertical, spacing=DP8) selectorExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") listBoxOption3 as Option
 						=========
 
-		Block as Relative(width=33%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="RadioBox facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Selector(selected="radioBoxOption1") selector5 as RadioBox
@@ -88,7 +87,7 @@ Template(layout=Vertical, spacing=DP8) selectorExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") radioBoxOption3 as Option
 						=========
 
-		Block as Relative(width=33%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="ToggleBox facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Selector(selected="toggleBoxOption1") selector6 as ToggleBox
@@ -104,8 +103,7 @@ Template(layout=Vertical, spacing=DP8) selectorExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") toggleBoxOption3 as Option
 						=========
 
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=33%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="CheckBox facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Selector selector7 as CheckBox
@@ -121,7 +119,7 @@ Template(layout=Vertical, spacing=DP8) selectorExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") checkBoxOption3 as Option
 						=========
 
-		Block as Relative(width=33%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="CollectionBox facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Selector selector8 as CollectionBox(multipleSelection=true, allowOther=true)

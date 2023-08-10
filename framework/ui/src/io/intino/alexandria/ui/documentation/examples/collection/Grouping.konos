@@ -4,8 +4,8 @@ use Theme
 
 Template(layout=Vertical, spacing=DP8) groupingExamplesMold
 
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=49%, height=100%)
+	Block(layout=Horizontal Wrap, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal)
 				Block(format=containerAirMedium, spacing=DP24) as Absolute(width=200px)
@@ -30,7 +30,7 @@ Template(layout=Vertical, spacing=DP8) groupingExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) age as Labeled("age")
 						=========
 
-		Block as Relative(width=49%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="ComboBox facet")
 			Block(spacing=DP8, format=filledNoAir)
 				Block(format=containerAirMedium, spacing=DP24, layout=Horizontal)
@@ -55,8 +55,7 @@ Template(layout=Vertical, spacing=DP8) groupingExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) age as Labeled("age")
 						=========
 
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=49%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets with many options")
 			Block(spacing=DP8, format=filledNoAir)
 				Block(format=containerAirMedium, spacing=DP24) as Relative(width=100%)
@@ -67,7 +66,7 @@ Template(layout=Vertical, spacing=DP8) groupingExamplesMold
 						Grouping(collections\=empty) country as Labeled("country")<br/>
 						=========
 
-		Block as Relative(width=49%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="ComboBox facet with many options")
 			Block(spacing=DP8, format=filledNoAir)
 				Block(format=containerAirMedium, spacing=DP24) as Relative(width=100%)
@@ -78,8 +77,7 @@ Template(layout=Vertical, spacing=DP8) groupingExamplesMold
 						Grouping(collections\=empty) country as Labeled("country") ComboBox<br/>
 						=========
 
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=49%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="AttachedTo facet with many options")
 			Block(spacing=DP8, format=filledNoAir)
 				Block(format=containerAirMedium, spacing=DP24) as Relative(width=100%)

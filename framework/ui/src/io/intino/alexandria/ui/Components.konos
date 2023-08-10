@@ -138,7 +138,6 @@ Component multipleImage
 	Request remove as Integer
 
 Component spinner
-	Notification refreshLoading as Bool
 
 Component baseSlider
 	Notification refreshOrdinals as Object(Ordinal) List

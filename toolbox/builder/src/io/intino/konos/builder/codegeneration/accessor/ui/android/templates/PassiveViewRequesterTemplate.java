@@ -27,7 +27,7 @@ public class PassiveViewRequesterTemplate extends Template {
 			rule().condition((trigger("parameter"))).output(literal("Uri.encode(value)")),
 			rule().condition((attribute("upload")), (trigger("method"))).output(literal("Application.fileService()!!.upload")),
 			rule().condition((attribute("download")), (trigger("method"))).output(literal("Application.fileService()!!.download")),
-			rule().condition((trigger("method"))).output(literal("Application.pushService()!!.send")),
+			rule().condition((trigger("method"))).output(literal("Application.pushService(element.activity())!!.send")),
 			rule().condition((type("schemaImport"))).output(literal("import ")).output(mark("package")).output(literal(".mobile.schemas.*;")),
 			rule().condition((allTypes("parameterType","date"))).output(literal("kotlinx.datetime.Instant")),
 			rule().condition((allTypes("parameterType","datetime"))).output(literal("kotlinx.datetime.Instant")),

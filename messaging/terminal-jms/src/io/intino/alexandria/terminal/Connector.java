@@ -58,8 +58,6 @@ public interface Connector {
 
 	void destroySubscription(String subscriberId);
 
-	void requestResponse(String path, Message message, Consumer<Message> onResponse);
-
 	Message requestResponse(String path, Message message);
 
 	Message requestResponse(String path, Message message, long timeout, TimeUnit timeUnit);

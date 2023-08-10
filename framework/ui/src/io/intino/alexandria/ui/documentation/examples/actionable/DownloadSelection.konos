@@ -4,8 +4,8 @@ use Theme
 
 Template(layout=Vertical, spacing=DP8) downloadSelectionExamplesMold
 
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=32%, height=100%)
+	Block(layout=Horizontal Wrap, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filledNoAir)
 				Toolbar toolbar as Linked(to=list6)

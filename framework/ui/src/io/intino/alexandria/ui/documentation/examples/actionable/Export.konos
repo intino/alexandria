@@ -4,8 +4,8 @@ use Theme
 
 Template(layout=Vertical, spacing=DP8) exportExamplesMold
 
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=32%, height=100%)
+	Block(layout=Horizontal Wrap, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets with from")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Button(title="export...", from="2011-12-03T00:00:00Z") export1 as Export
@@ -15,7 +15,7 @@ Template(layout=Vertical, spacing=DP8) exportExamplesMold
 						Export(title\="export...", from\="2011-12-03T00:00:00Z") as Button
 						=========
 
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets with from and to")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Button(title="export...") export2 as Export
@@ -35,7 +35,7 @@ Template(layout=Vertical, spacing=DP8) exportExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;rangeMax\=7 Days
 						=========
 
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets with options")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Button(title="export...") export3 as Export(options="a" "b")

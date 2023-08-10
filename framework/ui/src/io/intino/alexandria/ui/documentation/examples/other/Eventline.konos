@@ -4,7 +4,7 @@ use Theme
 
 Template(layout=Vertical, spacing=DP8) eventlineExamplesMold
 
-	Block(layout=Horizontal, spacing=DP24)
+	Block(layout=Horizontal Wrap, spacing=DP24)
 		Block(format=extraHeight) as Relative(width=100%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(format=filledNoAirExtraLarge air)
@@ -15,7 +15,6 @@ Template(layout=Vertical, spacing=DP8) eventlineExamplesMold
 							Eventline
 							=========
 
-	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=100%, height=100%)
 			Text(format=h6, value="No facets (Vertical arrangement)")
 			Block(format=filledNoAirLarge air)

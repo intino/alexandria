@@ -12,9 +12,7 @@ import io.intino.konos.model.Service;
 import io.intino.magritte.framework.Layer;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
@@ -54,9 +52,15 @@ public class ThemeRenderer extends UIRenderer {
 		result.add("name", usedFormat.replace("-", "_"));
 		String[] usedFormats = usedFormat.split("-");
 		String attributes = Arrays.stream(usedFormats).map(f -> formatMap.get(f).content()).filter(c -> c != null && !c.isEmpty()).collect(Collectors.joining(","));
+		addDefaultAttributes(result, usedFormats);
 		if (attributes.isEmpty()) return result.toFrame();
 		Arrays.stream(attributes.split(",")).filter(this::validAttribute).forEach(a -> result.add("attribute", attributeFrameOf(a)));
 		return result.toFrame();
+	}
+
+	private void addDefaultAttributes(FrameBuilder result, String[] usedFormats) {
+		List<String> defaultTextSizes = Arrays.stream(usedFormats).map(this::defaultTextSize).filter(Objects::nonNull).collect(Collectors.toList());
+		if (!defaultTextSizes.isEmpty()) result.add("defaultTextSize", defaultTextSizes.get(0));
 	}
 
 	private static final Set<String> InvalidAttributes = Set.of(
@@ -75,6 +79,18 @@ public class ThemeRenderer extends UIRenderer {
 		result.add("value", adaptValue(props[0], value));
 		adaptSizeable(props[0], value, result);
 		return result.toFrame();
+	}
+
+	private String defaultTextSize(String attribute) {
+		if (attribute.equalsIgnoreCase("h1")) return "48sp";
+		if (attribute.equalsIgnoreCase("h2")) return "38sp";
+		if (attribute.equalsIgnoreCase("h3")) return "30sp";
+		if (attribute.equalsIgnoreCase("h4")) return "28sp";
+		if (attribute.equalsIgnoreCase("h5")) return "24sp";
+		if (attribute.equalsIgnoreCase("h6")) return "20sp";
+		if (attribute.equalsIgnoreCase("body1")) return "12sp";
+		if (attribute.equalsIgnoreCase("body2")) return "8sp";
+		return null;
 	}
 
 	private static final Set<String> SizeableAttributes = Set.of("margin", "padding");
@@ -123,7 +139,7 @@ public class ThemeRenderer extends UIRenderer {
 		StringBuilder result = new StringBuilder();
 		for (String part : parts) {
 			if (result.length() > 0) result.append(" ");
-			result.append(part.contains("px") ? Math.round(Integer.parseInt(part.replace("px", "")) * 0.25) + "dp" : part);
+			result.append(part.contains("px") ? Math.round(Integer.parseInt(part.replace("px", ""))) + "px" : part);
 		}
 		return result.toString();
 	}

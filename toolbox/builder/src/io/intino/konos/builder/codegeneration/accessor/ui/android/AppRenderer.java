@@ -36,7 +36,14 @@ public class AppRenderer extends UIRenderer {
 		FrameBuilder result = super.buildFrame();
 		result.add("gradle");
 		result.add("project", context.project());
-		service.resourceList().stream().filter(Service.UI.Resource::isMain).findFirst().ifPresent(main -> result.add("main", main.name$()));
+		service.resourceList().stream().filter(Service.UI.Resource::isPage).forEach(r -> result.add("resource", resourceFrame(r)));
+		return result;
+	}
+
+	private FrameBuilder resourceFrame(Service.UI.Resource resource) {
+		FrameBuilder result = buildBaseFrame().add("resource");
+		if (resource.isMain()) result.add("main");
+		result.add("name", resource.name$());
 		return result;
 	}
 
@@ -62,7 +69,7 @@ public class AppRenderer extends UIRenderer {
 	}
 
 	private static final Map<String, List<String>> ComponentPropertiesMap = new HashMap<>() {{
-		put("Alexandria", List.of("name", "label", "format", "color", "visible", "traceable", "style", "multiple", "context", "owner"));
+		put("Alexandria", List.of("name", "label", "format", "color", "visible", "traceable", "style", "context", "owner", "multiple_instances", "multiple_arrangement", "multiple_no_items_message", "multiple_spacing", "multiple_editable", "multiple_wrap", "multiple_collapsed", "multiple_count_min", "multiple_count_max", "highlighted", "highlighted_background"));
 		put("Actionable:Alexandria", List.of("title", "target", "mode", "icon", "affirmed", "traceable", "signed", "size", "highlighted", "readonly"));
 		put("AbstractSlider:Alexandria", List.of("traceable", "arrangement", "animation", "readonly", "position", "style"));
 		put("AppDirectory:Alexandria", List.of("icon"));
@@ -78,7 +85,7 @@ public class AppRenderer extends UIRenderer {
 		put("Chart:Alexandria", List.of("width", "height"));
 		put("AlertDialog:Alexandria", List.of("title", "modal", "full_screen", "message", "close_label", "accept_label", "width", "height", "animation"));
 		put("AbstractDialog:Alexandria", List.of("title", "modal", "full_screen", "width", "height", "animation"));
-		put("Block:Alexandria", List.of("layout", "width", "height", "animation", "hidden", "auto_size"));
+		put("Block:Alexandria", List.of("layout", "width", "height", "animation", "hidden", "auto_size", "paper"));
 		put("Date:Alexandria", List.of("pattern", "mode", "value", "time_picker", "mask", "embedded", "allow_empty", "views", "shrink"));
 		put("User:Alexandria", List.of("mode"));
 		put("Number:Alexandria", List.of("value", "prefix", "suffix", "min", "max", "step", "readonly", "focused", "decimals", "expanded", "helper_text", "shrink"));

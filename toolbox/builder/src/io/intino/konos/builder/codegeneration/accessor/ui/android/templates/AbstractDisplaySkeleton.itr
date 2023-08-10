@@ -27,26 +27,44 @@ end
 
 def type(display & res & noAbstract)
     <?xml version="1.0" encoding="utf-8"?>
-    <LinearLayout
+    <com.google.android.flexbox.FlexboxLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:alexandria="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        alexandria:flexDirection="$layout">
 
-        [$component...[$NL]]
+        <ScrollView android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:fillViewport="true">
 
-    </LinearLayout>
+            <com.google.android.flexbox.FlexboxLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                alexandria:flexDirection="$layout">
+                [$component...[$NL]]
+    		</com.google.android.flexbox.FlexboxLayout>
+	    </ScrollView>
+
+    </com.google.android.flexbox.FlexboxLayout>
+end
+
+def type(layout & horizontal)
+    row
+end
+
+def type(layout & vertical)
+    column
 end
 
 def type(display & res)
     <?xml version="1.0" encoding="utf-8"?>
-    <LinearLayout
+    <com.google.android.flexbox.FlexboxLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:alexandria="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        alexandria:flexDirection="$layout">
 
         <TextView
                 android:layout_width="wrap_content"
@@ -56,7 +74,7 @@ def type(display & res)
 
         [$component...[$NL]]
 
-    </LinearLayout>
+    </com.google.android.flexbox.FlexboxLayout>
 end
 
 def type(display & noAbstract)

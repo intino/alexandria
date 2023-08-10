@@ -13,6 +13,7 @@ public class WidgetTypeMobilePage extends AbstractWidgetTypeMobilePage {
 			@Override
 			public void personify() {
 				WidgetTypeTemplate component = new WidgetTypeTemplate(box);
+				component.type(type);
 				register(component);
 				component.init();
 			}

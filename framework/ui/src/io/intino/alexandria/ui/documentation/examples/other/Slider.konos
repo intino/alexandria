@@ -4,8 +4,8 @@ use Theme
 
 Template(layout=Vertical, spacing=DP8) sliderExamplesMold
 
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=33%, height=100%)
+	Block(layout=Horizontal Wrap, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Slider(format=containerAirLarge) slider1
@@ -17,7 +17,7 @@ Template(layout=Vertical, spacing=DP8) sliderExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;Range(min\=1,max\=100)
 						=========
 
-		Block as Relative(width=33%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets with Animation property")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Slider(format=containerAirLarge) slider2
@@ -31,7 +31,7 @@ Template(layout=Vertical, spacing=DP8) sliderExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;Animation(interval\=100 Millis, loop\=true)
 						=========
 
-		Block as Relative(width=33%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Temporal facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				TemporalSlider(format=containerAirLarge) slider3
@@ -46,8 +46,7 @@ Template(layout=Vertical, spacing=DP8) sliderExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;scales\=Day Month Year
 						=========
 
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=33%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets with ToolbarOnly style")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Slider(format=containerAirLarge, style=ToolbarOnly) slider4
@@ -59,7 +58,7 @@ Template(layout=Vertical, spacing=DP8) sliderExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;Range(min\=1,max\=100)
 						=========
 
-		Block as Relative(width=33%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets with SliderOnly style")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Slider(format=containerAirLarge, style=SliderOnly) slider5
@@ -71,7 +70,7 @@ Template(layout=Vertical, spacing=DP8) sliderExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;Range(min\=1,max\=100)
 						=========
 
-		Block as Relative(width=33%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets with SliderOnly and Marks in Java")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Slider(format=containerAirLarge, style=SliderOnly) slider6
@@ -83,8 +82,7 @@ Template(layout=Vertical, spacing=DP8) sliderExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;Range(min\=1,max\=100)
 						=========
 
-	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=33%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets with slider on bottom")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Slider(format=containerAirLarge, position=SliderBottom) slider7
@@ -96,7 +94,7 @@ Template(layout=Vertical, spacing=DP8) sliderExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;Range(min\=1,max\=100)
 						=========
 
-		Block as Relative(width=33%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Range slider. No facets")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				RangeSlider(format=containerAirLarge, from=-80, to=3000, minimumDistance=10) slider8
