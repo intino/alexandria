@@ -7,10 +7,7 @@ import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQSession;
 import org.apache.activemq.command.ActiveMQDestination;
 
-import javax.jms.Connection;
-import javax.jms.JMSException;
-import javax.jms.Session;
-import javax.jms.TemporaryQueue;
+import javax.jms.*;
 import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
@@ -288,18 +285,24 @@ public class JmsConnector implements Connector {
 			TemporaryQueue temporaryQueue = session.createTemporaryQueue();
 			message.setJMSReplyTo(temporaryQueue);
 			message.setJMSCorrelationID(createRandomString());
-			try (javax.jms.MessageConsumer consumer = session.createConsumer(temporaryQueue)) {
-				sendMessage(producer, message, 100);
-				producer.close();
-				return consumer.receive(timeUnit.toMillis(timeout));
-			} catch (JMSException e) {
-				Logger.error(e.getMessage());
-			}
-		} catch (JMSException e) {
+			javax.jms.MessageConsumer consumer = session.createConsumer(temporaryQueue);
+			CompletableFuture<javax.jms.Message> future = new CompletableFuture<>();
+			consumer.setMessageListener(future::complete);
+			sendMessage(producer, message, 100);
+			producer.close();
+			Message response = waitFor(future, timeout, timeUnit);
+			consumer.close();
+			return response;
+		} catch (JMSException | ExecutionException | InterruptedException | TimeoutException e) {
 			Logger.error(e.getMessage());
 		}
 		return null;
 	}
+
+	private static javax.jms.Message waitFor(Future<javax.jms.Message> future, long timeout, TimeUnit timeUnit) throws ExecutionException, InterruptedException, TimeoutException {
+		return timeout <= 0 || timeUnit == null ? future.get() : future.get(timeout, timeUnit);
+	}
+
 
 	@Override
 	public void requestResponse(String path, javax.jms.Message message, String responsePath) {
@@ -452,15 +455,6 @@ public class JmsConnector implements Connector {
 		} catch (InterruptedException ignored) {
 		}
 		return result[0];
-	}
-
-	private void acceptMessage(Consumer<javax.jms.Message> onResponse, javax.jms.MessageConsumer consumer, javax.jms.Message m) {
-		try {
-			onResponse.accept(m);
-			consumer.close();
-		} catch (JMSException e) {
-			Logger.error(e);
-		}
 	}
 
 	private ConnectionListener connectionListener() {
