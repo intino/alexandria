@@ -3,7 +3,6 @@ package io.intino.konos.builder.helpers;
 import cottons.utils.StringHelper;
 import io.intino.konos.builder.codegeneration.ElementReference;
 import io.intino.konos.model.ActionableComponents;
-import io.intino.konos.model.InteractionComponents;
 import io.intino.konos.model.KonosGraph;
 import io.intino.magritte.framework.Layer;
 import io.intino.magritte.framework.Node;
