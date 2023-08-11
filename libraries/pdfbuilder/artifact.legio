@@ -1,11 +1,12 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.2.1") pdf-builder
+Artifact("io.intino.alexandria", "1.2.2") pdf-builder
 	Imports
-		Compile("fr.opensagres.xdocreport", "fr.opensagres.poi.xwpf.converter.core", "2.0.4")
-		Compile("fr.opensagres.xdocreport", "fr.opensagres.poi.xwpf.converter.pdf", "2.0.4")
-		Compile("fr.opensagres.xdocreport", "fr.opensagres.xdocreport.itext.extension", "2.0.4")
-		Compile("fr.opensagres.xdocreport", "fr.opensagres.poi.xwpf.converter.pdf", "2.0.4")
+		// Dont update. New versions seem to shrunk the pdfs content
+		Compile("fr.opensagres.xdocreport", "fr.opensagres.poi.xwpf.converter.core", "2.0.2")
+		Compile("fr.opensagres.xdocreport", "fr.opensagres.poi.xwpf.converter.pdf", "2.0.2")
+		Compile("fr.opensagres.xdocreport", "fr.opensagres.xdocreport.itext.extension", "2.0.2")
+		Compile("fr.opensagres.xdocreport", "fr.opensagres.poi.xwpf.converter.pdf", "2.0.2")
 		Compile("org.apache.pdfbox", "pdfbox", "2.0.25")
 
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
