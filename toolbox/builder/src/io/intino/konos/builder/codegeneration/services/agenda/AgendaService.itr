@@ -196,7 +196,7 @@ def trigger(private)
 	private File $name+firstLowerCase~File($parameter+signature...[, ]) {
 		File directory = new File(root, "$name+camelCaseToSnakeCase/");
 		directory.mkdirs();
-		return new File(directory, $parameter+names...[ + "." + ] + ".json");
+		return new File(directory, $parameter+names...[ + "##" + ] + ".json");
 	}
 
 	private $name+firstUpperCase load$name+firstUpperCase(File file) {
@@ -279,7 +279,7 @@ def trigger(argIndex)
 end
 
 def trigger(test)
-	$name.test(f.getName().split("\\\\.")$[$index])
+	$name.test(f.getName().split("##")$[$index])
 end
 
 def trigger(schemaParameter)

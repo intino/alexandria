@@ -14,6 +14,10 @@ class NullValue implements Message.Value {
 
 	@Override
 	public <T> T as(Class<T> type) {
-		return null;
+		return isBoolean(type) ? (T) Boolean.FALSE : null;
+	}
+
+	private <T> boolean isBoolean(Class<T> type) {
+		return type.equals(boolean.class) || type.equals(Boolean.class);
 	}
 }
