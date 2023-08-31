@@ -35,5 +35,6 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:json:1.2.2" level="project" />
     <orderEntry type="module" module-name="primitives" />
     <orderEntry type="library" name="Intino: commons-io:commons-io:2.11.0" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.1.2" level="project" />
   </component>
 </module>
