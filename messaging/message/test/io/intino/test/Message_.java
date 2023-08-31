@@ -14,6 +14,12 @@ import static org.junit.Assert.*;
 public class Message_ {
 
 	@Test
+	public void missing_attributes_should_return_false_when_get_as_boolean() {
+		Message m = new Message("AB");
+		assertFalse(m.get("something").asBoolean());
+	}
+
+	@Test
 	public void append_to_list() {
 		Message m = new Message("A");
 		m.set("list", List.of(""));
@@ -116,7 +122,7 @@ public class Message_ {
 		assertNotEquals("", m.get("a").asString());
 
 		assertFalse(m.get("b").isEmpty());
-		assertNull(m.get("b").asBoolean());
+		assertFalse(m.get("b").asBoolean());
 
 		assertFalse(m.get("c").isEmpty());
 		assertArrayEquals(numberList, m.get("c").as(Integer[].class));

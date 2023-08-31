@@ -291,7 +291,7 @@ public class Message {
 		 * */
 		<T> T as(Class<T> type);
 
-		default Boolean asBoolean() {return as(Boolean.class);}
+		default Boolean asBoolean() {Boolean v = as(Boolean.class); return v != null && v;}
 		default Byte asByte() {return as(Byte.class);}
 		default Character asCharacter() {return as(Character.class);}
 		default Short asShort() {return as(Short.class);}
