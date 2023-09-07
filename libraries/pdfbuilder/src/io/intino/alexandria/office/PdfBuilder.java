@@ -45,7 +45,7 @@ public class PdfBuilder {
 			try(OutputStream out = new BufferedOutputStream(new FileOutputStream(destinationPDF))) {
 				try(InputStream doc = new BufferedInputStream(new FileInputStream(inputDocx))) {
 					XWPFDocument document = new XWPFDocument(doc);
-					PdfOptions options = PdfOptions.create();
+					PdfOptions options = PdfOptions.getDefault();
 					PdfConverter.getInstance().convert(document, out, options);
 				}
 			}

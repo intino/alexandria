@@ -1,6 +1,8 @@
 package io.intino.alexandria.restaccessor;
 
+import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import io.intino.alexandria.Base64;
 import io.intino.alexandria.Json;
 import io.intino.alexandria.Resource;
@@ -26,6 +28,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -155,7 +158,7 @@ public class RequestBuilder {
 		return builder.build();
 	}
 
-	private static InputStream stream(Resource r)  {
+	private static InputStream stream(Resource r) {
 		try {
 			return r.stream();
 		} catch (IOException e) {
@@ -201,13 +204,22 @@ public class RequestBuilder {
 
 	private AlexandriaException exception(int statusCode, String bodyContent) {
 		try {
-			AlexandriaException e = bodyContent.startsWith("{") ? Json.fromString(bodyContent, AlexandriaException.class) : null;
+			AlexandriaException e = bodyContent.startsWith("{") ? alexandriaException(bodyContent) : null;
 			if (e != null) return ExceptionFactory.from(statusCode, e.getMessage(), e.parameters());
 			return ExceptionFactory.from(statusCode, bodyContent, Map.of());
 		} catch (JsonSyntaxException e) {
 			Logger.warn(e.getMessage() + ": " + bodyContent);
 			return ExceptionFactory.from(statusCode, bodyContent, Map.of());
 		}
+	}
+
+	private static AlexandriaException alexandriaException(String bodyContent) {
+		JsonObject jsonObject = Json.fromString(bodyContent, JsonObject.class);
+		Type asMap = new TypeToken<Map<String, String>>() {
+		}.getType();
+		return new AlexandriaException(jsonObject.get("code").getAsString(),
+				jsonObject.get("detailMessage").getAsString(),
+				jsonObject.has("parameters") ? Json.fromJson(jsonObject.get("parameters").getAsJsonObject(), asMap) : null);
 	}
 
 	private String bodyContent(HttpResponse response) {
