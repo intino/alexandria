@@ -50,7 +50,7 @@ Concept CatalogComponents
 		sub Grid
 			Concept:Named:{1..*} Column extends Component
 				var string label
-				var word:{Text Number Date} type
+				var word:{Text Number Date Icon MaterialIcon} type
 				var boolean sortable = false
 				var integer:{px} width = -1px
 				var boolean fixed = false

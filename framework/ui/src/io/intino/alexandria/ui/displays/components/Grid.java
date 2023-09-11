@@ -231,6 +231,7 @@ public class Grid<DN extends GridNotifier, B extends Box, Item> extends Abstract
         io.intino.alexandria.ui.model.datasource.grid.GridColumn<Item> column = columns.get(index);
         GridCell result = new GridCell();
         result.value(column.formatter().apply(value));
+        result.color(value.color());
         if (column.type() == io.intino.alexandria.ui.model.datasource.grid.GridColumn.Type.Link)
             result.address(itemResolver.address(column, item));
         return result;
