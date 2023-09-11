@@ -29,4 +29,8 @@ public class GridItem {
 		return add(new GridValue(value));
 	}
 
+	public GridItem add(Object value, String color) {
+		return add(new GridValue(value, color));
+	}
+
 }

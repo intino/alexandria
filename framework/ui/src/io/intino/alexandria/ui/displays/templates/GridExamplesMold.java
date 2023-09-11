@@ -1,13 +1,17 @@
 package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.UiFrameworkBox;
+import io.intino.alexandria.ui.Asset;
 import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.components.Grid;
 import io.intino.alexandria.ui.model.datasource.Filter;
 import io.intino.alexandria.ui.model.datasource.GridDatasource;
 import io.intino.alexandria.ui.model.datasource.Group;
 import io.intino.alexandria.ui.model.datasource.grid.*;
+import io.intino.alexandria.ui.services.push.UISession;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,13 +48,18 @@ public class GridExamplesMold extends AbstractGridExamplesMold<UiFrameworkBox> {
             grid.sortings(Collections.emptyList());
             notifyUser("Sort by " + e.column().label() + " with mode " + e.mode().name(), UserMessage.Type.Info);
         });
-        grid.source(new ExampleDatasource());
+        grid.source(new ExampleDatasource(session()));
     }
 
     private static class ExampleDatasource extends GridDatasource<GridItem> {
+        private final UISession session;
 
-        private static final int ColumnCount = 20;
+        private static final int ColumnCount = 22;
         private static final int RowCount = 1000;
+
+        private ExampleDatasource(UISession session) {
+            this.session = session;
+        }
 
         @Override
         public String name() {
@@ -96,11 +105,27 @@ public class GridExamplesMold extends AbstractGridExamplesMold<UiFrameworkBox> {
             for (int i=0; i<RowCount; i++) {
                 GridItem item = new GridItem();
                 for (int j=0; j<ColumnCount; j++) {
-                    item.add(j == 2 ? Instant.now() : i + "." + j);
+                    if (j == 0) item.add("Check", "blue");
+                    else if (j == 1) item.add(Asset.toResource(urlOf(session.browser().baseAssetUrl()), randomIcon()).toUrl().toString());
+                    else if (j == 3) item.add(Instant.now());
+                    else item.add(i + "." + j);
                 }
                 result.add(item);
             }
             return result;
+        }
+
+        private String randomIcon() {
+            double random = Math.random();
+            return "/icons/" + (random < 0.5 ? "process.ico" : "task.ico");
+        }
+
+        private URL urlOf(String url) {
+            try {
+                return new URL(url);
+            } catch (MalformedURLException e) {
+                return null;
+            }
         }
 
         private List<GridItem> groupBy(List<GridItem> items) {

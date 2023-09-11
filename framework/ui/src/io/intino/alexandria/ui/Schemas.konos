@@ -277,11 +277,11 @@ Schema GridColumn
 	Attribute address as Text
 	Attribute visible as Bool
 	Attribute width as Integer
-	Attribute type as Word("Link" "Text" "Number" "Date")
+	Attribute type as Word("Link" "Text" "Number" "Date" "Icon" "MaterialIcon")
 
 Schema GridColumnMode
 	Attribute name as Text
-	Attribute acceptedTypes as Word("Link" "Text" "Number" "Date") List
+	Attribute acceptedTypes as Word("Link" "Text" "Number" "Date" "Icon" "MaterialIcon") List
 
 Schema GridRow
 	Attribute selectable as Bool
@@ -290,6 +290,7 @@ Schema GridRow
 Schema GridCell
 	Attribute value as Text
 	Attribute address as Text
+	Attribute color as Text
 
 Schema GridSortInfo
 	Attribute column as Text

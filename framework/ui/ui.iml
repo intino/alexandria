@@ -72,7 +72,6 @@
     <orderEntry type="module" module-name="http" />
     <orderEntry type="module" module-name="exceptions" />
     <orderEntry type="module" module-name="primitives" />
-    <orderEntry type="module" module-name="rest-accessor" />
     <orderEntry type="library" name="Intino: jakarta.websocket:jakarta.websocket-client-api:2.1.0" level="project" />
     <orderEntry type="library" name="Intino: jakarta.websocket:jakarta.websocket-api:2.1.0" level="project" />
     <orderEntry type="library" name="Intino: org.glassfish.grizzly:grizzly-framework:4.0.0" level="project" />

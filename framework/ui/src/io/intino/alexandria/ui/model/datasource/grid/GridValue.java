@@ -4,9 +4,15 @@ import java.time.Instant;
 
 public class GridValue {
 	private Object value;
+	private String color;
 
 	public GridValue(Object value) {
+		this(value, null);
+	}
+
+	public GridValue(Object value, String color) {
 		this.value = value;
+		this.color = color;
 	}
 
 	public String asText() {
@@ -15,6 +21,10 @@ public class GridValue {
 		if (isNumber()) return String.valueOf(asNumber());
 		if (isInstant()) return String.valueOf(asInstant());
 		return (String) value;
+	}
+
+	public String color() {
+		return color;
 	}
 
 	public boolean isNumber() {
