@@ -215,11 +215,14 @@ Schema DialogSize
 	Attribute height as Text
 
 Schema LayerToolbar
-	Attribute homeButton as Object(LayerToolbarButton)
-	Attribute previousButton as Object(LayerToolbarButton)
-	Attribute nextButton as Object(LayerToolbarButton)
+	Attribute home as Object(LayerOperation)
+	Attribute previous as Object(LayerOperation)
+	Attribute next as Object(LayerOperation)
+	Attribute customOperations as Object(LayerOperation) List
 
-Schema LayerToolbarButton
+Schema LayerOperation
+	Attribute name as Text
+	Attribute icon as Text
 	Attribute visible as Bool
 	Attribute enabled as Bool
 
