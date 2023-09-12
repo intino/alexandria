@@ -273,6 +273,7 @@ Component layer
 	Request previous
 	Request next
 	Request close
+	Request execute as Text
 
 Component divider
 Component user

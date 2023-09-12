@@ -1,12 +1,13 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.schemas.LayerOperation;
 import io.intino.alexandria.schemas.LayerToolbar;
-import io.intino.alexandria.schemas.LayerToolbarButton;
 import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.events.BeforeListener;
 import io.intino.alexandria.ui.displays.events.Event;
 import io.intino.alexandria.ui.displays.events.Listener;
+import io.intino.alexandria.ui.displays.events.actionable.ExecuteListener;
 import io.intino.alexandria.ui.displays.notifiers.LayerNotifier;
 
 import java.util.ArrayList;
@@ -25,6 +26,8 @@ public class Layer<DN extends LayerNotifier, B extends Box> extends AbstractLaye
 	private Function<Layer, Boolean> canPreviousResolver;
 	private Consumer<Layer> nextListener;
 	private Function<Layer, Boolean> canNextResolver;
+	private java.util.List<LayerOperation> customOperationList = new ArrayList<>();
+	private Consumer<String> executeOperationListener;
 
 	public Layer(B box) {
 		super(box);
@@ -53,6 +56,16 @@ public class Layer<DN extends LayerNotifier, B extends Box> extends AbstractLaye
 		return this;
 	}
 
+	public Layer<DN, B> onExecuteOperation(Consumer<String> listener) {
+		this.executeOperationListener = listener;
+		return this;
+	}
+
+	public Layer<DN, B> addOperation(String name, String icon) {
+		customOperationList.add(new LayerOperation().name(name).icon(icon));
+		return this;
+	}
+
 	@Override
 	public void refresh() {
 		super.refresh();
@@ -61,9 +74,10 @@ public class Layer<DN extends LayerNotifier, B extends Box> extends AbstractLaye
 
 	private LayerToolbar toolbar() {
 		LayerToolbar result = new LayerToolbar();
-		result.homeButton(new LayerToolbarButton().visible(homeAction != null).enabled(homeAction != null));
-		result.previousButton(new LayerToolbarButton().visible(previousListener != null).enabled(canPreviousResolver != null ? canPreviousResolver.apply(this) : false));
-		result.nextButton(new LayerToolbarButton().visible(nextListener != null).enabled(canNextResolver != null ? canNextResolver.apply(this) : false));
+		result.home(new LayerOperation().visible(homeAction != null).enabled(homeAction != null));
+		result.previous(new LayerOperation().visible(previousListener != null).enabled(canPreviousResolver != null ? canPreviousResolver.apply(this) : false));
+		result.next(new LayerOperation().visible(nextListener != null).enabled(canNextResolver != null ? canNextResolver.apply(this) : false));
+		result.customOperations(customOperationList);
 		return result;
 	}
 
@@ -117,6 +131,11 @@ public class Layer<DN extends LayerNotifier, B extends Box> extends AbstractLaye
 		refresh();
 	}
 
+	public void execute(String operation) {
+		if (executeOperationListener == null) return;
+		executeOperationListener.accept(operation);
+	}
+
 	public Layer<DN, B> title(String title) {
 		_title(title);
 		notifier.refreshTitle(title);
@@ -151,4 +170,5 @@ public class Layer<DN extends LayerNotifier, B extends Box> extends AbstractLaye
 	private void notifyClose() {
 		closeListeners.forEach(l -> l.accept(new Event(this)));
 	}
+
 }
