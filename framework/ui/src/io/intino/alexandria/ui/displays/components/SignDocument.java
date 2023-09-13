@@ -4,10 +4,9 @@ import io.intino.alexandria.Base64;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.schemas.SignDocumentBatchEntry;
-import io.intino.alexandria.schemas.SignDocumentBatchSuccess;
+import io.intino.alexandria.schemas.SignDocumentSignatureSuccess;
 import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.events.SignEvent;
-import io.intino.alexandria.ui.displays.events.SignListener;
 import io.intino.alexandria.ui.displays.notifiers.SignDocumentNotifier;
 import io.intino.alexandria.ui.utils.IOUtils;
 
@@ -90,15 +89,14 @@ public class SignDocument<DN extends SignDocumentNotifier, B extends Box> extend
         notifier.refreshReadonly(true);
     }
 
-    public void batchSuccess(List<SignDocumentBatchSuccess> successList) {
+    public void batchSuccess(List<SignDocumentSignatureSuccess> successList) {
         List<SignEvent.SignEventInfo> signEventInfoList = successList.stream().map(this::signInfoOf).collect(Collectors.toList());
         notifyUser(translate("Sign process finished"), UserMessage.Type.Success);
         signListener.accept(new SignEvent(this, signEventInfoList));
     }
 
-    private SignEvent.SignEventInfo signInfoOf(SignDocumentBatchSuccess success) {
-        String signature = server.signature(success.id());
-        return new SignEvent.SignEventInfo(success.id(), signature, null, info(signature));
+    private SignEvent.SignEventInfo signInfoOf(SignDocumentSignatureSuccess success) {
+        return new SignEvent.SignEventInfo(success.id(), success.signature(), success.certificate(), info(success.signature()));
     }
 
     private void sign() {

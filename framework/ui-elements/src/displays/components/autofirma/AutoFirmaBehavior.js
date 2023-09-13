@@ -61,7 +61,8 @@ const AutoFirmaBehavior = (element) => {
         intention : null,
 
         initSignatory: function () {
-            AutoScript.setForceWSMode(true);
+            AutoScript.setForceWSMode(false);
+            AutoScript.setStickySignatory(true);
             AutoScript.cargarAppAfirma();
         },
 

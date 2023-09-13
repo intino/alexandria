@@ -28,13 +28,46 @@ class SignDocument extends AbstractSignDocument {
 
     signBatch = (documents) => {
         this.requester.signing();
-        this.behavior.signBatch(documents, this._batchSuccessCallback.bind(this), this._failureCallback.bind(this));
+        this._reset();
+        this.documentsToSign = documents;
+        this.behavior.signDocument(this.documentsToSign[this.signIndex].url, this._batchDocumentSignedCallback.bind(this), this._batchFailureCallback.bind(this));
     };
 
-    _batchSuccessCallback = (signatures) => {
-        this.success = true;
-        this.requester.batchSuccess(this._readSignaturesResult(signatures));
+    _batchDocumentSignedCallback = (signature, certificate) => {
+        this.signedDocuments[this.signIndex] = { signature: signature, certificate: certificate };
+        this.signIndex++;
+        if (this.signIndex >= this.documentsToSign.length) {
+            this._batchSuccess();
+            return;
+        }
+        this.behavior.signDocument(this.documentsToSign[this.signIndex].url, this._batchDocumentSignedCallback.bind(this), this._batchFailureCallback.bind(this));
+    }
+
+    _batchSuccess = () => {
+        this.requester.batchSuccess(this._signatures());
+        this._reset();
         this.setState({ readonly: false });
+    };
+
+    _batchFailureCallback = (errorCode, errorMessage) => {
+        this._failureCallback(errorCode, errorMessage);
+        this._reset();
+    };
+
+    _reset = () => {
+        this.signIndex = 0;
+        this.documentsToSign = [];
+        this.signedDocuments = [];
+    };
+
+    _signatures = () => {
+        const result = [];
+        for (let i=0; i<this.documentsToSign.length; i++) {
+            const signedDocument = this.signedDocuments[i] != null ? this.signedDocuments[i] : { signature: null, certificate: null };
+            const info = { id: this.documentsToSign[i].id, signature: signedDocument.signature, certificate: signedDocument.certificate };
+            result.push(info);
+        }
+        return result;
     };
 
     _readSignaturesResult = (content) => {
