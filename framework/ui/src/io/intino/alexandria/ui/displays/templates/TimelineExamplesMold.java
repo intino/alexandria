@@ -49,7 +49,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 
 			@Override
 			public List<Scale> scales() {
-				return List.of(Scale.Hour, Scale.Day, Scale.Week, Scale.Month, Scale.Year);
+				return List.of(Scale.Minute, Scale.Hour, Scale.Day, Scale.Week, Scale.Month, Scale.Year);
 			}
 
 			@Override

@@ -23,7 +23,8 @@ const ReelToolbar = ({ label, scales, toolbar, onChangeScale, onPrevious, onNext
     const renderScale = (scale, lastScale) => {
         const style = lastScale ? { border:'1px solid #888' } : { border:'1px solid #888',borderRight:'0' };
         const classNames = scale === toolbar.scale ? classnames(classes.scale, classes.selectedScale) : classes.scale;
-        return (<a onClick={(e) => { e.stopPropagation(); onChangeScale(scale)} } style={style} className={classNames}>{scale.substring(0,1)}</a>);
+        const label = scale === "Minute" ? "m" : scale.substring(0,1);
+        return (<a onClick={(e) => { e.stopPropagation(); onChangeScale(scale)} } style={style} className={classNames}>{label}</a>);
     };
     const title = translate(label.title != null ? label.title : "Status");
     return (
