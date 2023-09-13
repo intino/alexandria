@@ -258,9 +258,10 @@ Schema SignDocumentBatchEntry
 	Attribute id as Text
 	Attribute url as Text
 
-Schema SignDocumentBatchSuccess
+Schema SignDocumentSignatureSuccess
 	Attribute id as Text
-	Attribute success as Bool
+	Attribute signature as Text
+	Attribute certificate as Text
 
 Schema GridInfo
 	Attribute name as Text

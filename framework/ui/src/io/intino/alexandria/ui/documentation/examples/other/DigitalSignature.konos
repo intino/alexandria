@@ -21,3 +21,18 @@ Template(layout=Vertical, spacing=DP8) digitalSignatureExamplesMold
 						Link(title\="Sign text") as SignText<br/>
 						Link(title\="Sign document") as SignDocument
 						=========
+
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="Multiple sign by using @firma")
+			Block(format=filledNoAir, layout=Vertical CenterCenter)
+				Block as Relative(width=90%)
+					File signDocumentsField as Editable(showDropZone=false) Multiple Labeled("Documents to sign")
+					Block(layout=Horizontal StartJustified, format=airTop) > Button(title = "Sign documents", size=Small, highlight=Fill) signDocuments as SignDocument Readonly
+					Block(format=airTop, visible=false) signaturesBlock > Text(cropWithEllipsis=40 Chars) signatures as Labeled("Signatures") Multiple
+					Block(format=airTop) > Text(cropWithEllipsis=40 Chars) batchSignedBy as Labeled("Signed by")
+					Block(format=airTop) > Text(format=redColor) batchError as Labeled("Error")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Link(title\="Sign documents") as SignDocument
+						=========
