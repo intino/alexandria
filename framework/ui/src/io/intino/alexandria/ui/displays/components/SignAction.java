@@ -19,6 +19,7 @@ public abstract class SignAction<DN extends SignActionNotifier, B extends Box> e
 	public boolean readonly = false;
 	protected AutoFirmaServer server;
 	protected SignListener signListener;
+	protected String signSuccessMessage = "Sign process finished";
 	private SignErrorListener errorListener;
 	private SignAction.SignFormat format = SignAction.SignFormat.XAdES;
 
@@ -26,6 +27,11 @@ public abstract class SignAction<DN extends SignActionNotifier, B extends Box> e
 
 	public SignAction(B box) {
 		super(box);
+	}
+
+	public SignAction<DN, B> signSuccessMessage(String message) {
+		this.signSuccessMessage = message;
+		return this;
 	}
 
 	public SignAction<DN, B> signFormat(SignAction.SignFormat format) {
@@ -70,11 +76,11 @@ public abstract class SignAction<DN extends SignActionNotifier, B extends Box> e
 
 	public void signing() {
 		readonly(true);
-		notifyUser(translate("Select certificate when requested by @firma application..."), UserMessage.Type.Loading);
+		notifyUser(translate("Select certificate if requested by @firma application..."), UserMessage.Type.Loading);
 	}
 
 	public void success(SignActionSignatureSuccess success) {
-		notifyUser(translate("Sign process finished"), UserMessage.Type.Success);
+		notifyUser(translate(signSuccessMessage), UserMessage.Type.Success);
 		signListener.accept(new SignEvent(this, success.signature(), success.certificate(), info(success.signature())));
 	}
 
