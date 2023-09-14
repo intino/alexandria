@@ -91,7 +91,7 @@ public class SignDocument<DN extends SignDocumentNotifier, B extends Box> extend
 
     public void batchSuccess(List<SignDocumentSignatureSuccess> successList) {
         List<SignEvent.SignEventInfo> signEventInfoList = successList.stream().map(this::signInfoOf).collect(Collectors.toList());
-        notifyUser(translate("Sign process finished"), UserMessage.Type.Success);
+        notifyUser(translate(signSuccessMessage), UserMessage.Type.Success);
         signListener.accept(new SignEvent(this, signEventInfoList));
     }
 
