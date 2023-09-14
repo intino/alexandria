@@ -125,7 +125,7 @@ public class PushServiceHandler {
 		List<SparkClient> clientList = clientsMap.get(sessionId);
 		SparkClient savedClient = client != null ? clientList.stream().filter(c -> c.id().equals(client.id())).findFirst().orElse(null) : null;
 		if (savedClient != null) clientsMap.get(sessionId).remove(savedClient);
-		if (clientsMap.get(sessionId).size() <= 0) clientsMap.remove(sessionId);
+		if (clientsMap.containsKey(sessionId) && clientsMap.get(sessionId).isEmpty()) clientsMap.remove(sessionId);
 	}
 
 	private void refreshSession(Session session) {
