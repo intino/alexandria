@@ -326,12 +326,6 @@ Schema TimelineHistoryEntry
 	Attribute formattedValue as Text
 	Attribute annotation as Object(TimelineAnnotation)
 
-Schema TimelineToolbarInfo
-	Attribute label as Text
-	Attribute scale as Text
-	Attribute canNext as Bool
-	Attribute canPrevious as Bool
-
 Schema TimelineHistoryFetch
 	Attribute magnitude as Text
 	Attribute start as DateTime
@@ -344,7 +338,6 @@ Schema TimelineSetup
 	Attribute historyLabel as Text
 	Attribute magnitudes as Object(TimelineMagnitude) List
 	Attribute scales as Text List
-	Attribute toolbar as Object(TimelineToolbarInfo)
 
 Schema TimelineMagnitudeVisibility
 	Attribute name as Text
@@ -439,7 +432,6 @@ Schema ReelSetup
 	Attribute name as Text
 	Attribute signals as Object(ReelSignal) List
 	Attribute scales as Text List
-	Attribute toolbar as Object(ReelToolbarInfo)
 	Attribute navigation as Object(ReelNavigationInfo)
 
 Schema ReelSignal
@@ -458,12 +450,6 @@ Schema ReelSignalAnnotation
 	Attribute date as Text
 	Attribute color as Text
 	Attribute entries as Text List
-
-Schema ReelToolbarInfo
-	Attribute label as Text
-	Attribute scale as Text
-	Attribute canNext as Bool
-	Attribute canPrevious as Bool
 
 Schema ReelNavigationInfo
 	Attribute steps as Integer
@@ -485,3 +471,19 @@ Schema TextEditablePattern
 Schema TextEditablePatternRule
 	Attribute name as Text
 	Attribute value as Text
+
+Schema DocumentEditorCollaboraInfo
+	Attribute editorUrl as Text
+	Attribute accessToken as Text
+	Attribute documentUrl as Text
+
+Schema DateNavigatorSetup
+	Attribute scales as Text List
+	Attribute info as Object(DateNavigatorInfo)
+
+Schema DateNavigatorInfo
+	Attribute selected as DateTime
+	Attribute selectedLabel as Text
+	Attribute scale as Text
+	Attribute canNext as Bool
+	Attribute canPrevious as Bool

@@ -1,0 +1,17 @@
+dsl Konos
+
+use Theme
+
+Template(layout=Vertical, spacing=DP8) documentEditorExamplesMold
+
+	Block(layout=Horizontal Wrap, spacing=DP24)
+		Block(format=autoHeight verticalExtraHeight) as Relative(width=100%, height=100%)
+			Text(format=h6, value="Collabora facet")
+			Block(format=filledNoAirExtraLarge)
+				DocumentEditor documentEditor1 as Collabora(editorUrl="https://wopi.ces.siani.es/browser/a719c0f/cool.html")
+					document = "test.odt"
+				Block > Text as Code(language=Html)
+						value
+							=========
+							DocumentEditor as Collabora(editorUrl\="", accessToken\="")
+							=========

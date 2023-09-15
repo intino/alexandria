@@ -1,5 +1,7 @@
 dsl Konos
 
+use DocumentEditor
+use DateNavigation
 use Eventline
 use Reel
 use Timeline
@@ -84,9 +86,11 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block frameExamples as Conditional > TemplateStamp(template=frameExamplesMold)
 			Block microSiteExamples as Conditional > TemplateStamp(template=microSiteExamplesMold) microSiteExamplesMold
 			Block htmlViewerExamples as Conditional > TemplateStamp(template=htmlViewerExamplesMold) htmlViewerExamplesMold
+			Block dateNavigatorExamples as Conditional > TemplateStamp(template=dateNavigatorExamplesMold) dateNavigatorExamplesMold
 			Block timelineExamples as Conditional > TemplateStamp(template=timelineExamplesMold) timelineExamplesMold
 			Block eventlineExamples as Conditional > TemplateStamp(template=eventlineExamplesMold) eventlineExamplesMold
 			Block reelExamples as Conditional > TemplateStamp(template=reelExamplesMold) reelExamplesMold
+			Block documentEditorExamples as Conditional > TemplateStamp(template=documentEditorExamplesMold) documentEditorExamplesMold
 
 		Block facets
 			Text(value="Facets", format=h5 underline)

@@ -5,9 +5,13 @@ use Theme
 Template(layout=Vertical, spacing=DP8) reelExamplesMold
 
 	Block(layout=Horizontal Wrap, spacing=DP24)
-		Block as Relative(width=100%, height=100%)
+		Block(format=doubleAirBottom)
+			DateNavigator(temporalComponents=block1.block11.reel1) dateNavigator
+				Range(from="2022-01-01T00:00:00Z", to="2024-12-31T00:00:00Z")
+
+		Block block1 as Relative(width=100%, height=100%)
 			Text(format=h6, value="No facets")
-			Block(format=filledNoAirExtraLarge)
+			Block(format=filledNoAirExtraLarge) block11
 				Reel(format=doubleAirBottom) reel1
 				Block > Text as Code(language=Html)
 						value

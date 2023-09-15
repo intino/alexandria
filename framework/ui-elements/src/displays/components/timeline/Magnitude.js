@@ -13,7 +13,7 @@ const style = {
   cursor: "move"
 };
 
-const TimelineMagnitude = ({ toolbar, magnitude, index, id, moveMagnitude, classes, openHistory, mode, translate }) => {
+const TimelineMagnitude = ({ magnitude, index, id, moveMagnitude, classes, openHistory, mode, translate }) => {
     const ref = useRef(null);
     const [fullView, setFullView] = useState(false);
     const chart = createRef();
@@ -94,7 +94,6 @@ const TimelineMagnitude = ({ toolbar, magnitude, index, id, moveMagnitude, class
                 anchorEl={anchorRef.current} open={fullView} onClose={() => setFullView(false)}
                 anchorOrigin={{vertical: 'bottom',horizontal: 'left'}}>
                 <div style={{marginLeft:'10px'}}>
-                    {toolbar}
                     {renderDetail(magnitude)}
                 </div>
             </Popover>

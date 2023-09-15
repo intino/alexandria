@@ -15,9 +15,11 @@ def.file
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/collection/Table.konos#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/Eventline.konos#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/Slider.konos#true
+/Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/DateNavigator.konos#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/Chart.konos#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/Frame.konos#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/AppDirectory.konos#true
+/Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/DocumentEditor.konos#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/Dialog.konos#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/HtmlViewer.konos#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/Layer.konos#true
@@ -76,11 +78,11 @@ io.intino.alexandria
 artifactId
 ui-framework
 version
-4.26.2
+4.27.4
 module.parameters
 home
 current.dependencies
-io.intino.alexandria:core-framework:2.1.2,io.intino.alexandria:http:1.7.4,io.intino.alexandria:json:1.2.2,io.intino.alexandria:rest-accessor:3.1.2,io.intino.alexandria:logger4j:1.0.1,io.intino.alexandria:zip:1.0.4,io.intino.alexandria:driver-shiny:1.0.1,io.intino.alexandria:driver-r:1.0.1,io.intino.alexandria:proxy:1.1.14,io.intino.alexandria:totp:1.0.2,io.intino.icod:standalone:1.1.2
+io.intino.alexandria:core-framework:2.1.2,io.intino.alexandria:http:1.7.5,io.intino.alexandria:json:1.2.2,io.intino.alexandria:rest-accessor:3.1.2,io.intino.alexandria:logger4j:1.0.1,io.intino.alexandria:zip:1.0.4,io.intino.alexandria:driver-shiny:1.0.1,io.intino.alexandria:driver-r:1.0.1,io.intino.alexandria:proxy:1.1.14,io.intino.alexandria:totp:1.0.2,io.intino.icod:standalone:1.1.2
 box.generation.package
 io.intino.alexandria
 encoding

@@ -58,16 +58,6 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			}
 
 			@Override
-			public Instant previous(Scale scale, Instant date) {
-				return LocalDateTime.ofInstant(date, UTC).minus(1, scale.temporalUnit()).toInstant(UTC);
-			}
-
-			@Override
-			public Instant next(Scale scale, Instant date) {
-				return LocalDateTime.ofInstant(date, UTC).plus(1, scale.temporalUnit()).toInstant(UTC);
-			}
-
-			@Override
 			public Instant to(Scale scale) {
 				return Instant.now();
 			}

@@ -1,0 +1,18 @@
+dsl Konos
+
+use Theme
+
+Template(layout=Vertical, spacing=DP8) dateNavigatorExamplesMold
+
+	Block(layout=Horizontal Wrap, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filled)
+				DateNavigator dateNavigator1
+					Range(from="2022-01-01T00:00:00Z", to="2024-12-31T00:00:00Z")
+				Block > Text dateNavigator1Code as Code(language=Html)
+						value
+							=========
+							DateNavigator<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;Range(from\="2022-01-01T00:00:00Z", to\="2024-12-31T00:00:00Z")
+							=========

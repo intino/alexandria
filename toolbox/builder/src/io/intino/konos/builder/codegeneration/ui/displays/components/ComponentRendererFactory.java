@@ -30,6 +30,8 @@ public class ComponentRendererFactory {
 		map.put(conceptOf(Date.class), config -> new DateRenderer(config.context(), config.component().a$(Date.class), config.provider()));
 		map.put(conceptOf(File.class), config -> new FileRenderer(config.context(), config.component().a$(File.class), config.provider()));
 		map.put(conceptOf(Image.class), config -> new ImageRenderer(config.context(), config.component().a$(Image.class), config.provider()));
+		map.put(conceptOf(DocumentEditor.class), config -> new DocumentEditorRenderer(config.context(), config.component().a$(DocumentEditor.class), config.provider()));
+		map.put(conceptOf(DateNavigator.class), config -> new DateNavigatorRenderer(config.context(), config.component().a$(DateNavigator.class), config.provider()));
 		map.put(conceptOf(Reel.class), config -> new ReelRenderer(config.context(), config.component().a$(Reel.class), config.provider()));
 		map.put(conceptOf(Eventline.class), config -> new EventlineRenderer(config.context(), config.component().a$(Eventline.class), config.provider()));
 		map.put(conceptOf(Timeline.class), config -> new TimelineRenderer(config.context(), config.component().a$(Timeline.class), config.provider()));

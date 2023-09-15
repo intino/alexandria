@@ -47,6 +47,7 @@ Format("minHeight:'300px'") paperFormat
 Format("borderBottom:'1px dotted #ddd',width:'100%',marginBottom:'10px'") underline
 Format("fontSize:'10pt',color:'grey'") description
 Format("minHeight:'200px'") minTableHeight
+Format("height:'150px'") timelineSummaryHeight
 Format("color:'red'") redColor
 
 // Cards

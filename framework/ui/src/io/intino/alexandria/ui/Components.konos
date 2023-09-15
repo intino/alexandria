@@ -187,10 +187,25 @@ Component microSite
 Component htmlViewer
 	Notification refresh as Text
 
+Component documentEditor
+
+Component documentEditorCollabora as ExtensionOf(documentEditor)
+	Notification refresh as Object(DocumentEditorCollaboraInfo)
+
+Component dateNavigator
+	Notification setup as Object(DateNavigatorSetup)
+	Notification refresh as Object(DateNavigatorInfo)
+
+	Request first
+	Request previous
+	Request next
+	Request last
+	Request select as DateTime
+	Request changeScale as Text
+
 Component timeline
 	Notification setup as Object(TimelineSetup)
 	Notification refreshHistory as Object(TimelineHistoryEntry) List
-	Notification refreshHistoryToolbar as Object(TimelineToolbarInfo)
 	Notification refreshMagnitudesVisibility as Object(TimelineMagnitudeVisibility) List
 	Notification refreshMagnitudesSorting as Object(TimelineMagnitudeSorting) List
 	Notification refreshMagnitudes as Object(TimelineMagnitude) List
@@ -199,11 +214,6 @@ Component timeline
 	Request fetch as Object(TimelineHistoryFetch)
 	Request magnitudesVisibility as Object(TimelineMagnitudeVisibility) List
 	Request magnitudesSorting as Object(TimelineMagnitudeSorting) List
-	Request first
-	Request previous
-	Request next
-	Request last
-	Request changeScale as Text
 
 Component eventline
 	Notification setup as Object(EventlineSetup)
@@ -230,17 +240,11 @@ Component eventline
 
 Component reel
 	Notification setup as Object(ReelSetup)
-	Notification refreshToolbar as Object(ReelToolbarInfo)
 	Notification refreshSignalsSorting as Object(ReelSignalSorting) List
 	Notification refreshSignals as Object(ReelSignal) List
 	Notification refreshNavigation as Object(ReelNavigationInfo)
 	Request fetch as Object(ReelFetch)
 	Request signalsSorting as Object(ReelSignalSorting) List
-	Request first
-	Request previous
-	Request next
-	Request last
-	Request changeScale as Text
 
 Component frame
 	Notification refresh as Text

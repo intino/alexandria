@@ -4,7 +4,7 @@ use Docs
 use WidgetType
 use Theme
 
-Service(title = "", favicon = "") UiElements as UI(targets=Web Android, port = "9000")
+Service(title = "", favicon = "") UiElements as UI(targets=Web Android, port = "8080")
 	googleApiKey = "AIzaSyA8FjeAX36umrYD8Jk2FbRFWqDEulInKIA"
 
 	Resource(path = "/") home as Page(docsTemplate) Main

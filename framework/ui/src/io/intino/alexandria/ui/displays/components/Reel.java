@@ -71,38 +71,8 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 	public Reel<DN, B> select(Instant instant) {
 		if (source == null) return this;
 		if (selectedInstant(selectedScale()) != null && selectedInstant(selectedScale()).equals(instant)) return this;
-		if (instant.isBefore(source.from(selectedScale()))) instant = source.from(selectedScale());
-		if (instant.isAfter(source.to(selectedScale()))) instant = source.to(selectedScale());
 		selectInstant(selectedScale(), instant);
 		return this;
-	}
-
-	public void first() {
-		Scale scale = selectedScale();
-		selectInstant(scale, source.from(scale));
-	}
-
-	public void previous() {
-		Scale scale = selectedScale();
-		Instant current = selectedInstant(scale);
-		Instant from = source.from(scale);
-		current = source.previous(selectedScale(), current);
-		if (current.isBefore(from)) current = from;
-		selectInstant(scale, current);
-	}
-
-	public void next() {
-		Scale scale = selectedScale();
-		Instant current = selectedInstant(scale);
-		Instant to = source.to(scale);
-		current = source.next(selectedScale(), current);
-		if (current.isAfter(to)) current = to;
-		selectInstant(scale, current);
-	}
-
-	public void last() {
-		Scale scale = selectedScale();
-		selectInstant(scale, source.to(scale));
 	}
 
 	public void select(Scale scale) {
@@ -116,7 +86,6 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 	public void changeScale(Scale scale) {
 		if (selectedScale == scale) return;
 		selectedScale = scale;
-		refreshToolbar();
 		refreshSignals();
 		refreshNavigation();
 		if (selectScaleListener != null) selectScaleListener.accept(new SelectEvent(this, selectedScale));
@@ -129,7 +98,6 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 		notifier.setup(new ReelSetup()
 				.name(source.name())
 				.scales(source.scales().stream().map(Enum::name).collect(Collectors.toList()))
-				.toolbar(toolbar())
 				.signals(source.signals().stream().map(this::schemaOf).collect(Collectors.toList()))
 				.navigation(navigation()));
 	}
@@ -143,13 +111,8 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 
 	private void selectInstant(Scale scale, Instant value) {
 		selectedInstants.put(scale, value);
-		refreshToolbar();
 		refreshSignals();
 		if (selectListener != null) selectListener.accept(new SelectEvent(this, value));
-	}
-
-	private void refreshToolbar() {
-		notifier.refreshToolbar(toolbar());
 	}
 
 	private void refreshSignals() {
@@ -228,17 +191,6 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 
 	private ReelDatasource.Signal signal(SignalDefinition definition) {
 		return source.signal(definition);
-	}
-
-	private ReelToolbarInfo toolbar() {
-		Scale scale = selectedScale();
-		Instant date = selectedInstant(scale);
-		ReelToolbarInfo result = new ReelToolbarInfo();
-		result.label(ScaleFormatter.label(date, timezoneOffset(), scale, language()));
-		result.scale(selectedScale().name());
-		result.canPrevious(!ScaleFormatter.label(date, timezoneOffset(), scale, language()).equals(ScaleFormatter.label(source.from(scale), timezoneOffset(), scale, language())));
-		result.canNext(!ScaleFormatter.label(date, timezoneOffset(), scale, language()).equals(ScaleFormatter.label(source.to(scale), timezoneOffset(), scale, language())));
-		return result;
 	}
 
 	private Instant selectedInstant() {

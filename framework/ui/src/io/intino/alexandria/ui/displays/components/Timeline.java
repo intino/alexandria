@@ -86,8 +86,6 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	public Timeline<DN, B> select(Instant instant) {
 		if (source == null) return this;
 		if (selectedInstant(selectedScale()) != null && selectedInstant(selectedScale()).equals(instant)) return this;
-		if (instant.isBefore(source.from(selectedScale()))) instant = source.from(selectedScale());
-		if (instant.isAfter(source.to(selectedScale()))) instant = source.to(selectedScale());
 		selectInstant(selectedScale(), instant);
 		return this;
 	}
@@ -117,34 +115,6 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		return this;
 	}
 
-	public void first() {
-		Scale scale = selectedScale();
-		selectInstant(scale, source.from(scale));
-	}
-
-	public void previous() {
-		Scale scale = selectedScale();
-		Instant current = selectedInstant(scale);
-		Instant from = source.from(scale);
-		current = source.previous(selectedScale(), current);
-		if (current.isBefore(from)) current = from;
-		selectInstant(scale, current);
-	}
-
-	public void next() {
-		Scale scale = selectedScale();
-		Instant current = selectedInstant(scale);
-		Instant to = source.to(scale);
-		current = source.next(selectedScale(), current);
-		if (current.isAfter(to)) current = to;
-		selectInstant(scale, current);
-	}
-
-	public void last() {
-		Scale scale = selectedScale();
-		selectInstant(scale, source.to(scale));
-	}
-
 	public void select(Scale scale) {
 		changeScale(scale);
 	}
@@ -156,7 +126,6 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	public void changeScale(Scale scale) {
 		if (selectedScale == scale) return;
 		selectedScale = scale;
-		refreshToolbar();
 		refreshMagnitudes();
 		if (selectScaleListener != null) selectScaleListener.accept(new SelectEvent(this, selectedScale));
 	}
@@ -171,20 +140,8 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 							.stateLabel(stateLabel)
 							.historyLabel(historyLabel)
 							.scales(source.scales().stream().map(Enum::name).collect(Collectors.toList()))
-							.toolbar(toolbar())
 							.magnitudes(source.magnitudes().stream().map(this::schemaOf).collect(Collectors.toList()))
 		);
-	}
-
-	private TimelineToolbarInfo toolbar() {
-		Scale scale = selectedScale();
-		Instant date = selectedInstant(scale);
-		TimelineToolbarInfo result = new TimelineToolbarInfo();
-		result.label(ScaleFormatter.label(date, timezoneOffset(), scale, language()));
-		result.scale(selectedScale().name());
-		result.canPrevious(!ScaleFormatter.label(date, timezoneOffset(), scale, language()).equals(ScaleFormatter.label(source.from(scale), timezoneOffset(), scale, language())));
-		result.canNext(!ScaleFormatter.label(date, timezoneOffset(), scale, language()).equals(ScaleFormatter.label(source.to(scale), timezoneOffset(), scale, language())));
-		return result;
 	}
 
 	public void openHistory(String magnitudeName) {
@@ -358,13 +315,8 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 
 	private void selectInstant(Scale scale, Instant value) {
 		selectedInstants.put(scale, value);
-		refreshToolbar();
 		refreshMagnitudes();
 		if (selectListener != null) selectListener.accept(new SelectEvent(this, value));
-	}
-
-	private void refreshToolbar() {
-		notifier.refreshHistoryToolbar(toolbar());
 	}
 
 	private void refreshMagnitudes() {
