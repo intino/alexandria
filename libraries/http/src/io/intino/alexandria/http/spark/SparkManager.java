@@ -153,7 +153,7 @@ public class SparkManager<P extends PushService> {
 		return fromPartAsString(name);
 	}
 
-	public String fromFormAsStringOrDefault(String name, String defaultValue) {
+	public String fromFormOrDefault(String name, String defaultValue) {
 		String content = fromPartAsString(name);
 		return content != null ? content : defaultValue;
 	}
