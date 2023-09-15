@@ -123,6 +123,11 @@ public class SparkManager<P extends PushService> {
 		return request.body();
 	}
 
+	public String fromBodyOrDefault(String defaultValue) {
+		String body = request.body();
+		return body == null || body.isEmpty() ? defaultValue : body;
+	}
+
 	public <X extends Throwable> String fromBodyOrElseThrow(String name, Supplier<? extends X> exceptionSupplier) throws X {
 		final String body = request.body();
 		if (body == null || body.isEmpty()) throw exceptionSupplier.get();
