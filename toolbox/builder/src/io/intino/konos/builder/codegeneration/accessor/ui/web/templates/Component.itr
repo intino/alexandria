@@ -234,6 +234,10 @@ def type(properties & timeline) trigger(specific)
 	[ mode="$mode"]
 end
 
+def type(properties & documenteditor & collabora) trigger(specific)
+	[ editorUrl="$editorUrl"][ accessToken="$accessToken"]
+end
+
 def type(properties & eventline) trigger(specific)
 	[ arrangement="$arrangement"]
 end

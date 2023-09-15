@@ -15,7 +15,6 @@ import HighchartsReact from 'highcharts-react-official';
 import Delayer from 'alexandria-ui-elements/src/util/Delayer';
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import TimelineToolbar from './timeline/toolbar'
 import TimelineMagnitude from './timeline/magnitude'
 import Theme from "app-elements/gen/Theme";
 import 'alexandria-ui-elements/res/styles/components/timeline/styles.css';
@@ -51,14 +50,11 @@ class Timeline extends AbstractTimeline {
 		this.historyContainer = React.createRef();
 		this.state = {
 		    ...this.state,
-		    stateLabel : "",
-		    historyLabel : "",
 		    inside : false,
 		    openConfiguration : false,
 		    history : { visible: true, from: null, to: null, data: [] },
 		    magnitude : null,
 		    scales: [],
-		    toolbar: { label: '', scale: null, canNext: false, canPrevious: false },
 		    magnitudes: [],
 		    magnitudesVisibility : {},
 		    magnitudesSorting : {},
@@ -72,7 +68,7 @@ class Timeline extends AbstractTimeline {
     setup = (info) => {
         const magnitudesVisibility = this.getCookie(info.name + "_visibility") != null ? this.getCookie(info.name + "_visibility") : this.state.magnitudesVisibility;
         const magnitudesSorting = this.getCookie(info.name + "_sorting") != null ? this.getCookie(info.name + "_sorting") : this.state.magnitudesSorting;
-        this.setState({ scales: info.scales, stateLabel: info.stateLabel, toolbar: info.toolbar, historyLabel: info.historyLabel, magnitudes: info.magnitudes, magnitudesVisibility: magnitudesVisibility, magnitudesSorting: magnitudesSorting, sourceName: info.name });
+        this.setState({ scales: info.scales, magnitudes: info.magnitudes, magnitudesVisibility: magnitudesVisibility, magnitudesSorting: magnitudesSorting, sourceName: info.name });
     };
 
     refreshMagnitudesVisibility = (visibility) => {
@@ -101,7 +97,6 @@ class Timeline extends AbstractTimeline {
         return (
             <DndProvider backend={HTML5Backend}>
                 <div className={layoutClassNames} onMouseEnter={this.handleMouseEnter.bind(this)} onMouseLeave={this.handleMouseLeave.bind(this)}>
-                    {this.renderHeader()}
                     {this.renderMagnitudes()}
                     {this.renderHistoryDialog()}
                     {this.renderConfigurationDialog()}
@@ -117,35 +112,6 @@ class Timeline extends AbstractTimeline {
 
     handleMouseLeave = () => {
         this.setState({inside: false});
-    };
-
-    renderHeader = () => {
-        if (this.props.mode !== "Catalog") return (<React.Fragment/>);
-        const stateLabel = this.translate(this.state.stateLabel != null ? this.state.stateLabel : "State");
-        const historyLabel = this.translate(this.state.historyLabel != null ? this.state.historyLabel : "History");
-        return (
-            <div className="layout horizontal">
-                <div style={{width:"240px",fontSize:'18pt',fontWeight:'300'}}>{stateLabel}</div>
-                {this.renderToolbar({fontWeight:'300'})}
-            </div>
-        );
-    };
-
-    renderToolbar = (style) => {
-        return (
-            <TimelineToolbar
-                label={{title:this.state.historyLabel, style:style}}
-                scales={this.state.scales}
-                toolbar={this.state.toolbar}
-                onFirst={this.first.bind(this)}
-                onPrevious={this.previous.bind(this)}
-                onNext={this.next.bind(this)}
-                onLast={this.last.bind(this)}
-                onChangeScale={this.changeScale.bind(this)}
-                translate={this.translate.bind(this)}
-                classes={this.props.classes}
-            />
-        );
     };
 
     renderMagnitudes = () => {
@@ -218,7 +184,6 @@ class Timeline extends AbstractTimeline {
                                      openHistory={this.openHistory.bind(this, magnitude)}
                                      translate={this.translate.bind(this)}
                                      moveMagnitude={this.moveMagnitude.bind(this)}
-                                     toolbar={this.renderToolbar({fontSize:'14pt',fontWeight:'300'})}
         />);
     };
 
@@ -409,26 +374,6 @@ class Timeline extends AbstractTimeline {
         magnitudes.splice(dragIndex, 1);
         magnitudes.splice(hoverIndex, 0, magnitude);
         this.setState({magnitudes: magnitudes, magnitudesSorting: this.saveMagnitudesSorting()});
-    };
-
-	changeScale = (scale) => {
-        this.requester.changeScale(scale);
-    };
-
-	first = () => {
-        this.requester.first();
-	};
-
-	previous = () => {
-        this.requester.previous();
-    };
-
-	next = () => {
-        this.requester.next();
-    };
-
-	last = () => {
-        this.requester.last();
     };
 
     renderConfigurationDialog = () => {

@@ -66,6 +66,7 @@ public class ComponentTemplate extends Template {
 			rule().condition((allTypes("properties","sorting")), (trigger("specific"))).output(expression().output(literal(" mode=\"")).output(mark("mode")).output(literal("\""))).output(expression().output(literal(" align=\"")).output(mark("align")).output(literal("\""))),
 			rule().condition((allTypes("properties","htmlviewer")), (trigger("specific"))).output(expression().output(literal(" content=\"")).output(mark("content")).output(literal("\""))),
 			rule().condition((allTypes("properties","timeline")), (trigger("specific"))).output(expression().output(literal(" mode=\"")).output(mark("mode")).output(literal("\""))),
+			rule().condition((allTypes("properties","documenteditor","collabora")), (trigger("specific"))).output(expression().output(literal(" editorUrl=\"")).output(mark("editorUrl")).output(literal("\""))).output(expression().output(literal(" accessToken=\"")).output(mark("accessToken")).output(literal("\""))),
 			rule().condition((allTypes("properties","eventline")), (trigger("specific"))).output(expression().output(literal(" arrangement=\"")).output(mark("arrangement")).output(literal("\""))),
 			rule().condition((allTypes("properties","microsite")), (trigger("specific"))).output(expression().output(literal(" downloadOperations={")).output(literal("[")).output(literal("\"")).output(mark("downloadOperation").multiple("\",\"")).output(literal("\"")).output(literal("]")).output(literal("}"))),
 			rule().condition((type("properties")), (trigger("specific"))),

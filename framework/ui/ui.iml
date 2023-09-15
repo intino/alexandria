@@ -69,7 +69,6 @@
     <orderEntry type="library" name="Intino: com.auth0:java-jwt:4.3.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Intino: junit:junit:4.13.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Intino: org.hamcrest:hamcrest-core:1.3" level="project" />
-    <orderEntry type="module" module-name="http" />
     <orderEntry type="module" module-name="exceptions" />
     <orderEntry type="module" module-name="primitives" />
     <orderEntry type="library" name="Intino: jakarta.websocket:jakarta.websocket-client-api:2.1.0" level="project" />

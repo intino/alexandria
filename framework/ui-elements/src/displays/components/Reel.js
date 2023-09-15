@@ -7,7 +7,6 @@ import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import ReelToolbar from './reel/toolbar'
 import ReelSignal from './reel/signal'
 import Theme from "app-elements/gen/Theme";
 
@@ -36,7 +35,6 @@ class Reel extends AbstractReel {
 		    ...this.state,
 		    scales: [],
 		    inside : false,
-		    toolbar: { label: '', scale: null, canNext: false, canPrevious: false },
 		    navigation: { steps: 0 },
 		    signals: [],
 		    signalsSorting : {},
@@ -48,7 +46,6 @@ class Reel extends AbstractReel {
         return (
             <DndProvider backend={HTML5Backend}>
                 <div className="layout vertical wrap" onMouseEnter={this.handleMouseEnter.bind(this)} onMouseLeave={this.handleMouseLeave.bind(this)} style={this.style()}>
-                    {this.renderToolbar({fontWeight:'300'})}
                     {this.renderSignals()}
                     {this.renderNavigation()}
                     {this.renderCookieConsent()}
@@ -86,7 +83,7 @@ class Reel extends AbstractReel {
 
     setup = (info) => {
         const signalsSorting = this.getCookie(info.name + "_sorting") != null ? this.getCookie(info.name + "_sorting") : this.state.signalsSorting;
-        this.setState({ scales: info.scales, toolbar: info.toolbar, signals: info.signals, navigation: info.navigation, signalsSorting: signalsSorting, sourceName: info.name });
+        this.setState({ scales: info.scales, signals: info.signals, navigation: info.navigation, signalsSorting: signalsSorting, sourceName: info.name });
     };
 
     refreshSignalsSorting = (sorting) => {
@@ -120,23 +117,6 @@ class Reel extends AbstractReel {
         if (m1Position < m2Position ) return -1;
         if (m1Position > m2Position ) return 1;
         return 0;
-    };
-
-    renderToolbar = (style) => {
-        return (
-            <ReelToolbar
-                label={{title:this.state.name, style:style}}
-                scales={this.state.scales}
-                toolbar={this.state.toolbar}
-                onFirst={this.first.bind(this)}
-                onPrevious={this.previous.bind(this)}
-                onNext={this.next.bind(this)}
-                onLast={this.last.bind(this)}
-                onChangeScale={this.changeScale.bind(this)}
-                translate={this.translate.bind(this)}
-                classes={this.props.classes}
-            />
-        );
     };
 
     renderSignal = (signal, idx) => {
@@ -173,12 +153,6 @@ class Reel extends AbstractReel {
         this.requester.signalsSorting(list);
         return signalsSorting;
     };
-
-	changeScale = (scale) => { this.requester.changeScale(scale); };
-	first = () => { this.requester.first(); };
-	previous = () => { this.requester.previous(); };
-	next = () => { this.requester.next(); };
-	last = () => { this.requester.last(); };
 
     handleMouseEnter = () => {
         this.setState({inside: true});

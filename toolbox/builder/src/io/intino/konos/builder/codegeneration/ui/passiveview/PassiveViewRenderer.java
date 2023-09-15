@@ -20,6 +20,7 @@ import io.intino.konos.model.OtherComponents.TemplateStamp;
 import io.intino.konos.model.PassiveView.Notification;
 import io.intino.konos.model.PassiveView.Request;
 import io.intino.konos.model.VisualizationComponents.Dashboard;
+import io.intino.konos.model.VisualizationComponents.DocumentEditor;
 import io.intino.magritte.framework.Layer;
 
 import java.util.ArrayList;
@@ -167,6 +168,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (passiveView.i$(conceptOf(Block.Parallax.class))) result.add("Parallax");
 		if (passiveView.i$(conceptOf(Dashboard.Shiny.class))) result.add("Shiny");
 		if (passiveView.i$(conceptOf(Dashboard.Metabase.class))) result.add("Metabase");
+		if (passiveView.i$(conceptOf(DocumentEditor.Collabora.class))) result.add("Collabora");
 		return result;
 	}
 
