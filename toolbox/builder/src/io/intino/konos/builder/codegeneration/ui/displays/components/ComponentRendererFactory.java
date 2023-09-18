@@ -7,12 +7,12 @@ import io.intino.konos.builder.codegeneration.ui.displays.components.collection.
 import io.intino.konos.builder.codegeneration.ui.displays.components.data.*;
 import io.intino.konos.builder.codegeneration.ui.displays.components.other.*;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.model.ActionableComponents.Actionable;
 import io.intino.konos.model.*;
 import io.intino.konos.model.DataComponents.Date;
 import io.intino.konos.model.DataComponents.File;
 import io.intino.konos.model.DataComponents.Image;
 import io.intino.konos.model.DataComponents.Text;
-import io.intino.konos.model.ActionableComponents.Actionable;
 import io.intino.konos.model.InteractionComponents.Toolbar;
 
 import java.util.LinkedHashMap;

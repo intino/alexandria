@@ -15,7 +15,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
-import static io.intino.konos.builder.helpers.CodeGenerationHelper.*;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.resourceFilename;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.resourceFolder;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 
 public class ResourceRenderer extends UIRenderer {

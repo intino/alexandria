@@ -8,7 +8,6 @@ import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Schema;
-import io.intino.konos.model.Service;
 
 import java.io.File;
 

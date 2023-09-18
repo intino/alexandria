@@ -8,12 +8,10 @@ import io.intino.konos.builder.codegeneration.ui.displays.RouteDispatcherRendere
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.model.Component;
-import io.intino.konos.model.Display;
 import io.intino.konos.model.PassiveView;
 import io.intino.konos.model.Service;
 import io.intino.magritte.framework.Layer;
 
-import javax.lang.model.element.Element;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;

@@ -1,7 +1,6 @@
 package io.intino.konos.builder.codegeneration.ui;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.model.PassiveView;
 import io.intino.magritte.framework.Layer;

@@ -2,7 +2,6 @@ package io.intino.konos.builder.codegeneration.ui.displays.components;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
-import io.intino.konos.builder.codegeneration.ui.ElementRenderer;
 import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayRenderer;

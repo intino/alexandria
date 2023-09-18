@@ -6,7 +6,6 @@ import io.intino.konos.builder.codegeneration.ui.displays.components.ActionableR
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.ActionableComponents;
 import io.intino.konos.model.CatalogComponents;
-import io.intino.konos.model.InteractionComponents;
 
 public class DownloadRenderer extends ActionableRenderer {
 
