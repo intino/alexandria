@@ -284,8 +284,8 @@ Concept:{0..1} VisualizationComponents
 
 		sub Reel
 
-	Concept Eventline extends Component
-		var word:{Vertical Horizontal} arrangement = Horizontal
+		sub Eventline
+			var word:{Vertical Horizontal} arrangement = Horizontal
 
 Concept HelperComponents
 	Concept HelperComponent extends Component

@@ -15,6 +15,10 @@ public class DocumentEditorExamplesMold extends AbstractDocumentEditorExamplesMo
 	@Override
 	public void init() {
 		super.init();
+		editDocumentDialog.onOpen(e -> refreshDialog());
+	}
+
+	private void refreshDialog() {
 		documentEditor1.documentManager(new DocumentManager() {
 			@Override
 			public DocumentInfo info(String id) {
@@ -23,11 +27,7 @@ public class DocumentEditorExamplesMold extends AbstractDocumentEditorExamplesMo
 
 			@Override
 			public InputStream load(String id) {
-				try {
-					return new FileInputStream(new File("/tmp/example.odt"));
-				} catch (FileNotFoundException e) {
-					return new ByteArrayInputStream(new byte[0]);
-				}
+				return DocumentEditorExamplesMold.class.getResourceAsStream("/data/example.odt");
 			}
 
 			@Override
@@ -39,5 +39,7 @@ public class DocumentEditorExamplesMold extends AbstractDocumentEditorExamplesMo
 				}
 			}
 		});
+		documentEditor1.refresh();
 	}
+
 }
