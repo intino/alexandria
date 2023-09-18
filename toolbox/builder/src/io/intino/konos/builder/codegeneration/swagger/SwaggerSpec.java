@@ -163,6 +163,8 @@ public class SwaggerSpec {
 			public String format;
 			public Integer minimum;
 			public Integer maximum;
+			public Map<String, String> additionalProperties;
+
 		}
 	}
 
