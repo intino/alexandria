@@ -17,11 +17,11 @@ import java.util.stream.Collectors;
 public class OpenApiDescriptor {
 
 	private final Service.REST service;
-	private final List<Schema> schemas;
+	private final Set<Schema> schemas;
 
 	public OpenApiDescriptor(Service.REST service) {
 		this.service = service;
-		this.schemas = new ArrayList<>();
+		this.schemas = new HashSet<>();
 	}
 
 	public String createJSONDescriptor() {
@@ -95,9 +95,18 @@ public class OpenApiDescriptor {
 			if (response.isObject()) {
 				swaggerResponse.schema = new SwaggerSpec.Schema(null, "#/definitions/" + response.asObject().schema().name$());
 				this.schemas.add(response.asObject().schema());
+				this.schemas.addAll(components(response.asObject().schema()));
 			}
 		}
 		responses.put(response == null ? "200" : response.code(), swaggerResponse);
+	}
+
+	private Set<Schema> components(Schema schema) {
+		Set<Schema> components = new HashSet<>(schema.schemaList());
+		List<Schema> attrSchemas = schema.attributeList().stream().filter(Data::isObject).map(a -> a.asObject().schema()).collect(Collectors.toList());
+		components.addAll(attrSchemas);
+		attrSchemas.stream().map(this::components).forEach(components::addAll);
+		return components;
 	}
 
 	private void addResponse(Map<String, Operation.Response> responses, List<Exception> exceptions) {
@@ -140,7 +149,7 @@ public class OpenApiDescriptor {
 		for (Resource.Parameter parameter : parameters) {
 			Operation.Parameter swaggerParameter = new Operation.Parameter();
 			swaggerParameter.description = parameter.description();
-			swaggerParameter.in = parameter.in().name();
+			swaggerParameter.in = parameter.in().name() + (parameter.in().equals(In.form) ? "Data" : "");
 			swaggerParameter.name = parameter.name$();
 			swaggerParameter.type = parameterType(parameter.in(), parameter.asType());
 			swaggerParameter.required = parameter.in() == In.path || parameter.isRequired();
@@ -188,6 +197,7 @@ public class OpenApiDescriptor {
 			SwaggerSpec.Definition definition = new SwaggerSpec.Definition();
 			definition.required = schema.attributeList().stream().filter(Schema.Attribute::isRequired).map(Layer::name$).collect(Collectors.toList());
 			definition.properties = toMap(schema.attributeList());
+			definition.properties = toMap(schema.attributeList());
 			map.put(schema.name$(), definition);
 		}
 		return map;
@@ -203,6 +213,10 @@ public class OpenApiDescriptor {
 	private SwaggerSpec.Definition.Property propertyFrom(Schema.Attribute attribute) {
 		final SwaggerSpec.Definition.Property property = new SwaggerSpec.Definition.Property();
 		property.type = transform(attribute.asType());
+		if (attribute.isObject()) {
+			if (property.additionalProperties == null) property.additionalProperties = new HashMap<>();
+			property.additionalProperties.put("$ref", "#/definitions/" + attribute.asObject().schema().name$());
+		}
 		return property;
 	}
 
