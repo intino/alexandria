@@ -18,9 +18,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
-import static io.intino.konos.builder.helpers.Commons.*;
+import static io.intino.konos.builder.helpers.Commons.javaFile;
+import static io.intino.konos.builder.helpers.Commons.writeFrame;
 import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.groupingBy;
 
 public class CliRenderer extends Renderer {
 

@@ -22,8 +22,8 @@ import java.nio.file.Files;
 import java.util.logging.Logger;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
-import static io.intino.konos.builder.helpers.CodeGenerationHelper.*;
-import static io.intino.konos.builder.helpers.CodeGenerationHelper.createIfNotExists;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.displayFilename;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.fileOf;
 import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;

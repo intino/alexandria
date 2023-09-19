@@ -3,22 +3,17 @@ package io.intino.konos.builder.codegeneration.ui;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
-import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.CodeGenerationHelper;
 import io.intino.konos.builder.helpers.ElementHelper;
-import io.intino.konos.model.Component;
 import io.intino.magritte.framework.Layer;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.*;
-import static io.intino.konos.builder.helpers.Commons.*;
+import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 
 public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 	protected final C element;

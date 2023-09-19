@@ -9,7 +9,6 @@ import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Service;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

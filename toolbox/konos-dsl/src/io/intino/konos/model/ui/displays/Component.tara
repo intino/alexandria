@@ -286,6 +286,7 @@ Concept:{0..1} VisualizationComponents
 
 	Concept Eventline extends Component
 		var word:{Vertical Horizontal} arrangement = Horizontal
+		var word:{Left Right} toolbarArrangement = Right
 
 Concept HelperComponents
 	Concept HelperComponent extends Component

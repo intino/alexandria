@@ -3,8 +3,6 @@ package io.intino.konos.builder.helpers;
 import cottons.utils.StringHelper;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Formatters;
-import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.model.Data;
 import io.intino.konos.model.Redirect;
 import io.intino.konos.model.Response;
@@ -27,7 +25,6 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static io.intino.konos.builder.codegeneration.Formatters.firstLowerCase;
 import static java.util.stream.Collectors.toList;
 
 public class Commons {

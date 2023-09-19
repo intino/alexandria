@@ -4,7 +4,6 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.ActionableComponents;
-import io.intino.konos.model.InteractionComponents;
 
 import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
 

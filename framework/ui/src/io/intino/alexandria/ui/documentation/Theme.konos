@@ -53,6 +53,7 @@ Format("color:'red'") redColor
 // Cards
 Format("textAlign:'left',color:'#B71A1C',padding:'10px'") cardTitle
 Format("textAlign:'left',padding:'10px'") cardContent
+Format("padding:'0'") noAir
 
 // Widgets
 Format("color:'#888'") widgetType

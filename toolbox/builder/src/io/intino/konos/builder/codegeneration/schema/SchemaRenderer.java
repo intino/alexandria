@@ -2,13 +2,9 @@ package io.intino.konos.builder.codegeneration.schema;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
-import io.intino.konos.builder.OutputItem;
-import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Data;
 import io.intino.konos.model.Schema;
 import io.intino.konos.model.Service;
@@ -16,7 +12,6 @@ import io.intino.konos.model.Service;
 import java.io.File;
 import java.util.*;
 
-import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static java.util.Collections.addAll;
 
 public class SchemaRenderer extends Renderer {

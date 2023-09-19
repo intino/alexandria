@@ -4,14 +4,11 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.model.CatalogComponents;
 import io.intino.konos.model.VisualizationComponents;
 import io.intino.konos.model.VisualizationComponents.DateNavigator;
-import io.intino.konos.model.VisualizationComponents.Reel;
 
 import java.util.List;
-
-import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
+import java.util.stream.Collectors;
 
 public class DateNavigatorRenderer extends ComponentRenderer<DateNavigator> {
 
@@ -21,7 +18,8 @@ public class DateNavigatorRenderer extends ComponentRenderer<DateNavigator> {
 
 	@Override
 	public void fill(FrameBuilder builder) {
-		addBinding(builder, element.temporalComponents());
+		addBinding(builder, element.temporalComponents().stream().filter(c -> c.i$(VisualizationComponents.Timeline.class)).collect(Collectors.toList()));
+		addBinding(builder, element.temporalComponents().stream().filter(c -> c.i$(VisualizationComponents.Reel.class)).collect(Collectors.toList()));
 	}
 
 	@Override
