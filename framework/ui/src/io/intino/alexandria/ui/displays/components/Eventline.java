@@ -47,6 +47,12 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 		super(box);
 	}
 
+	@Override
+	public void didMount() {
+		super.didMount();
+		page(page);
+	}
+
 	public <DS extends EventlineDatasource> DS source() {
 		return (DS) source;
 	}

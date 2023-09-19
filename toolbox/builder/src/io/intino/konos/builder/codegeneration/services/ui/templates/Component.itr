@@ -491,7 +491,7 @@ end
 
 def type(component & child) trigger(conditionalReferences)
 	if ($owner.this.$name == null) $owner.this.$name = [$ancestorsNotMe...[.].]$name;
-	[$binding]
+	[$binding...[$NL]]
 	[$attachedTo]
 end
 
@@ -499,13 +499,13 @@ def type(component & child & collection & embedded) trigger(initializations)
 end
 
 def type(component & child & collection) trigger(initializations)
-	[$binding]
+	[$binding...[$NL]]
 	[$attachedTo]
 	[$component+initializations...[$NL]]
 end
 
 def type(component & child) trigger(initializations)
-	[$binding]
+	[$binding...[$NL]]
 	[$attachedTo]
 	[$component+initializations...[$NL]]
 end

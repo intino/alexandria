@@ -72,7 +72,7 @@ class DateNavigator extends AbstractDateNavigator {
 
     _renderScale = (scale, lastScale) => {
         const { classes } = this.props;
-        const style = lastScale ? { border:'1px solid #888' } : { border:'1px solid #888',borderRight:'0' };
+        const style = lastScale ? { border:'1px solid #888',borderRight:'1px solid #888' } : { border:'1px solid #888',borderRight:'0' };
         const classNames = scale === this.state.scale ? classnames(classes.scale, classes.selectedScale) : classes.scale;
         const label = scale === "Minute" ? "m" : scale.substring(0,1);
         return (<a onClick={this.handleChangeScale.bind(this, scale)} style={style} className={classNames}>{label}</a>);

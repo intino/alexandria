@@ -180,6 +180,7 @@ class Eventline extends AbstractEventline {
         return (
             <EventlineToolbar
                 label={{title:this.state.label, style:style}}
+                arrangement={this.props.toolbarArrangement}
                 toolbar={this.state.toolbar}
                 onFirst={this.first.bind(this)}
                 onPrevious={this.previous.bind(this)}

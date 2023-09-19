@@ -81,7 +81,7 @@ const TimelineMagnitude = ({ magnitude, index, id, moveMagnitude, classes, openH
     };
     const renderDetail = (magnitude) => {
         return (
-            <div className="layout horizontal flexible wrap" style={{padding:'5px'}}>
+            <div className="layout horizontal flex wrap end-justified" style={{padding:'5px'}}>
                 {renderSummaries(magnitude)}
                 {renderCustomView(magnitude)}
             </div>

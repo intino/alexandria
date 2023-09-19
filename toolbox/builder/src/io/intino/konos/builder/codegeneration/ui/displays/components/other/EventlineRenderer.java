@@ -16,6 +16,7 @@ public class EventlineRenderer extends ComponentRenderer<Eventline> {
 	public FrameBuilder properties() {
 		FrameBuilder properties = super.properties();
 		if (element.arrangement() != null) properties.add("arrangement", element.arrangement().name());
+		if (element.toolbarArrangement() != null) properties.add("toolbarArrangement", element.toolbarArrangement().name());
 		return properties;
 	}
 

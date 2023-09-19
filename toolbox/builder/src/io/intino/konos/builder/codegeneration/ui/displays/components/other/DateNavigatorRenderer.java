@@ -8,6 +8,7 @@ import io.intino.konos.model.VisualizationComponents;
 import io.intino.konos.model.VisualizationComponents.DateNavigator;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DateNavigatorRenderer extends ComponentRenderer<DateNavigator> {
 
@@ -17,7 +18,8 @@ public class DateNavigatorRenderer extends ComponentRenderer<DateNavigator> {
 
 	@Override
 	public void fill(FrameBuilder builder) {
-		addBinding(builder, element.temporalComponents());
+		addBinding(builder, element.temporalComponents().stream().filter(c -> c.i$(VisualizationComponents.Timeline.class)).collect(Collectors.toList()));
+		addBinding(builder, element.temporalComponents().stream().filter(c -> c.i$(VisualizationComponents.Reel.class)).collect(Collectors.toList()));
 	}
 
 	@Override

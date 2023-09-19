@@ -9,7 +9,7 @@ const EventlineToolbarStyles = {
     icon : { height:'20px',width:'20px' },
 };
 
-const EventlineToolbar = ({ label, toolbar, onPrevious, onNext, onFirst, onLast, translate, classes }) => {
+const EventlineToolbar = ({ label, arrangement, toolbar, onPrevious, onNext, onFirst, onLast, translate, classes }) => {
     const theme = Theme.get();
     const handleFirst = (e) => { e.stopPropagation(); onFirst();};
     const handlePrevious = (e) => { e.stopPropagation(); onPrevious();};
@@ -17,10 +17,11 @@ const EventlineToolbar = ({ label, toolbar, onPrevious, onNext, onFirst, onLast,
     const handleLast = (e) => { e.stopPropagation(); onLast();};
     const previousColor = toolbar.canPrevious ? theme.palette.primary.main : theme.palette.grey.A900;
     const nextColor = toolbar.canNext ? theme.palette.primary.main : theme.palette.grey.A900;
-    const title = translate(label.title != null ? label.title : "Events");
+    const title = translate(label.title != null ? label.title : null);
+    const toolbarLayout = "layout horizontal center " + (arrangement === "Left" ? "start-justified" : "end-justified");
     return (
-        <div className="layout horizontal end">
-            <div style={{marginRight:'15px',fontSize:'18pt',display: title === "" ? "none" : "block",...label.style}}>{title}</div>
+        <div className={toolbarLayout}>
+            {title && <div style={{marginRight:'15px',fontSize:'18pt',display: title === "" ? "none" : "block",...label.style}}>{title}</div>}
             <div style={{marginBottom:'1px'}} className="layout horizontal">
                 <div className="layout vertical"><Typography style={EventlineToolbarStyles.label}>{toolbar.label}</Typography></div>
                 <div className="layout horizontal">
