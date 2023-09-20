@@ -3,6 +3,7 @@ package io.intino.konos.builder.helpers;
 import cottons.utils.StringHelper;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
+import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.model.Data;
 import io.intino.konos.model.Redirect;
 import io.intino.konos.model.Response;
@@ -40,7 +41,8 @@ public class Commons {
 		}
 	}
 
-	public static Frame fileFrame(String directory, String packageName, String archetypeQn) {
+	public static Frame fileFrame(String directory, String packageName, String archetypeQn) throws KonosException {
+		if (archetypeQn == null) throw new KonosException("Archetype not found. Please define it in artifact");
 		if (directory.startsWith(".archetype")) {
 			String boxPackage = archetypeQn.replace(".Archetype", "");
 			String archetypePath = Commons.archetypePath(directory);

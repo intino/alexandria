@@ -46,11 +46,23 @@ public class SentinelsRenderer extends Renderer {
 	private Frame[] processSentinels() throws KonosException {
 		List<Frame> list = new ArrayList<>();
 		list.addAll(sentinels.stream().filter(t -> t.i$(Sentinel.SystemListener.class)).map(t -> t.a$(Sentinel.SystemListener.class)).map(this::processSentinel).collect(toList()));
-		list.addAll(sentinels.stream().filter(t -> t.i$(Sentinel.FileListener.class)).map(t -> t.a$(Sentinel.FileListener.class)).map(this::processFileListenerSentinel).collect(toList()));
+		list.addAll(fileListeners());
 		list.addAll(sentinels.stream().filter(t -> t.i$(Sentinel.WebHook.class)).map(t -> t.a$(Sentinel.WebHook.class)).map(this::processWebHookSentinel).collect(toList()));
 		for (Sentinel t : sentinels)
 			if (t.i$(Sentinel.WebHook.class)) new WebHookActionRenderer(context, t.asWebHook()).execute();
 		return list.toArray(new Frame[0]);
+	}
+
+	private List<Frame> fileListeners() throws KonosException {
+		List<Frame> list = new ArrayList<>();
+		for (Sentinel t : sentinels) {
+			if (t.i$(Sentinel.FileListener.class)) {
+				Sentinel.FileListener fileListener = t.a$(Sentinel.FileListener.class);
+				Frame frame = processFileListenerSentinel(fileListener);
+				list.add(frame);
+			}
+		}
+		return list;
 	}
 
 	private Frame processWebHookSentinel(Sentinel.WebHook webHook) {
@@ -83,7 +95,7 @@ public class SentinelsRenderer extends Renderer {
 		return builder.toFrame();
 	}
 
-	private Frame processFileListenerSentinel(Sentinel.FileListener sentinel) {
+	private Frame processFileListenerSentinel(Sentinel.FileListener sentinel) throws KonosException {
 		Set<String> custom = Commons.extractParameters(sentinel.file());
 		Frame fileFrame = Commons.fileFrame(sentinel.file(), packageName(), context.archetypeQN());
 		final FrameBuilder builder = new FrameBuilder().add("sentinel").add(sentinel.getClass().getSimpleName())

@@ -529,16 +529,32 @@ public class DocxBuilder {
 		private void replaceDocument(ZipEntry entry, ZipOutputStream zos) throws IOException {
 			File tmp = DocumentHelper.createTmpDocument(template.getParentFile(), documents.get(entry.getName()));
 			try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(tmp.toPath())))) {
+				boolean vtextbox = false;
 				String line;
 				while ((line = reader.readLine()) != null) {
-					if(isParagraphBegin(line))
-						replaceParagraph(reader, zos, line);
-					else
-						zos.write(content.replace(line).getBytes());
+					vtextbox |= isBeginOfTextBox(line);
+					if(vtextbox) {
+						// A text box creates 2 nodes: <v:textbox> and <w:txbx>. The first one is for metadata, so we should not modify it
+						zos.write(line.getBytes());
+						vtextbox = !isEndOfTextBox(line);
+					} else {
+						if(isParagraphBegin(line))
+							replaceParagraph(reader, zos, line);
+						else
+							zos.write(content.replace(line).getBytes());
+					}
 				}
 			} finally {
 				tmp.delete();
 			}
+		}
+
+		private boolean isBeginOfTextBox(String line) {
+			return line.trim().equals("<v:textbox>");
+		}
+
+		private boolean isEndOfTextBox(String line) {
+			return line.trim().equals("</v:textbox>");
 		}
 
 		private void replaceParagraph(BufferedReader reader, ZipOutputStream zos, String line) throws IOException {

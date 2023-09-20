@@ -1,5 +1,6 @@
 package io.intino.konos.builder.codegeneration;
 
+import io.intino.alexandria.logger.Logger;
 import io.intino.konos.builder.codegeneration.accessor.PomGenerator;
 import io.intino.konos.builder.codegeneration.accessor.analytic.AnalyticBuilderRenderer;
 import io.intino.konos.builder.codegeneration.accessor.messaging.MessagingAccessorRenderer;
@@ -55,30 +56,35 @@ public class FullRenderer {
 	}
 
 	private void render() throws KonosException {
-		if (context.mode().equals(Mode.Normal)) {
-			agendas();
-			schemas();
-			exceptions();
-			rest();
-			soap();
-			tasks();
-			jmx();
-			jms();
-			messageHub();
-			subscribers();
-			mounters();
-			adapters();
-			feeders();
-			processes();
-			analytic();
-			slack();
-			cli();
-			box();
-			main();
-			ui();
-			context.saveCache();
-		} else if (context.mode().equals(Mode.OnlyElements)) ui();
-		else accessors();
+		try {
+			if (context.mode().equals(Mode.Normal)) {
+				agendas();
+				schemas();
+				exceptions();
+				rest();
+				soap();
+				tasks();
+				jmx();
+				jms();
+				messageHub();
+				subscribers();
+				mounters();
+				adapters();
+				feeders();
+				processes();
+				analytic();
+				slack();
+				cli();
+				box();
+				main();
+				ui();
+				context.saveCache();
+			} else if (context.mode().equals(Mode.OnlyElements)) ui();
+			else accessors();
+		} catch (Throwable e) {
+			Logger.error(e);
+			throw new KonosException(e.getMessage(), e);
+		}
 	}
 
 	private void analytic() throws KonosException {
