@@ -491,7 +491,7 @@ end
 
 def type(component & child) trigger(conditionalReferences)
 	if ($owner.this.$name == null) $owner.this.$name = [$ancestorsNotMe...[.].]$name;
-	[$binding]
+	[$binding...[$NL]]
 	[$attachedTo]
 end
 
@@ -499,13 +499,13 @@ def type(component & child & collection & embedded) trigger(initializations)
 end
 
 def type(component & child & collection) trigger(initializations)
-	[$binding]
+	[$binding...[$NL]]
 	[$attachedTo]
 	[$component+initializations...[$NL]]
 end
 
 def type(component & child) trigger(initializations)
-	[$binding]
+	[$binding...[$NL]]
 	[$attachedTo]
 	[$component+initializations...[$NL]]
 end
@@ -548,6 +548,10 @@ end
 
 def type(binding & grouping)
 	if ($name != null) $name.bindTo($collection...[,]);
+end
+
+def type(binding & datenavigator)
+	if ($name != null) $name.bindTo($component...[,]);
 end
 
 def type(binding & groupingToolbar)
@@ -858,6 +862,16 @@ def type(properties & appDirectory & inline) trigger(specific)
 	$application...[$NL]
 end
 
+def type(properties & datenavigator) trigger(specific)
+	[_selected(java.time.Instant.ofEpochMilli($value~L));]
+	[_range(java.time.Instant.ofEpochMilli($from~L), java.time.Instant.ofEpochMilli($to~L));]
+	[_scales($scale...[,]);]
+end
+
+def type(scale)
+    io.intino.alexandria.Scale.$value+firstUpperCase
+end
+
 def type(properties & timeline) trigger(specific)
 	[_mode(io.intino.alexandria.ui.displays.components.Timeline.Mode.valueOf("$mode+firstUpperCase"));]
 end
@@ -878,6 +892,11 @@ def type(properties & dashboard & shiny) trigger(specific)
 	[$serverScript+resourceMethod]
 	[$uiScript+resourceMethod]
 	[$resource+resourceMethod...[$NL]]
+end
+
+def type(properties & documenteditor & collabora) trigger(specific)
+    [_document("$document");]
+	[_editorUrl("$editorUrl");]
 end
 
 def type(properties & dashboard & metabase) trigger(specific)

@@ -3,6 +3,7 @@ package io.intino.alexandria.ui.displays.templates;
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.UiFrameworkBox;
 import io.intino.alexandria.ui.displays.UserMessage;
+import io.intino.alexandria.ui.model.datenavigator.DateNavigatorDatasource;
 import io.intino.alexandria.ui.model.eventline.EventlineDatasource;
 
 import java.time.Instant;

@@ -5,9 +5,13 @@ use Theme
 Template(layout=Vertical, spacing=DP8) timelineExamplesMold
 
 	Block(layout=Horizontal Wrap, spacing=DP24)
-		Block(format=autoHeight) as Relative(width=100%, height=100%)
+		Block(format=doubleAirBottom)
+			DateNavigator(temporalComponents=block1.block11.timeline1 block2.block21.timeline2) dateNavigator
+				Range(from="2022-01-01T00:00:00Z", to="2024-12-31T00:00:00Z")
+
+		Block(format=timelineSummaryHeight airBottom) block1 as Relative(width=100%, height=100%)
 			Text(format=h6, value="No facets")
-			Block(format=filledNoAirExtraLarge)
+			Block(format=filledNoAirExtraLarge) block11
 				Timeline timeline1
 				Block > Text as Code(language=Html)
 						value
@@ -15,9 +19,9 @@ Template(layout=Vertical, spacing=DP8) timelineExamplesMold
 							Timeline
 							=========
 
-		Block as Relative(width=100%, height=100%)
+		Block block2 as Relative(width=100%, height=100%)
 			Text(format=h6, value="No facets (Catalog mode)")
-			Block(format=filledNoAirExtraLarge) as Absolute(height=500px)
+			Block(format=filledNoAirExtraLarge) block21 as Absolute(height=500px)
 				Timeline(mode=Catalog) timeline2
 				Block > Text as Code(language=Html)
 						value

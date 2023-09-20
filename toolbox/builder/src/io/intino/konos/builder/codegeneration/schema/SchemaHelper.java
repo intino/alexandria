@@ -3,8 +3,6 @@ package io.intino.konos.builder.codegeneration.schema;
 import io.intino.konos.model.Schema;
 import io.intino.konos.model.Service;
 
-import java.io.File;
-
 public class SchemaHelper {
 
 	public static String subPackage(Schema schema) {

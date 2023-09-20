@@ -9,7 +9,6 @@ import io.intino.konos.builder.codegeneration.accessor.ui.android.templates.Sche
 import io.intino.konos.builder.codegeneration.schema.SchemaWriter;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Schema;
 
 import java.io.File;
@@ -18,7 +17,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.logging.Logger;
 
-import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.kotlinFile;
 
 public class AndroidSchemaWriter extends SchemaWriter {

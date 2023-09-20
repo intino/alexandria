@@ -81,7 +81,7 @@ public class Download<DN extends DownloadNotifier, B extends Box> extends Abstra
 
             @Override
             public InputStream content() {
-                String content = serializeEntries();
+                String content = serialize();
                 notifyUser(translate("Downloaded"), UserMessage.Type.Success);
                 return new ByteArrayInputStream(content.getBytes());
             }
@@ -89,17 +89,25 @@ public class Download<DN extends DownloadNotifier, B extends Box> extends Abstra
     }
 
     @SuppressWarnings({"StreamToLoop", "unchecked"})
-    private String serializeEntries() {
+    private String serialize() {
         StringBuilder result = new StringBuilder();
         String separator = formatter.separator() != null ? formatter.separator() : DefaultSeparator;
-        collection.items(formatter.sortings()).forEach(item -> result.append(serializeEntry(item, separator)));
+        result.append(serializeHeader(separator));
+        collection.items(formatter.sortings()).forEach(item -> result.append(serializeRow(item, separator)));
         return result.toString();
     }
 
     @SuppressWarnings("unchecked")
-    private String serializeEntry(Object item, String separator) {
+    private String serializeHeader(String separator) {
+        List<String> header = formatter.header();
+        if (header == null || header.isEmpty()) return "";
+        return String.join(separator, header) + LineSeparator;
+    }
+
+    @SuppressWarnings("unchecked")
+    private String serializeRow(Object item, String separator) {
         StringBuilder result = new StringBuilder();
-        formatter.columns(item).forEach(c -> result.append(c).append(separator));
+        formatter.row(item).forEach(c -> result.append(c).append(separator));
         result.append(LineSeparator);
         return result.toString();
     }
@@ -111,7 +119,8 @@ public class Download<DN extends DownloadNotifier, B extends Box> extends Abstra
 
     public interface Formatter<T> {
         String filename();
-        List<String> columns(T item);
+        List<String> header();
+        List<String> row(T item);
         String[] sortings();
 
         default String separator() {

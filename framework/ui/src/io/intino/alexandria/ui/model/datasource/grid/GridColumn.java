@@ -15,7 +15,7 @@ public class GridColumn<T> {
 	private String pattern = "dd/MM/yyyy HH:mm:ss";
 	private Formatter formatter = defaultFormatter();
 
-	public enum Type { Link, Text, Number, Date }
+	public enum Type { Link, Text, Number, Date, Icon, MaterialIcon }
 
 	public String name() {
 		return name;

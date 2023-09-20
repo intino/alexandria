@@ -131,4 +131,4 @@ Component signDocument as ExtensionOf(signAction)
 	Notification signBatch as Object(SignDocumentBatchEntry) List
 
 	Request execute
-	Request batchSuccess as Object(SignDocumentBatchSuccess) List
+	Request batchSuccess as Object(SignDocumentSignatureSuccess) List

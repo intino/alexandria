@@ -3,7 +3,6 @@ package io.intino.konos.builder.codegeneration.accessor.ui.android.resource;
 import cottons.utils.StringHelper;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.accessor.ui.android.templates.PageTemplate;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;

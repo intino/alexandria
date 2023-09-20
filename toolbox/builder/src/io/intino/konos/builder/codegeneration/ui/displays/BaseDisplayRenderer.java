@@ -9,8 +9,8 @@ import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRe
 import io.intino.konos.builder.codegeneration.ui.passiveview.PassiveViewRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.ElementHelper;
-import io.intino.konos.model.*;
 import io.intino.konos.model.ActionableComponents.Actionable;
+import io.intino.konos.model.*;
 import io.intino.konos.model.OtherComponents.Dialog;
 import io.intino.konos.model.OtherComponents.OwnerTemplateStamp;
 import io.intino.konos.model.OtherComponents.ProxyStamp;

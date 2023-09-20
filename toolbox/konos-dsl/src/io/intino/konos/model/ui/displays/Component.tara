@@ -259,13 +259,34 @@ Concept:{0..1} VisualizationComponents
 				var instant max
 		Aspect Readonly
 
-	Concept Timeline extends Component
-		var word:{Summary Catalog} mode = Summary
+	Concept DocumentEditor extends Component
+		var string document = empty
+
+		Aspect Absolute
+		Aspect Relative
+
+		Aspect Collabora
+			var string editorUrl
+
+	Concept DateNavigator extends Component
+		var TemporalComponent[] temporalComponents = empty
+		var word[]:{Minute Hour Day Week Month Year} scales = Minute Hour Day Week Month Year
+		var instant selected = empty
+
+		Concept:{0..1} Range
+			var instant from
+			var instant to
+
+	Concept TemporalComponent extends Component
+
+		sub Timeline
+			var word:{Summary Catalog} mode = Summary
+
+		sub Reel
 
 	Concept Eventline extends Component
 		var word:{Vertical Horizontal} arrangement = Horizontal
-
-	Concept Reel extends Component
+		var word:{Left Right} toolbarArrangement = Right
 
 Concept HelperComponents
 	Concept HelperComponent extends Component

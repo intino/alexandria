@@ -5,9 +5,10 @@ use Theme
 Template(layout=Vertical, spacing=DP8) eventlineExamplesMold
 
 	Block(layout=Horizontal Wrap, spacing=DP24)
-		Block(format=extraHeight) as Relative(width=100%, height=100%)
+
+		Block(format=extraHeight) block1 as Relative(width=100%, height=100%)
 			Text(format=h6, value="No facets")
-			Block(format=filledNoAirExtraLarge air)
+			Block(format=filledNoAirExtraLarge air) block11
 				Eventline eventline1
 				Block > Text as Code(language=Html)
 						value
@@ -15,10 +16,10 @@ Template(layout=Vertical, spacing=DP8) eventlineExamplesMold
 							Eventline
 							=========
 
-		Block as Relative(width=100%, height=100%)
+		Block block2 as Relative(width=100%, height=100%)
 			Text(format=h6, value="No facets (Vertical arrangement)")
-			Block(format=filledNoAirLarge air)
-				Block as Absolute(height=400px) > Eventline(arrangement=Vertical) eventline2
+			Block(format=filledNoAirLarge air) block21
+				Block block211 as Absolute(height=400px) > Eventline(arrangement=Vertical) eventline2
 				Block > Text as Code(language=Html)
 						value
 							=========

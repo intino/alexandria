@@ -11,6 +11,8 @@ import { ToolsPanel } from "react-data-grid-addons";
 import 'alexandria-ui-elements/res/styles/grid.css';
 import 'alexandria-ui-elements/res/styles/layout.css';
 import history from "alexandria-ui-elements/src/util/History";
+import MaterialIcon from "./MaterialIcon";
+import Icon from "./Icon";
 import Select from "react-select";
 import {RiseLoader} from "react-spinners";
 import Theme from "app-elements/gen/Theme";
@@ -309,9 +311,13 @@ class Grid extends AbstractGrid {
         const { classes } = this.props;
         const type = column.type;
         const value = this.rowValue(data.value);
-        if (type === "Link" && data.row.selectable) return (<Link className={classNames(classes.link)} component="button" onClick={this.handleCellClick.bind(this, column, data)}>{value}</Link>);
-        else if (type === "Number" || type === "Date") return (<div style={{textAlign:'right'}}>{value}</div>);
-        return (<div>{value}</div>);
+        const color = this.rowColor(data.value);
+        const style = color !== undefined ? { color: color } : {};
+        if (type === "Icon") return (<Icon icon={value} color={color}/>);
+        else if (type === "MaterialIcon") return (<MaterialIcon icon={value} color={color}/>);
+        else if (type === "Link" && data.row.selectable) return (<Link className={classNames(classes.link)} style={style} component="button" onClick={this.handleCellClick.bind(this, column, data)}>{value}</Link>);
+        else if (type === "Number" || type === "Date") return (<div style={{textAlign:'right',...style}}>{value}</div>);
+        return (<div style={style}>{value}</div>);
     };
 
     handleRowClick = (row, data, c, e) => {
@@ -340,22 +346,27 @@ class Grid extends AbstractGrid {
         this.requester.cellClick({ column: column.name, columnIndex: columnIndex, row: value, rowIndex: index });
     };
 
-    rowInfo = (index, value, address) => {
-         return index + (value != null ? "_" + value : "") + (address != null ? "_" + address : "");
+    rowInfo = (index, value, address, color) => {
+         return index + "##" + (value != null ? value : "") + "##" + (address != null ? address : "") + "##" + (color != null ? color : "");
     };
 
     rowIndex = (value) => {
-        return value.split("_")[0];
+        return value.split("##")[0];
     };
 
     rowValue = (value) => {
-        const info = value.split("_");
-        return info.length > 1 ? info[1] : undefined;
+        const info = value.split("##");
+        return info.length > 1 && info[1] !== "" ? info[1] : undefined;
     };
 
     rowAddress = (value) => {
-        const info = value.split("_");
-        return info.length > 2 ? info[2] : undefined;
+        const info = value.split("##");
+        return info.length > 2 && info[2] !== "" ? info[2] : undefined;
+    };
+
+    rowColor = (value) => {
+        const info = value.split("##");
+        return info.length > 3 && info[3] !== "" ? info[3] : undefined;
     };
 
     columnIndex = (columnName) => {
@@ -389,7 +400,8 @@ class Grid extends AbstractGrid {
             let row = { selectable: newRows[i].selectable };
             for (let j=0; j<columns.length; j++) {
                 const address = newRows[i].cells[j].address != null ? newRows[i].cells[j].address : null;
-                row[columns[j].name] = this.rowInfo(i+offset, newRows[i].cells[j].value, address);
+                const color = newRows[i].cells[j].color != null ? newRows[i].cells[j].color : null;
+                row[columns[j].name] = this.rowInfo(i+offset, newRows[i].cells[j].value, address, color);
             }
             rows.push(row);
         }

@@ -47,11 +47,13 @@ Format("minHeight:'300px'") paperFormat
 Format("borderBottom:'1px dotted #ddd',width:'100%',marginBottom:'10px'") underline
 Format("fontSize:'10pt',color:'grey'") description
 Format("minHeight:'200px'") minTableHeight
+Format("height:'150px'") timelineSummaryHeight
 Format("color:'red'") redColor
 
 // Cards
 Format("textAlign:'left',color:'#B71A1C',padding:'10px'") cardTitle
 Format("textAlign:'left',padding:'10px'") cardContent
+Format("padding:'0'") noAir
 
 // Widgets
 Format("color:'#888'") widgetType

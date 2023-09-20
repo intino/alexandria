@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { Dialog as MuiDialog, DialogContent, Fade, Grow, Slide, Zoom, Typography, AppBar, IconButton } from "@material-ui/core"
 import { Home, Close, NavigateBefore, NavigateNext } from "@material-ui/icons";
 import { withStyles } from '@material-ui/core/styles';
@@ -8,6 +8,12 @@ import LayerRequester from "../../../gen/displays/requesters/LayerRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
 import history from "alexandria-ui-elements/src/util/History";
+
+const LayerIcon = React.lazy(() => {
+	return new Promise(resolve => {
+		setTimeout(() => resolve(import("./icon/MuiIcon"), 300));
+	});
+});
 
 const styles = theme => ({
     header : {
@@ -34,7 +40,7 @@ class Layer extends AbstractLayer {
         this.state = {
             ...this.state,
             title: this.props.title,
-            toolbar: { homeButton: { visible: false, enabled: false}, previousButton : { visible: false, enabled: false }, nextButton : { visible: false, enabled: false }},
+            toolbar: { home: { visible: false, enabled: false}, previous : { visible: false, enabled: false }, next : { visible: false, enabled: false }, customOperations: []},
             opened: false,
             closeAddress: Application.configuration.basePath,
         };
@@ -77,11 +83,11 @@ class Layer extends AbstractLayer {
 	renderTitle = () => {
 		const { classes } = this.props;
 		const style = this.props.color != null ? { backgroundColor: this.props.color } : undefined;
-		const showHome = this.state.toolbar.homeButton.visible;
-		const showPrevious = this.state.toolbar.previousButton.visible;
-		const previousDisabled = !this.state.toolbar.previousButton.enabled;
-		const showNext = this.state.toolbar.nextButton.visible;
-		const nextDisabled = !this.state.toolbar.nextButton.enabled;
+		const showHome = this.state.toolbar.home.visible;
+		const showPrevious = this.state.toolbar.previous.visible;
+		const previousDisabled = !this.state.toolbar.previous.enabled;
+		const showNext = this.state.toolbar.next.visible;
+		const nextDisabled = !this.state.toolbar.next.enabled;
 		return (
 			<AppBar style={style} className={classes.header}>
 				<div className="layout horizontal flex center">
@@ -89,10 +95,33 @@ class Layer extends AbstractLayer {
 					{!showHome && <Typography variant="h5">{this.translate(this.state.title)}</Typography>}
 					{showPrevious && <IconButton onClick={this.handlePrevious.bind(this)} disabled={previousDisabled} className={classes.icon} style={{marginLeft:'10px'}}><NavigateBefore fontSize="large"/></IconButton>}
 					{showNext && <IconButton onClick={this.handleNext.bind(this)} disabled={nextDisabled} className={classes.icon}><NavigateNext fontSize="large"/></IconButton>}
-					<div className="layout horizontal end-justified flex"><IconButton onClick={this.handleClose.bind(this)} className={classes.icon}><Close fontSize="large"/></IconButton></div>
+					<div className="layout horizontal end-justified flex">
+					    {this.renderCustomOperations()}
+					    <IconButton onClick={this.handleClose.bind(this)} className={classes.icon}><Close fontSize="large"/></IconButton>
+                    </div>
 				</div>
 			</AppBar>
 		);
+	};
+
+	renderCustomOperations = () => {
+	    const operations = this.state.toolbar.customOperations;
+	    const result = [];
+	    for (let i=0; i<operations.length; i++) result.push(this.renderCustomOperation(operations[i]));
+	    return result;
+	};
+
+	renderCustomOperation = (operation) => {
+        const { classes } = this.props;
+	    return (
+            <Suspense fallback={<div style={{width: "24px", ...this.style()}}/>}>
+	            <IconButton onClick={this.handleExecuteOperation.bind(this, operation.name)} className={classes.icon}><LayerIcon aria-label={operation.name} icon={operation.icon} fontSize="large"/></IconButton>
+	        </Suspense>
+        );
+	};
+
+	handleExecuteOperation = (name) => {
+	    this.requester.execute(name);
 	};
 
 	renderContent = () => {

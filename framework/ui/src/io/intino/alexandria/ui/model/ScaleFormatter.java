@@ -40,6 +40,7 @@ public class ScaleFormatter {
 	}
 
 	private static final Map<Scale, Map<String, String>> Formatters = new HashMap<>() {{
+		put(Scale.Minute, Map.of("es", "YYYY-MM-dd HH:mm", "en", "dd-MM-YYYY HH:mm"));
 		put(Scale.Hour, Map.of("es", "YYYY-MM-dd HH:mm", "en", "dd-MM-YYYY HH:mm"));
 		put(Scale.Day, Map.of("es", "YYYY-MM-dd", "en", "dd-MM-YYYY"));
 		put(Scale.Week, Map.of("es", "YYYY-'S'ww", "en", "'W'ww-YYYY"));
@@ -48,6 +49,7 @@ public class ScaleFormatter {
 	}};
 
 	private static final Map<Scale, Map<String, String>> ShortFormatters = new HashMap<>() {{
+		put(Scale.Minute, Map.of("es", "HH:mm", "en", "HH:mm"));
 		put(Scale.Hour, Map.of("es", "HH:mm", "en", "HH:mm"));
 		put(Scale.Day, Map.of("es", "MM-dd", "en", "dd-MM-YYYY"));
 		put(Scale.Week, Map.of("es", "'S'ww", "en", "'W'ww"));

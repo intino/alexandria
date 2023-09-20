@@ -5,7 +5,6 @@ import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ActionableRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.model.ActionableComponents;
-import io.intino.konos.model.InteractionComponents;
 import io.intino.konos.model.Service;
 
 public class OpenPageRenderer extends ActionableRenderer {
