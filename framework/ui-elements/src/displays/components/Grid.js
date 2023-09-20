@@ -169,6 +169,7 @@ class Grid extends AbstractGrid {
     };
 
     renderGroupBySelector = () => {
+        if (this.state.modes.length == 0) return (<React.Fragment/>);
         const { classes } = this.props;
         const styles = { ...SelectorComboBoxStyles, ...SelectorComboBoxTextViewStyles, ...GridSelectorStyles };
         return (
@@ -235,7 +236,7 @@ class Grid extends AbstractGrid {
     };
 
     renderColumnCheckbox = (column) => {
-        return (<div><FormControlLabel control={<Checkbox checked={this.isColumnVisible(column.index)} onChange={this.handleToggleColumn.bind(this, column.index)} color="primary" name={column.index}/>} label={column.label}/></div>);
+        return (<div><FormControlLabel control={<Checkbox checked={this.isColumnVisible(column.index)} onChange={this.handleToggleColumn.bind(this, column.index)} color="primary" name={column.index}/>} label={this.translate(column.label)}/></div>);
     };
 
     isColumnVisible = (index) => {
@@ -293,7 +294,7 @@ class Grid extends AbstractGrid {
     selectorColumns = () => {
         return this.state.columns.map((column, idx) => ({
             value: column.name,
-            label: column.label,
+            label: this.translate(column.label),
             type: column.type,
             width: column.width,
             index: idx
@@ -304,7 +305,7 @@ class Grid extends AbstractGrid {
         const type = column.type;
         const style = { display: 'inline-block' };
         if (type === "Number" || type === "Date") style.float = 'right';
-        return (<div style={style}>{column.label}</div>);
+        return (<div style={style}>{this.translate(column.label)}</div>);
     };
 
     rowFormatter = (column, data) => {
@@ -413,7 +414,7 @@ class Grid extends AbstractGrid {
 	};
 
     renderColumn(column, index) {
-        return (<div>{column.label}</div>);
+        return (<div>{this.translate(column.label)}</div>);
     };
 
     handleRowsSelected = rows => {

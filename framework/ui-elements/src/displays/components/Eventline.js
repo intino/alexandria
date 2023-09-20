@@ -164,7 +164,7 @@ class Eventline extends AbstractEventline {
             <div className="layout vertical" style={this.style()} ref={container}>
                 {this.renderToolbar({fontWeight:'300'})}
                 {this.state.loading && <div className="layout horizontal center-center" style={ {margin: "10px", height: "100%"} }><Spinner/></div>}
-                {!this.state.loading && this.state.eventsGroups.length == 0 && <Typography variant="body1">{this.translate("No events found")}</Typography>}
+                {!this.state.loading && this.state.eventsGroups.length == 0 && <div className="layout vertical flex center-center" style={{marginTop:'5%'}}><Typography variant="h5">{this.translate("No events found")}</Typography></div>}
                 {!this.state.loading && this.state.eventsGroups.length > 0 &&
                     <div ref={this.groups} className={"layout " + arrangement + " " + flex} style={{marginTop:'5px',...groupsStyle}} onScroll={this.handleScroll.bind(this, width, this.container.current != null ? this.container.current.offsetHeight : 100)}>
                         {this.renderBeforeScroller()}
