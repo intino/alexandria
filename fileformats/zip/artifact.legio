@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.4") zip
+Artifact("io.intino.alexandria", "1.0.5") zip
 	Imports
 		Compile("io.intino.alexandria", "logger", "2.1.0")
 	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
