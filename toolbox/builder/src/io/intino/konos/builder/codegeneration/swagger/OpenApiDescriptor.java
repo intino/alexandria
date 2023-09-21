@@ -14,6 +14,8 @@ import io.intino.magritte.framework.Layer;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static io.intino.konos.builder.codegeneration.accessor.rest.RESTAccessorRenderer.firstLowerCase;
+
 public class OpenApiDescriptor {
 
 	private final Service.REST service;
@@ -210,7 +212,8 @@ public class OpenApiDescriptor {
 	private Map<String, SwaggerSpec.Definition.Property> propertiesMap(Schema schema) {
 		Map<String, SwaggerSpec.Definition.Property> map = new LinkedHashMap<>();
 		for (Schema.Attribute attribute : schema.attributeList()) map.put(attribute.name$(), propertyFrom(attribute));
-		for (Schema component : schema.schemaList()) map.put(component.name$(), propertyFrom(component));
+		for (Schema component : schema.schemaList())
+			map.put(firstLowerCase(component.name$()), propertyFrom(component));
 		return map;
 	}
 
