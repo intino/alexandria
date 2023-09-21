@@ -194,29 +194,37 @@ public class OpenApiDescriptor {
 	private Map<String, SwaggerSpec.Definition> createDefinitions() {
 		Map<String, SwaggerSpec.Definition> map = new LinkedHashMap<>();
 		for (Schema schema : schemas) {
-			SwaggerSpec.Definition definition = new SwaggerSpec.Definition();
-			definition.required = schema.attributeList().stream().filter(Schema.Attribute::isRequired).map(Layer::name$).collect(Collectors.toList());
-			definition.properties = toMap(schema.attributeList());
-			definition.properties = toMap(schema.attributeList());
-			map.put(schema.name$(), definition);
+			map.put(schema.name$(), schemaDefinition(schema));
+			schema.schemaList().forEach(s -> map.put(s.name$(), schemaDefinition(s)));
 		}
 		return map;
 	}
 
-	private Map<String, SwaggerSpec.Definition.Property> toMap(List<Schema.Attribute> attributes) {
+	private SwaggerSpec.Definition schemaDefinition(Schema schema) {
+		SwaggerSpec.Definition definition = new SwaggerSpec.Definition();
+		definition.required = schema.attributeList().stream().filter(Schema.Attribute::isRequired).map(Layer::name$).collect(Collectors.toList());
+		definition.properties = propertiesMap(schema);
+		return definition;
+	}
+
+	private Map<String, SwaggerSpec.Definition.Property> propertiesMap(Schema schema) {
 		Map<String, SwaggerSpec.Definition.Property> map = new LinkedHashMap<>();
-		for (Schema.Attribute attribute : attributes) map.put(attribute.name$(), propertyFrom(attribute));
+		for (Schema.Attribute attribute : schema.attributeList()) map.put(attribute.name$(), propertyFrom(attribute));
+		for (Schema component : schema.schemaList()) map.put(component.name$(), propertyFrom(component));
 		return map;
 	}
 
+	private SwaggerSpec.Definition.Property propertyFrom(Schema schema) {
+		final SwaggerSpec.Definition.Property property = new SwaggerSpec.Definition.Property();
+		property.type = "object";
+		property.$ref = "#/definitions/" + schema.name$();
+		return property;
+	}
 
 	private SwaggerSpec.Definition.Property propertyFrom(Schema.Attribute attribute) {
 		final SwaggerSpec.Definition.Property property = new SwaggerSpec.Definition.Property();
 		property.type = transform(attribute.asType());
-		if (attribute.isObject()) {
-			if (property.additionalProperties == null) property.additionalProperties = new HashMap<>();
-			property.additionalProperties.put("$ref", "#/definitions/" + attribute.asObject().schema().name$());
-		}
+		if (attribute.isObject()) property.$ref = "#/definitions/" + attribute.asObject().schema().name$();
 		return property;
 	}
 
