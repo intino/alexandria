@@ -19,7 +19,7 @@ Artifact("io.intino.alexandria", "4.27.8") ui-framework
 		Compile("org.locationtech.jts", "jts-core", "1.19.0")
 		Compile("io.intino.icod", "standalone", "1.1.2")
 
-		Web("io.intino.alexandria", "ui-framework-elements", "4.27.7")
+		Web("io.intino.alexandria", "ui-framework-elements", "4.27.8")
 
 		Test("junit", "junit", "4.13.2")
 
