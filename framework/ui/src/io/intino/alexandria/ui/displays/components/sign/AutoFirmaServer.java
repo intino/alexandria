@@ -5,6 +5,7 @@ import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.DisplayRouteManager;
 import io.intino.alexandria.ui.services.push.UISession;
 import io.intino.alexandria.ui.spark.UISparkManager;
+import io.intino.alexandria.ui.utils.IOUtils;
 import io.intino.icod.core.DefaultConfiguration;
 import io.intino.icod.core.ServerDocumentManager;
 import io.intino.icod.services.DownloadService;
@@ -13,6 +14,8 @@ import io.intino.icod.services.StorageService;
 import io.intino.icod.services.spark.RequestInputMessage;
 import io.intino.icod.services.spark.SparkOutputMessage;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -85,7 +88,7 @@ public class AutoFirmaServer {
 	public SignDocument store(String id, InputStream document) {
 		try {
 			ServerDocumentManager documentManager = new ServerDocumentManager(new DefaultConfiguration());
-			documentManager.putRepositoryDocument(id, document);
+			documentManager.putRepositoryDocument(id + ".pdf", document);
 			return new SignDocument(id, repositoryUrl(id));
 		} catch (IOException e) {
 			Logger.error(e);
@@ -111,7 +114,7 @@ public class AutoFirmaServer {
 
 	private void document(UISparkManager manager) {
 		ServerDocumentManager documentManager = new ServerDocumentManager(new DefaultConfiguration());
-		manager.write(documentManager.getRepositoryDocument(manager.fromQuery("id")));
+		manager.write(documentManager.getRepositoryDocument(manager.fromQuery("id") + ".pdf"));
 	}
 
 	private void batchPreSigner(UISparkManager manager) {

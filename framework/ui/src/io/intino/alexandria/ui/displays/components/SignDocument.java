@@ -114,12 +114,13 @@ public class SignDocument<DN extends SignDocumentNotifier, B extends Box> extend
     }
 
     private void signDocument(InputStream documentStream) {
-        io.intino.alexandria.ui.displays.components.sign.SignDocument document = server.store(UUID.randomUUID().toString(), documentStream);
-        if (document == null) {
-            notifyUser(translate("Could not sign document"), UserMessage.Type.Error);
-            return;
-        }
-        sign(document.url());
+//        io.intino.alexandria.ui.displays.components.sign.SignDocument document = server.store(UUID.randomUUID().toString(), documentStream);
+//        if (document == null) {
+//            notifyUser(translate("Could not sign document"), UserMessage.Type.Error);
+//            return;
+//        }
+//        sign(document.url());
+        sign(signMode() == SignMode.CounterSign ? text(documentStream) : base64(documentStream));
     }
 
     private boolean canSign() {
@@ -134,6 +135,16 @@ public class SignDocument<DN extends SignDocumentNotifier, B extends Box> extend
         try {
             if (document == null) return null;
             return Base64.encode(IOUtils.toByteArray(document));
+        } catch (IOException e) {
+            Logger.error(e);
+            return null;
+        }
+    }
+
+    private String text(InputStream document) {
+        try {
+            if (document == null) return null;
+            return new String(IOUtils.toByteArray(document));
         } catch (IOException e) {
             Logger.error(e);
             return null;

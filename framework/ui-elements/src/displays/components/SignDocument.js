@@ -23,7 +23,8 @@ class SignDocument extends AbstractSignDocument {
 
     sign = (content) => {
         this.requester.signing();
-        this.behavior.signDocument(content, this._successCallback.bind(this), this._failureCallback.bind(this));
+        if (this.state.signMode === "Sign") this.behavior.signDocument(content, this._successCallback.bind(this), this._failureCallback.bind(this));
+        else if (this.state.signMode === "CounterSign") this.behavior.counterSign(content,  this.state.signFormat, this._successCallback.bind(this), this._failureCallback.bind(this));
     };
 
     signBatch = (documents) => {

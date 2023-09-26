@@ -21,7 +21,7 @@ const EventlineToolbar = ({ label, arrangement, toolbar, onPrevious, onNext, onF
     const toolbarLayout = "layout horizontal center " + (arrangement === "Left" ? "start-justified" : "end-justified");
     return (
         <div className={toolbarLayout}>
-            {title && <div style={{marginRight:'15px',fontSize:'18pt',display: title === "" ? "none" : "block",...label.style}}>{title}</div>}
+            {title && <div className="layout vertical flex" style={{marginRight:'15px',fontSize:'18pt',display: title === "" ? "none" : "block",...label.style}}>{title}</div>}
             <div style={{marginBottom:'1px'}} className="layout horizontal">
                 <div className="layout vertical"><Typography style={EventlineToolbarStyles.label}>{toolbar.label}</Typography></div>
                 <div className="layout horizontal">

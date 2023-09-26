@@ -20,6 +20,8 @@ const styles = theme => ({
     groupBlockVertical : { padding:'0 10px 20px 10px' },
     groupIconDashHorizontal : {borderTop:'1px dashed',width:'calc(100% - 18px)',position:'absolute',marginTop:'18px',marginLeft:'18px'},
     groupIconDashVertical : {borderLeft:'1px dashed',height:'100%',marginLeft:'3px'},
+    groupJumpHorizontal: { position:'absolute',zIndex:'1',background:'transparent',borderLeft:'2px solid',borderRight:'2px solid',width:'7px',height:'14px',marginLeft:'-20px',marginTop:'-3px'},
+    groupJumpVertical: { position:'absolute',zIndex:'1',background:'transparent',borderTop:'2px solid',borderBottom:'2px solid',width:'15px',height:'7px',marginTop:'-23px'},
 });
 
 const EventlineMui = React.lazy(() => {
@@ -45,7 +47,7 @@ class Eventline extends AbstractEventline {
 		    loading: false,
 		    selectedCategory: null,
 		    arrangement: this.props.arrangement,
-		    toolbar: { label: '', canNext: false, canPrevious: false },
+		    toolbar: { label: '', canNext: false, canPrevious: false, loadedPages: [] },
 		    eventsGroups: [],
 		}
 	};
@@ -214,15 +216,17 @@ class Eventline extends AbstractEventline {
         const { classes } = this.props;
         const arrangement = this.state.arrangement.toLowerCase() == "horizontal" ? "vertical" : "horizontal";
         const blockClass = this.state.arrangement.toLowerCase() == "horizontal" ? classes.groupBlockHorizontal : classes.groupBlockVertical;
+        const layout = this.state.arrangement.toLowerCase() == "vertical" ? "layout vertical flex" : "";
         const id = this.props.id + "_eventgroup_" + index;
         const isSelected = this.state.selectedElement != null && this.state.selectedElement.id == id;
-        const style = isSelected ? { background: "#fffbd4", cursor: "pointer", paddingTop: arrangement == "horizontal" ? "5px" : "0" } : { cursor: "pointer", paddingTop: arrangement == "horizontal" ? "5px" : "0" };
+        const style = isSelected ? { background: "#fffbd4", cursor: "pointer", paddingTop: arrangement == "horizontal" ? "5px" : "0" } : { cursor: "pointer", paddingTop: "0" };
+        const previousDate = index > 0 ? this.state.eventsGroups[index-1].date : null;
         this.toolbarInfo[index] = { date: group.date, longDate: group.longDate, page: group.page, id: id };
         return (
             <div id={id} className={classnames("layout", arrangement, "eventgroup")} style={{position:'relative',...style}} onClick={this.handleClickEventGroup.bind(this,id,this.toolbarInfo[index])}>
                 <div className={blockClass}>{this.renderGroupHeader(group)}</div>
-                <div>{this.renderGroupIcon(group)}</div>
-                <div className={blockClass}>{this.renderEvents(group, index)}</div>
+                <div>{this.renderGroupIcon(group, previousDate)}</div>
+                <div className={classnames(blockClass,layout)}>{this.renderEvents(group, index)}</div>
             </div>
         );
     };
@@ -241,14 +245,17 @@ class Eventline extends AbstractEventline {
         );
     };
 
-    renderGroupIcon = (group) => {
+    renderGroupIcon = (group, lastDate) => {
         const arrangement = this.state.arrangement.toLowerCase();
         const { classes } = this.props;
+        const hasJump = (lastDate == null ? 1 : Math.abs(group.date - lastDate) / 36e5) > 1;
         const clazz = arrangement == "horizontal" ? classes.groupIconDashHorizontal : classes.groupIconDashVertical;
+        const jumpClazz = arrangement == "horizontal" ? classes.groupJumpHorizontal : classes.groupJumpVertical;
         return (
-            <div className={"layout flex center " + arrangement} style={{height:'100%'}}>
+            <div className={"layout flex center " + arrangement} style={{height:'100%',position:'relative'}}>
                 <Adjust fontSize="small"/>
                 <div className={clazz}>&nbsp;</div>
+                {hasJump && <div className={jumpClazz}></div>}
             </div>
         );
     };
@@ -345,7 +352,11 @@ class Eventline extends AbstractEventline {
                 </IconButton>
                 <div style={{marginTop:'3px',marginLeft:'5px'}}>
                     <Typography onClick={this.handleSelectEvent.bind(this, group, event)}>{event.label}</Typography>
-                    {(event.comments != null && event.comments != "") && <Typography style={{color:'#888'}}>{event.comments}</Typography>}
+                    {(event.comments != null && event.comments != "") &&
+                        <Typography style={{color:'#888'}}>
+                            <div dangerouslySetInnerHTML={{__html: event.comments.replace("\n", "<br/>")}}></div>
+                        </Typography>
+                    }
                     {this.renderEventOperations(group, event)}
                 </div>
             </div>
@@ -405,7 +416,8 @@ class Eventline extends AbstractEventline {
 	    this.groups.current.scrollTo(0, arrangement == "vertical" ? this.groups.current.scrollHeight : 0);
 	    const events = this.groups.current.querySelectorAll(".eventgroup");
 	    if (events.length == 0) return;
-        this.updateSelectedInstant({ elementId: highlight ? events[0].id : null, info: this.toolbarInfo[0] });
+	    const index = arrangement == "vertical" ? events.length-1 : 0;
+        this.updateSelectedInstant({ elementId: highlight ? events[index].id : null, info: this.toolbarInfo[index] });
 	};
 
 	scrollToEnd = (highlight) => {
@@ -415,7 +427,9 @@ class Eventline extends AbstractEventline {
 	    this.groups.current.scrollTo(this.groups.current.scrollWidth, 0);
 	    const events = this.groups.current.querySelectorAll(".eventgroup");
 	    if (events.length == 0) return;
-        this.updateSelectedInstant({ elementId: highlight ? events[events.length-1].id : null, info: this.toolbarInfo[events.length-1] });
+	    const arrangement = this.state.arrangement.toLowerCase();
+	    const index = arrangement == "vertical" ? 0 : events.length-1;
+        this.updateSelectedInstant({ elementId: highlight ? events[index].id : null, info: this.toolbarInfo[index] });
 	};
 
     handleScroll = (width, height, e) => {

@@ -14,7 +14,7 @@ public class SignText<DN extends SignTextNotifier, B extends Box> extends Abstra
     }
 
     public void text(String content) {
-        signData = signData(content);
+        signData = signMode() == SignMode.CounterSign ? content : signData(content);
     }
 
     private String signData(String content) {

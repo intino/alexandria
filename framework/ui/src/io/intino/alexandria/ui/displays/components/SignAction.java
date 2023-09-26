@@ -21,8 +21,10 @@ public abstract class SignAction<DN extends SignActionNotifier, B extends Box> e
 	protected SignListener signListener;
 	protected String signSuccessMessage = "Sign process finished";
 	private SignErrorListener errorListener;
+	private SignAction.SignMode mode = SignMode.Sign;
 	private SignAction.SignFormat format = SignAction.SignFormat.XAdES;
 
+	public enum SignMode { Sign, CounterSign }
 	public enum SignFormat { PAdES, XAdES, CAdES }
 
 	public SignAction(B box) {
@@ -34,9 +36,23 @@ public abstract class SignAction<DN extends SignActionNotifier, B extends Box> e
 		return this;
 	}
 
+	public SignAction.SignFormat signFormat() {
+		return format;
+	}
+
 	public SignAction<DN, B> signFormat(SignAction.SignFormat format) {
 		_signFormat(format);
 		notifier.format(format.name());
+		return this;
+	}
+
+	public SignAction.SignMode signMode() {
+		return mode;
+	}
+
+	public SignAction<DN, B> signMode(SignAction.SignMode mode) {
+		_signMode(mode);
+		notifier.mode(mode.name());
 		return this;
 	}
 
@@ -101,6 +117,11 @@ public abstract class SignAction<DN extends SignActionNotifier, B extends Box> e
 
 	protected SignAction<DN, B> _signFormat(SignAction.SignFormat format) {
 		this.format = format;
+		return this;
+	}
+
+	protected SignAction<DN, B> _signMode(SignAction.SignMode mode) {
+		this.mode = mode;
 		return this;
 	}
 

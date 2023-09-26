@@ -12,7 +12,8 @@ Template(layout=Vertical, spacing=DP8) documentEditorExamplesMold
 				Block > Text as Code(language=Html)
 						value
 							=========
-							DocumentEditor as Collabora(editorUrl\="", accessToken\="")
+							DocumentEditor as Collabora(editorUrl\="")<br/>
+							&nbsp;&nbsp;&nbsp;&nbsp;
 							=========
 
 	Dialog(title="Edit document", format=noAir) editDocumentDialog as FullScreen

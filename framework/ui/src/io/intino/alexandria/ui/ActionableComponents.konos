@@ -118,6 +118,7 @@ Component copyToClipboard as ExtensionOf(actionable)
 Component signAction as ExtensionOf(actionable)
 	Notification setup as Object(SignActionSetup)
 	Notification format as Text
+	Notification mode as Text
 	Notification sign as Text
 
 	Request signing
