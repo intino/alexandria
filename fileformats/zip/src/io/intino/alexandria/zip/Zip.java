@@ -119,7 +119,9 @@ public class Zip {
 	}
 
 	private static void extractFile(ZipInputStream zipIn, String filePath) throws IOException {
-		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(filePath));
+		File file = new File(filePath);
+		file.getParentFile().mkdirs();
+		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
 		byte[] bytesIn = new byte[BUFFER_SIZE];
 		int read = 0;
 		while ((read = zipIn.read(bytesIn)) != -1) {
