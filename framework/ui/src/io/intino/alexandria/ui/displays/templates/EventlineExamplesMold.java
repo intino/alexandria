@@ -15,6 +15,8 @@ import static java.time.ZoneOffset.UTC;
 
 public class EventlineExamplesMold extends AbstractEventlineExamplesMold<UiFrameworkBox> {
 
+	public static final boolean WithJumps = true;
+
 	public EventlineExamplesMold(UiFrameworkBox box) {
 		super(box);
 	}
@@ -30,16 +32,15 @@ public class EventlineExamplesMold extends AbstractEventlineExamplesMold<UiFrame
 		});
 		eventline1.onExecuteEventOperation(e -> notifyUser(String.format("Execute operation %s for event %s", e.operation(), e.event().label()), UserMessage.Type.Info));
 		eventline1.refresh();
-		//eventline1.page(2);
-		Instant instant = new ArrayList<>(source().events(source().from(), source().to()).keySet()).get(10);
-		System.out.println(instant);
-		eventline1.select(instant);
+//		Instant instant = new ArrayList<>(source().events(source().from(), source().to()).keySet()).get(10);
+//		System.out.println(instant);
+//		eventline1.select(instant);
 		eventline2.label("Events");
 		eventline2.onSelectEvent(e -> notifyUser(String.format("Event %s selected", e.event().label()), UserMessage.Type.Info));
 		eventline2.onExecuteEventOperation(e -> notifyUser(String.format("Execute operation %s for event %s", e.operation(), e.event().label()), UserMessage.Type.Info));
 		eventline2.source(source());
 		eventline2.refresh();
-		eventline2.page(2);
+//		eventline2.last();
 	}
 
 	private EventlineDatasource source() {
@@ -52,11 +53,12 @@ public class EventlineExamplesMold extends AbstractEventlineExamplesMold<UiFrame
 			@Override
 			public Map<Instant, List<Event>> events(Instant start, Instant end) {
 //				if (random.nextInt(2) == 0) return Collections.emptyMap();
+				Random random = new Random();
 				Instant current = start;
 				Map<Instant, List<Event>> result = new HashMap<>();
 				while (current.isBefore(end)) {
 					result.put(current, randomEvents(current));
-					current = current.plus(1, scale().temporalUnit());
+					current = current.plus(WithJumps ? random.nextInt(40) : 1, scale().temporalUnit());
 				}
 				return result;
 			}

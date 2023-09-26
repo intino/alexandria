@@ -417,6 +417,11 @@ class Grid extends AbstractGrid {
         return (<div>{this.translate(column.label)}</div>);
     };
 
+    refreshSelection = (indexes) => {
+        const newIndexes = indexes.map(r => parseInt(r));
+        this.setState({selectedIndexes: newIndexes});
+    };
+
     handleRowsSelected = rows => {
         const indexes = this.state.selectedIndexes.concat(rows.map(r => r.rowIdx));
         this.setState({selectedIndexes: indexes});
