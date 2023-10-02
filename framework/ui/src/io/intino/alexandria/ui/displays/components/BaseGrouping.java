@@ -91,6 +91,11 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 		select(groups);
 	}
 
+ 	public void selection(List<String> groups) {
+		this.selection = new ArrayList<>(groups);
+		notifier.refreshSelection(selection);
+	}
+
 	public void select(List<String> groups) {
 		this.selection = new ArrayList<>(groups);
 		notifySelection();
@@ -125,7 +130,7 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 	@Override
 	public void refresh() {
 		super.refresh();
-		if (groups.size() > 0) refreshGroups();
+		refreshGroups();
 	}
 
 	protected java.util.List<Collection> _collectionBindings() {
