@@ -40,7 +40,7 @@ class SelectorRadioBox extends AbstractSelectorRadioBox {
 	};
 
 	renderItem = (item) => {
-        return (<FormControlLabel value={this._name(item)} control={<Radio>{item}</Radio>} label={this._label(item)} />);
+        return (<FormControlLabel value={this._name(item)} control={<Radio style={{marginLeft:'10px',marginRight:'5px',padding:'0'}}>{item}</Radio>} label={this._label(item)} />);
 	};
 
 	_name = (item) => {
