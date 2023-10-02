@@ -15,6 +15,5 @@
     <orderEntry type="library" scope="TEST" name="Intino: junit:junit:4.13.2" level="project" />
     <orderEntry type="module" module-name="json" />
     <orderEntry type="library" name="Intino: com.google.code.gson:gson:2.10.1" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:json:1.2.2" level="project" />
   </component>
 </module>
