@@ -84,6 +84,7 @@ public class Json {
 
 	private static GsonBuilder gsonBuilder() {
 		return new GsonBuilder()
+				.serializeSpecialFloatingPointValues()
 				.registerTypeAdapter(Instant.class, (JsonSerializer<Instant>) (instant, type, context) -> new JsonPrimitive(instant.toEpochMilli()))
 				.registerTypeAdapter(Instant.class, (JsonDeserializer<Instant>) (json, type1, context) -> Instant.ofEpochMilli(json.getAsJsonPrimitive().getAsLong()))
 				.registerTypeAdapter(Date.class, (JsonSerializer<Date>) (date, type, context) -> new JsonPrimitive(date.getTime()))
