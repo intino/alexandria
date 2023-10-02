@@ -115,7 +115,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 
 			@Override
 			public double value() {
-				return 11;
+				return 11.0;
 			}
 
 			@Override
@@ -240,7 +240,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 
 			@Override
 			public double value() {
-				return 3300;
+				return 3300.0;
 			}
 
 			@Override

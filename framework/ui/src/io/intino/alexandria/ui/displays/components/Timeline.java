@@ -6,7 +6,6 @@ import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.*;
 import io.intino.alexandria.ui.displays.events.SelectEvent;
 import io.intino.alexandria.ui.displays.events.SelectListener;
-import io.intino.alexandria.ui.displays.events.SelectionListener;
 import io.intino.alexandria.ui.displays.notifiers.TimelineNotifier;
 import io.intino.alexandria.ui.model.ScaleFormatter;
 import io.intino.alexandria.ui.model.timeline.Formatter;
@@ -330,10 +329,11 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	private TimelineMagnitude schemaOf(TimelineDatasource.Magnitude magnitude) {
 		MagnitudeDefinition definition = magnitude.definition();
 		Formatter formatter = definition.formatter();
+		double value = magnitude.value();
 		return new TimelineMagnitude()
 				.name(definition.name())
-				.value(magnitude.value())
-				.formattedValue(adapt(formatter.format(magnitude.value())))
+				.value(String.valueOf(value))
+				.formattedValue(!Double.isNaN(value) ? adapt(formatter.format(value)) : "-")
 				.status(magnitude.status().name())
 				.min(magnitude.min() != null ? String.valueOf(magnitude.min()) : null)
 				.formattedMin(magnitude.min() != null ? adapt(formatter.format(magnitude.min())) : null)
@@ -341,7 +341,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 				.formattedMax(magnitude.max() != null ? adapt(formatter.format(magnitude.max())) : null)
 				.percentage(magnitude.percentage() != null ? adapt(formatter.format(magnitude.percentage())) : null)
 				.label(definition.label(language()))
-				.unit(definition.unit())
+				.unit(translate(definition.unit()))
 				.summary(summaryOf(magnitude))
 				.serie(serieOf(magnitude))
 				.customView(magnitude.customHtmlView(selectedScale()));

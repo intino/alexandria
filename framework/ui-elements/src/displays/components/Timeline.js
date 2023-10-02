@@ -32,7 +32,7 @@ const styles = theme => ({
     infoUnit : { color: '#555', marginRight: '5px', marginLeft: '1px', fontSize: '8pt' },
     infoValue : { color:'#555', fontSize:'9pt' },
     catalogUnit : { fontSize: '12pt' },
-    summaryUnit : { position: 'absolute', fontSize: '9pt', marginLeft: '10px', marginTop: '-1px' },
+    summaryUnit : { fontSize: '9pt', marginTop: '-1px' },
     catalogTrend : { position: 'absolute', left: '0', top:'0px', marginLeft: '-2px', marginTop: '15px', width:'30px', height:'30px' },
     summaryTrend : { position: 'absolute', left: '0', bottom:'0px', marginLeft: '-4px', marginBottom: '-6px', width:'24px', height:'24px' },
     increased : { color: '#F44335' },

@@ -351,7 +351,7 @@ Schema TimelineMagnitude
 	Attribute name as Text
 	Attribute label as Text
 	Attribute status as Text
-	Attribute value as Real
+	Attribute value as Text
 	Attribute formattedValue as Text
 	Attribute min as Text
 	Attribute formattedMin as Text
