@@ -10,7 +10,9 @@ import java.io.OutputStream;
 public class Zit {
 
 	public static final String ZIT_EXTENSION = ".zit";
-	public static final String DELIMITER = "\0";
+	public static final String MAGNITUDE_DELIMITER = "\0";
+	public static final String ATTRIBUTE_DELIMITER = ";";
+	public static final String NAME_VALUE_SEP = "=";
 
 
 	public static InputStream decompressing(InputStream in) throws IOException {
