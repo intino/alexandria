@@ -3,6 +3,7 @@ package io.intino.alexandria.event.measurement;
 import io.intino.alexandria.event.Event;
 import io.intino.alexandria.event.measurement.MeasurementEvent.Measurement.Attribute;
 import io.intino.alexandria.message.Message;
+import io.intino.alexandria.zit.Zit;
 
 import java.time.Instant;
 import java.util.Arrays;
@@ -13,8 +14,9 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 public class MeasurementEvent implements Event {
-	private static final String MAGNITUDE_SEP = "\0";
-	private static final String ATTRIBUTE_SEP = "=";
+	private static final String MAGNITUDE_SEP = Zit.MAGNITUDE_DELIMITER;
+	private static final String ATTRIBUTE_SEP = Zit.ATTRIBUTE_DELIMITER;
+	private static final String NAME_VALUE_SEP = Zit.NAME_VALUE_SEP;
 
 	protected final String type;
 	protected final String source;
@@ -122,8 +124,8 @@ public class MeasurementEvent implements Event {
 
 		@Override
 		public String toString() {
-			String attributes = Arrays.stream(this.attributes).map(Attribute::toString).collect(joining(MAGNITUDE_SEP));
-			return name + (this.attributes.length > 0 ? MAGNITUDE_SEP + attributes : "");
+			String attributes = Arrays.stream(this.attributes).map(Attribute::toString).collect(joining(ATTRIBUTE_SEP));
+			return name + (this.attributes.length > 0 ? ATTRIBUTE_SEP + attributes : "");
 		}
 
 		public static class Attribute {
@@ -145,7 +147,7 @@ public class MeasurementEvent implements Event {
 
 			@Override
 			public String toString() {
-				return name + ATTRIBUTE_SEP + value;
+				return name + NAME_VALUE_SEP + value;
 			}
 		}
 	}
