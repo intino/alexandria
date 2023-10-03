@@ -14,7 +14,7 @@ import static java.util.stream.Collectors.toList;
 
 public class MeasurementEvent implements Event {
 	private static final String MEASUREMENT_SEP = "|";
-	private static final String ATTRIBUTE_SEP = ":";
+	private static final String ATTRIBUTE_SEP = "\0";
 
 	protected final String type;
 	protected final String source;
