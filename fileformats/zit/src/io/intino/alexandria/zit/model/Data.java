@@ -6,7 +6,7 @@ public class Data {
 
 	private final Instant ts;
 	private final double[] values;
-	private String[] measurements;
+	private final String[] measurements;
 
 	public Data(Instant ts, double[] values, String[] measurements) {
 		this.ts = ts;
