@@ -30,11 +30,12 @@ const TimelineSummary = ({ summary, evolution, width, unit, translate }) => {
     };
     const formattedValue = (value, date) => {
         const language = window.Application.configuration.language;
+        const formattedValue = isNaN(value) ? "-" : value;
         return (
             <div className="layout vertical flex end-justified">
                 <div className="layout horizontal end-justified center flex">
                     {date && <div className="layout horizontal start-justified flex" style={{...TimelineSummaryStyles.date,marginRight:'10px'}}><Moment format="DD/MM/YYYY HH:mm" date={date} locale={language}/></div>}
-                    <span>{value}</span>
+                    <span>{formattedValue}</span>
                     {formattedUnit()}
                 </div>
             </div>

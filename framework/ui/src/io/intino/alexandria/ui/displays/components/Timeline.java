@@ -178,7 +178,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	}
 
 	private TimelineSummaryValue summaryValueOf(double value, Instant date, Formatter formatter) {
-		return new TimelineSummaryValue().value(adapt(formatter.format(value))).date(date);
+		return new TimelineSummaryValue().value(Double.isNaN(value) ? null : adapt(formatter.format(value))).date(date);
 	}
 
 	private TimelineSerie serieOf(TimelineDatasource.Magnitude magnitude) {
