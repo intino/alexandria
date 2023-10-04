@@ -1,7 +1,7 @@
 package io.intino.alexandria.event.measurement;
 
 import io.intino.alexandria.event.Event;
-import io.intino.alexandria.event.measurement.MeasurementEvent.Measurement.Attribute;
+import io.intino.alexandria.event.measurement.MeasurementEvent.Magnitude.Attribute;
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.zit.Zit;
 
@@ -14,29 +14,29 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 public class MeasurementEvent implements Event {
-	private static final String MAGNITUDE_SEP = Zit.MAGNITUDE_DELIMITER;
-	private static final String ATTRIBUTE_SEP = Zit.ATTRIBUTE_DELIMITER;
-	private static final String NAME_VALUE_SEP = Zit.NAME_VALUE_SEP;
+	public static final String MAGNITUDE_SEP = Zit.MAGNITUDE_DELIMITER;
+	public static final String ATTRIBUTE_SEP = Zit.ATTRIBUTE_DELIMITER;
+	public static final String NAME_VALUE_SEP = Zit.NAME_VALUE_SEP;
 
 	protected final String type;
 	protected final String source;
 	protected final Instant ts;
-	protected final Measurement[] measurements;
+	protected final Magnitude[] magnitudes;
 	protected final double[] values;
 
 	public MeasurementEvent(String type, String source, Instant ts, String[] measurements, double[] values) {
 		this.type = requireNonNull(type, "type cannot be null");
 		this.source = requireNonNull(source, "source cannot be null");
 		this.ts = requireNonNull(ts, "ts cannot be null");
-		this.measurements = loadMeasurements(measurements);
+		this.magnitudes = loadMeasurements(measurements);
 		this.values = values;
 	}
 
-	public MeasurementEvent(String type, String source, Instant ts, Measurement[] measurements, double[] values) {
+	public MeasurementEvent(String type, String source, Instant ts, Magnitude[] magnitudes, double[] values) {
 		this.type = requireNonNull(type, "type cannot be null");
 		this.source = requireNonNull(source, "source cannot be null");
 		this.ts = requireNonNull(ts, "ts cannot be null");
-		this.measurements = measurements;
+		this.magnitudes = magnitudes;
 		this.values = values;
 	}
 
@@ -55,8 +55,8 @@ public class MeasurementEvent implements Event {
 		return source;
 	}
 
-	public Measurement[] measurements() {
-		return measurements;
+	public Magnitude[] measurements() {
+		return magnitudes;
 	}
 
 	public double[] values() {
@@ -68,11 +68,11 @@ public class MeasurementEvent implements Event {
 		return Format.Measurement;
 	}
 
-	private Measurement[] loadMeasurements(String[] measurements) {
+	private Magnitude[] loadMeasurements(String[] measurements) {
 		return Arrays.stream(measurements)
 				.map(m -> m.split(MAGNITUDE_SEP))
-				.map(fs -> new Measurement(fs[0], fs.length > 1 ? attributesOf(fs) : new Attribute[0]))
-				.toArray(Measurement[]::new);
+				.map(fs -> new Magnitude(fs[0], fs.length > 1 ? attributesOf(fs) : new Attribute[0]))
+				.toArray(Magnitude[]::new);
 	}
 
 	private Attribute[] attributesOf(String[] fs) {
@@ -100,16 +100,16 @@ public class MeasurementEvent implements Event {
 		Message message = new Message(type());
 		message.set("ss", ss());
 		message.set("ts", ts());
-		message.set("measurements", Arrays.stream(measurements).map(Measurement::toString).collect(toList()));
+		message.set("measurements", Arrays.stream(magnitudes).map(Magnitude::toString).collect(toList()));
 		message.set("values", values);
 		return message.toString();
 	}
 
-	public static class Measurement {
+	public static class Magnitude {
 		private final String name;
 		private final Attribute[] attributes;
 
-		public Measurement(String name, Attribute[] attributes) {
+		public Magnitude(String name, Attribute[] attributes) {
 			this.name = name;
 			this.attributes = attributes;
 		}
