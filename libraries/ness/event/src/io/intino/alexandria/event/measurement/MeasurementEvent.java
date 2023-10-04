@@ -24,11 +24,11 @@ public class MeasurementEvent implements Event {
 	protected final Magnitude[] magnitudes;
 	protected final double[] values;
 
-	public MeasurementEvent(String type, String source, Instant ts, String[] measurements, double[] values) {
+	public MeasurementEvent(String type, String source, Instant ts, String[] magnitudes, double[] values) {
 		this.type = requireNonNull(type, "type cannot be null");
 		this.source = requireNonNull(source, "source cannot be null");
 		this.ts = requireNonNull(ts, "ts cannot be null");
-		this.magnitudes = loadMeasurements(measurements);
+		this.magnitudes = loadMagnitudes(magnitudes);
 		this.values = values;
 	}
 
@@ -55,7 +55,7 @@ public class MeasurementEvent implements Event {
 		return source;
 	}
 
-	public Magnitude[] measurements() {
+	public Magnitude[] magnitudes() {
 		return magnitudes;
 	}
 
@@ -68,8 +68,8 @@ public class MeasurementEvent implements Event {
 		return Format.Measurement;
 	}
 
-	private Magnitude[] loadMeasurements(String[] measurements) {
-		return Arrays.stream(measurements)
+	private Magnitude[] loadMagnitudes(String[] magnitudes) {
+		return Arrays.stream(magnitudes)
 				.map(m -> m.split(MAGNITUDE_SEP))
 				.map(fs -> new Magnitude(fs[0], fs.length > 1 ? attributesOf(fs) : new Attribute[0]))
 				.toArray(Magnitude[]::new);
@@ -100,7 +100,7 @@ public class MeasurementEvent implements Event {
 		Message message = new Message(type());
 		message.set("ss", ss());
 		message.set("ts", ts());
-		message.set("measurements", Arrays.stream(magnitudes).map(Magnitude::toString).collect(toList()));
+		message.set("magnitudes", Arrays.stream(magnitudes).map(Magnitude::toString).collect(toList()));
 		message.set("values", values);
 		return message.toString();
 	}
