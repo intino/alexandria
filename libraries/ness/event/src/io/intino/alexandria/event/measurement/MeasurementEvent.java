@@ -70,7 +70,7 @@ public class MeasurementEvent implements Event {
 
 	private Magnitude[] loadMagnitudes(String[] magnitudes) {
 		return Arrays.stream(magnitudes)
-				.map(m -> m.split(MAGNITUDE_SEP))
+				.map(m -> m.split(ATTRIBUTE_SEP))
 				.map(fs -> new Magnitude(fs[0], fs.length > 1 ? attributesOf(fs) : new Attribute[0]))
 				.toArray(Magnitude[]::new);
 	}
