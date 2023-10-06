@@ -3,13 +3,11 @@ package io.intino.alexandria.ui.displays.templates;
 import io.intino.alexandria.Scale;
 import io.intino.alexandria.UiFrameworkBox;
 import io.intino.alexandria.ui.displays.UserMessage;
-import io.intino.alexandria.ui.model.datenavigator.DateNavigatorDatasource;
 import io.intino.alexandria.ui.model.eventline.EventlineDatasource;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.function.Function;
 
 import static java.time.ZoneOffset.UTC;
 
@@ -30,6 +28,7 @@ public class EventlineExamplesMold extends AbstractEventlineExamplesMold<UiFrame
 			notifyUser(String.format("Event %s selected", e.event().label()), UserMessage.Type.Info);
 			eventline1.refresh(e.event().color("blue").icon("CheckBox", "New label").operations(Collections.emptyList()));
 		});
+		eventline1.onSelectEvents(e -> notifyUser("Events selected", UserMessage.Type.Info));
 		eventline1.onExecuteEventOperation(e -> notifyUser(String.format("Execute operation %s for event %s", e.operation(), e.event().label()), UserMessage.Type.Info));
 		eventline1.refresh();
 //		Instant instant = new ArrayList<>(source().events(source().from(), source().to()).keySet()).get(10);
@@ -37,6 +36,7 @@ public class EventlineExamplesMold extends AbstractEventlineExamplesMold<UiFrame
 //		eventline1.select(instant);
 		eventline2.label("Events");
 		eventline2.onSelectEvent(e -> notifyUser(String.format("Event %s selected", e.event().label()), UserMessage.Type.Info));
+		eventline2.onSelectEvents(e -> notifyUser("Events selected", UserMessage.Type.Info));
 		eventline2.onExecuteEventOperation(e -> notifyUser(String.format("Execute operation %s for event %s", e.operation(), e.event().label()), UserMessage.Type.Info));
 		eventline2.source(source());
 		eventline2.refresh();
