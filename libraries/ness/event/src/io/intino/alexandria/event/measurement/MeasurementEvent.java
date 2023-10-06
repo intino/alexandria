@@ -13,8 +13,8 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 public class MeasurementEvent implements Event {
-	private static final String MEASUREMENT_SEP = "|";
-	private static final String ATTRIBUTE_SEP = ":";
+	private static final String MAGNITUDE_SEP = "\0";
+	private static final String ATTRIBUTE_SEP = "=";
 
 	protected final String type;
 	protected final String source;
@@ -68,7 +68,7 @@ public class MeasurementEvent implements Event {
 
 	private Measurement[] loadMeasurements(String[] measurements) {
 		return Arrays.stream(measurements)
-				.map(m -> m.split("\\" + MEASUREMENT_SEP))
+				.map(m -> m.split(MAGNITUDE_SEP))
 				.map(fs -> new Measurement(fs[0], fs.length > 1 ? attributesOf(fs) : new Attribute[0]))
 				.toArray(Measurement[]::new);
 	}
@@ -122,8 +122,8 @@ public class MeasurementEvent implements Event {
 
 		@Override
 		public String toString() {
-			String attributes = Arrays.stream(this.attributes).map(Attribute::toString).collect(joining(MEASUREMENT_SEP));
-			return name + (this.attributes.length > 0 ? MEASUREMENT_SEP + attributes : "");
+			String attributes = Arrays.stream(this.attributes).map(Attribute::toString).collect(joining(MAGNITUDE_SEP));
+			return name + (this.attributes.length > 0 ? MAGNITUDE_SEP + attributes : "");
 		}
 
 		public static class Attribute {
