@@ -49,6 +49,7 @@ class Eventline extends AbstractEventline {
 		    arrangement: this.props.arrangement,
 		    toolbar: { label: '', canNext: false, canPrevious: false, loadedPages: [] },
 		    eventsGroups: [],
+		    allowSelectEvents : false,
 		}
 	};
 
@@ -68,6 +69,10 @@ class Eventline extends AbstractEventline {
 
 	hideLoading = () => {
 	    this.setState({loading:false});
+	};
+
+	enableSelectEventsAction = () => {
+	    this.setState({allowSelectEvents:true});
 	};
 
 	addEventsBefore = (groups) => {
@@ -298,9 +303,11 @@ class Eventline extends AbstractEventline {
         const arrangement = this.state.arrangement.toLowerCase();
         const clazz = arrangement == "horizontal" ? classes.eventHorizontal : classes.eventVertical;
         const message = events.length + " " + this.translate(events.length == 1 ? "event" : "events");
+        const theme = Theme.get();
         return (
             <Paper className={clazz}>
-                <Typography>{category !== "undefined" && <b>{category}</b>}</Typography>
+                {!this.state.allowSelectEvents && <Typography>{category !== "undefined" && <b>{category}</b>}</Typography>}
+                {this.state.allowSelectEvents && <a style={{color:theme.palette.primary.main,cursor:'pointer'}} onClick={this.handleSelectEvents.bind(this, group, events)}><Typography>{category !== "undefined" && <b>{category}</b>}</Typography></a>}
                 {events.map((event, eventIndex) => this.renderEvent(group, event, eventIndex))}
             </Paper>
         );
@@ -308,17 +315,23 @@ class Eventline extends AbstractEventline {
 
     renderCategoryEventsDialog = () => {
         if (this.state.selectedCategory == null) return (<React.Fragment/>);
+        const theme = Theme.get();
+        const selectedCategory = this.state.selectedCategory;
         return (
             <Popover id={this.props.id + "mouse-over-popover"}
                 sx={{pointerEvents: 'none'}}
                 open={this.state.openCategoryEventsDialog}
-                anchorEl={this.state.selectedCategory.target}
+                anchorEl={selectedCategory.target}
                 anchorOrigin={{vertical: 'bottom',horizontal: 'left'}}
                 transformOrigin={{vertical: 'top',horizontal: 'left'}}
                 onClose={this.handleCloseCategoryEventsDialog.bind(this)}
                 disableRestoreFocus>
                 <div style={{padding:'10px',minWidth:'300px',minHeight:'100px'}}>
-                    {this.state.selectedCategory.events.map((event, eventIndex) => this.renderEvent(this.state.selectedCategory.group, event, eventIndex))}
+                    <div style={{marginBottom:'5px'}}>
+                        {!this.state.allowSelectEvents && <Typography variant="h6">{selectedCategory.category !== "undefined" && <b>{selectedCategory.category}</b>}</Typography>}
+                        {this.state.allowSelectEvents && <a style={{color:theme.palette.primary.main,cursor:'pointer'}} onClick={this.handleSelectEvents.bind(this, selectedCategory.group, selectedCategory.events)}><Typography variant="h6">{selectedCategory.category !== "undefined" && <b>{selectedCategory.category}</b>}</Typography></a>}
+                    </div>
+                    {selectedCategory.events.map((event, eventIndex) => this.renderEvent(selectedCategory.group, event, eventIndex))}
                 </div>
             </Popover>
         );
@@ -375,6 +388,10 @@ class Eventline extends AbstractEventline {
     renderEventOperation = (group, event, operation) => {
         const theme = Theme.get();
         return (<a style={{marginRight:'15px',color:theme.palette.primary.main,cursor:'pointer'}} onClick={this.handleExecuteEvent.bind(this, group, event, operation)}>{operation}</a>);
+    };
+
+    handleSelectEvents = (group, events) => {
+        this.requester.selectEvents(events.map(e => { return { date: group.date, event: e.id } }));
     };
 
     handleSelectEvent = (group, event) => {

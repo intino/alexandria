@@ -227,6 +227,7 @@ Component eventline
 	Notification scrollToEnd as Bool
 	Notification showLoading
 	Notification hideLoading
+	Notification enableSelectEventsAction
 	Request update as DateTime
 	Request first
 	Request previous
@@ -236,6 +237,7 @@ Component eventline
 	Request last
 	Request page as Integer
 	Request selectEvent as Object(EventlineSelectEventParams)
+	Request selectEvents as Object(EventlineSelectEventParams) List
 	Request executeEvent as Object(EventlineExecuteEventParams)
 
 Component reel

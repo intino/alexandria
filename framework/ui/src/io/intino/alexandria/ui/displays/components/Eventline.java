@@ -5,9 +5,7 @@ import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.*;
 import io.intino.alexandria.ui.displays.events.SelectEvent;
 import io.intino.alexandria.ui.displays.events.SelectListener;
-import io.intino.alexandria.ui.displays.events.eventline.ExecuteEvent;
-import io.intino.alexandria.ui.displays.events.eventline.ExecuteEventListener;
-import io.intino.alexandria.ui.displays.events.eventline.SelectEventListener;
+import io.intino.alexandria.ui.displays.events.eventline.*;
 import io.intino.alexandria.ui.displays.notifiers.EventlineNotifier;
 import io.intino.alexandria.ui.model.ScaleFormatter;
 import io.intino.alexandria.ui.model.eventline.EventlineDatasource;
@@ -17,10 +15,9 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
 import java.util.List;
 import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.time.ZoneOffset.UTC;
@@ -37,6 +34,7 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 	private Instant selectedInstant;
 	private SelectListener selectListener = null;
 	private SelectEventListener selectEventListener = null;
+	private SelectEventListListener selectEventListListener = null;
 	private ExecuteEventListener executeEventOperationListener = null;
 
 	private static final int DefaultStepsCount = 10;
@@ -66,6 +64,12 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 		return this;
 	}
 	
+	public Eventline<DN, B> onSelectEvents(SelectEventListListener listener) {
+		this.selectEventListListener = listener;
+		notifier.enableSelectEventsAction();
+		return this;
+	}
+
 	public Eventline<DN, B> onExecuteEventOperation(ExecuteEventListener listener) {
 		this.executeEventOperationListener = listener;
 		return this;
@@ -185,6 +189,13 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 		EventlineDatasource.Event event = eventOf(params.date(), params.event());
 		if (event == null) return;
 		selectEventListener.accept(new io.intino.alexandria.ui.displays.events.eventline.SelectEvent(this, event));
+	}
+
+	public void selectEvents(List<EventlineSelectEventParams> params) {
+		if (selectEventListListener == null) return;
+		List<EventlineDatasource.Event> events = eventsOf(params);
+		if (events.isEmpty()) return;
+		selectEventListListener.accept(new SelectEventListEvent(this, events));
 	}
 
 	public void executeEvent(EventlineExecuteEventParams params) {
@@ -355,6 +366,10 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 			return i;
 		}
 		return -1;
+	}
+
+	private List<EventlineDatasource.Event> eventsOf(List<EventlineSelectEventParams> params) {
+		return params.stream().map(p -> eventOf(p.date(), p.event())).collect(Collectors.toList());
 	}
 
 	private EventlineDatasource.Event eventOf(Instant instant, String id) {
