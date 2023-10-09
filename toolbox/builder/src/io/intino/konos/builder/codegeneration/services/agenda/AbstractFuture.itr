@@ -7,7 +7,7 @@ def type(future)
 	import java.util.List;
 	import java.util.Map;
 
-	import static  $package+validPackage.AgendaService.BaseUri;
+	import static $package+validPackage.AgendaService.BaseUri;
 
 	public abstract class Abstract$name+FirstUpperCase {
 		protected $name+FirstUpperCase~Schema schema;
@@ -20,7 +20,7 @@ def type(future)
 			return this.schema;
 		}
 
-		$option+methods...[$NL$NL]
+		[$option+methods...[$NL$NL]]
 
 		public void timeout() {
 			onTimeout($parameter+call...[,]);
@@ -28,9 +28,9 @@ def type(future)
 
 		protected abstract void onTimeout($parameter+signature...[,]);
 
-		$parameter+getter...[$NL$NL]
+		$[parameter+getter...[$NL$NL]]
 
-		$option+optionGetter...[$NL$NL]
+		[$option+optionGetter...[$NL$NL]]
 
 		public URI uri() {
 			if (schema == null) Logger.error("Future is not loaded");
@@ -68,7 +68,7 @@ def trigger(methods)
 end
 
 def trigger(getter)
-	protected String $name() {
+	protected $type $name() {
 		return schema.$name();
 	}
 end

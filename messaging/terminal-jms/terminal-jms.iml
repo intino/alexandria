@@ -27,5 +27,13 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:message:4.1.2" level="project" />
     <orderEntry type="library" name="Intino: com.github.luben:zstd-jni:1.5.4-1" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.1.2" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:zit:1.0.1" level="project" />
+    <orderEntry type="module" module-name="jms" />
+    <orderEntry type="library" name="Intino: org.slf4j:slf4j-api:1.7.25" level="project" />
+    <orderEntry type="library" name="Intino: org.fusesource.hawtbuf:hawtbuf:1.11" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:exceptions:2.1.1" level="project" />
+    <orderEntry type="library" name="Intino: jakarta.jms:jakarta.jms-api:2.0.3" level="project" />
+    <orderEntry type="library" name="Intino: org.jmdns:jmdns:3.5.8" level="project" />
+    <orderEntry type="library" name="Intino: org.apache.activemq:activemq-client:5.18.2" level="project" />
   </component>
 </module>
