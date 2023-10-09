@@ -28,7 +28,7 @@ def type(future)
 
 		protected abstract void onTimeout($parameter+signature...[,]);
 
-		$[parameter+getter...[$NL$NL]]
+		[$parameter+getter...[$NL$NL]]
 
 		[$option+optionGetter...[$NL$NL]]
 
