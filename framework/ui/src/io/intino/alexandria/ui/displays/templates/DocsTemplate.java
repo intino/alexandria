@@ -70,6 +70,7 @@ public class DocsTemplate extends AbstractDocsTemplate<AlexandriaUiBox> {
         body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Eventline));
         body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Reel));
         body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.DocumentEditor));
+        body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Kpi));
     }
 
     //    @Override

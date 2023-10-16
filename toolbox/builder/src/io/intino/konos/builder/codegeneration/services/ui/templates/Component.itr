@@ -721,6 +721,10 @@ def type(properties & grouping) trigger(specific)
 	[_path("$path");]
 end
 
+def type(properties & kpi) trigger(specific)
+	[_value($value);]
+end
+
 def type(properties & sorting) trigger(specific)
 	[_path("$path");]
 end

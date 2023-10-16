@@ -487,3 +487,7 @@ Schema DateNavigatorInfo
 	Attribute scale as Text
 	Attribute canNext as Bool
 	Attribute canPrevious as Bool
+
+Schema KpiColors
+	Attribute text as Text
+	Attribute background as Text

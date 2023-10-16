@@ -5,7 +5,6 @@ import io.intino.alexandria.schemas.DocumentEditorCollaboraInfo;
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.components.documenteditor.CollaboraServer;
 import io.intino.alexandria.ui.displays.components.documenteditor.DocumentManager;
-import io.intino.alexandria.ui.displays.components.sign.AutoFirmaServer;
 import io.intino.alexandria.ui.displays.notifiers.DocumentEditorCollaboraNotifier;
 
 public class DocumentEditorCollabora<DN extends DocumentEditorCollaboraNotifier, B extends Box> extends AbstractDocumentEditorCollabora<DN, B> {
@@ -25,6 +24,11 @@ public class DocumentEditorCollabora<DN extends DocumentEditorCollaboraNotifier,
 
 	public DocumentEditorCollabora<DN, B> documentManager(DocumentManager documentManager) {
 		server.documentManager(documentManager);
+		return this;
+	}
+
+	public DocumentEditorCollabora<DN, B> editorUrl(String url) {
+		_editorUrl(url);
 		return this;
 	}
 
