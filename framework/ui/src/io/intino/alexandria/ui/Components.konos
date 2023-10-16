@@ -296,3 +296,11 @@ Component stepper
 Component step
     Notification refresh as Object(StepInfo)
     Request contentRendered
+
+Component Kpi
+    Notification refresh as Text
+    Notification refreshLabel as Text
+    Notification refreshColors as Object(KpiColors)
+    Notification refreshHighlighted as Bool
+
+    Request select

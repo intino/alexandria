@@ -1,5 +1,7 @@
 dsl Konos
 
+use DateNavigator
+use Kpi
 use DocumentEditor
 use DateNavigation
 use Eventline
@@ -91,6 +93,7 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block eventlineExamples as Conditional > TemplateStamp(template=eventlineExamplesMold) eventlineExamplesMold
 			Block reelExamples as Conditional > TemplateStamp(template=reelExamplesMold) reelExamplesMold
 			Block documentEditorExamples as Conditional > TemplateStamp(template=documentEditorExamplesMold) documentEditorExamplesMold
+			Block kpiExamples as Conditional > TemplateStamp(template=kpiExamplesMold) kpiExamplesMold
 
 		Block facets
 			Text(value="Facets", format=h5 underline)

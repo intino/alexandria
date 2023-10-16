@@ -156,7 +156,13 @@ Concept ActionableComponents
 				var word:{CurrentObject Selection} context = CurrentObject
 
 Concept:{0..1} VisualizationComponents
-	Concept KPI extends Component
+	Concept Kpi extends Component
+		var word:{Square Circle} mode = Circle
+		var string label = empty
+		var string unit = ""
+		var string backgroundColor = "transparent"
+		var string textColor = "black"
+		var double value
 
 	Concept Header extends Component
 		var word:{Fixed Absolute Sticky Static Relative} position = Relative

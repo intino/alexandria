@@ -1,0 +1,20 @@
+dsl Konos
+
+use Theme
+
+Template(layout=Vertical, spacing=DP8) kpiExamplesMold
+
+	Block(layout=Horizontal Wrap, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Kpi(label="Incidents", value=100, backgroundColor="#ddd", textColor="#F68A1C", format=doubleAirLeft doubleAirRight) kpi1
+				Kpi(label="CPU load", value=80, backgroundColor="#2095D6", textColor="white", unit="%", format=doubleAirLeft doubleAirRight, mode=Square) kpi2
+				Kpi(label="Free disk space", value=80, backgroundColor="#D84646", textColor="white", unit="GB", format=doubleAirLeft doubleAirRight) kpi3
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Kpi(label\="Incidents", value\=100, backgroundColor\="#ddd", textColor\="#F68A1C", format\=doubleAirLeft doubleAirRight) kpi1
+						Kpi(label\="CPU load", value\=80, backgroundColor\="#2095D6", textColor\="white", unit\="%", format\=doubleAirLeft doubleAirRight, mode\=Square) kpi2
+						Kpi(label\="Free disk space", value\=80, backgroundColor\="#D84646", textColor\="white", unit\="GB", format\=doubleAirLeft doubleAirRight) kpi3
+						=========

@@ -3,7 +3,6 @@ package io.intino.alexandria.ui.displays.templates;
 import io.intino.alexandria.schemas.Widget;
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.EventsDisplay;
-import io.intino.alexandria.ui.displays.components.DocumentEditor;
 import io.intino.alexandria.ui.documentation.model.ActionableWidget;
 import io.intino.alexandria.ui.documentation.model.actionable.DownloadSelectionWidget;
 import io.intino.alexandria.ui.documentation.model.actionable.DownloadWidget;
@@ -82,6 +81,7 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
         eventlineExamples.visible(widget instanceof EventlineWidget);
         reelExamples.visible(widget instanceof ReelWidget);
         documentEditorExamples.visible(widget instanceof DocumentEditorWidget);
+        kpiExamples.visible(widget instanceof KpiWidget);
     }
 
     private void updateInfo() {

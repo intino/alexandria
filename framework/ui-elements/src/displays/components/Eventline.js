@@ -367,7 +367,7 @@ class Eventline extends AbstractEventline {
                     <Typography onClick={this.handleSelectEvent.bind(this, group, event)}>{event.label}</Typography>
                     {(event.comments != null && event.comments != "") &&
                         <Typography style={{color:'#888'}}>
-                            <div dangerouslySetInnerHTML={{__html: event.comments.replace("\n", "<br/>")}}></div>
+                            <div dangerouslySetInnerHTML={{__html: event.comments.replaceAll("\n", "<br/>")}}></div>
                         </Typography>
                     }
                     {this.renderEventOperations(group, event)}
