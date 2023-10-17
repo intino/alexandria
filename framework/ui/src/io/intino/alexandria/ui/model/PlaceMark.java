@@ -6,13 +6,14 @@ public class PlaceMark<O> {
 	private O item;
 	private String label;
 	private URL icon = null;
+	private int weight = 1;
 	private Geometry position;
 
 	public O item() {
 		return item;
 	}
 
-	public PlaceMark item(O item) {
+	public PlaceMark<O> item(O item) {
 		this.item = item;
 		return this;
 	}
@@ -21,7 +22,7 @@ public class PlaceMark<O> {
 		return label;
 	}
 
-	public PlaceMark label(String label) {
+	public PlaceMark<O> label(String label) {
 		this.label = label;
 		return this;
 	}
@@ -30,7 +31,7 @@ public class PlaceMark<O> {
 		return icon;
 	}
 
-	public PlaceMark icon(URL icon) {
+	public PlaceMark<O> icon(URL icon) {
 		this.icon = icon;
 		return this;
 	}
@@ -39,13 +40,22 @@ public class PlaceMark<O> {
 		return position;
 	}
 
-	public PlaceMark location(Geometry location) {
+	public PlaceMark<O> location(Geometry location) {
 		this.position = location;
 		return this;
 	}
 
-	public static PlaceMark build(String label, String location) {
-		PlaceMark result = new PlaceMark();
+	public int weight() {
+		return weight;
+	}
+
+	public PlaceMark<O> weight(int weight) {
+		this.weight = weight;
+		return this;
+	}
+
+	public static PlaceMark<?> build(String label, String location) {
+		PlaceMark<?> result = new PlaceMark<>();
 		result.label(label);
 		result.location(location != null ? Geometry.fromWkt(location) : null);
 		return result;

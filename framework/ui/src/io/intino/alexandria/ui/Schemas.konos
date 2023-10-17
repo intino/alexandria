@@ -51,6 +51,7 @@ Schema PlaceMark
 	Attribute label as Text
 	Attribute icon as Text
 	Attribute pos as LongInteger
+	Attribute weight as Integer
 
 Schema Geometry
 	Attribute type as Word("Point" "Polyline" "Polygon")

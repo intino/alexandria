@@ -60,7 +60,7 @@ export class EmbeddedMap extends AbstractMap {
 				    center={GeoBehavior.center(this)}
 				    onLoad={this.registerMap.bind(this)}
 				    options={this.mapOptions()}>
-					<div style={{height: height - 100, width: '100%'}}/>
+					<div style={{height: height, width: '100%'}}/>
 					{this.renderLayer()}
 				</GoogleMap>
 			</div>
@@ -82,7 +82,12 @@ export class EmbeddedMap extends AbstractMap {
 
 	renderLayer = () => {
 		if (this.isCluster()) return this.renderCluster();
-		else if (this.isHeatMap()) return this.renderHeatmap();
+		else if (this.isHeatMap()) {
+		    const result = [];
+		    result.push(this.renderHeatmap());
+		    if (this.isSelectable()) result.push(this.renderPlaceMarks());
+		    return result;
+		}
 		else if (this.isKml()) return this.renderKml();
 		return this.renderPlaceMarks();
 	};
@@ -101,7 +106,7 @@ export class EmbeddedMap extends AbstractMap {
 	};
 
 	renderHeatmap = () => {
-		const data = this.state.placeMarks.map(pm => GeometryUtil.firstPoint(pm.location));
+	    const data = this.state.placeMarks.map(pm => { return { location: GeometryUtil.firstPoint(pm.location), weight: pm.weight }; });
 		return (<HeatmapLayer data={data}/>);
 	};
 
@@ -155,6 +160,10 @@ export class EmbeddedMap extends AbstractMap {
 
 	isKml = () => {
 		return this.props.type != null && this.props.type.toLowerCase() === "kml";
+	};
+
+	isSelectable = () => {
+	    return this.props.selection != null;
 	};
 
 	setup = (info) => {
