@@ -325,7 +325,7 @@ public class Datasources {
 
 	private static <O> PlaceMark<O> placeMarkOf(Object item, int pos, io.intino.alexandria.ui.displays.components.Map.Type type) {
 		Geometry location = locations[pos] != null ? locations[pos] : point(31.76672014, -19.48827855);
-		return new PlaceMark<>().item(item).location(location).label(String.valueOf(pos+1));
+		return (PlaceMark<O>) new PlaceMark<>().item(item).location(location).label(String.valueOf(pos+1)).weight(1);
 	}
 
 	private static MapDatasource<Person> locatedPersonDatasource(List<Person> population, io.intino.alexandria.ui.displays.components.Map.Type type) {

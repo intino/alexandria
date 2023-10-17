@@ -26,6 +26,7 @@ public class PlaceMarkBuilder {
 	public static <Item> PlaceMark build(io.intino.alexandria.ui.model.PlaceMark<Item> placeMark, URL baseAssetUrl) {
 		io.intino.alexandria.schemas.PlaceMark result = new PlaceMark().location(locationOf(placeMark)).label(placeMark.label());
 		if (placeMark.icon() != null) result.icon(Asset.toResource(baseAssetUrl, placeMark.icon()).toUrl().toString());
+		result.weight(placeMark.weight());
 		return result;
 	}
 
