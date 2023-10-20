@@ -11,8 +11,13 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -31,11 +36,29 @@ public class ResourceStore_ {
 		events.forEach(System.out::println);
 
 		// Read resource
-		ResourceEvent event = events.get(1);
+		ResourceEvent event = events.get(0);
 		try(InputStream inputStream = event.resource().open()) {
 			// Open the resource on demand
 			System.out.println("\n");
 		}
+
+		int[] hashes = new int[events.size() * 10];
+		var threadPool = Executors.newCachedThreadPool();
+		for(int i = 0;i < hashes.length;i++) {
+			var e = events.get(i % events.size());
+			int index = i;
+			threadPool.execute(() -> {
+				try(InputStream inputStream = e.resource().open()) {
+					// Open the resource on demand
+					hashes[index] = inputStream.readAllBytes().hashCode();
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+			});
+		}
+		waitFor(threadPool);
+
+		System.out.println(Arrays.toString(hashes));
 
 		// Find directly by REI (Resource Event Identifier)
 		//Optional<ResourceEvent> result = resources.find("<type>/<ss>/<ts>/<resource-name>");
@@ -44,6 +67,15 @@ public class ResourceStore_ {
 		if(result.isEmpty()) return;
 
 		System.out.println("findByREI = " + result.get().resource().safeReader().ofEmpty().readAsString());
+	}
+
+	private static void waitFor(ExecutorService threadPool) {
+		threadPool.shutdown();
+		try {
+			threadPool.awaitTermination(5, TimeUnit.MINUTES);
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private static void writeResources() throws IOException {
@@ -56,8 +88,11 @@ public class ResourceStore_ {
 		);
 
 		File session = new File("temp/resources_20230101_session.zip");
+		session.getParentFile().mkdirs();
 		EventWriter.write(session, events.stream());
 
-		Files.move(session.toPath(), new File("temp/datalake/resources/Log/ss/20230101.zip").toPath(), REPLACE_EXISTING);
+		File file = new File("temp/datalake/resources/Log/ss/20230101.zip");
+		file.getParentFile().mkdirs();
+		Files.move(session.toPath(), file.toPath(), REPLACE_EXISTING);
 	}
 }

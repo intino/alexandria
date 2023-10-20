@@ -1,8 +1,8 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "7.0.5") datalake
+Artifact("io.intino.alexandria", "7.0.6") datalake
 	Imports
-		Compile("io.intino.alexandria", "event", "5.0.5")
+		Compile("io.intino.alexandria", "event", "5.0.6")
 		Test("junit", "junit", "4.13.2")
 		Test("org.assertj", "assertj-core", "3.24.2")
 		Test("commons-io", "commons-io", "2.9.0")
