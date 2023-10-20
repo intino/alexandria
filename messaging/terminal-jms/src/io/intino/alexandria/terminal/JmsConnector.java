@@ -42,8 +42,8 @@ public class JmsConnector implements Connector {
 	private Session session;
 	private ScheduledExecutorService scheduler;
 	private final ExecutorService eventDispatcher;
+	private final ExecutorService messageDispatcher;
 	private TemporaryQueue temporaryQueue;
-	private final ExecutorService publisherThread = Executors.newSingleThreadExecutor(r -> new Thread(r, "JMSConnector-Publisher"));
 
 	public JmsConnector(ConnectionConfig config, File outboxDirectory) {
 		this(config, false, outboxDirectory);
@@ -62,7 +62,8 @@ public class JmsConnector implements Connector {
 			this.eventOutBox = new EventOutBox(new File(outBoxDirectory, "events"));
 			this.messageOutBox = new MessageOutBox(new File(outBoxDirectory, "requests"));
 		}
-		eventDispatcher = Executors.newSingleThreadExecutor(new NamedThreadFactory("jms-connector"));
+		eventDispatcher = Executors.newSingleThreadExecutor(new NamedThreadFactory("JmsConnector-events"));
+		messageDispatcher = Executors.newSingleThreadExecutor(r -> new Thread(r, "JmsConnector-messages"));
 	}
 
 	@Override
@@ -340,8 +341,8 @@ public class JmsConnector implements Connector {
 		try {
 			consumers.values().forEach(JmsConsumer::close);
 			consumers.clear();
-			publisherThread.shutdown();
-			publisherThread.awaitTermination(1, MINUTES);
+			messageDispatcher.shutdown();
+			messageDispatcher.awaitTermination(1, MINUTES);
 			producers.values().forEach(JmsProducer::close);
 			producers.clear();
 			if (session != null) session.close();
@@ -452,7 +453,7 @@ public class JmsConnector implements Connector {
 
 	private boolean sendMessage(JmsProducer producer, javax.jms.Message message, int expirationTimeInSeconds) {
 		try {
-			Future<Boolean> result = publisherThread.submit(() -> producer.produce(message, expirationTimeInSeconds));
+			Future<Boolean> result = messageDispatcher.submit(() -> producer.produce(message, expirationTimeInSeconds));
 			return result.get(1, SECONDS);
 		} catch (InterruptedException | TimeoutException ignored) {
 		} catch (ExecutionException e) {
