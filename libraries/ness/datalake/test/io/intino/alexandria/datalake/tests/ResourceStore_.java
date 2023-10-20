@@ -11,8 +11,13 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -37,6 +42,24 @@ public class ResourceStore_ {
 			System.out.println("\n");
 		}
 
+		int[] hashes = new int[events.size() * 10];
+		var threadPool = Executors.newCachedThreadPool();
+		for(int i = 0;i < hashes.length;i++) {
+			var e = events.get(i % events.size());
+			int index = i;
+			threadPool.execute(() -> {
+				try(InputStream inputStream = e.resource().open()) {
+					// Open the resource on demand
+					hashes[index] = inputStream.readAllBytes().hashCode();
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+			});
+		}
+		waitFor(threadPool);
+
+		System.out.println(Arrays.toString(hashes));
+
 		// Find directly by REI (Resource Event Identifier)
 		//Optional<ResourceEvent> result = resources.find("<type>/<ss>/<ts>/<resource-name>");
 		Optional<ResourceEvent> result = resources.find(event.getREI());
@@ -44,6 +67,15 @@ public class ResourceStore_ {
 		if(result.isEmpty()) return;
 
 		System.out.println("findByREI = " + result.get().resource().safeReader().ofEmpty().readAsString());
+	}
+
+	private static void waitFor(ExecutorService threadPool) {
+		threadPool.shutdown();
+		try {
+			threadPool.awaitTermination(5, TimeUnit.MINUTES);
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private static void writeResources() throws IOException {
