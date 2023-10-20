@@ -8,15 +8,15 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
-class ResourceHelper {
+public class ResourceHelper {
 
-	static final String METADATA_TYPE = "$type";
-	static final String METADATA_SS = "$ss";
-	static final String METADATA_TS = "$ts";
-	static final String METADATA_REI = "$rei";
-	static final String METADATA_FILE = "$file";
+	public static final String METADATA_TYPE = "$type";
+	public static final String METADATA_SS = "$ss";
+	public static final String METADATA_TS = "$ts";
+	public static final String METADATA_REI = "$rei";
+	public static final String METADATA_FILE = "$file";
 
-	static String serializeMetadata(ResourceEvent event, File file) {
+	public static String serializeMetadata(ResourceEvent event, File file) {
 		Map<String, String> metadata = new HashMap<>(event.resource().metadata().properties());
 		metadata.put(METADATA_TYPE, event.type());
 		metadata.put(METADATA_SS, event.ss());
@@ -26,8 +26,7 @@ class ResourceHelper {
 		return Json.toJson(metadata);
 	}
 
-	@SuppressWarnings("unchecked")
-	static Map<String, String> deserializeMetadata(String content) {
+	public static Map<String, String> deserializeMetadata(String content) {
 		try {
 			return Json.fromJson(content, asMap);
 		} catch (com.google.gson.JsonSyntaxException e) {
@@ -35,6 +34,5 @@ class ResourceHelper {
 		}
 	}
 
-	public static final Type asMap = new TypeToken<Map<String, String>>() {
-	}.getType();
+	public static final Type asMap = new TypeToken<Map<String, String>>() {}.getType();
 }

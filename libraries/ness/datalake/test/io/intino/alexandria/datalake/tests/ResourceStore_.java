@@ -31,7 +31,7 @@ public class ResourceStore_ {
 		events.forEach(System.out::println);
 
 		// Read resource
-		ResourceEvent event = events.get(1);
+		ResourceEvent event = events.get(0);
 		try(InputStream inputStream = event.resource().open()) {
 			// Open the resource on demand
 			System.out.println("\n");
@@ -56,8 +56,11 @@ public class ResourceStore_ {
 		);
 
 		File session = new File("temp/resources_20230101_session.zip");
+		session.getParentFile().mkdirs();
 		EventWriter.write(session, events.stream());
 
-		Files.move(session.toPath(), new File("temp/datalake/resources/Log/ss/20230101.zip").toPath(), REPLACE_EXISTING);
+		File file = new File("temp/datalake/resources/Log/ss/20230101.zip");
+		file.getParentFile().mkdirs();
+		Files.move(session.toPath(), file.toPath(), REPLACE_EXISTING);
 	}
 }
