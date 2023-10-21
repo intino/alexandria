@@ -289,14 +289,15 @@ public class JmsConnector implements Connector {
 			if (this.temporaryQueue == null) temporaryQueue = session.createTemporaryQueue();
 			message.setJMSReplyTo(temporaryQueue);
 			message.setJMSCorrelationID(createRandomString());
-			javax.jms.MessageConsumer consumer = session.createConsumer(temporaryQueue);
-			CompletableFuture<javax.jms.Message> future = new CompletableFuture<>();
-			consumer.setMessageListener(future::complete);
-			sendMessage(producer, message, 100);
-			producer.close();
-			Message response = waitFor(future, timeout, timeUnit);
-			consumer.close();
-			return response;
+			try (javax.jms.MessageConsumer consumer = session.createConsumer(temporaryQueue)) {
+				CompletableFuture<javax.jms.Message> future = new CompletableFuture<>();
+				consumer.setMessageListener(future::complete);
+				sendMessage(producer, message, 100);
+				producer.close();
+				Message response = waitFor(future, timeout, timeUnit);
+				consumer.close();
+				return response;
+			}
 		} catch (JMSException | ExecutionException | InterruptedException e) {
 			if (e.getMessage() == null) Logger.error(e);
 			else Logger.error(e.getMessage());
