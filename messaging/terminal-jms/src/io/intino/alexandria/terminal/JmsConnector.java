@@ -297,8 +297,11 @@ public class JmsConnector implements Connector {
 			Message response = waitFor(future, timeout, timeUnit);
 			consumer.close();
 			return response;
-		} catch (JMSException | ExecutionException | InterruptedException | TimeoutException e) {
-			Logger.error(e.getMessage());
+		} catch (JMSException | ExecutionException | InterruptedException e) {
+			if (e.getMessage() == null) Logger.error(e);
+			else Logger.error(e.getMessage());
+		} catch (TimeoutException e) {
+			Logger.warn("Timeout receiving response of jms query");
 		}
 		return null;
 	}
