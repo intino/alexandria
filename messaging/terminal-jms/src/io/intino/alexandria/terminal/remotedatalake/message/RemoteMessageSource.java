@@ -31,6 +31,11 @@ public class RemoteMessageSource implements Source<MessageEvent> {
 	}
 
 	@Override
+	public Tub<MessageEvent> tub(Timetag timetag) {
+		return on(timetag);
+	}
+
+	@Override
 	public Stream<Tub<MessageEvent>> tubs() {
 		return tubs.stream()
 				.map(t -> new RemoteMessageTub(accessor, tank, source, t));

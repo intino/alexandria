@@ -94,24 +94,39 @@ public class ResourceEvent implements Event {
 		return new ResourceEvent(type, ss, resource).ts(Instant.parse(ts));
 	}
 
-	// TODO: TS is in milliseconds precision. This could lead to collisions between events with same ts in ms.
+	/**
+	 * <p>Represents an id that uniquely identifies a resource event in a datalake. It has the form:</p>
+	 *
+	 * <p><b>tank</b>/<b>ss</b>/<b>ts-epoch-millis</b>/<b>resource-name</b></p>
+	 *
+	 * */
 	public static class REI {
+
 		public static final String SEP = "/";
 		public static final String ID_SEP = "#";
+		public static final String NAME_SEP = "$";
 		public static final int SIZE = 4;
 
-		private final String[] components;
-
-		public REI(String rei) {
-			this(rei.split(SEP, SIZE));
+		public static REI of(String rei) {
+			try {
+				return of(rei.split(SEP, SIZE));
+			} catch (Exception e) {
+				return of(rei.split(ID_SEP, SIZE)); // Compatibility with old versions
+			}
 		}
 
-		public REI(String[] components) {
+		public static REI of(String[] components) {
 			if(components.length != 4) throw new MalformedREIException("REI must have 4 components: type, ss, ts and resource name");
 			if(components[0] == null || components[0].isBlank()) throw new MalformedREIException("type in REI cannot be null nor blank");
 			if(components[1] == null || components[1].isBlank()) throw new MalformedREIException("ss in REI cannot be null nor blank");
 			if(components[2] == null || components[2].isBlank() || isNotAValidTs(components[2])) throw new MalformedREIException("ts in REI is not a valid ts");
 			if(components[3] == null || components[3].isBlank()) throw new MalformedREIException("resource name in REI cannot be null nor blank");
+			return new REI(components);
+		}
+
+		private final String[] components;
+
+		private REI(String[] components) {
 			this.components = components;
 		}
 
@@ -139,11 +154,12 @@ public class ResourceEvent implements Event {
 			return components[3];
 		}
 
+		/**The id of the resource inside the tub*/
 		public String resourceId() {
-			return tsRaw() + ID_SEP + resourceName();
+			return tsRaw() + ID_SEP + resourceName().replace("/", NAME_SEP);
 		}
 
-		private boolean isNotAValidTs(String ts) {
+		private static boolean isNotAValidTs(String ts) {
 			try {
 				Instant.ofEpochMilli(Long.parseLong(ts));
 				return false;
@@ -167,7 +183,7 @@ public class ResourceEvent implements Event {
 
 		@Override
 		public String toString() {
-			return String.join(ID_SEP, components);
+			return String.join(SEP, components);
 		}
 	}
 

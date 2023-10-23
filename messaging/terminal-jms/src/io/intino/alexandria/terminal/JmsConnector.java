@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 import static io.intino.alexandria.jms.MessageReader.textFrom;
 import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static javax.jms.Session.AUTO_ACKNOWLEDGE;
 import static javax.jms.Session.SESSION_TRANSACTED;
 
@@ -41,6 +42,8 @@ public class JmsConnector implements Connector {
 	private Session session;
 	private ScheduledExecutorService scheduler;
 	private final ExecutorService eventDispatcher;
+	private final ExecutorService messageDispatcher;
+	private TemporaryQueue temporaryQueue;
 
 	public JmsConnector(ConnectionConfig config, File outboxDirectory) {
 		this(config, false, outboxDirectory);
@@ -59,7 +62,8 @@ public class JmsConnector implements Connector {
 			this.eventOutBox = new EventOutBox(new File(outBoxDirectory, "events"));
 			this.messageOutBox = new MessageOutBox(new File(outBoxDirectory, "requests"));
 		}
-		eventDispatcher = Executors.newSingleThreadExecutor(new NamedThreadFactory("jms-connector"));
+		eventDispatcher = Executors.newSingleThreadExecutor(new NamedThreadFactory("JmsConnector-events"));
+		messageDispatcher = Executors.newSingleThreadExecutor(r -> new Thread(r, "JmsConnector-messages"));
 	}
 
 	@Override
@@ -270,31 +274,35 @@ public class JmsConnector implements Connector {
 	}
 
 	@Override
-	public javax.jms.Message requestResponse(String path, javax.jms.Message message) {
+	public synchronized javax.jms.Message requestResponse(String path, javax.jms.Message message) {
 		return requestResponse(path, message, config.defaultTimeoutAmount(), config.defaultTimeoutUnit());
 	}
 
 	@Override
-	public javax.jms.Message requestResponse(String path, javax.jms.Message message, long timeout, TimeUnit timeUnit) {
+	public synchronized javax.jms.Message requestResponse(String path, javax.jms.Message message, long timeout, TimeUnit timeUnit) {
 		if (session == null) {
 			Logger.error("Connection lost. Invalid session");
 			return null;
 		}
 		try {
 			QueueProducer producer = new QueueProducer(session, path);
-			TemporaryQueue temporaryQueue = session.createTemporaryQueue();
+			if (this.temporaryQueue == null) temporaryQueue = session.createTemporaryQueue();
 			message.setJMSReplyTo(temporaryQueue);
 			message.setJMSCorrelationID(createRandomString());
-			javax.jms.MessageConsumer consumer = session.createConsumer(temporaryQueue);
-			CompletableFuture<javax.jms.Message> future = new CompletableFuture<>();
-			consumer.setMessageListener(future::complete);
-			sendMessage(producer, message, 100);
-			producer.close();
-			Message response = waitFor(future, timeout, timeUnit);
-			consumer.close();
-			return response;
-		} catch (JMSException | ExecutionException | InterruptedException | TimeoutException e) {
-			Logger.error(e.getMessage());
+			try (javax.jms.MessageConsumer consumer = session.createConsumer(temporaryQueue)) {
+				CompletableFuture<javax.jms.Message> future = new CompletableFuture<>();
+				consumer.setMessageListener(future::complete);
+				sendMessage(producer, message, 100);
+				producer.close();
+				Message response = waitFor(future, timeout, timeUnit);
+				consumer.close();
+				return response;
+			}
+		} catch (JMSException | ExecutionException | InterruptedException e) {
+			if (e.getMessage() == null) Logger.error(e);
+			else Logger.error(e.getMessage());
+		} catch (TimeoutException e) {
+			Logger.warn("Timeout receiving response of jms query");
 		}
 		return null;
 	}
@@ -337,13 +345,15 @@ public class JmsConnector implements Connector {
 		try {
 			consumers.values().forEach(JmsConsumer::close);
 			consumers.clear();
+			messageDispatcher.shutdown();
+			messageDispatcher.awaitTermination(1, MINUTES);
 			producers.values().forEach(JmsProducer::close);
 			producers.clear();
 			if (session != null) session.close();
 			if (connection != null) connection.close();
 			session = null;
 			connection = null;
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			Logger.error(e);
 		}
 	}
@@ -446,15 +456,14 @@ public class JmsConnector implements Connector {
 	}
 
 	private boolean sendMessage(JmsProducer producer, javax.jms.Message message, int expirationTimeInSeconds) {
-		final boolean[] result = {false};
 		try {
-			Thread thread = new Thread(() -> result[0] = producer.produce(message, expirationTimeInSeconds));
-			thread.start();
-			thread.join(1000);
-			thread.interrupt();
-		} catch (InterruptedException ignored) {
+			Future<Boolean> result = messageDispatcher.submit(() -> producer.produce(message, expirationTimeInSeconds));
+			return result.get(1, SECONDS);
+		} catch (InterruptedException | TimeoutException ignored) {
+		} catch (ExecutionException e) {
+			Logger.error(e);
 		}
-		return result[0];
+		return false;
 	}
 
 	private ConnectionListener connectionListener() {

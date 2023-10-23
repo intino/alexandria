@@ -5,38 +5,65 @@ import io.intino.alexandria.event.EventWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.nio.file.*;
-import java.util.Map;
+import java.io.OutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import static io.intino.alexandria.event.resource.ResourceHelper.serializeMetadata;
+import static io.intino.alexandria.event.resource.ZipResourceReader.METADATA_EXTENSION;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class ResourceEventWriter implements EventWriter<ResourceEvent> {
+
+	private static final String ENTRY_NAME_SEP = "$";
+
+	private final ZipOutputStream zip;
 	private final File file;
 
-	public ResourceEventWriter(File file) {
+	public ResourceEventWriter(File file) throws IOException {
+		this(file, true);
+	}
+
+	public ResourceEventWriter(File file, boolean append) throws IOException {
+		this(IO.open(file, append), file);
+	}
+
+	public ResourceEventWriter(OutputStream outputStream) {
+		this(outputStream, null);
+	}
+
+	public ResourceEventWriter(OutputStream outputStream, File file) {
+		this.zip = new ZipOutputStream(outputStream);
 		this.file = file;
 	}
 
 	@Override
 	public void write(ResourceEvent event) throws IOException {
-		URI uri = URI.create("jar:" + file.toPath().toUri());
-		String entryName = event.getREI().resourceId().replace("/", "$");
-		String entryMetadataName = event.getREI().resourceId().replace("/", "$") + ".metadata";
-		String metadata = serializeMetadata(event, file);
-		try (FileSystem fs = FileSystems.newFileSystem(uri, Map.of("create", "true")); InputStream data = event.resource().stream()) {
-			Path nf = fs.getPath(entryName);
-			Files.write(nf, data.readAllBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
-			nf = fs.getPath(entryMetadataName);
-			Files.writeString(nf, metadata, StandardOpenOption.CREATE);
+		writeResourceEntry(event);
+		writeMetadataEntry(event);
+	}
+
+	private void writeResourceEntry(ResourceEvent event) throws IOException {
+		ZipEntry entry = new ZipEntry(event.getREI().resourceId());
+		zip.putNextEntry(entry);
+		try(InputStream resourceData = event.resource().stream()) {
+			resourceData.transferTo(zip);
 		}
 	}
 
+	private void writeMetadataEntry(ResourceEvent event) throws IOException {
+		ZipEntry entry = new ZipEntry(event.getREI().resourceId() + METADATA_EXTENSION);
+		zip.putNextEntry(entry);
+		zip.write(serializeMetadata(event, file).getBytes(UTF_8));
+	}
+
 	@Override
-	public void flush() {
+	public void flush() throws IOException {
+		zip.flush();
 	}
 
 	@Override
 	public void close() throws IOException {
+		zip.close();
 	}
 }

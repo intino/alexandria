@@ -28,6 +28,12 @@ public class MessageEventSource implements Datalake.Store.Source<MessageEvent> {
 	}
 
 	@Override
+	public Tub<MessageEvent> tub(Timetag timetag) {
+		File file = new File(root, timetag.value() + Message.extension());
+		return file.exists() ? new MessageEventTub(file) : null;
+	}
+
+	@Override
 	public Scale scale() {
 		return Optional.ofNullable(first()).map(Tub::scale).orElse(null);
 	}
