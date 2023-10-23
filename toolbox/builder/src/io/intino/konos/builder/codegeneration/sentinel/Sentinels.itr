@@ -101,6 +101,10 @@ def type(cronTrigger) trigger(job)
 	newTrigger().withIdentity("$name").withSchedule(cronSchedule("$pattern")[.inTimeZone(TimeZone.getTimeZone(ZoneId.of("$timeZone")))]).build()
 end
 
+def type(onBootTrigger) type(delay) trigger(job)
+	newTrigger().startAt(java.util.Date.from(java.time.Instant.now().plus($delay, java.time.temporal.ChronoUnit.MILLIS))).build()
+end
+
 def type(onBootTrigger) trigger(job)
 	newTrigger().startNow().build()
 end

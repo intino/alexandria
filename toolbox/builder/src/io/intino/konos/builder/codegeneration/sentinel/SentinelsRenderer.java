@@ -87,9 +87,11 @@ public class SentinelsRenderer extends Renderer {
 			jobFrames.add(jobFrameBuilder.toFrame());
 		}
 		if (task.i$(Sentinel.BootListener.class)) {
-			final FrameBuilder jobFrameBuilder = new FrameBuilder("onBootTrigger", "job", "Boot" + task.getClass().getSimpleName())
+			final FrameBuilder fb = new FrameBuilder("onBootTrigger", "job", "Boot" + task.getClass().getSimpleName())
 					.add("name", task.core$().id());
-			jobFrames.add(jobFrameBuilder.toFrame());
+			if (task.asSentinel().asBootListener().delay() > 0)
+				fb.add("delay").add("delay", task.asSentinel().asBootListener().delay());
+			jobFrames.add(fb.toFrame());
 		}
 		builder.add("job", jobFrames.toArray(new Frame[0]));
 		return builder.toFrame();

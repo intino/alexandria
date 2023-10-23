@@ -19,6 +19,7 @@ public class SentinelsTemplate extends Template {
 			rule().condition((type("path")), (trigger("format"))).output(literal("\"")).output(mark("name")).output(literal("\"")).output(expression().output(mark("custom").multiple(""))),
 			rule().condition((trigger("fullevent"))).output(literal("io.intino.alexandria.scheduler.directory.DirectorySentinel.Event.")).output(mark("")),
 			rule().condition((type("cronTrigger")), (trigger("job"))).output(literal("newTrigger().withIdentity(\"")).output(mark("name")).output(literal("\").withSchedule(cronSchedule(\"")).output(mark("pattern")).output(literal("\")")).output(expression().output(literal(".inTimeZone(TimeZone.getTimeZone(ZoneId.of(\"")).output(mark("timeZone")).output(literal("\")))"))).output(literal(").build()")),
+				rule().condition((type("onBootTrigger")), (type("delay")), (trigger("job"))).output(literal("newTrigger().startAt(java.util.Date.from(java.time.Instant.now().plus(")).output(mark("delay")).output(literal(", java.time.temporal.ChronoUnit.MILLIS))).build()")),
 			rule().condition((type("onBootTrigger")), (trigger("job"))).output(literal("newTrigger().startNow().build()"))
 		);
 	}
