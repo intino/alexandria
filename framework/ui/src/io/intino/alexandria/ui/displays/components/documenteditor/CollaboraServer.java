@@ -7,8 +7,6 @@ import io.intino.alexandria.ui.spark.UISparkManager;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.HashSet;
-import java.util.Set;
 
 public class CollaboraServer {
 	private final AlexandriaUiBox box;
@@ -50,14 +48,14 @@ public class CollaboraServer {
 	}
 
 	private static final String InfoTemplate = "{\"BaseFileName\":\"%s\",\"OwnerId\":\"me\",\"Size\":%d,\"UserId\":\"%s\",\"Version\":\"1\"," +
-											   "\"UserCanWrite\":true,\"ReadOnly\":false,\"SupportsLocks\":false,\"SupportsUpdate\":true," +
+											   "\"UserCanWrite\":%b,\"ReadOnly\":%b,\"SupportsLocks\":false,\"SupportsUpdate\":%b," +
 										  	   "\"UserCanNotWriteRelative\":true,\"UserFriendlyName\":\"%s\"}";
 	private void get(UISparkManager manager) {
 		if (!canAccess(manager)) return;
 		String documentId = manager.fromPath("documentId");
 		DocumentManager.DocumentInfo info = documentManager.info(documentId);
 		if (info == null) return;
-		manager.write(String.format(InfoTemplate, info.id(), 0, info.author(), info.name()));
+		manager.write(String.format(InfoTemplate, info.id(), 0, info.author(), !info.readonly(), info.readonly(), !info.readonly(), info.name()));
 	}
 
 	private void load(UISparkManager manager) {

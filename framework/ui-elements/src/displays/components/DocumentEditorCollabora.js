@@ -38,6 +38,7 @@ class DocumentEditorCollabora extends AbstractDocumentEditorCollabora {
                 <form id={formId} name={formId} target={frameId} action={action} method="post">
                     <input name="access_token" value={accessToken} type="hidden" />
                     <input name="access_token_ttl" value="31536000" type="hidden" />
+                    <input name="ui_defaults" value="UIMode=compact;TextSidebar=false;TextRuler=false;TextStatusbar=false;" type="hidden"/>
                 </form>
                 <span id={holderId}></span>
 	        </div>
