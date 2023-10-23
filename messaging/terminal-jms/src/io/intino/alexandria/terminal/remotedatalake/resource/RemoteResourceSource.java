@@ -31,6 +31,11 @@ public class RemoteResourceSource implements Source<ResourceEvent> {
 	}
 
 	@Override
+	public Tub<ResourceEvent> tub(Timetag timetag) {
+		return on(timetag);
+	}
+
+	@Override
 	public Stream<Tub<ResourceEvent>> tubs() {
 		return tubs.stream()
 				.map(t -> new RemoteResourceTub(accessor, tank, source, t));
