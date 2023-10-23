@@ -14,6 +14,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static io.intino.alexandria.event.Event.Format.Measurement;
+
 public class MeasurementEventSource implements Datalake.Store.Source<MeasurementEvent> {
 	private final File root;
 
@@ -24,6 +26,12 @@ public class MeasurementEventSource implements Datalake.Store.Source<Measurement
 	@Override
 	public String name() {
 		return root.getName();
+	}
+
+	@Override
+	public Tub<MeasurementEvent> tub(Timetag timetag) {
+		File file = new File(root, timetag.value() + Measurement.extension());
+		return file.exists() ? new MeasurementEventTub(file) : null;
 	}
 
 	@Override
