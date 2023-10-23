@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Arrays;
@@ -25,10 +26,23 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 public class ResourceStore_ {
 
 	public static void main(String[] args) throws IOException {
+//		test1();
+		test2();
+	}
+
+	private static void test2() {
+		Datalake datalake = new FileDatalake(new File("temp/datalake"));
+		Datalake.ResourceStore resources = datalake.resourceStore();
+//		C:\Users\naits\AppData\Local\Temp\Rar$DRa5736.38091\1695802200183#$var$log$intino$data-hub.log
+		//Log#45-79-45-227-ip-linodeusercontent-com.com.cinepolis:data-hub#1695802200183#/var/log/intino/data-hub.log
+		var event = resources.find(ResourceEvent.REI.of("Log#45-79-45-227-ip-linodeusercontent-com.com.cinepolis_data-hub#1695802200183#/var/log/intino/data-hub.log"));
+		System.out.println(event);
+	}
+
+	private static void test1() throws IOException {
 		writeResources();
 
 		Datalake datalake = new FileDatalake(new File("temp/datalake"));
-
 		Datalake.ResourceStore resources = datalake.resourceStore();
 
 		// List all the events in this store. At this point, NO resources are loaded into memory and no files are opened

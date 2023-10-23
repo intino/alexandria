@@ -8,9 +8,7 @@ import io.intino.alexandria.datalake.Datalake.Store.Tub;
 import io.intino.alexandria.event.resource.ResourceEvent;
 
 import java.io.File;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static io.intino.alexandria.event.Event.Format.Resource;
@@ -26,6 +24,12 @@ public class ResourceEventSource implements Datalake.Store.Source<ResourceEvent>
 	@Override
 	public String name() {
 		return root.getName();
+	}
+
+	@Override
+	public Tub<ResourceEvent> tub(Timetag timetag) {
+		File file = new File(root, timetag.value() + Resource.extension());
+		return file.exists() ? new ResourceEventTub(file) : null;
 	}
 
 	@Override

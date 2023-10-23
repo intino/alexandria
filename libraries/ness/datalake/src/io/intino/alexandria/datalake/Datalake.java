@@ -72,6 +72,9 @@ public interface Datalake {
 		interface Source<T extends Event> {
 			String name();
 
+			default Store.Tub<T> tub(String timetag) {return tub(Timetag.of(timetag));}
+			Store.Tub<T> tub(Timetag timetag);
+
 			Stream<Store.Tub<T>> tubs();
 
 			Store.Tub<T> first();
@@ -113,7 +116,7 @@ public interface Datalake {
 	}
 
 	interface ResourceStore extends Store<ResourceEvent> {
-		default Optional<ResourceEvent> find(String rei) {return find(new ResourceEvent.REI(rei));}
+		default Optional<ResourceEvent> find(String rei) {return find(ResourceEvent.REI.of(rei));}
 		Optional<ResourceEvent> find(ResourceEvent.REI rei);
 	}
 }
