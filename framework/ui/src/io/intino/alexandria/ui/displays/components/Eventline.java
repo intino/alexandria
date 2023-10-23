@@ -226,7 +226,7 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 			page++;
 			result.addAll(load(page));
 		}
-		pageGroups = result.stream().sorted(eventsComparator()).collect(Collectors.toList());
+		pageGroups = result.stream().sorted(eventGroupsComparator()).collect(Collectors.toList());
 		selectedPageGroupIndex = 0;
 		if (!result.isEmpty()) selectedInstant = result.get(0).date();
 		return pageGroups;
@@ -238,7 +238,7 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 			page--;
 			result.addAll(0, load(page));
 		}
-		pageGroups = result.stream().sorted(eventsComparator()).collect(Collectors.toList());
+		pageGroups = result.stream().sorted(eventGroupsComparator()).collect(Collectors.toList());
 		selectedPageGroupIndex = 0;
 		if (!result.isEmpty()) selectedInstant = result.get(0).date();
 		return pageGroups;
@@ -253,7 +253,7 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 		return register(source.events(from, to)).entrySet().stream().map(e -> schemaOf(e, page)).collect(Collectors.toList());
 	}
 
-	private Comparator<EventlineEventGroup> eventsComparator() {
+	private Comparator<EventlineEventGroup> eventGroupsComparator() {
 		if (arrangement == Arrangement.Vertical) return (o1, o2) -> o2.date().compareTo(o1.date());
 		return Comparator.comparing(EventlineEventGroup::date);
 	}
@@ -264,8 +264,13 @@ public class Eventline<DN extends EventlineNotifier, B extends Box> extends Abst
 		result.date(entry.getKey());
 		result.shortDate(ScaleFormatter.shortLabel(entry.getKey(), timezoneOffset(), selectedScale(), language()));
 		result.longDate(ScaleFormatter.label(entry.getKey(), timezoneOffset(), selectedScale(), language()));
-		result.events(entry.getValue().stream().map(this::schemaOf).sorted(Comparator.comparing(EventlineEvent::label)).collect(Collectors.toList()));
+		result.events(entry.getValue().stream().map(this::schemaOf).sorted(eventsComparator()).collect(Collectors.toList()));
 		return result;
+	}
+
+	private Comparator<EventlineEvent> eventsComparator() {
+		if (arrangement == Arrangement.Vertical) return (o1, o2) -> o2.date().compareTo(o1.date());
+		return Comparator.comparing(EventlineEvent::date);
 	}
 
 	private EventlineEvent schemaOf(EventlineDatasource.Event event) {
