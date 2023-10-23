@@ -11,11 +11,13 @@ public interface DocumentManager {
 		private final String id;
 		private final String name;
 		private final String author;
+		private final boolean readonly;
 
-		public DocumentInfo(String id, String name, String author) {
+		public DocumentInfo(String id, String name, String author, boolean readonly) {
 			this.id = id;
 			this.name = name;
 			this.author = author;
+			this.readonly = readonly;
 		}
 
 		public String id() {
@@ -28,6 +30,10 @@ public interface DocumentManager {
 
 		public String author() {
 			return author;
+		}
+
+		public boolean readonly() {
+			return readonly;
 		}
 	}
 }

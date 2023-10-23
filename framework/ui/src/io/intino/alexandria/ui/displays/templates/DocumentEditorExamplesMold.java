@@ -4,7 +4,9 @@ import io.intino.alexandria.UiFrameworkBox;
 import io.intino.alexandria.ui.displays.components.documenteditor.DocumentManager;
 import org.apache.commons.io.FileUtils;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class DocumentEditorExamplesMold extends AbstractDocumentEditorExamplesMold<UiFrameworkBox> {
 
@@ -22,7 +24,7 @@ public class DocumentEditorExamplesMold extends AbstractDocumentEditorExamplesMo
 		documentEditor1.documentManager(new DocumentManager() {
 			@Override
 			public DocumentInfo info(String id) {
-				return new DocumentInfo(id, "Document example", "Example author");
+				return new DocumentInfo(id, "Document example", "Example author", false);
 			}
 
 			@Override
