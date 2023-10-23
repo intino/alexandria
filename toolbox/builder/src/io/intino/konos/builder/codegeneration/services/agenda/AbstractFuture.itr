@@ -68,7 +68,7 @@ def trigger(methods)
 end
 
 def trigger(getter)
-	protected String $name() {
+	protected $type $name() {
 		return schema.$name();
 	}
 end
