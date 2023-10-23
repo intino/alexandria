@@ -31,6 +31,11 @@ public class RemoteMeasurementSource implements Source<MeasurementEvent> {
 	}
 
 	@Override
+	public Tub<MeasurementEvent> tub(Timetag timetag) {
+		return on(timetag);
+	}
+
+	@Override
 	public Stream<Tub<MeasurementEvent>> tubs() {
 		return tubs.stream()
 				.map(t -> new RemoteMeasurementTub(accessor, tank, source, t));
