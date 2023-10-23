@@ -278,6 +278,20 @@ def trigger(argIndex)
 	params$[$index]
 end
 
+def type(Boolean) trigger(test)
+	$name.test(Boolean.valueOf(f.getName().split("##")$[$index]))
+end
+
+def type(Double) trigger(test)
+	$name.test(Double.parseDouble(f.getName().split("##")$[$index]))
+end
+
+
+def type(Integer) trigger(test)
+	$name.test(Integer.parseInt(f.getName().split("##")$[$index]))
+end
+
+
 def trigger(test)
 	$name.test(f.getName().split("##")$[$index])
 end

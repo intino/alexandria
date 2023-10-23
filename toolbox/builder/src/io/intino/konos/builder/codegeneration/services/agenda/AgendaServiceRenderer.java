@@ -74,7 +74,7 @@ public class AgendaServiceRenderer extends Renderer {
 
 	private Frame frameOf(Parameter param, int index) {
 		String innerPackage = param.isObject() && param.asObject().isComponent() ? String.join(".", packageName(), "schemas.") : "";
-		final FrameBuilder builder = new FrameBuilder("parameter")
+		final FrameBuilder builder = new FrameBuilder("parameter", param.asType().type())
 				.add("index", index)
 				.add("name", param.name$());
 		if (param.isWord()) builder.add("type", "java.lang.String");
