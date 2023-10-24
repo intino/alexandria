@@ -20,7 +20,10 @@ public class KpiRenderer extends ComponentRenderer<VisualizationComponents.Kpi> 
 		properties.add("unit", element.unit());
 		properties.add("backgroundColor", element.backgroundColor());
 		properties.add("textColor", element.textColor());
+		properties.add("highlightedColor", element.highlightedColor());
 		properties.add("value", element.value());
+		properties.add("size", element.size().name());
+		properties.add("textPosition", element.textPosition().name());
 		return properties;
 	}
 
