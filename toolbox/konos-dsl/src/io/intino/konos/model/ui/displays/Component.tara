@@ -162,7 +162,10 @@ Concept:{0..1} VisualizationComponents
 		var string unit = ""
 		var string backgroundColor = "transparent"
 		var string textColor = "black"
+		var string highlightedColor = "black"
 		var double value
+		var word:{Small Medium Large} size = Small
+		var word:{Inside Outside} textPosition = Outside
 
 	Concept Header extends Component
 		var word:{Fixed Absolute Sticky Static Relative} position = Relative

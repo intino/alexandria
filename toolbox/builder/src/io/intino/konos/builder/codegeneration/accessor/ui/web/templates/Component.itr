@@ -87,7 +87,7 @@ def type(properties & signtext) trigger(specific)
 end
 
 def type(properties & kpi) trigger(specific)
-	[ mode="$mode"][ unit="$unit"][ textColor="$textColor"][ backgroundColor="$backgroundColor"][ value="$value"]
+	[ mode="$mode"][ unit="$unit"][ textColor="$textColor"][ backgroundColor="$backgroundColor"][ highlightedColor="$highlightedColor"][ value="$value"][ size="$size"][ textPosition="$textPosition"]
 end
 
 def type(properties & template) trigger(specific)
