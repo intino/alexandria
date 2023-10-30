@@ -23,7 +23,6 @@ def type(box)
 		[$service+field...[$NL]]
 		[$connector+field]
 		[$terminal+field]
-		[$datalake+field]
 		[$sentinel+field]
 		[$workflow+field]
 		[protected Map<String, Soul> uiSouls = new java.util.HashMap<>()$hasUi+hideUi]
@@ -41,7 +40,6 @@ def type(box)
 			[$parent+empty?initJavaLogger();]
 			[$connector+setup]
 			[$service+setup...[$NL]]
-			[$datalake+setup]
 			[$terminal+setup]
 		}
 
@@ -93,16 +91,15 @@ def type(box)
 		@Override
 		public void startServices() {
 			initUI();
+			initAgenda();
 			initRestServices();
 			initSoapServices();
 			initJmxServices();
-			initDatalake();
 			initTerminal();
 			initMessagingServices();
 			initSentinels();
 			initSlackBots();
 			initWorkflow();
-			initAgenda();
 			initCli();
 		}
 
@@ -115,8 +112,6 @@ def type(box)
 		[$hasUi+authService]
 
 		[$terminal+getter]
-
-		[$datalake+getter]
 
 		[$sentinel+getter...[$NL$NL]]
 
@@ -151,10 +146,6 @@ def type(box)
 		}
 
 		[$hasUi+translatorServiceInitialization]
-
-		protected void initDatalake() {
-			[$datalake+init]
-		}
 
 		protected void initConnector() {
 			[$connector+init]
@@ -208,10 +199,6 @@ def type(logger) trigger(logger)
 	io.intino.alexandria.logger4j.Logger.init();
 end
 
-def type(datalake) trigger(import)
-	import io.intino.alexandria.datalake.Datalake;
-end
-
 def type(connector) trigger(import)
 	import io.intino.alexandria.terminal.Connector;
 end
@@ -244,15 +231,6 @@ end
 
 def type(service & soap) trigger(setup)
 	[if($parameter != null && !$parameter.isEmpty()) ]io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/");
-end
-
-
-def type(datalake & mirror) trigger(setup)
-	this.datalake = new Datalake(new java.io.File($path+parameter)[, $parameter...[, ]]);
-end
-
-def type(datalake) trigger(setup)
-	this.datalake = new io.intino.alexandria.datalake.file.FileDatalake(new java.io.File($path+parameter));
 end
 
 def type(terminal) trigger(setup)
@@ -329,10 +307,6 @@ def type(workflow) trigger(init)
 	this.workflow = new $package.bpm.Workflow(($box+SnakeCaseToCamelCase+FirstUpperCase~Box)this[, $parameter]);
 end
 
-def type(datalake & mirror) trigger(init)
-	this.datalake.init();
-end
-
 def type(connector) trigger(init)
 	if (!(this.connector instanceof io.intino.alexandria.terminal.JmsConnector) || ((io.intino.alexandria.terminal.JmsConnector) this.connector).connection() != null) return;
 	final io.intino.alexandria.terminal.JmsConnector connector = (io.intino.alexandria.terminal.JmsConnector) this.connector;
@@ -392,14 +366,6 @@ def type(sentinel) trigger(field)
 	private io.intino.alexandria.scheduler.AlexandriaScheduler scheduler = new io.intino.alexandria.scheduler.AlexandriaScheduler();
 end
 
-def type(datalake & mirror) trigger(field)
-	private $package.Datalake datalake;
-end
-
-def type(datalake) trigger(field)
-	protected io.intino.alexandria.datalake.Datalake datalake;
-end
-
 def type(connector) trigger(field)
 	protected io.intino.alexandria.terminal.Connector connector;
 end
@@ -419,12 +385,6 @@ end
 def type(service & messaging) trigger(getter)
 	public $name+SnakeCaseToCamelCase+firstUpperCase~Service $name+SnakeCaseToCamelCase+firstlowerCase() {
 		return $name+SnakeCaseToCamelCase+firstlowerCase;
-	}
-end
-
-def type(datalake) trigger(getter)
-	public io.intino.alexandria.datalake.Datalake datalake() {
-		return this.datalake;
 	}
 end
 
@@ -449,10 +409,6 @@ def type(agenda) trigger(getter)
 	public AgendaService agenda() {
 		return this.agenda;
 	}
-end
-
-def trigger(feeder)
-	io.intino.alexandria.core.Feeders.get().register(new $package+validPackage.datalake.feeders.$name+FirstUpperCase(($box+FirstUpperCase~Box) this));
 end
 
 def type(service & slack) trigger(getter)
@@ -602,9 +558,5 @@ def trigger(hideUi)
 end
 
 def trigger(hideUi)
-	;
-end
-
-def trigger(hideDatalake)
 	;
 end
