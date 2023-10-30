@@ -152,31 +152,31 @@ def type(box)
 
 		[$hasUi+translatorServiceInitialization]
 
-		private void initDatalake() {
+		protected void initDatalake() {
 			[$datalake+init]
 		}
 
-		private void initConnector() {
+		protected void initConnector() {
 			[$connector+init]
 		}
 
-		private void initTerminal() {
+		protected void initTerminal() {
 			[$terminal+init]
 		}
 
-		private void initSentinels() {
+		protected void initSentinels() {
 			[$sentinel+init...[$NL]]
 		}
 
-		private void initWorkflow() {
+		protected void initWorkflow() {
 			[$workflow+init]
 		}
 
-		private void initAgenda() {
+		protected void initAgenda() {
 			$service+agenda...[$NL]
 		}
 
-		private void initCli() {
+		protected void initCli() {
 			$service+cli...[$NL]
 		}
 
@@ -306,6 +306,7 @@ def type(service & messaging) trigger(messaging)
 end
 
 def type(service & agenda) trigger(agenda)
+	if (this.agenda != null) return;
 	this.agenda = new $name+SnakeCaseToCamelCase+firstUpperCase~Service(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 	this.agenda.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), scheduler);
 	io.intino.alexandria.http.AlexandriaSparkBuilder.instance().start();
