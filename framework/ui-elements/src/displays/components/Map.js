@@ -85,7 +85,7 @@ export class EmbeddedMap extends AbstractMap {
 		else if (this.isHeatMap()) {
 		    const result = [];
 		    result.push(this.renderHeatmap());
-		    if (this.isSelectable()) result.push(this.renderPlaceMarks());
+		    if (this.isSelectable()) result.push(this.renderCluster());
 		    return result;
 		}
 		else if (this.isKml()) return this.renderKml();

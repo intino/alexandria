@@ -91,6 +91,7 @@ class SearchBox extends AbstractSearchBox {
 	};
 
 	render() {
+	    if (!this.state.visible) return (<React.Fragment/>);
 		const {classes} = this.props;
 		const placeholder = this.translate(this.props.placeholder != null && this.props.placeholder !== "" ? this.props.placeholder : "Search...");
 		return (
