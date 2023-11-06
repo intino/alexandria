@@ -78,7 +78,7 @@ public class MeasurementEvent implements Event {
 	private Attribute[] attributesOf(String[] fs) {
 		return Arrays.stream(fs)
 				.skip(1)
-				.map(f -> new Attribute(f.split(ATTRIBUTE_SEP)))
+				.map(f -> new Attribute(f.split(NAME_VALUE_SEP)))
 				.toArray(Attribute[]::new);
 	}
 
