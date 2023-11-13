@@ -7,7 +7,6 @@ import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.events.BeforeListener;
 import io.intino.alexandria.ui.displays.events.Event;
 import io.intino.alexandria.ui.displays.events.Listener;
-import io.intino.alexandria.ui.displays.events.actionable.ExecuteListener;
 import io.intino.alexandria.ui.displays.notifiers.LayerNotifier;
 
 import java.util.ArrayList;
@@ -58,6 +57,11 @@ public class Layer<DN extends LayerNotifier, B extends Box> extends AbstractLaye
 
 	public Layer<DN, B> onExecuteOperation(Consumer<String> listener) {
 		this.executeOperationListener = listener;
+		return this;
+	}
+
+	public Layer<DN, B> clearOperations() {
+		customOperationList.clear();
 		return this;
 	}
 
