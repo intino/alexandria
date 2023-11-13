@@ -26,17 +26,16 @@
     <orderEntry type="library" name="Intino: com.github.luben:zstd-jni:1.5.4-1" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.1.2" level="project" />
     <orderEntry type="library" name="Intino: com.google.code.gson:gson:2.10.1" level="project" />
-    <orderEntry type="module" module-name="ingestion" />
     <orderEntry type="library" scope="TEST" name="Intino: org.openjdk.jmh:jmh-core:1.36" level="project" />
     <orderEntry type="library" scope="TEST" name="Intino: org.openjdk.jmh:jmh-generator-annprocess:1.36" level="project" />
     <orderEntry type="library" scope="TEST" name="Intino: commons-io:commons-io:2.13.0" level="project" />
-    <orderEntry type="module" module-name="datalake" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:json:1.2.3" level="project" />
-    <orderEntry type="module" module-name="session" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:datalake:7.0.7" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:event:5.0.7" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:zit:1.0.1" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:ingestion:5.0.5" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:session:2.0.5" level="project" />
+    <orderEntry type="module" module-name="datalake" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:event:5.0.8" level="project" />
+    <orderEntry type="module" module-name="zim" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:datalake:7.0.8" level="project" />
+    <orderEntry type="module" module-name="ingestion" />
+    <orderEntry type="module" module-name="session" />
   </component>
 </module>
