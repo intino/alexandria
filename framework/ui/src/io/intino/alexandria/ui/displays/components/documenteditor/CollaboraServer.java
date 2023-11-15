@@ -2,31 +2,41 @@ package io.intino.alexandria.ui.displays.components.documenteditor;
 
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.DisplayRouteManager;
-import io.intino.alexandria.ui.services.push.UISession;
 import io.intino.alexandria.ui.spark.UISparkManager;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class CollaboraServer {
 	private final AlexandriaUiBox box;
-	private final UISession session;
-	private DocumentManager documentManager;
 
-	private static boolean ready = false;
+	private static final Set<String> AccessTokens = new HashSet<>();
+	private static final Map<String, DocumentManager> DocumentManagers = new HashMap<>();
+	private static boolean Ready = false;
 
 	private static final String GetPattern = "/collaboraserver/document/:documentId";
 	private static final String LoadPattern = "/collaboraserver/document/:documentId/contents";
 	private static final String SavePattern = "/collaboraserver/document/:documentId/contents";
 
-	public CollaboraServer(AlexandriaUiBox box, UISession session) {
+	public CollaboraServer(AlexandriaUiBox box) {
 		this.box = box;
-		this.session = session;
 	}
 
-	public CollaboraServer documentManager(DocumentManager documentManager) {
-		this.documentManager = documentManager;
-		return this;
+	public void documentManager(String accessToken, DocumentManager documentManager) {
+		DocumentManagers.put(accessToken, documentManager);
+	}
+
+	public void register(String accessToken) {
+		AccessTokens.add(accessToken);
+	}
+
+	public void unregister(String accessToken) {
+		AccessTokens.remove(accessToken);
+		DocumentManagers.remove(accessToken);
 	}
 
 	public CollaboraServer listen() {
@@ -35,16 +45,16 @@ public class CollaboraServer {
 		routeManager.get(GetPattern, this::get);
 		routeManager.get(LoadPattern, this::load);
 		routeManager.post(SavePattern, this::save);
-		ready = true;
+		Ready = true;
 		return this;
 	}
 
-	public String url(String documentId) {
-		return session.browser().baseUrl() + GetPattern.replace(":documentId", documentId);
+	public String url(String baseUrl, String documentId) {
+		return baseUrl + GetPattern.replace(":documentId", documentId);
 	}
 
 	private boolean listening() {
-		return ready;
+		return Ready;
 	}
 
 	private static final String InfoTemplate = "{\"BaseFileName\":\"%s\",\"OwnerId\":\"me\",\"Size\":%d,\"UserId\":\"%s\",\"Version\":\"1\"," +
@@ -52,31 +62,41 @@ public class CollaboraServer {
 										  	   "\"UserCanNotWriteRelative\":true,\"UserFriendlyName\":\"%s\"}";
 	private void get(UISparkManager manager) {
 		if (!canAccess(manager)) return;
+		String accessToken = manager.fromQuery("access_token");
+		if (!DocumentManagers.containsKey(accessToken)) return;
 		String documentId = manager.fromPath("documentId");
-		DocumentManager.DocumentInfo info = documentManager.info(documentId);
+		DocumentManager.DocumentInfo info = DocumentManagers.get(accessToken).info(documentId);
 		if (info == null) return;
-		manager.write(String.format(InfoTemplate, info.id(), 0, info.author(), !info.readonly(), info.readonly(), !info.readonly(), info.name()));
+		manager.write(String.format(InfoTemplate, clean(info.id()), 0, clean(info.author()), !info.readonly(), info.readonly(), !info.readonly(), clean(info.name())));
+	}
+
+	private String clean(String value) {
+		return value != null ? value.replace("\"", "\\\"") : value;
 	}
 
 	private void load(UISparkManager manager) {
 		if (!canAccess(manager)) return;
+		String accessToken = manager.fromQuery("access_token");
+		if (!DocumentManagers.containsKey(accessToken)) return;
 		String documentId = manager.fromPath("documentId");
-		InputStream content = documentManager.load(documentId);
+		InputStream content = DocumentManagers.get(accessToken).load(documentId);
 		manager.write(content, documentId);
 	}
 
 	private void save(UISparkManager manager) {
 		if (!canAccess(manager)) return;
+		String accessToken = manager.fromQuery("access_token");
+		if (!DocumentManagers.containsKey(accessToken)) return;
 		String documentId = manager.fromPath("documentId");
 		byte[] bytes = manager.fromBodyAsBytes();
-		documentManager.save(documentId, new ByteArrayInputStream(bytes));
+		DocumentManagers.get(accessToken).save(documentId, new ByteArrayInputStream(bytes));
 		manager.write("OK");
 	}
 
 	private boolean canAccess(UISparkManager manager) {
-		if (documentManager == null) return false;
 		String token = manager.fromQuery("access_token");
-		return session.id().equals(token);
+		if (!DocumentManagers.containsKey(token)) return false;
+		return AccessTokens.contains(token);
 	}
 
 }

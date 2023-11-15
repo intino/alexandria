@@ -164,7 +164,7 @@ def type(properties & code) trigger(specific)
 end
 
 def type(properties & text) trigger(specific)
-	[ alexandria:text_mode="$mode"][ alexandria:text_edition_mode="$editionMode"][ alexandria:text_max_length="$maxLength"][ alexandria:text_rows="$rows"][ alexandria:text_prefix="$prefix"][ alexandria:text_suffix="$suffix"][ alexandria:text_translate="$translate"][ alexandria:text_crop_with_ellipsis="$cropWithEllipsis"][ alexandria:text_value="$defaultValue+escapeHtml"][ alexandria:text_placeholder="$placeholder"][ alexandria:text_readonly="$readonly"][ alexandria:text_focused="$focused"][ $highlighted][ alexandria:text_type="$type"][ alexandria:text_helper_text="$helperText"][ alexandria:text_shrink="$shrink"]
+	[ alexandria:text_mode="$mode"][ alexandria:text_edition_mode="$editionMode"][ alexandria:text_max_length="$maxLength"][ alexandria:text_rows="$rows"][ alexandria:text_prefix="$prefix"][ alexandria:text_suffix="$suffix"][ alexandria:text_translate="$translate"][ alexandria:text_crop_with_ellipsis="$cropWithEllipsis"][ alexandria:text_value="$defaultValue+escapeHtml"][ alexandria:text_placeholder="$placeholder"][ alexandria:text_readonly="$readonly"][ alexandria:text_focused="$focused"][ $highlighted][ alexandria:text_type="$type"][ alexandria:text_helper_text="$helperText"][ alexandria:text_shrink="$shrink"][ alexandria:text_pattern="$pattern"]
 end
 
 def type(properties & location) trigger(specific)

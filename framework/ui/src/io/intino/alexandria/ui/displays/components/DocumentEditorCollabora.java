@@ -10,7 +10,6 @@ import io.intino.alexandria.ui.displays.notifiers.DocumentEditorCollaboraNotifie
 public class DocumentEditorCollabora<DN extends DocumentEditorCollaboraNotifier, B extends Box> extends AbstractDocumentEditorCollabora<DN, B> {
 	private CollaboraServer server;
 	private String documentId;
-	private String accessToken;
 	private String editorUrl;
 
 	public DocumentEditorCollabora(B box) {
@@ -23,7 +22,7 @@ public class DocumentEditorCollabora<DN extends DocumentEditorCollaboraNotifier,
 	}
 
 	public DocumentEditorCollabora<DN, B> documentManager(DocumentManager documentManager) {
-		server.documentManager(documentManager);
+		server.documentManager(accessToken(), documentManager);
 		return this;
 	}
 
@@ -35,14 +34,21 @@ public class DocumentEditorCollabora<DN extends DocumentEditorCollaboraNotifier,
 	@Override
 	public void init() {
 		super.init();
-		server = new CollaboraServer((AlexandriaUiBox)box(), session()).listen();
+		server = new CollaboraServer((AlexandriaUiBox)box()).listen();
 		refresh();
 	}
 
 	@Override
 	public void refresh() {
 		super.refresh();
-		notifier.refresh(new DocumentEditorCollaboraInfo().editorUrl(editorUrl).accessToken(session().id()).documentUrl(documentUrl()));
+		server.register(accessToken());
+		notifier.refresh(new DocumentEditorCollaboraInfo().editorUrl(editorUrl).accessToken(accessToken()).documentUrl(documentUrl()));
+	}
+
+	@Override
+	public void unregister() {
+		super.unregister();
+		server.unregister(accessToken());
 	}
 
 	protected DocumentEditorCollabora<DN, B> _editorUrl(String url) {
@@ -55,14 +61,13 @@ public class DocumentEditorCollabora<DN extends DocumentEditorCollaboraNotifier,
 		return this;
 	}
 
-	protected DocumentEditorCollabora<DN, B> _accessToken(String token) {
-		this.accessToken = token;
-		return this;
-	}
-
 	private String documentUrl() {
 		if (documentId == null) return null;
-		return server.url(documentId);
+		return server.url(session().browser().baseUrl(), documentId);
+	}
+
+	private String accessToken() {
+		return session().id() + "-" + id();
 	}
 
 }

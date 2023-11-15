@@ -28,7 +28,7 @@ def type(resource & main)
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
-            Application.start("$name", pushService(withParams("http://10.0.2.2:9000$path")))
+            Application.start("$name", pushService(withParams("http://10.0.2.2:9000$path")) { showNoConnectionDialog(); })
             setContentView(R.layout.$name+camelCaseToUnderscoreCase+lowerCase~_activity)
         }
 
@@ -49,7 +49,7 @@ def type(resource)
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             Application.close("$name")
-            Application.open("$name", pushService(withParams("http://10.0.2.2:9000$path")))
+            Application.open("$name", pushService(withParams("http://10.0.2.2:9000$path")) { showNoConnectionDialog(); })
             setContentView(R.layout.$name+camelCaseToUnderscoreCase+lowerCase~_activity)
         }
 

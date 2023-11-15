@@ -90,7 +90,7 @@ public class AppRenderer extends UIRenderer {
 		put("Number:Alexandria", List.of("value", "prefix", "suffix", "min", "max", "step", "readonly", "focused", "decimals", "expanded", "helper_text", "shrink"));
 		put("Header:Alexandria", List.of("position", "width", "height", "elevation"));
 		put("Code:Alexandria", List.of("mode", "language", "highlighted"));
-		put("Text:Alexandria", List.of("mode", "edition_mode", "max_length", "rows", "prefix", "suffix", "translate", "crop_with_ellipsis", "value", "placeholder", "readonly", "focused", "highlighted", "type", "helper_text", "shrink"));
+		put("Text:Alexandria", List.of("mode", "edition_mode", "max_length", "rows", "prefix", "suffix", "translate", "crop_with_ellipsis", "value", "placeholder", "readonly", "focused", "highlighted", "type", "helper_text", "shrink", "pattern"));
 		put("Location:Alexandria", List.of("center", "zoom", "modes", "controls"));
 		put("Collection:Alexandria", List.of("no_items_message", "no_items_found_message", "page_size", "item_height", "scrolling_mark", "navigable", "selection"));
 		put("Map:Collection", List.of("page_size", "type", "item_height", "center", "zoom", "controls"));
