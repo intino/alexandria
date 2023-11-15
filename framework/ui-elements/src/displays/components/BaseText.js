@@ -16,7 +16,7 @@ export default class BaseText extends AbstractBaseText {
 
     refresh = (value) => {
         const finalValue = this._requireEllipsis(value) ? value.substring(0, this.props.cropWithEllipsis) + "..." : value;
-		this.setState({ value: finalValue != null ? finalValue : "", title: value != null ? value : "", error: null });
+		this.setState({ value: finalValue != null ? finalValue : "", title: value != null ? value : "" });
     };
 
     refreshError = (value) => {
