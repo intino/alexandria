@@ -52,6 +52,10 @@ public class ZitWriter implements AutoCloseable {
 		this.sensorModel = sensorModel;
 	}
 
+	public String[] sensorModel() {
+		return sensorModel;
+	}
+
 	private void loadHeader(File file) throws IOException {
 		try (ZitStream stream = ZitStream.of(file)) {
 			Data data = stream.reduce((first, second) -> second).orElse(null);
@@ -107,9 +111,5 @@ public class ZitWriter implements AutoCloseable {
 	@Override
 	public void close() {
 		resource.close();
-	}
-
-	public String[] sensorModel() {
-		return sensorModel;
 	}
 }
