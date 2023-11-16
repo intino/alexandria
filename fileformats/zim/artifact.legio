@@ -1,15 +1,15 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "5.1.1") zim
+Artifact("io.intino.alexandria", "5.1.2") zim
 	Imports
 		Compile("io.intino.alexandria", "iterator-stream", "1.0.0")
 		Compile("io.intino.alexandria", "message", "4.1.2")
 		Compile("io.intino.alexandria", "logger", "2.1.0")
-		Compile("com.github.luben", "zstd-jni", "1.5.4-1")
-		Test("org.xerial.snappy", "snappy-java", "1.1.8.4")
+		Compile("com.github.luben", "zstd-jni", "1.5.5-10")
+		Test("org.xerial.snappy", "snappy-java", "1.1.9.1")
 		Test("org.lz4", "lz4-java", "1.8.0")
-		Test("org.openjdk.jmh", "jmh-core", "1.36")
-		Test("org.openjdk.jmh", "jmh-generator-annprocess", "1.36")
+		Test("org.openjdk.jmh", "jmh-core", "1.37")
+		Test("org.openjdk.jmh", "jmh-generator-annprocess", "1.37")
 		Test("org.assertj", "assertj-core", "3.24.2")
 		Test("junit", "junit", "4.13.2")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
