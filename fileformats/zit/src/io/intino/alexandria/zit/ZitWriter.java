@@ -17,6 +17,7 @@ public class ZitWriter implements AutoCloseable {
 	private final Writer writer;
 	private final DisposableResource resource;
 	private Period period;
+	private String[] sensorModel;
 	private Instant nextTs;
 
 	public ZitWriter(File file) throws IOException {
@@ -33,6 +34,7 @@ public class ZitWriter implements AutoCloseable {
 
 	public ZitWriter(File file, String id, String sensor, Period period, String[] sensorModel) throws IOException {
 		this.period = period;
+		this.sensorModel = sensorModel;
 		boolean exists = file.exists();
 		file.getParentFile().mkdirs();
 		this.writer = new OutputStreamWriter(Zit.compressing(new BufferedOutputStream(new FileOutputStream(file))));
@@ -47,6 +49,11 @@ public class ZitWriter implements AutoCloseable {
 
 	public void put(String[] sensorModel) {
 		writeLine("@measurements " + String.join(MAGNITUDE_DELIMITER, sensorModel).stripTrailing());
+		this.sensorModel = sensorModel;
+	}
+
+	public String[] sensorModel() {
+		return sensorModel;
 	}
 
 	private void loadHeader(File file) throws IOException {
