@@ -60,7 +60,7 @@ public class ReelExamplesMold extends AbstractReelExamplesMold<UiFrameworkBox> {
 						for (int i=0; i<24; i++) {
 							result += i%2 != 0 ? " " : "-";
 						}
-						return result + " ";
+						return result;
 					}
 
 					@Override
