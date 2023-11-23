@@ -18,7 +18,7 @@ public class RESTServiceTemplate extends Template {
 			rule().condition((type("custom")), (trigger("authenticate"))).output(literal(".before(manager -> { if (!authenticator.isAuthenticated(manager.request().queryParams().stream().collect(java.util.stream.Collectors.toMap(p -> p, p -> manager.request().queryParams(p))))) throw new io.intino.alexandria.exceptions.Unauthorized(\"Credential not found\");})")),
 			rule().condition((type("path")), (trigger("format"))).output(literal("\"")).output(mark("name")).output(literal("\"")).output(expression().output(mark("custom").multiple(""))),
 			rule().condition((trigger("custom"))).output(literal(".replace(\"{")).output(mark("value")).output(literal("}\", box.configuration().get(\"")).output(mark("value")).output(literal("\"))")),
-			rule().condition((trigger("hasnotifications"))).output(literal("if (!io.intino.alexandria.http.AlexandriaSparkBuilder.isUI()) server.route(\"/push\").push(new io.intino.alexandria.http.spark.SparkPushService());"))
+			rule().condition((trigger("hasnotifications"))).output(literal("if (!io.intino.alexandria.http.AlexandriaSparkBuilder.isUI()) server.route(\"/_alexandria/push\").push(new io.intino.alexandria.http.spark.SparkPushService());"))
 		);
 	}
 }

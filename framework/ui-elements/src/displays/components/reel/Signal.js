@@ -93,13 +93,14 @@ const ReelSignal = ({ signal, index, id, moveSignal, classes, translate, style, 
         for (i=0; i<steps.length; i++) {
             const value = steps[i].value;
             const date = steps[i].date;
-            block.push({ value: value, date: steps[i].date });
-            if (i == steps.length-1 || (current != null && value != current)) {
+            if (current != null && value != current) {
                 result.push(renderBlock(block, i < steps.length-1 ? steps[i+1].date : date, signal.color, findAnnotation(signal, date)));
                 block = [];
             }
+            block.push({ value: value, date: steps[i].date });
             current = value;
         }
+        if (block.length > 0) result.push(renderBlock(block, steps[steps.length-1].date, signal.color, findAnnotation(signal, steps[steps.length-1].date)));
         return result;
 
     };

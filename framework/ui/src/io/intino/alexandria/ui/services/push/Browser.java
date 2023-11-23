@@ -19,7 +19,7 @@ public class Browser {
     private Map<String, Object> preferences = new HashMap<>();
     private Consumer<String> redirectManager = null;
 
-    private static final String PushPath = "/push?id=%s&currentSession=%s&language=%s";
+    private static final String PushPath = "/_alexandria/push?id=%s&currentSession=%s&language=%s";
 
     public String baseUrl() {
         return baseUrl;

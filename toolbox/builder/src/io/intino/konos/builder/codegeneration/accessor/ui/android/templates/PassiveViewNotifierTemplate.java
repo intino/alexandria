@@ -24,7 +24,7 @@ public class PassiveViewNotifierTemplate extends Template {
 			rule().condition((allTypes("parameter","longinteger"))).output(literal("((it[\"v\"]!! as JsonPrimitive).content).toLong()")),
 			rule().condition((allTypes("parameter","integer"))).output(literal("((it[\"v\"]!! as JsonPrimitive).content).toInt()")),
 			rule().condition((allTypes("parameter","boolean"))).output(literal("((it[\"v\"]!! as JsonPrimitive).content).toBoolean()")),
-			rule().condition((allTypes("parameter","object"))).output(literal("io.intino.alexandria.mobile.util.Json.parse((it[\"v\"]!! as JsonObject).toString()) as ")).output(mark("package")).output(literal(".mobile.schemas.")).output(mark("value", "firstUpperCase")),
+			rule().condition((allTypes("parameter","object"))).output(literal("if (it[\"v\"] != null) io.intino.alexandria.mobile.util.Json.parse((it[\"v\"] as JsonObject).toString()) as ")).output(mark("package")).output(literal(".mobile.schemas.")).output(mark("value", "firstUpperCase")).output(literal(" else ")).output(mark("package")).output(literal(".mobile.schemas.")).output(mark("value", "firstUpperCase")).output(literal("()")),
 			rule().condition((type("parameter"))).output(literal("if (it.containsKey(\"v\")) (it[\"v\"] as JsonPrimitive).content else \"\"")),
 			rule().condition((attribute("", "Display")), (trigger("target"))).output(literal(".toSelf()")),
 			rule().condition((trigger("target"))),
