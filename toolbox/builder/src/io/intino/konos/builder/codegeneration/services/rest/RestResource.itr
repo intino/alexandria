@@ -35,7 +35,7 @@ def type(notification)
 				return true;
 			});
 			manager.pushService().onClose(clientId).execute((java.util.function.Consumer<Client>) action::onClose);
-			[$returnType+methodCall]manager.baseUrl().replace("http", "ws") + "/push?id=" + clientId[$returnType+ending];
+			[$returnType+methodCall]manager.baseUrl().replace("http", "ws") + "/_alexandria/push?id=" + clientId[$returnType+ending];
 		}
 
 		private $package+validPackage.actions.$name+snakeCaseToCamelCase+firstUpperCase~Action fill($package+validPackage.actions.$name+snakeCaseToCamelCase+firstUpperCase~Action action) {

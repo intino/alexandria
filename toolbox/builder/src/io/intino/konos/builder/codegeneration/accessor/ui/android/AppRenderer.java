@@ -28,6 +28,7 @@ public class AppRenderer extends UIRenderer {
 		writeAndroidGradle(buildFrame().add("android"));
 		writeSharedGradle(buildFrame().add("shared"));
 		writeProperties(buildFrame().add("properties"));
+		writeStrings(buildFrame().add("strings"));
 	}
 
 	@Override
@@ -65,6 +66,10 @@ public class AppRenderer extends UIRenderer {
 	private void writeProperties(FrameBuilder builder) {
 		addProperties(builder);
 		Commons.write(new File(res(Target.Android) + File.separator + "values" + File.separator + "properties.xml").toPath(), setup(new AppTemplate()).render(builder.toFrame()));
+	}
+
+	private void writeStrings(FrameBuilder builder) {
+		Commons.write(new File(res(Target.Android) + File.separator + "values" + File.separator + "strings.xml").toPath(), setup(new AppTemplate()).render(builder.toFrame()));
 	}
 
 	private static final Map<String, List<String>> ComponentPropertiesMap = new HashMap<>() {{

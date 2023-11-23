@@ -62,5 +62,5 @@ def trigger(custom)
 end
 
 def trigger(hasNotifications)
-	if (!io.intino.alexandria.http.AlexandriaSparkBuilder.isUI()) server.route("/push").push(new io.intino.alexandria.http.spark.SparkPushService());
+	if (!io.intino.alexandria.http.AlexandriaSparkBuilder.isUI()) server.route("/_alexandria/push").push(new io.intino.alexandria.http.spark.SparkPushService());
 end

@@ -15,9 +15,9 @@ public class PassiveViewRequesterTemplate extends Template {
 			rule().condition((type("parameter")), (trigger("request"))).output(literal("fun ")).output(mark("name")).output(literal("(value: String) {\n    ")).output(mark("method")).output(literal("(UiMessage(\"")).output(mark("name")).output(literal("\", \"")).output(mark("display", "lowercase")).output(literal("\", element.shortId(), ")).output(mark("parameter")).output(mark("nullParameter")).output(literal(", element.owner(), element.context()), element.ownerUnit());\n}")),
 			rule().condition((trigger("request"))).output(literal("fun ")).output(mark("name")).output(literal("(")).output(expression().output(mark("parameterSignature")).output(literal(": ")).output(mark("customParameterType"))).output(literal(") {\n    ")).output(mark("method")).output(literal("(UiMessage(\"")).output(mark("name")).output(literal("\", \"")).output(mark("display", "lowercase")).output(literal("\", element.shortId(), ")).output(mark("parameter")).output(mark("nullParameter")).output(literal(", element.owner(), element.context()), element.ownerUnit());\n}")),
 			rule().condition((type("object")), (trigger("parameter"))).output(literal("Uri.encode(Json.stringify(value, ")).output(mark("type")).output(literal(".serializer()))")),
-			rule().condition((allTypes("list","file")), (trigger("parameter"))).output(literal("Uri.encode(Json.stringify(arrayListOf(io.intino.alexandria.mobile.util.Base64.encoder.encode(value).toString())))")),
+			rule().condition((allTypes("list","file")), (trigger("parameter"))).output(literal("if (value != null) Uri.encode(Json.stringify(arrayListOf(io.intino.alexandria.mobile.util.Base64.encoder.encode(value).toString()))) else null")),
 			rule().condition((type("list")), (trigger("parameter"))).output(literal("Uri.encode(Json.stringify(value))")),
-			rule().condition((type("file")), (trigger("parameter"))).output(literal("io.intino.alexandria.mobile.util.Base64.encoder.encode(value).toString()")),
+			rule().condition((type("file")), (trigger("parameter"))).output(literal("if (value != null) io.intino.alexandria.mobile.util.Base64.encoder.encode(value).toString() else null")),
 			rule().condition((type("boolean")), (trigger("parameter"))).output(literal("value.toString()")),
 			rule().condition((type("LongInteger")), (trigger("parameter"))).output(literal("value.toString()")),
 			rule().condition((type("Integer")), (trigger("parameter"))).output(literal("value.toString()")),
@@ -32,7 +32,7 @@ public class PassiveViewRequesterTemplate extends Template {
 			rule().condition((allTypes("parameterType","date"))).output(literal("kotlinx.datetime.Instant")),
 			rule().condition((allTypes("parameterType","datetime"))).output(literal("kotlinx.datetime.Instant")),
 			rule().condition((allTypes("parameterType","integer"))).output(literal("Int")),
-			rule().condition((allTypes("parameterType","file"))).output(literal("ByteArray")),
+			rule().condition((allTypes("parameterType","file"))).output(literal("ByteArray?")),
 			rule().condition((type("parameterType"))).output(mark("value"))
 		);
 	}
