@@ -1,10 +1,10 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "5.0.8") event
+Artifact("io.intino.alexandria", "5.0.9") event
 	Imports
 		Compile("io.intino.alexandria", "iterator-stream", "1.0.0")
-		Compile("io.intino.alexandria", "zim", "5.1.1")
-		Compile("io.intino.alexandria", "zit", "1.0.1")
+		Compile("io.intino.alexandria", "zim", "5.1.2")
+		Compile("io.intino.alexandria", "zit", "1.0.2")
 		Compile("io.intino.alexandria", "logger", "2.1.0")
 		Compile("io.intino.alexandria", "primitives", "1.1.2")
 		Compile("io.intino.alexandria", "json", "1.2.3")

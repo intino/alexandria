@@ -1,11 +1,11 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.0") zit
+Artifact("io.intino.alexandria", "1.0.2") zit
 	Imports
 		Compile("io.intino.alexandria", "logger", "2.1.0")
-		Compile("com.github.luben", "zstd-jni", "1.5.4-1")
+		Compile("com.github.luben", "zstd-jni", "1.5.5-10")
 		Compile("io.intino.alexandria", "iterator-stream", "1.0.0")
-		Test("junit", "junit", "4.13")
+		Test("junit", "junit", "4.13.2")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 

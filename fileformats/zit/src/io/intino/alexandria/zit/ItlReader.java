@@ -105,7 +105,7 @@ public class ItlReader implements AutoCloseable {
 				period = Period.of(data);
 				break;
 			case "measurements":
-				measurements = data.split("\0");
+				measurements = data.split(Zit.MAGNITUDE_DELIMITER);
 				break;
 		}
 	}
