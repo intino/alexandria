@@ -18,8 +18,8 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Intino: junit:junit:4.13.2" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:exceptions:2.1.1" level="project" />
-    <orderEntry type="library" name="Intino: jakarta.jms:jakarta.jms-api:2.0.3" level="project" />
     <orderEntry type="library" name="Intino: org.jmdns:jmdns:3.5.8" level="project" />
-    <orderEntry type="library" name="Intino: org.apache.activemq:activemq-client:5.18.2" level="project" />
+    <orderEntry type="library" name="Intino: org.apache.activemq:activemq-client:6.0.0" level="project" />
+    <orderEntry type="library" name="Intino: jakarta.jms:jakarta.jms-api:3.1.0" level="project" />
   </component>
 </module>
