@@ -1,11 +1,10 @@
 package io.intino.alexandria.jms;
 
 import io.intino.alexandria.logger.Logger;
-
-import javax.jms.BytesMessage;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.TextMessage;
+import jakarta.jms.BytesMessage;
+import jakarta.jms.JMSException;
+import jakarta.jms.Message;
+import jakarta.jms.TextMessage;
 
 public class MessageReader {
 

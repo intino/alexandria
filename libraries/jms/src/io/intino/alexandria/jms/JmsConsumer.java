@@ -1,8 +1,8 @@
 package io.intino.alexandria.jms;
 
 import io.intino.alexandria.logger.Logger;
+import jakarta.jms.*;
 
-import javax.jms.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

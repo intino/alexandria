@@ -1,9 +1,8 @@
 package io.intino.alexandria.jms;
 
 import io.intino.alexandria.logger.Logger;
-
-import javax.jms.JMSException;
-import javax.jms.Session;
+import jakarta.jms.JMSException;
+import jakarta.jms.Session;
 
 public class QueueConsumer extends JmsConsumer {
 	public QueueConsumer(Session session, String topic) throws JMSException {

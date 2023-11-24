@@ -1,8 +1,9 @@
 package io.intino.alexandria.jms;
 
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.Session;
+
+import jakarta.jms.Destination;
+import jakarta.jms.JMSException;
+import jakarta.jms.Session;
 
 public class TopicProducer extends JmsProducer {
 
