@@ -4,6 +4,7 @@ public class SignInfo {
     private String secret;
     private String email;
     private String company;
+    private boolean canSetup;
 
     public String secret() {
         return secret;
@@ -29,6 +30,15 @@ public class SignInfo {
 
     public SignInfo company(String signCompany) {
         this.company = signCompany;
+        return this;
+    }
+
+    public boolean canSetup() {
+        return canSetup;
+    }
+
+    public SignInfo canSetup(boolean canSetup) {
+        this.canSetup = canSetup;
         return this;
     }
 }

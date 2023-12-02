@@ -5,7 +5,11 @@ public interface SignInfoProvider {
 	String email();
 	String secret();
 
+	default boolean canSetup() {
+		return true;
+	}
+
 	default SignInfo signInfo() {
-		return new SignInfo().company(company()).email(email()).secret(secret());
+		return new SignInfo().company(company()).email(email()).secret(secret()).canSetup(canSetup());
 	}
 }

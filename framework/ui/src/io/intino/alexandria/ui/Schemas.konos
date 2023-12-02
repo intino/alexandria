@@ -186,6 +186,7 @@ Schema ActionableInfo
 	Attribute disabled as Bool
 
 Schema ActionableSignInfo
+	Attribute canSetup as Bool
 	Attribute setupRequired as Bool
 	Attribute secret as Text
 	Attribute secretImage as Text
