@@ -1,14 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.WriterException;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.common.BitMatrix;
-import de.taimos.totp.TOTP;
 import io.intino.alexandria.Base64;
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.schemas.ActionableInfo;
 import io.intino.alexandria.schemas.ActionableSign;
 import io.intino.alexandria.schemas.ActionableSignInfo;
@@ -24,11 +17,9 @@ import io.intino.alexandria.ui.displays.events.Listener;
 import io.intino.alexandria.ui.displays.notifiers.ActionableNotifier;
 import io.intino.alexandria.ui.resources.Asset;
 import io.intino.alexandria.ui.spark.UIFile;
-import org.apache.commons.codec.binary.Base32;
-import org.apache.commons.codec.binary.Hex;
 
-import java.io.*;
-import java.security.SecureRandom;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
 public abstract class Actionable<DN extends ActionableNotifier, B extends Box> extends Component<DN, B> {
     private String title;
@@ -120,7 +111,7 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
     }
 
     public void setupSign(ActionableSign info) {
-        this.signInfo = new SignInfo().secret(info.secret());
+        this.signInfo = new SignInfo().secret(info.secret()).canSetup(true);
         if (signChecker == null) notifier.setupSignResult(true);
         notifier.setupSignResult(signChecker.check(info.sign(), "Setting up sign configuration"));
     }
@@ -213,7 +204,7 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
     protected void refreshSignInfo() {
         if (signMode != SignMode.OneTimePassword) return;
         String secret = signSecret();
-        notifier.refreshSignInfo(new ActionableSignInfo().setupRequired(signSetupRequired()).secret(secret).secretImage(signSecretImage(secret)));
+        notifier.refreshSignInfo(new ActionableSignInfo().canSetup(signCanSetup()).setupRequired(signSetupRequired()).secret(secret).secretImage(signSecretImage(secret)));
     }
 
     private String signSecretImage(String secret) {
@@ -243,6 +234,10 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
 
     private boolean isResourceIcon() {
         return (mode == Mode.IconButton || mode == Mode.IconToggle || mode == Mode.IconSplitButton) && icon != null && Actionable.class.getResource(this.icon) != null;
+    }
+
+    private boolean signCanSetup() {
+        return signInfoProvider != null ? signInfoProvider.canSetup() : signInfo == null || signInfo.canSetup();
     }
 
     private boolean signSetupRequired() {

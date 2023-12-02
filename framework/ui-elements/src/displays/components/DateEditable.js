@@ -5,7 +5,7 @@ import AbstractDateEditable from "../../../gen/displays/components/AbstractDateE
 import DateEditableNotifier from "../../../gen/displays/notifiers/DateEditableNotifier";
 import DateEditableRequester from "../../../gen/displays/requesters/DateEditableRequester";
 import MomentUtils from '@date-io/moment';
-import { MuiPickersUtilsProvider, KeyboardDateTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, KeyboardDateTimePicker, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import moment from 'moment';
@@ -97,6 +97,7 @@ class DateEditable extends AbstractDateEditable {
 		const value = this.state.value != null ? this.state.value : null;
 		const variant = this._variant();
 		const toolbar = this._isEmbedded() && this.props.mode === "fromnow" ? (props) => (<React.Fragment/>) : undefined;
+		const hasDateInfo = this._hasDateInfo();
 		return (
 			<div style={this.style()}>
 				{ !timePicker ? <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={moment.locale(Application.configuration.language)}>
@@ -114,8 +115,23 @@ class DateEditable extends AbstractDateEditable {
                                 </MuiPickersUtilsProvider>
                              : undefined
                 }
-				{ timePicker ? <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={moment.locale(Application.configuration.language)}>
+				{ (timePicker && hasDateInfo) ? <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={moment.locale(Application.configuration.language)}>
 				                    <KeyboardDateTimePicker variant={variant} placeholder={pattern} autoOk
+				                            InputLabelProps={{ shrink: this.props.shrink !== null ? this.props.shrink : undefined }}
+                                            inputProps={{ref:this.inputRef}}
+                                            disabled={this.state.readonly}
+                                            format={pattern} className={classes.datetime}
+                                            value={value} onChange={this.handleChange.bind(this)}
+                                            minDate={min} maxDate={this._max(max)} label={timeLabel}
+                                            ToolbarComponent={toolbar}
+                                            renderDay={this.isWeekView() ? this.renderWrappedWeekDay.bind(this) : undefined}
+                                            minDateMessage={this.translate("Date should not be before minimal date")}
+                                            maxDateMessage={this.translate("Date should not be after maximal date")}/>
+                                </MuiPickersUtilsProvider>
+                             : undefined
+                }
+				{ (timePicker && !hasDateInfo) ? <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={moment.locale(Application.configuration.language)}>
+				                    <KeyboardTimePicker variant={variant} placeholder={pattern} autoOk
 				                            InputLabelProps={{ shrink: this.props.shrink !== null ? this.props.shrink : undefined }}
                                             inputProps={{ref:this.inputRef}}
                                             disabled={this.state.readonly}
@@ -260,6 +276,15 @@ class DateEditable extends AbstractDateEditable {
         if (value == undefined) return undefined;
         return moment.utc(value).endOf('week').toDate();
     };
+
+    _hasDateInfo = () => {
+        const pattern = this.state.pattern;
+        if (pattern == null || pattern === "") return true;
+        var infoList = ["M", "Mo", "MM", "MMM", "MMMM", "Q", "Qo", "D", "Do", "DD", "DDD", "DDDo", "DDDD", "d", "do", "dd", "ddd", "dddd", "e", "E", "w", "wo", "ww", "W", "Wo", "WW", "YY", "YYYY", "YYYYYY", "Y", "y", "N", "NN", "NNN", "NNNN", "NNNNN", "gg", "gggg", "GG", "GGGG"];
+        for (var i=0; i<infoList.length; i++) if (pattern.indexOf(infoList[i]) != -1) return true;
+        return false;
+    };
+
 }
 
 export default withStyles(styles, { withTheme: true })(DateEditable);

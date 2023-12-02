@@ -223,12 +223,12 @@ export default class Actionable extends AbstractActionable {
 	    return (
 	        <div style={{marginTop:'10px'}}>
                 <div className="layout horizontal center-center">
-                    <TextField disabled={disabled} id={this._fieldKeycode(0)} style={{marginRight:'10px'}} autoFocus={true} type="tel" InputProps={{disableUnderline:true}} inputProps={{style: { padding:'0 10px',border:'1px solid #ddd',borderRadius:'5px',width:'20px',fontSize:'23pt' }, maxlength: 1 }} value={this._signDigit(0)} onClick={this.handleSignKeycodeClick.bind(this)} onChange={this.handleSignKeycodeChange.bind(this, 0)} />
-                    <TextField disabled={disabled} id={this._fieldKeycode(1)} style={{marginRight:'10px'}} type="tel" InputProps={{disableUnderline:true}} inputProps={{style: { padding:'0 10px',border:'1px solid #ddd',borderRadius:'5px',width:'20px',fontSize:'23pt' }, maxlength: 1 }} value={this._signDigit(1)} onClick={this.handleSignKeycodeClick.bind(this)} onChange={this.handleSignKeycodeChange.bind(this, 1)} />
-                    <TextField disabled={disabled} id={this._fieldKeycode(2)} style={{marginRight:'10px'}} type="tel" InputProps={{disableUnderline:true}} inputProps={{style: { padding:'0 10px',border:'1px solid #ddd',borderRadius:'5px',width:'20px',fontSize:'23pt' }, maxlength: 1 }} value={this._signDigit(2)} onClick={this.handleSignKeycodeClick.bind(this)} onChange={this.handleSignKeycodeChange.bind(this, 2)} />
-                    <TextField disabled={disabled} id={this._fieldKeycode(3)} style={{marginRight:'10px'}} type="tel" InputProps={{disableUnderline:true}} inputProps={{style: { padding:'0 10px',border:'1px solid #ddd',borderRadius:'5px',width:'20px',fontSize:'23pt' }, maxlength: 1 }} value={this._signDigit(3)} onClick={this.handleSignKeycodeClick.bind(this)} onChange={this.handleSignKeycodeChange.bind(this, 3)} />
-                    <TextField disabled={disabled} id={this._fieldKeycode(4)} style={{marginRight:'10px'}} type="tel" InputProps={{disableUnderline:true}} inputProps={{style: { padding:'0 10px',border:'1px solid #ddd',borderRadius:'5px',width:'20px',fontSize:'23pt' }, maxlength: 1 }} value={this._signDigit(4)} onClick={this.handleSignKeycodeClick.bind(this)} onChange={this.handleSignKeycodeChange.bind(this, 4)} />
-                    <TextField disabled={disabled} id={this._fieldKeycode(5)} style={{marginRight:'10px'}} type="tel" InputProps={{disableUnderline:true}} inputProps={{style: { padding:'0 10px',border:'1px solid #ddd',borderRadius:'5px',width:'20px',fontSize:'23pt' }, maxlength: 1 }} value={this._signDigit(5)} onClick={this.handleSignKeycodeClick.bind(this)} onChange={this.handleSignKeycodeChange.bind(this, 5)} />
+                    <TextField disabled={disabled} id={this._fieldKeycode(0)} style={{marginRight:'10px'}} autoFocus={true} type="tel" InputProps={{disableUnderline:true}} inputProps={{style: { padding:'0 10px',border:'1px solid #ddd',borderRadius:'5px',width:'20px',fontSize:'23pt' }, maxlength: 1 }} value={this._signDigit(0)} onClick={this.handleSignKeycodeClick.bind(this)} onKeyUp={this.handleSignKeycodeUp.bind(this, 0)} onChange={this.handleSignKeycodeChange.bind(this, 0)} />
+                    <TextField disabled={disabled} id={this._fieldKeycode(1)} style={{marginRight:'10px'}} type="tel" InputProps={{disableUnderline:true}} inputProps={{style: { padding:'0 10px',border:'1px solid #ddd',borderRadius:'5px',width:'20px',fontSize:'23pt' }, maxlength: 1 }} value={this._signDigit(1)} onClick={this.handleSignKeycodeClick.bind(this)} onKeyUp={this.handleSignKeycodeUp.bind(this, 1)} onChange={this.handleSignKeycodeChange.bind(this, 1)} />
+                    <TextField disabled={disabled} id={this._fieldKeycode(2)} style={{marginRight:'10px'}} type="tel" InputProps={{disableUnderline:true}} inputProps={{style: { padding:'0 10px',border:'1px solid #ddd',borderRadius:'5px',width:'20px',fontSize:'23pt' }, maxlength: 1 }} value={this._signDigit(2)} onClick={this.handleSignKeycodeClick.bind(this)} onKeyUp={this.handleSignKeycodeUp.bind(this, 2)} onChange={this.handleSignKeycodeChange.bind(this, 2)} />
+                    <TextField disabled={disabled} id={this._fieldKeycode(3)} style={{marginRight:'10px'}} type="tel" InputProps={{disableUnderline:true}} inputProps={{style: { padding:'0 10px',border:'1px solid #ddd',borderRadius:'5px',width:'20px',fontSize:'23pt' }, maxlength: 1 }} value={this._signDigit(3)} onClick={this.handleSignKeycodeClick.bind(this)} onKeyUp={this.handleSignKeycodeUp.bind(this, 3)} onChange={this.handleSignKeycodeChange.bind(this, 3)} />
+                    <TextField disabled={disabled} id={this._fieldKeycode(4)} style={{marginRight:'10px'}} type="tel" InputProps={{disableUnderline:true}} inputProps={{style: { padding:'0 10px',border:'1px solid #ddd',borderRadius:'5px',width:'20px',fontSize:'23pt' }, maxlength: 1 }} value={this._signDigit(4)} onClick={this.handleSignKeycodeClick.bind(this)} onKeyUp={this.handleSignKeycodeUp.bind(this, 4)} onChange={this.handleSignKeycodeChange.bind(this, 4)} />
+                    <TextField disabled={disabled} id={this._fieldKeycode(5)} style={{marginRight:'10px'}} type="tel" InputProps={{disableUnderline:true}} inputProps={{style: { padding:'0 10px',border:'1px solid #ddd',borderRadius:'5px',width:'20px',fontSize:'23pt' }, maxlength: 1 }} value={this._signDigit(5)} onClick={this.handleSignKeycodeClick.bind(this)} onKeyUp={this.handleSignKeycodeUp.bind(this, 5)} onChange={this.handleSignKeycodeChange.bind(this, 5)} />
                 </div>
                 {disabled && <div style={{marginTop:'10px', color: theme.palette.secondary.main}}>{this.translate("Two factor authentication not enabled. Before signing, you must enable it by clicking in enable button.")}</div>}
             </div>
@@ -263,9 +263,11 @@ export default class Actionable extends AbstractActionable {
                     }
                 </DialogContent>
 				<DialogActions>
-				    <div className="layout horizontal flexible" style={{width:'100%',display:isOneTimePasswordSignMode?'block':'none'}}>
-				        <Button onClick={this.handleSignSetup} color="primary">{this.translate(this.state.signInfo.setupRequired ? "Enable" : "Setup")}</Button>
-				    </div>
+				    { this.state.signInfo.canSetup &&
+                        <div className="layout horizontal flexible" style={{width:'100%',display:isOneTimePasswordSignMode?'block':'none'}}>
+                            <Button onClick={this.handleSignSetup} color="primary">{this.translate(this.state.signInfo.setupRequired ? "Enable" : "Setup")}</Button>
+                        </div>
+                    }
 				    <div className="layout horizontal end-justified">
 					    <Button onClick={this.handleSignClose} color="primary" style={{marginRight:'10px'}}>{this.translate("Cancel")}</Button>
 					    <Button variant="contained" onClick={this.handleSignAccept} color="primary">{this.translate("OK")}</Button>
@@ -373,9 +375,22 @@ export default class Actionable extends AbstractActionable {
 	    e.target.setSelectionRange(0, e.target.value.length);
 	};
 
+	handleSignKeycodeUp = (pos, e) => {
+	    if (e.keyCode == 13) this.handleSignAccept();
+	    else if (e.keyCode == 8) {
+	        if (pos > 0) {
+                const previousField = document.getElementById(this._fieldKeycode(pos-1));
+                previousField.focus();
+                previousField.setSelectionRange(0, 1);
+	        }
+            this.setState({signInfo: this.state.signInfo});
+	    }
+	};
+
 	handleSignKeycodeChange = (pos, e) => {
         const signInfo = this.state.signInfo;
         signInfo.sign = this.signKeycode();
+        signInfo.r = Math.random();
 	    if (pos < 5 && e.target.value !== "") {
 	        let nextPos = pos+1;
 	        const nextField = document.getElementById(this._fieldKeycode(nextPos));
@@ -458,10 +473,11 @@ export default class Actionable extends AbstractActionable {
 		this.setState({ title, readonly });
 	};
 
-	refreshSignInfo = ({ setupRequired, secret, secretImage }) => {
+	refreshSignInfo = ({ setupRequired, secret, secretImage, canSetup }) => {
         const signInfo = this.state.signInfo;
         signInfo.secret = secret;
         signInfo.secretImage = secretImage;
+        signInfo.canSetup = canSetup;
         signInfo.setupRequired = setupRequired;
 		this.setState({ signInfo });
 	};
