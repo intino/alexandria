@@ -17,13 +17,7 @@
     <orderEntry type="library" scope="TEST" name="Intino: junit:junit:4.13.2" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger4j:1.0.1" level="project" />
     <orderEntry type="library" name="Intino: com.google.code.gson:gson:2.10.1" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:exceptions:2.1.1" level="project" />
-    <orderEntry type="library" name="Intino: org.fusesource.hawtbuf:hawtbuf:1.11" level="project" />
-    <orderEntry type="library" name="Intino: org.slf4j:slf4j-api:2.0.6" level="project" />
-    <orderEntry type="library" name="Intino: jakarta.jms:jakarta.jms-api:2.0.3" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:json:1.2.3" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:jms:1.6.1" level="project" />
-    <orderEntry type="library" name="Intino: org.apache.activemq:activemq-client:5.18.2" level="project" />
     <orderEntry type="module" module-name="datalake" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:datalake:7.0.9" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:event:5.0.9" level="project" />
@@ -34,5 +28,12 @@
     <orderEntry type="library" name="Intino: com.github.luben:zstd-jni:1.5.5-10" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:zit:1.0.2" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.1.2" level="project" />
+    <orderEntry type="module" module-name="jms" />
+    <orderEntry type="library" name="Intino: org.slf4j:slf4j-api:1.7.25" level="project" />
+    <orderEntry type="library" name="Intino: org.fusesource.hawtbuf:hawtbuf:1.11" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:exceptions:2.1.1" level="project" />
+    <orderEntry type="library" name="Intino: org.jmdns:jmdns:3.5.8" level="project" />
+    <orderEntry type="library" name="Intino: org.apache.activemq:activemq-client:6.0.0" level="project" />
+    <orderEntry type="library" name="Intino: jakarta.jms:jakarta.jms-api:3.1.0" level="project" />
   </component>
 </module>

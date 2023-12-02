@@ -1,9 +1,9 @@
 package io.intino.alexandria.jms;
 
 import io.intino.alexandria.logger.Logger;
+import jakarta.jms.*;
 import org.apache.activemq.ActiveMQSession;
 
-import javax.jms.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;

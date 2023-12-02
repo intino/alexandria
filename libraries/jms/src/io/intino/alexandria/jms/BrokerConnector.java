@@ -1,12 +1,11 @@
 package io.intino.alexandria.jms;
 
 import io.intino.alexandria.logger.Logger;
+import jakarta.jms.Connection;
+import jakarta.jms.JMSException;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.ActiveMQSslConnectionFactory;
-
-import javax.jms.Connection;
-import javax.jms.JMSException;
 
 public class BrokerConnector {
 

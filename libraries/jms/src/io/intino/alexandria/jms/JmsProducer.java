@@ -2,10 +2,10 @@ package io.intino.alexandria.jms;
 
 
 import io.intino.alexandria.logger.Logger;
+import jakarta.jms.*;
 
-import javax.jms.*;
+import static jakarta.jms.DeliveryMode.NON_PERSISTENT;
 
-import static javax.jms.DeliveryMode.NON_PERSISTENT;
 
 public abstract class JmsProducer {
 	protected final Session session;
