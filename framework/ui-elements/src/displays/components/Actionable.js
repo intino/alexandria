@@ -241,7 +241,7 @@ export default class Actionable extends AbstractActionable {
 
 	_signDigit = (pos) => {
 	    const sign = this.state.signInfo.sign;
-	    return sign != null ? sign[pos] : null;
+	    return sign != null ? sign[pos] : "";
 	};
 
 	renderSign = () => {
@@ -449,7 +449,14 @@ export default class Actionable extends AbstractActionable {
     		this.setState({ openSign : false });
 	        this.requester.execute();
 	    }
-	    else this.showError(this.translate("User not granted to execute operation"));
+	    else {
+	        this.showError(this.translate("User not granted to execute operation"));
+			const signInfo = this.state.signInfo;
+			signInfo.sign = null;
+	        this.setState({signInfo});
+	        const field = document.getElementById(this._fieldKeycode(0));
+	        field.focus();
+	    }
 	}
 
 	setupSignResult = (value) => {
