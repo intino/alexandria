@@ -17,8 +17,10 @@ import io.intino.alexandria.ui.model.datasource.grid.GridGroupBy;
 import io.intino.alexandria.ui.model.datasource.grid.GridItem;
 import io.intino.alexandria.ui.model.datasource.grid.GridValue;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -118,6 +120,7 @@ public class Grid<DN extends GridNotifier, B extends Box, Item> extends Abstract
         GridCollectionBehavior<Item> behavior = behavior();
         notifier.refreshGroupBy(info);
         behavior.groupBy(info.group() != null ? groupByOf(info) : null);
+        notifyRefreshItemCount();
     }
 
     private void refreshGroupByOptions(GridGroupByOptionsInfo info) {

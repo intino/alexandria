@@ -12,6 +12,8 @@ public abstract class GridDatasource<O> extends PageDatasource<O> {
 
 	public abstract List<O> items(int start, int count, String condition, List<Filter> filters, List<String> sortings, GridGroupBy groupBy);
 
+	public abstract long itemCount(String condition, List<Filter> filters, GridGroupBy groupBy);
+
 	public abstract List<String> columnGroups(GridColumn<O> column, String mode, String condition, List<Filter> filters);
 
 	public abstract List<GridColumnMode> columnModes();
