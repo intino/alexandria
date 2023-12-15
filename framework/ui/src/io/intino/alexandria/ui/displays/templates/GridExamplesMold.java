@@ -7,7 +7,10 @@ import io.intino.alexandria.ui.displays.components.Grid;
 import io.intino.alexandria.ui.model.datasource.Filter;
 import io.intino.alexandria.ui.model.datasource.GridDatasource;
 import io.intino.alexandria.ui.model.datasource.Group;
-import io.intino.alexandria.ui.model.datasource.grid.*;
+import io.intino.alexandria.ui.model.datasource.grid.GridColumn;
+import io.intino.alexandria.ui.model.datasource.grid.GridColumnMode;
+import io.intino.alexandria.ui.model.datasource.grid.GridGroupBy;
+import io.intino.alexandria.ui.model.datasource.grid.GridItem;
 import io.intino.alexandria.ui.services.push.UISession;
 
 import java.net.MalformedURLException;
@@ -75,6 +78,16 @@ public class GridExamplesMold extends AbstractGridExamplesMold<UiFrameworkBox> {
         }
 
         @Override
+        public long itemCount(String condition, List<Filter> filters) {
+            return load(condition, filters).size();
+        }
+
+        @Override
+        public long itemCount(String condition, List<Filter> filters, GridGroupBy groupBy) {
+            return groupBy(load(condition, filters)).size();
+        }
+
+        @Override
         public List<String> columnGroups(GridColumn<GridItem> column, String mode, String condition, List<Filter> filters) {
             if (mode == null || mode.equals("Distinct values")) return List.of("Lorem ipsum dolor sit amet lorem ipsum", "ipsum dolor sit amet lorem ipsum", "dolor sit amet lorem ipsum", "sit amet lorem ipsum");
             return List.of("lorem", "ipsum", "dolor", "sit");
@@ -88,11 +101,6 @@ public class GridExamplesMold extends AbstractGridExamplesMold<UiFrameworkBox> {
                 new GridColumnMode("Year", GridColumn.Type.Date),
                 new GridColumnMode("Year and month", GridColumn.Type.Date)
             );
-        }
-
-        @Override
-        public long itemCount(String condition, List<Filter> filters) {
-            return load(condition, filters).size();
         }
 
         @Override

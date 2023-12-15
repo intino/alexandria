@@ -133,6 +133,7 @@ class DateEditable extends AbstractDateEditable {
 				{ (timePicker && !hasDateInfo) ? <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={moment.locale(Application.configuration.language)}>
 				                    <KeyboardTimePicker variant={variant} placeholder={pattern} autoOk
 				                            InputLabelProps={{ shrink: this.props.shrink !== null ? this.props.shrink : undefined }}
+				                            ampm={false}
                                             inputProps={{ref:this.inputRef}}
                                             disabled={this.state.readonly}
                                             format={pattern} className={classes.datetime}
