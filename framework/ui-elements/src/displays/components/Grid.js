@@ -106,7 +106,6 @@ class Grid extends AbstractGrid {
         if (selectedColumn == null) return;
     	var gridCanvas = this.grid.getDataGridDOMNode().querySelector('.react-grid-Canvas');
     	if (gridCanvas != null) gridCanvas.scrollLeft = this.horizontalScroll;
-    	this.horizontalScroll = null;
     };
 
     renderGrid = () => {
