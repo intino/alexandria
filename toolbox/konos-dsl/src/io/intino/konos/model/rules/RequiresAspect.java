@@ -1,11 +1,11 @@
 package io.intino.konos.model.rules;
 
-import io.intino.magritte.lang.model.Node;
-import io.intino.magritte.lang.model.rules.NodeRule;
+import io.intino.tara.language.model.Mogram;
+import io.intino.tara.language.model.rules.NodeRule;
 
 public class RequiresAspect implements NodeRule {
-	public boolean accept(Node node) {
-		return !node.appliedAspects().isEmpty();
+	public boolean accept(Mogram node) {
+		return !node.appliedFacets().isEmpty();
 	}
 
 

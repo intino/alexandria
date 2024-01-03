@@ -12,11 +12,13 @@ Concept:Named Component extends Display
 	var string color = empty
 	var Format[] format = empty
 	var boolean visible = true
-	Aspect Option
-	Aspect Labeled
-	Aspect DynamicLoaded
-    	var word:{VerySlow Slow Fast VeryFast} loadTime = VeryFast
-	Aspect Traceable
+	Facet Option
+	Facet Labeled
+		var string label
+    	var word:{Top Bottom Left Right} position = Left
+	Facet DynamicLoaded
+		var word:{VerySlow Slow Fast VeryFast} loadTime = VeryFast
+	Facet Traceable
 		var integer maxAge = -1
 		var boolean secure = false
 
@@ -26,28 +28,37 @@ Concept Block extends Component
 	var word:{Never Always IfMobile IfNotMobile} hidden = Never
 	has Component
 
-	Aspect Drawer
-    	var word:{Left Top Bottom Right} position = Left
-    	var word:{Permanent Persistent PersistentAndMini Temporary} variant = Temporary
-    Aspect Splitter
-    	var string splitMobileLabel = "Back"
-	Aspect Absolute
-	Aspect Relative
-	Aspect AutoSize
-	Aspect Paper
-    Aspect Badge
-    	var integer value = -1
-    	var integer max = -1
-    	var boolean showZero = false
-    	var word:{Normal Dot} mode = Normal
-    Aspect Parallax
-    	var string background
-    Aspect Conditional
-    	var Component.Option selected = empty
-    Aspect Animated
-    Aspect Multiple
-    Aspect Popover
-    	var word:{TopLeft TopCenter TopRight LeftTop LeftCenter LeftBottom RightTop RightCenter RightBottom BottomLeft BottomCenter BottomRight} position = BottomCenter
+	Facet Drawer
+		var word:{Left Top Bottom Right} position = Left
+		var word:{Permanent Persistent PersistentAndMini Temporary} variant = Temporary
+	Facet Splitter
+		var string splitMobileLabel = "Back"
+	Facet Absolute
+	Facet Relative
+	Facet AutoSize
+	Facet Paper
+	Facet Badge
+		var integer value = -1
+		var integer max = -1
+		var boolean showZero = false
+		var word:{Normal Dot} mode = Normal
+	Facet Parallax
+		var string background
+	Facet Conditional
+		var Component.Option selected = empty
+	Facet Animated extends Animated
+
+	Facet Multiple
+		var string noItemsMessage = empty
+		var boolean wrapItems = true
+		var word:{Vertical Horizontal} arrangement = Vertical
+		var word:Spacing spacing = None
+		var boolean collapsed = false
+		Concept:{0..1} Count
+			var integer min = 0
+			var integer max = -1
+	Facet Popover
+		var word:{TopLeft TopCenter TopRight LeftTop LeftCenter LeftBottom RightTop RightCenter RightBottom BottomLeft BottomCenter BottomRight} position = BottomCenter
 
 Concept:Named Template extends Component
 	var string modelClass = empty
@@ -55,32 +66,30 @@ Concept:Named Template extends Component
 	var word:Spacing spacing = None
 	var boolean scrollable = true
 	has Component
-	Aspect Desktop
-    	has:{1..1} VisualizationComponents.Header
+	Facet Desktop
+		has:{1..1} VisualizationComponents.Header
 		//has:{1..1} ChildComponents.Tabs
 
-	Aspect DrawerNavigable with Desktop
+	Facet DrawerNavigable with Desktop
 		var word:{Left Right Top Bottom} direction = Left
 		var word:{Normal Modal} mode = Normal
 		var boolean hasMiniVariant = false
 		var boolean underHeader = false
 
-	Aspect Responsible with DrawerNavigable
-	Aspect Persistent with DrawerNavigable
-	Aspect Absolute
-	Aspect Relative
+	Facet Responsible with DrawerNavigable
+	Facet Persistent with DrawerNavigable
+	Facet Absolute
+	Facet Relative
 
 
 Concept InteractionComponents
-
 	Concept Toolbar extends Component
 		has Component
-		Aspect Linked
-        	var CatalogComponents.Collection to
-        	has ActionableComponents.Actionable
+		Facet Linked
+			var CatalogComponents.Collection to
+			has ActionableComponents.Actionable
 
 Concept ActionableComponents
-
 	Concept Actionable extends Component is abstract
 		var string title
 		var word:{Blank Self Parent Top} target = Self
@@ -114,10 +123,9 @@ Concept ActionableComponents
 			sub MaterialIconToggle
 				var string icon
 
-		Aspect Readonly
-		Aspect Addressable
-
-		Aspect Secured
+		Facet Readonly
+		Facet Addressable extends Addressable
+		Facet Secured
 			sub Affirmed
 				var string affirmText
 			sub Signed
@@ -125,7 +133,7 @@ Concept ActionableComponents
 				var string signText
 				var string reasonText = empty
 
-		Aspect Behavior
+		Facet Behavior
 			sub Action > var word:{CurrentObject Selection} context = CurrentObject
 			sub OpenDrawer > var Block.Drawer drawer
 			sub CloseDrawer > var Block.Drawer drawer
@@ -172,16 +180,16 @@ Concept:{0..1} VisualizationComponents
 		var word:{Fixed Absolute Sticky Static Relative} position = Relative
 		var integer elevation = 4
 		has Component
-		Aspect Absolute
-		Aspect Relative
+		Facet Absolute
+		Facet Relative
 
 	Concept Chart extends Component
 		var Dataframe input
 		var string serverUrl = empty
 		var word:{Image Html} output = Html
 		var string query
-		Aspect Absolute
-		Aspect Relative
+		Facet Absolute
+		Facet Relative
 
 	Concept Dashboard extends Component
 
@@ -189,15 +197,15 @@ Concept:{0..1} VisualizationComponents
 			var string name
 			var string value
 
-		Aspect Absolute
-		Aspect Relative
+		Facet Absolute
+		Facet Relative
 
-		Aspect Shiny
+		Facet Shiny
 			var string serverScript
 			var string uiScript
 			var string[] resources = empty
 
-		Aspect Metabase
+		Facet Metabase
 			var string url
 			var string secretKey
 			var boolean bordered = true
@@ -208,15 +216,15 @@ Concept:{0..1} VisualizationComponents
 		var string materialIcon = "Apps"
 
 		Concept:{1..1} Source
-			Aspect FromResource
+			Facet FromResource
 				var string path = empty
 				var string separator = "\\t"
 
-			Aspect FromFile
+			Facet FromFile
 				var string file = empty
 				var string separator = "\\t"
 
-			Aspect Inline
+			Facet Inline
 				Concept:{1..*} Application
 					var string name
 					var string url
@@ -234,7 +242,7 @@ Concept:{0..1} VisualizationComponents
 		var word:{Full NoToolbar} style = Full
 		Concept Step extends Component
 			has Component
-			Aspect MaterialIcon
+			Facet MaterialIcon
 				var string icon
 
 	Concept AbstractSlider extends Component
@@ -267,15 +275,15 @@ Concept:{0..1} VisualizationComponents
 			Concept:{1..1} Range
 				var instant min
 				var instant max
-		Aspect Readonly
+		Facet Readonly
 
 	Concept DocumentEditor extends Component
 		var string document = empty
 
-		Aspect Absolute
-		Aspect Relative
+		Facet Absolute
+		Facet Relative
 
-		Aspect Collabora
+		Facet Collabora
 			var string editorUrl
 
 	Concept DateNavigator extends Component
@@ -304,7 +312,7 @@ Concept HelperComponents
 	Concept Row extends HelperComponent
 		var CatalogComponents.Moldable.Mold.Item[] items
 
-Facet Editable
+Facet Editable is abstract
 	var string placeholder = ""
 	var string defaultValue = ""
 	var string validator = ""

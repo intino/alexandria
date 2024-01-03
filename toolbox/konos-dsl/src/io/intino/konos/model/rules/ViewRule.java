@@ -1,7 +1,7 @@
 package io.intino.konos.model.rules;
 
-import io.intino.magritte.lang.model.Node;
-import io.intino.magritte.lang.model.rules.NodeRule;
+import io.intino.tara.language.model.Mogram;
+import io.intino.tara.language.model.rules.NodeRule;
 
 import java.util.List;
 
@@ -15,41 +15,37 @@ public class ViewRule implements NodeRule {
 
 	private ERROR_TYPE error = NAME;
 
-	public boolean accept(Node node) {
-		final List<Node> components = node.components();
+	public boolean accept(Mogram mogram) {
+		final List<Mogram> components = mogram.components();
 		if (components.size() != 1) {
 			error(SIZE);
 			return false;
 		}
-		return components.stream().noneMatch(component -> hasForbiddenTypes(component) || (node.isAnonymous() && (hasFilteredCatalog(component) || isRenderDisplay(component))));
+		return components.stream().noneMatch(component -> hasForbiddenTypes(component) || (mogram.isAnonymous() && (hasFilteredCatalog(component) || isRenderDisplay(component))));
 	}
 
-	private boolean hasForbiddenTypes(Node component) {
+	private boolean hasForbiddenTypes(Mogram component) {
 		return component.types().contains("RenderPanels") ||
 				component.types().contains("RenderObjects") && error(COMPONENT_NOT_ALLOWED);
 	}
 
-	private boolean hasFilteredCatalog(Node component) {
+	private boolean hasFilteredCatalog(Mogram component) {
 		return component.types().contains("RenderCatalogs") &&
 				component.parameters().stream().anyMatch(p -> p.name().equals("filtered") &&
 						p.values().get(0).toString().equals("true")) && error(NAME);
 	}
 
-	private boolean isRenderDisplay(Node component) {
+	private boolean isRenderDisplay(Mogram component) {
 		return component.types().contains("RenderDisplay") && error(NAME);
 	}
 
 	@Override
 	public String errorMessage() {
-		switch (error) {
-			case NAME:
-				return "This View must have name";
-			case SIZE:
-				return "This View must have just one Render";
-			case COMPONENT_NOT_ALLOWED:
-				return "RenderPanels and RenderObjects are not allowed here";
-		}
-		return "";
+		return switch (error) {
+			case NAME -> "This View must have name";
+			case SIZE -> "This View must have just one Render";
+			case COMPONENT_NOT_ALLOWED -> "RenderPanels and RenderObjects are not allowed here";
+		};
 	}
 
 	private boolean error(ERROR_TYPE type) {

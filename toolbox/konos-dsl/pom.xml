@@ -8,9 +8,9 @@
 	<version>1.0.0</version>
 
 	<properties>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<tara.level>Product</tara.level>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<tara.level>MetaModel</tara.level>
 		<tara.language>Proteo</tara.language>
 		<tara.language.version>1.0.0</tara.language.version>
 		<tara.out.language>Konos</tara.out.language>
@@ -72,7 +72,7 @@
 			<groupId>io.intino.magritte</groupId>
 			<artifactId>framework</artifactId>
 			<scope>provided</scope>
-			<version>3.4.4</version>
+			<version>4.0.0</version>
 		</dependency>
 <!--		<dependency>-->
 <!--			<groupId>io.intino.tara</groupId>-->

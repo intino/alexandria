@@ -9,13 +9,10 @@ import io.intino.konos.builder.codegeneration.accessor.ui.android.AndroidSchemaW
 import io.intino.konos.builder.codegeneration.accessor.ui.web.ServiceListRenderer;
 import io.intino.konos.builder.codegeneration.analytic.AnalyticRenderer;
 import io.intino.konos.builder.codegeneration.bpm.BpmRenderer;
-import io.intino.konos.builder.codegeneration.datahub.adapter.AdapterRenderer;
-import io.intino.konos.builder.codegeneration.datahub.messagehub.MessageHubRenderer;
 import io.intino.konos.builder.codegeneration.datahub.mounter.MounterFactoryRenderer;
 import io.intino.konos.builder.codegeneration.datahub.mounter.MounterRenderer;
 import io.intino.konos.builder.codegeneration.datahub.subscriber.SubscriberRenderer;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
-import io.intino.konos.builder.codegeneration.feeder.FeederRenderer;
 import io.intino.konos.builder.codegeneration.main.MainRenderer;
 import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.codegeneration.sentinel.ListenerRenderer;
@@ -66,17 +63,14 @@ public class FullRenderer {
 				tasks();
 				jmx();
 				jms();
-				messageHub();
 				subscribers();
 				mounters();
-				adapters();
-				feeders();
 				processes();
 				analytic();
 				slack();
 				cli();
 				box();
-				main();
+				mainClass();
 				ui();
 				context.saveCache();
 			} else if (context.mode().equals(Mode.OnlyElements)) ui();
@@ -160,10 +154,6 @@ public class FullRenderer {
 		new AgendaServiceRenderer(context, graph).execute();
 	}
 
-	private void messageHub() {
-		new MessageHubRenderer(context, graph).execute();
-	}
-
 	private void mounters() throws KonosException {
 		new MounterFactoryRenderer(context, graph).execute();
 		new MounterRenderer(context, graph).execute();
@@ -173,16 +163,8 @@ public class FullRenderer {
 		new SubscriberRenderer(context, graph).execute();
 	}
 
-	private void adapters() {
-		new AdapterRenderer(context, graph).execute();
-	}
-
 	private void processes() throws KonosException {
 		new BpmRenderer(context, graph).execute();
-	}
-
-	private void feeders() {
-		new FeederRenderer(context, graph).execute();
 	}
 
 	private void slack() throws KonosException {
@@ -223,7 +205,7 @@ public class FullRenderer {
 		new BoxConfigurationRenderer(context, hasModel, renderer.customParameters()).execute();
 	}
 
-	private void main() {
+	private void mainClass() {
 		new MainRenderer(context, hasModel, graph).execute();
 	}
 

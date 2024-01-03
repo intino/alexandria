@@ -1,6 +1,6 @@
 package io.intino.konos.model.rules;
 
-import io.intino.magritte.lang.model.Metric;
+import io.intino.tara.language.model.Metric;
 
 public enum Time implements Metric<Integer> {
 	day(v -> v * 3600 * 24),

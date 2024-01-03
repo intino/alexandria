@@ -37,6 +37,14 @@ public class KonosGraph extends io.intino.konos.model.AbstractGraph {
 		return this;
 	}
 
+	public static KonosGraph load(io.intino.magritte.io.Stash... startingModel) {
+		return new Graph().loadLanguage("Konos", _language()).loadStashes(startingModel).as(KonosGraph.class);
+	}
+
+	public static KonosGraph load(io.intino.magritte.framework.Store store, io.intino.magritte.io.Stash... startingModel) {
+		return new Graph(store).loadLanguage("Konos", _language()).loadStashes(startingModel).as(KonosGraph.class);
+	}
+
 	private void resetCache() {
 		tables = new HashMap<>();
 		items = new HashMap<>();

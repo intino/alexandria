@@ -9,7 +9,7 @@ Concept:Named Service
 	has:Named Schema
 	has:Named Exception
 
-	Aspect REST
+	Facet REST
 		var string swagger = "2.0" is private
 		var string host
 		var string port
@@ -23,14 +23,14 @@ Concept:Named Service
 		var boolean generateDocs = true
 		var word[]:{http https ws wss} protocols = https
 		Concept:{0..1}:RequiresAspect Authentication
-			Aspect WithCertificate
+			Facet WithCertificate
 				var string store
 				var string storePassword
 				Concept AllowedUsers
 					var string[] certificate
-			Aspect Basic
-			Aspect Bearer
-			Aspect Custom
+			Facet Basic
+			Facet Bearer
+			Facet Custom
 		Concept:{0..1} Info
 			var string title
 			var string version
@@ -79,7 +79,7 @@ Concept:Named Service
 				//TODO si no, debe ser cualquier otro y en caso de ser tipo file el consumes debe ser "multipart/form-data" y el
 				//TODO in debe ser form.
 
-	Aspect Soap
+	Facet Soap
 		var string host
 		var string port
 		var string basePath = ""
@@ -90,7 +90,7 @@ Concept:Named Service
 				var string xmlns
 			Concept:{0..1} Output extends Response
 				var string xmlns
-	Aspect JMX
+	Facet JMX
 		var string path = ""
 		Concept:Named:{1..*} Operation
 			var string description
@@ -99,7 +99,7 @@ Concept:Named Service
 			has:{0..1} Response
 		Concept:Named Notification
 
-	Aspect Messaging
+	Facet Messaging
 		var string context
 		var word:{Queue Topic} subscriptionModel = Queue
 		Concept:Named Request
@@ -108,7 +108,7 @@ Concept:Named Service
 			has Exception
 			has:{0..1} Response
 
-	Aspect SlackBot
+	Facet SlackBot
 		var string token
 		Concept Notification
 			var string channel
@@ -120,13 +120,13 @@ Concept:Named Service
 			var word:{Text Attachment} responseType = Text
 			has Request
 
-	Aspect RocketChatBot extends SlackBot
+	Facet RocketChatBot extends SlackBot
 
-	Aspect CLI
+	Facet CLI
 		var string port
 
 		Concept:Named State
-			Aspect Initial
+			Facet Initial
 		Concept:Named Command
 			var string name
 			var string abbreviation
@@ -135,20 +135,20 @@ Concept:Named Service
 			Concept:{0..1} Postcondition > var State state
 			has Parameter
 			Concept:{1..1} Response
-				Aspect Confirmation
+				Facet Confirmation
 					var string question
 					var string[] options
-				Aspect Text
-				Aspect MultiLine
+				Facet Text
+				Facet MultiLine
 					Concept Line
 						var string content
 						var Line visibleWith = empty
 						var boolean addBreak = true
-						Aspect Multiple
+						Facet Multiple
 							var word:{Horizontal Vertical} arrangement = Vertical
 			has Exception
 
-	Aspect UI
+	Facet UI
 		var word[]:{Web Android IOS} targets = Web
 		var function:HomesProvider homeList = 'return self.resourceList().stream().filter(Service.UI.Resource::isMain).collect(toList());';
 		var function:TemplatesProvider templates = 'return self.resourceList().stream().map(r -> r.asPage().template()).collect(Collectors.toList());';
@@ -162,25 +162,34 @@ Concept:Named Service
     	var string title
     	var string favicon // TODO. Llamarlo launch -> un zip con la configuración de lanzamiento de la app
     	var string googleApiKey = empty
+		Concept Use
+			var string package
+			var string name
+			var string service
+			var string url = empty
+		var string port
+		var string title
+		var string favicon // TODO. Llamarlo launch -> un zip con la configuración de lanzamiento de la app
+		var string googleApiKey = empty
 
-    	Concept:{0..1} Authentication
-    		var string by
+		Concept:{0..1} Authentication
+			var string by
 
-    	Concept:{0..1} Edition
-    		var string by
+		Concept:{0..1} Edition
+			var string by
 
-    	Concept:Named Resource
-    		var string path
+		Concept:Named Resource
+			var string path
 			has Parameter
-    		Aspect Main
-    		Aspect Confidential
-    		Aspect Page
-            	var Template template
-    		Aspect StaticPage
-            	var string content = empty
-    		Aspect AssetPage
+			Facet Main
+			Facet Confidential
+			Facet Page
+				var Template template
+			Facet StaticPage
+				var string content = empty
+			Facet AssetPage
 
-    Aspect Agenda
+	Facet Agenda
 		var string filePath
 		var string baseUri = "triggers"
 		Concept:Named Future

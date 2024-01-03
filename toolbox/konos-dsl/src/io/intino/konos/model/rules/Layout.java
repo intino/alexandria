@@ -1,6 +1,6 @@
 package io.intino.konos.model.rules;
 
-import io.intino.magritte.lang.model.Rule;
+import io.intino.tara.language.model.Rule;
 
 public enum Layout implements Rule<Enum> {
 	Horizontal, HorizontalReverse, Vertical, VerticalReverse,

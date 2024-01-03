@@ -1,5 +1,6 @@
 dsl Proteo
 
+use Services
 use Component
 
 Concept CatalogComponents
@@ -11,8 +12,8 @@ Concept CatalogComponents
 		var integer pageSize = 20
 		var boolean scrollingMark = true
 
-		Aspect Selectable
-        	var boolean multiple = false
+		Facet Selectable
+			var boolean multiple = false
 
 		sub Moldable
 
@@ -26,9 +27,11 @@ Concept CatalogComponents
 
 			sub Magazine
 			sub List
-				Aspect Navigable
+				Facet Navigable
+					var word:{Top Bottom} position = Bottom
 			sub Table
-				Aspect Navigable
+				Facet Navigable
+					var word:{Top Bottom} position = Bottom
 			sub Map
 				var string icon = empty
 				var word[]:{ Zoom MapType Scale StreetView Rotate Fullscreen } controls = Zoom MapType Scale StreetView Rotate Fullscreen
@@ -41,10 +44,10 @@ Concept CatalogComponents
 					var integer defaultZoom
 					var integer min
 					var integer max
-				Aspect Cluster
-				Aspect Kml
+				Facet Cluster
+				Facet Kml
 					var string layer
-				Aspect Heatmap
+				Facet Heatmap
 			sub DynamicTable
 
 		sub Grid
@@ -55,8 +58,11 @@ Concept CatalogComponents
 				var integer:{px} width = -1px
 				var boolean fixed = false
 				var string pattern = empty
-				Aspect Clickable
-				Aspect Addressable
+				Facet Clickable
+				Facet Addressable
+					var Service.UI.Resource addressableResource
+                	var boolean encoded = false
+                	var boolean listenForChanges = true
 
 	Concept:Named GroupingToolbar extends Component
 		var Grouping[] groupings
@@ -64,22 +70,31 @@ Concept CatalogComponents
 	Concept:Named Grouping extends Component
 		var Collection[] collections
 		var integer pageSize = 5
-		Aspect ComboBox
-        	var string placeholder = ""
-        Aspect AttachedTo
-        	var Grouping grouping
-        	var string value = empty
-		Aspect Addressable
+		Facet ComboBox
+			var string placeholder = ""
+		Facet AttachedTo
+			var Grouping grouping
+			var string value = empty
+		Facet Addressable
+			var Service.UI.Resource addressableResource
+        	var boolean encoded = false
+        	var boolean listenForChanges = true
 
 	Concept:Named Sorting extends Component
 		var Collection[] collections
-		Aspect OrderBy
+		Facet OrderBy
 			var word:{Ascending Descending} mode = Ascending
 			var word:{Left Right} align = Left
-		Aspect Addressable
+		Facet Addressable
+			var Service.UI.Resource addressableResource
+        	var boolean encoded = false
+        	var boolean listenForChanges = true
 
 	Concept:Named SearchBox extends Component
 		var Collection[] collections
 		var string placeholder = empty
 		var boolean showCountMessage = true
-		Aspect Addressable
+		Facet Addressable
+			var Service.UI.Resource addressableResource
+        	var boolean encoded = false
+        	var boolean listenForChanges = true
