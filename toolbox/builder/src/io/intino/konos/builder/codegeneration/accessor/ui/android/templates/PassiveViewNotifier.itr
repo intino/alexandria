@@ -86,7 +86,7 @@ def type(parameter & boolean)
 end
 
 def type(parameter & object)
-	if (it$["v"$] != null) io.intino.alexandria.mobile.util.Json.parse((it$["v"$] as JsonObject).toString()) as $package.mobile.schemas.$value+firstUpperCase else $package.mobile.schemas.$value+firstUpperCase()
+	if (it$["v"$] != null && !(it$["v"$] as JsonObject).isEmpty()) io.intino.alexandria.mobile.util.Json.parse((it$["v"$] as JsonObject).toString()) as $package.mobile.schemas.$value+firstUpperCase else $package.mobile.schemas.$value+firstUpperCase.empty()
 end
 
 def type(parameter)

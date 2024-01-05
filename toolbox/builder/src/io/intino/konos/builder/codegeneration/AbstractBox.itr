@@ -208,7 +208,7 @@ def trigger(uiBox)
 end
 
 def type(service & ui) trigger(setupMethod)
-	public void setupUi() {
+	public void setup$name+firstUpperCase~Ui() {
 		[if($parameter == null || $parameter.isEmpty())] return;
 		this.authService = [this.authService($authentication)?null];
 		[io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/")];
@@ -267,10 +267,10 @@ def type(service & soap) trigger(soap)
 end
 
 def type(service & ui) trigger(ui)
-	setupUi();
+	setup$name+firstUpperCase~Ui();
 	[this.initTranslatorService()];
-	io.intino.alexandria.ui.UISpark sparkInstance = (io.intino.alexandria.ui.UISpark) io.intino.alexandria.http.AlexandriaSparkBuilder.instance();
-	sparkInstance.start();
+	io.intino.alexandria.ui.UISpark spark$name+firstUpperCase~Instance = (io.intino.alexandria.ui.UISpark) io.intino.alexandria.http.AlexandriaSparkBuilder.instance();
+	spark$name+firstUpperCase~Instance.start();
 	Logger.info("UI $name: started at port " + $parameter + "!");
 end
 

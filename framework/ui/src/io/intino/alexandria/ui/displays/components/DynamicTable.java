@@ -217,7 +217,7 @@ public abstract class DynamicTable<B extends Box, ItemComponent extends io.intin
         behavior.section(section);
         behavior.row(params.row());
         behavior.reload();
-        notifier.setup(new DynamicTableSetup().visibleColumns(visibleColumns).openRowExternal(openRowListener != null).selectRowsEnabled(selectRowsListener != null).pageSize(pageSize()).itemCount(behavior.itemCount()));
+        notifier.setupDynamicTable((DynamicTableSetup) new DynamicTableSetup().visibleColumns(visibleColumns).openRowExternal(openRowListener != null).selectRowsEnabled(selectRowsListener != null).pageSize(pageSize()).itemCount(behavior.itemCount()));
     }
 
     private Section sectionOf(String section) {
@@ -230,7 +230,7 @@ public abstract class DynamicTable<B extends Box, ItemComponent extends io.intin
     public void didMount() {
         DynamicTableCollectionBehavior behavior = behavior();
         DynamicTableDatasource source = source();
-        notifier.setup(new DynamicTableSetup().visibleColumns(visibleColumns).name(source != null ? source.name() : null).openRowExternal(openRowListener != null).selectRowsEnabled(selectRowsListener != null).pageSize(pageSize()).itemCount(behavior.itemCount()));
+        notifier.setupDynamicTable((DynamicTableSetup) new DynamicTableSetup().visibleColumns(visibleColumns).name(source != null ? source.name() : null).openRowExternal(openRowListener != null).selectRowsEnabled(selectRowsListener != null).pageSize(pageSize()).itemCount(behavior.itemCount()));
         notifyReady();
     }
 
@@ -240,7 +240,7 @@ public abstract class DynamicTable<B extends Box, ItemComponent extends io.intin
         if (source == null) return;
         DynamicTableCollectionBehavior behavior = behavior();
         behavior.setup(source, pageSize());
-        notifier.setup(new DynamicTableSetup().visibleColumns(visibleColumns).name(source.name()).openRowExternal(openRowListener != null).selectRowsEnabled(selectRowsListener != null).pageSize(pageSize()).itemCount(behavior.itemCount()));
+        notifier.setupDynamicTable((DynamicTableSetup) new DynamicTableSetup().visibleColumns(visibleColumns).name(source.name()).openRowExternal(openRowListener != null).selectRowsEnabled(selectRowsListener != null).pageSize(pageSize()).itemCount(behavior.itemCount()));
         notifyReady();
     }
 

@@ -2,7 +2,17 @@ def type(reference)
 	<Displays$name+firstUppercase context={this._context.bind(this)} owner={this._owner.bind(this)} id="[$parentPath~.]$id"$properties+common$properties+specific></Displays$name+firstUppercase>
 end
 
+def type(block & child) trigger(transfer)
+    $component+transfer...[$NL]
+end
+
 def type(header & child) trigger(transfer)
+    val $parentPath+dotsWithUnderscore~_$id = findViewById<$extends<*, *>>(R.id.[$parentPath+dotsWithUnderscore~_]$id)
+    $parentPath+dotsWithUnderscore~_$id.transfer(listOf($component+transferFind...[,]))
+    $component+transfer...[$NL]
+end
+
+def type(tabs & child) trigger(transfer)
     val $parentPath+dotsWithUnderscore~_$id = findViewById<$extends<*, *>>(R.id.[$parentPath+dotsWithUnderscore~_]$id)
     $parentPath+dotsWithUnderscore~_$id.transfer(listOf($component+transferFind...[,]))
     $component+transfer...[$NL]

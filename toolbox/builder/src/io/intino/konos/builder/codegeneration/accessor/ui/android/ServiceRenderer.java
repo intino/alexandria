@@ -1,10 +1,8 @@
 package io.intino.konos.builder.codegeneration.accessor.ui.android;
 
 import io.intino.konos.builder.codegeneration.accessor.ui.android.resource.ResourceListRenderer;
-import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayListRenderer;
-import io.intino.konos.builder.codegeneration.ui.displays.RouteDispatcherRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.model.Component;
@@ -26,8 +24,6 @@ public class ServiceRenderer extends UIRenderer {
 
 	@Override
 	public void render() throws KonosException {
-		new AppRenderer(context, service).execute();
-		new RouteDispatcherRenderer(context, service, Target.Android).execute();
 		new DisplayListRenderer(context, service, new AndroidRendererWriter(context)).execute();
 		new DisplaysManifestRenderer(context, service).execute();
 		new ResourceListRenderer(context, service).execute();

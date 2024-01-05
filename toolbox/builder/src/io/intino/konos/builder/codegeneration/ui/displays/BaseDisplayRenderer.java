@@ -23,6 +23,7 @@ import java.util.List;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.hasAbstractClass;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.isScrollable;
 import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
 import static io.intino.konos.model.CatalogComponents.Collection;
 import static io.intino.konos.model.Component.DynamicLoaded;
@@ -58,6 +59,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		result.add(typeOf(element));
 		if (accessible) result.add("accessible");
 		if (!hasAbstractClass(element, writer.target())) result.add("noAbstract");
+		if (isScrollable(element, writer.target())) result.add("scrollable");
 		addParametrized(result, accessible);
 		addExtends(result, accessible);
 		addImports(result, accessible);

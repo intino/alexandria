@@ -73,7 +73,7 @@ public abstract class PageCollection<DN extends PageCollectionNotifier, B extend
         if (source == null) return;
         PageCollectionBehavior behavior = behavior();
         behavior.setup(source, pageSize);
-        notifier.setup(new PageCollectionSetup().pageSize(pageSize).itemCount(behavior.itemCount()));
+        notifier.setupPageCollection((PageCollectionSetup) new PageCollectionSetup().pageSize(pageSize).itemCount(behavior.itemCount()));
         notifyReady();
     }
 

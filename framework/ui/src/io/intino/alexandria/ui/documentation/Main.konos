@@ -4,7 +4,7 @@ use Docs
 use WidgetType
 use Theme
 
-Service(title = "", favicon = "") UiElements as UI(targets=Web Android, port = "9000")
+Service(title = "", favicon = "") UiElements as UI(targets=Web Android, port = "9000", url="http://10.0.2.2:9000")
 	googleApiKey = "AIzaSyA8FjeAX36umrYD8Jk2FbRFWqDEulInKIA"
 
 	Resource(path = "/") home as Page(docsTemplate) Main
@@ -12,6 +12,11 @@ Service(title = "", favicon = "") UiElements as UI(targets=Web Android, port = "
 	Resource(path = "/widgets/:type/") widgetType as Page(widgetTypeTemplate)
 	Resource(path = "/widgets/microsite/:page") microSite as Page(widgetTypeTemplate)
 	Resource(path = "/static/example.html") exampleContent as StaticPage(content="<div>This is a static page</div>")
+
+Service(title = "", favicon = "") UiMobile as UI(targets=Android, port = "9000", url="http://10.0.2.2:9000")
+	googleApiKey = "AIzaSyA8FjeAX36umrYD8Jk2FbRFWqDEulInKIA"
+
+	Resource(path = "/mobile") mobileHome as Page(mobileDocsTemplate) Main
 
 Template homeTemplate
 	Header(color="white", format=air) as Absolute(height=100px)

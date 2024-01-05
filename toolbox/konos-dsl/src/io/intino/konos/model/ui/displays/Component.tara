@@ -53,6 +53,7 @@ Concept:Named Template extends Component
 	var string modelClass = empty
 	var word[]:Layout layout = Vertical
 	var word:Spacing spacing = None
+	var boolean scrollable = true
 	has Component
 	Aspect Desktop
     	has:{1..1} VisualizationComponents.Header

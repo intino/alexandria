@@ -4,10 +4,7 @@ def type(dispatcher)
     import android.content.Context
     import android.content.Intent
     import android.os.Bundle
-    import $package.mobile.android.pages.HomeActivity
-    import $package.mobile.android.pages.MicroSiteActivity
-    import $package.mobile.android.pages.WidgetTypeActivity
-    import $package.mobile.android.pages.WidgetsActivity
+    [$resource+import...[$NL]]
     import java.util.regex.Matcher
     import java.util.regex.Pattern
 
@@ -78,6 +75,13 @@ def type(dispatcher)
         }
 
     }
+end
+
+def type(resource & main) trigger(import)
+end
+
+def type(resource) trigger(import)
+    import $package.mobile.android.pages.$name+firstUpperCase~Activity
 end
 
 def type(resource & main) trigger(patternRegister)

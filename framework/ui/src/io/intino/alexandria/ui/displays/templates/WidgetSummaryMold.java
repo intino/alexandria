@@ -15,6 +15,7 @@ public class WidgetSummaryMold extends AbstractWidgetSummaryMold<AlexandriaUiBox
         Widget item = item();
         updateTitle();
         description.value(translate(item.description()));
+        facets.clear();
         facets.addAll(item.facets());
     }
 

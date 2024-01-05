@@ -9,16 +9,18 @@ import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Service;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class AppRenderer extends UIRenderer {
-	private final Service.UI service;
+	private final List<Service.UI> serviceList;
 
-	protected AppRenderer(CompilationContext compilationContext, Service.UI service) {
+	protected AppRenderer(CompilationContext compilationContext, List<Service.UI> serviceList) {
 		super(compilationContext);
-		this.service = service;
+		this.serviceList = serviceList;
 	}
 
 	@Override
@@ -36,8 +38,12 @@ public class AppRenderer extends UIRenderer {
 		FrameBuilder result = super.buildFrame();
 		result.add("gradle");
 		result.add("project", context.project());
-		service.resourceList().stream().filter(Service.UI.Resource::isPage).forEach(r -> result.add("resource", resourceFrame(r)));
+		resources().stream().filter(Service.UI.Resource::isPage).forEach(r -> result.add("resource", resourceFrame(r)));
 		return result;
+	}
+
+	private List<Service.UI.Resource> resources() {
+		return serviceList.stream().map(Service.UI::resourceList).flatMap(Collection::stream).collect(Collectors.toList());
 	}
 
 	private FrameBuilder resourceFrame(Service.UI.Resource resource) {

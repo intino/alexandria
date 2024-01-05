@@ -157,6 +157,7 @@ Concept:Named Service
     		var string name
     		var string service
     		var string url = empty
+    	var string url = empty
     	var string port
     	var string title
     	var string favicon // TODO. Llamarlo launch -> un zip con la configuración de lanzamiento de la app

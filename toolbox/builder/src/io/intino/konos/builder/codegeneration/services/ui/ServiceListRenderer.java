@@ -4,6 +4,7 @@ import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayListRenderer;
+import io.intino.konos.builder.codegeneration.ui.displays.RouteDispatcherRenderer;
 import io.intino.konos.builder.codegeneration.ui.resource.ResourceListRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
@@ -26,6 +27,7 @@ public class ServiceListRenderer extends UIRenderer {
 	public void render() throws KonosException {
 		for (Service service : graph.serviceList(Service::isUI).collect(toList())) processUIService(service.asUI());
 		new ResourceListRenderer(context, graph, Target.Server).execute();
+		new RouteDispatcherRenderer(context, graph.serviceList(Service::isUI).map(Service::asUI).collect(toList()), Target.Server).execute();
 	}
 
 	private void processUIService(Service.UI service) throws KonosException {
