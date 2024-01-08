@@ -24,6 +24,7 @@ public class MobileDocsTemplate extends AbstractMobileDocsTemplate<AlexandriaUiB
 		super.init();
 		widgetList.onAddItem(this::refresh);
 		widgetTypeSelector.onSelect(this::refreshWidgets);
+		backTrigger.onExecute(e -> showCatalogBlock());
 	}
 
 	private void refreshWidgets(SelectionEvent event) {
@@ -31,6 +32,7 @@ public class MobileDocsTemplate extends AbstractMobileDocsTemplate<AlexandriaUiB
 	}
 
 	private void refreshWidgets(String group) {
+		if (!catalogBlock.isVisible()) showCatalogBlock();
 		this.group.value(labelOf(group));
 		widgetList.source(new WidgetGroupDatasource(group));
 		widgetList.reload();
@@ -49,8 +51,25 @@ public class MobileDocsTemplate extends AbstractMobileDocsTemplate<AlexandriaUiB
 	private void refresh(AddItemEvent event) {
 		Widget widget = event.item();
 		WidgetListMold display = event.component();
+		display.widgetListItem.onSelect(e -> open(widget));
 		display.widgetListItem.item(widget);
 		display.widgetListItem.refresh();
+	}
+
+	private void open(Widget widget) {
+		showWidgetBlock();
+		widgetStamp.item(widget);
+		widgetStamp.refresh();
+	}
+
+	private void showCatalogBlock() {
+		catalogBlock.show();
+		widgetBlock.hide();
+	}
+
+	private void showWidgetBlock() {
+		catalogBlock.hide();
+		widgetBlock.show();
 	}
 
 	private static class WidgetGroupDatasource extends PageDatasource<Widget> {

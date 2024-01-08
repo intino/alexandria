@@ -33,6 +33,7 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
         Widget widget = item();
         title.value(translate(widget.getClass().getSimpleName().replace("Widget", "")));
         description.value(translate(widget.description()));
+        highlightFacets.clear();
         highlightFacets.addAll(widget.facets());
         updateExamplesVisibility();
         updateInfo();

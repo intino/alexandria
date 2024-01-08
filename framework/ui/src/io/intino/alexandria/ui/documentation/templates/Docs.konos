@@ -1,5 +1,6 @@
 dsl Konos
 
+use Widget
 use Main
 use Theme
 
@@ -35,13 +36,18 @@ Template(scrollable=false) mobileDocsTemplate
 				Text(value="widgets")
 
 	Block(layout=Vertical Flexible) as Relative(height=80%)
-		Text(format=h5 airBottom) group
-		List(itemClass="io.intino.alexandria.schemas.Widget") widgetList
-			noItemsMessage = "No widgets defined"
-			Mold
-				Item(height=200px) widgetListMold
-					Block(format=air)
-						TemplateStamp(template=widgetSummaryMold) widgetListItem
+		Block(layout=Vertical Flexible) catalogBlock
+			Text(format=h5 airBottom) group
+			List(itemClass="io.intino.alexandria.schemas.Widget") widgetList
+				noItemsMessage = "No widgets defined"
+				Mold
+					Item(height=200px) widgetListMold
+						Block(format=air)
+							TemplateStamp(template=widgetSummaryMold) widgetListItem
+
+		Block(visible=false) widgetBlock
+			MaterialIconButton(title="Back", icon="zmdi-arrow-left") backTrigger as Action
+			TemplateStamp(template=widgetMold) widgetStamp
 
 	Block(layout=Vertical End)
 		Selector widgetTypeSelector as Tabs
@@ -51,7 +57,7 @@ Template(scrollable=false) mobileDocsTemplate
 			MaterialIcon(icon="zmdi-more") otherOption as Option
 
 Template(layout=Vertical Flexible, modelClass="io.intino.alexandria.schemas.Widget", scrollable=false) widgetSummaryMold as Relative(height=100%)
-	Link(title = "", format=h6, size=Large) title as OpenPage(page = UiElements.widgetType)
+	Link(title = "", format=h6, size=Large) title as Action
 	Block(layout=Flexible) > Text description
 	Text(format=body2) facets as Multiple(arrangement=Horizontal) Highlighted("white","#679164")
 
@@ -60,7 +66,6 @@ Template(layout=Vertical Flexible, modelClass="io.intino.alexandria.schemas.Widg
 		Link(title = "", format=h6, size=Large) title as OpenPage(page = UiElements.widgetType)
 		Block(layout=Flexible) > Text description
 		Text(format=body2) facets as Multiple(arrangement=Horizontal) Highlighted("white","#679164")
-
 
 //Template docsTemplate as Decorated
 //	Header(color="white", format=air) as Absolute(height=100px)
