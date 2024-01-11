@@ -57,8 +57,8 @@ Concept OtherComponents
 
 	Concept Frame extends Component
 		var string url
-		Facet Absolute
-		Facet Relative
+		Facet Absolute extends Absolute
+		Facet Relative extends Relative
 
 	Concept Selector extends Component
 		var boolean multipleSelection = false
