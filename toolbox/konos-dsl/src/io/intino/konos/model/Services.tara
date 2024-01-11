@@ -70,7 +70,7 @@ Concept:Named Service
 				has:{0..1} Response
 				var Exception[] exceptionRefs = empty
 				has Exception
-			Aspect Public
+			Facet Public
 		Concept:Named Notification
 			var string path
 			Concept:Named Parameter extends Parameter is component
@@ -162,16 +162,6 @@ Concept:Named Service
     	var string title
     	var string favicon // TODO. Llamarlo launch -> un zip con la configuración de lanzamiento de la app
     	var string googleApiKey = empty
-		Concept Use
-			var string package
-			var string name
-			var string service
-			var string url = empty
-		var string port
-		var string title
-		var string favicon // TODO. Llamarlo launch -> un zip con la configuración de lanzamiento de la app
-		var string googleApiKey = empty
-
 		Concept:{0..1} Authentication
 			var string by
 

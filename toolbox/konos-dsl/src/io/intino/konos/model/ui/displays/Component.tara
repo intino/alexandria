@@ -33,9 +33,9 @@ Concept Block extends Component
 		var word:{Permanent Persistent PersistentAndMini Temporary} variant = Temporary
 	Facet Splitter
 		var string splitMobileLabel = "Back"
-	Facet Absolute
-	Facet Relative
-	Facet AutoSize
+	Facet Absolute extends Absolute
+	Facet Relative extends Relative
+	Facet AutoSize extends AutoSize
 	Facet Paper
 	Facet Badge
 		var integer value = -1
@@ -48,15 +48,7 @@ Concept Block extends Component
 		var Component.Option selected = empty
 	Facet Animated extends Animated
 
-	Facet Multiple
-		var string noItemsMessage = empty
-		var boolean wrapItems = true
-		var word:{Vertical Horizontal} arrangement = Vertical
-		var word:Spacing spacing = None
-		var boolean collapsed = false
-		Concept:{0..1} Count
-			var integer min = 0
-			var integer max = -1
+	Facet Multiple extends Multiple
 	Facet Popover
 		var word:{TopLeft TopCenter TopRight LeftTop LeftCenter LeftBottom RightTop RightCenter RightBottom BottomLeft BottomCenter BottomRight} position = BottomCenter
 
@@ -78,8 +70,8 @@ Concept:Named Template extends Component
 
 	Facet Responsible with DrawerNavigable
 	Facet Persistent with DrawerNavigable
-	Facet Absolute
-	Facet Relative
+	Facet Absolute extends Absolute
+	Facet Relative extends Relative
 
 
 Concept InteractionComponents
@@ -180,16 +172,16 @@ Concept:{0..1} VisualizationComponents
 		var word:{Fixed Absolute Sticky Static Relative} position = Relative
 		var integer elevation = 4
 		has Component
-		Facet Absolute
-		Facet Relative
+		Facet Absolute extends Absolute
+		Facet Relative extends Relative
 
 	Concept Chart extends Component
 		var Dataframe input
 		var string serverUrl = empty
 		var word:{Image Html} output = Html
 		var string query
-		Facet Absolute
-		Facet Relative
+		Facet Absolute extends Absolute
+		Facet Relative extends Relative
 
 	Concept Dashboard extends Component
 
@@ -197,8 +189,8 @@ Concept:{0..1} VisualizationComponents
 			var string name
 			var string value
 
-		Facet Absolute
-		Facet Relative
+		Facet Absolute extends Absolute
+		Facet Relative extends Relative
 
 		Facet Shiny
 			var string serverScript
@@ -280,8 +272,8 @@ Concept:{0..1} VisualizationComponents
 	Concept DocumentEditor extends Component
 		var string document = empty
 
-		Facet Absolute
-		Facet Relative
+		Facet Absolute extends Absolute
+		Facet Relative extends Relative
 
 		Facet Collabora
 			var string editorUrl

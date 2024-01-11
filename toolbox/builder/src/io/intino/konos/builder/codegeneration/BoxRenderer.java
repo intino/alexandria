@@ -60,7 +60,7 @@ public class BoxRenderer extends Renderer {
 			final String genPackage = configuration.model().generationPackage();
 			dsls.add((genPackage == null ? "" : genPackage.toLowerCase() + ".") + firstUpperCase(language));
 		}
-		if (!configuration.model().level().isSolution())
+		if (!configuration.model().level().isModel())
 			dsls.add(configuration.generationPackage().toLowerCase() + "." + firstUpperCase(configuration.model().outDsl()));
 		return dsls.toArray(new String[0]);
 	}

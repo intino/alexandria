@@ -97,8 +97,8 @@ Concept DataComponents
 		var string pattern = "DD/MM/YYYY"
 		var word:{FromNow ToNow None} mode = None
 		var instant value = empty
-		Facet Multiple
-		Facet Editable
+		Facet Multiple extends Multiple
+		Facet Editable extends Editable
 			var instant min = empty
 			var instant max = empty
 			var boolean timePicker = false

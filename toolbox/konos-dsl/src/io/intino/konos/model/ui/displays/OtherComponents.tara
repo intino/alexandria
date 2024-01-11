@@ -31,8 +31,8 @@ Concept OtherComponents
 		var string content = empty
 
 	Concept BaseStamp extends Component
-		Facet Multiple
-		Facet Editable
+		Facet Multiple extends Multiple
+		Facet Editable extends Editable
 
 		!! Renders template in this component
 		sub TemplateStamp
@@ -102,8 +102,8 @@ Concept OtherComponents
 
 	Concept AbstractDialog extends Component is abstract
 		var string title
-		Facet Absolute
-		Facet Relative
+		Facet Absolute extends Absolute
+		Facet Relative extends Relative
 		Facet Animated extends Animated
 		Facet FullScreen
 		Facet Modal

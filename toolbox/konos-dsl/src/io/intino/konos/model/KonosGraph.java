@@ -15,7 +15,7 @@ public class KonosGraph extends io.intino.konos.model.AbstractGraph {
 	private static Map<String, List<CatalogComponents.Moldable.Mold.Item>> items = new HashMap<>();
 	private static Map<String, List<HelperComponents.Row>> rows = new HashMap<>();
 	private static Map<String, List<CatalogComponents.Table>> tables = new HashMap<>();
-	private static Map<String, List<CatalogComponents.DynamicTable>> dynamicTables = new HashMap<>();
+	private static final Map<String, List<CatalogComponents.DynamicTable>> dynamicTables = new HashMap<>();
 	private List<CatalogComponents.Collection> collectionDisplays;
 	private List<CatalogComponents.Table> tableDisplays;
 	private List<CatalogComponents.List> listDisplays;
