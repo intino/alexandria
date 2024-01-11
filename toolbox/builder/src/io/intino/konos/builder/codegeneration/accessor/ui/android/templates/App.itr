@@ -34,7 +34,8 @@ end
 def type(resource & main)
     <activity
         android:name=".pages.$name+snakecaseToCamelCase+firstUpperCase~Activity"
-        android:exported="true">
+        android:exported="true"
+        android:windowSoftInputMode="adjustNothing">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
@@ -45,7 +46,8 @@ end
 def type(resource)
     <activity
         android:name=".pages.$name+snakecaseToCamelCase+firstUpperCase~Activity"
-        android:exported="true">
+        android:exported="true"
+        android:windowSoftInputMode="adjustNothing">
     </activity>
 end
 

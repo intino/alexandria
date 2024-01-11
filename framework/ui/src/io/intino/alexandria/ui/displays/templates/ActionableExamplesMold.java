@@ -1,14 +1,10 @@
 package io.intino.alexandria.ui.displays.templates;
 
-import de.taimos.totp.TOTP;
 import io.intino.alexandria.ui.AlexandriaUiBox;
-import io.intino.alexandria.ui.displays.components.actionable.SignChecker;
-import io.intino.alexandria.ui.displays.components.actionable.SignInfo;
 import io.intino.alexandria.ui.displays.components.actionable.SignInfoProvider;
-import org.apache.commons.codec.binary.Base32;
-import org.apache.commons.codec.binary.Hex;
 
 public class ActionableExamplesMold extends AbstractActionableExamplesMold<AlexandriaUiBox> {
+    private String reason;
 
     public ActionableExamplesMold(AlexandriaUiBox box) {
         super(box);
@@ -27,6 +23,10 @@ public class ActionableExamplesMold extends AbstractActionableExamplesMold<Alexa
         operation6.onExecute((event) -> operation6.notifyUser("User clicked operation"));
         operation7.onExecute((event) -> operation7.notifyUser("User clicked operation"));
         operation8.onToggle((event) -> operation7.notifyUser("Edition state to " + event.state().name()));
+        operation9.signChecker((sign, reason) -> sign.equals("1234"));
+        operation9.onExecute(e -> operation9.notifyUser("User clicked operation"));
+        operation10.signChecker((sign, reason) -> { this.reason = reason; return sign.equals("1234"); });
+        operation10.onExecute(e -> operation10.notifyUser("User clicked operation. Reason: " + reason));
         operation11.onToggle((event) -> operation11.notifyUser("Edition state to " + event.state().name()));
         operation12.onToggle((event) -> operation12.notifyUser("Edition state to " + event.state().name()));
         operation13.onToggle((event) -> operation13.notifyUser("Edition state to " + event.state().name()));

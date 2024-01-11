@@ -46,7 +46,9 @@ use Theme
 use Schemas
 
 Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widgetMold as DynamicLoaded(loadTime=Slow)
-	Text(value="Widget", format=h3) title
+	Block(layout=Horizontal Center)
+		MaterialIconButton(title="Back", icon="NavigateBefore", format=airRight, visible=false) backTrigger as Action
+		Text(value="Widget", format=h3) title
 	Text(format=body1) highlightFacets as Multiple(arrangement=Horizontal) Highlighted("white","#679164")
 	Text(format=body1 airBottom) description
 

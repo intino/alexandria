@@ -2,6 +2,7 @@ package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.UiFrameworkBox;
 import io.intino.alexandria.schemas.Widget;
+import io.intino.alexandria.ui.documentation.DisplayHelper;
 
 public class WidgetSummaryMoldCard extends AbstractWidgetSummaryMoldCard<UiFrameworkBox> {
 
@@ -20,9 +21,8 @@ public class WidgetSummaryMoldCard extends AbstractWidgetSummaryMoldCard<UiFrame
 	}
 
 	private void updateTitle() {
-		String simpleName = item().getClass().getSimpleName().replace("Widget", "");
-		title.title(translate(simpleName));
-		title.path("/widgets/" + simpleName.toLowerCase() + "/");
+		title.title(DisplayHelper.label(item(), this::translate));
+		title.path("/widgets/" + DisplayHelper.name(item()).toLowerCase() + "/");
 	}
 
 }

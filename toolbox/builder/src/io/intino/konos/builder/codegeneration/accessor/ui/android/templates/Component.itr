@@ -86,7 +86,7 @@ def type(method)
 end
 
 def type(properties & actionable) trigger(common)
-	[ alexandria:actionable_title="$title"][ alexandria:alexandria_name="$name"][ alexandria:actionable_target="$target"][ alexandria:actionable_mode="$actionableMode"][ alexandria:actionable_icon="$icon"][ alexandria:actionable_affirmed="$affirmed"][ alexandria:actionable_traceable="$traceable"][ alexandria:actionable_signed="{mode:'$signMode',text:'$signText',reason:'$reasonText'}"][ alexandria:actionable_readonly="$readonly"][ alexandria:actionable_size="$size"][ style="@style/$format...[_]"][ alexandria:actionable_highlighted="$highlighted"][ alexandria:alexandria_visible="$visible"][ alexandria:alexandria_style="$style"][ alexandria:alexandria_color="$color"]
+	[ alexandria:actionable_title="$title"][ alexandria:alexandria_name="$name"][ alexandria:actionable_target="$target"][ alexandria:actionable_mode="$actionableMode"][ alexandria:actionable_icon="$icon"][ alexandria:actionable_affirmed="$affirmed"][ alexandria:actionable_traceable="$traceable"][ alexandria:actionable_signed="{'mode':'$signMode','text':'$signText','reason':'$reasonText'}"][ alexandria:actionable_readonly="$readonly"][ alexandria:actionable_size="$size"][ style="@style/$format...[_]"][ alexandria:actionable_highlighted="$highlighted"][ alexandria:alexandria_visible="$visible"][ alexandria:alexandria_style="$style"][ alexandria:alexandria_color="$color"]
 end
 
 def type(properties & abstractslider) trigger(common)
@@ -142,15 +142,15 @@ def type(properties & chart) trigger(specific)
 end
 
 def type(properties & alertdialog) trigger(specific)
-	[ alexandria:alert_dialog_title="$title"][ alexandria:alert_dialog_modal="$modal"][ alexandria:alert_dialog_full_screen="$fullscreen"][ alexandria:alert_dialog_message="$message"][ alexandria:alert_dialog_close_label="$closeLabel"][ alexandria:alert_dialog_accept_label="$acceptLabel"][ alexandria:alert_dialog_width="$width"][ alexandria:alert_dialog_height="$height"][ alexandria:alert_dialog_animation="{mode:'$mode',direction:'$transitionDirection',duration:'$transitionDuration'}"]
+	[ alexandria:alert_dialog_title="$title"][ alexandria:alert_dialog_modal="$modal"][ alexandria:alert_dialog_full_screen="$fullscreen"][ alexandria:alert_dialog_message="$message"][ alexandria:alert_dialog_close_label="$closeLabel"][ alexandria:alert_dialog_accept_label="$acceptLabel"][ alexandria:alert_dialog_width="$width"][ alexandria:alert_dialog_height="$height"][ alexandria:alert_dialog_animation="{'mode':'$mode','direction':'$transitionDirection','duration':'$transitionDuration'}"]
 end
 
 def type(properties & abstractdialog) trigger(specific)
-	[ alexandria:abstract_dialog_title="$title"][ alexandria:abstract_dialog_modal="$modal"][ alexandria:abstract_dialog_full_screen="$fullscreen"][ alexandria:abstract_dialog_width="$width"][ alexandria:abstract_dialog_height="$height"][ alexandria:abstract_dialog_animation="{mode:'$mode',direction:'$transitionDirection',duration:'$transitionDuration'}"]
+	[ alexandria:abstract_dialog_title="$title"][ alexandria:abstract_dialog_modal="$modal"][ alexandria:abstract_dialog_full_screen="$fullscreen"][ alexandria:abstract_dialog_width="$width"][ alexandria:abstract_dialog_height="$height"][ alexandria:abstract_dialog_animation="{'mode':'$mode','direction':'$transitionDirection','duration':'$transitionDuration'}"]
 end
 
 def type(properties & block) trigger(specific)
-	[ alexandria:block_layout="$layout...[ ]"][ alexandria:block_width="$width"][ alexandria:block_height="$height"][ alexandria:showDivider="middle"][ alexandria:dividerDrawable="@drawable/spacing_$spacing"][ alexandria:block_paper="$paperBoolean"][ android:background="@drawable/$paper"][ $badge][ $drawer][ $popover][ alexandria:block_animation="{mode:'$mode',direction:'$transitionDirection',duration:'$transitionDuration'}"][ alexandria:block_hidden="$hidden"][ alexandria:auto_size="$autoSize"][ android:visibility="$conditional~gone"]
+	[ alexandria:block_layout="$layout...[ ]"][ alexandria:block_width="$width"][ alexandria:block_height="$height"][ alexandria:showDivider="middle"][ alexandria:dividerDrawable="@drawable/spacing_$spacing"][ alexandria:block_paper="$paperBoolean"][ android:background="@drawable/$paper"][ $badge][ $drawer][ $popover][ alexandria:block_animation="{'mode':'$mode','direction':'$transitionDirection','duration':'$transitionDuration'}"][ alexandria:block_hidden="$hidden"][ alexandria:block_auto_size="$autoSize"][ android:visibility="$conditional~gone"]
 end
 
 def type(properties & date) trigger(specific)

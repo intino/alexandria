@@ -5,6 +5,7 @@ import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.events.AddItemEvent;
 import io.intino.alexandria.ui.displays.events.SelectionEvent;
 import io.intino.alexandria.ui.displays.items.WidgetListMold;
+import io.intino.alexandria.ui.documentation.DisplayHelper;
 import io.intino.alexandria.ui.documentation.Model;
 import io.intino.alexandria.ui.model.datasource.Filter;
 import io.intino.alexandria.ui.model.datasource.Group;
@@ -24,7 +25,9 @@ public class MobileDocsTemplate extends AbstractMobileDocsTemplate<AlexandriaUiB
 		super.init();
 		widgetList.onAddItem(this::refresh);
 		widgetTypeSelector.onSelect(this::refreshWidgets);
-		backTrigger.onExecute(e -> showCatalogBlock());
+		widgetStamp.onBack(e -> showCatalogBlock());
+		open(Model.widget(Model.WidgetType.OpenPage));
+		//widgetTypeSelector.select("operationOption");
 	}
 
 	private void refreshWidgets(SelectionEvent event) {
@@ -58,6 +61,7 @@ public class MobileDocsTemplate extends AbstractMobileDocsTemplate<AlexandriaUiB
 
 	private void open(Widget widget) {
 		showWidgetBlock();
+		widgetStamp.mode(WidgetMold.Mode.Embedded);
 		widgetStamp.item(widget);
 		widgetStamp.refresh();
 	}
@@ -108,7 +112,7 @@ public class MobileDocsTemplate extends AbstractMobileDocsTemplate<AlexandriaUiB
 		}
 
 		private List<Widget> sort(List<Widget> widgetList, List<String> sortings) {
-			widgetList.sort(Comparator.comparing(Widget::description));
+			widgetList.sort(Comparator.comparing(DisplayHelper::name));
 			return widgetList;
 		}
 

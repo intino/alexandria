@@ -35,7 +35,7 @@ Template(scrollable=false) mobileDocsTemplate
 				Link(title="home") as OpenSite(site="https://www.intino.io")
 				Text(value="widgets")
 
-	Block(layout=Vertical Flexible) as Relative(height=80%)
+	Block as AutoSize
 		Block(layout=Vertical Flexible) catalogBlock
 			Text(format=h5 airBottom) group
 			List(itemClass="io.intino.alexandria.schemas.Widget") widgetList
@@ -45,16 +45,15 @@ Template(scrollable=false) mobileDocsTemplate
 						Block(format=air)
 							TemplateStamp(template=widgetSummaryMold) widgetListItem
 
-		Block(visible=false) widgetBlock
-			MaterialIconButton(title="Back", icon="zmdi-arrow-left") backTrigger as Action
+		Block(visible=false, format=air) widgetBlock
 			TemplateStamp(template=widgetMold) widgetStamp
 
 	Block(layout=Vertical End)
 		Selector widgetTypeSelector as Tabs
-			MaterialIcon(icon="zmdi-edit") dataOption as Option
-			MaterialIcon(icon="zmdi-format-list-bulleted") catalogOption as Option
-			MaterialIcon(icon="zmdi-caret-right-circle") operationOption as Option
-			MaterialIcon(icon="zmdi-more") otherOption as Option
+			MaterialIcon(icon="Edit") dataOption as Option
+			MaterialIcon(icon="List") catalogOption as Option
+			MaterialIcon(icon="PlayArrow") operationOption as Option
+			MaterialIcon(icon="MoreHoriz") otherOption as Option
 
 Template(layout=Vertical Flexible, modelClass="io.intino.alexandria.schemas.Widget", scrollable=false) widgetSummaryMold as Relative(height=100%)
 	Link(title = "", format=h6, size=Large) title as Action

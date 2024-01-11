@@ -2,6 +2,7 @@ package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.schemas.Widget;
 import io.intino.alexandria.ui.AlexandriaUiBox;
+import io.intino.alexandria.ui.documentation.DisplayHelper;
 
 import java.util.function.Consumer;
 
@@ -34,8 +35,7 @@ public class WidgetSummaryMold extends AbstractWidgetSummaryMold<AlexandriaUiBox
     }
 
     private void updateTitle() {
-        String simpleName = item().getClass().getSimpleName().replace("Widget", "");
-        title.title(translate(simpleName));
+        title.title(DisplayHelper.label(item(), this::translate));
     }
 
 }
