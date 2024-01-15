@@ -2,6 +2,7 @@ def type(display)
     package $package.mobile.displays.notifiers
 
     import $package.mobile.displays.[$packageType~s.]$name+firstUpperCase~$proxy
+    import kotlinx.serialization.json.JsonArray
     import kotlinx.serialization.json.JsonObject
     import kotlinx.serialization.json.JsonPrimitive
 
@@ -85,8 +86,16 @@ def type(parameter & boolean)
 	((it$["v"$]!! as JsonPrimitive).content).toBoolean()
 end
 
+def type(parameter & object & list)
+	if (it$["v"$] != null) io.intino.alexandria.mobile.util.Json.list(it$["v"$] as JsonArray, $package.mobile.schemas.$value+firstUpperCase.empty()) else emptyList()
+end
+
 def type(parameter & object)
 	if (it$["v"$] != null && !(it$["v"$] as JsonObject).isEmpty()) io.intino.alexandria.mobile.util.Json.parse((it$["v"$] as JsonObject).toString()) as $package.mobile.schemas.$value+firstUpperCase else $package.mobile.schemas.$value+firstUpperCase.empty()
+end
+
+def type(parameter & list)
+    if (it.containsKey("v")) io.intino.alexandria.mobile.util.Json.list(it$["v"$] as JsonArray, $value()) else emptyList()
 end
 
 def type(parameter)
