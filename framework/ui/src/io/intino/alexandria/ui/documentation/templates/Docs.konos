@@ -1,5 +1,6 @@
 dsl Konos
 
+use Widget
 use Main
 use Theme
 
@@ -15,21 +16,55 @@ Template docsTemplate
 
 	Block(layout=Wrap, spacing=DP40, format=containerAirLarge) body
 		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) dataBlock as Labeled("data widgets")
-			TemplateStamp(template=widgetSummaryMold,spacing=DP16,arrangement=Horizontal) dataWidgets as Multiple(noItemsMessage="no widgets")
+			TemplateStamp(template=widgetSummaryMoldCard,spacing=DP16,arrangement=Horizontal) dataWidgets as Multiple(noItemsMessage="no widgets")
 		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) catalogBlock as Labeled("catalog widgets")
-			TemplateStamp(template=widgetSummaryMold,spacing=DP16,arrangement=Horizontal) catalogWidgets as Multiple(noItemsMessage="no widgets")
+			TemplateStamp(template=widgetSummaryMoldCard,spacing=DP16,arrangement=Horizontal) catalogWidgets as Multiple(noItemsMessage="no widgets")
 		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) operationBlock as Labeled("operation widgets")
-			TemplateStamp(template=widgetSummaryMold,spacing=DP16,arrangement=Horizontal) operationWidgets as Multiple(noItemsMessage="no widgets")
+			TemplateStamp(template=widgetSummaryMoldCard,spacing=DP16,arrangement=Horizontal) operationWidgets as Multiple(noItemsMessage="no widgets")
 		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) otherBlock as Labeled("other widgets")
-			TemplateStamp(template=widgetSummaryMold,spacing=DP16,arrangement=Horizontal) otherWidgets as Multiple(noItemsMessage="no widgets")
+			TemplateStamp(template=widgetSummaryMoldCard,spacing=DP16,arrangement=Horizontal) otherWidgets as Multiple(noItemsMessage="no widgets")
 
 
-Template(layout=Vertical Flexible, modelClass="io.intino.alexandria.schemas.Widget") widgetSummaryMold as Relative(height=100%)
+Template(scrollable=false) mobileDocsTemplate
+	Header(color="white", format=air) as Absolute(height=100px)
+		Block(layout=Horizontal Center, spacing=DP24)
+			Image(value="images/intino.png") as Absolute(80px, 80px)
+			Text(value="intino", format=h3)
+			Block(layout=Horizontal Center, format=headerToolbar, spacing=DP24) links
+				//Link(title="home") as OpenPage(page=UiElements.home)
+				Link(title="home") as OpenSite(site="https://www.intino.io")
+				Text(value="widgets")
+
+	Block as AutoSize
+		Block(layout=Vertical Flexible) catalogBlock
+			Text(format=h5 airBottom) group
+			List(itemClass="io.intino.alexandria.schemas.Widget") widgetList
+				noItemsMessage = "No widgets defined"
+				Mold
+					Item(height=200px) widgetListMold
+						Block(format=air)
+							TemplateStamp(template=widgetSummaryMold) widgetListItem
+
+		Block(visible=false, format=air) widgetBlock
+			TemplateStamp(template=widgetMold) widgetStamp
+
+	Block(layout=Vertical End)
+		Selector widgetTypeSelector as Tabs
+			MaterialIcon(icon="Edit") dataOption as Option
+			MaterialIcon(icon="List") catalogOption as Option
+			MaterialIcon(icon="PlayArrow") operationOption as Option
+			MaterialIcon(icon="MoreHoriz") otherOption as Option
+
+Template(layout=Vertical Flexible, modelClass="io.intino.alexandria.schemas.Widget", scrollable=false) widgetSummaryMold as Relative(height=100%)
+	Link(title = "", format=h6, size=Large) title as Action
+	Block(layout=Flexible) > Text description
+	Text(format=body2) facets as Multiple(arrangement=Horizontal) Highlighted("white","#679164")
+
+Template(layout=Vertical Flexible, modelClass="io.intino.alexandria.schemas.Widget") widgetSummaryMoldCard as Relative(height=100%)
 	Block(layout=Vertical Flexible) as Paper Absolute(width=400px)
 		Link(title = "", format=h6, size=Large) title as OpenPage(page = UiElements.widgetType)
 		Block(layout=Flexible) > Text description
 		Text(format=body2) facets as Multiple(arrangement=Horizontal) Highlighted("white","#679164")
-
 
 //Template docsTemplate as Decorated
 //	Header(color="white", format=air) as Absolute(height=100px)

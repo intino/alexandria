@@ -46,7 +46,7 @@ def type(object) trigger(parameter)
 end
 
 def type(list & file) trigger(parameter)
-	if (value != null) Uri.encode(Json.stringify(arrayListOf(io.intino.alexandria.mobile.util.Base64.encoder.encode(value).toString()))) else null
+	if (value != null) Uri.encode(Json.stringify(arrayListOf("BASE64:" + io.intino.alexandria.mobile.util.Base64.encoder.encode(value).decodeToString()))) else null
 end
 
 def type(list) trigger(parameter)
@@ -54,7 +54,7 @@ def type(list) trigger(parameter)
 end
 
 def type(file) trigger(parameter)
-	if (value != null) io.intino.alexandria.mobile.util.Base64.encoder.encode(value).toString() else null
+	if (value != null) "BASE64:" + io.intino.alexandria.mobile.util.Base64.encoder.encode(value).decodeToString() else null
 end
 
 def type(boolean) trigger(parameter)

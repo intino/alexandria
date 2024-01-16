@@ -13,7 +13,7 @@ Component collection
 	Request selectAll
 
 Component pageCollection as ExtensionOf(collection)
-	Notification setup as Object(PageCollectionSetup)
+	Notification setupPageCollection as Object(PageCollectionSetup)
 	Request changePage as Integer
 	Request changePageSize as Integer
 	Request notifyItemsRendered as Object(CollectionItemsRenderedInfo)
@@ -21,7 +21,7 @@ Component pageCollection as ExtensionOf(collection)
 	Request loadMoreItems as Object(CollectionMoreItems)
 
 Component dynamicTable as ExtensionOf(pageCollection)
-	Notification setup as Object(DynamicTableSetup)
+	Notification setupDynamicTable as Object(DynamicTableSetup)
 	Notification openRowProvided as Bool
 	Notification openRow as Text
 	Notification openView as Text

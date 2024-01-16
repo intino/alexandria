@@ -255,7 +255,7 @@ public class AbstractBoxRenderer extends Renderer {
 	}
 
 	private void parent(FrameBuilder builder) {
-		if (parent() != null && configuration != null && configuration.model() != null && !configuration.model().level().isPlatform())
+		if (parent() != null && configuration != null && configuration.model() != null && !configuration.model().level().isMetaMetaModel())
 			builder.add("parent", parent()).add("hasParent", "");
 		else builder.add("hasntParent", "");
 	}

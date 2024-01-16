@@ -12,6 +12,7 @@ import io.intino.konos.model.Service;
 import io.intino.magritte.framework.Layer;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -20,12 +21,18 @@ import static io.intino.konos.builder.helpers.CodeGenerationHelper.*;
 import static java.util.stream.Collectors.toList;
 
 public class RouteDispatcherRenderer extends UIRenderer {
-	private final Service.UI service;
+	private final List<Service.UI> serviceList;
 	private final Target target;
+
+	public RouteDispatcherRenderer(CompilationContext compilationContext, List<Service.UI> serviceList, Target target) {
+		super(compilationContext);
+		this.serviceList = serviceList;
+		this.target = target;
+	}
 
 	public RouteDispatcherRenderer(CompilationContext compilationContext, Service.UI service, Target target) {
 		super(compilationContext);
-		this.service = service;
+		this.serviceList = List.of(service);
 		this.target = target;
 	}
 
@@ -39,22 +46,26 @@ public class RouteDispatcherRenderer extends UIRenderer {
 			Commons.write(routeDispatcher.toPath(), setup(template()).render(builder.toFrame()));
 		Commons.write(fileOf(displaysFolder(gen(target), target), target != Target.Android ? "AbstractRouteDispatcher" : "RouteDispatcher", target).toPath(), setup(template()).render(builder.add("gen").toFrame()));
 		if (target.equals(Target.Server))
-			context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), fileOf(displaysFolder(gen(target), target), "AbstractRouteDispatcher", target).getAbsolutePath()));
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(serviceList.get(0)), fileOf(displaysFolder(gen(target), target), "AbstractRouteDispatcher", target).getAbsolutePath()));
 	}
 
 	@Override
 	public FrameBuilder buildFrame() {
 		FrameBuilder builder = super.buildFrame();
 		builder.add("dispatcher");
-		service.resourceList().stream().filter(Service.UI.Resource::isPage).forEach(r -> {
+		resources().stream().filter(Service.UI.Resource::isPage).forEach(r -> {
 			if (r.isMain()) builder.add("resource", resourceFrame(r).add("main"));
 			builder.add("resource", resourceFrame(r));
 		});
 		return builder;
 	}
 
+	private List<Service.UI.Resource> resources() {
+		return serviceList.stream().map(Service.UI::resourceList).flatMap(Collection::stream).collect(toList());
+	}
+
 	private FrameBuilder resourceFrame(Service.UI.Resource resource) {
-		FrameBuilder result = new FrameBuilder("resource");
+		FrameBuilder result = buildBaseFrame().add("resource");
 		result.add("name", resource.name$());
 		result.add("pattern", patternOf(resource));
 		addResourceParams(resource, result);

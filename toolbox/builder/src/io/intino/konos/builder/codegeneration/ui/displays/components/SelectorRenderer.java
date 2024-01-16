@@ -15,6 +15,7 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 	@Override
 	protected void fill(FrameBuilder builder) {
 		super.fill(builder);
+		if (element.isTabs()) builder.add("tabs");
 		addBinding(builder);
 		addAddressableMethod(builder);
 	}

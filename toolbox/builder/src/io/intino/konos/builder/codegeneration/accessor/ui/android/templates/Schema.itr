@@ -18,6 +18,14 @@ def trigger(schema)
 
 		$attribute+setter...[$NL$NL]
 
+        companion object {
+            fun empty(): $name+firstUpperCase {
+                val result = $name+firstUpperCase()
+		        $attribute+init...[$NL$NL]
+                return result
+            }
+        }
+
 		[$schema...[$NL$NL]]
 	}
 end
@@ -126,6 +134,7 @@ end
 def type(list) trigger(renderMapType)
 	List<$type+firstUpperCase>
 end
+
 def trigger(renderMapType)
 	$type+firstUpperCase
 end
@@ -136,6 +145,7 @@ def type(word & single) trigger(setter)
 		return this
 	}
 end
+
 def type(word & multiple) trigger(setter)
 	fun $name+snakeCaseToCamelCase+firstLowerCase($name+snakeCaseToCamelCase+firstLowerCase : List<$type+FirstUpperCase>) : $element+firstUpperCase {
 		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase
@@ -176,6 +186,50 @@ def type(multiple) trigger(setter)
 		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase
 		return this
 	}
+end
+
+def type(multiple) trigger(init)
+    result.$name+firstLowerCase = emptyList();
+end
+
+def type(single & object) trigger(init)
+    result.$name+firstLowerCase = $type+snakeCaseToCamelCase+firstUpperCase.empty()
+end
+
+def type(single) trigger(init)
+    result.$name+firstLowerCase = $typeFrame+empty
+end
+
+def type(typeFrame & datetime) trigger(empty)
+    null!!
+end
+
+def type(typeFrame & date) trigger(empty)
+    null!!
+end
+
+def type(typeFrame & real) trigger(empty)
+    null!!
+end
+
+def type(typeFrame & boolean) trigger(empty)
+    false
+end
+
+def type(typeFrame & integer) trigger(empty)
+    null!!
+end
+
+def type(typeFrame & longinteger) trigger(empty)
+    null!!
+end
+
+def type(typeFrame & word) trigger(empty)
+    null!!
+end
+
+def type(typeFrame) trigger(empty)
+    ""
 end
 
 def type(typeFrame & datetime)

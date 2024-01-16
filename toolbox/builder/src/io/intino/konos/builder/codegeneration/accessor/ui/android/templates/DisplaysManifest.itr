@@ -13,10 +13,11 @@ def type(manifest)
 
     object $accessible~Displays {
 
-        fun get(definition: DisplayDefinition, context: Context) : PassiveView<*, *> {
+        fun get(definition: DisplayDefinition, context: Context) : PassiveView<*, *>? {
             return when(definition.type()) {
                 $display...[$NL]
-                else -> throw Exception("Display not found for type $type")
+                //else -> throw Exception("Display not found for type " + definition.type())
+                else -> null
             }
         }
 

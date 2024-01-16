@@ -3,6 +3,7 @@ package io.intino.alexandria.ui.displays.templates;
 import io.intino.alexandria.schemas.Widget;
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.EventsDisplay;
+import io.intino.alexandria.ui.documentation.DisplayHelper;
 import io.intino.alexandria.ui.documentation.model.ActionableWidget;
 import io.intino.alexandria.ui.documentation.model.actionable.DownloadSelectionWidget;
 import io.intino.alexandria.ui.documentation.model.actionable.DownloadWidget;
@@ -11,18 +12,31 @@ import io.intino.alexandria.ui.documentation.model.collection.*;
 import io.intino.alexandria.ui.documentation.model.data.*;
 import io.intino.alexandria.ui.documentation.model.other.*;
 
-public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
+import java.util.function.Consumer;
 
+public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
     private boolean infoAdded = false;
+    private Mode mode = Mode.Normal;
+    private Consumer<Boolean> backListener;
 
     public WidgetMold(AlexandriaUiBox box) {
         super(box);
+    }
+
+    public enum Mode { Normal, Embedded }
+    public void mode(Mode mode) {
+        this.mode = mode;
+    }
+
+    public void onBack(Consumer<Boolean> listener) {
+        this.backListener = listener;
     }
 
     @Override
     public void init() {
         super.init();
         events.display(new EventsDisplay(box()));
+        backTrigger.onExecute(e -> notifyBack());
     }
 
     @Override
@@ -31,8 +45,10 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
         showLoading();
         if (item() == null) return;
         Widget widget = item();
-        title.value(translate(widget.getClass().getSimpleName().replace("Widget", "")));
+        backTrigger.visible(mode == Mode.Embedded);
+        title.value(DisplayHelper.label(widget, this::translate));
         description.value(translate(widget.description()));
+        highlightFacets.clear();
         highlightFacets.addAll(widget.facets());
         updateExamplesVisibility();
         updateInfo();
@@ -105,6 +121,11 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
     private void refreshEventsDisplay() {
         events.<EventsDisplay>display().events(item().eventList());
         //events.refresh();
+    }
+
+    private void notifyBack() {
+        if (backListener == null) return;
+        backListener.accept(true);
     }
 
 }

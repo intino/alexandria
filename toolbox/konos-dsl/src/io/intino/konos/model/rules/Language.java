@@ -1,6 +1,6 @@
 package io.intino.konos.model.rules;
 
-import io.intino.magritte.lang.model.Rule;
+import io.intino.tara.language.model.Rule;
 
 public enum Language implements Rule<Enum> {
 	Afar("aa"), Abkhaz("ab"), Avestan("ae"), Afrikaans("af"), Akan("ak"), Amharic("am"), Aragonese("an"),
@@ -31,7 +31,7 @@ public enum Language implements Rule<Enum> {
 	Vietnamese("vi"), Walloon("wa"), Wolof("wo"), Xhosa("xh"), Yiddish("yi"), Yoruba("yo"),
 	ZhuangChuang("za"), Chinese("zh"), Zulu("zu");
 
-	private String code;
+	private final String code;
 
 	Language(String code) {
 		this.code = code;

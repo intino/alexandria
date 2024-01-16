@@ -1,8 +1,8 @@
 dsl Proteo
 
 Concept Data is abstract
-	Aspect List
-	Aspect Type
+	Facet List
+	Facet Type
 		var string type is reactive private
 		sub Real
 			var double defaultValue = empty
@@ -53,8 +53,8 @@ Concept Schema
 	Concept:Named:RequiresAspect Attribute extends Data
 		var boolean isRequired = true
 	has Schema
-	Aspect ExtensionOf
-    	var Schema parent
+	Facet ExtensionOf
+		var Schema parent
 
 Concept Exception extends Data
 	var word:ExceptionCodes code
