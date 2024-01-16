@@ -110,7 +110,7 @@ public class AppRenderer extends UIRenderer {
 		put("Spinner:Alexandria", List.of("mode", "size"));
 		put("Switch:Alexandria", List.of("state"));
 		put("Toggle:Alexandria", List.of("state"));
-		put("SplitButton:Alexandria", List.of("options", "default_option"));
+		put("SplitButton:Actionable", List.of("options", "default_option"));
 		put("Export:Alexandria", List.of("from", "to", "min", "max", "range", "options"));
 		put("Download:Alexandria", List.of("options"));
 		put("SearchBox:Alexandria", List.of("placeholder", "show_count_message"));
@@ -131,7 +131,7 @@ public class AppRenderer extends UIRenderer {
 		String name = component.split(":")[0];
 		String parent = component.split(":").length > 1 ? component.split(":")[1] : null;
 		result.add("name", name);
-		if (parent != null) result.add("parent", context.project());
+		if (parent != null) result.add("parent", parent);
 		attributes.forEach(a -> result.add("attribute", attributeFrame(name, parent, a)));
 		return result;
 	}
