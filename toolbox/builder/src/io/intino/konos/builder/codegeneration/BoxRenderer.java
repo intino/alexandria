@@ -9,8 +9,8 @@ import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.KonosGraph;
-import io.intino.magritte.dsl.Meta;
-import io.intino.magritte.dsl.Proteo;
+import io.intino.tara.dsls.Meta;
+import io.intino.tara.dsls.Proteo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +60,7 @@ public class BoxRenderer extends Renderer {
 			final String genPackage = configuration.model().generationPackage();
 			dsls.add((genPackage == null ? "" : genPackage.toLowerCase() + ".") + firstUpperCase(language));
 		}
-		if (!configuration.model().level().isSolution())
+		if (!configuration.model().level().isModel())
 			dsls.add(configuration.generationPackage().toLowerCase() + "." + firstUpperCase(configuration.model().outDsl()));
 		return dsls.toArray(new String[0]);
 	}

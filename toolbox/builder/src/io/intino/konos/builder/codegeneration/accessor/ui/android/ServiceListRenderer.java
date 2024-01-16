@@ -28,7 +28,7 @@ public class ServiceListRenderer extends UIRenderer {
 		List<Service.UI> services = graph.serviceList(this::isAndroid).map(Service::asUI).collect(Collectors.toList());
 		for (Service.UI s : services) new ServiceCreator(context, s, genDirectoryProvider.apply(s)).execute();
 		new AppRenderer(context, services).execute();
-		new RouteDispatcherRenderer(context, services, Target.Android).execute();
+		if (!services.isEmpty()) new RouteDispatcherRenderer(context, services, Target.Android).execute();
 	}
 
 	private boolean isAndroid(Service service) {

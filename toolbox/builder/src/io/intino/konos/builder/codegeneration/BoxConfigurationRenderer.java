@@ -38,7 +38,7 @@ public class BoxConfigurationRenderer extends Renderer {
 	private String fillFrame(FrameBuilder builder) {
 		final String boxName = context.boxName();
 		builder.add("name", boxName).add("package", packageName());
-		if (parent() != null && configuration != null && configuration.model() != null && !configuration.model().level().isPlatform())
+		if (parent() != null && configuration != null && configuration.model() != null && !configuration.model().level().isMetaMetaModel())
 			builder.add("parent", parent());
 		if (isTara) builder.add("tara", "");
 		params.stream()

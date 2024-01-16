@@ -11,69 +11,69 @@ Concept DataComponents
 		var string suffix = empty
 		var integer:{Chars} cropWithEllipsis = -1 Chars
 		var boolean translate = false
-		Aspect Multiple
-		Aspect Highlighted
-        	var string textColor
-        	var string backgroundColor
-        Aspect Code
-            var word:CodeLanguage language
-        Aspect Editable
-        	var word:{Normal Email Url} edition = Normal
+		Facet Multiple extends Multiple
+		Facet Highlighted
+			var string textColor
+			var string backgroundColor
+		Facet Code
+			var word:CodeLanguage language
+		Facet Editable extends Editable
+			var word:{Normal Email Url} edition = Normal
 			var string helperText = empty
 			var boolean shrink = false
 
-        	Concept:{0..1} Validation
-        		var string pattern = empty
+			Concept:{0..1} Validation
+				var string pattern = empty
 
-        		Concept:{0..1} Length
-        			var integer min
-        			var integer max
-        Aspect Memo with Editable
-        	var word:{Raw Rich} editionMode = Raw
-        	var integer:{Rows} height = 5 Rows
-		Aspect Password with Editable
-        	Concept:{0..1} Validation
-        		var word[]:{Letter Number Symbol} isRequired = Letter Number Symbol
-        		Concept:{1..1} Length
-        			var integer min
-        			var integer max
-        Aspect Readonly with Editable
-        Aspect Required with Editable
-        Aspect Focused with Editable
+				Concept:{0..1} Length
+					var integer min
+					var integer max
+		Facet Memo with Editable
+			var word:{Raw Rich} editionMode = Raw
+			var integer:{Rows} height = 5 Rows
+		Facet Password with Editable
+			Concept:{0..1} Validation
+				var word[]:{Letter Number Symbol} isRequired = Letter Number Symbol
+				Concept:{1..1} Length
+					var integer min
+					var integer max
+		Facet Readonly with Editable
+		Facet Required with Editable
+		Facet Focused with Editable
 
 	Concept File extends Component
 		var string value = empty
-		Aspect Absolute
-		Aspect Relative
-		Aspect Multiple
-		Aspect Editable
-        	var boolean showPreview = false
-        	var boolean showDropZone = false
-        	Concept:{0..1} Validation
-        		var double:{kbytes} maxSize = 50000000 kbytes
-        		var word[]:{Image Video Application Text Xml Html Pdf Excel} allowedTypes = Image Video Application Text
-        Aspect Readonly with Editable
-        Aspect Required with Editable
-        Aspect Focused with Editable
+		Facet Absolute extends Absolute
+		Facet Relative extends Relative
+		Facet Multiple extends Multiple
+		Facet Editable extends Editable
+			var boolean showPreview = false
+			var boolean showDropZone = false
+			Concept:{0..1} Validation
+				var double:{kbytes} maxSize = 50000000 kbytes
+				var word[]:{Image Video Application Text Xml Html Pdf Excel} allowedTypes = Image Video Application Text
+		Facet Readonly with Editable
+		Facet Required with Editable
+		Facet Focused with Editable
 
 	Concept Image extends Component
 		var string value = empty
 		var string defaultValue = empty
 		var boolean allowFullscreen = false
 		var integer:{%} mobileReduceFactor = 0%
-		Aspect Avatar
+		Facet Avatar
 			var string text
-		Aspect Absolute
-		Aspect Relative
-		Aspect Multiple
-		Aspect Editable
-        	var boolean showPreview = false
-        	Concept:{0..1} Validation
-        		var double:{kbytes} maxSize
-        		var string[] allowedExtensions = empty
-        Aspect Readonly with Editable
-        Aspect Required with Editable
-        Aspect Focused with Editable
+		Facet Absolute extends Absolute
+		Facet Relative extends Relative
+		Facet Multiple extends Multiple
+		Facet Editable extends Editable
+			var boolean showPreview = false
+			Concept:{0..1} Validation
+				var double:{kbytes} maxSize
+				var string[] allowedExtensions = empty
+		Facet Readonly with Editable
+		Facet Required with Editable
+		Facet Focused with Editable
 
 	Concept Number extends Component
 		var double value = empty
@@ -82,34 +82,34 @@ Concept DataComponents
 		var integer countDecimals = 0
 		var boolean expanded = true
 		var word:{Number Currency Bytes Percentage Exponential} style = Number
-		Aspect Multiple
-		Aspect Editable
+		Facet Multiple extends Multiple
+		Facet Editable extends Editable
 			var string helperText = empty
 			var boolean shrink = false
-        	var double min = -1
-        	var double max = -1
-        	var double step = -1
-        Aspect Readonly with Editable
-        Aspect Required with Editable
-        Aspect Focused with Editable
+			var double min = -1
+			var double max = -1
+			var double step = -1
+		Facet Readonly with Editable
+		Facet Required with Editable
+		Facet Focused with Editable
 
 	Concept Date extends Component
 		var string pattern = "DD/MM/YYYY"
 		var word:{FromNow ToNow None} mode = None
 		var instant value = empty
-		Aspect Multiple
-		Aspect Editable
-        	var instant min = empty
-        	var instant max = empty
-        	var boolean timePicker = false
-        	var string mask = empty
-        	var boolean allowEmpty = false
-        	var boolean shrink = false
-        	var word[]:{Year Month Week Date} views = empty
+		Facet Multiple extends Multiple
+		Facet Editable extends Editable
+			var instant min = empty
+			var instant max = empty
+			var boolean timePicker = false
+			var string mask = empty
+			var boolean allowEmpty = false
+			var boolean shrink = false
+			var word[]:{Year Month Week Date} views = empty
 			var boolean embedded = false
-		Aspect Readonly with Editable
-		Aspect Required with Editable
-		Aspect Focused with Editable
+		Facet Readonly with Editable
+		Facet Required with Editable
+		Facet Focused with Editable
 
 	Concept Location extends Component
 		var string icon = empty
@@ -124,8 +124,8 @@ Concept DataComponents
 			var integer defaultZoom
 			var integer min
 			var integer max
-		Aspect Editable //TODO is ok extending facet??
-        	var word[]:{Point Polygon Polyline Rectangle} modes = empty
-		Aspect Readonly with Editable
-		Aspect Required with Editable
-		Aspect Focused with Editable
+		Facet Editable extends Editable
+			var word[]:{Point Polygon Polyline Rectangle} modes = empty
+		Facet Readonly with Editable
+		Facet Required with Editable
+		Facet Focused with Editable

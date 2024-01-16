@@ -15,7 +15,7 @@ public class KonosGraph extends io.intino.konos.model.AbstractGraph {
 	private static Map<String, List<CatalogComponents.Moldable.Mold.Item>> items = new HashMap<>();
 	private static Map<String, List<HelperComponents.Row>> rows = new HashMap<>();
 	private static Map<String, List<CatalogComponents.Table>> tables = new HashMap<>();
-	private static Map<String, List<CatalogComponents.DynamicTable>> dynamicTables = new HashMap<>();
+	private static final Map<String, List<CatalogComponents.DynamicTable>> dynamicTables = new HashMap<>();
 	private List<CatalogComponents.Collection> collectionDisplays;
 	private List<CatalogComponents.Table> tableDisplays;
 	private List<CatalogComponents.List> listDisplays;
@@ -35,6 +35,14 @@ public class KonosGraph extends io.intino.konos.model.AbstractGraph {
 		resetCache();
 		createPrivateComponents(group);
 		return this;
+	}
+
+	public static KonosGraph load(io.intino.magritte.io.Stash... startingModel) {
+		return new Graph().loadLanguage("Konos", _language()).loadStashes(startingModel).as(KonosGraph.class);
+	}
+
+	public static KonosGraph load(io.intino.magritte.framework.Store store, io.intino.magritte.io.Stash... startingModel) {
+		return new Graph(store).loadLanguage("Konos", _language()).loadStashes(startingModel).as(KonosGraph.class);
 	}
 
 	private void resetCache() {

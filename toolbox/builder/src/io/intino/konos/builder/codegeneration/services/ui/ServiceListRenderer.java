@@ -12,6 +12,7 @@ import io.intino.konos.model.KonosGraph;
 import io.intino.konos.model.Service;
 
 import java.io.File;
+import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
@@ -25,9 +26,10 @@ public class ServiceListRenderer extends UIRenderer {
 
 	@Override
 	public void render() throws KonosException {
-		for (Service service : graph.serviceList(Service::isUI).collect(toList())) processUIService(service.asUI());
+		List<Service.UI> uiServices = graph.serviceList(Service::isUI).map(Service::asUI).collect(toList());
+		for (Service.UI service : uiServices) processUIService(service);
 		new ResourceListRenderer(context, graph, Target.Server).execute();
-		new RouteDispatcherRenderer(context, graph.serviceList(Service::isUI).map(Service::asUI).collect(toList()), Target.Server).execute();
+		if (!uiServices.isEmpty()) new RouteDispatcherRenderer(context, uiServices, Target.Server).execute();
 	}
 
 	private void processUIService(Service.UI service) throws KonosException {

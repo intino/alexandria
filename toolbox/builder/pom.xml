@@ -5,10 +5,10 @@
 	<groupId>io.intino.konos</groupId>
 	<artifactId>builder</artifactId>
 	<name>Builder</name>
-	<version>10.6.14</version>
+	<version>11.0.0</version>
 	<properties>
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -82,12 +82,12 @@
 		<dependency>
 			<groupId>io.intino</groupId>
 			<artifactId>configuration</artifactId>
-			<version>1.3.1</version>
+			<version>1.5.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.intino.konos</groupId>
 			<artifactId>konos-builder-constants</artifactId>
-			<version>1.3.0</version>
+			<version>1.4.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.intino.konos</groupId>
@@ -128,12 +128,12 @@
 		<dependency>
 			<groupId>io.intino.magritte</groupId>
 			<artifactId>builder</artifactId>
-			<version>4.2.3</version>
+			<version>5.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.intino.magritte</groupId>
 			<artifactId>framework</artifactId>
-			<version>3.4.4</version>
+			<version>4.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
@@ -157,6 +157,5 @@
 			<version>4.13.2</version>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 </project>

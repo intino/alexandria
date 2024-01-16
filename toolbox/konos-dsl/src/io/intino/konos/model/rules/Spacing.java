@@ -1,6 +1,6 @@
 package io.intino.konos.model.rules;
 
-import io.intino.magritte.lang.model.Rule;
+import io.intino.tara.language.model.Rule;
 
 public enum Spacing implements Rule<Enum> {
 	DP8(8), DP16(16), DP24(24), DP32(32), DP40(40), None(0);

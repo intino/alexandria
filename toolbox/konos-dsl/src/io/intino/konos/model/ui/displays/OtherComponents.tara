@@ -20,19 +20,19 @@ Concept OtherComponents
 
 	Concept Progress extends Component
 		Concept Color > var string text; var string background
-		Aspect Circular
-        Aspect Linear
+		Facet Circular
+		Facet Linear
 
-    Concept MicroSite extends Component
-    	var string site
-    	var word[]:{DownloadMicrosite DownloadContent} downloadOperations = DownloadMicrosite DownloadContent
+	Concept MicroSite extends Component
+		var string site
+		var word[]:{DownloadMicrosite DownloadContent} downloadOperations = DownloadMicrosite DownloadContent
 
 	Concept HtmlViewer extends Component
 		var string content = empty
 
 	Concept BaseStamp extends Component
-		Aspect Multiple
-		Aspect Editable
+		Facet Multiple extends Multiple
+		Facet Editable extends Editable
 
 		!! Renders template in this component
 		sub TemplateStamp
@@ -57,56 +57,56 @@ Concept OtherComponents
 
 	Concept Frame extends Component
 		var string url
-		Aspect Absolute
-		Aspect Relative
+		Facet Absolute extends Absolute
+		Facet Relative extends Relative
 
 	Concept Selector extends Component
 		var boolean multipleSelection = false
 		has Component
-		Aspect Addressable
-		Aspect Tabs
+		Facet Addressable extends Addressable
+		Facet Tabs
 			var word:{Off On Auto} scrollButtons = Off
-        Aspect Menu
+		Facet Menu
 			var word:{Horizontal Vertical} layout = Vertical
-        Aspect ListBox
-        Aspect CollectionBox
-        	var CatalogComponents.Collection source = empty
-        	var string placeholder = ""
-        	var boolean allowOther = false
+		Facet ListBox
+		Facet CollectionBox
+			var CatalogComponents.Collection source = empty
+			var string placeholder = ""
+			var boolean allowOther = false
 			has:{0..1} CatalogComponents.Collection
-        Aspect RadioBox
-        	!! The value that should initially be selected, defaults to the first value.
-        	var string selected = empty
-        	var word:{Horizontal Vertical} layout = Vertical
-        Aspect CheckBox
-        	!! The value(s) that should initially be selected. Defaults to the first value, or no values if Multiple facet is present
-        	var string[] selected = empty
-        	var word:{Horizontal Vertical} layout = Vertical
-        Aspect ComboBox
-        	var string placeholder = ""
-        	var integer:{px} maxMenuHeight = 300px
-        	var word:{FieldView TextView} view = FieldView
-        Aspect ToggleBox
-        	var word:{Small Medium Large} size = Medium
-        	var string selected = empty
-        	var word:{Horizontal Vertical} layout = Horizontal
-        Aspect Readonly
-        Aspect Required with RadioBox, CheckBox, ComboBox
-        Aspect Focused with RadioBox, CheckBox, ComboBox
+		Facet RadioBox
+			!! The value that should initially be selected, defaults to the first value.
+			var string selected = empty
+			var word:{Horizontal Vertical} layout = Vertical
+		Facet CheckBox
+			!! The value(s) that should initially be selected. Defaults to the first value, or no values if Multiple facet is present
+			var string[] selected = empty
+			var word:{Horizontal Vertical} layout = Vertical
+		Facet ComboBox
+			var string placeholder = ""
+			var integer:{px} maxMenuHeight = 300px
+			var word:{FieldView TextView} view = FieldView
+		Facet ToggleBox
+			var word:{Small Medium Large} size = Medium
+			var string selected = empty
+			var word:{Horizontal Vertical} layout = Horizontal
+		Facet Readonly
+		Facet Required with RadioBox, CheckBox, ComboBox
+		Facet Focused with RadioBox, CheckBox, ComboBox
 
 	Concept BaseIcon extends Component
 		var string icon
-		Aspect Multiple
+		Facet Multiple
 		sub Icon
 		sub MaterialIcon
 
 	Concept AbstractDialog extends Component is abstract
 		var string title
-		Aspect Absolute
-		Aspect Relative
-		Aspect Animated
-		Aspect FullScreen
-		Aspect Modal
+		Facet Absolute extends Absolute
+		Facet Relative extends Relative
+		Facet Animated extends Animated
+		Facet FullScreen
+		Facet Modal
 		sub Dialog
 			has Component
 
