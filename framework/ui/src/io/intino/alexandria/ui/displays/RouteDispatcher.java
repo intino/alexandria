@@ -20,4 +20,8 @@ public class RouteDispatcher extends AbstractRouteDispatcher {
     public void dispatchMicroSite(Soul soul, String page) {
     }
 
+    @Override
+    public void dispatchMobileHome(Soul soul) {
+    }
+
 }

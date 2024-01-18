@@ -6,37 +6,37 @@ Concept:{0..1} Split > var string[] splits
 
 Concept:RequiresAspect Axis
 	var string label
-	Aspect Continuous
+	Facet Continuous
 		var string unit
-    	Concept Range
+		Concept Range
 			var string label = empty
-    		Aspect LowerBound
-    			var integer lowerBound
-    		Aspect Bound
-    			var integer lowerBound
-    			var integer upperBound
-    		Aspect UpperBound
-    			var integer upperBound
-	Aspect Categorical
+			Facet LowerBound
+				var integer lowerBound
+			Facet Bound
+				var integer lowerBound
+				var integer upperBound
+			Facet UpperBound
+				var integer upperBound
+	Facet Categorical
 		var resource tsv
 		Concept:{0..1} IncludeLabel
-			Aspect Name
+			Facet Name
 		Concept:{0..1} Include
 			var Axis[]:Categorical axes
-	Aspect Dynamic with Categorical
+	Facet Dynamic with Categorical
 
 Concept:CheckVirtual Cube
 	var word:{Yearly Monthly Daily Hourly} scale
 	var Split splitted = empty
 	Concept:{0..1} Index
-	Aspect Virtual
+	Facet Virtual
 		var Cube main
 		var Cube join
 	Concept:{0..1} Fact
 		Concept:Named Column extends SizedData
 			sub Attribute
 			sub Measure
-		Aspect Cached
+		Facet Cached
 			var word:{Last First} timetag = Last
 	Concept:Named:AxisAccomplishSource Dimension
 		var string label
@@ -47,8 +47,8 @@ Concept:CheckVirtual Cube
 		var string unit = ""
 		var Fact.Column source
 		var integer countDecimals = 0
-		Aspect Average
-		Aspect Sum
+		Facet Average
+		Facet Sum
 	Concept:Named CustomDimension
 		var string label
 		var Axis axis
@@ -56,13 +56,13 @@ Concept:CheckVirtual Cube
 		var string label
 		var string unit = ""
 		var integer countDecimals = 0
-		Aspect Average
-		Aspect Sum
+		Facet Average
+		Facet Sum
 	Concept:Named CustomFilter
 
 Concept SizedData
-	Aspect List
-	Aspect Type
+	Facet List
+	Facet Type
 		var string type is reactive private
 		var string primitive = 'self.type()' is reactive private
 		var integer:{bits} size = 0 bits

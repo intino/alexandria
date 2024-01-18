@@ -2,7 +2,6 @@ package io.intino.alexandria.ui.spark.pages;
 
 import io.intino.alexandria.ui.resources.Asset;
 import io.intino.alexandria.ui.services.push.Browser;
-import io.intino.alexandria.ui.services.push.UISession;
 import io.intino.alexandria.ui.utils.StreamUtil;
 
 import java.io.IOException;
@@ -33,6 +32,7 @@ public abstract class WebPage extends UiPage {
 
 	protected String template(String name, List<Unit> usedUnits) {
 		try {
+			session.browser().origin(Browser.Origin.Web);
 			byte[] templateBytes = StreamUtil.readBytes(Page.class.getResourceAsStream(format(TemplateName, uiServiceName, name)));
 			String result = new String(templateBytes);
 			result = addTemplateVariables(result, usedUnits);

@@ -159,6 +159,11 @@ class CompilationInfoExtractor {
 			}
 
 			@Override
+			public UpdatePolicy updatePolicy() {
+				return null;
+			}
+
+			@Override
 			public Configuration root() {
 				return null;
 			}

@@ -20,6 +20,7 @@ import io.intino.alexandria.ui.spark.UIFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.net.URL;
 
 public abstract class Actionable<DN extends ActionableNotifier, B extends Box> extends Component<DN, B> {
     private String title;
@@ -45,7 +46,7 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
     @Override
     public void didMount() {
         super.didMount();
-        if (isResourceIcon()) refreshIcon();
+        refreshIconIfRequired();
         refreshSignInfo();
     }
 
@@ -144,7 +145,7 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
     @Override
     public void init() {
         super.init();
-        if (isResourceIcon()) refreshIcon();
+        refreshIconIfRequired();
         refreshSignInfo();
     }
 
@@ -227,13 +228,31 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
         };
     }
 
+    private void refreshIconIfRequired() {
+        if (isResourceIcon()) refreshIcon();
+        if (isMaterialIcon() && session().browser().isMobile()) refreshIcon();
+    }
+
     private void refreshIcon() {
-        String icon = isResourceIcon() ? Asset.toResource(baseAssetUrl(), Actionable.class.getResource(this.icon)).toUrl().toString() : this.icon;
-        notifier.refreshIcon(icon);
+        notifier.refreshIcon(icon());
+    }
+
+    private static final String PngMaterialIcon = "/icons/mobile/%s.png";
+    private String icon() {
+        if (isResourceIcon()) return Asset.toResource(baseAssetUrl(), Actionable.class.getResource(this.icon)).toUrl().toString();
+        if (isMaterialIcon() && session().browser().isMobile()) {
+            URL iconResource = Actionable.class.getResource(String.format(PngMaterialIcon, this.icon));
+            return iconResource != null ? Asset.toResource(baseAssetUrl(), iconResource).setLabel(String.format(PngMaterialIcon, this.icon)).toUrl().toString() : this.icon;
+        }
+        return this.icon;
     }
 
     private boolean isResourceIcon() {
         return (mode == Mode.IconButton || mode == Mode.IconToggle || mode == Mode.IconSplitButton) && icon != null && Actionable.class.getResource(this.icon) != null;
+    }
+
+    private boolean isMaterialIcon() {
+        return (mode == Mode.MaterialIconButton || mode == Mode.MaterialIconToggle || mode == Mode.MaterialIconSplitButton) && icon != null;
     }
 
     private boolean signCanSetup() {

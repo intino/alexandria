@@ -1,8 +1,8 @@
 package io.intino.konos.model.rules;
 
-import io.intino.magritte.lang.model.Node;
-import io.intino.magritte.lang.model.Parameter;
-import io.intino.magritte.lang.model.rules.NodeRule;
+import io.intino.tara.language.model.Mogram;
+import io.intino.tara.language.model.Parameter;
+import io.intino.tara.language.model.rules.NodeRule;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,8 +23,8 @@ public class CheckFileParameter implements NodeRule {
 
 
 	@Override
-	public boolean accept(Node node) {
-		final List<Node> files = node.components().stream().filter(n -> isParameter(n) && n.appliedAspects().stream().anyMatch(f -> f.type().equals("File"))).collect(Collectors.toList());
+	public boolean accept(Mogram node) {
+		final List<Mogram> files = node.components().stream().filter(n -> isParameter(n) && n.appliedFacets().stream().anyMatch(f -> f.type().equals("File"))).collect(Collectors.toList());
 		if (!files.isEmpty() && (! (parameterInForm(files.get(0)) || parameterInBody(files.get(0))))) {
 			cause = Cause.FileParameterNotInForm;
 			return false;
@@ -37,19 +37,19 @@ public class CheckFileParameter implements NodeRule {
 		return cause.message;
 	}
 
-	private boolean isParameter(Node component) {
+	private boolean isParameter(Mogram component) {
 		return component.type().equals("Service.REST.Resource.Parameter");
 	}
 
-	private boolean parameterInForm(Node node) {
+	private boolean parameterInForm(Mogram node) {
 		return "form".equals(parameter(node, "in").values().get(0).toString());
 	}
 
-	private boolean parameterInBody(Node node) {
+	private boolean parameterInBody(Mogram node) {
 		return "body".equals(parameter(node, "in").values().get(0).toString());
 	}
 
-	private Parameter parameter(Node node, String name) {
+	private Parameter parameter(Mogram node, String name) {
 		return node.parameters().stream().filter(v -> v.name().equals(name)).findFirst().orElse(null);
 	}
 }

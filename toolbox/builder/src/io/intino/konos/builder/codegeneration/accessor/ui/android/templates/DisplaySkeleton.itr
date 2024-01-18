@@ -108,6 +108,10 @@ def type(integer) trigger(parameter)
     Int
 end
 
+def type(list) trigger(parameter)
+    kotlin.collections.List<$value>
+end
+
 def trigger(parameter)
     $value
 end

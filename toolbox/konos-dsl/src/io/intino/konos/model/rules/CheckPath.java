@@ -1,9 +1,9 @@
 package io.intino.konos.model.rules;
 
-import io.intino.magritte.lang.model.EmptyNode;
-import io.intino.magritte.lang.model.Node;
-import io.intino.magritte.lang.model.Parameter;
-import io.intino.magritte.lang.model.rules.NodeRule;
+import io.intino.tara.language.model.EmptyMogram;
+import io.intino.tara.language.model.Mogram;
+import io.intino.tara.language.model.Parameter;
+import io.intino.tara.language.model.rules.NodeRule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,24 +15,24 @@ public class CheckPath implements NodeRule {
 
 	private Cause cause;
 
-	public boolean accept(Node node) {
-		return !pathIsWrong(node);
+	public boolean accept(Mogram mogram) {
+		return !pathIsWrong(mogram);
 	}
 
-	private boolean pathIsWrong(Node node) {
-		if (parameter(node, "path") == null) return false;
-		if (parameter(node, "path").values().get(0) instanceof EmptyNode) {
+	private boolean pathIsWrong(Mogram mogram) {
+		if (parameter(mogram, "path") == null) return false;
+		if (parameter(mogram, "path").values().get(0) instanceof EmptyMogram) {
 			cause = Cause.NullPath;
 			return true;
 		}
-		return pathIsWrong((String) parameter(node, "path").values().get(0), node);
+		return pathIsWrong((String) parameter(mogram, "path").values().get(0), mogram);
 	}
 
-	private boolean pathIsWrong(String pathValue, Node node) {
-		if (node == null) return false;
+	private boolean pathIsWrong(String pathValue, Mogram mogram) {
+		if (mogram == null) return false;
 		List<String> parametersInPath = stream(pathValue.split("/")).filter(s -> s.startsWith(":")).map(s -> s.substring(1)).collect(toList());
-		List<String> parametersDeclaredInPath = pathParametersFromNode(node);
-		parametersDeclaredInPath.addAll(pathParametersInMethods(node.components()));
+		List<String> parametersDeclaredInPath = pathParametersFromMogram(mogram);
+		parametersDeclaredInPath.addAll(pathParametersInMethods(mogram.components()));
 		for (String parameterName : parametersInPath) {
 			if (parametersDeclaredInPath.contains(parameterName)) continue;
 			cause = Cause.ParameterNotDeclared;
@@ -46,25 +46,25 @@ public class CheckPath implements NodeRule {
 		return false;
 	}
 
-	private List<String> pathParametersFromNode(Node node) {
-		return node.components().stream().filter(c -> isParameter(c) && parameterIsInPath(c)).map(Node::name).collect(toList());
+	private List<String> pathParametersFromMogram(Mogram node) {
+		return node.components().stream().filter(c -> isParameter(c) && parameterIsInPath(c)).map(Mogram::name).collect(toList());
 	}
 
-	private List<String> pathParametersInMethods(List<Node> methods) {
+	private List<String> pathParametersInMethods(List<Mogram> methods) {
 		List<String> parameters = new ArrayList<>();
-		for (Node component : methods) parameters.addAll(pathParametersFromNode(component));
+		for (Mogram component : methods) parameters.addAll(pathParametersFromMogram(component));
 		return parameters;
 	}
 
-	private boolean parameterIsInPath(Node node) {
+	private boolean parameterIsInPath(Mogram node) {
 		return "path".equals(parameter(node, "in").values().get(0).toString());
 	}
 
-	private Parameter parameter(Node node, String name) {
+	private Parameter parameter(Mogram node, String name) {
 		return node.parameters().stream().filter(v -> v.name().equals(name)).findFirst().orElse(null);
 	}
 
-	private boolean isParameter(Node component) {
+	private boolean isParameter(Mogram component) {
 		return component.type().equals("Service.REST.Resource.Parameter");
 	}
 

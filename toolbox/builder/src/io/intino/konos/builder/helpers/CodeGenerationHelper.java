@@ -3,6 +3,7 @@ package io.intino.konos.builder.helpers;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.model.CatalogComponents;
 import io.intino.konos.model.HelperComponents;
+import io.intino.konos.model.Template;
 import io.intino.magritte.framework.Layer;
 
 import java.io.File;
@@ -27,6 +28,10 @@ public class CodeGenerationHelper {
 				!element.i$(conceptOf(CatalogComponents.DynamicTable.class)) &&
 				!element.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class)) &&
 				!element.i$(conceptOf(HelperComponents.Row.class));
+	}
+
+	public static boolean isScrollable(Layer element, Target target) {
+		return element.i$(conceptOf(io.intino.konos.model.Template.class)) && element.a$(Template.class).scrollable();
 	}
 
 	public static File folder(File root, String path, Target target) {

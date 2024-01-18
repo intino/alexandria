@@ -81,7 +81,9 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Signed facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
-				Button(title="edition") operation9 as Action Signed(signText="Fill your password before continue")
+				Block
+					Button(title="edition") operation9 as Action Signed(signText="Fill your password before continue")
+					Text(format=body2, value="1234 must be filled when sign requested", translate=true)
 			Block > Text as Code(language=Html)
 					value
 						=========

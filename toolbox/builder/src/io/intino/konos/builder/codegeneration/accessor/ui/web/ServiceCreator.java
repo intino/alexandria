@@ -27,8 +27,7 @@ public class ServiceCreator extends UIRenderer {
 	public void render() throws KonosException {
 		try {
 			context.postCompileActionMessages().add(new PostCompileDependantWebModuleActionMessage(context.configuration().module(), service.name$()));
-			if (context.serviceDirectory() == null)
-				context.serviceDirectory(new File(context.configuration().moduleDirectory().getParentFile(), Formatters.camelCaseToSnakeCase().format(service.name$()).toString()));
+			context.serviceDirectory(new File(context.configuration().moduleDirectory().getParentFile(), Formatters.camelCaseToSnakeCase().format(service.name$()).toString()));
 			if (!context.serviceDirectory().exists()) createSkeleton();
 			new ServiceRenderer(context, service).execute();
 		} catch (IOException e) {

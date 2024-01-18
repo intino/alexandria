@@ -25,7 +25,7 @@ def type(display & accessible)
 	[$displayRegistration+declaration]
 end
 
-def type(display & res & noAbstract)
+def type(display & res & noAbstract & scrollable)
     <?xml version="1.0" encoding="utf-8"?>
     <com.google.android.flexbox.FlexboxLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -45,6 +45,20 @@ def type(display & res & noAbstract)
                 [$component...[$NL]]
     		</com.google.android.flexbox.FlexboxLayout>
 	    </ScrollView>
+
+    </com.google.android.flexbox.FlexboxLayout>
+end
+
+def type(display & res & noAbstract)
+    <?xml version="1.0" encoding="utf-8"?>
+    <com.google.android.flexbox.FlexboxLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:alexandria="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        alexandria:flexDirection="$layout">
+
+        [$component...[$NL]]
 
     </com.google.android.flexbox.FlexboxLayout>
 end

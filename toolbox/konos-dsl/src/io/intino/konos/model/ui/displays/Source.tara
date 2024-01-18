@@ -6,7 +6,7 @@ Concept:Named Source
 		Concept Column
 			var string name
 			var word:{String Integer Double Boolean} type
-		Aspect CSV
+		Facet CSV
 			var string datasourceFilename
-		Aspect Custom
+		Facet Custom
 			var string datasourceClass

@@ -4,7 +4,7 @@ import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.notifiers.BaseIconNotifier;
 
 public class BaseIcon<DN extends BaseIconNotifier, B extends Box> extends AbstractBaseIcon<DN, B> {
-    private String icon;
+    protected String icon;
 
     public BaseIcon(B box) {
         super(box);

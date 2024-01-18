@@ -18,6 +18,9 @@ public class Browser {
     private int timezoneOffset = 0;
     private Map<String, Object> preferences = new HashMap<>();
     private Consumer<String> redirectManager = null;
+    private Origin origin;
+
+    public enum Origin { Mobile, Web }
 
     private static final String PushPath = "/_alexandria/push?id=%s&currentSession=%s&language=%s";
 
@@ -126,5 +129,17 @@ public class Browser {
     public Browser add(String preference, Object value) {
         preferences.put(preference, value);
         return this;
+    }
+
+    public void origin(Origin origin) {
+        this.origin = origin;
+    }
+
+    public boolean isMobile() {
+        return origin == Origin.Mobile;
+    }
+
+    public boolean isWeb() {
+        return origin == Origin.Web;
     }
 }

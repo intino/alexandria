@@ -9,16 +9,18 @@ import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Service;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class AppRenderer extends UIRenderer {
-	private final Service.UI service;
+	private final List<Service.UI> serviceList;
 
-	protected AppRenderer(CompilationContext compilationContext, Service.UI service) {
+	protected AppRenderer(CompilationContext compilationContext, List<Service.UI> serviceList) {
 		super(compilationContext);
-		this.service = service;
+		this.serviceList = serviceList;
 	}
 
 	@Override
@@ -36,8 +38,12 @@ public class AppRenderer extends UIRenderer {
 		FrameBuilder result = super.buildFrame();
 		result.add("gradle");
 		result.add("project", context.project());
-		service.resourceList().stream().filter(Service.UI.Resource::isPage).forEach(r -> result.add("resource", resourceFrame(r)));
+		resources().stream().filter(Service.UI.Resource::isPage).forEach(r -> result.add("resource", resourceFrame(r)));
 		return result;
+	}
+
+	private List<Service.UI.Resource> resources() {
+		return serviceList.stream().map(Service.UI::resourceList).flatMap(Collection::stream).collect(Collectors.toList());
 	}
 
 	private FrameBuilder resourceFrame(Service.UI.Resource resource) {
@@ -104,7 +110,7 @@ public class AppRenderer extends UIRenderer {
 		put("Spinner:Alexandria", List.of("mode", "size"));
 		put("Switch:Alexandria", List.of("state"));
 		put("Toggle:Alexandria", List.of("state"));
-		put("SplitButton:Alexandria", List.of("options", "default_option"));
+		put("SplitButton:Actionable", List.of("options", "default_option"));
 		put("Export:Alexandria", List.of("from", "to", "min", "max", "range", "options"));
 		put("Download:Alexandria", List.of("options"));
 		put("SearchBox:Alexandria", List.of("placeholder", "show_count_message"));
@@ -125,7 +131,7 @@ public class AppRenderer extends UIRenderer {
 		String name = component.split(":")[0];
 		String parent = component.split(":").length > 1 ? component.split(":")[1] : null;
 		result.add("name", name);
-		if (parent != null) result.add("parent", context.project());
+		if (parent != null) result.add("parent", parent);
 		attributes.forEach(a -> result.add("attribute", attributeFrame(name, parent, a)));
 		return result;
 	}

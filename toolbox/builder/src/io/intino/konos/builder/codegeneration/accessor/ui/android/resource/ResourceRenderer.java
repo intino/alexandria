@@ -53,6 +53,7 @@ public class ResourceRenderer extends io.intino.konos.builder.codegeneration.ui.
 		result.add("name", resource.name$());
 		if (resource.isMain()) result.add("main");
 		Template template = KonosGraph.templateFor(resource);
+		result.add("url", uiService.url());
 		result.add("path", resource.path());
 		result.add("pageDisplay", template.name$());
 		result.add("pageDisplayId", shortId(template));

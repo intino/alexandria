@@ -18,6 +18,7 @@ public class DisplaySkeletonTemplate extends Template {
 			rule().condition((type("date")), (trigger("parameter"))).output(literal("kotlinx.datetime.Instant")),
 			rule().condition((type("datetime")), (trigger("parameter"))).output(literal("kotlinx.datetime.Instant")),
 			rule().condition((type("integer")), (trigger("parameter"))).output(literal("Int")),
+			rule().condition((type("list")), (trigger("parameter"))).output(literal("kotlin.collections.List<")).output(mark("value")).output(literal(">")),
 			rule().condition((trigger("parameter"))).output(mark("value")),
 			rule().condition((allTypes("displayExtends","generic")), (trigger("interface"))).output(literal(": ")).output(mark("parentMobileShared")),
 			rule().condition((allTypes("displayExtends","generic","isExtensionOf"))).output(literal(": ")).output(mark("parent")).output(literal("<DR, DN>(context, attrs, defStyleAttr, defStyleRes)")),

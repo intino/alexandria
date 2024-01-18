@@ -1,12 +1,12 @@
 package io.intino.konos.model.rules;
 
-import io.intino.magritte.lang.model.Node;
-import io.intino.magritte.lang.model.rules.NodeRule;
+import io.intino.tara.language.model.Mogram;
+import io.intino.tara.language.model.rules.NodeRule;
 
 public class Named implements NodeRule {
 
-	public boolean accept(Node node) {
-		return !node.isAnonymous();
+	public boolean accept(Mogram mogram) {
+		return !mogram.isAnonymous();
 	}
 
 	public String errorMessage() {
