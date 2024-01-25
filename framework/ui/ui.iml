@@ -85,8 +85,6 @@
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-api:9.4.42.v20210604" level="project" />
     <orderEntry type="library" name="Intino: com.opencsv:opencsv:5.9" level="project" />
     <orderEntry type="library" name="Intino: org.apache.commons:commons-text:1.11.0" level="project" />
-    <orderEntry type="module" module-name="ui-elements" />
-    <orderEntry type="library" name="Intino: io.intino.icod:standalone:1.2.0" level="project" />
     <orderEntry type="library" name="Intino: org.apache.tika:tika-core:1.24.1" level="project" />
     <orderEntry type="library" name="Intino: org.siani.monet:monet-library-encrypt:1.1" level="project" />
     <orderEntry type="library" name="Intino: dnie:DNIeJCAProvider:1.4" level="project" />
@@ -103,5 +101,7 @@
     <orderEntry type="library" name="Intino: dnie:xmlsec:1.4.2-ADSI" level="project" />
     <orderEntry type="library" name="Intino: org.bouncycastle:bctsp-jdk15:1.45" level="project" />
     <orderEntry type="library" name="Intino: commons-lang:commons-lang:2.6" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.icod:core:1.0.0" level="project" />
+    <orderEntry type="module" module-name="ui-elements" />
   </component>
 </module>
