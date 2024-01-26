@@ -60,6 +60,10 @@ public abstract class Soul implements DisplayRepository {
         }
     }
 
+    public List<Layer<?, ?>> layers() {
+        return layers;
+    }
+
     public Layer<?, ?> currentLayer() {
         return !layers.isEmpty() ? layers.get(layers.size()-1) : null;
     }
