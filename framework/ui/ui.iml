@@ -101,5 +101,6 @@
     <orderEntry type="library" name="Intino: org.apache.httpcomponents:httpmime:4.5.14" level="project" />
     <orderEntry type="library" name="Intino: com.sparkjava:spark-core:2.9.3" level="project" />
     <orderEntry type="library" name="Intino: commons-codec:commons-codec:1.10" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:http:1.7.8" level="project" />
   </component>
 </module>
