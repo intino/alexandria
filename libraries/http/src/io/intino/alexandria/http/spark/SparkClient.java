@@ -104,7 +104,7 @@ public class SparkClient implements Client {
 	private static Map<String, String> parseQueryString(String queryString) {
 		return Stream.of(queryString.split("&"))
 				.map(param -> param.split("="))
-				.collect(toMap(p -> p[0], p -> p[1]));
+				.collect(toMap(p -> p[0], p -> p.length > 1 ? p[1] : "", (a, b) -> a));
 	}
 
 	private void runQueueManager() {
