@@ -74,8 +74,9 @@ public class UISparkManager extends SparkManager<PushService> {
 	}
 
 	public String languageFromHeader() {
-		String language = request.raw().getHeader("Accept-Language");
-		return language != null ? languageOf(language.split(",")[0]) : null;
+		String languageMetadata = request.raw().getHeader("Accept-Language");
+		if (languageMetadata == null) return null;
+		return languageOf(languageMetadata.split(",")[0]);
 	}
 
 	public String ipAddressFromHeader() {
@@ -96,8 +97,9 @@ public class UISparkManager extends SparkManager<PushService> {
 	}
 
 	private String languageOf(String language) {
-		if (language == null) return null;
-		return Locale.forLanguageTag(language).getLanguage().toLowerCase();
+		if (language == null || language.isEmpty()) return null;
+		Locale locale = Locale.forLanguageTag(language);
+		return (locale.getCountry().isEmpty() ? locale.getLanguage() : locale.getCountry()).toLowerCase();
 	}
 
 	public java.util.Map<String, String> cookies() {
