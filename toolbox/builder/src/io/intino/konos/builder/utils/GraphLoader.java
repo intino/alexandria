@@ -4,12 +4,15 @@ import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.model.KonosGraph;
 import io.intino.magritte.builder.StashBuilder;
 import io.intino.magritte.framework.loaders.ClassFinder;
+import io.intino.magritte.framework.stores.ResourcesStore;
 import io.intino.magritte.io.Stash;
 import tara.dsl.Konos;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -39,10 +42,23 @@ public class GraphLoader {
 	private KonosGraph loadGraph(CompilerConfiguration configuration, Stash... stashes) {
 		final ClassLoader currentLoader = Thread.currentThread().getContextClassLoader();
 		Thread.currentThread().setContextClassLoader(GraphLoader.class.getClassLoader());
-		KonosGraph graph = KonosGraph.load(stashes);
+		KonosGraph graph = KonosGraph.load(store(configuration), stashes);
 		if (graph == null) return null;
 		graph.init(configuration.module());
 		Thread.currentThread().setContextClassLoader(currentLoader);
 		return graph;
+	}
+
+	private ResourcesStore store(CompilerConfiguration configuration) {
+		return new ResourcesStore() {
+			@Override
+			public URL resourceFrom(String path) {
+				try {
+					return new File(configuration.resDirectory().getPath() + File.separator + path).toURI().toURL();
+				} catch (MalformedURLException e) {
+					return null;
+				}
+			}
+		};
 	}
 }

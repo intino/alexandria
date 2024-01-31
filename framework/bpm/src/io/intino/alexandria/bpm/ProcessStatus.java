@@ -8,8 +8,6 @@ import java.time.Instant;
 import static io.intino.alexandria.bpm.Workflow.EventType;
 
 public class ProcessStatus extends MessageEvent {
-
-
 	private static final String Owner = "owner";
 	private static final String Task = "Task";
 	private static final String State = "State";

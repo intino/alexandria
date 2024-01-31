@@ -4,7 +4,6 @@ public class KonosBuildConstants {
 	public static final String ENCODING = "encoding";
 	public static final String OUTPUTPATH = "outputpath";
 	public static final String PROJECT = "project";
-	public static final String KONOSC = "Konosc";
 	public static final String ACTION_MESSAGE = "%%postaction%%";
 	public static final String START_ACTIONS_MESSAGE = "%%postaction%%";
 	public static final String END_ACTIONS_MESSAGE = "/%postaction%%";
@@ -26,11 +25,8 @@ public class KonosBuildConstants {
 	public static final String SEPARATOR = "#%%#%%%#%%%%%%%%%#";
 	public static final String MESSAGE_ACTION_SEPARATOR = "#%%####%%%#%#####%#";
 	public static final String PRESENTABLE_MESSAGE = "@#$%@# Presentable:";
-	public static final String CLEAR_PRESENTABLE = "$@#$%^ CLEAR_PRESENTABLE";
-	public static final String NO_KONOS = "Cannot compile Konos files: No Konos generator is defined";
 	public static final String MODULE = "module";
 	public static final String MODULE_PATH = "module.path";
-	public static final String WEB_MODULE_PATH = "web.module.path";
 	public static final String PROJECT_PATH = "project.path";
 	public static final String PARAMETERS = "module.parameters";
 	public static final String LANGUAGE = "language";
@@ -44,7 +40,6 @@ public class KonosBuildConstants {
 	public static final String INTINO_PROJECT_PATH = "intino.project.path";
 	public static final String BOX_GENERATION_PACKAGE = "box.generation.package";
 	public static final String COMPILATION_MODE = "compilation.mode";
-	public static final String KONOSC_STUB_GENERATION_FAILED = "error generating stubs";
 	public static final String LEVEL = "level";
 	public static final String GROUP_ID = "groupId";
 	public static final String ARTIFACT_ID = "artifactId";
