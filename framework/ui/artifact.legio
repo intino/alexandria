@@ -2,6 +2,7 @@ dsl Legio
 
 Artifact("io.intino.alexandria", "5.1.6") ui-framework
 	Box("Konos", "11.0.0", targetPackage = "io.intino.alexandria")
+
 	Imports
 		Compile("io.intino.alexandria", "core-framework", "2.2.0")
 		Compile("io.intino.alexandria", "http", "1.7.8")
@@ -18,6 +19,8 @@ Artifact("io.intino.alexandria", "5.1.6") ui-framework
 		Provided("io.intino.icod", "core", "1.0.0")
 		Provided("io.intino.alexandria", "driver-shiny", "1.1.0")
 		Provided("io.intino.alexandria", "driver-r", "1.1.0")
+		Provided("io.intino.alexandria", "driver", "1.0.3")
+		Provided("io.intino.alexandria", "proxy", "1.2.0")
 
 		Web("io.intino.alexandria", "ui-framework-elements", "5.1.6")
 		Web("io.intino.alexandria", "ui-mobile", "4.28.18")

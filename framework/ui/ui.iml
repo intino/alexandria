@@ -97,5 +97,7 @@
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-api:9.4.48.v20220622" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Intino: io.intino.alexandria:driver-shiny:1.1.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Intino: io.intino.alexandria:driver-r:1.1.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Intino: io.intino.alexandria:driver:1.0.3" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Intino: io.intino.alexandria:proxy:1.2.0" level="project" />
   </component>
 </module>
