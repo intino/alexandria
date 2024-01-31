@@ -1,43 +1,15 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.1.14") proxy
-	Imports
-		Compile("com.sparkjava", "spark-core", "2.9.3")
-			Exclude("org.eclipse.jetty", "jetty-server")
-			Exclude("org.eclipse.jetty", "jetty-webapp")
-			Exclude("org.eclipse.jetty", "jetty-http")
-			Exclude("org.eclipse.jetty", "jetty-util")
-			Exclude("org.eclipse.jetty", "jetty-io")
-			Exclude("org.eclipse.jetty", "jetty-xml")
-			Exclude("org.eclipse.jetty", "jetty-servlet")
-			Exclude("org.eclipse.jetty", "jetty-security")
-			Exclude("org.eclipse.jetty", "jetty-client")
-			Exclude("org.eclipse.jetty.websocket", "websocket-server")
-			Exclude("org.eclipse.jetty.websocket", "websocket-servlet")
-			Exclude("org.eclipse.jetty.websocket", "websocket-common")
-			Exclude("org.eclipse.jetty.websocket", "websocket-client")
-			Exclude("org.eclipse.jetty.websocket", "websocket-api")
+Artifact("io.intino.alexandria", "1.2.0") proxy
 
+	Imports
 		Compile("io.intino.alexandria", "logger", "2.0.0")
 		Compile("org.apache.httpcomponents", "httpclient", "4.5.7")
 		Compile("org.apache.httpcomponents", "httpmime", "4.5.7")
 		Compile("org.apache.httpcomponents", "fluent-hc", "4.5.7")
 		Compile("commons-io", "commons-io", "2.4")
 
-		Compile("org.eclipse.jetty", "jetty-server", "9.4.42.v20210604")
-		Compile("org.eclipse.jetty", "jetty-webapp", "9.4.42.v20210604")
-		Compile("org.eclipse.jetty", "jetty-http", "9.4.42.v20210604")
-		Compile("org.eclipse.jetty", "jetty-util", "9.4.42.v20210604")
-		Compile("org.eclipse.jetty", "jetty-io", "9.4.42.v20210604")
-		Compile("org.eclipse.jetty", "jetty-xml", "9.4.42.v20210604")
-		Compile("org.eclipse.jetty", "jetty-servlet", "9.4.42.v20210604")
-		Compile("org.eclipse.jetty", "jetty-security", "9.4.42.v20210604")
-		Compile("org.eclipse.jetty", "jetty-client", "9.4.42.v20210604")
-		Compile("org.eclipse.jetty.websocket", "websocket-server", "9.4.42.v20210604")
-		Compile("org.eclipse.jetty.websocket", "websocket-servlet", "9.4.42.v20210604")
-		Compile("org.eclipse.jetty.websocket", "websocket-common", "9.4.42.v20210604")
-		Compile("org.eclipse.jetty.websocket", "websocket-client", "9.4.42.v20210604")
-		Compile("org.eclipse.jetty.websocket", "websocket-api", "9.4.42.v20210604")
+		Provided("com.sparkjava", "spark-core", "2.9.4")
 
 		Test("junit", "junit", "4.12")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources=true)

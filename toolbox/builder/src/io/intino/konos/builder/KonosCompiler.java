@@ -84,10 +84,16 @@ public class KonosCompiler {
 		if (graph.workflow() == null) remove(dependencies, "bpm");
 		if (graph.slackBotServiceList().isEmpty()) remove(dependencies, "slack");
 		if (graph.cliServiceList().isEmpty()) remove(dependencies, "cli");
-		if (graph.visualizationComponents() == null || graph.visualizationComponents().chartList(c -> c.isAbsolute() || c.isRelative()).isEmpty())
+		if (graph.visualizationComponents() == null || graph.visualizationComponents().chartList(c -> c.isAbsolute() || c.isRelative()).isEmpty()) {
 			remove(dependencies, "driver-r");
-		if (graph.visualizationComponents() == null || graph.visualizationComponents().dashboardList(d -> d.isAbsolute() || d.isRelative()).isEmpty())
+			remove(dependencies, "proxy");
+		}
+		if (graph.visualizationComponents() == null || graph.visualizationComponents().dashboardList(d -> d.isAbsolute() || d.isRelative()).isEmpty()) {
 			remove(dependencies, "driver-shiny");
+			remove(dependencies, "proxy");
+		}
+		if (graph.actionableComponentsList().isEmpty() || graph.actionableComponentsList().stream().allMatch(l -> l.actionableList(d -> d.isSignDocument() || d.isSignText()).isEmpty()))
+			remove(dependencies, "io.intino.icod:core");
 		if (graph.sentinelList().stream().noneMatch(Sentinel::isWebHook) ||
 				!graph.restServiceList().isEmpty() ||
 				!graph.soapServiceList().isEmpty() ||
