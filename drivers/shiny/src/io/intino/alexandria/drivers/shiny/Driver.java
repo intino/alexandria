@@ -77,9 +77,17 @@ public class Driver implements io.intino.alexandria.drivers.Driver<URL, io.intin
 	}
 
 	private ProxyAdapter proxyAdapter() {
-		return (localUrl, remoteUrl, param, value) -> {
-			CleanQueryParam cleanQueryParam = new CleanQueryParam();
-			return cleanQueryParam.execute(localUrl, param, value);
+		return new ProxyAdapter() {
+			@Override
+			public String adaptParameter(URL localUrl, URL remoteUrl, String param, String value) {
+				CleanQueryParam cleanQueryParam = new CleanQueryParam();
+				return cleanQueryParam.execute(localUrl, param, value);
+			}
+
+			@Override
+			public String adaptContent(String content) {
+				return content;
+			}
 		};
 	}
 
