@@ -99,5 +99,9 @@
     <orderEntry type="library" scope="PROVIDED" name="Intino: io.intino.alexandria:driver-r:1.1.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Intino: io.intino.alexandria:driver:1.0.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Intino: io.intino.alexandria:proxy:1.2.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Intino: net.rforge:Rserve:0.6-8.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Intino: net.rforge:REngine:0.6-8.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Intino: com.jcraft:jsch:0.1.55" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Intino: org.apache.httpcomponents:fluent-hc:4.5.7" level="project" />
   </component>
 </module>

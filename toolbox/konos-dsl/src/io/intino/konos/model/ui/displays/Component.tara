@@ -341,9 +341,5 @@ Facet Multiple
 		var integer min = 0
 		var integer max = -1
 
-Facet Labeled
-	var string label
-	var word:{Top Bottom Left Right} position = Left
-
 Facet Navigable
 	var word:{Top Bottom} position = Bottom

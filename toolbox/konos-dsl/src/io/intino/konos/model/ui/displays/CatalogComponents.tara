@@ -27,10 +27,10 @@ Concept CatalogComponents
 
 			sub Magazine
 			sub List
-				Facet Navigable
+				Facet Navigable extends Navigable
 					var word:{Top Bottom} position = Bottom
 			sub Table
-				Facet Navigable
+				Facet Navigable extends Navigable
 					var word:{Top Bottom} position = Bottom
 			sub Map
 				var string icon = empty
