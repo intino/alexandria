@@ -150,7 +150,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		FrameBuilder result = new FrameBuilder().add("properties").add(typeOf(element));
 		if (element.color() != null && !element.color().isEmpty()) result.add("color", element.color());
 		if (element.isOption()) result.add("name", element.asOption().name$());
-		if (element.i$(conceptOf(Labeled.class))) result.add("label", element.a$(Labeled.class).label());
+		if (element.i$(conceptOf(Component.Labeled.class))) result.add("label", element.a$(Component.Labeled.class).label());
 		if (!element.visible()) result.add("visible", element.visible());
 		if (element.isTraceable()) result.add("traceable", true);
 		if (element.i$(conceptOf(Multiple.class))) {
