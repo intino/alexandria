@@ -1,9 +1,9 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.1") driver-shiny
+Artifact("io.intino.alexandria", "1.1.0") driver-shiny
 	Imports
 		Compile("io.intino.alexandria", "driver", "1.0.1")
-		Compile("io.intino.alexandria", "proxy", "1.1.0")
+		Compile("io.intino.alexandria", "proxy", "1.2.0")
 		Compile("io.intino.alexandria", "driver-r", "1.0.1")
 
 		Test("junit", "junit", "4.13")

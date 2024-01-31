@@ -16,9 +16,8 @@ Artifact("io.intino.alexandria", "5.1.5") ui-framework
 		Compile("org.locationtech.jts", "jts-core", "1.19.0")
 
 		Provided("io.intino.icod", "core", "1.0.0")
-		Provided("io.intino.alexandria", "proxy", "1.2.0")
-		Provided("io.intino.alexandria", "driver-shiny", "1.0.1")
-		Provided("io.intino.alexandria", "driver-r", "1.0.1")
+		Provided("io.intino.alexandria", "driver-shiny", "1.1.0")
+		Provided("io.intino.alexandria", "driver-r", "1.1.0")
 
 		Web("io.intino.alexandria", "ui-framework-elements", "5.1.5")
 		Web("io.intino.alexandria", "ui-mobile", "4.28.18")
