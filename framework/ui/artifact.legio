@@ -32,6 +32,7 @@ Artifact("io.intino.alexandria", "5.1.6") ui-framework
 	Parameter(name = "home")
 	Parameter(name = "port")
 
+Repository("siani-maven") > Release("https://artifactory.siani.es/artifactory/releases")
 Repository("intino-maven") > Release("https://artifactory.intino.io/artifactory/releases")
 Repository("bedatadriven") bedatadrivenPublic > Release("https://nexus.bedatadriven.com/content/groups/public/")
 
