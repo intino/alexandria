@@ -132,6 +132,7 @@ class Grid extends AbstractGrid {
                 sortDirection={this.state.sortDirection}
                 onGridSort={this.sortColumns.bind(this)}
                 onRowClick={this.handleRowClick.bind(this)}
+                onScroll={this.handleScroll.bind(this)}
                 toolbar={
                     <ToolsPanel.AdvancedToolbar>
                         <div className="layout horizontal flex center">
@@ -346,6 +347,13 @@ class Grid extends AbstractGrid {
         this.requester.cellClick({ column: column.name, columnIndex: columnIndex, row: value, rowIndex: index });
     };
 
+    handleScroll = (e, a, b) => {
+        const page = this.pageOf(e.rowOverscanEndIdx+(this.state.pageSize*0,2));
+        if (this.lastLoadedPage[page]) return;
+        this.lastLoadedPage[page] = true;
+        this.requester.loadNextPage();
+    };
+
     rowInfo = (index, value, address, color) => {
          return index + "##" + (value != null ? value : "") + "##" + (address != null ? address : "") + "##" + (color != null ? color : "");
     };
@@ -379,11 +387,6 @@ class Grid extends AbstractGrid {
 
     handleRowGetter = (i) => {
         const rows = this.state.rows;
-        const page = this.pageOf(i+this.state.pageSize);
-        if (!this.lastLoadedPage[page]) {
-            this.lastLoadedPage[page] = true;
-            this.requester.loadNextPage();
-        }
         this.lastRow = i;
         return rows[i] || {};
     };
@@ -405,6 +408,8 @@ class Grid extends AbstractGrid {
             }
             rows.push(row);
         }
+        const page = this.pageOf(rows.length-1);
+        this.lastLoadedPage[page] = true;
         this.setState({ rows: rows });
     };
 

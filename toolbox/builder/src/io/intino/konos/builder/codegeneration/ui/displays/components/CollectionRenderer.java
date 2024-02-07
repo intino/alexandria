@@ -22,7 +22,7 @@ public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 		result.add("collection");
 		if (element.i$(conceptOf(Navigable.class))) result.add("navigable", element.a$(Navigable.class).position().name());
 		if (element.sourceClass() != null) result.add("sourceClass", element.sourceClass());
-		if (element.i$(conceptOf(CatalogComponents.List.class)) || element.i$(conceptOf(CatalogComponents.Table.class))) result.add("pageSize", element.pageSize());
+		if (element.i$(conceptOf(CatalogComponents.List.class)) || element.i$(conceptOf(CatalogComponents.Table.class)) || element.i$(conceptOf(CatalogComponents.Grid.class))) result.add("pageSize", element.pageSize());
 		result.add("itemHeight", itemHeight());
 		result.add("scrollingMark", element.scrollingMark());
 		if (element.isSelectable()) result.add("selection", element.asSelectable().multiple() ? "multiple" : "single");

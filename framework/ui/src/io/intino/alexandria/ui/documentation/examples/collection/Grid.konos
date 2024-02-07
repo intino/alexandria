@@ -11,6 +11,7 @@ Template(layout=Vertical, spacing=DP8) gridExamplesMold
 			Text(format=h6, value="No facets")
 			Block(layout=Vertical Flexible, spacing=DP8, format=filledNoAir)
 				Grid(itemClass="io.intino.alexandria.ui.model.datasource.grid.GridItem", noItemsMessage="No elements") grid as Selectable
+					pageSize = 24
 					Column(label="", type=MaterialIcon, width=40px) columna0
 					Column(label="", type=Icon, width=40px) columna1
 					Column(label="Columna 1", type=Text, sortable=true) columna2 as Clickable Addressable(UiElements.widgets)
