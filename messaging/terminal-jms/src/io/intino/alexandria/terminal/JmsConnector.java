@@ -90,7 +90,7 @@ public class JmsConnector implements Connector {
 
 	private void connect() throws JMSException {
 		if (!Broker.isRunning(config.url())) {
-			Logger.warn("Broker (" + config.url() + ") unreachable .Connection aborted");
+			Logger.warn("Broker (" + config.url() + ") unreachable. Connection aborted");
 			return;
 		}
 		initConnection();
