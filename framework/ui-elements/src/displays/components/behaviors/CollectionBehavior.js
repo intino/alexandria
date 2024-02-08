@@ -49,6 +49,8 @@ const CollectionBehavior = (collection) => {
         const scrollableTarget = self.collection.props.id + "_infinite";
         if (width <= 800) itemHeight += (itemHeight/4.5);
         self.notifyItemsRendered(items);
+        self.loadingNextPage = false;
+        window.setTimeout(() => self.loadNextPageIfRequired(hasMore, scrollableTarget), 1000);
         return (
             <div id={scrollableTarget} style={{ height: height, width: width, overflow: "auto" }}>
                 <InfiniteScroll dataLength={items.length} next={self.loadNextPage.bind(self)}
@@ -58,6 +60,22 @@ const CollectionBehavior = (collection) => {
                 </InfiniteScroll>
             </div>
         );
+    };
+
+    self.loadNextPageIfRequired = (hasMore, scrollableTargetId) => {
+        if (self.loadingNextPage) return;
+        const scrollableTarget = document.getElementById(scrollableTargetId);
+        const scrollContainer = scrollableTarget != null && scrollableTarget.childNodes[0] != null ? scrollableTarget.childNodes[0].firstChild : null;
+        const scrollIsVisible = scrollContainer == null || scrollContainer.offsetHeight == 0 || scrollContainer.scrollHeight > scrollContainer.offsetHeight;
+        if (!hasMore || scrollIsVisible) return;
+        self.loadingNextPage = true;
+        self.loadNextPage();
+    };
+
+    self.requestNewPage = (hasMore, scrollableTarget, height) => {
+        const scrollIsVisible = document.getElementById(scrollableTarget).scrollHeight > height;
+        const toolbar = document.getElementById(scrollableTarget + "_toolbar");
+        toolbar.style.display = hasMore && !scrollIsVisible ? "block" : "none";
     };
 
     self.renderList = (items, height, width, onItemsRendered, ref) => {

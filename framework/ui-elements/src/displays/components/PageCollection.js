@@ -11,6 +11,10 @@ export default class PageCollection extends AbstractPageCollection {
 		super(props);
 	};
 
+	setupPageCollection = (info) => {
+		this.setState({ itemCount : info.itemCount, pageSize: info.pageSize });
+	};
+
 }
 
 DisplayFactory.register("PageCollection", PageCollection);
