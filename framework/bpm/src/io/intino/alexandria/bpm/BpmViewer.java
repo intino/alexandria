@@ -145,11 +145,10 @@ public class BpmViewer {
 			if (data != null) return data;
 			try (MessageReader reader = new MessageReader(persistenceManager.read(dataPath))) {
 				Message message = reader.next();
-				data = message.attributes().stream().collect(toMap(a -> a, a -> message.get(a).asString()));
+				data = message.attributes().stream().collect(toMap(a -> a, a -> message.contains(a) ? message.get(a).asString() : ""));
 			} catch (Exception e) {
 				Logger.error(e);
 			}
-
 			return data;
 		}
 
