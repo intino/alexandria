@@ -164,6 +164,10 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
 		};
 	};
 
+    setupDynamicTable = (info) => {
+        this.setup(info);
+    };
+
     setup = (info) => {
         let visibleColumns = info.visibleColumns != null && info.visibleColumns.length > 0 ? this.visibleColumnsArrayOf(info.visibleColumns) : null;
         if (visibleColumns == null) visibleColumns = this.getCookie(info.name) ? this.getCookie(info.name) : this.state.visibleColumns;
