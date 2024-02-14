@@ -12,6 +12,10 @@ export default class PageCollection extends AbstractPageCollection {
 	};
 
 	setupPageCollection = (info) => {
+		this.setup(info);
+	};
+
+	setup = (info) => {
 		this.setState({ itemCount : info.itemCount, pageSize: info.pageSize });
 	};
 
