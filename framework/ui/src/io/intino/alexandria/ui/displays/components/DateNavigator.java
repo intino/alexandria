@@ -13,9 +13,7 @@ import io.intino.alexandria.ui.model.datenavigator.DateNavigatorDatasource;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.time.ZoneOffset.UTC;
@@ -25,7 +23,7 @@ public class DateNavigator<DN extends DateNavigatorNotifier, B extends Box> exte
 	private Instant from;
 	private Instant to;
 	private Scale selectedScale = null;
-	private final Map<Scale, Instant> selectedInstants = new HashMap<>();
+	private Instant selectedInstant;
 	private SelectListener selectListener;
 	private SelectListener selectScaleListener;
 	private DateNavigatorDatasource source = null;
@@ -145,11 +143,11 @@ public class DateNavigator<DN extends DateNavigatorNotifier, B extends Box> exte
 	}
 
 	private Instant selectedInstant(Scale scale) {
-		return selectedInstants.getOrDefault(scale, source.to(selectedScale()));
+		return selectedInstant != null ? selectedInstant : source.to(selectedScale());
 	}
 
 	private void selectInstant(Scale scale, Instant value) {
-		selectedInstants.put(scale, value);
+		selectedInstant = value;
 		refresh();
 		notifySelected(value);
 	}
