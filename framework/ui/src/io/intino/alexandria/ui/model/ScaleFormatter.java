@@ -13,12 +13,14 @@ import java.util.Map;
 public class ScaleFormatter {
 
 	public static String label(Instant date, int zoneOffset, Scale scale, String language) {
-		String format = Formatters.getOrDefault(scale, Formatters.get(Scale.Day)).getOrDefault(language, "en");
+		Map<String, String> formats = Formatters.getOrDefault(scale, Formatters.get(Scale.Day));
+		String format = formats.getOrDefault(language, formats.get("en"));
 		return date(date, zoneOffset, format, language);
 	}
 
 	public static String shortLabel(Instant date, int zoneOffset, Scale scale, String language) {
-		String format = ShortFormatters.getOrDefault(scale, ShortFormatters.get(Scale.Day)).getOrDefault(language, "en");
+		Map<String, String> formats = ShortFormatters.getOrDefault(scale, ShortFormatters.get(Scale.Day));
+		String format = formats.getOrDefault(language, formats.get("en"));
 		return date(date, zoneOffset, format, language);
 	}
 
