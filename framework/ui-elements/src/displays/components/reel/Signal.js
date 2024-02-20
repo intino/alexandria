@@ -137,7 +137,7 @@ const ReelSignal = ({ signal, index, id, moveSignal, classes, translate, style, 
                         </div>
                         <div className="layout horizontal center">
                             <Typography variant="body2" style={{marginRight:'5px',color:'#777',width:'60px'}}>{translate("until")}</Typography>
-                            {selection.endDate}
+                            {selection.block[selection.block.length-1].date}
                         </div>
                     </React.Fragment>
                 }

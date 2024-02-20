@@ -79,7 +79,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Intino: dnie:xmlsec:1.4.2-ADSI" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Intino: org.bouncycastle:bctsp-jdk15:1.45" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Intino: commons-lang:commons-lang:2.6" level="project" />
-    <orderEntry type="module" module-name="ui-elements" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-server:9.4.48.v20220622" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-webapp:9.4.48.v20220622" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-server:9.4.48.v20220622" level="project" />
@@ -103,5 +102,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Intino: net.rforge:REngine:0.6-8.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Intino: com.jcraft:jsch:0.1.55" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Intino: org.apache.httpcomponents:fluent-hc:4.5.7" level="project" />
+    <orderEntry type="module" module-name="ui-elements" />
   </component>
 </module>

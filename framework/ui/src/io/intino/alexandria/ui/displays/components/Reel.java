@@ -6,21 +6,19 @@ import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.*;
 import io.intino.alexandria.ui.displays.events.SelectEvent;
 import io.intino.alexandria.ui.displays.events.SelectListener;
-import io.intino.alexandria.ui.displays.events.SelectionEvent;
-import io.intino.alexandria.ui.displays.events.SelectionListener;
 import io.intino.alexandria.ui.displays.notifiers.ReelNotifier;
+import io.intino.alexandria.ui.model.ScaleFormatter;
 import io.intino.alexandria.ui.model.reel.ReelDatasource;
 import io.intino.alexandria.ui.model.reel.ReelDatasource.Annotation;
 import io.intino.alexandria.ui.model.reel.SignalDefinition;
-import io.intino.alexandria.ui.model.ScaleFormatter;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.util.*;
 import java.util.List;
 import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B> {
@@ -160,11 +158,14 @@ public class Reel<DN extends ReelNotifier, B extends Box> extends AbstractReel<B
 	}
 
 	private List<ReelSignalStep> stepsOf(String reel, Instant from) {
+		Scale lowLevelScale = !source.scales().isEmpty() ? source.scales().get(0) : selectedScale();
 		Scale scale = selectedScale();
 		Instant current = from;
 		List<ReelSignalStep> result = new ArrayList<>();
 		for (int i = 0; i < reel.length(); i++) {
-			result.add(new ReelSignalStep().value(String.valueOf(reel.charAt(i))).date(ScaleFormatter.label(current, timezoneOffset(), scale, language())));
+			String scaledDate = ScaleFormatter.label(current, timezoneOffset(), scale, language());
+			String date = ScaleFormatter.label(current, timezoneOffset(), lowLevelScale, language());
+			result.add(new ReelSignalStep().value(String.valueOf(reel.charAt(i))).date(date).scaledDate(scaledDate));
 			current = source.next(scale, current);
 		}
 		return result;

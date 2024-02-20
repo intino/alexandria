@@ -5,6 +5,7 @@ import io.intino.konos.builder.codegeneration.FullRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.utils.GraphLoader;
+import io.intino.konos.builder.utils.Version;
 import io.intino.konos.compiler.shared.PostCompileActionMessage;
 import io.intino.konos.compiler.shared.PostCompileConfigurationDependencyActionMessage;
 import io.intino.konos.model.KonosGraph;
@@ -62,13 +63,17 @@ public class KonosCompiler {
 		Map<String, String> currentDependencies = configuration.currentDependencies().stream().collect(Collectors.toMap(d -> d.split(":")[0] + ":" + d.split(":")[1], d -> d.split(":")[2]));
 		List<PostCompileConfigurationDependencyActionMessage> toAdd = requiredDependencies.entrySet().stream()
 				.filter(entry -> !contains(currentDependencies, entry))
-				.map(entry -> new PostCompileConfigurationDependencyActionMessage(configuration.module(), entry.getKey() + ":" + entry.getValue())).collect(Collectors.toList());
+				.map(entry -> new PostCompileConfigurationDependencyActionMessage(configuration.module(), entry.getKey() + ":" + entry.getValue())).toList();
 		postCompileActionMessages.addAll(toAdd);
 		return !toAdd.isEmpty();
 	}
 
 	private boolean contains(Map<String, String> deps, Map.Entry<String, String> entry) {
-		return deps.containsKey(entry.getKey()) && deps.get(entry.getKey()).compareTo(entry.getValue()) >= 0;
+		try {
+			return deps.containsKey(entry.getKey()) && new Version(deps.get(entry.getKey())).compareTo(new Version(entry.getValue())) >= 0;
+		} catch (KonosException e) {
+			return true;
+		}
 	}
 
 	private Map<String, String> requiredDependencies(KonosGraph graph, CompilationContext context) {
