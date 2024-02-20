@@ -447,6 +447,7 @@ Schema ReelSignal
 Schema ReelSignalStep
 	Attribute value as Text
 	Attribute date as Text
+	Attribute scaledDate as Text
 
 Schema ReelSignalAnnotation
 	Attribute date as Text

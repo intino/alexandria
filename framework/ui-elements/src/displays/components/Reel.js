@@ -37,7 +37,7 @@ class Reel extends AbstractReel {
 		    inside : false,
 		    navigation: { steps: 0 },
 		    signals: [],
-		    signalsSorting : {},
+		    signalsSorting : {}
 		}
 	};
 
@@ -48,6 +48,7 @@ class Reel extends AbstractReel {
                 <div className="layout vertical wrap" onMouseEnter={this.handleMouseEnter.bind(this)} onMouseLeave={this.handleMouseLeave.bind(this)} style={this.style()}>
                     {this.renderSignals()}
                     {this.renderNavigation()}
+                    {this.renderRange()}
                     {this.renderCookieConsent()}
                 </div>
             </DndProvider>
@@ -71,6 +72,20 @@ class Reel extends AbstractReel {
 //                </div>
 //            </div>
 //        );
+    };
+
+    renderRange = () => {
+        const signals = this.sortedSignals();
+        if (signals.length <= 0) return (<React.Fragment/>);
+        const signal = signals[0];
+        const steps = signal.steps;
+        const width = ReelStepWidth*steps.length;
+        return (
+            <div className="layout horizontal" style={{marginLeft:'200px',width:width+"px"}}>
+                <div className="layout vertical flex" style={{fontSize:'8pt',color:'#777'}}>{steps[0].scaledDate}</div>
+                <div className="layout vertical end-justified" style={{fontSize:'8pt',color:'#777'}}>{steps[steps.length-1].scaledDate}</div>
+            </div>
+        );
     };
 
     handleMove = (e) => {
