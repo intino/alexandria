@@ -76,7 +76,7 @@ public class EventSession {
 	}
 
 	private EventWriter<Event> writerOf(String tank, String source, Timetag timetag, Format format) throws IOException {
-		return writerOf(Fingerprint.of(tank, source, timetag, format));
+		return writerOf(Fingerprint.of(tank, withOutParameters(source), timetag, format));
 	}
 
 	private EventWriter<Event> writerOf(Fingerprint fingerprint) throws IOException {
@@ -88,5 +88,9 @@ public class EventSession {
 
 	private EventWriter<Event> createWriter(Fingerprint fingerprint) throws IOException {
 		return EventWriter.of(fingerprint.format(), provider.file(fingerprint.name(), fingerprint.format()));
+	}
+
+	private static String withOutParameters(String ss) {
+		return ss.contains("?") ? ss.substring(0, ss.indexOf("?")) : ss;
 	}
 }
