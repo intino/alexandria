@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "5.0.7") ingestion
+Artifact("io.intino.alexandria", "5.0.8") ingestion
 	Imports
 		Compile("io.intino.alexandria", "session", "2.0.7")
 		Test("junit", "junit", "4.13.2")
