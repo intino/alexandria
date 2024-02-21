@@ -7,7 +7,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class ZipFileEntryInputStream extends InputStream {
-
 	private final ZipFile zipFile;
 	private final InputStream inputStream;
 
