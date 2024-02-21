@@ -30,7 +30,6 @@
     <orderEntry type="module" module-name="zim" />
     <orderEntry type="module" module-name="logger" />
     <orderEntry type="module" module-name="zit" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:event:5.0.9" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:zim:5.1.2" level="project" />
     <orderEntry type="library" name="Intino: com.github.luben:zstd-jni:1.5.5-10" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:zit:1.0.2" level="project" />
