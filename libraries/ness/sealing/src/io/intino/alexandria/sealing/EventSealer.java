@@ -50,13 +50,12 @@ public class EventSealer {
 
 	public void seal(Fingerprint fingerprint, List<File> sessions) throws IOException {
 		File datalakeFile = datalakeFile(fingerprint);
-		File temp = new File(tempFolder, System.nanoTime() + datalakeFile.getName());
-		if (fingerprint.format().equals(Event.Format.Resource)) sealResources(datalakeFile, sessions, temp);
-		else sealMessages(datalakeFile, fingerprint.format(), sort(fingerprint, sessions), temp);
+		if (fingerprint.format().equals(Event.Format.Resource)) sealResources(datalakeFile, sessions);
+		else sealMessages(datalakeFile, fingerprint.format(), sort(fingerprint, sessions), temp(datalakeFile));
 	}
 
-	private void sealResources(File datalakeFile, List<File> sessions, File temp) {
-		try (EventWriter<Event> writer = EventWriter.of(temp)) {
+	private void sealResources(File datalakeFile, List<File> sessions) {
+		try (EventWriter<Event> writer = EventWriter.of(datalakeFile)) {
 			for (File s : sessions) {
 				EventReader<Event> of = EventReader.of(Event.Format.Resource, s);
 				of.forEachRemaining(e -> {
@@ -68,12 +67,13 @@ public class EventSealer {
 				});
 				of.close();
 			}
-			Files.move(temp.toPath(), datalakeFile.toPath(), REPLACE_EXISTING, ATOMIC_MOVE);
 		} catch (Exception e) {
 			Logger.error(e);
-		} finally {
-			temp.delete();
 		}
+	}
+
+	private File temp(File datalakeFile) {
+		return new File(tempFolder, System.nanoTime() + datalakeFile.getName());
 	}
 
 	private void sealMessages(File datalakeFile, Event.Format format, List<File> sortedSessions, File temp) throws
