@@ -20,9 +20,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import static io.intino.alexandria.event.Event.Format.Resource;
+import static io.intino.alexandria.event.resource.ResourceEvent.METADATA;
 import static io.intino.alexandria.event.resource.ResourceEvent.REI.ID_SEP;
 import static io.intino.alexandria.event.resource.ResourceHelper.METADATA_FILE;
-import static io.intino.alexandria.event.resource.ZipResourceReader.METADATA_EXTENSION;
 
 public class ResourceEventTub implements Datalake.Store.Tub<ResourceEvent>, FileTub {
 
@@ -56,7 +56,7 @@ public class ResourceEventTub implements Datalake.Store.Tub<ResourceEvent>, File
 		try(ZipFile zipFile = new ZipFile(zip)) {
 			return zipFile.stream()
 					.filter(entry -> entry.getName().endsWith(suffix))
-					.map(entry -> toResourceEvent(resourceName, entry, zipFile.getEntry(entry.getName() + METADATA_EXTENSION), zipFile))
+					.map(entry -> toResourceEvent(resourceName, entry, zipFile.getEntry(entry.getName() + METADATA), zipFile))
 					.collect(Collectors.toList());
 		} catch (IOException e) {
 			Logger.error(e);
@@ -68,7 +68,7 @@ public class ResourceEventTub implements Datalake.Store.Tub<ResourceEvent>, File
 		try(ZipFile zipFile = new ZipFile(zip)) {
 			ZipEntry entry = zipFile.getEntry(rei.resourceId());
 			if(entry == null) return Optional.empty();
-			ZipEntry metadata = zipFile.getEntry(entry.getName() + METADATA_EXTENSION);
+			ZipEntry metadata = zipFile.getEntry(entry.getName() + METADATA);
 			return Optional.of(toResourceEvent(rei.resourceName(), entry, metadata, zipFile));
 		} catch (IOException e) {
 			Logger.error(e);

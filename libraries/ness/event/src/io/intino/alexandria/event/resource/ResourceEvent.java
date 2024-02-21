@@ -13,8 +13,8 @@ import static io.intino.alexandria.event.resource.ResourceHelper.*;
 import static java.util.Objects.requireNonNull;
 
 public class ResourceEvent implements Event {
+	public static final String METADATA = ".metadata";
 	static final String ENTRY_NAME_SEP = "$";
-	static final String METADATA = ".metadata";
 
 	private final String type;
 	private final String ss;
