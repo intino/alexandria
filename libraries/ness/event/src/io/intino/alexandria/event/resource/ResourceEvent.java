@@ -13,6 +13,8 @@ import static io.intino.alexandria.event.resource.ResourceHelper.*;
 import static java.util.Objects.requireNonNull;
 
 public class ResourceEvent implements Event {
+	static final String ENTRY_NAME_SEP = "$";
+	static final String METADATA = ".metadata";
 
 	private final String type;
 	private final String ss;
@@ -23,7 +25,7 @@ public class ResourceEvent implements Event {
 		this.type = requireNonNull(type, "type cannot be null");
 		this.ss = requireNonNull(ss, "ss cannot be null");
 		this.resource = requireNonNull(resource, "resource cannot be null");
-		if(resource.name().isBlank()) throw new IllegalArgumentException("Resource name cannot be blank");
+		if (resource.name().isBlank()) throw new IllegalArgumentException("Resource name cannot be blank");
 	}
 
 	public ResourceEvent(String type, String ss, File file) {
@@ -98,8 +100,7 @@ public class ResourceEvent implements Event {
 	 * <p>Represents an id that uniquely identifies a resource event in a datalake. It has the form:</p>
 	 *
 	 * <p><b>tank</b>/<b>ss</b>/<b>ts-epoch-millis</b>/<b>resource-name</b></p>
-	 *
-	 * */
+	 */
 	public static class REI {
 
 		public static final String SEP = "/";
@@ -116,11 +117,16 @@ public class ResourceEvent implements Event {
 		}
 
 		public static REI of(String[] components) {
-			if(components.length != 4) throw new MalformedREIException("REI must have 4 components: type, ss, ts and resource name");
-			if(components[0] == null || components[0].isBlank()) throw new MalformedREIException("type in REI cannot be null nor blank");
-			if(components[1] == null || components[1].isBlank()) throw new MalformedREIException("ss in REI cannot be null nor blank");
-			if(components[2] == null || components[2].isBlank() || isNotAValidTs(components[2])) throw new MalformedREIException("ts in REI is not a valid ts");
-			if(components[3] == null || components[3].isBlank()) throw new MalformedREIException("resource name in REI cannot be null nor blank");
+			if (components.length != 4)
+				throw new MalformedREIException("REI must have 4 components: type, ss, ts and resource name");
+			if (components[0] == null || components[0].isBlank())
+				throw new MalformedREIException("type in REI cannot be null nor blank");
+			if (components[1] == null || components[1].isBlank())
+				throw new MalformedREIException("ss in REI cannot be null nor blank");
+			if (components[2] == null || components[2].isBlank() || isNotAValidTs(components[2]))
+				throw new MalformedREIException("ts in REI is not a valid ts");
+			if (components[3] == null || components[3].isBlank())
+				throw new MalformedREIException("resource name in REI cannot be null nor blank");
 			return new REI(components);
 		}
 
@@ -154,7 +160,9 @@ public class ResourceEvent implements Event {
 			return components[3];
 		}
 
-		/**The id of the resource inside the tub*/
+		/**
+		 * The id of the resource inside the tub
+		 */
 		public String resourceId() {
 			return tsRaw() + ID_SEP + resourceName().replace("/", NAME_SEP);
 		}

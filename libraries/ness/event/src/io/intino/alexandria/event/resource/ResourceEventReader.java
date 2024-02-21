@@ -13,7 +13,6 @@ import java.util.stream.Stream;
 import static java.util.Arrays.stream;
 
 public class ResourceEventReader implements EventReader<ResourceEvent> {
-
 	private final Iterator<ResourceEvent> iterator;
 
 	public ResourceEventReader(File file) throws IOException {

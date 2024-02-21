@@ -11,12 +11,11 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import static io.intino.alexandria.event.resource.ResourceEvent.METADATA;
 import static io.intino.alexandria.event.resource.ResourceEvent.REI.ID_SEP;
 import static io.intino.alexandria.event.resource.ResourceHelper.METADATA_FILE;
 
 public class ZipResourceReader implements Iterator<Resource>, AutoCloseable {
-
-	public static final String METADATA_EXTENSION = ".metadata";
 	private final File file;
 	private final ZipFile zipFile;
 	private final Map<Object, ZipEntry> entries;
@@ -26,7 +25,7 @@ public class ZipResourceReader implements Iterator<Resource>, AutoCloseable {
 		this.file = file;
 		zipFile = new ZipFile(file);
 		entries = Collections.list(zipFile.entries()).stream().collect(Collectors.toMap(ZipEntry::getName, e -> e));
-		iterator = entries.values().stream().filter(e -> !e.getName().endsWith(METADATA_EXTENSION)).sorted(Comparator.comparing(ZipEntry::getName)).iterator();
+		iterator = entries.values().stream().filter(e -> !e.getName().endsWith(METADATA)).sorted(Comparator.comparing(ZipEntry::getName)).iterator();
 	}
 
 	@Override
@@ -48,7 +47,7 @@ public class ZipResourceReader implements Iterator<Resource>, AutoCloseable {
 	}
 
 	private Map<String, String> deserializeMetadata(ZipEntry entry) {
-		ZipEntry metadataEntry = entries.get(entry.getName() + METADATA_EXTENSION);
+		ZipEntry metadataEntry = entries.get(entry.getName() + METADATA);
 		if (metadataEntry != null) {
 			try {
 				Map<String, String> metadata = ResourceHelper.deserializeMetadata(new String(zipFile.getInputStream(metadataEntry).readAllBytes(), StandardCharsets.UTF_8));
