@@ -29,17 +29,17 @@ public class ResourceEventWriter implements EventWriter<ResourceEvent> {
 	public void write(ResourceEvent event) throws IOException {
 		URI uri = URI.create("jar:" + file.toPath().toUri());
 		try (FileSystem fs = FileSystems.newFileSystem(uri, Map.of("create", "true")); InputStream data = event.resource().stream()) {
-			addMetadata(fs, event.getREI(), data);
-			addData(fs, event.getREI(), serializeMetadata(event, file));
+			addData(fs, event.getREI(), data);
+			addMetaData(fs, event.getREI(), serializeMetadata(event, file));
 		}
 	}
 
-	private static void addData(FileSystem fs, ResourceEvent.REI rei, String metadata) throws IOException {
+	private static void addMetaData(FileSystem fs, ResourceEvent.REI rei, String metadata) throws IOException {
 		String entryMetadataName = rei.resourceId().replace("/", ENTRY_NAME_SEP) + METADATA;
 		Files.writeString(fs.getPath(entryMetadataName), metadata, CREATE, APPEND);
 	}
 
-	private static void addMetadata(FileSystem fs, ResourceEvent.REI rei, InputStream data) throws IOException {
+	private static void addData(FileSystem fs, ResourceEvent.REI rei, InputStream data) throws IOException {
 		Files.write(fs.getPath(rei.resourceId().replace("/", ENTRY_NAME_SEP)), data.readAllBytes(), CREATE, APPEND);
 	}
 
