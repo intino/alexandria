@@ -34,13 +34,17 @@ public class ResourceEventWriter implements EventWriter<ResourceEvent> {
 		}
 	}
 
+	private static void addData(FileSystem fs, ResourceEvent.REI rei, InputStream data) throws IOException {
+		Files.write(fs.getPath(normalizePath(rei)), data.readAllBytes(), CREATE, APPEND);
+	}
+
 	private static void addMetaData(FileSystem fs, ResourceEvent.REI rei, String metadata) throws IOException {
-		String entryMetadataName = rei.resourceId().replace("/", ENTRY_NAME_SEP) + METADATA;
+		String entryMetadataName = normalizePath(rei) + METADATA;
 		Files.writeString(fs.getPath(entryMetadataName), metadata, CREATE, APPEND);
 	}
 
-	private static void addData(FileSystem fs, ResourceEvent.REI rei, InputStream data) throws IOException {
-		Files.write(fs.getPath(rei.resourceId().replace("/", ENTRY_NAME_SEP)), data.readAllBytes(), CREATE, APPEND);
+	private static String normalizePath(ResourceEvent.REI rei) {
+		return rei.resourceId().replace("/", ENTRY_NAME_SEP).replace("\\", ENTRY_NAME_SEP);
 	}
 
 	@Override
