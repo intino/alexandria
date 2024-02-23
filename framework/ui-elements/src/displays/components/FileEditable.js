@@ -132,7 +132,7 @@ export default class FileEditable extends AbstractFile {
 	    try { filename = atob(id); }
         catch (e) {}
 	    filename = filename.indexOf("/") !== -1 ? filename.substr(filename.lastIndexOf("/")+1) : filename;
-	    return decodeURIComponent(filename);
+	    return decodeURIComponent(unescape(filename));
 	};
 
 	_renderInputField = () => {
