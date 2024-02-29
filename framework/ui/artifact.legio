@@ -25,7 +25,9 @@ Artifact("io.intino.alexandria", "4.21.14-SNAPSHOT") ui-framework
 		Test("junit", "junit", "4.13.2")
 
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true, finalName = "intino") as Runnable("io.intino.alexandria.Main")
-	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
+	Distribution > Artifactory("intino-maven")
+			Release("https://artifactory.intino.io/artifactory/release-libraries")
+			Snapshot("https://artifactory.intino.io/artifactory/snapshot-libraries")
 	Parameter(name = "home")
 
 Repository("intino-maven") > Release("https://artifactory.intino.io/artifactory/releases")

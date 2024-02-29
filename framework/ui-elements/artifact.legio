@@ -38,7 +38,9 @@ Artifact("io.intino.alexandria", "4.21.14-SNAPSHOT") ui-framework-elements
 		WebComponent("immutable", "^4.1.0")
 
 	Package(LibrariesLinkedByManifest)
-	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
+	Distribution > Artifactory("intino-maven")
+			Release("https://artifactory.intino.io/artifactory/release-libraries")
+			Snapshot("https://artifactory.intino.io/artifactory/snapshot-libraries")
 
 Repository("intino-maven")
 	Release("https://artifactory.intino.io/artifactory/releases")
