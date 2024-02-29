@@ -41,6 +41,11 @@ class Text extends AbstractText {
 		}
 	};
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.value === this.props.value) return;
+        this.setState({ value: nextProps.value });
+    }
+
 	render() {
 		if (!this.state.visible) return (<React.Fragment/>);
 
