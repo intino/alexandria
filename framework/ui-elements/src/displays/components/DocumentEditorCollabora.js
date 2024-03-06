@@ -37,12 +37,17 @@ class DocumentEditorCollabora extends AbstractDocumentEditorCollabora {
 	        <div layout="vertical flex" style={{width:'100%',height:'100%'}}>
                 <form id={formId} name={formId} target={frameId} action={action} method="post">
                     <input name="access_token" value={accessToken} type="hidden" />
-                    <input name="access_token_ttl" value="31536000" type="hidden" />
+                    <input name="access_token_ttl" value={this.timeoutMillis()} type="hidden" />
                     <input name="ui_defaults" value="UIMode=compact;TextSidebar=false;TextRuler=false;TextStatusbar=false;" type="hidden"/>
                 </form>
                 <span id={holderId}></span>
 	        </div>
 	    );
+	};
+
+	timeoutMillis = () => {
+	    const OneDay = 24*60*60*1000;
+	    return Date.now() + OneDay;
 	};
 
 	refresh = (info) => {
