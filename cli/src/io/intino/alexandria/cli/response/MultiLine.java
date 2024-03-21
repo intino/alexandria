@@ -4,7 +4,6 @@ import io.intino.alexandria.cli.Response;
 import io.intino.alexandria.cli.util.MessageHelper;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
@@ -25,7 +24,8 @@ public class MultiLine extends Response {
 
 	private String serialize(Line line) {
 		String result = line(line);
-		return (line.addBreak() ? "\n" : " ") + result;
+		if (result.isEmpty()) return "";
+		return result + (line.addBreak() ? "\n" : " ");
 	}
 
 	private boolean isVisible(Line line) {
@@ -43,7 +43,8 @@ public class MultiLine extends Response {
 		String template = line.template();
 		List<MessageData> data = line.multiple().value() ? provider.dataList(line.name()) : singletonList(provider.data(line.name()));
 		Line.Multiple.Arrangement arrangement = line.multiple().arrangement();
-		List<String> result = data.stream().map(d -> lineOf(d, template)).filter(Objects::nonNull).collect(Collectors.toList());
+		List<String> result = data.stream().map(d -> lineOf(d, template)).filter(l -> l != null && !l.isEmpty()).collect(Collectors.toList());
+		if (result.isEmpty()) return "";
 		return String.join(arrangement == Line.Multiple.Arrangement.Vertical ? "\n" : " ", result);
 	}
 
