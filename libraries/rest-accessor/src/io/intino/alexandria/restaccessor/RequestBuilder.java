@@ -130,7 +130,7 @@ public class RequestBuilder {
 				request.setURI(buildUrl());
 				if (auth != null) request.setHeader(HttpHeaders.AUTHORIZATION, auth.type() + " " + auth.token);
 				headerParameters.forEach(request::setHeader);
-				if (!entityParts.isEmpty() && request instanceof HttpEntityEnclosingRequestBase)
+				if ((!resources.isEmpty() || !entityParts.isEmpty()) && request instanceof HttpEntityEnclosingRequestBase)
 					((HttpEntityEnclosingRequestBase) request).setEntity(buildEntity());
 				else if (urlEncodedFormEntity != null && request instanceof HttpEntityEnclosingRequestBase)
 					((HttpEntityEnclosingRequestBase) request).setEntity(urlEncodedFormEntity);
@@ -146,7 +146,7 @@ public class RequestBuilder {
 	}
 
 	private HttpEntity buildEntity() {
-		if (entityParts.size() == 1)
+		if (resources.isEmpty() && entityParts.size() == 1)
 			return stringEntity(String.valueOf(entityParts.values().iterator().next()));
 		return multipartEntity();
 	}

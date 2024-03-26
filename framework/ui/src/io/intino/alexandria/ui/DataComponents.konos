@@ -66,6 +66,7 @@ Component imageAvatar as ExtensionOf(baseImage)
 Component imageEditable as ExtensionOf(baseImage)
 	Notification refreshReadonly as Bool
 	Notification refreshFocused as Bool
+	Request notifyUploading
 	Request notifyChange as File
 	Request(responseType=Asset) download
 
