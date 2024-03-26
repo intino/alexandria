@@ -4,6 +4,8 @@ import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.components.editable.Editable;
 import io.intino.alexandria.ui.displays.events.ChangeEvent;
 import io.intino.alexandria.ui.displays.events.ChangeListener;
+import io.intino.alexandria.ui.displays.events.Event;
+import io.intino.alexandria.ui.displays.events.Listener;
 import io.intino.alexandria.ui.displays.notifiers.ImageEditableNotifier;
 import io.intino.alexandria.ui.resources.Asset;
 import io.intino.alexandria.ui.spark.UIFile;
@@ -19,8 +21,9 @@ public class ImageEditable<DN extends ImageEditableNotifier, B extends Box> exte
 	private URL defaultValue;
 	private boolean readonly;
 	public ChangeListener changeListener = null;
+	private Listener uploadingListener = null;
 
-    public ImageEditable(B box) {
+	public ImageEditable(B box) {
         super(box);
     }
 
@@ -69,10 +72,19 @@ public class ImageEditable<DN extends ImageEditableNotifier, B extends Box> exte
 		};
 	}
 
+	public ImageEditable<DN, B> onUploading(Listener listener) {
+		this.uploadingListener = listener;
+		return this;
+	}
+
 	@Override
 	public ImageEditable<DN, B> onChange(ChangeListener listener) {
     	this.changeListener = listener;
     	return this;
+	}
+
+	public void notifyUploading() {
+		if (uploadingListener != null) uploadingListener.accept(new Event(this));
 	}
 
 	public void notifyChange(io.intino.alexandria.Resource value) {
