@@ -11,7 +11,7 @@ def type(jmxserver)
 
 		public JMXServer init(Box box) {
 			JMXServer server = new JMXServer(mbClasses(box));
-			server.init();
+			server.init("intino.$path");
 			return server;
 		}
 
