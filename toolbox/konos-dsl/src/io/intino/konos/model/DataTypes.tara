@@ -2,6 +2,7 @@ dsl Proteo
 
 Concept Data is abstract
 	Facet List
+	Facet Set
 	Facet Type
 		var string type is reactive private
 		sub Real
