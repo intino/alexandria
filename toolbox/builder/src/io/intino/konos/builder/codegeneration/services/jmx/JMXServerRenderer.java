@@ -37,6 +37,7 @@ public class JMXServerRenderer extends Renderer {
 		writeFrame(gen(Target.Server), "JMX" + snakeCaseToCamelCase(service.name$()), template().render(new FrameBuilder("jmxserver")
 				.add("name", service.name$())
 				.add("box", boxName())
+				.add("path", service.path())
 				.add("package", packageName()).toFrame()));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Server), "JMX" + snakeCaseToCamelCase(service.name$())).getAbsolutePath()));
 	}

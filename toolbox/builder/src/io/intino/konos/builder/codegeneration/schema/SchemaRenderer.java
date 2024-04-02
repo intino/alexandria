@@ -92,23 +92,23 @@ public class SchemaRenderer extends Renderer {
 	}
 
 	private FrameBuilder process(Data.Real attribute) {
-		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", "double")
+		return new FrameBuilder("primitive", cardinality(attribute.asData()), "double")
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
-				.add("type", !multiple(attribute) ? "double" : attribute.type())
+				.add("type", multiple(attribute.asData()) ? attribute.type() : "double")
 				.add("typeFrame", new FrameBuilder("typeFrame", "real").add("value", attribute.type()))
 				.add("defaultValue", attribute.defaultValue());
 	}
 
 	private FrameBuilder process(Data.Integer attribute) {
-		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
+		return new FrameBuilder("primitive", cardinality(attribute.asData()), attribute.type())
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
-				.add("type", !multiple(attribute) ? "int" : attribute.type())
+				.add("type", multiple(attribute.asData()) ? attribute.type() : "int")
 				.add("typeFrame", new FrameBuilder("typeFrame", "integer").add("value", attribute.type()))
 				.add("defaultValue", attribute.defaultValue());
 	}
 
 	private FrameBuilder process(Data.LongInteger attribute) {
-		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
+		return new FrameBuilder("primitive", cardinality(attribute.asData()), attribute.type())
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
 				.add("type", attribute.type())
 				.add("typeFrame", new FrameBuilder("typeFrame", "longinteger").add("value", attribute.type()))
@@ -116,7 +116,7 @@ public class SchemaRenderer extends Renderer {
 	}
 
 	private FrameBuilder process(Data.File attribute) {
-		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
+		return new FrameBuilder("primitive", cardinality(attribute.asData()), attribute.type())
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
 				.add("type", attribute.type())
 				.add("typeFrame", new FrameBuilder("typeFrame", "file").add("value", attribute.type()))
@@ -124,7 +124,7 @@ public class SchemaRenderer extends Renderer {
 	}
 
 	private FrameBuilder process(Data.Bool attribute) {
-		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
+		return new FrameBuilder("primitive", cardinality(attribute.asData()), attribute.type())
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
 				.add("type", attribute.type())
 				.add("typeFrame", new FrameBuilder("typeFrame", "boolean").add("value", attribute.type()))
@@ -132,7 +132,7 @@ public class SchemaRenderer extends Renderer {
 	}
 
 	private FrameBuilder process(Data.Text attribute) {
-		FrameBuilder builder = new FrameBuilder(multiple(attribute) ? "multiple" : "single", attribute.type())
+		FrameBuilder builder = new FrameBuilder(cardinality(attribute.asData()), attribute.type())
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
 				.add("type", attribute.type())
 				.add("typeFrame", new FrameBuilder("typeFrame", "text").add("value", attribute.type()))
@@ -142,7 +142,7 @@ public class SchemaRenderer extends Renderer {
 	}
 
 	private FrameBuilder process(Data.DateTime attribute) {
-		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
+		return new FrameBuilder("primitive", cardinality(attribute.asData()), attribute.type())
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
 				.add("type", attribute.type())
 				.add("typeFrame", new FrameBuilder("typeFrame", "datetime").add("value", attribute.type()))
@@ -150,7 +150,7 @@ public class SchemaRenderer extends Renderer {
 	}
 
 	private FrameBuilder process(Data.Date attribute) {
-		return new FrameBuilder("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
+		return new FrameBuilder("primitive", cardinality(attribute.asData()), attribute.type())
 				.add("name", attribute.a$(Schema.Attribute.class).name$())
 				.add("type", attribute.type())
 				.add("typeFrame", new FrameBuilder("typeFrame", "date").add(attribute.type()).add("value", attribute.type()))
@@ -159,7 +159,7 @@ public class SchemaRenderer extends Renderer {
 
 	private FrameBuilder process(Data.Word attribute) {
 		final Schema.Attribute a = attribute.a$(Schema.Attribute.class);
-		return new FrameBuilder("word", multiple(attribute) ? "multiple" : "single", attribute.type())
+		return new FrameBuilder("word", cardinality(attribute.asData()), attribute.type())
 				.add("name", a.name$())
 				.add("words", attribute.values().toArray(new String[0]))
 				.add("type", a.name$())
@@ -176,7 +176,7 @@ public class SchemaRenderer extends Renderer {
 	}
 
 	private FrameBuilder processObjectAttribute(Schema schema, String name, boolean multiple) {
-		return new FrameBuilder(multiple ? "multiple" : "single", "object", schema.name$())
+		return new FrameBuilder(multiple ? "list" : "single", "object", schema.name$())
 				.add("name", name)
 				.add("type", schema.name$())
 				.add("lateInit", "")
@@ -184,7 +184,7 @@ public class SchemaRenderer extends Renderer {
 	}
 
 	private FrameBuilder processSchema(Schema schema, String name, boolean multiple) {
-		return new FrameBuilder(multiple ? "multiple" : "single", "schema", schema.name$())
+		return new FrameBuilder(multiple ? "list" : "single", "schema", schema.name$())
 				.add("name", name)
 				.add("type", schema.name$())
 				.add("lateInit", "")
@@ -197,8 +197,13 @@ public class SchemaRenderer extends Renderer {
 		return packageName + "." + subPackage.replace(File.separator, ".");
 	}
 
-	private boolean multiple(Data.Type attribute) {
-		return attribute.asData().isList();
+
+	private String cardinality(Data attribute) {
+		return attribute.isList() ? "list" : attribute.isSet() ? "set" : "single";
+	}
+
+	private boolean multiple(Data attribute) {
+		return attribute.isList() || attribute.isSet();
 	}
 
 }

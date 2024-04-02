@@ -15,7 +15,9 @@ import javax.management.remote.JMXServiceURL;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 
@@ -45,16 +47,49 @@ public class JMXClient {
 		List<VirtualMachineDescriptor> vms = VirtualMachine.list();
 		for (VirtualMachineDescriptor desc : vms) {
 			try {
-				VirtualMachine vm = VirtualMachine.attach(desc);
-				vm.startLocalManagementAgent();
-				Properties props = vm.getAgentProperties();
-				String connectorAddress = props.getProperty(CONNECTOR_ADDRESS);
+				String connectorAddress = connectorAddress(desc);
 				if (connectorAddress == null) continue;
 				set.put(desc.displayName(), connectorAddress);
 			} catch (AttachNotSupportedException | IOException ignored) {
 			}
 		}
 		return set;
+	}
+
+	public static Map<String, String> asyncAllJMXLocalURLs(int timeoutSeconds) {
+		List<VirtualMachineDescriptor> vms = VirtualMachine.list();
+		try {
+			ExecutorService service = Executors.newFixedThreadPool(vms.size());
+			List<Future> futures = vms.stream().map(desc -> service.submit(() -> {
+				String connectorAddress = connectorAddress(desc);
+				return connectorAddress == null ? null : new SimpleEntry<>(desc.displayName(), connectorAddress);
+			})).collect(Collectors.toList());
+			service.shutdown();
+			service.awaitTermination(timeoutSeconds, TimeUnit.SECONDS);
+			return futures.stream()
+					.filter(Future::isDone)
+					.map(JMXClient::get)
+					.filter(Objects::nonNull)
+					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+		} catch (InterruptedException e) {
+			Logger.error(e);
+			return Map.of();
+		}
+	}
+
+	private static String connectorAddress(VirtualMachineDescriptor desc) throws AttachNotSupportedException, IOException {
+		VirtualMachine vm = VirtualMachine.attach(desc);
+		vm.startLocalManagementAgent();
+		Properties props = vm.getAgentProperties();
+		return props.getProperty(CONNECTOR_ADDRESS);
+	}
+
+	private static Map.Entry<String, String> get(Future f) {
+		try {
+			return (Map.Entry<String, String>) f.get();
+		} catch (InterruptedException | ExecutionException e) {
+			return null;
+		}
 	}
 
 	public JMXConnection connect() throws IOException {
