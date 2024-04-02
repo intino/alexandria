@@ -3,7 +3,6 @@ package io.intino.alexandria.ui.displays.components;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.components.collection.Selectable;
 import io.intino.alexandria.ui.displays.events.*;
-import io.intino.alexandria.ui.displays.events.actionable.OpenListener;
 import io.intino.alexandria.ui.displays.notifiers.SelectorCollectionBoxNotifier;
 import io.intino.alexandria.ui.model.Datasource;
 import io.intino.alexandria.ui.utils.DelayerUtil;
@@ -16,11 +15,12 @@ import static java.util.stream.Collectors.toList;
 
 public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNotifier, B extends Box> extends AbstractSelectorCollectionBox<DN, B> {
     private java.util.List<Object> selection = new ArrayList<>();
-    private java.util.List<OpenValueListener> openListeners = new ArrayList<>();
+    private final java.util.List<OpenValueListener> openListeners = new ArrayList<>();
     private Collection collection;
     private ValueProvider valueProvider;
     private Listener selectOtherListener;
     private String searchCondition;
+    private Datasource source;
 
     public SelectorCollectionBox(B box) {
         super(box);
@@ -55,7 +55,7 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
     }
 
     public SelectorCollectionBox<DN, B> source(Datasource source) {
-        collection.source(source);
+        this.source = source;
         return this;
     }
 
@@ -81,7 +81,7 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
     public void search(String value) {
         DelayerUtil.execute(this, x -> {
             if (value.equals(searchCondition)) return;
-            collection.filter(value);
+            collection().ifPresent(c -> c.filter(value));
             searchCondition = value;
         }, 100);
     }
@@ -106,7 +106,10 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
     }
 
     public void opened() {
-        collection().ifPresent(Collection::reload);
+        collection().ifPresent(c -> {
+            if (source != null) c.source(source);
+            else c.reload();
+        });
     }
 
     public <T extends Object> void selection(T... selection) {
@@ -133,7 +136,7 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
 
     public void unSelect(String option) {
         updateSelection(selection.stream().filter(i -> !option.equals(valueOf(i))).collect(Collectors.toList()));
-        collection.reload();
+        collection().ifPresent(Collection::reload);
     }
 
     protected void reloadComponents() { // Override base selector behavior
