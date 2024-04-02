@@ -43,7 +43,7 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
 
     public ProxyDisplay<DN> session(UISession session) {
         this.sessionId = session.id();
-        this.clientId = session.client().id();
+        this.clientId = session.client() != null ? session.client().id() : null;
         this.token = session.token() != null ? session.token().id() : null;
         return this;
     }
