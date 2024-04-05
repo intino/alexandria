@@ -151,7 +151,9 @@ public class Commons {
 		if (response.asType() == null) return "void";
 		String innerPackage = response.isObject() && response.asObject().isComponent() ? String.join(".", packageName, "schemas.") : "";
 		String type = innerPackage + response.asType().type();
-		return response.isList() ? "List<" + type + ">" : type;
+		if (response.isList()) return "List<" + type + ">";
+		if (response.isSet()) return "Set<" + type + ">";
+		return type;
 	}
 
 	public static String fullReturnType(Response response, String packageName) {
@@ -160,7 +162,9 @@ public class Commons {
 		if (response.asType() == null) return "void";
 		String innerPackage = response.isObject() ? String.join(".", packageName, "schemas.") : "";
 		String type = innerPackage + response.asType().type();
-		return response.isList() ? "java.util.List<" + type + ">" : type;
+		if (response.isList()) return "java.util.List<" + type + ">";
+		if (response.isSet()) return "java.util.Set<" + type + ">";
+		return type;
 	}
 
 	public static int fileParameters(Operation operation) {

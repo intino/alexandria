@@ -33,7 +33,7 @@ public class SchemaListRenderer extends Renderer {
 		this.destination = destination != null ? destination : gen(Target.Server);
 		this.packageName = packageName != null ? packageName : context.packageName();
 		this.serializationAnnotations = false;
-		this.writer = new DefaultSchemaWriter(context, this.destination, this.packageName, this.serializationAnnotations);
+		this.writer = new DefaultSchemaWriter(context, this.destination, this.packageName, false);
 	}
 
 	public SchemaListRenderer(CompilationContext context, KonosGraph graph, File destination, boolean serializationAnnotations) {

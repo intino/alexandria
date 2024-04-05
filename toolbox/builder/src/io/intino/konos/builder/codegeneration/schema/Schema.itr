@@ -65,6 +65,7 @@ end
 def type(list) trigger(declaration)
 	private java.util.List<$type> $name+firstLowerCase = new java.util.ArrayList<>();
 end
+
 def type(set) trigger(declaration)
 	private java.util.Set<$type> $name+firstLowerCase = new java.util.HashSet<>();
 end
