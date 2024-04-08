@@ -5,7 +5,7 @@
 	<groupId>io.intino.konos</groupId>
 	<artifactId>builder</artifactId>
 	<name>Builder</name>
-	<version>11.1.1</version>
+	<version>11.1.2</version>
 	<properties>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>

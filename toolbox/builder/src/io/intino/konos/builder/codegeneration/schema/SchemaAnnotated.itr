@@ -216,6 +216,12 @@ def type(list) trigger(setter)
 		return this;
 	}
 end
+def type(set & schema) trigger(setter)
+	public $element+firstUpperCase $name+snakeCaseToCamelCase+firstLowerCase~List(java.util.Set<$type+firstUpperCase> $name+snakeCaseToCamelCase+firstLowerCase) {
+		this.$name+snakeCaseToCamelCase+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase;
+		return this;
+	}
+end
 
 def type(set) trigger(setter)
 	public $element+firstUpperCase $name+snakeCaseToCamelCase+firstLowerCase(java.util.Set<$type> $name+snakeCaseToCamelCase+firstLowerCase) {
