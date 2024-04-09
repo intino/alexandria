@@ -7,10 +7,7 @@ import io.intino.alexandria.schemas.TextEditablePatternRule;
 import io.intino.alexandria.ui.displays.components.editable.Editable;
 import io.intino.alexandria.ui.displays.components.text.DefaultTextPatternMatcher;
 import io.intino.alexandria.ui.displays.components.text.TextPatternMatcher;
-import io.intino.alexandria.ui.displays.events.ChangeEvent;
-import io.intino.alexandria.ui.displays.events.ChangeListener;
-import io.intino.alexandria.ui.displays.events.KeyPressEvent;
-import io.intino.alexandria.ui.displays.events.KeyPressListener;
+import io.intino.alexandria.ui.displays.events.*;
 import io.intino.alexandria.ui.displays.notifiers.TextEditableNotifier;
 
 import java.util.ArrayList;
@@ -25,6 +22,7 @@ public class TextEditable<DN extends TextEditableNotifier, B extends Box> extend
     private ChangeListener changeListener = null;
     private KeyPressListener keyPressListener = null;
     private KeyPressListener enterPressListener = null;
+    private ReadonlyListener readonlyListener = null;
 
     private static final String EnterKeyCode = "Enter";
 
@@ -57,13 +55,19 @@ public class TextEditable<DN extends TextEditableNotifier, B extends Box> extend
     @Override
     public TextEditable<DN, B> readonly(boolean readonly) {
         _readonly(readonly);
-        notifier.refreshReadonly(readonly);
+        notifyReadonly(readonly);
         return this;
     }
 
     @Override
     public TextEditable<DN, B> onChange(ChangeListener listener) {
         this.changeListener = listener;
+        return this;
+    }
+
+    @Override
+    public TextEditable<DN, B> onReadonly(ReadonlyListener listener) {
+        this.readonlyListener = listener;
         return this;
     }
 
@@ -180,6 +184,11 @@ public class TextEditable<DN extends TextEditableNotifier, B extends Box> extend
             if (!set.contains(pattern.substring(i, i+1))) positions.add(i);
         }
         return positions;
+    }
+
+    private void notifyReadonly(boolean value) {
+        if (readonlyListener != null) readonlyListener.accept(new ReadonlyEvent(this, value));
+        notifier.refreshReadonly(value);
     }
 
 }

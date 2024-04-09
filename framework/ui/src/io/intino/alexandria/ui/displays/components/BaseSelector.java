@@ -6,6 +6,8 @@ import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.PropertyList;
 import io.intino.alexandria.ui.displays.components.addressable.Addressable;
 import io.intino.alexandria.ui.displays.components.selector.SelectorOption;
+import io.intino.alexandria.ui.displays.events.ReadonlyEvent;
+import io.intino.alexandria.ui.displays.events.ReadonlyListener;
 import io.intino.alexandria.ui.displays.events.SelectionEvent;
 import io.intino.alexandria.ui.displays.events.SelectionListener;
 import io.intino.alexandria.ui.displays.notifiers.BaseSelectorNotifier;
@@ -22,6 +24,7 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
     private String path;
     private String address;
     private java.util.List<SelectionListener> selectionListeners = new ArrayList<>();
+    private ReadonlyListener readonlyListener = null;
     private List<String> options = new ArrayList<>();
     private List<Component> components = new ArrayList<>();
 
@@ -35,13 +38,18 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
         return this;
     }
 
+    public BaseSelector<DN, B> onReadonly(ReadonlyListener listener) {
+        this.readonlyListener = listener;
+        return this;
+    }
+
     public boolean readonly() {
         return readonly;
     }
 
     public BaseSelector<DN, B> readonly(boolean readonly) {
         _readonly(readonly);
-        notifier.refreshReadonly(readonly);
+        notifyReadonly(readonly);
         return this;
     }
 
@@ -293,4 +301,10 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
     private boolean validAddress() {
         return address != null && address.chars().filter(c -> c == ':').count() <= 1;
     }
+
+    private void notifyReadonly(boolean readonly) {
+        if (readonlyListener != null) readonlyListener.accept(new ReadonlyEvent(this, readonly));
+        notifier.refreshReadonly(readonly);
+    }
+
 }

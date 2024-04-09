@@ -5,9 +5,7 @@ import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.collection.Selectable;
 import io.intino.alexandria.ui.displays.components.editable.Editable;
-import io.intino.alexandria.ui.displays.events.AddItemEvent;
-import io.intino.alexandria.ui.displays.events.ChangeItemEvent;
-import io.intino.alexandria.ui.displays.events.RemoveItemEvent;
+import io.intino.alexandria.ui.displays.events.*;
 import io.intino.alexandria.ui.displays.events.editable.AddItemListener;
 import io.intino.alexandria.ui.displays.events.editable.ChangeItemListener;
 import io.intino.alexandria.ui.displays.events.editable.RemoveItemListener;
@@ -22,6 +20,7 @@ public abstract class Multiple<B extends Box, C extends Component, V> extends Ab
     private RemoveItemListener removeItemListener;
     private java.util.Map<C, String> labelsMap = new HashMap<>();
     private java.util.Map<C, String> descriptionsMap = new HashMap<>();
+    private ReadonlyListener readonlyListener = null;
 
     public Multiple(B box) {
         super(box);
@@ -33,13 +32,18 @@ public abstract class Multiple<B extends Box, C extends Component, V> extends Ab
         notifier.refreshVisibility(visible());
     }
 
+    public Multiple<B, C, V> onReadonly(ReadonlyListener listener) {
+        this.readonlyListener = listener;
+        return this;
+    }
+
     public boolean readonly() {
         return readonly;
     }
 
     public Multiple<B, C, V> readonly(boolean readonly) {
         _readonly(readonly);
-        notifier.refreshReadonly(readonly);
+        notifyReadonly(readonly);
         return this;
     }
 
@@ -129,6 +133,11 @@ public abstract class Multiple<B extends Box, C extends Component, V> extends Ab
     private void _readonly(Display c, boolean readonly) {
         if (!(c instanceof Editable)) return;
         ((Editable)c).readonly(readonly);
+    }
+
+    private void notifyReadonly(boolean value) {
+        if (readonlyListener != null) readonlyListener.accept(new ReadonlyEvent(this, value));
+        notifier.refreshReadonly(value);
     }
 
 }

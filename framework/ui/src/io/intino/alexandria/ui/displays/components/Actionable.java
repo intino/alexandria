@@ -11,9 +11,7 @@ import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.components.actionable.SignChecker;
 import io.intino.alexandria.ui.displays.components.actionable.SignInfo;
 import io.intino.alexandria.ui.displays.components.actionable.SignInfoProvider;
-import io.intino.alexandria.ui.displays.events.BeforeListener;
-import io.intino.alexandria.ui.displays.events.Event;
-import io.intino.alexandria.ui.displays.events.Listener;
+import io.intino.alexandria.ui.displays.events.*;
 import io.intino.alexandria.ui.displays.notifiers.ActionableNotifier;
 import io.intino.alexandria.ui.resources.Asset;
 import io.intino.alexandria.ui.spark.UIFile;
@@ -34,6 +32,7 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
     private SignInfo signInfo;
     private BeforeListener beforeAffirmListener;
     private Listener cancelAffirmListener;
+    private ReadonlyListener readonlyListener = null;
 
     public enum Mode { Link, Button, IconButton, MaterialIconButton, Toggle, IconToggle, MaterialIconToggle, SplitButton, IconSplitButton, MaterialIconSplitButton, AvatarIconButton }
     public enum Highlight { None, Outline, Fill }
@@ -88,13 +87,13 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
 
     public Actionable<DN, B> enable() {
         _readonly(false);
-        notifier.refreshReadonly(readonly);
+        notifyReadonly(readonly);
         return this;
     }
 
     public Actionable<DN, B> disable() {
         _readonly(true);
-        notifier.refreshReadonly(readonly);
+        notifyReadonly(readonly);
         return this;
     }
 
@@ -135,6 +134,11 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
 
     public Actionable<DN, B> onCancelAffirmed(Listener listener) {
         this.cancelAffirmListener = listener;
+        return this;
+    }
+
+    public Actionable<DN, B> onReadonly(ReadonlyListener listener) {
+        this.readonlyListener = listener;
         return this;
     }
 
@@ -267,6 +271,11 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
         if (signMode != SignMode.OneTimePassword) return null;
         if (signInfo != null && signInfo.secret() != null) return signInfo.secret();
         return Totp.createSecret();
+    }
+
+    private void notifyReadonly(boolean readonly) {
+        if (readonlyListener != null) readonlyListener.accept(new ReadonlyEvent(this, readonly));
+        notifier.refreshReadonly(readonly);
     }
 
 }

@@ -7,10 +7,7 @@ import io.intino.alexandria.schemas.SignActionSignatureSuccess;
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.components.sign.AutoFirmaServer;
-import io.intino.alexandria.ui.displays.events.SignErrorEvent;
-import io.intino.alexandria.ui.displays.events.SignErrorListener;
-import io.intino.alexandria.ui.displays.events.SignEvent;
-import io.intino.alexandria.ui.displays.events.SignListener;
+import io.intino.alexandria.ui.displays.events.*;
 import io.intino.alexandria.ui.displays.notifiers.SignActionNotifier;
 import io.intino.icod.core.SignatureInfo;
 import io.intino.icod.core.XadesSignatureHelper;
@@ -23,6 +20,7 @@ public abstract class SignAction<DN extends SignActionNotifier, B extends Box> e
 	private SignErrorListener errorListener;
 	private SignAction.SignMode mode = SignMode.Sign;
 	private SignAction.SignFormat format = SignAction.SignFormat.XAdES;
+	private ReadonlyListener readonlyListener = null;
 
 	public enum SignMode { Sign, CounterSign }
 	public enum SignFormat { PAdES, XAdES, CAdES }
@@ -78,7 +76,7 @@ public abstract class SignAction<DN extends SignActionNotifier, B extends Box> e
 
 	public SignAction<DN, B> readonly(boolean readonly) {
 		this.readonly = readonly;
-		notifier.refreshReadonly(readonly);
+		notifyReadonly(readonly);
 		return this;
 	}
 
@@ -115,6 +113,11 @@ public abstract class SignAction<DN extends SignActionNotifier, B extends Box> e
 		return this;
 	}
 
+	public SignAction<DN, B> onReadonly(ReadonlyListener listener) {
+		this.readonlyListener = listener;
+		return this;
+	}
+
 	protected SignAction<DN, B> _signFormat(SignAction.SignFormat format) {
 		this.format = format;
 		return this;
@@ -138,6 +141,11 @@ public abstract class SignAction<DN extends SignActionNotifier, B extends Box> e
 		result.batchPreSignerUrl(server.batchPreSignerUrl());
 		result.batchPostSignerUrl(server.batchPostSignerUrl());
 		return result;
+	}
+
+	private void notifyReadonly(boolean value) {
+		if (readonlyListener != null) readonlyListener.accept(new ReadonlyEvent(this, value));
+		notifier.refreshReadonly(value);
 	}
 
 }

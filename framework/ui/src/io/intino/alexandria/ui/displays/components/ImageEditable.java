@@ -2,10 +2,7 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.components.editable.Editable;
-import io.intino.alexandria.ui.displays.events.ChangeEvent;
-import io.intino.alexandria.ui.displays.events.ChangeListener;
-import io.intino.alexandria.ui.displays.events.Event;
-import io.intino.alexandria.ui.displays.events.Listener;
+import io.intino.alexandria.ui.displays.events.*;
 import io.intino.alexandria.ui.displays.notifiers.ImageEditableNotifier;
 import io.intino.alexandria.ui.resources.Asset;
 import io.intino.alexandria.ui.spark.UIFile;
@@ -22,6 +19,7 @@ public class ImageEditable<DN extends ImageEditableNotifier, B extends Box> exte
 	private boolean readonly;
 	public ChangeListener changeListener = null;
 	private Listener uploadingListener = null;
+	private ReadonlyListener readonlyListener = null;
 
 	public ImageEditable(B box) {
         super(box);
@@ -46,7 +44,7 @@ public class ImageEditable<DN extends ImageEditableNotifier, B extends Box> exte
 	@Override
 	public ImageEditable<DN, B> readonly(boolean readonly) {
 		_readonly(readonly);
-		notifier.refreshReadonly(readonly);
+		notifyReadonly(readonly);
 		return this;
 	}
 
@@ -83,6 +81,12 @@ public class ImageEditable<DN extends ImageEditableNotifier, B extends Box> exte
     	return this;
 	}
 
+	@Override
+	public ImageEditable<DN, B> onReadonly(ReadonlyListener listener) {
+    	this.readonlyListener = listener;
+    	return this;
+	}
+
 	public void notifyUploading() {
 		if (uploadingListener != null) uploadingListener.accept(new Event(this));
 	}
@@ -107,6 +111,11 @@ public class ImageEditable<DN extends ImageEditableNotifier, B extends Box> exte
 		if (value() != null) result = Asset.toResource(baseAssetUrl(), value()).toUrl().toString();
 		else if (defaultValue != null) result = Asset.toResource(baseAssetUrl(), defaultValue).toUrl().toString();
 		return result;
+	}
+
+	private void notifyReadonly(boolean value) {
+		if (readonlyListener != null) readonlyListener.accept(new ReadonlyEvent(this, value));
+		notifier.refreshReadonly(value);
 	}
 
 }

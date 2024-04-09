@@ -65,6 +65,7 @@ end
 def type(list) trigger(declaration)
 	private java.util.List<$type> $name+firstLowerCase = new java.util.ArrayList<>();
 end
+
 def type(set) trigger(declaration)
 	private java.util.Set<$type> $name+firstLowerCase = new java.util.HashSet<>();
 end
@@ -180,7 +181,7 @@ def !type(primitive) type(single) trigger(setter)
 	}
 end
 
-def type(schema) type(list) trigger(setter)
+def type(schema & list) trigger(setter)
 	public $element+firstUpperCase $name+snakeCaseToCamelCase+firstLowerCase~List(java.util.List<$type+firstUpperCase> $name+snakeCaseToCamelCase+firstLowerCase) {
 		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase;
 		return this;
@@ -189,6 +190,13 @@ end
 
 def type(list) trigger(setter)
 	public $element+firstUpperCase $name+snakeCaseToCamelCase+firstLowerCase(java.util.List<$type> $name+snakeCaseToCamelCase+firstLowerCase) {
+		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase;
+		return this;
+	}
+end
+
+def type(schema & set) trigger(setter)
+	public $element+firstUpperCase $name+snakeCaseToCamelCase+firstLowerCase~List(java.util.Set<$type+firstUpperCase> $name+snakeCaseToCamelCase+firstLowerCase) {
 		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase;
 		return this;
 	}

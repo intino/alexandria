@@ -6,9 +6,7 @@ import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.collection.Selectable;
 import io.intino.alexandria.ui.displays.components.editable.Editable;
-import io.intino.alexandria.ui.displays.events.AddItemEvent;
-import io.intino.alexandria.ui.displays.events.ChangeItemEvent;
-import io.intino.alexandria.ui.displays.events.RemoveItemEvent;
+import io.intino.alexandria.ui.displays.events.*;
 import io.intino.alexandria.ui.displays.events.editable.AddItemListener;
 import io.intino.alexandria.ui.displays.events.editable.ChangeItemListener;
 import io.intino.alexandria.ui.displays.events.editable.RemoveItemListener;
@@ -21,6 +19,7 @@ public abstract class MultipleImage<B extends Box, C extends Component, V> exten
 	private AddItemListener addItemListener;
 	private ChangeItemListener changeItemListener;
 	private RemoveItemListener removeItemListener;
+	private ReadonlyListener readonlyListener = null;
 
 	public MultipleImage(B box) {
 		super(box);
@@ -50,7 +49,12 @@ public abstract class MultipleImage<B extends Box, C extends Component, V> exten
 
 	public MultipleImage<B, C, V> readonly(boolean readonly) {
 		_readonly(readonly);
-		notifier.refreshReadonly(readonly);
+		notifyReadonly(readonly);
+		return this;
+	}
+
+	public MultipleImage<B, C, V> onReadonly(ReadonlyListener listener) {
+		this.readonlyListener = listener;
 		return this;
 	}
 
@@ -155,6 +159,11 @@ public abstract class MultipleImage<B extends Box, C extends Component, V> exten
 		List<BaseImage> children = children(BaseImage.class);
 		List<String> images = children.stream().map(c -> c.serializedValue()).collect(Collectors.toList());
 		notifier.refreshImages(images);
+	}
+
+	private void notifyReadonly(boolean value) {
+		if (readonlyListener != null) readonlyListener.accept(new ReadonlyEvent(this, value));
+		notifier.refreshReadonly(value);
 	}
 
 }

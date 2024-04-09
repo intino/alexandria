@@ -4,11 +4,14 @@ import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.components.editable.Editable;
 import io.intino.alexandria.ui.displays.events.ChangeEvent;
 import io.intino.alexandria.ui.displays.events.ChangeListener;
+import io.intino.alexandria.ui.displays.events.ReadonlyEvent;
+import io.intino.alexandria.ui.displays.events.ReadonlyListener;
 import io.intino.alexandria.ui.displays.notifiers.TemplateStampEditableNotifier;
 
 public class TemplateStampEditable<DN extends TemplateStampEditableNotifier, B extends Box> extends AbstractTemplateStampEditable<B> implements Editable<DN, B> {
     private boolean readonly;
     private ChangeListener changeListener = null;
+    private ReadonlyListener readonlyListener = null;
 
     public TemplateStampEditable(B box) {
         super(box);
@@ -39,6 +42,7 @@ public class TemplateStampEditable<DN extends TemplateStampEditableNotifier, B e
     public TemplateStampEditable<DN, B> readonly(boolean readonly) {
         this.readonly = readonly;
         children().stream().filter(c -> c instanceof Editable).forEach(c -> ((Editable<?,?>)c).readonly(readonly));
+        notifyReadonly(readonly);
         return this;
     }
 
@@ -48,8 +52,20 @@ public class TemplateStampEditable<DN extends TemplateStampEditableNotifier, B e
         return this;
     }
 
+    @Override
+    public Editable<DN, B> onReadonly(ReadonlyListener listener) {
+        this.readonlyListener = listener;
+        return this;
+    }
+
     private void notifyChange(ChangeEvent event) {
         if (changeListener == null) return;
         changeListener.accept(new ChangeEvent(this, event.value()));
     }
+
+    private void notifyReadonly(boolean value) {
+        if (readonlyListener == null) return;
+        readonlyListener.accept(new ReadonlyEvent(this, value));
+    }
+
 }

@@ -4,10 +4,7 @@ import io.intino.alexandria.Resource;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.ui.displays.components.editable.Editable;
-import io.intino.alexandria.ui.displays.events.ChangeEvent;
-import io.intino.alexandria.ui.displays.events.ChangeListener;
-import io.intino.alexandria.ui.displays.events.Event;
-import io.intino.alexandria.ui.displays.events.Listener;
+import io.intino.alexandria.ui.displays.events.*;
 import io.intino.alexandria.ui.displays.notifiers.FileEditableNotifier;
 import io.intino.alexandria.ui.spark.UIFile;
 
@@ -23,6 +20,7 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 	private boolean readonly;
 	protected Listener uploadingListener = null;
 	protected ChangeListener changeListener = null;
+	private ReadonlyListener readonlyListener = null;
 	private File preview;
 
 	public FileEditable(B box) {
@@ -60,7 +58,7 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 	@Override
 	public FileEditable<DN, B> readonly(boolean readonly) {
 		_readonly(readonly);
-		notifier.refreshReadonly(readonly);
+		notifyReadonly(readonly);
 		return this;
 	}
 
@@ -72,6 +70,12 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 	@Override
 	public FileEditable<DN, B> onChange(ChangeListener listener) {
 		this.changeListener = listener;
+		return this;
+	}
+
+	@Override
+	public FileEditable<DN, B> onReadonly(ReadonlyListener listener) {
+		this.readonlyListener = listener;
 		return this;
 	}
 
@@ -123,6 +127,11 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 	private void refreshPreview() {
 		preview.visible(value() != null);
 		preview.value(value(), mimeType());
+	}
+
+	private void notifyReadonly(boolean value) {
+		if (readonlyListener != null) readonlyListener.accept(new ReadonlyEvent(this, value));
+		notifier.refreshReadonly(value);
 	}
 
 }

@@ -107,7 +107,7 @@ public class RESTAccessorRenderer extends Renderer {
 	private String[] responseType(Response response) {
 		List<String> types = new ArrayList<>(List.of(response != null && response.isType() ? response.asType().type() : "void"));
 		if (response != null)
-			types.addAll(response.core$().layerList().stream().map(l -> l.contains("$") ? l.substring(l.indexOf("$") + 1) : l).collect(Collectors.toList()));
+			types.addAll(response.core$().layerList().stream().map(l -> l.contains("$") ? l.substring(l.indexOf("$") + 1) : l).toList());
 		return types.toArray(new String[0]);
 	}
 
@@ -139,15 +139,19 @@ public class RESTAccessorRenderer extends Renderer {
 			List<Parameter> parameters = enumParameters.get(resource);
 			if (parameters.stream().noneMatch(p -> p.name$().equals(parameter.name$())))
 				enumParameters.get(resource).add(parameter);
-			type = firstUpperCase(snakeCaseToCamelCase(resource) + firstUpperCase(parameter.name$()));
+			type = firstUpperCase(snakeCaseToCamelCase(resource) + firstUpperCase(snakeCaseToCamelCase(parameter.name$())));
 		} else type = (parameter.isObject() && parameter.asObject().isComponent() ?
 				String.join(".", packageName(), "schemas.") : "") + parameter.asType().type();
-		return parameter.isList() ? "List<" + type + ">" : type;
+		if (parameter.isList()) return "List<" + type + ">";
+		if (parameter.isSet()) return "Set<" + type + ">";
+		return type;
 	}
 
 	private String parameterType(Notification.Parameter parameter) {
 		String type = (parameter.isObject() && parameter.asObject().isComponent() ? String.join(".", packageName(), "schemas.") : "") + parameter.asType().type();
-		return parameter.isList() ? "List<" + type + ">" : type;
+		if (parameter.isList()) return "List<" + type + ">";
+		if (parameter.isSet()) return "Set<" + type + ">";
+		return type;
 	}
 
 	private String processPath(String path) {

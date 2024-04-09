@@ -3,6 +3,8 @@ def type(accessor)
 
 	import java.util.List;
 	import java.util.Map;
+	import java.util.Set;
+	import java.util.HashSet;
 	import java.util.HashMap;
 	import java.util.ArrayList;
 	import java.util.Arrays;
@@ -117,6 +119,10 @@ end
 
 def type(list) trigger(return)
 	return io.intino.alexandria.restaccessor.adapters.ResponseAdapter.adapt(response.content(), new com.google.gson.reflect.TypeToken<Array$value>(){}.getType());
+end
+
+def type(set) trigger(return)
+	return io.intino.alexandria.restaccessor.adapters.ResponseAdapter.adapt(response.content(), new com.google.gson.reflect.TypeToken<Hash$value>(){}.getType());
 end
 
 def type(file) trigger(return)
