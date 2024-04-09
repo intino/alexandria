@@ -67,6 +67,7 @@ def type(resource)
 	package $package.rest.resources;
 
 	import java.util.List;
+	import java.util.Set;
 	import java.util.ArrayList;
 	import io.intino.alexandria.exceptions.*;
 	import $package.*;
