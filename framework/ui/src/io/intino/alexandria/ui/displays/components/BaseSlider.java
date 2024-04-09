@@ -9,6 +9,8 @@ import io.intino.alexandria.ui.displays.components.slider.Ordinal;
 import io.intino.alexandria.ui.displays.components.slider.Range;
 import io.intino.alexandria.ui.displays.events.ChangeEvent;
 import io.intino.alexandria.ui.displays.events.ChangeListener;
+import io.intino.alexandria.ui.displays.events.ReadonlyEvent;
+import io.intino.alexandria.ui.displays.events.ReadonlyListener;
 import io.intino.alexandria.ui.displays.notifiers.BaseSliderNotifier;
 
 import java.text.NumberFormat;
@@ -25,6 +27,7 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 	private Timer playerStepTimer = null;
 	private boolean readonly;
 	private java.util.List<BaseSlider<DN, B>> observers = new ArrayList<>();
+	private ReadonlyListener readonlyListener = null;
 	protected Object value;
 	protected Range range = null;
 
@@ -40,6 +43,11 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 
 	public BaseSlider onChange(ChangeListener listener) {
 		this.changeListener = listener;
+		return this;
+	}
+
+	public BaseSlider onReadonly(ReadonlyListener listener) {
+		this.readonlyListener = listener;
 		return this;
 	}
 
@@ -87,7 +95,7 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 
 	public BaseSlider<DN, B> readonly(boolean value) {
 		_readonly(value);
-		notifier.refreshReadonly(value);
+		notifyReadonly(value);
 		return this;
 	}
 
@@ -272,6 +280,11 @@ public abstract class BaseSlider<DN extends BaseSliderNotifier, B extends Box> e
 
 	private Selected selectedValue() {
 		return schemaOf(value);
+	}
+
+	private void notifyReadonly(boolean value) {
+		if (readonlyListener != null) readonlyListener.accept(new ReadonlyEvent(this, value));
+		notifier.refreshReadonly(value);
 	}
 
 }

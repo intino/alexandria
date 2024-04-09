@@ -5,6 +5,8 @@ import io.intino.alexandria.schemas.Range;
 import io.intino.alexandria.ui.displays.components.editable.Editable;
 import io.intino.alexandria.ui.displays.events.ChangeEvent;
 import io.intino.alexandria.ui.displays.events.ChangeListener;
+import io.intino.alexandria.ui.displays.events.ReadonlyEvent;
+import io.intino.alexandria.ui.displays.events.ReadonlyListener;
 import io.intino.alexandria.ui.displays.notifiers.DateEditableNotifier;
 
 import java.time.Instant;
@@ -17,6 +19,7 @@ public class DateEditable<DN extends DateEditableNotifier, B extends Box> extend
 	private String pattern;
 	private boolean readonly;
 	private ChangeListener changeListener = null;
+	private ReadonlyListener readonlyListener = null;
 
 	public enum View {
 		Year, Month, Week, Date;
@@ -95,7 +98,7 @@ public class DateEditable<DN extends DateEditableNotifier, B extends Box> extend
 	@Override
 	public DateEditable<DN, B> readonly(boolean readonly) {
 		_readonly(readonly);
-		notifier.refreshReadonly(readonly);
+		notifyReadonly(readonly);
 		return this;
 	}
 
@@ -107,6 +110,12 @@ public class DateEditable<DN extends DateEditableNotifier, B extends Box> extend
 	@Override
 	public DateEditable<DN, B> onChange(ChangeListener listener) {
 		this.changeListener = listener;
+		return this;
+	}
+
+	@Override
+	public DateEditable<DN, B> onReadonly(ReadonlyListener listener) {
+		this.readonlyListener = listener;
 		return this;
 	}
 
@@ -140,6 +149,11 @@ public class DateEditable<DN extends DateEditableNotifier, B extends Box> extend
 		if (min != null) range.min(min.toEpochMilli());
 		if (max != null) range.max(max.toEpochMilli());
 		return range;
+	}
+
+	private void notifyReadonly(boolean value) {
+		if (readonlyListener != null) readonlyListener.accept(new ReadonlyEvent(this, value));
+		notifier.refreshReadonly(value);
 	}
 
 }

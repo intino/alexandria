@@ -5,6 +5,8 @@ import io.intino.alexandria.schemas.Geometry;
 import io.intino.alexandria.ui.displays.components.editable.Editable;
 import io.intino.alexandria.ui.displays.events.ChangeEvent;
 import io.intino.alexandria.ui.displays.events.ChangeListener;
+import io.intino.alexandria.ui.displays.events.ReadonlyEvent;
+import io.intino.alexandria.ui.displays.events.ReadonlyListener;
 import io.intino.alexandria.ui.displays.notifiers.LocationEditableNotifier;
 import io.intino.alexandria.ui.model.locations.Point;
 import io.intino.alexandria.ui.model.locations.Polygon;
@@ -16,8 +18,9 @@ import java.util.stream.Collectors;
 public class LocationEditable<DN extends LocationEditableNotifier, B extends Box> extends AbstractLocationEditable<DN, B> implements Editable<DN, B> {
 	private boolean readonly;
 	private ChangeListener changeListener = null;
+	private ReadonlyListener readonlyListener = null;
 
-    public LocationEditable(B box) {
+	public LocationEditable(B box) {
         super(box);
     }
 
@@ -39,13 +42,19 @@ public class LocationEditable<DN extends LocationEditableNotifier, B extends Box
 
 	public LocationEditable<DN, B> readonly(boolean readonly) {
 		_readonly(readonly);
-		notifier.refreshReadonly(readonly);
+		notifyReadonly(readonly);
 		return this;
 	}
 
 	@Override
 	public LocationEditable<DN, B> onChange(ChangeListener listener) {
 		this.changeListener = listener;
+		return this;
+	}
+
+	@Override
+	public LocationEditable<DN, B> onReadonly(ReadonlyListener listener) {
+		this.readonlyListener = listener;
 		return this;
 	}
 
@@ -86,4 +95,10 @@ public class LocationEditable<DN extends LocationEditableNotifier, B extends Box
 	private Point pointOf(io.intino.alexandria.schemas.Point point) {
 		return new Point(point.lat(), point.lng());
 	}
+
+	private void notifyReadonly(boolean value) {
+		if (readonlyListener != null) readonlyListener.accept(new ReadonlyEvent(this, value));
+		notifier.refreshReadonly(value);
+	}
+
 }
