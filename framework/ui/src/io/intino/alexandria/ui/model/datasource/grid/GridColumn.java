@@ -119,7 +119,7 @@ public class GridColumn<T> {
 	}
 
 	private String formatInstant(GridValue value) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern).withZone(ZoneId.systemDefault());
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern).withZone(ZoneId.of("UTC"));
 		return formatter.format(value.asInstant());
 	}
 

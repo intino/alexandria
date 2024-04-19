@@ -28,6 +28,7 @@ class Date extends AbstractDate {
 		this.requester = new DateRequester(this);
 		this.state = {
 			...this.state,
+			pattern : this.props.pattern !== "" ? this.props.pattern : undefined,
 			value : this.props.value,
 		}
 	};
@@ -36,7 +37,7 @@ class Date extends AbstractDate {
 		if (!this.state.visible) return (<React.Fragment/>);
 
 		const { classes } = this.props;
-		const pattern = this.props.pattern !== "" ? this.props.pattern : undefined;
+		const pattern = this.state.pattern;
 		const hasMode = this.props.mode != null;
 		const language = window.Application.configuration.language;
 
@@ -58,6 +59,10 @@ class Date extends AbstractDate {
 
 	refresh = (value) => {
 		this.setState({ "value": value });
+	};
+
+	refreshPattern = (pattern) => {
+	    this.setState({ pattern });
 	};
 
 }

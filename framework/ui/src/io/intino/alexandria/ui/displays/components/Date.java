@@ -9,9 +9,16 @@ public class Date<DN extends DateNotifier, B extends Box> extends AbstractDate<D
     private Instant min;
     private Instant max;
     private Instant value;
+    private String pattern;
 
     public Date(B box) {
         super(box);
+    }
+
+    @Override
+    public void didMount() {
+        super.didMount();
+        if (pattern != null) notifier.refreshPattern(pattern);
     }
 
     public Instant value() {
@@ -43,6 +50,12 @@ public class Date<DN extends DateNotifier, B extends Box> extends AbstractDate<D
 
     protected Date<DN, B> _max(Instant max) {
         this.max = max;
+        return this;
+    }
+
+    public Date<DN, B> pattern(String pattern) {
+        this.pattern = pattern;
+        notifier.refreshPattern(pattern);
         return this;
     }
 

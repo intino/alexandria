@@ -102,6 +102,5 @@
     <orderEntry type="library" scope="PROVIDED" name="Intino: net.rforge:REngine:0.6-8.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Intino: com.jcraft:jsch:0.1.55" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Intino: org.apache.httpcomponents:fluent-hc:4.5.7" level="project" />
-    <orderEntry type="module" module-name="ui-elements" />
   </component>
 </module>
