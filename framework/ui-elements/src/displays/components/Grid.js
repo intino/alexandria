@@ -111,6 +111,8 @@ class Grid extends AbstractGrid {
         const showCheckbox = this.props.selection != null && this.allowMultiSelection();
         const { classes } = this.props;
         const selectorColumnsDisabled = this.selectorColumns().length <= 0;
+        this.loadingNextPage = false;
+        window.setTimeout(() => this.loadNextPageIfRequired(), 1000);
         return (
             <DataGrid
                 ref={(g) => {this.grid = g;}}
@@ -350,6 +352,16 @@ class Grid extends AbstractGrid {
         const page = this.pageOf(e.rowOverscanEndIdx+(this.state.pageSize*0,2));
         if (this.lastLoadedPage[page]) return;
         this.lastLoadedPage[page] = true;
+        this.requester.loadNextPage();
+    };
+
+    loadNextPageIfRequired = () => {
+        if (this.loadingNextPage) return;
+        const hasMore = this.state.rows.length < this.state.itemCount;
+        const scrollableTarget = this.grid.getDataGridDOMNode().querySelector('.react-grid-Canvas');
+        const scrollIsVisible = scrollableTarget == null || scrollableTarget.offsetHeight == 0 || scrollableTarget.scrollHeight > scrollableTarget.offsetHeight;
+        if (!hasMore || scrollIsVisible) return;
+        this.loadingNextPage = true;
         this.requester.loadNextPage();
     };
 
