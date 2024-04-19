@@ -85,6 +85,7 @@ class Grid extends AbstractGrid {
     };
 
     renderLoading = () => {
+        if (this.state.rows.length > 0) this.saveHorizontalScroll(this.horizontalScroll);
         const theme = Theme.get();
         return (<div style={{position:'absolute',height:'100%',width:'100%',zIndex:'1'}} className="layout vertical flex center-center"><RiseLoader color={theme.palette.secondary.main} loading={true}/></div>);
     };
@@ -95,15 +96,13 @@ class Grid extends AbstractGrid {
     	if (gridCanvas != null) gridCanvas.scrollTop = top;
     };
 
-    saveHorizontalScroll = () => {
+    saveHorizontalScroll = (defaultValue) => {
     	var gridCanvas = this.grid.getDataGridDOMNode().querySelector('.react-grid-Canvas');
-    	this.horizontalScroll = gridCanvas != null ? gridCanvas.scrollLeft : 0;
+    	this.horizontalScroll = gridCanvas != null ? gridCanvas.scrollLeft : (defaultValue != null ? defaultValue : 0);
     };
 
     restoreHorizontalScroll() {
         if (this.horizontalScroll == null) return;
-        var selectedColumn = this.state.sortColumn;
-        if (selectedColumn == null) return;
     	var gridCanvas = this.grid.getDataGridDOMNode().querySelector('.react-grid-Canvas');
     	if (gridCanvas != null) gridCanvas.scrollLeft = this.horizontalScroll;
     };

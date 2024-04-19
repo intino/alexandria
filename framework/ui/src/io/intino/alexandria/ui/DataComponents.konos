@@ -21,7 +21,10 @@ Component numberEditable as ExtensionOf(baseNumber)
 Component baseDate
 	Notification refresh as DateTime
 	Notification refreshError as Text
+
 Component date as ExtensionOf(baseDate)
+	Notification refreshPattern as Text
+
 Component dateEditable as ExtensionOf(baseDate)
 	Notification refreshReadonly as Bool
 	Notification refreshPattern as Text
