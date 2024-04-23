@@ -31,6 +31,7 @@ public abstract class PushService<S extends Session<C>, C extends Client> implem
 		messageListeners.get(clientId).add(consumer);
 		return () -> {
 			synchronized (messageListeners) {
+				if (!messageListeners.containsKey(clientId)) return;
 				messageListeners.get(clientId).remove(consumer);
 			}
 		};
@@ -71,6 +72,7 @@ public abstract class PushService<S extends Session<C>, C extends Client> implem
 	}
 
 	public void onMessage(C client, String message) {
+		messageListeners.putIfAbsent(client.id(), new ArrayList<>());
 		messageListeners.get(client.id()).forEach(listener -> listener.accept(message));
 	}
 
