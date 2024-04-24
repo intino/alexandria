@@ -20,5 +20,7 @@ Artifact("io.intino", "12.0.0") konos
 		Compile("io.intino.itrules", "engine", "1.0.1")
 		Compile("org.hashids", "hashids", "1.0.3")
 		Test("junit", "junit", "4.13.2")
-	Package(mode = ModulesAndLibrariesLinkedByManifest) as Runnable(mainClass = "io.intino.konos.KonoscRunner")
+	Package(mode = ModulesAndLibrariesLinkedByManifest,attachSources = true) as Runnable(mainClass = "io.intino.konos.KonoscRunner")
+	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
+
 RunConfiguration local
