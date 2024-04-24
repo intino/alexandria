@@ -1,0 +1,16 @@
+def type(main)
+	package $package;
+
+	public class Main {
+		public static void main(String$[] args) {
+			$name+SnakeCaseToCamelCase+firstUpperCase~Box box = new $name+SnakeCaseToCamelCase+firstUpperCase~Box(args);
+			[$model]
+			box.start();
+			Runtime.getRuntime().addShutdownHook(new Thread(box::stop));
+		}
+	}
+end
+
+def type(model) trigger(model)
+	io.intino.magritte.framework.Graph graph = new io.intino.magritte.framework.Graph().loadStashes("$name");
+end

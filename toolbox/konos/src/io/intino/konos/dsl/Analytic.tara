@@ -1,0 +1,105 @@
+dsl Proteo
+
+use DataTypes
+
+Concept:{0..1} Split > var string[] splits
+Concept:RequiresAspect Axis
+	var string label
+	Facet Continuous
+		var string unit
+		Concept Range
+			var string label = empty
+			Facet LowerBound
+				var integer lowerBound
+			Facet Bound
+				var integer lowerBound
+				var integer upperBound
+			Facet UpperBound
+				var integer upperBound
+	Facet Categorical
+		var resource tsv
+		Concept:{0..1} IncludeLabel
+			Facet Name
+		Concept:{0..1} Include
+			var Axis[]:Categorical axes
+	Facet Dynamic with Categorical
+
+Concept:CheckVirtual Cube
+	var word:{Yearly Monthly Daily Hourly} scale
+	var Split splitted = empty
+	Concept:{0..1} Index
+	Facet Virtual
+		var Cube main
+		var Cube join
+	Concept:{0..1} Fact
+		Concept:Named Column extends SizedData
+			sub Attribute
+			sub Measure
+		Facet Cached
+			var word:{Last First} timetag = Last
+	Concept:Named:AxisAccomplishSource Dimension
+		var string label
+		var Axis axis
+		var Fact.Column attribute
+	Concept:Named Indicator
+		var string label
+		var string unit = ""
+		var Fact.Column source
+		var integer countDecimals = 0
+		Facet Average
+		Facet Sum
+	Concept:Named CustomDimension
+		var string label
+		var Axis axis
+	Concept:Named CustomIndicator
+		var string label
+		var string unit = ""
+		var integer countDecimals = 0
+		Facet Average
+		Facet Sum
+	Concept:Named CustomFilter
+
+Concept SizedData
+	Facet List
+	Facet Type
+		var string type is reactive private
+		var string primitive = 'self.type()' is reactive private
+		var integer:{bits} size = 0 bits
+		var integer:{bits} maxSize = 64 bits is private
+		sub Real
+			var string type = "Double" is reactive private
+			var string primitive = "double" is reactive private
+			var integer:{bits} size = 64 bits
+		sub Integer
+			var string type = "Integer" is reactive private
+			var string primitive = "int" is reactive private
+			var integer:{bits} size = 32 bits
+			var integer:{bits} maxSize = 32 bits is final private
+		sub LongInteger
+			var string type = "Long" is reactive private
+			var string primitive = "long" is reactive private
+			var integer:{bits} size = 64 bits
+			var integer:{bits} maxSize = 64 bits is final private
+		sub Id
+			var string type = "Long" is reactive private
+			var string primitive = "long" is reactive private
+			var integer:{bits} size = 64 bits
+		sub Bool
+			var string type = "Boolean" is reactive private
+			var string primitive = "boolean" is reactive private
+			var integer:{bits} size = 2 bits is final
+		sub Date
+			var string format = "dd/MM/yyyy"
+			var string type = "java.time.LocalDate" is reactive private
+			var integer:{bits} size = 16 bits
+		sub DateTime
+			var string format = "dd/MM/yyyy HH:mm:ss"
+			var string type = "java.time.Instant" is reactive private
+			var word:{Millis Seconds Minutes Hours} precision = Millis
+			var integer:{bits} size = 64 bits
+		sub Category
+			var Axis:Categorical axis;
+			var integer:{bits} size = 0 bits
+		sub Virtual
+		sub UnsignedLong with LongInteger
+		sub UnsignedInt with Integer

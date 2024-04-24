@@ -5,7 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/framework/allotropy/allotropy.iml" filepath="$PROJECT_DIR$/framework/allotropy/allotropy.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/framework/bot/bot.iml" filepath="$PROJECT_DIR$/framework/bot/bot.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/framework/bpm/bpm.iml" filepath="$PROJECT_DIR$/framework/bpm/bpm.iml" group="framework" />
-      <module fileurl="file://$PROJECT_DIR$/cli/cli.iml" filepath="$PROJECT_DIR$/cli/cli.iml" group="framework" />
+      <module fileurl="file://$PROJECT_DIR$/framework/cli/cli.iml" filepath="$PROJECT_DIR$/framework/cli/cli.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/framework/core/core.iml" filepath="$PROJECT_DIR$/framework/core/core.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/libraries/ness/datalake/datalake.iml" filepath="$PROJECT_DIR$/libraries/ness/datalake/datalake.iml" group="eventsourcing" />
       <module fileurl="file://$PROJECT_DIR$/libraries/docxbuilder/docxbuilder.iml" filepath="$PROJECT_DIR$/libraries/docxbuilder/docxbuilder.iml" group="office" />
@@ -20,6 +20,7 @@
       <module fileurl="file://$PROJECT_DIR$/libraries/jms/jms.iml" filepath="$PROJECT_DIR$/libraries/jms/jms.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/jmx/jmx.iml" filepath="$PROJECT_DIR$/libraries/jmx/jmx.iml" group="services" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/json/json.iml" filepath="$PROJECT_DIR$/fileformats/json/json.iml" group="fileformats" />
+      <module fileurl="file://$PROJECT_DIR$/toolbox/konos/konos.iml" filepath="$PROJECT_DIR$/toolbox/konos/konos.iml" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/led/led.iml" filepath="$PROJECT_DIR$/fileformats/led/led.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/libraries/logger/logger.iml" filepath="$PROJECT_DIR$/libraries/logger/logger.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/logger4j/logger4j.iml" filepath="$PROJECT_DIR$/libraries/logger4j/logger4j.iml" group="libraries" />
@@ -41,11 +42,11 @@
       <module fileurl="file://$PROJECT_DIR$/drivers/shiny/shiny.iml" filepath="$PROJECT_DIR$/drivers/shiny/shiny.iml" group="drivers" />
       <module fileurl="file://$PROJECT_DIR$/framework/slack/slack.iml" filepath="$PROJECT_DIR$/framework/slack/slack.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/libraries/soap/soap.iml" filepath="$PROJECT_DIR$/libraries/soap/soap.iml" group="services" />
-      <module fileurl="file://$PROJECT_DIR$/sql-predicate/sql-predicate.iml" filepath="$PROJECT_DIR$/sql-predicate/sql-predicate.iml" group="libraries" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/sql-predicate/sql-predicate.iml" filepath="$PROJECT_DIR$/libraries/sql-predicate/sql-predicate.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/tabb/tabb.iml" filepath="$PROJECT_DIR$/fileformats/tabb/tabb.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/framework/telegram/telegram.iml" filepath="$PROJECT_DIR$/framework/telegram/telegram.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/messaging/terminal-jms/terminal-jms.iml" filepath="$PROJECT_DIR$/messaging/terminal-jms/terminal-jms.iml" group="eventsourcing" />
-      <module fileurl="file://$PROJECT_DIR$/totp/totp.iml" filepath="$PROJECT_DIR$/totp/totp.iml" group="libraries" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/totp/totp.iml" filepath="$PROJECT_DIR$/libraries/totp/totp.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/tris/tris.iml" filepath="$PROJECT_DIR$/fileformats/tris/tris.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/framework/ui/ui.iml" filepath="$PROJECT_DIR$/framework/ui/ui.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/framework/ui-elements/ui-elements.iml" filepath="$PROJECT_DIR$/framework/ui-elements/ui-elements.iml" group="framework" />

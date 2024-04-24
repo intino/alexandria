@@ -1,0 +1,12 @@
+{
+  "Service.UI.homeList": [
+    "import java.util.List;",
+    "import static java.util.stream.Collectors.toList;",
+    "import io.intino.konos.dsl.Service;"
+  ],
+  "Service.UI.templates": [
+    "import java.util.List;",
+    "import java.util.stream.Collectors;",
+    "import io.intino.konos.dsl.Template;"
+  ]
+}
