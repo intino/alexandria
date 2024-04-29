@@ -1,0 +1,38 @@
+dsl Proteo
+
+use DataTypes
+
+Concept:Named Subscriber
+	var string event
+	Facet Durable
+		var string subscriberId
+		var word:{ReceiveAll ReceiveAfterLastSeal} subscriptionMode
+
+Concept:Named Datamart
+	var word:{Table Graph} type
+	Concept:Named:RequiresAspect Mounter
+		Facet MounterType
+			sub Triplet
+			sub Event
+				Concept:{1..*} Require
+					var string tank
+
+Concept:Named Sensor is component
+	Facet UserSensor
+		var integer:{%} width = 100%
+		var integer:{%} height = 100%
+	Facet FormEdition extends UserSensor
+		var string path
+	Facet DocumentEdition extends UserSensor
+		var word:{Offline Online} mode = Online
+	Facet DocumentSignature extends UserSensor
+		var word:{Sign CoSign CounterSign} signType
+		var word:{Pkcs7 XadesAttached XadesDetached CadesAttached CadesDetached} signFormat
+
+	Facet Poll extends UserSensor
+		var string defaultOption = empty
+		Concept Option
+			var string value
+			var Schema event
+			has Option
+	Facet Device
