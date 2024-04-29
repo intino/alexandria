@@ -6,7 +6,6 @@ import io.intino.magritte.builder.StashBuilder;
 import io.intino.magritte.framework.loaders.ClassFinder;
 import io.intino.magritte.framework.stores.ResourcesStore;
 import io.intino.magritte.io.model.Stash;
-import io.intino.tara.Language;
 import tara.dsl.Konos;
 
 import java.io.ByteArrayOutputStream;

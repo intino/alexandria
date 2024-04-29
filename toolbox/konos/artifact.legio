@@ -6,7 +6,7 @@ Artifact("io.intino", "12.0.0") konos
 		OutputDsl > Builder("io.intino", "konos", "12.0.0")
 	Imports
 		Compile("io.intino", "builder-interface", "2.0.0")
-		Compile("tara.dsl", "konos", "1.0.0")
+		Compile("tara.dsl", "konos", "12.0.0")
 		Compile("io.intino.magritte", "builder", "7.0.0")
 		Compile("io.intino.alexandria", "zip", "1.0.0")
 		Compile("io.swagger", "swagger-codegen", "2.4.19")

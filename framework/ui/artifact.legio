@@ -1,7 +1,8 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "5.1.20") ui-framework
-	Box("Konos", "11.0.5", targetPackage = "io.intino.alexandria")
+Artifact("io.intino.alexandria", "5.1.21") ui-framework
+	Dsl("Konos", "12.0.0") > Builder > generationPackage = "alexandria"
+	Code("io.intino")
 
 	Imports
 		Compile("io.intino.alexandria", "core-framework", "2.2.0")
@@ -22,7 +23,7 @@ Artifact("io.intino.alexandria", "5.1.20") ui-framework
 		Provided("io.intino.alexandria", "driver", "1.0.3")
 		Provided("io.intino.alexandria", "proxy", "1.2.0")
 
-		Web("io.intino.alexandria", "ui-framework-elements", "5.1.20")
+		Web("io.intino.alexandria", "ui-framework-elements", "5.1.21")
 		Web("io.intino.alexandria", "ui-mobile", "4.28.18")
 
 		Test("junit", "junit", "4.13.2")
@@ -33,7 +34,6 @@ Artifact("io.intino.alexandria", "5.1.20") ui-framework
 	Parameter(name = "port")
 
 Repository("siani-maven") > Release("https://artifactory.siani.es/artifactory/releases")
-Repository("intino-maven") > Release("https://artifactory.intino.io/artifactory/releases")
 Repository("bedatadriven") bedatadrivenPublic > Release("https://nexus.bedatadriven.com/content/groups/public/")
 
 RunConfiguration local

@@ -109,7 +109,7 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 						onMenuOpen={this.handleOpen.bind(this)}
 						onMenuClose={this.handleClose.bind(this)}
 						styles={SelectorCollectionBoxViewStyles}/>
-    			{this.props.allowOther && <div className="layout vertical end"><a className={classes.other} onClick={this.handleAllowOther.bind(this)}>{label != null ? this.translate("Add") + " " + this.translate(label).toLowerCase() : this.translate("Add other")}</a></div>}
+    			{this.props.allowOther && !this.state.readonly && <div className="layout vertical end"><a className={classes.other} onClick={this.handleAllowOther.bind(this)}>{label != null ? this.translate("Add") + " " + this.translate(label).toLowerCase() : this.translate("Add other")}</a></div>}
 			</div>
         );
     };
