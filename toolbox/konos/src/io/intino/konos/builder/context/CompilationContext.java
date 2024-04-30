@@ -2,19 +2,18 @@ package io.intino.konos.builder.context;
 
 import com.google.gson.Gson;
 import io.intino.alexandria.logger.Logger;
+import io.intino.builder.BuildConstants;
+import io.intino.builder.PostCompileActionMessage;
 import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.cache.CacheReader;
 import io.intino.konos.builder.codegeneration.cache.CacheWriter;
 import io.intino.konos.builder.codegeneration.cache.LayerCache;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
-import io.intino.builder.BuildConstants;
-import io.intino.builder.PostCompileActionMessage;
 import io.intino.konos.dsl.KonosGraph;
 import io.intino.magritte.framework.Layer;
 import io.intino.magritte.framework.Node;
 import io.intino.magritte.io.model.Stash;
-
 
 import java.io.File;
 import java.io.IOException;
@@ -268,7 +267,7 @@ public class CompilationContext {
 
 	public String sourceFileOf(Node node) {
 		String stash = node.stash();
-		File file = sources.stream().filter(f -> f.getName().replace(".konos", "").equals(stash)).findFirst().orElse(null);
+		File file = sources.stream().filter(f -> f.getName().replace(".konos", "").replace(".tara", "").equals(stash)).findFirst().orElse(null);
 		return file == null ? sources.get(0).getAbsolutePath() : file.getAbsolutePath();
 	}
 
