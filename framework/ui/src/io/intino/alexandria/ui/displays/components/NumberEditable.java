@@ -81,6 +81,11 @@ public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> ex
 		return this;
 	}
 
+	public void update(Double value) {
+		notifyChange(value);
+		value(value);
+	}
+
 	public NumberEditable value(double value) {
     	return value(Double.valueOf(value));
 	}

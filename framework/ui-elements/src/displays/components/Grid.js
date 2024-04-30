@@ -358,7 +358,7 @@ class Grid extends AbstractGrid {
     loadNextPageIfRequired = () => {
         if (this.loadingNextPage) return;
         const hasMore = this.state.rows.length < this.state.itemCount;
-        const scrollableTarget = this.grid.getDataGridDOMNode().querySelector('.react-grid-Canvas');
+        const scrollableTarget = this.grid != null && this.grid.getDataGridDOMNode() != null ? this.grid.getDataGridDOMNode().querySelector('.react-grid-Canvas') : null;
         const scrollIsVisible = scrollableTarget == null || scrollableTarget.offsetHeight == 0 || scrollableTarget.scrollHeight > scrollableTarget.offsetHeight;
         if (!hasMore || scrollIsVisible) return;
         this.loadingNextPage = true;
