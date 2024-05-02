@@ -3,7 +3,7 @@ dsl Legio
 Artifact("io.intino", "12.0.1") konos
 	Dsl("Proteo", "1.0.0")
 		Builder("io.intino.magritte", "builder", "7.0.0", "dsl")
-		OutputDsl > Builder("io.intino", "konos", "12.0.0")
+		OutputDsl > Builder("io.intino", "konos", "12.0.1")
 	Imports
 		Compile("tara.dsl", "konos", "12.0.0")
 		Compile("io.intino", "builder-interface", "2.0.0")
