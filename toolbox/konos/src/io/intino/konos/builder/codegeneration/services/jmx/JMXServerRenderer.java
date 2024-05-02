@@ -34,11 +34,12 @@ public class JMXServerRenderer extends Renderer {
 	private void processService(Service.JMX service) {
 		final List<Operation> operations = service.operationList();
 		if (operations.isEmpty()) return;
-		writeFrame(gen(Target.Server), "JMX" + snakeCaseToCamelCase(service.name$()), template().render(new FrameBuilder("jmxserver")
+		FrameBuilder frame = new FrameBuilder("jmxserver")
 				.add("name", service.name$())
 				.add("box", boxName())
-				.add("path", service.path())
-				.add("package", packageName()).toFrame()));
+				.add("package", packageName());
+		if (!service.path().isEmpty()) frame.add("path", service.path());
+		writeFrame(gen(Target.Server), "JMX" + snakeCaseToCamelCase(service.name$()), template().render(frame.toFrame()));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Server), "JMX" + snakeCaseToCamelCase(service.name$())).getAbsolutePath()));
 	}
 
