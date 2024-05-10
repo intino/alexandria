@@ -1,13 +1,13 @@
 dsl Legio
 
-Artifact("io.intino", "12.0.1") konos
-	Dsl("Proteo", "1.0.0")
-		Builder("io.intino.magritte", "builder", "7.0.0", "dsl")
-		OutputDsl > Builder("io.intino", "konos", "12.0.1")
+Artifact("io.intino", "12.0.2") konos
+	Dsl("Proteo", "1.0.1")
+		Builder("io.intino.magritte", "builder", "7.0.2", "dsl")
+		OutputDsl > Builder("io.intino", "konos") as ArtifactVersionFollower
 	Imports
-		Compile("tara.dsl", "konos", "12.0.0")
+		Compile("tara.dsl", "konos") as ArtifactVersionFollower
 		Compile("io.intino", "builder-interface", "2.0.0")
-		Compile("io.intino.magritte", "builder", "7.0.0")
+		Compile("io.intino.magritte", "builder", "7.0.2")
 		Compile("io.intino.magritte", "framework", "5.2.0") > Exclude("io.intino.tara", "language")
 		Compile("io.intino.alexandria", "zip", "1.0.0")
 		Compile("io.intino.cottons", "cotton-utils", "1.0.0")
