@@ -5,7 +5,6 @@ import io.intino.tara.language.model.Parameter;
 import io.intino.tara.language.model.rules.MogramRule;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CheckFileParameter implements MogramRule {
 	private Cause cause;
@@ -24,7 +23,7 @@ public class CheckFileParameter implements MogramRule {
 
 	@Override
 	public boolean accept(Mogram node) {
-		final List<Mogram> files = node.components().stream().filter(n -> isParameter(n) && n.appliedFacets().stream().anyMatch(f -> f.type().equals("File"))).collect(Collectors.toList());
+		final List<Mogram> files = node.components().stream().filter(n -> isParameter(n) && n.appliedFacets().stream().anyMatch(f -> f.type().equals("File"))).toList();
 		if (!files.isEmpty() && (!(parameterInForm(files.get(0)) || parameterInBody(files.get(0))))) {
 			cause = Cause.FileParameterNotInForm;
 			return false;
