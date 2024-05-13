@@ -184,7 +184,7 @@ def type(box)
 		public static java.net.URL url(String url) {
             try {
                 return new java.net.URI(url).toURL();
-            } catch (java.net.MalformedURLException | java.net.URISyntaxException e) {
+            } catch (java.net.MalformedURLException | java.net.URISyntaxException | IllegalArgumentException e) {
                 return null;
             }
         }
