@@ -4,7 +4,7 @@ use DataTypes
 use Component
 use Services
 
-Concept:Named PassiveView is abstract
+Concept PassiveView is abstract
 	Concept Request extends Data
 		var word:{Asset Void} responseType = Void
 		var Exception[] exceptionRefs = empty
@@ -22,7 +22,7 @@ Concept:Named PassiveView is abstract
 	Facet ExtensionOf
 		var PassiveView parentView
 
-Concept:Named Display extends PassiveView
+Concept Display extends PassiveView
 	var Component[] components = empty
 	var string parentDisplay = empty
 	has Block
