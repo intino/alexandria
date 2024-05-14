@@ -8,7 +8,7 @@ use Source
 use Display
 use UI
 
-Concept:Named Component extends Display
+Concept Component extends Display
 	var string color = empty
 	var Format[] format = empty
 	var boolean visible = true
