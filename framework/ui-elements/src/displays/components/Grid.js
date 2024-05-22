@@ -111,12 +111,13 @@ class Grid extends AbstractGrid {
         const showCheckbox = this.props.selection != null && this.allowMultiSelection();
         const { classes } = this.props;
         const selectorColumnsDisabled = this.selectorColumns().length <= 0;
+        const columns = this.columns();
         this.loadingNextPage = false;
         window.setTimeout(() => this.loadNextPageIfRequired(), 1000);
         return (
             <DataGrid
                 ref={(g) => {this.grid = g;}}
-                columns={this.columns()}
+                columns={columns}
                 rowGetter={this.handleRowGetter.bind(this)}
                 rowsCount={this.state.rows.length}
                 emptyRowsView={this.emptyRowsView.bind(this)}
@@ -137,7 +138,7 @@ class Grid extends AbstractGrid {
                 toolbar={
                     <ToolsPanel.AdvancedToolbar>
                         <div className="layout horizontal flex center">
-                            <div><a className={classes.columnsAction} onClick={this.handleOpenColumnsDialog.bind(this)} disabled={selectorColumnsDisabled}>{this.translate("Show columns...")}</a></div>
+                            {columns.length > 1 && <div><a className={classes.columnsAction} onClick={this.handleOpenColumnsDialog.bind(this)} disabled={selectorColumnsDisabled}>{this.translate("Show columns...")}</a></div>}
                             {this.renderGroupBySelector()}
                             {this.renderGroupByModes()}
                             {this.renderGroupByOptions()}

@@ -31,7 +31,6 @@ const CollectionBehavior = (collection) => {
 
         if (collection.state.loading) return self.renderLoading(height, width);
         if (items.length <= 0) return self.renderEmpty(height, width);
-        if (self.allowMultiSelection()) self.selection = [];
 
         if (navigable == null) return self.renderInfiniteList(items, height, width);
         return (

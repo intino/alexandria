@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "5.1.22") ui-framework
+Artifact("io.intino.alexandria", "5.1.23") ui-framework
 	Dsl("Konos", "12.0.0") > Builder > generationPackage = "alexandria"
 	Code("io.intino")
 
@@ -23,7 +23,7 @@ Artifact("io.intino.alexandria", "5.1.22") ui-framework
 		Provided("io.intino.alexandria", "driver", "1.0.3")
 		Provided("io.intino.alexandria", "proxy", "1.2.0")
 
-		Web("io.intino.alexandria", "ui-framework-elements", "5.1.22")
+		Web("io.intino.alexandria", "ui-framework-elements") as ArtifactVersionFollower
 		Web("io.intino.alexandria", "ui-mobile", "4.28.18")
 
 		Test("junit", "junit", "4.13.2")

@@ -15,6 +15,7 @@ export default class Display extends PassiveView {
 
     constructor(props) {
         super(props);
+        this.onClearContainer = null;
         this.state = {
             traceable: this.props.traceable
         }
@@ -67,6 +68,7 @@ export default class Display extends PassiveView {
 
     clearContainer = (params) => {
         this._registerInstances(params.c, []);
+        if (this.onClearContainer) this.onClearContainer();
     };
 
     redirect = (params) => {
