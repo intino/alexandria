@@ -93,10 +93,9 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
 
     public void reload() {
         if (behavior == null) return;
-        List<Integer> selectedIndexList = itemsIndexOf(selection);
         behavior.reload();
         notifyRefreshItemCount();
-        refreshSelection(selectedIndexList);
+        selection(Collections.emptyList());
     }
 
     public boolean ready() {

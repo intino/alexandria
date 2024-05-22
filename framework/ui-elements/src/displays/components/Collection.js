@@ -34,6 +34,7 @@ export default class Collection extends AbstractCollection {
 		super(props);
 		this.behavior = new CollectionBehavior(this);
         this.container = React.createRef();
+        this.onClearContainer = this.clearSelection.bind(this);
         this.state = {
             multiSelection: this.props.selection != null && this.props.selection === "multiple",
             itemCount: 20,
@@ -67,6 +68,10 @@ export default class Collection extends AbstractCollection {
         if (this.state.multiSelection != null) return this.state.multiSelection;
         return this.props.selection != null && this.props.selection === "multiple";
 	};
+
+    clearSelection = () => {
+        if (this.allowMultiSelection()) this.selection = [];
+    };
 }
 
 DisplayFactory.register("Collection", Collection);

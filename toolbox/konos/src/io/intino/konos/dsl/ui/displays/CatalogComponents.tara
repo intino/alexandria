@@ -19,9 +19,9 @@ Concept CatalogComponents
 
 			Concept:{1..*} Mold
 				var word:{Never Always IfMobile IfNotMobile} hidden = Never
-				Concept:{0..1} Heading extends Component
+				Concept:{0..1}:Named Heading extends Component
 					has Component
-				Concept:{1..1} Item extends Component > has Component
+				Concept:{1..1}:Named Item extends Component > has Component
 					var integer:{px} height
 					var integer:{%} width = -1%
 
