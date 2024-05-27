@@ -19,7 +19,7 @@ def type(accessor)
 
 	$schemaImport
 
-	public class $name+firstUpperCase+snakeCaseToCamelCase$~Accessor {
+	public class $name+firstUpperCase+snakeCaseToCamelCase~Accessor {
 		private final URL url;
 		private final RestAccessorNotifier notifier = new RestAccessorNotifier();
 		private int timeoutMillis = 120 * 1_000;
