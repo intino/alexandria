@@ -8,12 +8,14 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 
+@SuppressWarnings("rawtypes")
 public abstract class ComparisonExpression extends BinaryExpression implements BooleanExpression {
-	public static final ThreadLocal<Boolean> CONVERT_STRING_EXPRESSIONS = new ThreadLocal<Boolean>();
+    public static final ThreadLocal<Boolean> CONVERT_STRING_EXPRESSIONS = new ThreadLocal<>();
 
 	boolean convertStringExpressions;
-	private static final Set<Character> REGEXP_CONTROL_CHARS = new HashSet<Character>();
+    private static final Set<Character> REGEXP_CONTROL_CHARS = new HashSet<>();
 
 	public ComparisonExpression(Expression left, Expression right) {
 		super(left, right);
@@ -98,12 +100,12 @@ public abstract class ComparisonExpression extends BinaryExpression implements B
 			Object rv = this.getRight().evaluate(context);
 			if (rv == null) return null;
 			if (!(rv instanceof String)) return FALSE;
-			return likePattern.matcher((String) rv).matches() ? Boolean.TRUE : FALSE;
+            return likePattern.matcher((String) rv).matches() ? TRUE : FALSE;
 		}
 
 		public boolean matches(EvaluationContext context) throws Exception {
 			Object object = evaluate(context);
-			return object == Boolean.TRUE;
+            return object == TRUE;
 		}
 	}
 
@@ -158,7 +160,6 @@ public abstract class ComparisonExpression extends BinaryExpression implements B
 		return doCreateEqual(left, right);
 	}
 
-	@SuppressWarnings({"rawtypes"})
 	private static BooleanExpression doCreateEqual(Expression left, Expression right) {
 		return new EqualsExpression(left, right);
 	}
@@ -172,7 +173,7 @@ public abstract class ComparisonExpression extends BinaryExpression implements B
 			Object lv = left.evaluate(context);
 			Object rv = right.evaluate(context);
 			if (lv == null ^ rv == null) return lv == null ? null : FALSE;
-			if (lv == rv || lv.equals(rv)) return Boolean.TRUE;
+            if (lv == rv || lv.equals(rv)) return TRUE;
 			if (lv instanceof Comparable && rv instanceof Comparable) return compare((Comparable) lv, (Comparable) rv);
 			return FALSE;
 		}
@@ -296,14 +297,13 @@ public abstract class ComparisonExpression extends BinaryExpression implements B
 		return compare(lv, rv);
 	}
 
-	@SuppressWarnings({"rawtypes", "unchecked"})
 	protected Boolean compare(Comparable lv, Comparable rv) {
 		Class<? extends Comparable> lc = lv.getClass();
 		Class<? extends Comparable> rc = rv.getClass();
 		if (lc != rc) {
 			try {
 				if (lc == Boolean.class) {
-					if (convertStringExpressions && rc == String.class) lv = Boolean.valueOf((String) lv);
+                    if (convertStringExpressions && rc == String.class) lv = Boolean.valueOf(lv.toString());
 					else return FALSE;
 				} else if (lc == Byte.class) {
 					if (rc == Short.class) lv = ((Number) lv).shortValue();
@@ -358,12 +358,12 @@ public abstract class ComparisonExpression extends BinaryExpression implements B
 				return FALSE;
 			}
 		}
-		return asBoolean(lv.compareTo(rv)) ? Boolean.TRUE : FALSE;
+        return asBoolean(lv.compareTo(rv)) ? TRUE : FALSE;
 	}
 
 	protected abstract boolean asBoolean(int answer);
 
 	public boolean matches(EvaluationContext context) throws Exception {
-		return evaluate(context) == Boolean.TRUE;
+        return evaluate(context) == TRUE;
 	}
 }

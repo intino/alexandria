@@ -5,7 +5,6 @@ import io.intino.alexandria.sqlpredicate.context.EvaluationContext;
 import java.math.BigDecimal;
 
 public class ConstantExpression implements Expression {
-
 	static class BooleanConstantExpression extends ConstantExpression implements BooleanExpression {
 		public BooleanConstantExpression(Object value) {
 			super(value);
@@ -36,7 +35,7 @@ public class ConstantExpression implements Expression {
 			value = new BigDecimal(text);
 		}
 		long l = value.longValue();
-		if (Integer.MIN_VALUE <= l && l <= Integer.MAX_VALUE) value = Integer.valueOf(value.intValue());
+        if (Integer.MIN_VALUE <= l && l <= Integer.MAX_VALUE) value = value.intValue();
 		return new ConstantExpression(value);
 	}
 
@@ -79,10 +78,7 @@ public class ConstantExpression implements Expression {
 	}
 
 	public boolean equals(Object o) {
-
-		if (o == null || !this.getClass().equals(o.getClass())) {
-			return false;
-		}
+        if (o == null || !this.getClass().equals(o.getClass())) return false;
 		return toString().equals(o.toString());
 
 	}

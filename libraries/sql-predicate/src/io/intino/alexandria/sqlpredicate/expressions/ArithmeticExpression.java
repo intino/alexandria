@@ -15,9 +15,7 @@ public abstract class ArithmeticExpression extends BinaryExpression {
 		return new ArithmeticExpression(left, right) {
 			protected Object evaluate(Object lvalue, Object rvalue) {
 				if (lvalue instanceof String text) return text + rvalue;
-				else if (lvalue instanceof Number) {
-					return plus((Number) lvalue, asNumber(rvalue));
-				}
+                else if (lvalue instanceof Number) return plus((Number) lvalue, asNumber(rvalue));
 				throw new RuntimeException("Cannot call plus operation on: " + lvalue + " and: " + rvalue);
 			}
 
@@ -58,9 +56,7 @@ public abstract class ArithmeticExpression extends BinaryExpression {
 		return new ArithmeticExpression(left, right) {
 
 			protected Object evaluate(Object lvalue, Object rvalue) {
-				if (lvalue instanceof Number) {
-					return divide((Number) lvalue, asNumber(rvalue));
-				}
+                if (lvalue instanceof Number) return divide((Number) lvalue, asNumber(rvalue));
 				throw new RuntimeException("Cannot call divide operation on: " + lvalue + " and: " + rvalue);
 			}
 
@@ -74,9 +70,7 @@ public abstract class ArithmeticExpression extends BinaryExpression {
 		return new ArithmeticExpression(left, right) {
 
 			protected Object evaluate(Object lvalue, Object rvalue) {
-				if (lvalue instanceof Number) {
-					return mod((Number) lvalue, asNumber(rvalue));
-				}
+                if (lvalue instanceof Number) return mod((Number) lvalue, asNumber(rvalue));
 				throw new RuntimeException("Cannot call mod operation on: " + lvalue + " and: " + rvalue);
 			}
 
@@ -137,8 +131,7 @@ public abstract class ArithmeticExpression extends BinaryExpression {
 		Object lvalue = left.evaluate(context);
 		if (lvalue == null) return null;
 		Object rvalue = right.evaluate(context);
-		if (rvalue == null) return null;
-		return evaluate(lvalue, rvalue);
+        return rvalue == null ? null : evaluate(lvalue, rvalue);
 	}
 
 	protected abstract Object evaluate(Object lvalue, Object rvalue);

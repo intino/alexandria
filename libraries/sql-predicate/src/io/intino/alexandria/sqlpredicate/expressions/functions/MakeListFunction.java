@@ -26,13 +26,9 @@ public class MakeListFunction implements FilterFunction {
 	}
 
 	public Object evaluate(FunctionCallExpression expr, EvaluationContext context) throws Exception {
-		int num_arg = expr.getNumArguments();
-		List<Object> ele_arr = new ArrayList<>(num_arg);
-		int cur = 0;
-		while (cur < num_arg) {
-			ele_arr.add(expr.getArgument(cur).evaluate(context));
-			cur++;
-		}
-		return ele_arr;
+        int argsLength = expr.getNumArguments();
+        List<Object> elements = new ArrayList<>(argsLength);
+        for (int i = 0; i < argsLength; i++) elements.add(expr.getArgument(i).evaluate(context));
+        return elements;
 	}
 }
