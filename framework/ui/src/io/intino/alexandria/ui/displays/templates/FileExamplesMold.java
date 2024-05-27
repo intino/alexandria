@@ -8,6 +8,4 @@ public class FileExamplesMold extends AbstractFileExamplesMold<AlexandriaUiBox> 
         super(box);
     }
 
-
-
 }

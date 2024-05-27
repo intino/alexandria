@@ -50,42 +50,90 @@ class File extends AbstractFile {
 
 		if (file === undefined) return (<React.Fragment/>);
 
-		const notAvailable = this.translate("No preview available");
-		const notSupportedMessage = this.translate("It appears your application is not configured to display PDF files. No worries, just");
-		const notSupportedLinkMessage = this.translate("click here to download file");
-		const downloadTitle = this.translate("Download");
-
 		return (
 			<Block layout="horizontal flex">
 				{ ComponentBehavior.labelBlock(this.props, 'body1', this.style()) }
-				{(!this._isPdf() && !this._isXml()) &&
-				    <div style={{height:"100%", width:"100%"}} className="layout vertical flex">
-				        <div style={{height:"50px", background:"#26282B"}}></div>
-				        <div style={{background:"#414447"}} className="layout vertical flex">
-                            <div style={this.style()} className={classNames(classes.message, "layout vertical center-center")}>
-                                <div style={{padding:"50px 70px",background:"#4C494C",borderRadius:"10px",fontSize:"12pt",boxShadow:"3px 3px 25px black"}} className="layout vertical center-center">
-                                    <div style={{marginBottom:"10px",fontSize:"15pt",color:"white"}}>{notAvailable}</div>
-                                    <Button variant="contained" color="primary" onClick={this._downloadFile.bind(this, file)}><SaveAltIcon style={{marginRight:"5px"}}/>{downloadTitle}</Button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-				}
-				{this._isPdf() &&
-					<object className={classes.value} style={this.style()} data={file} type="application/pdf" download={this.state.filename}>
-					    <a href={this.state.filename}>{this.state.filename}</a>
-						<div className="layout horizontal center-center">
-							<p>{notSupportedMessage}</p>&nbsp;<a href={file} target="_blank">{notSupportedLinkMessage}</a>
-						</div>
-					</object>
-				}
-				{this._isXml() && this._renderXml()}
+				{!this._isRecognizedFormat() && this._renderNotRecognizedFormat(file)}
+				{this._isPdf() && this._renderPdf(file)}
+				{this._isImage() && this._renderImage(file)}
+				{this._isXml() && this._renderXml(file)}
 			</Block>
 		);
 	};
 
-	_renderXml = () => {
-	    const file = this._fileUrl();
+	_renderNotRecognizedFormat = (file) => {
+		const { classes } = this.props;
+
+		const notAvailable = this.translate("No preview available");
+		const downloadTitle = this.translate("Download");
+
+	    return (
+            <div style={{height:"100%", width:"100%"}} className="layout vertical flex">
+                <div style={{height:"50px", background:"#26282B"}}></div>
+                <div style={{background:"#414447"}} className="layout vertical flex">
+                    <div style={this.style()} className={classNames(classes.message, "layout vertical center-center")}>
+                        <div style={{padding:"50px 70px",background:"#4C494C",borderRadius:"10px",fontSize:"12pt",boxShadow:"3px 3px 25px black"}} className="layout vertical center-center">
+                            <div style={{marginBottom:"10px",fontSize:"15pt",color:"white"}}>{notAvailable}</div>
+                            <Button variant="contained" color="primary" onClick={this._downloadFile.bind(this, file)}><SaveAltIcon style={{marginRight:"5px"}}/>{downloadTitle}</Button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+	    );
+	};
+
+	_renderPdf = (file) => {
+		const { classes } = this.props;
+
+		const notSupportedMessage = this.translate("It appears your application is not configured to display PDF files. No worries, just");
+		const notSupportedLinkMessage = this.translate("click here to download file");
+
+	    return (
+            <object className={classes.value} style={this.style()} data={file} type="application/pdf" download={this.state.filename}>
+                <a href={this.state.filename}>{this.state.filename}</a>
+                <div className="layout horizontal center-center">
+                    <p>{notSupportedMessage}</p>&nbsp;<a href={file} target="_blank">{notSupportedLinkMessage}</a>
+                </div>
+            </object>
+	    );
+	}
+
+	_renderImage = (file) => {
+		const { classes } = this.props;
+		const downloadTitle = this.translate("Download");
+		const imageId = this.props.id + "_" + Math.random();
+		window.setTimeout(() => this._adjustImageSize(imageId), 10);
+		return (
+		    <div style={{width:'100%',height:'100%'}} ref={this.container}>
+                <div style={{height:"100%", width:"100%"}} className="layout vertical flex">
+                    <div style={{height:"50px", background:"#26282B"}} className="layout horizontal start-justified">
+                        <Button style={{margin:'8px'}} variant="contained" color="primary" onClick={this._downloadFile.bind(this, file)}><SaveAltIcon style={{marginRight:"5px"}}/>{downloadTitle}</Button>
+                    </div>
+                    <div style={{background:"#414447"}} className="layout vertical flex">
+                        <div style={this.style()} className={classNames(classes.message, "layout vertical center-center")}>
+                            <div className="layout vertical center-center">
+                                <img id={imageId} src={file} title={this.state.filename} style={{display:"none"}}/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+		    </div>
+        );
+    }
+
+	_adjustImageSize = (imageId) => {
+	    const width = this.container.current.offsetWidth - 20;
+	    const height = this.container.current.offsetHeight - 20;
+	    const element = document.getElementById(imageId);
+	    element.style.display = "block";
+	    element.style.width = width + "px";
+	    if (element.offsetHeight > height) {
+	        element.style.width = "100%";
+	        element.style.height = height + "px";
+	    }
+	};
+
+	_renderXml = (file) => {
 		const downloadTitle = this.translate("Download");
 	    this.width = this.container.current != null ? this.container.current.offsetWidth + "px" : (this.width != null ? this.width : "100%");
 	    this.height = this.container.current != null ? this.container.current.offsetHeight-60 + "px" : (this.height != null ? this.height : "100%");
@@ -104,8 +152,16 @@ class File extends AbstractFile {
         return (<div style={{width:'100%',height:'100%'}} ref={this.container}>...{this._loadData()}</div>);
 	};
 
+	_isRecognizedFormat = () => {
+	    return this._isPdf() || this._isXml() || this._isImage();
+	};
+
 	_isPdf = () => {
 		return this.state.mimeType != null && this.state.mimeType === "application/pdf";
+	};
+
+	_isImage = () => {
+		return this.state.mimeType != null && this.state.mimeType.startsWith("image/");
 	};
 
 	_isXml = () => {
