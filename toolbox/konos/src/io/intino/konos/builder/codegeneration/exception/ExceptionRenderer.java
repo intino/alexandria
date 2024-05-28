@@ -1,8 +1,9 @@
 package io.intino.konos.builder.codegeneration.exception;
 
+import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
@@ -38,19 +39,20 @@ public class ExceptionRenderer extends Renderer {
 	}
 
 	private void processException(io.intino.konos.dsl.Exception exception) {
-		writeFrame(destinyPackage(gen(Target.Server)), exception.name$(), template().render(
-				new FrameBuilder("exception")
-						.add("name", exception.name$())
-						.add("code", exception.code())
-						.add("package", packageName()).toFrame()));
+		writeFrame(destinyPackage(gen(Target.Server)), exception.name$(), new ExceptionTemplate().render(
+				frame(exception), Formatters.all));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(exception), javaFile(destinyPackage(gen(Target.Server)), exception.name$()).getAbsolutePath()));
+	}
+
+	private Frame frame(io.intino.konos.dsl.Exception exception) {
+		return new FrameBuilder("exception")
+				.add("name", exception.name$())
+				.add("code", exception.code())
+				.add("package", packageName()).toFrame();
 	}
 
 	private File destinyPackage(File destiny) {
 		return new File(destiny, EXCEPTIONS);
 	}
 
-	private Template template() {
-		return new ExceptionTemplate();
-	}
 }

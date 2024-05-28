@@ -1,7 +1,7 @@
-def type(resource & accessibleDisplay)
+def type(resource, accessibleDisplay)
 	package $package+validPackage.ui.resources;
 
-	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
+	import $package+validPackage.$box+PascalCase~Box;
 	import $package+validPackage.ui.pages.$name+firstUpperCase~ProxyPage;
 	import io.intino.alexandria.Json;
 	import io.intino.alexandria.exceptions.AlexandriaException;
@@ -16,9 +16,9 @@ def type(resource & accessibleDisplay)
 	import java.util.function.Function;
 
 	public class $name+firstUpperCase~ProxyResource extends io.intino.alexandria.ui.spark.resources.ProxyResource {
-		private final $box+SnakeCaseToCamelCase+FirstUpperCase~Box box;
+		private final $box+PascalCase~Box box;
 
-		public $name+firstUpperCase~ProxyResource($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, io.intino.alexandria.ui.spark.UISparkManager manager, DisplayNotifierProvider notifierProvider) {
+		public $name+firstUpperCase~ProxyResource($box+PascalCase~Box box, io.intino.alexandria.ui.spark.UISparkManager manager, DisplayNotifierProvider notifierProvider) {
 			super(manager, notifierProvider);
 			this.box = box;
 		}
@@ -79,7 +79,7 @@ def type(resource & accessibleDisplay)
 			page.execute();
 			box.registerSoul(client.id(), soul);
 			soul.register(new io.intino.alexandria.ui.displays.DisplayRouter(box).id("__router__"));
-			//(($package+validPackage.ui.displays.RouteDispatcher)box.routeManager().routeDispatcher()).dispatch$name+firstUpperCase(soul[, $parameter+dispatch...[, ]]);
+			//(($package+validPackage.ui.displays.RouteDispatcher)box.routeManager().routeDispatcher()).dispatch$name+firstUpperCase(soul<<, $parameter+dispatch...[, ]>>);
 
 			manager.pushService().onClose(page.clientId).execute(new Consumer<UIClient>() {
 				@Override
@@ -95,7 +95,7 @@ def type(resource & accessibleDisplay)
 	}
 end
 
-def type(render & confidential)
+def type(render, confidential)
 	try {
 		if (!isLogged(accessToken()))
 			throw new Unauthorized("user is not logged");
@@ -113,10 +113,10 @@ def type(render)
 	render();
 end
 
-def type(resource & static)
+def type(resource, static)
 	package $package+validPackage.ui.resources;
 
-	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
+	import $package+validPackage.$box+PascalCase~Box;
 	import $package+validPackage.ui.pages.$name+firstUpperCase~Page;
 	import io.intino.alexandria.exceptions.AlexandriaException;
 	import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
@@ -126,10 +126,10 @@ def type(resource & static)
 	import java.util.function.Consumer;
 	import java.util.function.Function;
 
-	public class $name+firstUpperCase~Resource extends io.intino.alexandria.ui.spark.resources.[$editor]Resource {
-		private final $box+SnakeCaseToCamelCase+FirstUpperCase~Box box;
+	public class $name+firstUpperCase~Resource extends io.intino.alexandria.ui.spark.resources.<<$editor>>Resource {
+		private final $box+PascalCase~Box box;
 
-		public $name+firstUpperCase~Resource($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, io.intino.alexandria.ui.spark.UISparkManager manager, DisplayNotifierProvider notifierProvider) {
+		public $name+firstUpperCase~Resource($box+PascalCase~Box box, io.intino.alexandria.ui.spark.UISparkManager manager, DisplayNotifierProvider notifierProvider) {
 			super(manager, notifierProvider);
 			this.box = box;
 		}
@@ -138,9 +138,9 @@ def type(resource & static)
 		public void execute() throws AlexandriaException {
 			super.execute();
 			fillDeviceParameter();
-			[$confidential
+			<<$confidential
 			if (isLogged()) render();
-			else authenticate();?render();]
+			else authenticate();?render();>>
 		}
 
 		private void render() {
@@ -158,10 +158,10 @@ def type(resource & static)
 			page.session.whenLogout(b -> logout(page.session));
 			page.box = box;
 			page.clientId = clientId;
-			[page.googleApiKey = $googleApiKey+format;]
+			<<page.googleApiKey = $googleApiKey+format;>>
 			page.device = parameterValue("device");
-			page.token = parameterValue("token");[
-			$editor+parameters]
+			page.token = parameterValue("token");<<
+			$editor+parameters>>
 			$parameter...[$NL]
 			if (!page.hasPermissions()) {
 				manager.redirect(page.redirectUrl());
@@ -174,10 +174,10 @@ def type(resource & static)
 	}
 end
 
-def type(resource & asset)
+def type(resource, asset)
 	package $package+validPackage.ui.resources;
 
-	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
+	import $package+validPackage.$box+PascalCase~Box;
 	import $package+validPackage.ui.pages.$name+firstUpperCase~Page;
 	import io.intino.alexandria.exceptions.AlexandriaException;
 	import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
@@ -187,10 +187,10 @@ def type(resource & asset)
 	import java.util.function.Consumer;
 	import java.util.function.Function;
 
-	public class $name+firstUpperCase~Resource extends io.intino.alexandria.ui.spark.resources.[$editor]Resource {
-		private final $box+SnakeCaseToCamelCase+FirstUpperCase~Box box;
+	public class $name+firstUpperCase~Resource extends io.intino.alexandria.ui.spark.resources.<<$editor>>Resource {
+		private final $box+PascalCase~Box box;
 
-		public $name+firstUpperCase~Resource($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, io.intino.alexandria.ui.spark.UISparkManager manager, DisplayNotifierProvider notifierProvider) {
+		public $name+firstUpperCase~Resource($box+PascalCase~Box box, io.intino.alexandria.ui.spark.UISparkManager manager, DisplayNotifierProvider notifierProvider) {
 			super(manager, notifierProvider);
 			this.box = box;
 		}
@@ -199,9 +199,9 @@ def type(resource & asset)
 		public void execute() throws AlexandriaException {
 			super.execute();
 			fillDeviceParameter();
-			[$confidential
+			<<$confidential
 			if (isLogged()) render();
-			else authenticate();?render();]
+			else authenticate();?render();>>
 		}
 
 		private void render() {
@@ -219,10 +219,10 @@ def type(resource & asset)
 			page.session.whenLogout(b -> logout(page.session));
 			page.box = box;
 			page.clientId = clientId;
-			[page.googleApiKey = $googleApiKey+format;]
+			<<page.googleApiKey = $googleApiKey+format;>>
 			page.device = parameterValue("device");
-			page.token = parameterValue("token");[
-			$editor+parameters]
+			page.token = parameterValue("token");<<
+			$editor+parameters>>
 			$parameter...[$NL]
 			if (!page.hasPermissions()) {
 				manager.redirect(page.redirectUrl());
@@ -238,7 +238,7 @@ end
 def type(resource)
 	package $package+validPackage.ui.resources;
 
-	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
+	import $package+validPackage.$box+PascalCase~Box;
 	$page+import
 	import $package+validPackage.ui.pages.$name+firstUpperCase~Page;
 	import io.intino.alexandria.exceptions.AlexandriaException;
@@ -250,10 +250,10 @@ def type(resource)
 	import java.util.function.Consumer;
 	import java.util.function.Function;
 
-	public class $name+firstUpperCase~Resource extends io.intino.alexandria.ui.spark.resources.[$editor]Resource {
-		private final $box+SnakeCaseToCamelCase+FirstUpperCase~Box box;
+	public class $name+firstUpperCase~Resource extends io.intino.alexandria.ui.spark.resources.<<$editor>>Resource {
+		private final $box+PascalCase~Box box;
 
-		public $name+firstUpperCase~Resource($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, io.intino.alexandria.ui.spark.UISparkManager manager, DisplayNotifierProvider notifierProvider) {
+		public $name+firstUpperCase~Resource($box+PascalCase~Box box, io.intino.alexandria.ui.spark.UISparkManager manager, DisplayNotifierProvider notifierProvider) {
 			super(manager, notifierProvider);
 			this.box = box;
 		}
@@ -262,9 +262,9 @@ def type(resource)
 		public void execute() throws AlexandriaException {
 			super.execute();
 			fillDeviceParameter();
-			[$confidential
+			<<$confidential
 			if (isLogged()) render();
-			else authenticate();?render();]
+			else authenticate();?render();>>
 		}
 
 		private void render() {
@@ -282,10 +282,10 @@ def type(resource)
 			page.session.whenLogout(b -> logout(page.session));
             $page+box
 			page.clientId = clientId;
-			[page.googleApiKey = $googleApiKey+format;]
+			<<page.googleApiKey = $googleApiKey+format;>>
 			page.device = parameterValue("device");
-			page.token = parameterValue("token");[
-			$editor+parameters]
+			page.token = parameterValue("token");<<
+			$editor+parameters>>
 			$parameter...[$NL]
 			if (!page.hasPermissions()) {
 				manager.redirect(page.redirectUrl());
@@ -297,7 +297,7 @@ def type(resource)
 					return false;
 
 				if (client.soul() != null) {
-					(($package+validPackage.ui.displays.RouteDispatcher)box.routeManager().routeDispatcher()).dispatch$name+firstUpperCase(client.soul()[, $parameter+dispatch...[, ]]);
+					(($package+validPackage.ui.displays.RouteDispatcher)box.routeManager().routeDispatcher()).dispatch$name+firstUpperCase(client.soul()<<, $parameter+dispatch...[, ]>>);
 					return false;
 				}
 
@@ -314,7 +314,7 @@ def type(resource)
 
 				box.registerSoul(clientId, soul);
 				soul.register(new io.intino.alexandria.ui.displays.DisplayRouter(box).id("__router__"));
-				(($package+validPackage.ui.displays.RouteDispatcher)box.routeManager().routeDispatcher()).dispatch$name+firstUpperCase(soul[, $parameter+dispatch...[, ]]);
+				(($package+validPackage.ui.displays.RouteDispatcher)box.routeManager().routeDispatcher()).dispatch$name+firstUpperCase(soul<<, $parameter+dispatch...[, ]>>);
 
 				return true;
 			});
@@ -339,51 +339,51 @@ def trigger(parameters)
 	page.permission = loadPermission();
 end
 
-def type(parameter & mobile) trigger(dispatch)
-    page instanceof $resource+firstUpperCase~MobilePage ? (($resource+firstUpperCase~MobilePage)page).$name+SnakeCaseToCamelCase+firstLowerCase : (($resource+firstUpperCase~Page)page).$name+SnakeCaseToCamelCase+firstLowerCase
+def type(parameter, mobile) and trigger(dispatch)
+    page instanceof $resource+firstUpperCase~MobilePage ? (($resource+firstUpperCase~MobilePage)page).$name+CamelCase : (($resource+firstUpperCase~Page)page).$name+CamelCase
 end
 
-def type(parameter) trigger(dispatch)
-    (($resource+firstUpperCase~Page)page).$name+SnakeCaseToCamelCase+firstLowerCase
+def type(parameter) and trigger(dispatch)
+    (($resource+firstUpperCase~Page)page).$name+CamelCase
 end
 
-def type(parameter & mobile)
-    if (page instanceof $resource+firstUpperCase~MobilePage) (($resource+firstUpperCase~MobilePage)page).$name+SnakeCaseToCamelCase+firstLowerCase = parameterValue("$name");
-    else (($resource+firstUpperCase~Page)page).$name+SnakeCaseToCamelCase+firstLowerCase = parameterValue("$name");
+def type(parameter, mobile)
+    if (page instanceof $resource+firstUpperCase~MobilePage) (($resource+firstUpperCase~MobilePage)page).$name+CamelCase = parameterValue("$name");
+    else (($resource+firstUpperCase~Page)page).$name+CamelCase = parameterValue("$name");
 end
 
 def type(parameter)
-	(($resource+firstUpperCase~Page)page).$name+SnakeCaseToCamelCase+firstLowerCase = parameterValue("$name");
+	(($resource+firstUpperCase~Page)page).$name+CamelCase = parameterValue("$name");
 end
 
-def type(googleApiKey) trigger(format)
-	"$name"[$custom...[]]
+def type(googleApiKey) and trigger(format)
+	"$name"<<$custom...[]>>
 end
 
 def trigger(custom)
 	.replace("{$this}", box.configuration().get("$this"))
 end
 
-def type(page & mobile) trigger(import)
+def type(page, mobile) and trigger(import)
 	import $package+validPackage.ui.pages.$name+firstUpperCase~MobilePage;
 end
 
-def type(page) trigger(import)
+def type(page) and trigger(import)
 end
 
-def type(page & mobile) trigger(instance)
+def type(page, mobile) and trigger(instance)
     manager.fromQuery("device") != null ? new $name+firstUpperCase~MobilePage() : new $name+firstUpperCase~Page()
 end
 
-def type(page) trigger(instance)
+def type(page) and trigger(instance)
     new $name+firstUpperCase~Page()
 end
 
-def type(page & mobile) trigger(box)
+def type(page, mobile) and trigger(box)
     if (page instanceof $name+firstUpperCase~MobilePage) (($name+firstUpperCase~MobilePage)page).box = box;
     else (($name+firstUpperCase~Page)page).box = box;
 end
 
-def type(page) trigger(box)
+def type(page) and trigger(box)
     (($name+firstUpperCase~Page)page).box = box;
 end

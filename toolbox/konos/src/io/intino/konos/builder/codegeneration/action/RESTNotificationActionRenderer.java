@@ -6,6 +6,8 @@ import io.intino.konos.dsl.Service.REST.Notification;
 
 import java.util.Collections;
 
+import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
+
 public class RESTNotificationActionRenderer extends ActionRenderer {
 	private final Notification notification;
 

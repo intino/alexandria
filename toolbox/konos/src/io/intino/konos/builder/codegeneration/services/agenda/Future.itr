@@ -1,13 +1,13 @@
 def type(future)
 	package $package+validPackage.agenda;
 
-	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
+	import $package+validPackage.$box+PascalCase~Box;
 	$schemaImport
 
 	public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {
-		private final $box+snakecaseToCamelCase+firstUpperCase~Box box;
+		private final $box+PascalCase~Box box;
 
-		public $name+FirstUpperCase($box+snakecaseToCamelCase+firstUpperCase~Box box) {
+		public $name+FirstUpperCase($box+PascalCase~Box box) {
 			this.box = box;
 		}
 
@@ -22,7 +22,7 @@ end
 
 def trigger(option)
 	@Override
-	protected void on$name+firstUpperCase($parameter+signature...[, ][, $optionParameter+signature...[, ]]) {
+	protected void on$name+firstUpperCase($parameter+signature...[, ]<<, $optionParameter+signature...[, ]>>) {
 
 	}
 end

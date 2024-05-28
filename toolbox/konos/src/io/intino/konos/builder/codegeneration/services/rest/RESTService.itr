@@ -5,28 +5,28 @@ def type(server)
 	import $package+ValidPackage.rest.resources.*;
 	import io.intino.alexandria.core.Box;
 
-	public class $name+firstUpperCase+SnakeCaseToCamelCase~Service {
+	public class $name+pascalCase~Service {
 
-		[$authenticator+field]
+		<<$authenticator+field>>
 
 		public static AlexandriaSpark setup(AlexandriaSpark server, $box+FirstUpperCase~Box box) {
-			[$authenticator+assign]
-			[$authenticationWithCertificate]
-			[$hasNotifications]
-			[$notification...[$NL]]
-			[$resource...[$NL]]
+			<<$authenticator+assign>>
+			<<$authenticationWithCertificate>>
+			<<$hasNotifications>>
+			<<$notification...[$NL]>>
+			<<$resource...[$NL]>>
 
 			return server;
 		}
 	}
 end
 
-def type(authenticator) trigger(assign)
-	authenticator = new $service+firstUpperCase+SnakeCaseToCamelCase~ServiceAuthenticator(box);
+def type(authenticator) and trigger(assign)
+	authenticator = new $service+pascalCase~ServiceAuthenticator(box);
 end
 
-def type(authenticator) trigger(field)
-	private static $service+firstUpperCase+SnakeCaseToCamelCase~ServiceAuthenticator authenticator;
+def type(authenticator) and trigger(field)
+	private static $service+pascalCase~ServiceAuthenticator authenticator;
 end
 
 def type(authenticationWithCertificate)
@@ -34,27 +34,27 @@ def type(authenticationWithCertificate)
 end
 
 def trigger(notification)
-	server.route("$path+format").post(manager -> new $package.rest.notifications.$name+firstUpperCase+SnakeCaseToCamelCase~Notification(box, manager).execute());
+	server.route("$path+format").post(manager -> new $package.rest.notifications.$name+pascalCase~Notification(box, manager).execute());
 end
 
 def type(resource)
-	server.route($path+format)[$authenticate].$method+firstlowerCase(manager -> new $operation+firstUpperCase~$name+firstUpperCase+SnakeCaseToCamelCase~Resource(box, manager).execute());
+	server.route($path+format)<<$authenticate>>.$method+firstlowerCase(manager -> new $operation+firstUpperCase~$name+pascalCase~Resource(box, manager).execute());
 end
 
-def type(bearer) trigger(authenticate)
+def type(bearer) and trigger(authenticate)
 	.before(manager -> { if (manager.fromHeader("Authorization") == null || !authenticator.isAuthenticated(manager.fromHeader("Authorization").replace("Bearer ", ""))) throw new io.intino.alexandria.exceptions.Unauthorized("Credential not found");})
 end
 
-def type(basic) trigger(authenticate)
+def type(basic) and trigger(authenticate)
 	.before(manager -> { if (manager.fromHeader("Authorization") == null || !authenticator.isAuthenticated(manager.fromHeader("Authorization").replace("Basic ", ""))) throw new io.intino.alexandria.exceptions.Unauthorized("Credential not found");})
 end
 
-def type(custom) trigger(authenticate)
+def type(custom) and trigger(authenticate)
 	.before(manager -> { if (!authenticator.isAuthenticated(manager.request().queryParams().stream().collect(java.util.stream.Collectors.toMap(p -> p, p -> manager.request().queryParams(p))))) throw new io.intino.alexandria.exceptions.Unauthorized("Credential not found");})
 end
 
-def type(path) trigger(format)
-	"$name"[$custom...[]]
+def type(path) and trigger(format)
+	"$name"<<$custom...[]>>
 end
 
 def trigger(custom)

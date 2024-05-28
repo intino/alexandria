@@ -4,7 +4,7 @@ def type(dispatcher)
     import android.content.Context
     import android.content.Intent
     import android.os.Bundle
-    [$resource+import...[$NL]]
+    <<$resource+import...[$NL]>>
     import java.util.regex.Matcher
     import java.util.regex.Pattern
 
@@ -12,7 +12,7 @@ def type(dispatcher)
         private var info : HashMap<String, RouteInfo> = hashMapOf()
 
         init {
-            [$resource+patternRegister...[$NL]]
+            <<$resource+patternRegister...[$NL]>>
         }
 
         fun dispatch(context: Context, address: String) : Intent? {
@@ -23,7 +23,7 @@ def type(dispatcher)
         }
 
         private fun infoOf(address: String): RouteInfo? {
-            [$resource+info...[$NL]]
+            <<$resource+info...[$NL]>>
             return null
         }
 
@@ -37,7 +37,7 @@ def type(dispatcher)
             val b = Bundle()
             val parameters = paramsOf(address, info)
             for (i in 0 until info.parameterNames.size) {
-                b.putString(info.parameterNames$[i$], parameters.get(i))
+                b.putString(info.parameterNames[i], parameters.get(i))
             }
             intent.putExtras(b)
         }
@@ -62,10 +62,10 @@ def type(dispatcher)
         private fun addQueryStringParams(address: String, result: MutableList<String?>): List<String?> {
             if (address.indexOf("?") == -1) return result
             val parameters = address.split("\\\\?".toRegex()).dropLastWhile { it.isEmpty() }
-                .toTypedArray()$[1$].split("&".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                .toTypedArray()[1].split("&".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             for (i in parameters.indices) {
-                result.add(parameters$[i$].split("=".toRegex()).dropLastWhile { it.isEmpty() }
-                    .toTypedArray()$[1$])
+                result.add(parameters[i].split("=".toRegex()).dropLastWhile { it.isEmpty() }
+                    .toTypedArray()[1])
             }
             return result
         }
@@ -77,25 +77,25 @@ def type(dispatcher)
     }
 end
 
-def type(resource & main) trigger(import)
+def type(resource, main) and trigger(import)
 end
 
-def type(resource) trigger(import)
+def type(resource) and trigger(import)
     import $package.mobile.android.pages.$name+firstUpperCase~Activity
 end
 
-def type(resource & main) trigger(patternRegister)
+def type(resource, main) and trigger(patternRegister)
 end
 
-def type(resource) trigger(patternRegister)
+def type(resource) and trigger(patternRegister)
     info.put("$name", RouteInfo("$pattern", $name+firstUpperCase~Activity::class.java, listOf($param...[,])))
 end
 
-def type(resource & main) trigger(info)
+def type(resource, main) and trigger(info)
     if (matches(address, info.get("$name")!!)) return info.get("$name")
 end
 
-def type(resource) trigger(info)
+def type(resource) and trigger(info)
     else if (matches(address, info.get("$name")!!)) return info.get("$name")
 end
 

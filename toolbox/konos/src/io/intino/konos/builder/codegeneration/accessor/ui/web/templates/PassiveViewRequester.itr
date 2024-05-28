@@ -5,18 +5,18 @@ def type(display)
 		constructor(element) {
 			super(element);
 		};
-		[$request...[$NL]]
+		<<$request...[$NL]>>
 		didMount = () => {
 			this.pushService.send({ op: "didMount", s: "$name+lowerCase", d: this.element.shortId(), o: this.element.props.owner(), c: this.element.props.context()}, this.element.ownerUnit());
 		};
 	}
 end
 
-def attribute(extensionOf) trigger(import)
+def attribute(extensionOf) and trigger(import)
 	import $parent+firstUpperCase~Requester from "./$parent+firstUpperCase~Requester"
 end
 
-def attribute(accessible) trigger(import)
+def attribute(accessible) and trigger(import)
 	import Requester from "alexandria-ui-elements/gen/displays/requesters/ProxyDisplayRequester";
 end
 
@@ -24,14 +24,14 @@ def trigger(import)
 	import Requester from "./Requester";
 end
 
-def attribute(accessible) trigger(proxy)
+def attribute(accessible) and trigger(proxy)
 	Proxy
 end
 
 def trigger(proxy)
 end
 
-def attribute(extensionOf) trigger(parentType)
+def attribute(extensionOf) and trigger(parentType)
 	$parent+firstUpperCase~Requester
 end
 
@@ -39,7 +39,7 @@ def trigger(parentType)
 	Requester
 end
 
-def type(parameter) trigger(request)
+def type(parameter) and trigger(request)
 	$name = function(value) {
 		if (this.addToHistory(value)) return;
 		$method({ app: this.element.context, op: "$name", s: "$display+lowercase", d: this.element.shortId(), o: this.element.props.owner(), c: this.element.props.context(), v: $parameter}, this.element.ownerUnit());
@@ -47,25 +47,25 @@ def type(parameter) trigger(request)
 end
 
 def trigger(request)
-	$name = ([$parameterSignature]) => {
-		if (this.addToHistory([$parameterSignature])) return;
-		$method({ app: this.element.context, op: "$name", s: "$display+lowercase", d: this.element.shortId(), o: this.element.props.owner(), c: this.element.props.context()[, v: $parameter]}, this.element.ownerUnit());
+	$name = (<<$parameterSignature>>) => {
+		if (this.addToHistory(<<$parameterSignature>>)) return;
+		$method({ app: this.element.context, op: "$name", s: "$display+lowercase", d: this.element.shortId(), o: this.element.props.owner(), c: this.element.props.context()<<, v: $parameter>>}, this.element.ownerUnit());
 	};
 end
 
-def type(object) trigger(parameter)
+def type(object) and trigger(parameter)
 	encodeURIComponent(JSON.stringify(value))
 end
 
-def type(list & file) trigger(parameter)
+def type(list, file) and trigger(parameter)
 	value
 end
 
-def type(list) trigger(parameter)
+def type(list) and trigger(parameter)
 	encodeURIComponent(JSON.stringify(value))
 end
 
-def type(file) trigger(parameter)
+def type(file) and trigger(parameter)
 	value
 end
 
@@ -73,11 +73,11 @@ def trigger(parameter)
 	encodeURIComponent(value)
 end
 
-def attribute(upload) trigger(method)
+def attribute(upload) and trigger(method)
 	this.fileService.upload
 end
 
-def attribute(download) trigger(method)
+def attribute(download) and trigger(method)
 	this.fileService.download
 end
 

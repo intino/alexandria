@@ -11,19 +11,19 @@ def type(jmxserver)
 
 		public JMXServer init(Box box) {
 			JMXServer server = new JMXServer(mbClasses(box));
-			server.init("intino[.$path]");
+			server.init("intino<<.$path>>");
 			return server;
 		}
 
-		private Map<String, Object$[]> mbClasses(Box box) {
-			Map<String, Object$[]> map = new HashMap<>();
-			map.put("$package.jmx.$name+snakecaseToCamelCase+firstUpperCase", new Object$[$]{box});
+		private Map<String, Object[]~> mbClasses(Box box) {
+			Map<String, Object[]~> map = new HashMap<>();
+			map.put("$package.jmx.$name+PascalCase", new Object[]{box});
 			return map;
 		}
 	}
 end
 
-def type(jmx) type(interface)
+def type(jmx) and type(interface)
 	package $package+ValidPackage.jmx;
 
 	import io.intino.alexandria.logger.Logger;
@@ -33,7 +33,7 @@ def type(jmx) type(interface)
 	import java.util.*;
 	import java.time.*;
 
-	public interface $name+snakecaseToCamelCase+firstUpperCase~MBean {
+	public interface $name+PascalCase~MBean {
 
 		@Description("Shows information about the available operations")
 		@Parameters({})
@@ -43,26 +43,26 @@ def type(jmx) type(interface)
 	}
 end
 
-def type(operation) trigger(signature)
+def type(operation) and trigger(signature)
 	@Description("$description")
 	@Parameters({$parameter+displayName...[, ]})
-	$returnType $name+SnakeCaseToCamelCase+firstLowerCase($parameter+withType...[, ]);
+	$returnType $name+CamelCase($parameter+withType...[, ]);
 end
 
-def type(parameter) trigger(displayName)
+def type(parameter) and trigger(displayName)
 	"$name"
 end
 
-def type(parameter & list) trigger(withType)
+def type(parameter, list) and trigger(withType)
 	java.util.List<$type> $name
 end
 
-def type(parameter) trigger(withType)
+def type(parameter) and trigger(withType)
 	$type $name
 end
 
 
-def type(jmx) type(implementation)
+def type(jmx) and type(implementation)
 	package $package+ValidPackage.jmx;
 
 	import io.intino.alexandria.logger.Logger;
@@ -70,13 +70,13 @@ def type(jmx) type(implementation)
 	import java.util.*;
 	import java.time.*;
 
-	public class $name+SnakeCaseToCamelCase+validName+firstUpperCase implements $name+validName+firstUpperCase~MBean {
+	public class $name+CamelCase+validName+firstUpperCase implements $name+validName+firstUpperCase~MBean {
 
 		private final $box+validName+FirstUpperCase~Box box;
 
 		public java.util.List<String> help() {
 			List<String> operations = new ArrayList<>();
-			operations.addAll(java.util.Arrays.asList(new String$[]{$operation+help...[, ]}));
+			operations.addAll(java.util.Arrays.asList(new String[]{$operation+help...[, ]}));
 			return operations;
 		}
 
@@ -88,13 +88,13 @@ def type(jmx) type(implementation)
 	}
 end
 
-def type(operation) trigger(implementation)
-	public $returnType $name+SnakeCaseToCamelCase+validName+firstLowerCase($parameter+withType...[, ]) {
+def type(operation) and trigger(implementation)
+	public $returnType $name+CamelCase+validName+firstLowerCase($parameter+withType...[, ]) {
 		try {
-		$package+ValidPackage.actions.$action+snakecaseToCamelCase+firstUpperCase~Action action = new $package+ValidPackage.actions.$action+SnakeCaseToCamelCase+firstUpperCase~Action();
+		$package+ValidPackage.actions.$action+PascalCase~Action action = new $package+ValidPackage.actions.$action+PascalCase~Action();
 		action.box = box;
-		[$parameter+assign...[$NL]]
-		[$returnType+return ]action.execute();
+		<<$parameter+assign...[$NL]>>
+		<<$returnType+return >>action.execute();
 		} catch (Throwable e) {
 			Logger.error(e);
 			throw e;
@@ -102,27 +102,27 @@ def type(operation) trigger(implementation)
 	}
 end
 
-def type(operation) trigger(help)
-	"$returnType $name+SnakeCaseToCamelCase+validName+firstLowerCase($parameter+withType...[, ])[: $description]"
+def type(operation) and trigger(help)
+	"$returnType $name+CamelCase+validName+firstLowerCase($parameter+withType...[, ])<<: $description>>"
 end
 
 
-def type(parameter) trigger(assign)
+def type(parameter) and trigger(assign)
 	action.$name = $name;
 end
 
-def type(returnType) attribute(value:void) trigger(return)
+def type(returnType) and attribute(value,void) and trigger(return)
 end
 
-def type(returnType) trigger(return)
+def type(returnType) and trigger(return)
 	return
 end
 
-def type(returnType & list) trigger(returnType)
+def type(returnType, list) and trigger(returnType)
 	java.util.List<$value>
 end
 
-def type(returnType) trigger(returnType)
+def type(returnType) and trigger(returnType)
 	$value
 end
 

@@ -2,7 +2,6 @@ package io.intino.konos.builder.codegeneration.services.slack;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
@@ -43,7 +42,7 @@ public class SlackRenderer extends Renderer {
 		for (String level : collectLevels(service).keySet())
 			builder.add("level", new FrameBuilder("level").add("name", level).toFrame());
 		String className = snakeCaseToCamelCase(service.name$()) + "SlackBot";
-		writeFrame(gen(Target.Server), className, template().render(builder));
+		writeFrame(gen(Target.Server), className, new SlackTemplate().render(builder, Formatters.all));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Server), className).getAbsolutePath()));
 
 		if (alreadyRendered(new File(src(Target.Server), "slack"), srcName)) updateBot(service, srcName);
@@ -57,12 +56,12 @@ public class SlackRenderer extends Renderer {
 	private void newBotActions(Service.SlackBot service) {
 		final File directory = new File(src(Target.Server), "slack");
 		if (!alreadyRendered(directory, snakeCaseToCamelCase(service.name$()) + "Slack"))
-			writeFrame(directory, snakeCaseToCamelCase(service.name$()) + "Slack", template().render(createFrameBuilder(service.name$(), service.requestList(), false)));
+			writeFrame(directory, snakeCaseToCamelCase(service.name$()) + "Slack", new SlackTemplate().render(createFrameBuilder(service.name$(), service.requestList(), false), Formatters.all));
 		Map<String, List<Request>> groups = collectLevels(service);
 		for (String requestContainer : groups.keySet()) {
 			classes().put("Service#" + service.name$(), "slack." + requestContainer + "Slack");
 			if (!alreadyRendered(directory, requestContainer + "Slack"))
-				writeFrame(directory, requestContainer + "Slack", template().render(createFrameBuilder(requestContainer, groups.get(requestContainer), false)));
+				writeFrame(directory, requestContainer + "Slack", new SlackTemplate().render(createFrameBuilder(requestContainer, groups.get(requestContainer), false), Formatters.all));
 		}
 	}
 
@@ -122,10 +121,6 @@ public class SlackRenderer extends Renderer {
 		for (Request component : request.requestList())
 			builder.add("component", component.name$());
 		return builder.toFrame();
-	}
-
-	private Template template() {
-		return Formatters.customize(new SlackTemplate()).add("slashToCamelCase", o -> snakeCaseToCamelCase(o.toString().replace("|", "_")));
 	}
 
 	private boolean alreadyRendered(File destiny, String name) {

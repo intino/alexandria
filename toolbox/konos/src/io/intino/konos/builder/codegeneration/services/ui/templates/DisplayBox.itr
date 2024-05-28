@@ -1,25 +1,25 @@
-def type(box & decorated) trigger(extension)
+def type(box, decorated) and trigger(extension)
 	B extends Box
 end
 
-def type(box) trigger(extension)
+def type(box) and trigger(extension)
 end
 
-def type(box & decorated) trigger(extensionTagged)
+def type(box, decorated) and trigger(extensionTagged)
 	<B extends Box>
 end
 
-def type(box) trigger(extensionTagged)
+def type(box) and trigger(extensionTagged)
 end
 
-def type(box & decorated) trigger(type)
+def type(box, decorated) and trigger(type)
 	B
 end
 
-def type(box & accessible) trigger(type)
+def type(box, accessible) and trigger(type)
 	Box
 end
 
-def type(box) trigger(type)
+def type(box) and trigger(type)
 	$box+firstUpperCase~Box
 end

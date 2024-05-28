@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration.datahub.mounter;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
@@ -12,7 +13,6 @@ import io.intino.konos.dsl.KonosGraph;
 
 import java.io.File;
 
-import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
@@ -54,7 +54,7 @@ public class MounterRenderer {
 		File mounters = new File(datamartFolder, "mounters");
 		if (!alreadyRendered(mounters, mounterName)) {
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(mounter), javaFile(mounters, firstUpperCase(mounterName)).getAbsolutePath()));
-			writeFrame(mounters, mounterName, customize(new MounterTemplate()).render(builder.toFrame()));
+			writeFrame(mounters, mounterName, new MounterTemplate().render(builder.toFrame(), Formatters.all));
 		}
 	}
 

@@ -4,52 +4,52 @@ def type(box)
 	import java.util.LinkedHashMap;
 	import java.util.Map;
 	import java.util.UUID;
-	[
+	<<
 	import java.util.HashMap;
-	import java.util.Map$hasUi+hideUi]
+	import java.util.Map$hasUi+hideUi>>
 
 	import io.intino.alexandria.logger.Logger;
 	import java.util.logging.ConsoleHandler;
 	import java.util.logging.Level;
 
-	[$messagehub+import]
-	[$terminal+import]
-	[import io.intino.alexandria.http.AlexandriaSpark;$hasREST]
-	[import io.intino.alexandria.ui.services.push.PushService$hasUI+hideUi]
-	[import io.intino.alexandria.ui.Soul$hasUi+hideUi]
+	<<$messagehub+import>>
+	<<$terminal+import>>
+	<<import io.intino.alexandria.http.AlexandriaSpark;$hasREST>>
+	<<import io.intino.alexandria.ui.services.push.PushService$hasUI+hideUi>>
+	<<import io.intino.alexandria.ui.Soul$hasUi+hideUi>>
 
-	public abstract class AbstractBox extends [$hasUi+uiBox?io.intino.alexandria.core.Box] {
-		protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;
-		[$service+field...[$NL]]
-		[$connector+field]
-		[$terminal+field]
-		[$sentinel+field]
-		[$workflow+field]
-		[protected Map<String, Soul> uiSouls = new java.util.HashMap<>()$hasUi+hideUi]
-		[private java.util.List<io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>()$hasUi+hideUi]
-		[private io.intino.alexandria.ui.services.AuthService authService$hasUi+hideUi]
-		[private PushService pushService$hasUi+hideUi]
+	public abstract class AbstractBox extends <<$hasUi+uiBox?io.intino.alexandria.core.Box>> {
+		protected $name+PascalCase~Configuration configuration;
+		<<$service+field...[$NL]>>
+		<<$connector+field>>
+		<<$terminal+field>>
+		<<$sentinel+field>>
+		<<$workflow+field>>
+		<<protected Map<String, Soul> uiSouls = new java.util.HashMap<>()$hasUi+hideUi>>
+		<<private java.util.List<io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>()$hasUi+hideUi>>
+		<<private io.intino.alexandria.ui.services.AuthService authService$hasUi+hideUi>>
+		<<private PushService pushService$hasUi+hideUi>>
 
-		public AbstractBox(String$[] args) {
-			this(new $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration(args));
+		public AbstractBox(String[] args) {
+			this(new $name+PascalCase~Configuration(args));
 		}
 
-		public AbstractBox($name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration) {
-			[owner = new $parent~Box(configuration);]
+		public AbstractBox($name+PascalCase~Configuration configuration) {
+			<<owner = new $parent~Box(configuration);>>
 			this.configuration = configuration;
-			[$parent+empty?initJavaLogger();]
-			[$connector+setup]
-			[$service+setup...[$NL]]
-			[$terminal+setup]
+			<<$parent+empty?initJavaLogger();>>
+			<<$connector+setup>>
+			<<$service+setup...[$NL]>>
+			<<$terminal+setup>>
 		}
 
-		public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration() {
+		public $name+PascalCase~Configuration configuration() {
 			return configuration;
 		}
 
 		@Override
 		public io.intino.alexandria.core.Box put(Object o) {
-			[$hasParent~owner.put(o);]
+			<<$hasParent~owner.put(o);>>
 			return this;
 		}
 
@@ -81,9 +81,9 @@ def type(box)
 
 		@Override
 		public void stopServices() {
-			[$spark...[$NL]]
-			[$service+stop...[$NL]]
-			[$connector+stop]
+			<<$spark...[$NL]>>
+			<<$service+stop...[$NL]>>
+			<<$connector+stop>>
 		}
 
 		public abstract void afterStop();
@@ -103,23 +103,23 @@ def type(box)
 			initCli();
 		}
 
-		[$hasUi+pushService]
+		<<$hasUi+pushService>>
 
-		[$hasUi+registerSoul]
+		<<$hasUi+registerSoul>>
 
-		[$service+getter...[$NL$NL]]
+		<<$service+getter...[$NL$NL]>>
 
-		[$hasUi+authService]
+		<<$hasUi+authService>>
 
-		[$terminal+getter]
+		<<$terminal+getter>>
 
-		[$sentinel+getter...[$NL$NL]]
+		<<$sentinel+getter...[$NL$NL]>>
 
-		[$workflow+getter]
+		<<$workflow+getter>>
 
 		$service+setupMethod...[$NL$NL]
 
-		[$terminal+datamartSourceSelector]
+		<<$terminal+datamartSourceSelector>>
 
 		private void initRestServices() {
 			$service+rest...[$NL]
@@ -145,22 +145,22 @@ def type(box)
 			$service+ui...[$NL]
 		}
 
-		[$hasUi+translatorServiceInitialization]
+		<<$hasUi+translatorServiceInitialization>>
 
 		protected void initConnector() {
-			[$connector+init]
+			<<$connector+init>>
 		}
 
 		protected void initTerminal() {
-			[$terminal+init]
+			<<$terminal+init>>
 		}
 
 		protected void initSentinels() {
-			[$sentinel+init...[$NL]]
+			<<$sentinel+init...[$NL]>>
 		}
 
 		protected void initWorkflow() {
-			[$workflow+init]
+			<<$workflow+init>>
 		}
 
 		protected void initAgenda() {
@@ -195,11 +195,11 @@ def trigger(empty)
 	;
 end
 
-def type(logger) trigger(logger)
+def type(logger) and trigger(logger)
 	io.intino.alexandria.logger4j.Logger.init();
 end
 
-def type(connector) trigger(import)
+def type(connector) and trigger(import)
 	import io.intino.alexandria.terminal.Connector;
 end
 
@@ -207,107 +207,107 @@ def trigger(uiBox)
 	io.intino.alexandria.ui.AlexandriaUiBox
 end
 
-def type(service & ui) trigger(setupMethod)
+def type(service, ui) and trigger(setupMethod)
 	public void setup$name+firstUpperCase~Ui() {
-		[if($parameter == null || $parameter.isEmpty())] return;
-		this.authService = [this.authService($authentication)?null];
-		[io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/")];
+		<<if($parameter == null || $parameter.isEmpty())>> return;
+		this.authService = <<this.authService($authentication)?null>>;
+		<<io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/")>>;
 		io.intino.alexandria.http.AlexandriaSparkBuilder.setUI(true);
 		io.intino.alexandria.http.AlexandriaSparkBuilder.addParameters(this.authService);
 		this.pushService = new io.intino.alexandria.ui.services.push.PushService();
 		io.intino.alexandria.ui.UISpark sparkInstance = (io.intino.alexandria.ui.UISpark) io.intino.alexandria.http.AlexandriaSparkBuilder.instance();
-		$package+validPackage.ui.$name+SnakeCaseToCamelCase+FirstUpperCase~Service.init(sparkInstance, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this, pushService, new $package+validPackage.ui.displays.RouteDispatcher());
+		$package+validPackage.ui.$name+PascalCase~Service.init(sparkInstance, ($configuration+PascalCase~Box) this, pushService, new $package+validPackage.ui.displays.RouteDispatcher());
 		$use...[$NL]
 		io.intino.alexandria.ui.UiElementsService.initDisplays(sparkInstance, pushService);
 	}
 end
 
-def type(service & cli) trigger(setupMethod)
+def type(service, cli) and trigger(setupMethod)
 	public void setupCli() {
-		[if($parameter == null || $parameter.isEmpty())] return;
-		[io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/")];
+		<<if($parameter == null || $parameter.isEmpty())>> return;
+		<<io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/")>>;
 	}
 end
 
-def type(service & soap) trigger(setup)
-	[if($parameter != null && !$parameter.isEmpty()) ]io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/");
+def type(service, soap) and trigger(setup)
+	<<if($parameter != null && !$parameter.isEmpty()) >>io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/");
 end
 
-def type(terminal) trigger(setup)
+def type(terminal) and trigger(setup)
 	this.terminal = new $qn(connector);
 end
 
-def type(connector) trigger(setup)
+def type(connector) and trigger(setup)
 	this.connector = io.intino.alexandria.terminal.ConnectorFactory.createConnector(new io.intino.alexandria.jms.ConnectionConfig($parameter...[, ]), $additionalParameter...[,]);
 end
 
-def type(service & jmx) trigger(jmx)
-	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new JMX$name+SnakeCaseToCamelCase+FirstUpperCase().init((($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this));
+def type(service, jmx) and trigger(jmx)
+	this.$name+CamelCase = new JMX$name+PascalCase().init((($configuration+PascalCase~Box) this));
 	Logger.info("Jmx service $name: started!");
 end
 
-def type(service & slack) trigger(slack)
+def type(service, slack) and trigger(slack)
 	if ($parameter == null || $parameter.isEmpty()) return;
-	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new $name+SnakeCaseToCamelCase+FirstUpperCase~SlackBot(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this, $parameter);
+	this.$name+CamelCase = new $name+PascalCase~SlackBot(($configuration+PascalCase~Box) this, $parameter);
 	Logger.info("Slack service $name: started!");
 end
 
-def type(service & rest) trigger(rest)
-	[if($parameter == null || $parameter.isEmpty()) return;]
+def type(service, rest) and trigger(rest)
+	<<if($parameter == null || $parameter.isEmpty()) return;>>
 	io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/");
-	[$name+SnakeCaseToCamelCase+FirstUpperCase~Service.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);]
-	[io.intino.alexandria.http.AlexandriaSparkBuilder.instance().start();]
+	<<$name+PascalCase~Service.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), ($configuration+PascalCase~Box) this);>>
+	<<io.intino.alexandria.http.AlexandriaSparkBuilder.instance().start();>>
 	Logger.info("Rest service $name: started at port " + $parameter + "!");
 end
 
-def type(service & soap) trigger(soap)
-	[$name+SnakeCaseToCamelCase+FirstUpperCase~Service.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);]
-	[io.intino.alexandria.http.AlexandriaSparkBuilder.instance().start();
-	Logger.info("Soap service $name: started!");]
+def type(service, soap) and trigger(soap)
+	<<$name+PascalCase~Service.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), ($configuration+PascalCase~Box) this);>>
+	<<io.intino.alexandria.http.AlexandriaSparkBuilder.instance().start();
+	Logger.info("Soap service $name: started!");>>
 end
 
-def type(service & ui) trigger(ui)
+def type(service, ui) and trigger(ui)
 	setup$name+firstUpperCase~Ui();
-	[this.initTranslatorService()];
+	<<this.initTranslatorService()>>;
 	io.intino.alexandria.ui.UISpark spark$name+firstUpperCase~Instance = (io.intino.alexandria.ui.UISpark) io.intino.alexandria.http.AlexandriaSparkBuilder.instance();
 	spark$name+firstUpperCase~Instance.start();
 	Logger.info("UI $name: started at port " + $parameter + "!");
 end
 
 def trigger(use)
-	[$this.initDisplays(sparkInstance, pushService);]
+	<<$this.initDisplays(sparkInstance, pushService);>>
 end
 
-def type(service & messaging) trigger(messaging)
-	this.$name+SnakeCaseToCamelCase+firstLowerCase = new $name+SnakeCaseToCamelCase+firstUpperCase~Service(this.connector, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+def type(service, messaging) and trigger(messaging)
+	this.$name+CamelCase = new $name+PascalCase~Service(this.connector, ($configuration+PascalCase~Box) this);
 	Logger.info("Messaging service $name: started!");
 end
 
-def type(service & agenda) trigger(agenda)
+def type(service, agenda) and trigger(agenda)
 	if (this.agenda != null) return;
-	this.agenda = new $name+SnakeCaseToCamelCase+firstUpperCase~Service(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	this.agenda = new $name+PascalCase~Service(($configuration+PascalCase~Box) this);
 	this.agenda.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), scheduler);
 	io.intino.alexandria.http.AlexandriaSparkBuilder.instance().start();
 	Logger.info("Agenda service: started!");
 end
 
-def type(service & cli) trigger(cli)
+def type(service, cli) and trigger(cli)
     setupCli();
-    $name+SnakeCaseToCamelCase+firstUpperCase~Service $name+SnakeCaseToCamelCase+firstLowerCase~Service = new $name+SnakeCaseToCamelCase+firstUpperCase~Service();
-    $name+SnakeCaseToCamelCase+firstLowerCase~Service.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this, new $name+SnakeCaseToCamelCase+firstUpperCase(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box)this));
+    $name+PascalCase~Service $name+CamelCase~Service = new $name+PascalCase~Service();
+    $name+CamelCase~Service.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), ($configuration+PascalCase~Box) this, new $name+PascalCase(($configuration+PascalCase~Box)this));
     io.intino.alexandria.http.AlexandriaSparkBuilder.instance().start();
     Logger.info("$name+firstUpperCase service: started!");
 end
 
-def type(sentinel) trigger(init)
-	Sentinels.init(this.scheduler, this.configuration.home() [$hasWebhook io.intino.alexandria.http.AlexandriaSparkBuilder.instance()], ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+def type(sentinel) and trigger(init)
+	Sentinels.init(this.scheduler, this.configuration.home() <<$hasWebhook io.intino.alexandria.http.AlexandriaSparkBuilder.instance()>>, ($configuration+PascalCase~Box) this);
 end
 
-def type(workflow) trigger(init)
-	this.workflow = new $package.bpm.Workflow(($box+SnakeCaseToCamelCase+FirstUpperCase~Box)this[, $parameter]);
+def type(workflow) and trigger(init)
+	this.workflow = new $package.bpm.Workflow(($box+PascalCase~Box)this<<, $parameter>>);
 end
 
-def type(connector) trigger(init)
+def type(connector) and trigger(init)
 	if (!(this.connector instanceof io.intino.alexandria.terminal.JmsConnector) || ((io.intino.alexandria.terminal.JmsConnector) this.connector).connection() != null) return;
 	final io.intino.alexandria.terminal.JmsConnector connector = (io.intino.alexandria.terminal.JmsConnector) this.connector;
 	if (connector.connection() == null) connector.start();
@@ -320,29 +320,29 @@ def type(connector) trigger(init)
 		}
 end
 
-def type(terminal) trigger(init)
+def type(terminal) and trigger(init)
 	if (this.terminal != null) {
 		java.time.Instant sealStamp = this.terminal.requestLastSeal();
 		Logger.info("Last seal on " + sealStamp.toString());
 		java.util.function.Predicate<java.time.Instant> filter = i -> !i.isBefore(sealStamp);
-		this.terminal.initDatamarts([$datamartsLoad()]);
+		this.terminal.initDatamarts(<<$datamartsLoad()>>);
 		$subscriber...[$NL]
 	}
 end
 
-def type(datamartsLoad) trigger(datamartSourceSelector)
+def type(datamartsLoad) and trigger(datamartSourceSelector)
 	protected abstract String $datamartsLoad();
 end
 
-def type(subscriber & durable & filtered) trigger(subscriber)
+def type(subscriber, durable, filtered) and trigger(subscriber)
 	this.terminal.subscribe(($terminal.$eventQn+FirstUpperCase~Consumer) (e, t) -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e, t), "$subscriberId", filter, null);
 end
 
-def type(subscriber & durable) trigger(subscriber)
+def type(subscriber, durable) and trigger(subscriber)
 	this.terminal.subscribe(($terminal.$eventQn+FirstUpperCase~Consumer) (e, t) -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e, t), "$subscriberId");
 end
 
-def type(subscriber) trigger(subscriber)
+def type(subscriber) and trigger(subscriber)
 	this.terminal.subscribe(($terminal.$eventQn+FirstUpperCase~Consumer) (e, t) -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e, t));
 end
 
@@ -350,45 +350,45 @@ def trigger(split)
 	$type.Split.$value
 end
 
-def type(service & jmx) trigger(field)
-	protected io.intino.alexandria.jmx.JMXServer $name+SnakeCaseToCamelCase+firstlowerCase;
+def type(service, jmx) and trigger(field)
+	protected io.intino.alexandria.jmx.JMXServer $name+CamelCase;
 end
 
-def type(service & slack) trigger(field)
-	private io.intino.alexandria.slack.Bot $name+SnakeCaseToCamelCase+firstlowerCase;
+def type(service, slack) and trigger(field)
+	private io.intino.alexandria.slack.Bot $name+CamelCase;
 end
 
-def type(service & messaging) trigger(field)
-	private $name+SnakeCaseToCamelCase+firstUpperCase~Service $name+SnakeCaseToCamelCase+firstlowerCase;
+def type(service, messaging) and trigger(field)
+	private $name+PascalCase~Service $name+CamelCase;
 end
 
-def type(sentinel) trigger(field)
+def type(sentinel) and trigger(field)
 	private io.intino.alexandria.scheduler.AlexandriaScheduler scheduler = new io.intino.alexandria.scheduler.AlexandriaScheduler();
 end
 
-def type(connector) trigger(field)
+def type(connector) and trigger(field)
 	protected io.intino.alexandria.terminal.Connector connector;
 end
 
-def type(terminal) trigger(field)
+def type(terminal) and trigger(field)
 	protected $qn terminal;
 end
 
-def type(workflow) trigger(field)
+def type(workflow) and trigger(field)
 	protected $package.bpm.Workflow workflow;
 end
 
-def type(agenda) trigger(field)
+def type(agenda) and trigger(field)
 	protected AgendaService agenda;
 end
 
-def type(service & messaging) trigger(getter)
-	public $name+SnakeCaseToCamelCase+firstUpperCase~Service $name+SnakeCaseToCamelCase+firstlowerCase() {
-		return $name+SnakeCaseToCamelCase+firstlowerCase;
+def type(service, messaging) and trigger(getter)
+	public $name+PascalCase~Service $name+CamelCase() {
+		return $name+CamelCase;
 	}
 end
 
-def type(terminal) trigger(getter)
+def type(terminal) and trigger(getter)
 	public $qn terminal() {
 		return this.terminal;
 	}
@@ -398,47 +398,47 @@ def type(terminal) trigger(getter)
 	}
 end
 
-def type(workflow) trigger(getter)
+def type(workflow) and trigger(getter)
 	public $package.bpm.Workflow workflow() {
 		return this.workflow;
 	}
 end
 
 
-def type(agenda) trigger(getter)
+def type(agenda) and trigger(getter)
 	public AgendaService agenda() {
 		return this.agenda;
 	}
 end
 
-def type(service & slack) trigger(getter)
-	public $name+SnakeCaseToCamelCase+firstUpperCase~SlackBot $name+SnakeCaseToCamelCase+firstlowerCase() {
-		return ($name+SnakeCaseToCamelCase+firstUpperCase~SlackBot) $name+SnakeCaseToCamelCase+firstlowerCase;
+def type(service, slack) and trigger(getter)
+	public $name+PascalCase~SlackBot $name+CamelCase() {
+		return ($name+PascalCase~SlackBot) $name+CamelCase;
 	}
 end
 
-def type(service) trigger(getter)
+def type(service) and trigger(getter)
 end
 
 def trigger(spark)
 	io.intino.alexandria.http.AlexandriaSparkBuilder.instance().stop();
 end
 
-def type(connector) trigger(stop)
+def type(connector) and trigger(stop)
 	if (connector instanceof io.intino.alexandria.terminal.JmsConnector) ((io.intino.alexandria.terminal.JmsConnector) connector).stop();
 end
 
-def type(service & slack) trigger(stop)
-	this.$name+SnakeCaseToCamelCase+FirstLowerCase.disconnect();
+def type(service, slack) and trigger(stop)
+	this.$name+CamelCase.disconnect();
 end
 
-def type(service) trigger(stop)
+def type(service) and trigger(stop)
 end
 
 def type(service)
 end
 
-def type(sentinel) trigger(getter)
+def type(sentinel) and trigger(getter)
 	public io.intino.alexandria.scheduler.AlexandriaScheduler scheduler() {
 		return this.scheduler;
 	}
@@ -477,18 +477,18 @@ def trigger(registerSoul)
 	}
 
 	public void registerSoul(String clientId, Soul soul) {
-		[if (owner != null) (($parent~Box) owner).registerSoul(clientId, soul);]
+		<<if (owner != null) (($parent~Box) owner).registerSoul(clientId, soul);>>
 		uiSouls.put(clientId, soul);
 	}
 
 	public void unRegisterSoul(String clientId) {
-		[if (owner != null) (($parent~Box) owner).unRegisterSoul(clientId);]
+		<<if (owner != null) (($parent~Box) owner).unRegisterSoul(clientId);>>
 		uiSouls.remove(clientId);
 		if (uiSouls.size() <= 0) notifySoulsClosed();
 	}
 
 	public void onSoulsClosed(io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed listener) {
-		[if (owner != null) (($parent~Box) owner).onSoulsClosed(listener);]
+		<<if (owner != null) (($parent~Box) owner).onSoulsClosed(listener);>>
 		this.soulsClosedListeners.add(listener);
 	}
 
@@ -498,39 +498,39 @@ def trigger(registerSoul)
 end
 
 
-def type(conf & file) trigger(additionalParameter)
+def type(conf, file) and trigger(additionalParameter)
 	configuration().get("$value") == null ? null : new java.io.File(configuration().get("$value"))
 end
 
-def type(conf) trigger(additionalParameter)
+def type(conf) and trigger(additionalParameter)
 	configuration().get("$value")
 end
 
-def type(conf & file) trigger(parameter)
+def type(conf, file) and trigger(parameter)
 	configuration().get("$value") == null ? null : new java.io.File(configuration().get("$value"))
 end
 
-def type(conf) trigger(parameter)
+def type(conf) and trigger(parameter)
 	configuration().get("$value")
 end
 
-def type(custom) trigger(parameter)
+def type(custom) and trigger(parameter)
 	configuration().get("$value+customParameter")
 end
 
-def type(custom) trigger(authentication)
+def type(custom) and trigger(authentication)
 	url(configuration().get("$value+customParameter"))
 end
 
-def type(custom) trigger(edition)
+def type(custom) and trigger(edition)
 	url(configuration().get("$value+customParameter"))
 end
 
-def type(file) trigger(parameter)
+def type(file) and trigger(parameter)
 	$value
 end
 
-def type(int) trigger(parameter)
+def type(int) and trigger(parameter)
 	$value
 end
 

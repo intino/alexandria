@@ -2,7 +2,7 @@ package io.intino.konos.builder.codegeneration.accessor.messaging;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.context.CompilationContext;
@@ -21,7 +21,7 @@ import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
 public class MessagingAccessorRenderer extends Renderer {
 	private final Service.Messaging service;
-	private File destination;
+	private final File destination;
 
 	public MessagingAccessorRenderer(CompilationContext compilationContext, Service.Messaging application, File destination) {
 		super(compilationContext);
@@ -45,7 +45,7 @@ public class MessagingAccessorRenderer extends Renderer {
 		final Set<String> customParameters = extractCustomParameters(requests);
 		builder.add("request", requests.stream().map(request -> processRequest(request, jmsService).toFrame()).toArray(Frame[]::new));
 		for (String parameter : customParameters) builder.add("custom", parameter);
-		Commons.writeFrame(destination, snakeCaseToCamelCase(jmsService.name$()) + "Accessor", getTemplate().render(builder.toFrame()));
+		Commons.writeFrame(destination, snakeCaseToCamelCase(jmsService.name$()) + "Accessor", new MessagingAccessorTemplate().render(builder.toFrame(), Formatters.all));
 	}
 
 	private Set<String> extractCustomParameters(List<Service.Messaging.Request> requests) {
@@ -82,12 +82,5 @@ public class MessagingAccessorRenderer extends Renderer {
 		return new FrameBuilder("value")
 				.add("name", response.name$())
 				.add("type", response.asType().type()).toFrame();
-	}
-
-	private Template getTemplate() {
-		return new MessagingAccessorTemplate()
-				.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()))
-				.add("ReturnTypeFormatter", (value) -> value.equals("Void") ? "void" : value)
-				.add("validname", value -> value.toString().replace("-", "").toLowerCase());
 	}
 }

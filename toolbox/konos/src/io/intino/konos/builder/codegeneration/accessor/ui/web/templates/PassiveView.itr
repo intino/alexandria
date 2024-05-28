@@ -1,19 +1,19 @@
 def type(notifier)
 	export default class Notifier {
-		static subscriptions = $[$];
+		static subscriptions = [];
 
 		constructor(element) {
 			this.element = element;
 			this.pushService = Application.services.pushService;
-			this.pushRegistrations = $[$];
+			this.pushRegistrations = [];
 			this.pushLinked = false;
 		};
 
 		setup() {
 			var context = this.element.props.context != null ? this.element.props.context() : "";
 			var key = this.element.props.id + context;
-			//if (Notifier.subscriptions$[key$]) return;
-			//Notifier.subscriptions$[key$] = true;
+			//if (Notifier.subscriptions[key]) return;
+			//Notifier.subscriptions[key] = true;
 			this.when("addInstance").toSelf().execute((parameters) => this.element.addInstance(parameters));
 			this.when("addInstances").toSelf().execute((parameters) => this.element.addInstances(parameters));
 			this.when("insertInstance").toSelf().execute((parameters) => this.element.insertInstance(parameters));
@@ -63,7 +63,7 @@ def type(notifier)
 
 			function _containsInList(content, list) {
 				for (var i=0; i<list.length; i++) {
-					if (content.indexOf(list$[i$]) === -1) return false;
+					if (content.indexOf(list[i]) === -1) return false;
 				}
 				return true;
 			}
@@ -76,7 +76,7 @@ def type(notifier)
 		detached = () => {
 			var context = this.element.props.context != null ? this.element.props.context() : "";
 			var key = this.element.props.id + context;
-			//Notifier.subscriptions$[key$] = null;
+			//Notifier.subscriptions[key] = null;
 			this.pushRegistrations.forEach((registrations) => registrations.deregister());
 			this.pushRegistrations.splice(0, this.pushRegistrations.length);
 		};
@@ -104,17 +104,17 @@ def type(requester)
 			}
 			const pushConnections = Application.configuration.pushConnections;
 			for (let i=0; i<pushConnections.length; i++) {
-				const connection = pushConnections$[i$].split("_##_");
-				if (connection$[0$].toLowerCase() !== unit.toLowerCase()) continue;
-				this.pushService.openConnection(connection$[0$], connection$[1$], successCallback, errorCallback);
+				const connection = pushConnections[i].split("_##_");
+				if (connection[0].toLowerCase() !== unit.toLowerCase()) continue;
+				this.pushService.openConnection(connection[0], connection[1], successCallback, errorCallback);
 			}
 		};
 
 		addToHistory = (param) => {
 			const address = this.element.historyAddress();
-			const id = (param instanceof Array) ? (param.length > 0 ? param$[0$] : "") : param;
+			const id = (param instanceof Array) ? (param.length > 0 ? param[0] : "") : param;
 			if (address == null) return false;
-			history.push(address.replace(/:$[^\\/$]*/, id), {});
+			history.push(address.replace(/:[^\\/]*/, id), {});
 			return true;
 		};
 	}

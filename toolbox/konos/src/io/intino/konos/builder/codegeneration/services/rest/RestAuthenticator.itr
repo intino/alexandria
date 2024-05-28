@@ -1,10 +1,10 @@
 def type(basic)
 	package $package+ValidPackage;
 
-	public class $service+firstUpperCase+SnakeCaseToCamelCase~Authenticator {
+	public class $service+pascalCase~Authenticator {
 		private $box+FirstUpperCase~Box box;
 
-		public $service+firstUpperCase+SnakeCaseToCamelCase~Authenticator($box+FirstUpperCase~Box box) {
+		public $service+pascalCase~Authenticator($box+FirstUpperCase~Box box) {
 			this.box = box;
 		}
 
@@ -17,10 +17,10 @@ end
 def type(bearer)
 	package $package+ValidPackage;
 
-	public class $service+firstUpperCase+SnakeCaseToCamelCase~Authenticator {
+	public class $service+pascalCase~Authenticator {
 	 	private $box+FirstUpperCase~Box box;
 
-	 	public $service+firstUpperCase+SnakeCaseToCamelCase~Authenticator($box+FirstUpperCase~Box box) {
+	 	public $service+pascalCase~Authenticator($box+FirstUpperCase~Box box) {
 			this.box = box;
 		}
 
@@ -35,10 +35,10 @@ def type(custom)
 
     import java.util.Map;
 
-	public class $service+firstUpperCase+SnakeCaseToCamelCase~Authenticator {
+	public class $service+pascalCase~Authenticator {
 	 	private $box+FirstUpperCase~Box box;
 
-	 	public $service+firstUpperCase+SnakeCaseToCamelCase~Authenticator($box+FirstUpperCase~Box box) {
+	 	public $service+pascalCase~Authenticator($box+FirstUpperCase~Box box) {
 			this.box = box;
 		}
 

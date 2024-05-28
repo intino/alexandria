@@ -1,7 +1,6 @@
 package io.intino.konos.builder.codegeneration.action;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
@@ -18,8 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static cottons.utils.StringHelper.snakeCaseToCamelCase;
-import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamelCase;
+import static io.intino.itrules.formatters.StringFormatters.camelCase;
+import static io.intino.itrules.formatters.StringFormatters.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 
 public abstract class ActionRenderer extends Renderer {
@@ -41,7 +40,7 @@ public abstract class ActionRenderer extends Renderer {
 	}
 
 	protected boolean alreadyRendered(File destiny, String action, Target target) {
-		return javaFile(destinationPackage(destiny), firstUpperCase(snakeCaseToCamelCase(action)) + suffix(target)).exists();
+		return javaFile(destinationPackage(destiny), firstUpperWithCamel(action) + suffix(target)).exists();
 	}
 
 	protected File destinationPackage(File destiny) {
@@ -53,7 +52,7 @@ public abstract class ActionRenderer extends Renderer {
 		if (!alreadyRendered(destiny, name)) {
 			createNewClass(name, serviceName, response, parameters, exceptions, schemas);
 		} else {
-			File newDestination = javaFile(destinationPackage(destiny), firstUpperCase(snakeCaseToCamelCase(name)) + suffix(Target.Server));
+			File newDestination = javaFile(destinationPackage(destiny), firstUpperWithCamel(name) + suffix(Target.Server));
 			new ActionUpdater(context, newDestination, packageName(), parameters, exceptions, response).update();
 		}
 	}
@@ -63,7 +62,7 @@ public abstract class ActionRenderer extends Renderer {
 		if (!alreadyRendered(destiny, name))
 			createNewClass(name, serviceName, response, toMap(parameters), exceptions, schemas);
 		else {
-			File newDestination = javaFile(destinationPackage(destiny), firstUpperCase(snakeCaseToCamelCase(name)) + suffix(Target.Server));
+			File newDestination = javaFile(destinationPackage(destiny), firstUpperWithCamel(name) + suffix(Target.Server));
 			new ActionUpdater(context, newDestination, packageName(), toMap(parameters), exceptions, response).update();
 		}
 	}
@@ -94,8 +93,12 @@ public abstract class ActionRenderer extends Renderer {
 		if (!schemas.isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName).toFrame());
 		File packageFolder = destinationPackage(destination());
-		context.compiledFiles().add(new OutputItem(packageFolder.getAbsolutePath(), javaFile(packageFolder, firstUpperCase(snakeCaseToCamelCase(name)) + suffix(Target.Server)).getAbsolutePath()));
-		Commons.writeFrame(packageFolder, firstUpperCase(snakeCaseToCamelCase(name)) + suffix(Target.Server), template().render(builder.toFrame()));
+		context.compiledFiles().add(new OutputItem(packageFolder.getAbsolutePath(), javaFile(packageFolder, firstUpperWithCamel(name) + suffix(Target.Server)).getAbsolutePath()));
+		Commons.writeFrame(packageFolder, firstUpperWithCamel(name) + suffix(Target.Server), new ActionTemplate().render(builder.toFrame(), Formatters.all));
+	}
+
+	private static String firstUpperWithCamel(String name) {
+		return (String) firstUpperCase().format(camelCase().format(name));
 	}
 
 	protected FrameBuilder contextPropertyFrame() {
@@ -108,20 +111,12 @@ public abstract class ActionRenderer extends Renderer {
 		for (Map.Entry<String, ? extends Parameter> parameter : parameters.entrySet()) {
 			final FrameBuilder parameterBuilder = new FrameBuilder("parameter", parameter.getValue().asType().getClass().getSimpleName());
 			if (parameter.getValue().isList()) parameterBuilder.add("list");
-			builder.add("parameter", parameterBuilder.add("name", snakeCaseToCamelCase().format(parameter.getKey())).add("type", formatType(parameter.getValue().asType())).toFrame());
+			builder.add("parameter", parameterBuilder.add("name", camelCase().format(parameter.getKey())).add("type", formatType(parameter.getValue().asType())).toFrame());
 		}
 	}
 
 	private String formatType(Data.Type typeData) {
 		return (typeData.i$(Data.Object.class) ? (packageName() + ".schemas.") : "") + typeData.type();
-	}
-
-	protected String firstUpperCase(String value) {
-		return value.substring(0, 1).toUpperCase() + value.substring(1);
-	}
-
-	protected Template template() {
-		return Formatters.customize(new ActionTemplate());
 	}
 
 	private File destination() {

@@ -34,14 +34,14 @@ def type(operation)
 	}
 end
 
-def type(parameter) trigger(signature)
+def type(parameter) and trigger(signature)
 	$type $name+validName+firstLowerCase
 end
 
-def type(parameter) trigger(name)
+def type(parameter) and trigger(name)
 	$name+validName+firstLowerCase
 end
 
-def type(schemaImport) trigger(schemaImport)
+def type(schemaImport) and trigger(schemaImport)
 	import $package.schemas.*;
 end

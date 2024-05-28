@@ -9,6 +9,8 @@ import io.intino.magritte.framework.Node;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
+import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
+
 public class WebHookActionRenderer extends ActionRenderer {
 
 	private final Sentinel.WebHook webHook;

@@ -3,7 +3,6 @@ package io.intino.konos.builder.codegeneration.services.rest;
 import cottons.utils.MimeTypes;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
@@ -53,7 +52,7 @@ public class RESTResourceRenderer extends Renderer {
 			Frame frame = frameOf(resource, operation);
 			final String className = snakeCaseToCamelCase(operation.getClass().getSimpleName() + "_" + resource.name$()) + "Resource";
 			File resourcesPackage = new File(gen(Target.Server), RESOURCES_PACKAGE);
-			Commons.writeFrame(resourcesPackage, className, template().render(frame));
+			Commons.writeFrame(resourcesPackage, className, new RestResourceTemplate().render(frame, Formatters.all));
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(resource), javaFile(resourcesPackage, className).getAbsolutePath()));
 			createCorrespondingAction(operation);
 		}
@@ -68,7 +67,7 @@ public class RESTResourceRenderer extends Renderer {
 		builder.add("returnType", notificationResponse());
 		if (service.authentication() != null) builder.add("throws", "Unauthorized");
 		File genNotifications = new File(gen(Target.Server), NOTIFICATIONS_PACKAGE);
-		Commons.writeFrame(genNotifications, className, template().render(builder.toFrame()));
+		Commons.writeFrame(genNotifications, className, new RestResourceTemplate().render(builder.toFrame(), Formatters.all));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(genNotifications, className).getAbsolutePath()));
 
 		createCorrespondingAction(notification);
@@ -145,7 +144,7 @@ public class RESTResourceRenderer extends Renderer {
 	}
 
 	private String[] throwCodes(Operation resource) {
-		List<String> throwCodes = resource.exceptionList().stream().map(r -> r.code().toString()).collect(Collectors.toList());
+		List<String> throwCodes = resource.exceptionList().stream().map(r -> r.code().toString()).toList();
 		return throwCodes.isEmpty() ? new String[]{"InternalServerError"} : throwCodes.toArray(new String[0]);
 	}
 
@@ -203,7 +202,4 @@ public class RESTResourceRenderer extends Renderer {
 		return firstUpperCase(owner.owner().name());
 	}
 
-	private Template template() {
-		return Formatters.customize(new RestResourceTemplate());
-	}
 }

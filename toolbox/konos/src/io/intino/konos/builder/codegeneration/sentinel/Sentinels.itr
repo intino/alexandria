@@ -17,13 +17,13 @@ def type(sentinels)
 	import static org.quartz.CronScheduleBuilder.*;
 	import static org.quartz.TriggerBuilder.newTrigger;
 
-	public class $name+firstUpperCase+SnakeCaseToCamelCase~Sentinels {
+	public class $name+pascalCase~Sentinels {
 
-		private $name+firstUpperCase+SnakeCaseToCamelCase~Sentinels() {
+		private $name+pascalCase~Sentinels() {
 
 		}
 
-		public static void init(AlexandriaScheduler scheduler, java.io.File home[$hasWebhook io.intino.alexandria.http.AlexandriaSpark webServer], $box+FirstUpperCase~Box box) {
+		public static void init(AlexandriaScheduler scheduler, java.io.File home<<$hasWebhook io.intino.alexandria.http.AlexandriaSpark webServer>>, $box+FirstUpperCase~Box box) {
 			JobDetail job;
 			try {
 				$sentinel+init...[$NL]
@@ -43,10 +43,10 @@ def type(sentinels)
 	}
 end
 
-def type(sentinel) type(FileListener) trigger(init)
+def type(sentinel) and type(FileListener) and trigger(init)
 	File directory = $file+customizeDirectory;
 	if (directory != null && directory.exists()) scheduler.watchDirectory("$name", directory, (file, event) -> {
-				$package+ValidPackage.actions.$name+SnakeCaseToCamelCase~Action action = new $package+ValidPackage.actions.$name+SnakeCaseToCamelCase~Action();
+				$package+ValidPackage.actions.$name+CamelCase~Action action = new $package+ValidPackage.actions.$name+CamelCase~Action();
 				action.box = box;
 				action.file = file;
 				action.event = event;
@@ -55,11 +55,11 @@ def type(sentinel) type(FileListener) trigger(init)
 	else if (directory != null) Logger.warn("Directory " + directory + " not found");
 end
 
-def type(archetype) trigger(customizeDirectory)
+def type(archetype) and trigger(customizeDirectory)
 	new $package.Archetype(home).$path
 end
 
-def type(custom) trigger(customizeDirectory)
+def type(custom) and trigger(customizeDirectory)
 	box.configuration().get("$path") == null ? null : new java.io.File(box.configuration().get("$path"))
 end
 
@@ -67,44 +67,44 @@ def trigger(customizeDirectory)
 	new java.io.File("$path")
 end
 
-def type(sentinel) type(webhook) trigger(init)
-	webServer.route($path+format).get(manager -> $name+SnakeCaseToCamelCase+firstLowerCase~Action(manager).execute());
+def type(sentinel) and type(webhook) and trigger(init)
+	webServer.route($path+format).get(manager -> $name+CamelCase~Action(manager).execute());
 end
 
-def type(sentinel) type(webhook) trigger(actionCall)
-	private static $name+SnakeCaseToCamelCase+firstUpperCase~Action $name+SnakeCaseToCamelCase+firstLowerCase~Action(io.intino.alexandria.http.spark.SparkManager manager) {
-		$name+SnakeCaseToCamelCase+firstUpperCase~Action action = new $name+SnakeCaseToCamelCase+firstUpperCase~Action();
+def type(sentinel) and type(webhook) and trigger(actionCall)
+	private static $name+PascalCase~Action $name+CamelCase~Action(io.intino.alexandria.http.spark.SparkManager manager) {
+		$name+PascalCase~Action action = new $name+PascalCase~Action();
 		$parameter+assign...[$NL]
 		return action;
 	}
 end
 
-def type(sentinel) trigger(init)
-	job = newJob($package+ValidPackage.scheduling.$name+SnakeCaseToCamelCase~Listener.class).withIdentity("$name").build();
+def type(sentinel) and trigger(init)
+	job = newJob($package+ValidPackage.scheduling.$name+PascalCase~Listener.class).withIdentity("$name").build();
 	job.getJobDataMap().put("box", box);
 	scheduler.scheduleJob(job, newSet($job...[, ]), true);
 end
 
 def trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.from$in+firstUpperCase("$name");
+	action.$name+CamelCase = manager.from$in+firstUpperCase("$name");
 end
 
-def type(path) trigger(format)
-	"$name"[$custom...[]]
+def type(path) and trigger(format)
+	"$name"<<$custom...[]>>
 end
 
 def trigger(fullEvent)
 	io.intino.alexandria.scheduler.directory.DirectorySentinel.Event.$this
 end
 
-def type(cronTrigger) trigger(job)
-	newTrigger().withIdentity("$name").withSchedule(cronSchedule("$pattern")[.inTimeZone(TimeZone.getTimeZone(ZoneId.of("$timeZone")))]).build()
+def type(cronTrigger) and trigger(job)
+	newTrigger().withIdentity("$name").withSchedule(cronSchedule("$pattern")<<.inTimeZone(TimeZone.getTimeZone(ZoneId.of("$timeZone")))>>).build()
 end
 
-def type(onBootTrigger) type(delay) trigger(job)
+def type(onBootTrigger) and type(delay) and trigger(job)
 	newTrigger().startAt(java.util.Date.from(java.time.Instant.now().plus($delay, java.time.temporal.ChronoUnit.MILLIS))).build()
 end
 
-def type(onBootTrigger) trigger(job)
+def type(onBootTrigger) and trigger(job)
 	newTrigger().startNow().build()
 end

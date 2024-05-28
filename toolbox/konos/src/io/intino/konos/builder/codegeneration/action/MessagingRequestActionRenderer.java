@@ -7,6 +7,7 @@ import io.intino.konos.dsl.Service.Messaging.Request;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 
 public class MessagingRequestActionRenderer extends ActionRenderer {
 	private final Request request;

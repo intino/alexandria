@@ -10,26 +10,26 @@ def type(display)
 		setup() {
 			if (this.element == null || this.pushLinked) return;
 			super.setup();
-			[$notification...[$NL]]
-			[$event...[$NL]]
+			<<$notification...[$NL]>>
+			<<$event...[$NL]>>
 			this.pushLinked = true;
 		};
 	}
 end
 
-def attribute(extensionOf) trigger(import)
+def attribute(extensionOf) and trigger(import)
 	import $parent+firstUpperCase~Notifier from "./$parent+firstUpperCase~Notifier"
 end
 
-def attribute(component) trigger(import)
+def attribute(component) and trigger(import)
 	import Notifier from "alexandria-ui-elements/src/displays/notifiers/ComponentNotifier";
 end
 
-def attribute(accessible) trigger(import)
+def attribute(accessible) and trigger(import)
 	import Notifier from "alexandria-ui-elements/gen/displays/notifiers/ProxyDisplayNotifier";
 end
 
-def attribute(baseType) trigger(import)
+def attribute(baseType) and trigger(import)
 	import Notifier from "alexandria-ui-elements/gen/displays/notifiers/$type+firstUpperCase~Notifier";
 end
 
@@ -37,14 +37,14 @@ def trigger(import)
 	import Notifier from "./Notifier";
 end
 
-def attribute(accessible) trigger(proxy)
+def attribute(accessible) and trigger(proxy)
 	Proxy
 end
 
 def trigger(proxy)
 end
 
-def attribute(extensionOf) trigger(parentType)
+def attribute(extensionOf) and trigger(parentType)
 	$parent+firstUpperCase~Notifier
 end
 
@@ -53,18 +53,18 @@ def trigger(parentType)
 end
 
 def trigger(notification)
-	this.when("$name")[$target].execute(([$parameter+call]) => this.element.$name([$parameter+value]));
+	this.when("$name")<<$target>>.execute((<<$parameter+call>>) => this.element.$name(<<$parameter+value>>));
 end
 
-def type(parameter) trigger(call)
+def type(parameter) and trigger(call)
 	parameters
 end
 
-def type(parameter) trigger(value)
+def type(parameter) and trigger(value)
 	parameters.v
 end
 
-def attribute(this:Display) trigger(target)
+def attribute(this, Display) and trigger(target)
 	.toSelf()
 end
 

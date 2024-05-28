@@ -1,6 +1,5 @@
 package io.intino.konos.builder.codegeneration.ui.passiveview;
 
-import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.dsl.PassiveView;
@@ -23,10 +22,5 @@ public class PassiveViewUpdater<C extends PassiveView> extends Updater {
 
 	private void addMethod(Request request) {
 		//TODO
-	}
-
-
-	private String nameOf(Request request) {
-		return Formatters.firstLowerCase(Formatters.snakeCaseToCamelCase().format(request.name$()).toString());
 	}
 }

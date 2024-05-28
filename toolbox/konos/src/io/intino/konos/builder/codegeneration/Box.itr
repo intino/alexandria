@@ -1,13 +1,13 @@
 def type(box)
 	package $package;
 
-	public class $name+SnakeCaseToCamelCase+firstUpperCase~Box extends AbstractBox {
+	public class $name+PascalCase~Box extends AbstractBox {
 
-		public $name+SnakeCaseToCamelCase+firstUpperCase~Box(String$[] args) {
-			this(new $name+SnakeCaseToCamelCase+firstUpperCase~Configuration(args));
+		public $name+PascalCase~Box(String[] args) {
+			this(new $name+PascalCase~Configuration(args));
 		}
 
-		public $name+SnakeCaseToCamelCase+firstUpperCase~Box($name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
+		public $name+PascalCase~Box($name+PascalCase~Configuration configuration) {
 			super(configuration);
 		}
 
@@ -33,12 +33,12 @@ def type(box)
 
 		}
 
-		[$hasUi+authService]
+		<<$hasUi+authService>>
 
-		[$terminal+datamartSourceSelector]
+		<<$terminal+datamartSourceSelector>>
 
-		[$rest]
-		[$authenticationValidator]
+		<<$rest>>
+		<<$authenticationValidator>>
 	}
 end
 
@@ -60,7 +60,7 @@ def trigger(rest)
 	}	
 end
 
-def type(datamartsLoad) trigger(datamartSourceSelector)
+def type(datamartsLoad) and trigger(datamartSourceSelector)
 	protected String $datamartsLoad() {
 		return null;//TODO add ss selector using SQL syntax
 	}

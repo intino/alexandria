@@ -9,20 +9,20 @@ def type(axis)
 	import java.util.function.Function;
 	import java.util.stream.Collectors;
 
-	public class $name+snakeCaseToCamelCase+FirstUpperCase implements Axis {
+	public class $name+PascalCase implements Axis {
 
 		public static final String TITLE = "$label";
 
-		public static final Component NA = new Component(0, "NA"[, $include+defaultValue...[, ]]);
-		[$component...[$NL]]
+		public static final Component NA = new Component(0, "NA"<<, $include+defaultValue...[, ]>>);
+		<<$component...[$NL]>>
 
 		private static final class Singleton {
-			private static final $name+snakeCaseToCamelCase+FirstUpperCase INSTANCE = new $name+snakeCaseToCamelCase+FirstUpperCase();
+			private static final $name+PascalCase INSTANCE = new $name+PascalCase();
 		}
 
 		// === STATIC METHODS === //
 
-		public static $name+snakeCaseToCamelCase+FirstUpperCase get() {
+		public static $name+PascalCase get() {
 			return Singleton.INSTANCE;
 		}
 
@@ -54,15 +54,15 @@ def type(axis)
 			return get().getComponent(name);
 		}
 
-		[$include+staticGetter...[$NL$NL]]
+		<<$include+staticGetter...[$NL$NL]>>
 
 		// === === //
 
-		private final Component$[] components;
+		private final Component[] components;
 		private final Map<String, Component> componentsByName;
 
-		private $name+snakeCaseToCamelCase+FirstUpperCase() {
-			[$components+load]
+		private $name+PascalCase() {
+			<<$components+load>>
 			this.componentsByName = toStream().collect(Collectors.toMap(Component::id, Function.identity()));
 		}
 
@@ -88,7 +88,7 @@ def type(axis)
 				}
 				@Override
 				public int size() {
-					return $name+snakeCaseToCamelCase+FirstUpperCase~.size() - 1;
+					return $name+PascalCase~.size() - 1;
 				}
 			};
 		}
@@ -108,7 +108,7 @@ def type(axis)
 		@Override
 		public Component getComponent(int index) {
 			if(index < 0 || index >= components.length) return NA;
-			return components$[index];
+			return components[index];
 		}
 
 		@Override
@@ -118,7 +118,7 @@ def type(axis)
 
 		@Override
 		public String toString() {
-			return "$name+snakeCaseToCamelCase+FirstUpperCase";
+			return "$name+PascalCase";
 		}
 
 
@@ -128,7 +128,7 @@ def type(axis)
 			private final String id;
 			$include+declaration...[$NL]
 
-			Component(int index, String id[, $include+parameter...[, ]]) {
+			Component(int index, String id<<, $include+parameter...[, ]>>) {
 				this.index = index;
 				this.id = id;
 				$include+assign...[$NL]
@@ -144,11 +144,11 @@ def type(axis)
 				return id;
 			}
 
-			[$include+getter...[$NL$NL]]
+			<<$include+getter...[$NL$NL]>>
 
 			@Override
 			public Axis axis() {
-				return $name+snakeCaseToCamelCase+FirstUpperCase.get();
+				return $name+PascalCase.get();
 			}
 
 			@Override
@@ -173,103 +173,103 @@ def type(axis)
 end
 
 def type(component)
-	public static final Component $name = new Component($index, "$id"[, "$label"][, $include+constructor...[, ]]);
+	public static final Component $name = new Component($index, "$id"<<, "$label">><<, $include+constructor...[, ]>>);
 end
 
-def attribute(name:label) trigger(declaration)
+def attribute(name, label) and trigger(declaration)
 	private final String $name+firstLowerCase;
 end
 
-def type(include) attribute(name:label) trigger(staticGetter)
-	public static $axis+snakeCaseToCamelCase+firstUpperCase.Component componentByLabel(String label) {
+def type(include) and attribute(name, label) and trigger(staticGetter)
+	public static $axis+PascalCase.Component componentByLabel(String label) {
 		return stream().filter(c -> c.label().equals(label)).findFirst().orElse(NA);
 	}
 end
 
-def type(include) attribute(type:continuous) trigger(staticGetter)
-	public static $axis+snakeCaseToCamelCase+firstUpperCase.Component componentBy$label+snakeCaseToCamelCase+firstUpperCase($name+snakeCaseToCamelCase+firstUpperCase.Range range) {
-		return stream().filter(c -> c.$label+snakeCaseToCamelCase+firstLowerCase().equals(range)).findFirst().orElse(NA);
+def type(include) and attribute(type, continuous) and trigger(staticGetter)
+	public static $axis+PascalCase.Component componentBy$label+PascalCase($name+PascalCase.Range range) {
+		return stream().filter(c -> c.$label+CamelCase().equals(range)).findFirst().orElse(NA);
 	}
 end
 
-def type(include) attribute(type:categorical) trigger(staticGetter)
-	public static $axis+snakeCaseToCamelCase+firstUpperCase.Component componentBy$label+snakeCaseToCamelCase+firstUpperCase($name+snakeCaseToCamelCase+firstUpperCase.Component component) {
-		return stream().filter(c -> c.$label+snakeCaseToCamelCase+firstLowerCase().equals(component)).findFirst().orElse(NA);
+def type(include) and attribute(type, categorical) and trigger(staticGetter)
+	public static $axis+PascalCase.Component componentBy$label+PascalCase($name+PascalCase.Component component) {
+		return stream().filter(c -> c.$label+CamelCase().equals(component)).findFirst().orElse(NA);
 	}
 end
 
-def type(include) attribute(type:continuous) trigger(declaration)
-	private final $name+snakeCaseToCamelCase+firstUpperCase.Range $label+snakeCaseToCamelCase+firstLowerCase;
+def type(include) and attribute(type, continuous) and trigger(declaration)
+	private final $name+PascalCase.Range $label+CamelCase;
 end
 
-def type(include) attribute(type:categorical) trigger(declaration)
-	private final $name+snakeCaseToCamelCase+firstUpperCase.Component $label+snakeCaseToCamelCase+firstLowerCase;
+def type(include) and attribute(type, categorical) and trigger(declaration)
+	private final $name+PascalCase.Component $label+CamelCase;
 end
 
-def attribute(name:label) trigger(getter)
-	public String $name+snakeCaseToCamelCase+firstLowerCase() {
-		return $name+snakeCaseToCamelCase+firstLowerCase;
+def attribute(name, label) and trigger(getter)
+	public String $name+CamelCase() {
+		return $name+CamelCase;
 	}
 end
 
-def trigger(getter) attribute(type:continuous)
-	public $name+snakeCaseToCamelCase+firstUpperCase.Range $label+snakeCaseToCamelCase+firstLowerCase() {
-		return $label+snakeCaseToCamelCase+firstLowerCase;
+def trigger(getter) and attribute(type, continuous)
+	public $name+PascalCase.Range $label+CamelCase() {
+		return $label+CamelCase;
 	}
 end
 
-def trigger(getter) attribute(type:categorical)
-	public $name+snakeCaseToCamelCase+firstUpperCase.Component $label+snakeCaseToCamelCase+firstLowerCase() {
-		return $label+snakeCaseToCamelCase+firstLowerCase;
+def trigger(getter) and attribute(type, categorical)
+	public $name+PascalCase.Component $label+CamelCase() {
+		return $label+CamelCase;
 	}
 end
 
 def trigger(toString)
-	sb.append(", $label+snakeCaseToCamelCase+firstLowerCase=").append($label+snakeCaseToCamelCase+firstLowerCase);
+	sb.append(", $label+CamelCase=").append($label+CamelCase);
 end
 
-def attribute(name:label) trigger(defaultValue)
+def attribute(name, label) and trigger(defaultValue)
 	"$id"
 end
 
-def trigger(defaultValue) attribute(type:categorical)
-	$name+snakeCaseToCamelCase+firstUpperCase.NA
+def trigger(defaultValue) and attribute(type, categorical)
+	$name+PascalCase.NA
 end
 
-def trigger(defaultValue) attribute(type:continuous)
-	$name+snakeCaseToCamelCase+firstUpperCase.component(0)
+def trigger(defaultValue) and attribute(type, continuous)
+	$name+PascalCase.component(0)
 end
 
-def attribute(name:label) trigger(parameter)
-	String $name+snakeCaseToCamelCase+firstLowerCase
+def attribute(name, label) and trigger(parameter)
+	String $name+CamelCase
 end
 
-def attribute(type:categorical) trigger(parameter)
-	$name+snakeCaseToCamelCase+firstUpperCase.Component $label+snakeCaseToCamelCase+firstLowerCase
+def attribute(type, categorical) and trigger(parameter)
+	$name+PascalCase.Component $label+CamelCase
 end
 
-def attribute(type:continuous) trigger(parameter)
-	$name+snakeCaseToCamelCase+firstUpperCase.Range $label+snakeCaseToCamelCase+firstLowerCase
+def attribute(type, continuous) and trigger(parameter)
+	$name+PascalCase.Range $label+CamelCase
 end
 
-def attribute(name:label) trigger(constructorFromTsv)
-	l.length > $index ? l$[$index] : "NA"
+def attribute(name, label) and trigger(constructorFromTsv)
+	l.length > $index ? l[$index] : "NA"
 end
 
-def trigger(constructorFromTsv) attribute(type:continuous)
-	l.length > $index ? $name+snakeCaseToCamelCase+firstUpperCase.rangeOf(Double.parseDouble(l$[$index])) : $name+snakeCaseToCamelCase+firstUpperCase.component(0)
+def trigger(constructorFromTsv) and attribute(type, continuous)
+	l.length > $index ? $name+PascalCase.rangeOf(Double.parseDouble(l[$index])) : $name+PascalCase.component(0)
 end
 
-def trigger(constructorFromTsv) attribute(type:categorical)
-	l.length > $index ? $name+snakeCaseToCamelCase+firstUpperCase.component(l$[$index]) : $name+snakeCaseToCamelCase+firstUpperCase.NA
+def trigger(constructorFromTsv) and attribute(type, categorical)
+	l.length > $index ? $name+PascalCase.component(l[$index]) : $name+PascalCase.NA
 end
 
 def trigger(constructor)
-	$name+snakeCaseToCamelCase+firstUpperCase.component("$id")
+	$name+PascalCase.component("$id")
 end
 
 def trigger(assign)
-	this.$label+snakeCaseToCamelCase+firstLowerCase = $label+snakeCaseToCamelCase+firstLowerCase;
+	this.$label+CamelCase = $label+CamelCase;
 end
 
 def trigger(put)
@@ -278,23 +278,23 @@ def trigger(put)
 end
 
 def trigger(field)
-	public static final Component $name+snakeCaseToCamelCase+FirstUpperCase = new Component($index, "$name"[, "$label"]);
+	public static final Component $name+PascalCase = new Component($index, "$name"<<, "$label">>);
 end
 
-def type(components) attribute(embedded:true) trigger(load)
-	this.components = new Component$[] {NA[, $component...[, ]]};
+def type(components) and attribute(embedded, true) and trigger(load)
+	this.components = new Component[] {NA<<, $component...[, ]>>};
 end
 
-def type(components) attribute(embedded:false) trigger(load)
-	Component$[] components = new Component$[0];
+def type(components) and attribute(embedded, false) and trigger(load)
+	Component[] components = new Component[0];
 	java.io.InputStream resource = getClass().getResourceAsStream("$resource");
-	if(resource == null) throw new IllegalStateException("$name+snakeCaseToCamelCase+firstUpperCase: Resource " + "$resource" + " not found");
+	if(resource == null) throw new IllegalStateException("$name+PascalCase: Resource " + "$resource" + " not found");
 	try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(resource))) {
 			components = Stream.concat(Stream.of(NA),
-			reader.lines().map(l -> l.split("\t")).map(l -> new Component(Integer.parseInt(l$[0]),l$[1][,$include+constructorFromTsv...[, ]]))
-			).toArray(Component$[]::new);
+			reader.lines().map(l -> l.split("\t")).map(l -> new Component(Integer.parseInt(l[0]),l[1]<<,$include+constructorFromTsv...[, ]>>))
+			).toArray(Component[]::new);
 		} catch (Exception e) {
-			io.intino.alexandria.logger.Logger.error("Failed to load components of $name+snakeCaseToCamelCase+firstUpperCase", e);
+			io.intino.alexandria.logger.Logger.error("Failed to load components of $name+PascalCase", e);
 		}
 		this.components = components;
 end

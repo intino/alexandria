@@ -1,4 +1,4 @@
-def type(resource & template)
+def type(resource, template)
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
@@ -6,7 +6,7 @@ def type(resource & template)
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	tools:context=".pages.$name+snakecaseToCamelCase+firstUpperCase~Activity">
+	tools:context=".pages.$name+PascalCase~Activity">
 
 	<$package+validPackage.mobile.android.displays.templates.$pageDisplay+firstUpperCase
 		android:id="@+id/$pageDisplayId+firstLowerCase"
@@ -16,7 +16,7 @@ def type(resource & template)
 </androidx.constraintlayout.widget.ConstraintLayout>
 end
 
-def type(resource & main)
+def type(resource, main)
     package $package+validPackage.mobile.android.pages
 
     import android.os.Bundle
@@ -24,7 +24,7 @@ def type(resource & main)
     import io.intino.alexandria.mobile.android.AlexandriaActivity
     import $package+validPackage.mobile.android.R
 
-    class $name+snakecaseToCamelCase+firstUpperCase~Activity : AlexandriaActivity("$name") {
+    class $name+PascalCase~Activity : AlexandriaActivity("$name") {
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
@@ -46,7 +46,7 @@ def type(resource)
     import io.intino.alexandria.mobile.android.AlexandriaActivity
     import $package+validPackage.mobile.android.R
 
-    class $name+snakecaseToCamelCase+firstUpperCase~Activity : AlexandriaActivity("$name") {
+    class $name+PascalCase~Activity : AlexandriaActivity("$name") {
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
@@ -60,11 +60,11 @@ def type(resource)
     }
 end
 
-def attribute(hasAbstract) trigger(origin)
+def attribute(hasAbstract) and trigger(origin)
 	../../src
 end
 
-def attribute(decorated) trigger(origin)
+def attribute(decorated) and trigger(origin)
 	../../gen
 end
 

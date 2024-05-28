@@ -1,118 +1,118 @@
-def type(column) trigger(toString)
+def type(column) and trigger(toString)
 	+ ", $name=" + $name()
 end
 
-def type(column) type(id) trigger(getter)
+def type(column) and type(id) and trigger(getter)
 	public long $name+firstLowerCase() {
 		return bitBuffer.getAlignedLong(0);
 	}
 end
 
-def type(column) type(long & unsigned) trigger(getter)
+def type(column) and type(long, unsigned) and trigger(getter)
 	public long $name+firstLowerCase() {
-		return bitBuffer.get$aligned~ULong[$bits+nbits]($offset[, $bits]);
+		return bitBuffer.get$aligned~ULong<<$bits+nbits>>($offset<<, $bits>>);
 	}
 end
 
-def type(column) type(long) trigger(getter)
+def type(column) and type(long) and trigger(getter)
 	public long $name+firstLowerCase() {
-		return bitBuffer.get$aligned~Long[$bits+nbits]($offset[, $bits]);
+		return bitBuffer.get$aligned~Long<<$bits+nbits>>($offset<<, $bits>>);
 	}
 end
 
-def type(column) type(int & unsigned) trigger(getter)
+def type(column) and type(int, unsigned) and trigger(getter)
 	public long $name+firstLowerCase() {
-		return bitBuffer.get$aligned~UInteger[$bits+nbits]($offset[, $bits]);
+		return bitBuffer.get$aligned~UInteger<<$bits+nbits>>($offset<<, $bits>>);
 	}
 end
 
-def type(column) type(int) trigger(getter)
+def type(column) and type(int) and trigger(getter)
 	public int $name+firstLowerCase() {
-		return bitBuffer.get$aligned~Integer[$bits+nbits]($offset[, $bits]);
+		return bitBuffer.get$aligned~Integer<<$bits+nbits>>($offset<<, $bits>>);
 	}
 end
 
-def type(column) type(short & unsigned) trigger(getter)
+def type(column) and type(short, unsigned) and trigger(getter)
 	public int $name+firstLowerCase() {
-		return bitBuffer.get$aligned~UShort[$bits+nbits]($offset[, $bits]);
+		return bitBuffer.get$aligned~UShort<<$bits+nbits>>($offset<<, $bits>>);
 	}
 end
 
-def type(column) type(short) trigger(getter)
+def type(column) and type(short) and trigger(getter)
 	public short $name+firstLowerCase() {
-		return bitBuffer.get$aligned~Short[$bits+nbits]($offset[, $bits]);
+		return bitBuffer.get$aligned~Short<<$bits+nbits>>($offset<<, $bits>>);
 	}
 end
 
-def type(column) type(byte & unsigned) trigger(getter)
+def type(column) and type(byte, unsigned) and trigger(getter)
 	public short $name+firstLowerCase() {
-		return bitBuffer.get$aligned~UByte[$bits+nbits]($offset[, $bits]);
+		return bitBuffer.get$aligned~UByte<<$bits+nbits>>($offset<<, $bits>>);
 	}
 end
 
-def type(column) type(byte) trigger(getter)
+def type(column) and type(byte) and trigger(getter)
 	public byte $name+firstLowerCase() {
-		return bitBuffer.get$aligned~Byte[$bits+nbits]($offset[, $bits]);
+		return bitBuffer.get$aligned~Byte<<$bits+nbits>>($offset<<, $bits>>);
 	}
 end
 
-def type(column & boolean) trigger(getter)
+def type(column, boolean) and trigger(getter)
 	public boolean $name+firstLowerCase() {
 		return bitBuffer.getBoolean($offset);
 	}
 end
 
-def type(column & float) trigger(getter)
+def type(column, float) and trigger(getter)
 	public float $name+firstLowerCase() {
 		return bitBuffer.get$aligned~Real$size~Bits($offset);
 	}
 end
 
-def type(column & double) trigger(getter)
+def type(column, double) and trigger(getter)
 	public double $name+firstLowerCase() {
 		return bitBuffer.get$aligned~Real$size~Bits($offset);
 	}
 end
 
-def type(column & datetime) trigger(getter)
+def type(column, datetime) and trigger(getter)
 	public $type $name+firstLowerCase() {
-		return java.time.Instant.ofEpochMilli(bitBuffer.get$aligned~Long[$bits+nbits]($offset[, $bits]));
+		return java.time.Instant.ofEpochMilli(bitBuffer.get$aligned~Long<<$bits+nbits>>($offset<<, $bits>>));
 	}
 end
 
-def type(column & date) trigger(getter)
+def type(column, date) and trigger(getter)
 	public $type $name+firstLowerCase() {
-		return java.time.LocalDate.ofEpochDay(Short.toUnsignedInt(bitBuffer.get$aligned~Short[$bits+nbits]($offset[, $bits])));
+		return java.time.LocalDate.ofEpochDay(Short.toUnsignedInt(bitBuffer.get$aligned~Short<<$bits+nbits>>($offset<<, $bits>>)));
 	}
 end
 
-def type(column & categorical) trigger(getter)
+def type(column, categorical) and trigger(getter)
 	public $type+firstUpperCase.Component $name+firstLowerCase() {
 		return $type+firstUpperCase.component((int)bitBuffer.getUIntegerNBits($offset, $bits));
 	}
 end
 
-def type(column & real) attribute(size:32) trigger(getter)
+def type(column, real) and attribute(size, 32) and trigger(getter)
 	public float $name+firstLowerCase() {
 		return bitBuffer.getAlignedReal$size~Bits($offset);
 	}
 end
 
-def type(column & real) trigger(getter)
+def type(column, real) and trigger(getter)
 	public double $name+firstLowerCase() {
 		return bitBuffer.getAlignedReal$size~Bits($offset);
 	}
 end
 
-def type(virtualColumn & primitive) trigger(abstract)
+def type(virtualColumn, primitive) and trigger(abstract)
 	public abstract $type+firstLowerCase $name+firstLowerCase();
 end
 
-def type(virtualColumn) trigger(abstract)
+def type(virtualColumn) and trigger(abstract)
 	public abstract $type+firstUpperCase $name+firstLowerCase();
 end
 
-def type(virtualColumn & primitive) trigger(implementation)
+def type(virtualColumn, primitive) and trigger(implementation)
 	@Override
 	public $type+firstLowerCase $name+firstLowerCase() {
 		// TODO: compute and return $name+firstLowerCase.
@@ -120,7 +120,7 @@ def type(virtualColumn & primitive) trigger(implementation)
 	}
 end
 
-def type(virtualColumn) trigger(implementation)
+def type(virtualColumn) and trigger(implementation)
 	@Override
 	public $type+firstUpperCase $name+firstLowerCase() {
 		// TODO: compute and return $name+firstLowerCase.
@@ -128,168 +128,168 @@ def type(virtualColumn) trigger(implementation)
 	}
 end
 
-def type(column & byte & unsigned) trigger(setter)
+def type(column, byte, unsigned) and trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase(byte $name+firstLowerCase) {
-		bitBuffer.set$aligned~UByte[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
+		bitBuffer.set$aligned~UByte<<$bits+nbits>>($offset<<, $bits>>, $name+firstLowerCase);
 		return this;
 	}
 end
 
-def type(column & byte) trigger(setter)
+def type(column, byte) and trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase(byte $name+firstLowerCase) {
-		bitBuffer.set$aligned~Byte[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
+		bitBuffer.set$aligned~Byte<<$bits+nbits>>($offset<<, $bits>>, $name+firstLowerCase);
 		return this;
 	}
 end
 
-def type(column & short & unsigned) trigger(setter)
+def type(column, short, unsigned) and trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase(short $name+firstLowerCase) {
-		bitBuffer.set$aligned~UShort[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
+		bitBuffer.set$aligned~UShort<<$bits+nbits>>($offset<<, $bits>>, $name+firstLowerCase);
 		return this;
 	}
 end
 
-def type(column & short) trigger(setter)
+def type(column, short) and trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase(short $name+firstLowerCase) {
-		bitBuffer.set$aligned~Short[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
+		bitBuffer.set$aligned~Short<<$bits+nbits>>($offset<<, $bits>>, $name+firstLowerCase);
 		return this;
 	}
 end
 
-def type(column) type(int & unsigned) trigger(setter)
+def type(column) and type(int, unsigned) and trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase(int $name+firstLowerCase) {
-		bitBuffer.set$aligned~UInteger[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
+		bitBuffer.set$aligned~UInteger<<$bits+nbits>>($offset<<, $bits>>, $name+firstLowerCase);
 		return this;
 	}
 end
 
-def type(column & int) trigger(setter)
+def type(column, int) and trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase(int $name+firstLowerCase) {
-		bitBuffer.set$aligned~Integer[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
+		bitBuffer.set$aligned~Integer<<$bits+nbits>>($offset<<, $bits>>, $name+firstLowerCase);
 		return this;
 	}
 end
 
-def type(column & boolean) trigger(setter)
+def type(column, boolean) and trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase(boolean $name+firstLowerCase) {
 		bitBuffer.setBoolean($offset, $name+firstLowerCase);
 		return this;
 	}
 end
 
-def type(column) type(id) trigger(setter)
+def type(column) and type(id) and trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase(long $name+firstLowerCase) {
 		bitBuffer.setAlignedLong(0, $name+firstLowerCase);
 		return this;
 	}
 end
 
-def type(column) type(long & unsigned) trigger(setter)
+def type(column) and type(long, unsigned) and trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase(long $name+firstLowerCase) {
-		bitBuffer.set$aligned~ULong[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
+		bitBuffer.set$aligned~ULong<<$bits+nbits>>($offset<<, $bits>>, $name+firstLowerCase);
 		return this;
 	}
 end
 
-def type(column) type(long) trigger(setter)
+def type(column) and type(long) and trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase(long $name+firstLowerCase) {
-		bitBuffer.set$aligned~Long[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
+		bitBuffer.set$aligned~Long<<$bits+nbits>>($offset<<, $bits>>, $name+firstLowerCase);
 		return this;
 	}
 end
 
-def type(column & datetime) trigger(setter)
+def type(column, datetime) and trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase($type $name+firstLowerCase) {
-		bitBuffer.set$aligned~Long[$bits+nbits]($offset[, $bits], $name+firstLowerCase.toEpochMilli());
+		bitBuffer.set$aligned~Long<<$bits+nbits>>($offset<<, $bits>>, $name+firstLowerCase.toEpochMilli());
 		return this;
 	}
 end
 
-def type(column & date) trigger(setter)
+def type(column, date) and trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase($type $name+firstLowerCase) {
-		bitBuffer.set$aligned~Short[$bits+nbits]($offset[, $bits], (short) $name+firstLowerCase.toEpochDay());
+		bitBuffer.set$aligned~Short<<$bits+nbits>>($offset<<, $bits>>, (short) $name+firstLowerCase.toEpochDay());
 		return this;
 	}
 end
 
-def type(column & integer) type(unsigned) trigger(setter)
+def type(column, integer) and type(unsigned) and trigger(setter)
 	public $owner+firstUpperCase~Builder $name+firstLowerCase(int $name+firstLowerCase) {
-		bitBuffer.set$aligned~UInteger[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
+		bitBuffer.set$aligned~UInteger<<$bits+nbits>>($offset<<, $bits>>, $name+firstLowerCase);
 		return this;
 	}
 end
 
 
-def type(column & integer) trigger(setter)
+def type(column, integer) and trigger(setter)
 	public $owner+firstUpperCase~Builder $name+firstLowerCase(int $name+firstLowerCase) {
-		bitBuffer.set$aligned~Integer[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
+		bitBuffer.set$aligned~Integer<<$bits+nbits>>($offset<<, $bits>>, $name+firstLowerCase);
 		return this;
 	}
 end
 
-def type(column & boolean) trigger(setter)
+def type(column, boolean) and trigger(setter)
 	public $owner+firstUpperCase~Builder $name+firstLowerCase(boolean $name+firstLowerCase) {
 		bitBuffer.setBoolean($offset, $name+firstLowerCase);
 		return this;
 	}
 end
 
-def type(column & float) trigger(setter)
+def type(column, float) and trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase(float $name+firstLowerCase) {
 		bitBuffer.set$aligned~Real$size~Bits($offset, $name+firstLowerCase);
 		return this;
 	}
 end
 
-def type(column & double) trigger(setter)
+def type(column, double) and trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase($type $name+firstLowerCase) {
 		bitBuffer.set$aligned~Real$size~Bits($offset, $name+firstLowerCase);
 		return this;
 	}
 end
 
-def type(column) type(longInteger & unsigned) trigger(setter)
+def type(column) and type(longInteger, unsigned) and trigger(setter)
 	public $owner+firstUpperCase~Builder $name+firstLowerCase(long $name+firstLowerCase) {
-		bitBuffer.set$aligned~ULong[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
+		bitBuffer.set$aligned~ULong<<$bits+nbits>>($offset<<, $bits>>, $name+firstLowerCase);
 		return this;
 	}
 end
 
-def type(column) type(longInteger) trigger(setter)
+def type(column) and type(longInteger) and trigger(setter)
 	public $owner+firstUpperCase~Builder $name+firstLowerCase(long $name+firstLowerCase) {
-		bitBuffer.set$aligned~Long[$bits+nbits]($offset[, $bits], $name+firstLowerCase);
+		bitBuffer.set$aligned~Long<<$bits+nbits>>($offset<<, $bits>>, $name+firstLowerCase);
 		return this;
 	}
 end
 
-def type(column) type(id) trigger(setter)
+def type(column) and type(id) and trigger(setter)
 	public $owner+firstUpperCase~Builder $name+firstLowerCase(long $name+firstLowerCase) {
 		bitBuffer.setAlignedLong(0, $name+firstLowerCase);
 		return this;
 	}
 end
 
-def type(column & datetime) trigger(setter)
+def type(column, datetime) and trigger(setter)
 	public $owner+firstUpperCase~Builder $name+firstLowerCase($type $name+firstLowerCase) {
-		bitBuffer.set$aligned~Long[$bits+nbits]($offset[, $bits], $name+firstLowerCase.toEpochMilli());
+		bitBuffer.set$aligned~Long<<$bits+nbits>>($offset<<, $bits>>, $name+firstLowerCase.toEpochMilli());
 		return this;
 	}
 end
 
-def type(column & date) trigger(setter)
+def type(column, date) and trigger(setter)
 	public $owner+firstUpperCase~Builder $name+firstLowerCase($type $name+firstLowerCase) {
-		bitBuffer.set$aligned~Short[$bits+nbits]($offset[, $bits], (short) $name+firstLowerCase.toEpochDay());
+		bitBuffer.set$aligned~Short<<$bits+nbits>>($offset<<, $bits>>, (short) $name+firstLowerCase.toEpochDay());
 		return this;
 	}
 end
 
-def type(column & id) trigger(getter)
+def type(column, id) and trigger(getter)
 	public long $name+firstLowerCase() {
 		return bitBuffer.getAlignedLong(0);
 	}
 end
 
-def type(column & categorical) trigger(setter)
+def type(column, categorical) and trigger(setter)
 	public $owner+firstUpperCase $name+firstLowerCase(String $name+firstLowerCase) {
 		bitBuffer.setUIntegerNBits($offset, $bits, $name+firstLowerCase == null ? (int) NULL : $type+firstUpperCase.component($name+firstLowerCase).index());
 		return this;

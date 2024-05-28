@@ -6,22 +6,22 @@ def type(theme)
     </resources>
 end
 
-def type(type & Normal)
+def type(type, Normal)
     Theme.Material3.Light
 end
 
-def type(type & Dark)
+def type(type, Dark)
     Theme.Material3.Dark
 end
 
 def type(format)
     <style name="$name">
-        [<item name="android:textSize">$defaultTextSize</item>]
+        <<~<item name="android:textSize">$defaultTextSize</item>~>>
         $attribute...[$NL]
     </style>
 end
 
-def type(attribute & sizeable)
+def type(attribute, sizeable)
     <item name="android:$topName">$left</item>
     <item name="android:$rightName">$right</item>
     <item name="android:$bottomName">$bottom</item>

@@ -1,15 +1,14 @@
 package io.intino.konos.builder.codegeneration;
 
+import io.intino.builder.PostCompileConfigurationParameterActionMessage;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
 import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.CompilationContext.DataHubManifest;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.builder.PostCompileConfigurationParameterActionMessage;
 import io.intino.konos.dsl.KonosGraph;
 import io.intino.konos.dsl.Sentinel;
 import io.intino.konos.dsl.Service;
@@ -17,7 +16,6 @@ import io.intino.konos.dsl.Subscriber;
 import io.intino.magritte.framework.Node;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
@@ -45,7 +43,7 @@ public class AbstractBoxRenderer extends Renderer {
 		sentinels(root);
 		terminal(root);
 		workflow(root);
-		Commons.writeFrame(context.gen(Target.Server), "AbstractBox", template().render(root.toFrame()));
+		Commons.writeFrame(context.gen(Target.Server), "AbstractBox", new AbstractBoxTemplate().render(root.toFrame(), Formatters.all));
 		context.compiledFiles().add(new OutputItem(sourceFileOf(graph), javaFile(gen(Target.Server), "AbstractBox").getAbsolutePath()));
 		notifyNewParameters();
 	}
@@ -76,7 +74,7 @@ public class AbstractBoxRenderer extends Renderer {
 				.filter(Sentinel::isFileListener)
 				.map(s -> s.asFileListener().file())
 				.map(Commons::extractParameters)
-				.flatMap(Collection::stream).collect(Collectors.toList()));
+				.flatMap(Collection::stream).toList());
 	}
 
 
@@ -260,7 +258,4 @@ public class AbstractBoxRenderer extends Renderer {
 		else builder.add("hasntParent", "");
 	}
 
-	private Template template() {
-		return Formatters.customize(new AbstractBoxTemplate());
-	}
 }

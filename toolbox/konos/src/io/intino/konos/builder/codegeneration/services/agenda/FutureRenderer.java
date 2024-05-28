@@ -2,14 +2,10 @@ package io.intino.konos.builder.codegeneration.services.agenda;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
-import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
-import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.dsl.Data;
 import io.intino.konos.dsl.Parameter;
 
@@ -17,8 +13,11 @@ import java.io.File;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import static io.intino.konos.builder.codegeneration.Formatters.all;
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
+import static io.intino.konos.builder.codegeneration.services.ui.Target.Server;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
+import static io.intino.konos.builder.helpers.Commons.writeFrame;
 import static io.intino.konos.dsl.Service.Agenda.Future;
 
 public class FutureRenderer extends Renderer {
@@ -44,21 +43,21 @@ public class FutureRenderer extends Renderer {
 	}
 
 	private void renderSrc(Frame frame) {
-		File agendaPackage = new File(src(Target.Server), "agenda");
+		File agendaPackage = new File(src(Server), "agenda");
 		File file = javaFile(agendaPackage, firstUpperCase(future.name$()));
 		if (file.exists()) return;
-		Commons.writeFrame(agendaPackage, firstUpperCase(future.name$()), template().render(frame));
+		writeFrame(agendaPackage, firstUpperCase(future.name$()), new FutureTemplate().render(frame, all));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(future), javaFile(agendaPackage, firstUpperCase(future.name$())).getAbsolutePath()));
 	}
 
 	private void renderAbstract(Frame frame) {
-		Commons.writeFrame(new File(gen(Target.Server), "agenda"), "Abstract" + firstUpperCase(future.name$()), abstractTemplate().render(frame));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(future), javaFile(new File(gen(Target.Server), "agenda"), "Abstract" + firstUpperCase(future.name$())).getAbsolutePath()));
+		writeFrame(new File(gen(Server), "agenda"), "Abstract" + firstUpperCase(future.name$()), new AbstractFutureTemplate().render(frame, all));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(future), javaFile(new File(gen(Server), "agenda"), "Abstract" + firstUpperCase(future.name$())).getAbsolutePath()));
 	}
 
 	private void renderSchema(Frame frame) {
-		Commons.writeFrame(new File(gen(Target.Server), "agenda"), firstUpperCase(future.name$()) + "Schema", schemaTemplate().render(frame));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(future), javaFile(new File(gen(Target.Server), "agenda"), firstUpperCase(future.name$()) + "Schema").getAbsolutePath()));
+		writeFrame(new File(gen(Server), "agenda"), firstUpperCase(future.name$()) + "Schema", new FutureSchemaTemplate().render(frame, all));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(future), javaFile(new File(gen(Server), "agenda"), firstUpperCase(future.name$()) + "Schema").getAbsolutePath()));
 	}
 
 	private FrameBuilder futureFrame() {
@@ -94,17 +93,5 @@ public class FutureRenderer extends Renderer {
 		String innerPackage = param.isObject() && param.asObject().isComponent() ? String.join(".", packageName(), "schemas.") : "";
 		if (param.isWord()) builder.add("type", "java.lang.String");
 		else builder.add("type", innerPackage + param.asType().type());
-	}
-
-	private Template abstractTemplate() {
-		return Formatters.customize(new AbstractFutureTemplate());
-	}
-
-	private Template template() {
-		return Formatters.customize(new FutureTemplate());
-	}
-
-	private Template schemaTemplate() {
-		return Formatters.customize(new FutureSchemaTemplate());
 	}
 }

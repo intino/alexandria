@@ -2,7 +2,6 @@ package io.intino.konos.builder.codegeneration.services.agenda;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
@@ -42,7 +41,7 @@ public class AgendaServiceRenderer extends Renderer {
 				.add("future", processFutures(agenda.futureList()));
 		if (!agenda.graph().schemaList().isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()).toFrame());
-		Commons.writeFrame(gen(Target.Server), "AgendaService", template().render(builder.toFrame()));
+		Commons.writeFrame(gen(Target.Server), "AgendaService", new AgendaServiceTemplate().render(builder.toFrame(), Formatters.all));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(agenda), javaFile(gen(Target.Server), "AgendaService").getAbsolutePath()));
 		for (Agenda.Future future : agenda.futureList()) new FutureRenderer(context, future).render();
 	}
@@ -81,9 +80,5 @@ public class AgendaServiceRenderer extends Renderer {
 		else builder.add("type", innerPackage + param.asType().type());
 		if (param.i$(Data.List.class)) builder.add("list");
 		return builder.toFrame();
-	}
-
-	private Template template() {
-		return Formatters.customize(new AgendaServiceTemplate());
 	}
 }

@@ -2,7 +2,6 @@ package io.intino.konos.builder.codegeneration;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
 import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
@@ -36,7 +35,7 @@ public class BoxRenderer extends Renderer {
 		if (hasModel) builder.add("tara", fillTara());
 		if (!graph.uiServiceList().isEmpty()) builder.add("hasUi", new FrameBuilder().add("package", packageName()));
 		context.compiledFiles().add(new OutputItem(src(Target.Server).getAbsolutePath(), javaFile(src(Target.Server), snakeCaseToCamelCase(name) + "Box").getAbsolutePath()));
-		Commons.writeFrame(src(Target.Server), snakeCaseToCamelCase(name) + "Box", template().render(builder.toFrame()));
+		Commons.writeFrame(src(Target.Server), snakeCaseToCamelCase(name) + "Box", new BoxTemplate().render(builder.toFrame(), Formatters.all));
 	}
 
 	private Frame fillTara() {
@@ -61,10 +60,6 @@ public class BoxRenderer extends Renderer {
 		if (!configuration.dsl().level().isModel())
 			dsls.add(configuration.generationPackage().toLowerCase() + "." + firstUpperCase(configuration.dsl().outDsl()));
 		return dsls.toArray(new String[0]);
-	}
-
-	private Template template() {
-		return Formatters.customize(new BoxTemplate());
 	}
 
 }

@@ -24,19 +24,19 @@ def type(manifest)
     }
 end
 
-def type(display & row)
+def type(display, row)
     "$name+firstUppercase" -> $name+firstUppercase~(context)
 end
 
-def type(display & mold)
+def type(display, mold)
     "$name+firstUppercase" -> $name+firstUppercase~(context)
 end
 
-def type(display & item)
+def type(display, item)
     "$name+firstUppercase" -> $name+firstUppercase~(context)
 end
 
-def type(display & template)
+def type(display, template)
     "$name+firstUppercase" -> $name+firstUppercase~(context)
 end
 

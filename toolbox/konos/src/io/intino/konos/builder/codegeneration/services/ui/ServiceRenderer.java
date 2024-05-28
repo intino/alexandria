@@ -2,8 +2,8 @@ package io.intino.konos.builder.codegeneration.services.ui;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.services.ui.templates.ServiceTemplate;
 import io.intino.konos.builder.codegeneration.ui.I18nRenderer;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
@@ -46,7 +46,7 @@ public class ServiceRenderer extends UIRenderer {
 			if (hasNotifiers) builder.add("notifiersImport", packageName()).add("requestersImport", packageName());
 		}
 		if (service.authentication() != null) builder.add("auth", service.authentication().by());
-		writeFrame(serviceFolder(gen(Target.Server)), serviceFilename(service.name$()), template().render(builder.toFrame()));
+		writeFrame(serviceFolder(gen(Target.Server)), serviceFilename(service.name$()), new ServiceTemplate().render(builder.toFrame(), Formatters.all));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(serviceFolder(gen(Target.Server)), serviceFilename(service.name$())).getAbsolutePath()));
 	}
 
@@ -94,10 +94,6 @@ public class ServiceRenderer extends UIRenderer {
 		if (display.requestList().stream().anyMatch(r -> r.responseType().equals(Asset)))
 			builder.add("asset", display.name$());
 		return builder;
-	}
-
-	private Template template() {
-		return addFormats(new ServiceTemplate());
 	}
 
 }

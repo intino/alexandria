@@ -1,39 +1,39 @@
-def type(display & accessible)
+def type(display, accessible)
 	import React from "react";
-	[$alexandriaBlockImport]
-	[$alexandriaTemplateStampImport]
-	[$alexandriaDisplayStampImport]
-	[$alexandriaComponentImport...[$NL]]
-	[$projectComponentImport...[$NL]]
-	[$parent+import]
-	[import $notDecorated+firstUpperCase~Notifier from "$notifierDirectory/notifiers/$notDecorated+firstUpperCase~Notifier";]
-	[import $notDecorated+firstUpperCase~Requester from "$requesterDirectory/requesters/$notDecorated+firstUpperCase~Requester";]
-	[$displayRegistration+import]
-	import $name+SnakeCaseToCamelCase+FirstUpperCase from './$name+SnakeCaseToCamelCase+FirstUpperCase';
+	<<$alexandriaBlockImport>>
+	<<$alexandriaTemplateStampImport>>
+	<<$alexandriaDisplayStampImport>>
+	<<$alexandriaComponentImport...[$NL]>>
+	<<$projectComponentImport...[$NL]>>
+	<<$parent+import>>
+	<<import $notDecorated+firstUpperCase~Notifier from "$notifierDirectory/notifiers/$notDecorated+firstUpperCase~Notifier";>>
+	<<import $notDecorated+firstUpperCase~Requester from "$requesterDirectory/requesters/$notDecorated+firstUpperCase~Requester";>>
+	<<$displayRegistration+import>>
+	import $name+PascalCase from './$name+PascalCase';
 
-	export default class $name+SnakeCaseToCamelCase+FirstUpperCase~Proxy extends $displayExtends {
+	export default class $name+PascalCase~Proxy extends $displayExtends {
 
 		constructor(props) {
 			super(props);
-			[this.notifier = new $notDecorated+firstUpperCase~Notifier(this);]
-			[this.requester = new $notDecorated+firstUpperCase~Requester(this);]
-			[$properties+initialization]
+			<<this.notifier = new $notDecorated+firstUpperCase~Notifier(this);>>
+			<<this.requester = new $notDecorated+firstUpperCase~Requester(this);>>
+			<<$properties+initialization>>
 		};
 
 	}
 
-	[$displayRegistration+declaration]
+	<<$displayRegistration+declaration>>
 end
 
-def type(display & noAbstract)
+def type(display, noAbstract)
 	import React from "react";
 	import { withStyles } from '@material-ui/core/styles';
-	[$alexandriaBlockImport]
-	[$alexandriaTemplateStampImport]
-	[$alexandriaDisplayStampImport]
-	[$alexandriaComponentImport...[$NL]]
-	[$projectComponentImport...[$NL]]
-	[$parent+import]
+	<<$alexandriaBlockImport>>
+	<<$alexandriaTemplateStampImport>>
+	<<$alexandriaDisplayStampImport>>
+	<<$alexandriaComponentImport...[$NL]>>
+	<<$projectComponentImport...[$NL]>>
+	<<$parent+import>>
 	$accessibleNotifierImport
 	import $name+firstUpperCase~Requester from "alexandria-ui-elements/gen/displays/requesters/$requester~Requester";
 	import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
@@ -47,29 +47,29 @@ def type(display & noAbstract)
 			super(props);
 			this.notifier = new $name+firstUpperCase~Notifier(this);
 			this.requester = new $name+firstUpperCase~Requester(this);
-			[$properties+initialization]
+			<<$properties+initialization>>
 		};
 
 		render() {
 			const display = !this.state.visible ? {display:'none'} : undefined;
 			const className = "layout vertical center-justified" + (this.hiddenClass() !== "" ? " " + this.hiddenClass() : "");
-			return [this.$baseMethod](
-				[$renderTag]
-					[$reference...[$NL]]
-					[$component...[$NL]]
-				[$renderTag+end]
+			return <<this.$baseMethod>>(
+				<<$renderTag>>
+					<<$reference...[$NL]>>
+					<<$component...[$NL]>>
+				<<$renderTag+end>>
 			);
 		}
 
 		$notification...[$NL$NL]
-		[$notifyProxyMethod]
+		<<$notifyProxyMethod>>
 	}
 
 	export default withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase));
 	DisplayFactory.register("$name+firstUpperCase", withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase)));
 end
 
-def type(accessibleNotifierImport & accessible)
+def type(accessibleNotifierImport, accessible)
 	import $name+firstUpperCase~Notifier from "$serviceName/gen/displays/notifiers/$name+firstUpperCase~Notifier";
 end
 
@@ -84,77 +84,77 @@ def type(notifyProxyMethod)
 	};
 end
 
-def type(display & collection)
+def type(display, collection)
 	import React from "react";
-	[$alexandriaBlockImport]
-	[$alexandriaTemplateStampImport]
-	[$alexandriaDisplayStampImport]
-	[$alexandriaComponentImport...[$NL]]
-	[$projectComponentImport...[$NL]]
-	[$parent+import]
-	[import $notDecorated+firstUpperCase~Notifier from "$notifierDirectory/notifiers/$notDecorated+firstUpperCase~Notifier";]
-	[import $notDecorated+firstUpperCase~Requester from "$requesterDirectory/requesters/$notDecorated+firstUpperCase~Requester";]
-	[$displayRegistration+import]
+	<<$alexandriaBlockImport>>
+	<<$alexandriaTemplateStampImport>>
+	<<$alexandriaDisplayStampImport>>
+	<<$alexandriaComponentImport...[$NL]>>
+	<<$projectComponentImport...[$NL]>>
+	<<$parent+import>>
+	<<import $notDecorated+firstUpperCase~Notifier from "$notifierDirectory/notifiers/$notDecorated+firstUpperCase~Notifier";>>
+	<<import $notDecorated+firstUpperCase~Requester from "$requesterDirectory/requesters/$notDecorated+firstUpperCase~Requester";>>
+	<<$displayRegistration+import>>
 
 	export default class $abstract$name+firstUpperCase extends $displayExtends {
 
 		constructor(props) {
 			super(props);
-			[this.notifier = new $notDecorated+firstUpperCase~Notifier(this);]
-			[this.requester = new $notDecorated+firstUpperCase~Requester(this);]
-			[$properties+initialization]
+			<<this.notifier = new $notDecorated+firstUpperCase~Notifier(this);>>
+			<<this.requester = new $notDecorated+firstUpperCase~Requester(this);>>
+			<<$properties+initialization>>
 		};
 
 	}
 
-	[$displayRegistration+declaration]
+	<<$displayRegistration+declaration>>
 end
 
 def type(display)
 	import React from "react";
-	[$alexandriaBlockImport]
-	[$alexandriaTemplateStampImport]
-	[$alexandriaDisplayStampImport]
-	[$alexandriaComponentImport...[$NL]]
-	[$projectComponentImport...[$NL]]
-	[$parent+import]
-	[import $notDecorated+firstUpperCase~Notifier from "$notifierDirectory/notifiers/$notDecorated+firstUpperCase~Notifier";]
-	[import $notDecorated+firstUpperCase~Requester from "$requesterDirectory/requesters/$notDecorated+firstUpperCase~Requester";]
-	[$displayRegistration+import]
+	<<$alexandriaBlockImport>>
+	<<$alexandriaTemplateStampImport>>
+	<<$alexandriaDisplayStampImport>>
+	<<$alexandriaComponentImport...[$NL]>>
+	<<$projectComponentImport...[$NL]>>
+	<<$parent+import>>
+	<<import $notDecorated+firstUpperCase~Notifier from "$notifierDirectory/notifiers/$notDecorated+firstUpperCase~Notifier";>>
+	<<import $notDecorated+firstUpperCase~Requester from "$requesterDirectory/requesters/$notDecorated+firstUpperCase~Requester";>>
+	<<$displayRegistration+import>>
 
 	export default class $abstract$name+firstUpperCase extends $displayExtends {
 
 		constructor(props) {
 			super(props);
-			[this.notifier = new $notDecorated+firstUpperCase~Notifier(this);]
-			[this.requester = new $notDecorated+firstUpperCase~Requester(this);]
-			[$properties+initialization]
+			<<this.notifier = new $notDecorated+firstUpperCase~Notifier(this);>>
+			<<this.requester = new $notDecorated+firstUpperCase~Requester(this);>>
+			<<$properties+initialization>>
 		};
 
 		render() {
 			const display = !this.state.visible ? {display:'none'} : undefined;
 			const className = "layout vertical center-justified" + (this.hiddenClass() !== "" ? " " + this.hiddenClass() : "");
-			return [this.$baseMethod](
-				[$renderTag]
-					[$reference...[$NL]]
-					[$component...[$NL]]
-				[$renderTag+end]
+			return <<this.$baseMethod>>(
+				<<$renderTag>>
+					<<$reference...[$NL]>>
+					<<$component...[$NL]>>
+				<<$renderTag+end>>
 			);
 		}
 	}
 
-	[$displayRegistration+declaration]
+	<<$displayRegistration+declaration>>
 end
 
-def type(displayRegistration) trigger(import)
+def type(displayRegistration) and trigger(import)
 	import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 end
 
-def type(displayRegistration & accessible) trigger(declaration)
-	DisplayFactory.register("$name+SnakeCaseToCamelCase+FirstUpperCase~Proxy", $name+SnakeCaseToCamelCase+FirstUpperCase~Proxy);
+def type(displayRegistration, accessible) and trigger(declaration)
+	DisplayFactory.register("$name+PascalCase~Proxy", $name+PascalCase~Proxy);
 end
 
-def type(displayRegistration) trigger(declaration)
+def type(displayRegistration) and trigger(declaration)
 	DisplayFactory.register("$name+firstUpperCase", $name+firstUpperCase);
 end
 
@@ -162,27 +162,27 @@ def type(alexandriaImport)
 	import Ui$name+firstUpperCase from "alexandria-ui-elements/src/displays/components/$name+firstUpperCase";
 end
 
-def type(alexandriaImport & embedded)
+def type(alexandriaImport, embedded)
 	import { Embedded$name+firstUpperCase as Ui$name+firstUpperCase } from "alexandria-ui-elements/src/displays/components/$name+firstUpperCase";
 end
 
 def type(alexandriaComponentImport)
-	import Ui$type+firstUpperCase$facet...[] from "alexandria-ui-elements/[$componentTarget]/displays/[$componentDirectory/]$type+firstUpperCase$facet...[]";
+	import Ui$type+firstUpperCase$facet...[] from "alexandria-ui-elements/<<$componentTarget>>/displays/<<$componentDirectory/>>$type+firstUpperCase$facet...[]";
 end
 
-def type(projectComponentImport & ownertemplatestamp)
+def type(projectComponentImport, ownertemplatestamp)
 	import Displays$name+firstUpperCase from "$ownerModuleName/gen/displays/templates/$name+firstUpperCase";
 end
 
 def type(projectComponentImport)
-	import Displays$name+firstUpperCase from "$serviceName/[$directory]/displays/[$componentDirectory/]$name+firstUpperCase";
+	import Displays$name+firstUpperCase from "$serviceName/<<$directory>>/displays/<<$componentDirectory/>>$name+firstUpperCase";
 end
 
-def type(displayExtends & generic & isExtensionOf)
+def type(displayExtends, generic, isExtensionOf)
 	Displays~$parent
 end
 
-def type(displayExtends & generic)
+def type(displayExtends, generic)
 	Ui~$parent
 end
 
@@ -190,31 +190,31 @@ def type(displayExtends)
 	Ui~$type+firstUpperCase
 end
 
-def type(renderTag & template) trigger(end)
+def type(renderTag, template) and trigger(end)
 	</UiBlock>
 end
 
-def type(renderTag & block) trigger(end)
+def type(renderTag, block) and trigger(end)
 	</UiBlock>
 end
 
-def type(renderTag & item) trigger(end)
+def type(renderTag, item) and trigger(end)
 	</div>
 end
 
-def type(renderTag) trigger(end)
+def type(renderTag) and trigger(end)
 	</React.Fragment>
 end
 
-def type(renderTag & template)
-	<UiBlock[$properties+common$properties+specific] style={{...this.props.style,...display}}>
+def type(renderTag, template)
+	<UiBlock<<$properties+common$properties+specific>> style={{...this.props.style,...display}}>
 end
 
-def type(renderTag & block)
-	<UiBlock[$properties+common$properties+specific] style={{...this.props.style,...display}}>
+def type(renderTag, block)
+	<UiBlock<<$properties+common$properties+specific>> style={{...this.props.style,...display}}>
 end
 
-def type(renderTag & item)
+def type(renderTag, item)
 	<div style={{width:"100%",height:"100%",...this.props.style,...this.style(),...display}} className={className}>
 end
 
@@ -222,34 +222,34 @@ def type(renderTag)
 	<React.Fragment>
 end
 
-def type(renderTagAttributes & block)
+def type(renderTagAttributes, block)
 	$properties+common$properties+specific
 end
 
 def type(renderTagAttributes)
 end
 
-def attribute(parent) trigger(import)
+def attribute(parent) and trigger(import)
 	import Displays$parent+firstUpperCase from "../../../src/displays/$parentDirectory/$parent+firstUpperCase";
 end
 
-def attribute(accessible) trigger(import)
+def attribute(accessible) and trigger(import)
 	import Ui$value+firstUpperCase from "alexandria-ui-elements/src/displays/ProxyDisplay";
 end
 
-def attribute(baseDisplay) trigger(import)
+def attribute(baseDisplay) and trigger(import)
 	import Ui$value+firstUpperCase from "alexandria-ui-elements/src/displays/Display";
 end
 
-def attribute(baseComponent) trigger(import)
+def attribute(baseComponent) and trigger(import)
 	import Ui$value+firstUpperCase from "alexandria-ui-elements/src/displays/components/Component";
 end
 
-def attribute(embeddedComponent) trigger(import)
+def attribute(embeddedComponent) and trigger(import)
 	import { Embedded$value+firstUpperCase as Ui$value+firstUpperCase } from "alexandria-ui-elements/src/displays/components/$value+firstUpperCase";
 end
 
-def attribute(component) trigger(import)
+def attribute(component) and trigger(import)
 	import Ui$value+firstUpperCase from "alexandria-ui-elements/src/displays/components/$value+firstUpperCase";
 end
 

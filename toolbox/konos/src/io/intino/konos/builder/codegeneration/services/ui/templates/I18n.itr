@@ -21,9 +21,9 @@ def type(i18n)
 			return new ArrayList<>(dictionaries.values());
 		}
 
-		[static {
+		<<static {
 			$translator...[$NL]
-		}]
+		}>>
 	}
 end
 

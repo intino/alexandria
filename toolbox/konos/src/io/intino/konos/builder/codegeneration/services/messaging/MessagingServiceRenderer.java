@@ -2,7 +2,6 @@ package io.intino.konos.builder.codegeneration.services.messaging;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
 import io.intino.itrules.formatters.StringFormatters;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Renderer;
@@ -15,6 +14,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+import static io.intino.konos.builder.codegeneration.Formatters.all;
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
@@ -33,6 +33,12 @@ public class MessagingServiceRenderer extends Renderer {
 	}
 
 	private void processService(Service.Messaging service) {
+		FrameBuilder builder = frameBuilder(service);
+		writeFrame(gen(Target.Server), nameOf(service), new MessagingServiceTemplate().render(builder.toFrame(), all));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Server), nameOf(service)).getAbsolutePath()));
+	}
+
+	private FrameBuilder frameBuilder(Service.Messaging service) {
 		FrameBuilder builder = new FrameBuilder("messaging").
 				add("name", service.name$()).
 				add("box", boxName()).
@@ -41,8 +47,7 @@ public class MessagingServiceRenderer extends Renderer {
 				add("request", processRequests(service.requestList(), service.context(), service.subscriptionModel().name()));
 		if (!service.graph().schemaList().isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()).toFrame());
-		writeFrame(gen(Target.Server), nameOf(service), template().render(builder.toFrame()));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Server), nameOf(service)).getAbsolutePath()));
+		return builder;
 	}
 
 	private String nameOf(Service.Messaging service) {
@@ -61,9 +66,4 @@ public class MessagingServiceRenderer extends Renderer {
 				add("path", customize("path", "service." + context + "." + request.path()));
 		return builder.toFrame();
 	}
-
-	private Template template() {
-		return customize(new MessagingServiceTemplate());
-	}
-
 }

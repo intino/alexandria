@@ -2,6 +2,7 @@ package io.intino.konos.builder.codegeneration.ui.resource;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.action.AccessibleDisplayActionRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.codegeneration.services.ui.templates.ResourceTemplate;
@@ -37,7 +38,7 @@ public class AccessibleDisplayRenderer extends UIRenderer {
 
 		builder.add("parameter", parameters(display));
 		if (target == Target.Server) {
-			Commons.writeFrame(resourceFolder(gen(target), target), resourceFilename(display.name$(), "ProxyResource"), setup(new ResourceTemplate()).render(builder.toFrame()));
+			Commons.writeFrame(resourceFolder(gen(target), target), resourceFilename(display.name$(), "ProxyResource"), new ResourceTemplate().render(builder.toFrame(), Formatters.all));
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(display), javaFile(resourceFolder(gen(target), target), resourceFilename(display.name$(), "ProxyResource")).getAbsolutePath()));
 		}
 

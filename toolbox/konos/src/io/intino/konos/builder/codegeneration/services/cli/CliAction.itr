@@ -2,8 +2,8 @@ def type(command)
 	package $package+validPackage.actions;
 
 	import io.intino.alexandria.cli.command.MessageProperties;
-    import io.intino.alexandria.cli.response.Text;[
-    $response+import]
+    import io.intino.alexandria.cli.response.Text;<<
+    $response+import>>
     import $package+validPackage.$box+FirstUpperCase~Box;
 
     public class $name+firstUppercase~Action {
@@ -16,7 +16,7 @@ def type(command)
     		return null;
     	}
 
-        [$response+method...[$NL]]
+        <<$response+method...[$NL]>>
     }
 end
 
@@ -26,7 +26,7 @@ def type(condition)
     }
 end
 
-def type(parameter & list)
+def type(parameter, list)
     public List<String> $name;
 end
 
@@ -34,35 +34,35 @@ def type(parameter)
     public String $name;
 end
 
-def type(response & multiline) trigger(type)
+def type(response, multiline) and trigger(type)
     MultiLineProvider
 end
 
-def type(response & attachment) trigger(type)
+def type(response, attachment) and trigger(type)
     io.intino.alexandria.Resource
 end
 
-def type(response & confirmation) trigger(type)
+def type(response, confirmation) and trigger(type)
     io.intino.alexandria.cli.response.QuestionProvider
 end
 
-def type(response) trigger(type)
+def type(response) and trigger(type)
     String
 end
 
-def type(response & multiline) trigger(import)
+def type(response, multiline) and trigger(import)
     import $package+validPackage.cli.commands.$command+firstUppercase~Command.MultiLineProvider;
 end
 
-def type(response) trigger(type)
+def type(response) and trigger(type)
     io.intino.alexandria.cli.response.Text
 end
 
-def type(response & confirmation) trigger(method)
+def type(response, confirmation) and trigger(method)
     $option...[$NL]
 end
 
-def type(response) trigger(method)
+def type(response) and trigger(method)
 end
 
 def type(option)

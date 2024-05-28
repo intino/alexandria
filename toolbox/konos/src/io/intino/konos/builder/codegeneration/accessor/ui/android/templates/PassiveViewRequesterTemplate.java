@@ -1,39 +1,53 @@
 package io.intino.konos.builder.codegeneration.accessor.ui.android.templates;
 
-import io.intino.itrules.RuleSet;
-import io.intino.itrules.Template;
+import io.intino.itrules.template.Rule;
+import io.intino.itrules.template.Template;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static io.intino.itrules.template.condition.predicates.Predicates.*;
+import static io.intino.itrules.template.outputs.Outputs.*;
 
 public class PassiveViewRequesterTemplate extends Template {
 
-	public RuleSet ruleSet() {
-		return new RuleSet().add(
-				rule().condition((type("display"))).output(literal("package ")).output(mark("package")).output(literal(".mobile.displays.requesters\n\nimport io.intino.alexandria.mobile.Application\nimport io.intino.alexandria.mobile.UiMessage\nimport io.intino.alexandria.mobile.util.Json\nimport io.intino.alexandria.mobile.util.Uri\n\nimport ")).output(mark("package")).output(literal(".mobile.displays.")).output(expression().output(mark("packageType")).output(literal("s."))).output(mark("name", "firstUpperCase")).output(mark("proxy")).output(literal("\n")).output(mark("schemaImport")).output(literal("\n\nopen class ")).output(mark("name", "firstUpperCase")).output(mark("proxy")).output(literal("Requester(private var element: ")).output(mark("name", "firstUpperCase")).output(mark("proxy")).output(literal(") : ")).output(mark("parentType")).output(literal("(element) {\n    ")).output(expression().output(mark("request").multiple("\n"))).output(literal("\n}")),
-				rule().condition((attribute("accessible")), (trigger("proxy"))).output(literal("Proxy")),
-				rule().condition((trigger("proxy"))),
-				rule().condition((attribute("extensionof")), (trigger("parenttype"))).output(mark("parent", "firstUpperCase")).output(literal("Requester")),
-				rule().condition((trigger("parenttype"))).output(literal("io.intino.alexandria.mobile.displays.requesters.")).output(expression().output(mark("type", "class", "FirstUpperCase"))).output(literal("Requester")),
-				rule().condition((type("parameter")), (trigger("request"))).output(literal("fun ")).output(mark("name")).output(literal("(value: String) {\n    ")).output(mark("method")).output(literal("(UiMessage(\"")).output(mark("name")).output(literal("\", \"")).output(mark("display", "lowercase")).output(literal("\", element.shortId(), ")).output(mark("parameter")).output(mark("nullParameter")).output(literal(", element.owner(), element.context()), element.ownerUnit());\n}")),
-				rule().condition((trigger("request"))).output(literal("fun ")).output(mark("name")).output(literal("(")).output(expression().output(mark("parameterSignature")).output(literal(": ")).output(mark("customParameterType"))).output(literal(") {\n    ")).output(mark("method")).output(literal("(UiMessage(\"")).output(mark("name")).output(literal("\", \"")).output(mark("display", "lowercase")).output(literal("\", element.shortId(), ")).output(mark("parameter")).output(mark("nullParameter")).output(literal(", element.owner(), element.context()), element.ownerUnit());\n}")),
-				rule().condition((type("object")), (trigger("parameter"))).output(literal("Uri.encode(Json.stringify(value, ")).output(mark("type")).output(literal(".serializer()))")),
-				rule().condition((allTypes("list", "file")), (trigger("parameter"))).output(literal("if (value != null) Uri.encode(Json.stringify(arrayListOf(\"BASE64:\" + io.intino.alexandria.mobile.util.Base64.encoder.encode(value).decodeToString()))) else null")),
-				rule().condition((type("list")), (trigger("parameter"))).output(literal("Uri.encode(Json.stringify(value))")),
-				rule().condition((type("file")), (trigger("parameter"))).output(literal("if (value != null) \"BASE64:\" + io.intino.alexandria.mobile.util.Base64.encoder.encode(value).decodeToString() else null")),
-				rule().condition((type("boolean")), (trigger("parameter"))).output(literal("value.toString()")),
-				rule().condition((type("LongInteger")), (trigger("parameter"))).output(literal("value.toString()")),
-				rule().condition((type("Integer")), (trigger("parameter"))).output(literal("value.toString()")),
-				rule().condition((type("Real")), (trigger("parameter"))).output(literal("value.toString()")),
-				rule().condition((type("Date")), (trigger("parameter"))).output(literal("value.toEpochMilliseconds().toString()")),
-				rule().condition((type("DateTime")), (trigger("parameter"))).output(literal("value.toEpochMilliseconds().toString()")),
-				rule().condition((trigger("parameter"))).output(literal("Uri.encode(value)")),
-				rule().condition((attribute("upload")), (trigger("method"))).output(literal("Application.fileService()!!.upload")),
-				rule().condition((attribute("download")), (trigger("method"))).output(literal("Application.fileService()!!.download")),
-				rule().condition((trigger("method"))).output(literal("Application.pushService(element.activity())!!.send")),
-				rule().condition((type("schemaImport"))).output(literal("import ")).output(mark("package")).output(literal(".mobile.schemas.*;")),
-				rule().condition((allTypes("parameterType", "date"))).output(literal("kotlinx.datetime.Instant")),
-				rule().condition((allTypes("parameterType", "datetime"))).output(literal("kotlinx.datetime.Instant")),
-				rule().condition((allTypes("parameterType", "integer"))).output(literal("Int")),
-				rule().condition((allTypes("parameterType", "file"))).output(literal("ByteArray?")),
-				rule().condition((type("parameterType"))).output(mark("value"))
-		);
+	public List<Rule> ruleSet() {
+		List<Rule> rules = new ArrayList<>();
+		rules.add(rule().condition(allTypes("display")).output(literal("package ")).output(placeholder("package")).output(literal(".mobile.displays.requesters\n\nimport io.intino.alexandria.mobile.Application\nimport io.intino.alexandria.mobile.UiMessage\nimport io.intino.alexandria.mobile.util.Json\nimport io.intino.alexandria.mobile.util.Uri\n\nimport ")).output(placeholder("package")).output(literal(".mobile.displays.")).output(expression().output(placeholder("packageType")).output(literal("s."))).output(placeholder("name", "firstUpperCase")).output(placeholder("proxy")).output(literal("\n")).output(placeholder("schemaImport")).output(literal("\n\nopen class ")).output(placeholder("name", "firstUpperCase")).output(placeholder("proxy")).output(literal("Requester(private var element: ")).output(placeholder("name", "firstUpperCase")).output(placeholder("proxy")).output(literal(") : ")).output(placeholder("parentType")).output(literal("(element) {\n    ")).output(expression().output(placeholder("request").multiple("\n"))).output(literal("\n}")));
+		rules.add(rule().condition(all(attribute("accessible"), trigger("proxy"))).output(literal("Proxy")));
+		rules.add(rule().condition(trigger("proxy")));
+		rules.add(rule().condition(all(attribute("extensionof"), trigger("parenttype"))).output(placeholder("parent", "firstUpperCase")).output(literal("Requester")));
+		rules.add(rule().condition(trigger("parenttype")).output(literal("io.intino.alexandria.mobile.displays.requesters.")).output(expression().output(placeholder("type", "class", "FirstUpperCase"))).output(literal("Requester")));
+		rules.add(rule().condition(all(allTypes("parameter"), trigger("request"))).output(literal("fun ")).output(placeholder("name")).output(literal("(value: String) {\n    ")).output(placeholder("method")).output(literal("(UiMessage(\"")).output(placeholder("name")).output(literal("\", \"")).output(placeholder("display", "lowercase")).output(literal("\", element.shortId(), ")).output(placeholder("parameter")).output(placeholder("nullParameter")).output(literal(", element.owner(), element.context()), element.ownerUnit());\n}")));
+		rules.add(rule().condition(trigger("request")).output(literal("fun ")).output(placeholder("name")).output(literal("(")).output(expression().output(placeholder("parameterSignature")).output(literal(": ")).output(placeholder("customParameterType"))).output(literal(") {\n    ")).output(placeholder("method")).output(literal("(UiMessage(\"")).output(placeholder("name")).output(literal("\", \"")).output(placeholder("display", "lowercase")).output(literal("\", element.shortId(), ")).output(placeholder("parameter")).output(placeholder("nullParameter")).output(literal(", element.owner(), element.context()), element.ownerUnit());\n}")));
+		rules.add(rule().condition(all(allTypes("object"), trigger("parameter"))).output(literal("Uri.encode(Json.stringify(value, ")).output(placeholder("type")).output(literal(".serializer()))")));
+		rules.add(rule().condition(all(allTypes("list", "file"), trigger("parameter"))).output(literal("if (value != null) Uri.encode(Json.stringify(arrayListOf(\"BASE64:\" + io.intino.alexandria.mobile.util.Base64.encoder.encode(value).decodeToString()))) else null")));
+		rules.add(rule().condition(all(allTypes("list"), trigger("parameter"))).output(literal("Uri.encode(Json.stringify(value))")));
+		rules.add(rule().condition(all(allTypes("file"), trigger("parameter"))).output(literal("if (value != null) \"BASE64:\" + io.intino.alexandria.mobile.util.Base64.encoder.encode(value).decodeToString() else null")));
+		rules.add(rule().condition(all(allTypes("boolean"), trigger("parameter"))).output(literal("value.toString()")));
+		rules.add(rule().condition(all(allTypes("LongInteger"), trigger("parameter"))).output(literal("value.toString()")));
+		rules.add(rule().condition(all(allTypes("Integer"), trigger("parameter"))).output(literal("value.toString()")));
+		rules.add(rule().condition(all(allTypes("Real"), trigger("parameter"))).output(literal("value.toString()")));
+		rules.add(rule().condition(all(allTypes("Date"), trigger("parameter"))).output(literal("value.toEpochMilliseconds().toString()")));
+		rules.add(rule().condition(all(allTypes("DateTime"), trigger("parameter"))).output(literal("value.toEpochMilliseconds().toString()")));
+		rules.add(rule().condition(trigger("parameter")).output(literal("Uri.encode(value)")));
+		rules.add(rule().condition(all(attribute("upload"), trigger("method"))).output(literal("Application.fileService()!!.upload")));
+		rules.add(rule().condition(all(attribute("download"), trigger("method"))).output(literal("Application.fileService()!!.download")));
+		rules.add(rule().condition(trigger("method")).output(literal("Application.pushService(element.activity())!!.send")));
+		rules.add(rule().condition(allTypes("schemaImport")).output(literal("import ")).output(placeholder("package")).output(literal(".mobile.schemas.*;")));
+		rules.add(rule().condition(allTypes("parameterType", "date")).output(literal("kotlinx.datetime.Instant")));
+		rules.add(rule().condition(allTypes("parameterType", "datetime")).output(literal("kotlinx.datetime.Instant")));
+		rules.add(rule().condition(allTypes("parameterType", "integer")).output(literal("Int")));
+		rules.add(rule().condition(allTypes("parameterType", "file")).output(literal("ByteArray?")));
+		rules.add(rule().condition(allTypes("parameterType")).output(placeholder("value")));
+		return rules;
+	}
+
+	public String render(Object object) {
+		return new io.intino.itrules.Engine(this).render(object);
+	}
+
+	public String render(Object object, java.util.Map<String, io.intino.itrules.Formatter> formatters) {
+		return new io.intino.itrules.Engine(this).addAll(formatters).render(object);
 	}
 }

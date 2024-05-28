@@ -1,19 +1,34 @@
 package io.intino.konos.builder.codegeneration.accessor.ui.android.templates;
 
-import io.intino.itrules.RuleSet;
-import io.intino.itrules.Template;
+import io.intino.itrules.template.Rule;
+import io.intino.itrules.template.Template;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static io.intino.itrules.template.condition.predicates.Predicates.*;
+import static io.intino.itrules.template.outputs.Outputs.literal;
+import static io.intino.itrules.template.outputs.Outputs.placeholder;
 
 public class PageTemplate extends Template {
 
-	public RuleSet ruleSet() {
-		return new RuleSet().add(
-				rule().condition((allTypes("resource", "template"))).output(literal("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<androidx.constraintlayout.widget.ConstraintLayout\nxmlns:android=\"http://schemas.android.com/apk/res/android\"\nxmlns:alexandria=\"http://schemas.android.com/apk/res-auto\"\nxmlns:tools=\"http://schemas.android.com/tools\"\nandroid:layout_width=\"match_parent\"\nandroid:layout_height=\"match_parent\"\ntools:context=\".pages.")).output(mark("name", "snakecaseToCamelCase", "firstUpperCase")).output(literal("Activity\">\n\n<")).output(mark("package", "validPackage")).output(literal(".mobile.android.displays.templates.")).output(mark("pageDisplay", "firstUpperCase")).output(literal("\n\tandroid:id=\"@+id/")).output(mark("pageDisplayId", "firstLowerCase")).output(literal("\"\n\tandroid:layout_width=\"match_parent\"\n\tandroid:layout_height=\"match_parent\">\n</")).output(mark("package", "validPackage")).output(literal(".mobile.android.displays.templates.")).output(mark("pageDisplay", "firstUpperCase")).output(literal(">\n</androidx.constraintlayout.widget.ConstraintLayout>")),
-				rule().condition((allTypes("resource", "main"))).output(literal("package ")).output(mark("package", "validPackage")).output(literal(".mobile.android.pages\n\nimport android.os.Bundle\nimport io.intino.alexandria.mobile.Application\nimport io.intino.alexandria.mobile.android.AlexandriaActivity\nimport ")).output(mark("package", "validPackage")).output(literal(".mobile.android.R\n\nclass ")).output(mark("name", "snakecaseToCamelCase", "firstUpperCase")).output(literal("Activity : AlexandriaActivity(\"")).output(mark("name")).output(literal("\") {\n\n    override fun onCreate(savedInstanceState: Bundle?) {\n        super.onCreate(savedInstanceState)\n        Application.onVerifyPermissions { type, callback -> verifyPermissions(type, callback) }\n        Application.onPickFile { callback -> pickFile(callback) }\n        Application.start(\"")).output(mark("name")).output(literal("\", \"")).output(mark("url")).output(literal("\", pushService(withParams(\"")).output(mark("url")).output(mark("path")).output(literal("\")) { showNoConnectionDialog(); })\n        setContentView(R.layout.")).output(mark("name", "camelCaseToUnderscoreCase", "lowerCase")).output(literal("_activity)\n    }\n\n\n}")),
-				rule().condition((type("resource"))).output(literal("package ")).output(mark("package", "validPackage")).output(literal(".mobile.android.pages\n\nimport android.os.Bundle\nimport io.intino.alexandria.mobile.Application\nimport io.intino.alexandria.mobile.android.AlexandriaActivity\nimport ")).output(mark("package", "validPackage")).output(literal(".mobile.android.R\n\nclass ")).output(mark("name", "snakecaseToCamelCase", "firstUpperCase")).output(literal("Activity : AlexandriaActivity(\"")).output(mark("name")).output(literal("\") {\n\n    override fun onCreate(savedInstanceState: Bundle?) {\n        super.onCreate(savedInstanceState)\n        Application.onVerifyPermissions { type, callback -> verifyPermissions(type, callback) }\n        Application.onPickFile { callback -> pickFile(callback) }\n        Application.close(\"")).output(mark("name")).output(literal("\")\n        Application.open(\"")).output(mark("name")).output(literal("\", \"")).output(mark("url")).output(literal("\", pushService(withParams(\"")).output(mark("url")).output(mark("path")).output(literal("\")) { showNoConnectionDialog(); })\n        setContentView(R.layout.")).output(mark("name", "camelCaseToUnderscoreCase", "lowerCase")).output(literal("_activity)\n    }\n\n}")),
-				rule().condition((attribute("hasabstract")), (trigger("origin"))).output(literal("../../src")),
-				rule().condition((attribute("decorated")), (trigger("origin"))).output(literal("../../gen")),
-				rule().condition((trigger("origin"))).output(literal("..")),
-				rule().condition((type("accessibleImport"))).output(literal("import ")).output(mark("service", "firstUpperCase")).output(literal("AccessibleDisplays from '")).output(mark("elements")).output(literal("/gen/AccessibleDisplays';"))
-		);
+	public List<Rule> ruleSet() {
+		List<Rule> rules = new ArrayList<>();
+		rules.add(rule().condition(allTypes("resource", "template")).output(literal("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<androidx.constraintlayout.widget.ConstraintLayout\nxmlns:android=\"http://schemas.android.com/apk/res/android\"\nxmlns:alexandria=\"http://schemas.android.com/apk/res-auto\"\nxmlns:tools=\"http://schemas.android.com/tools\"\nandroid:layout_width=\"match_parent\"\nandroid:layout_height=\"match_parent\"\ntools:context=\".pages.")).output(placeholder("name", "PascalCase")).output(literal("Activity\">\n\n<")).output(placeholder("package", "validPackage")).output(literal(".mobile.android.displays.templates.")).output(placeholder("pageDisplay", "firstUpperCase")).output(literal("\n\tandroid:id=\"@+id/")).output(placeholder("pageDisplayId", "firstLowerCase")).output(literal("\"\n\tandroid:layout_width=\"match_parent\"\n\tandroid:layout_height=\"match_parent\">\n</")).output(placeholder("package", "validPackage")).output(literal(".mobile.android.displays.templates.")).output(placeholder("pageDisplay", "firstUpperCase")).output(literal(">\n</androidx.constraintlayout.widget.ConstraintLayout>")));
+		rules.add(rule().condition(allTypes("resource", "main")).output(literal("package ")).output(placeholder("package", "validPackage")).output(literal(".mobile.android.pages\n\nimport android.os.Bundle\nimport io.intino.alexandria.mobile.Application\nimport io.intino.alexandria.mobile.android.AlexandriaActivity\nimport ")).output(placeholder("package", "validPackage")).output(literal(".mobile.android.R\n\nclass ")).output(placeholder("name", "PascalCase")).output(literal("Activity : AlexandriaActivity(\"")).output(placeholder("name")).output(literal("\") {\n\n    override fun onCreate(savedInstanceState: Bundle?) {\n        super.onCreate(savedInstanceState)\n        Application.onVerifyPermissions { type, callback -> verifyPermissions(type, callback) }\n        Application.onPickFile { callback -> pickFile(callback) }\n        Application.start(\"")).output(placeholder("name")).output(literal("\", \"")).output(placeholder("url")).output(literal("\", pushService(withParams(\"")).output(placeholder("url")).output(placeholder("path")).output(literal("\")) { showNoConnectionDialog(); })\n        setContentView(R.layout.")).output(placeholder("name", "camelCaseToUnderscoreCase", "lowerCase")).output(literal("_activity)\n    }\n\n\n}")));
+		rules.add(rule().condition(allTypes("resource")).output(literal("package ")).output(placeholder("package", "validPackage")).output(literal(".mobile.android.pages\n\nimport android.os.Bundle\nimport io.intino.alexandria.mobile.Application\nimport io.intino.alexandria.mobile.android.AlexandriaActivity\nimport ")).output(placeholder("package", "validPackage")).output(literal(".mobile.android.R\n\nclass ")).output(placeholder("name", "PascalCase")).output(literal("Activity : AlexandriaActivity(\"")).output(placeholder("name")).output(literal("\") {\n\n    override fun onCreate(savedInstanceState: Bundle?) {\n        super.onCreate(savedInstanceState)\n        Application.onVerifyPermissions { type, callback -> verifyPermissions(type, callback) }\n        Application.onPickFile { callback -> pickFile(callback) }\n        Application.close(\"")).output(placeholder("name")).output(literal("\")\n        Application.open(\"")).output(placeholder("name")).output(literal("\", \"")).output(placeholder("url")).output(literal("\", pushService(withParams(\"")).output(placeholder("url")).output(placeholder("path")).output(literal("\")) { showNoConnectionDialog(); })\n        setContentView(R.layout.")).output(placeholder("name", "camelCaseToUnderscoreCase", "lowerCase")).output(literal("_activity)\n    }\n\n}")));
+		rules.add(rule().condition(all(attribute("hasabstract"), trigger("origin"))).output(literal("../../src")));
+		rules.add(rule().condition(all(attribute("decorated"), trigger("origin"))).output(literal("../../gen")));
+		rules.add(rule().condition(trigger("origin")).output(literal("..")));
+		rules.add(rule().condition(allTypes("accessibleImport")).output(literal("import ")).output(placeholder("service", "firstUpperCase")).output(literal("AccessibleDisplays from '")).output(placeholder("elements")).output(literal("/gen/AccessibleDisplays';")));
+		return rules;
+	}
+
+	public String render(Object object) {
+		return new io.intino.itrules.Engine(this).render(object);
+	}
+
+	public String render(Object object, java.util.Map<String, io.intino.itrules.Formatter> formatters) {
+		return new io.intino.itrules.Engine(this).addAll(formatters).render(object);
 	}
 }

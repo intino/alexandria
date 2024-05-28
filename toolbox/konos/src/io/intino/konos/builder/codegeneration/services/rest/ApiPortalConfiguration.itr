@@ -1,8 +1,8 @@
 def type(api)
 	{
-	  "urls": $[
+	  "urls": [
 		$url...[,$NL]
-	  $],
+	  ],
 	  "title": "$title",
 	  "subtitle": "$subtitle",
 	  "background": "$background",

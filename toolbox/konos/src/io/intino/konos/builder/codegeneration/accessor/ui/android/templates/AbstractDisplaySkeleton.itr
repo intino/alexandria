@@ -1,31 +1,31 @@
-def type(display & accessible)
+def type(display, accessible)
 	import React from "react";
-	[$alexandriaBlockImport]
-	[$alexandriaTemplateStampImport]
-	[$alexandriaDisplayStampImport]
-	[$alexandriaComponentImport...[$NL]]
-	[$projectComponentImport...[$NL]]
-	[$parent+import]
-	[import $notDecorated+firstUpperCase~Notifier from "$notifierDirectory/notifiers/$notDecorated+firstUpperCase~Notifier";]
-	[import $notDecorated+firstUpperCase~Requester from "$requesterDirectory/requesters/$notDecorated+firstUpperCase~Requester";]
-	[$displayRegistration+import]
-	import $name+SnakeCaseToCamelCase+FirstUpperCase from './$name+SnakeCaseToCamelCase+FirstUpperCase';
+	<<$alexandriaBlockImport>>
+	<<$alexandriaTemplateStampImport>>
+	<<$alexandriaDisplayStampImport>>
+	<<$alexandriaComponentImport...[$NL]>>
+	<<$projectComponentImport...[$NL]>>
+	<<$parent+import>>
+	<<import $notDecorated+firstUpperCase~Notifier from "$notifierDirectory/notifiers/$notDecorated+firstUpperCase~Notifier";>>
+	<<import $notDecorated+firstUpperCase~Requester from "$requesterDirectory/requesters/$notDecorated+firstUpperCase~Requester";>>
+	<<$displayRegistration+import>>
+	import $name+PascalCase from './$name+PascalCase';
 
-	export default class $name+SnakeCaseToCamelCase+FirstUpperCase~Proxy extends $displayExtends {
+	export default class $name+PascalCase~Proxy extends $displayExtends {
 
 		constructor(props) {
 			super(props);
-			[this.notifier = new $notDecorated+firstUpperCase~Notifier(this);]
-			[this.requester = new $notDecorated+firstUpperCase~Requester(this);]
-			[$properties+initialization]
+			<<this.notifier = new $notDecorated+firstUpperCase~Notifier(this);>>
+			<<this.requester = new $notDecorated+firstUpperCase~Requester(this);>>
+			<<$properties+initialization>>
 		};
 
 	}
 
-	[$displayRegistration+declaration]
+	<<$displayRegistration+declaration>>
 end
 
-def type(display & res & noAbstract & scrollable)
+def type(display, res, noAbstract, scrollable)
     <?xml version="1.0" encoding="utf-8"?>
     <com.google.android.flexbox.FlexboxLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -42,14 +42,14 @@ def type(display & res & noAbstract & scrollable)
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 alexandria:flexDirection="$layout">
-                [$component...[$NL]]
+                <<$component...[$NL]>>
     		</com.google.android.flexbox.FlexboxLayout>
 	    </ScrollView>
 
     </com.google.android.flexbox.FlexboxLayout>
 end
 
-def type(display & res & noAbstract)
+def type(display, res, noAbstract)
     <?xml version="1.0" encoding="utf-8"?>
     <com.google.android.flexbox.FlexboxLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -58,20 +58,20 @@ def type(display & res & noAbstract)
         android:layout_height="match_parent"
         alexandria:flexDirection="$layout">
 
-        [$component...[$NL]]
+        <<$component...[$NL]>>
 
     </com.google.android.flexbox.FlexboxLayout>
 end
 
-def type(layout & horizontal)
+def type(layout, horizontal)
     row
 end
 
-def type(layout & vertical)
+def type(layout, vertical)
     column
 end
 
-def type(display & res)
+def type(display, res)
     <?xml version="1.0" encoding="utf-8"?>
     <com.google.android.flexbox.FlexboxLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -86,19 +86,19 @@ def type(display & res)
                 android:text="I am $name"
             />
 
-        [$component...[$NL]]
+        <<$component...[$NL]>>
 
     </com.google.android.flexbox.FlexboxLayout>
 end
 
-def type(display & noAbstract)
-    package $package.mobile.android.displays[.$packageType~s]
+def type(display, noAbstract)
+    package $package.mobile.android.displays<<.$packageType~s>>
 
     import android.content.Context
     import android.util.AttributeSet
     import androidx.core.content.ContextCompat.*
 
-	[$parent+import]
+	<<$parent+import>>
 	$accessibleNotifierImport
 	import io.intino.alexandria.mobile.displays.requesters.$requester~Requester
 	import $package.mobile.android.R
@@ -108,15 +108,15 @@ def type(display & noAbstract)
 		init {
 			this.notifier = $notifier~Notifier(this);
 			this.requester = $requester~Requester(this);
-			[$properties+initialization]
+			<<$properties+initialization>>
 		}
 
 		$notification...[$NL$NL]
-		[$notifyProxyMethod]
+		<<$notifyProxyMethod>>
 	}
 end
 
-def type(accessibleNotifierImport & accessible)
+def type(accessibleNotifierImport, accessible)
 	import $package.mobile.displays.notifiers.$name+firstUpperCase~Notifier
 end
 
@@ -131,52 +131,52 @@ def type(notifyProxyMethod)
 	};
 end
 
-def type(display & collection)
+def type(display, collection)
 	import React from "react";
-	[$alexandriaBlockImport]
-	[$alexandriaTemplateStampImport]
-	[$alexandriaDisplayStampImport]
-	[$alexandriaComponentImport...[$NL]]
-	[$projectComponentImport...[$NL]]
-	[$parent+import]
-	[import $notDecorated+firstUpperCase~Notifier from "$notifierDirectory/notifiers/$notDecorated+firstUpperCase~Notifier";]
-	[import $notDecorated+firstUpperCase~Requester from "$requesterDirectory/requesters/$notDecorated+firstUpperCase~Requester";]
-	[$displayRegistration+import]
+	<<$alexandriaBlockImport>>
+	<<$alexandriaTemplateStampImport>>
+	<<$alexandriaDisplayStampImport>>
+	<<$alexandriaComponentImport...[$NL]>>
+	<<$projectComponentImport...[$NL]>>
+	<<$parent+import>>
+	<<import $notDecorated+firstUpperCase~Notifier from "$notifierDirectory/notifiers/$notDecorated+firstUpperCase~Notifier";>>
+	<<import $notDecorated+firstUpperCase~Requester from "$requesterDirectory/requesters/$notDecorated+firstUpperCase~Requester";>>
+	<<$displayRegistration+import>>
 
 	export default class $name+firstUpperCase extends $displayExtends {
 
 		constructor(props) {
 			super(props);
-			[this.notifier = new $notDecorated+firstUpperCase~Notifier(this);]
-			[this.requester = new $notDecorated+firstUpperCase~Requester(this);]
-			[$properties+initialization]
+			<<this.notifier = new $notDecorated+firstUpperCase~Notifier(this);>>
+			<<this.requester = new $notDecorated+firstUpperCase~Requester(this);>>
+			<<$properties+initialization>>
 		};
 
 	}
 
-	[$displayRegistration+declaration]
+	<<$displayRegistration+declaration>>
 end
 
 def type(display)
-    package $package.mobile.android.displays[.$packageType~s]
+    package $package.mobile.android.displays<<.$packageType~s>>
 
     import android.content.Context
     import android.util.AttributeSet
     import androidx.core.content.ContextCompat.*
 
-	[$alexandriaBlockImport]
-	[$alexandriaTemplateStampImport]
-	[$alexandriaDisplayStampImport]
-	[$alexandriaComponentImport...[$NL]]
-	[$projectComponentImport...[$NL]]
-	[$parent+import]
+	<<$alexandriaBlockImport>>
+	<<$alexandriaTemplateStampImport>>
+	<<$alexandriaDisplayStampImport>>
+	<<$alexandriaComponentImport...[$NL]>>
+	<<$projectComponentImport...[$NL]>>
+	<<$parent+import>>
     import $package.mobile.displays.notifiers.$notDecorated+firstUpperCase~Notifier
     import $package.mobile.displays.requesters.$notDecorated+firstUpperCase~Requester
-	[$displayRegistration+import]
+	<<$displayRegistration+import>>
     $schemaImport
     import $package.mobile.android.R
 
-    open class $name+firstUpperCase<DR: $notDecorated+firstUpperCase~Requester, DN: $notDecorated+firstUpperCase~Notifier> @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0, layout: Int? = null) $displayExtends+display, $package.mobile.displays[.$packageType~s].$name+firstUpperCase {
+    open class $name+firstUpperCase<DR: $notDecorated+firstUpperCase~Requester, DN: $notDecorated+firstUpperCase~Notifier> @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0, layout: Int? = null) $displayExtends+display, $package.mobile.displays<<.$packageType~s>>.$name+firstUpperCase {
 
         init {
             this.requester = $notDecorated+firstUpperCase~Requester(this) as DR
@@ -185,18 +185,18 @@ def type(display)
         }
 
 		$notification...[$NL$NL]
-        [$reference...[$NL]]
-        [$component...[$NL]]
+        <<$reference...[$NL]>>
+        <<$component...[$NL]>>
 
     }
 end
 
-def type(notification) trigger(interface)
-    fun $name([value : $parameter])
+def type(notification) and trigger(interface)
+    fun $name(<<value : $parameter>>)
 end
 
 def type(notification)
-    override fun $name([value: $parameter]) {
+    override fun $name(<<value: $parameter>>) {
     }
 end
 
@@ -204,15 +204,15 @@ def trigger(parameterValue)
 	value
 end
 
-def type(date) trigger(parameter)
+def type(date) and trigger(parameter)
     kotlinx.datetime.Instant
 end
 
-def type(datetime) trigger(parameter)
+def type(datetime) and trigger(parameter)
     kotlinx.datetime.Instant
 end
 
-def type(integer) trigger(parameter)
+def type(integer) and trigger(parameter)
     Int
 end
 
@@ -220,15 +220,15 @@ def trigger(parameter)
     $value
 end
 
-def type(displayRegistration) trigger(import)
+def type(displayRegistration) and trigger(import)
 	import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 end
 
-def type(displayRegistration & accessible) trigger(declaration)
-	DisplayFactory.register("$name+SnakeCaseToCamelCase+FirstUpperCase~Proxy", $name+SnakeCaseToCamelCase+FirstUpperCase~Proxy);
+def type(displayRegistration, accessible) and trigger(declaration)
+	DisplayFactory.register("$name+PascalCase~Proxy", $name+PascalCase~Proxy);
 end
 
-def type(displayRegistration) trigger(declaration)
+def type(displayRegistration) and trigger(declaration)
 	DisplayFactory.register("$name+firstUpperCase", $name+firstUpperCase);
 end
 
@@ -236,67 +236,67 @@ def type(alexandriaImport)
 	import Ui$name+firstUpperCase from "alexandria-ui-elements/src/displays/components/$name+firstUpperCase";
 end
 
-def type(alexandriaImport & embedded)
+def type(alexandriaImport, embedded)
 	import { Embedded$name+firstUpperCase as Ui$name+firstUpperCase } from "alexandria-ui-elements/src/displays/components/$name+firstUpperCase";
 end
 
 def type(alexandriaComponentImport)
-	import Ui$type+firstUpperCase$facet...[] from "alexandria-ui-elements/[$componentTarget]/displays/[$componentDirectory/]$type+firstUpperCase$facet...[]";
+	import Ui$type+firstUpperCase$facet...[] from "alexandria-ui-elements/<<$componentTarget>>/displays/<<$componentDirectory/>>$type+firstUpperCase$facet...[]";
 end
 
-def type(projectComponentImport & ownertemplatestamp)
+def type(projectComponentImport, ownertemplatestamp)
 	import Displays$name+firstUpperCase from "$ownerModuleName/gen/displays/templates/$name+firstUpperCase";
 end
 
 def type(projectComponentImport)
-	import Displays$name+firstUpperCase from "$serviceName/[$directory]/displays/[$componentDirectory/]$name+firstUpperCase";
+	import Displays$name+firstUpperCase from "$serviceName/<<$directory>>/displays/<<$componentDirectory/>>$name+firstUpperCase";
 end
 
-def type(displayExtends & generic & isExtensionOf) trigger(display)
+def type(displayExtends, generic, isExtensionOf) and trigger(display)
 	: $parent<DR, DN>(context, attrs, defStyleAttr, defStyleRes)
 end
 
-def type(displayExtends & generic) trigger(display)
+def type(displayExtends, generic) and trigger(display)
 	: $parent<DR, DN>(context, attrs, defStyleAttr, defStyleRes, IntArray(0))
 end
 
-def type(displayExtends & template) trigger(display)
+def type(displayExtends, template) and trigger(display)
 	: io.intino.alexandria.mobile.android.displays.components.Template<DR, DN>(context, attrs, defStyleAttr, defStyleRes)
 end
 
-def type(displayExtends & table) trigger(display)
+def type(displayExtends, table) and trigger(display)
 	: io.intino.alexandria.mobile.android.displays.components.$type+firstUpperCase$facet...[]<DR, DN>(context, attrs, defStyleAttr, defStyleRes)
 end
 
-def type(displayExtends & dynamictable) trigger(display)
+def type(displayExtends, dynamictable) and trigger(display)
 	: io.intino.alexandria.mobile.android.displays.components.$type+firstUpperCase$facet...[]<DR, DN>(context, attrs, defStyleAttr, defStyleRes)
 end
 
-def type(displayExtends & collection) trigger(display)
+def type(displayExtends, collection) and trigger(display)
 	: io.intino.alexandria.mobile.android.displays.components.$type+firstUpperCase$facet...[]<DR, DN>(context, attrs, defStyleAttr, defStyleRes)
 end
 
-def type(displayExtends & item) trigger(display)
+def type(displayExtends, item) and trigger(display)
 	: io.intino.alexandria.mobile.android.displays.components.Item<DR, DN>(context, attrs, defStyleAttr, defStyleRes)
 end
 
-def type(displayExtends & row) trigger(display)
+def type(displayExtends, row) and trigger(display)
 	: io.intino.alexandria.mobile.android.displays.components.Row<DR, DN>(context, attrs, defStyleAttr, defStyleRes)
 end
 
-def type(displayExtends & dialog) trigger(display)
+def type(displayExtends, dialog) and trigger(display)
 	: io.intino.alexandria.mobile.android.displays.components.Dialog<DR, DN>(context, attrs, defStyleAttr, defStyleRes)
 end
 
-def type(displayExtends) trigger(display)
+def type(displayExtends) and trigger(display)
 	: io.intino.alexandria.mobile.android.displays.$type+firstUpperCase<DR, DN>(context, attrs, defStyleAttr, defStyleRes, IntArray(0))
 end
 
-def type(displayExtends & generic & isExtensionOf)
+def type(displayExtends, generic, isExtensionOf)
 	$parent
 end
 
-def type(displayExtends & generic)
+def type(displayExtends, generic)
 	$parent
 end
 
@@ -304,31 +304,31 @@ def type(displayExtends)
 	$type+firstUpperCase
 end
 
-def type(renderTag & template) trigger(end)
+def type(renderTag, template) and trigger(end)
 	</UiBlock>
 end
 
-def type(renderTag & block) trigger(end)
+def type(renderTag, block) and trigger(end)
 	</UiBlock>
 end
 
-def type(renderTag & item) trigger(end)
+def type(renderTag, item) and trigger(end)
 	</div>
 end
 
-def type(renderTag) trigger(end)
+def type(renderTag) and trigger(end)
 	</React.Fragment>
 end
 
-def type(renderTag & template)
-	<UiBlock[$properties+common$properties+specific] style={{...this.props.style,...display}}>
+def type(renderTag, template)
+	<UiBlock<<$properties+common$properties+specific>> style={{...this.props.style,...display}}>
 end
 
-def type(renderTag & block)
-	<UiBlock[$properties+common$properties+specific] style={{...this.props.style,...display}}>
+def type(renderTag, block)
+	<UiBlock<<$properties+common$properties+specific>> style={{...this.props.style,...display}}>
 end
 
-def type(renderTag & item)
+def type(renderTag, item)
 	<div style={{width:"100%",height:"100%",...this.props.style,...this.style(),...display}} className={className}>
 end
 
@@ -336,34 +336,34 @@ def type(renderTag)
 	<React.Fragment>
 end
 
-def type(renderTagAttributes & block)
+def type(renderTagAttributes, block)
 	$properties+common$properties+specific
 end
 
 def type(renderTagAttributes)
 end
 
-def attribute(parent) trigger(import)
+def attribute(parent) and trigger(import)
     import $package.mobile.android.displays.$parentDirectory.$parent+firstUpperCase
 end
 
-def attribute(accessible) trigger(import)
+def attribute(accessible) and trigger(import)
     import io.intino.alexandria.mobile.android.displays.ProxyDisplay
 end
 
-def attribute(baseDisplay) trigger(import)
+def attribute(baseDisplay) and trigger(import)
     import io.intino.alexandria.mobile.android.displays.Display
 end
 
-def attribute(baseComponent) trigger(import)
+def attribute(baseComponent) and trigger(import)
     import io.intino.alexandria.mobile.android.displays.Component
 end
 
-def attribute(embeddedComponent) trigger(import)
+def attribute(embeddedComponent) and trigger(import)
     import io.intino.alexandria.mobile.android.displays.components.$value+firstUpperCase
 end
 
-def attribute(component) trigger(import)
+def attribute(component) and trigger(import)
     import io.intino.alexandria.mobile.android.displays.components.$value+firstUpperCase
 end
 

@@ -37,7 +37,7 @@ end
 
 def trigger(publicMethod)
 	public void launch$name+firstUpperCase($parameter+signature...[, ]) {
-		registerProcess(new $name+firstUpperCase(box[, $parameter+firstLowerCase...[, ]]));
+		registerProcess(new $name+firstUpperCase(box<<, $parameter+firstLowerCase...[, ]>>));
 	}
 end
 
@@ -49,7 +49,7 @@ def trigger(process)
 	case "$name+FirstUpperCase": return new $name+firstUpperCase(id, box);
 end
 
-def type(archetype) trigger(customizeDirectory)
+def type(archetype) and trigger(customizeDirectory)
 	new $package.Archetype(box.configuration().home()).$path
 end
 

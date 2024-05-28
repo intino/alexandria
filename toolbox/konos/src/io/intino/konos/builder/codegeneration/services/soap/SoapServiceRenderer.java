@@ -2,8 +2,8 @@ package io.intino.konos.builder.codegeneration.services.soap;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
@@ -22,12 +22,10 @@ import static java.util.stream.Collectors.toList;
 
 public class SoapServiceRenderer extends Renderer {
 	private final List<Service.Soap> services;
-	private final KonosGraph graph;
 
 	public SoapServiceRenderer(CompilationContext compilationContext, KonosGraph graph) {
 		super(compilationContext);
 		this.services = graph.serviceList(Service::isSoap).map(Service::asSoap).collect(toList());
-		this.graph = graph;
 	}
 
 	public void render() {
@@ -43,7 +41,7 @@ public class SoapServiceRenderer extends Renderer {
 				add("operation", framesOf(service.operationList()));
 		final String className = snakeCaseToCamelCase(service.name$()) + "Service";
 		classes().put(service.getClass().getSimpleName() + "#" + service.name$(), className);
-		Commons.writeFrame(gen, className, template().render(builder.toFrame()));
+		Commons.writeFrame(gen, className, new SoapServiceTemplate().render(builder.toFrame(), Formatters.all));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Server), className).getAbsolutePath()));
 	}
 
@@ -58,7 +56,4 @@ public class SoapServiceRenderer extends Renderer {
 				.add("path", customize("path", Commons.path(operation))).toFrame();
 	}
 
-	private Template template() {
-		return customize(new SoapServiceTemplate());
-	}
 }

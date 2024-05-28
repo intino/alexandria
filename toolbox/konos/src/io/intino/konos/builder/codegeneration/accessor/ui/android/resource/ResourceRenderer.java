@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration.accessor.ui.android.resource;
 import cottons.utils.StringHelper;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.accessor.ui.android.templates.PageTemplate;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
@@ -36,14 +37,14 @@ public class ResourceRenderer extends io.intino.konos.builder.codegeneration.ui.
 		builder.add("activity");
 		File file = Commons.kotlinFile(src(target), File.separator + "pages" + File.separator + firstUpperCase(resource.name$()) + "Activity");
 		file.getParentFile().mkdirs();
-		Commons.write(file.toPath(), setup(new PageTemplate()).render(builder.toFrame()));
+		Commons.write(file.toPath(), new PageTemplate().render(builder.toFrame(), Formatters.all));
 	}
 
 	private void writeActivityTemplate(FrameBuilder builder) {
 		builder.add("template");
 		File file = new File(res(target) + File.separator + "layout" + File.separator + StringHelper.camelCaseToSnakeCase(resource.name$()).replace("-", "_") + "_activity.xml");
 		file.getParentFile().mkdirs();
-		Commons.write(file.toPath(), setup(new PageTemplate()).render(builder.toFrame()));
+		Commons.write(file.toPath(), new PageTemplate().render(builder.toFrame(), Formatters.all));
 	}
 
 	@Override

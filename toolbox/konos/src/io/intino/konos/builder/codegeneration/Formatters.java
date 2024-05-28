@@ -5,26 +5,39 @@ import cottons.utils.StringHelper;
 import io.intino.itrules.Formatter;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
 import io.intino.konos.builder.helpers.Commons;
 import org.apache.commons.lang.StringEscapeUtils;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+
 public class Formatters {
+	public static Map<String, Formatter> all = new HashMap<>();
+
+	static {
+		all.put("validname", validName());
+		all.put("camelCaseToSnakeCase", camelCaseToSnakeCase());
+		all.put("escapeHtml", escapeHtml());
+		all.put("returnType", returnType());
+		all.put("returnTypeFormatter", returnTypeFormatter());
+		all.put("validPackage", validPackage());
+		all.put("subpath", subPath());
+		all.put("shortType", shortType());
+		all.put("quoted", quoted());
+		all.put("customParameter", customParameter());
+		all.put("dotsWithUnderscore", dotsWithUnderscore());
+		all.put("slashToCamelCase", slashToCamel());
+		all.put("typeFormat", typeFormatter());
+	}
 
 	public static Formatter validName() {
 		return (value) -> StringHelper.snakeCaseToCamelCase(value.toString().replace(".", "-"));
 	}
 
-	public static Formatter snakeCaseToCamelCase() {
-		return value -> StringHelper.snakeCaseToCamelCase(value.toString());
-	}
-
 	public static Formatter camelCaseToSnakeCase() {
 		return value -> StringHelper.camelCaseToSnakeCase(value.toString());
-	}
-
-	public static Formatter camelCaseToUnderscoreCase() {
-		return value -> StringHelper.camelCaseToSnakeCase(value.toString()).replace("-", "_");
 	}
 
 	public static Formatter escapeHtml() {
@@ -41,6 +54,17 @@ public class Formatters {
 
 	public static String firstUpperCase(String value) {
 		return value.substring(0, 1).toUpperCase() + value.substring(1);
+	}
+
+	public static Formatter typeFormatter() {
+		return value -> {
+			if (value.toString().contains(".")) return Formatters.firstLowerCase(value.toString());
+			else return value;
+		};
+	}
+
+	public static Formatter slashToCamel() {
+		return o -> snakeCaseToCamelCase(o.toString().replace("|", "_"));
 	}
 
 	public static Formatter returnTypeFormatter() {
@@ -77,28 +101,10 @@ public class Formatters {
 	public static Frame customize(String name, String value) {
 		FrameBuilder builder = new FrameBuilder(name);
 		builder.add("name", value);
-		builder.add("custom", Commons.extractParameters(value).stream().toArray(String[]::new));
+		builder.add("custom", Commons.extractParameters(value).toArray(String[]::new));
 		return builder.toFrame();
 	}
 
-
-	public static Template customize(Template template) {
-		template.add("validname", validName());
-		template.add("snakeCaseToCamelCase", snakeCaseToCamelCase());
-		template.add("camelCaseToSnakeCase", camelCaseToSnakeCase());
-		template.add("camelCaseToUnderscoreCase", camelCaseToUnderscoreCase());
-		template.add("escapeHtml", escapeHtml());
-		template.add("returnType", returnType());
-		template.add("returnTypeFormatter", returnTypeFormatter());
-		template.add("quoted", quoted());
-		template.add("validPackage", validPackage());
-		template.add("subpath", subPath());
-		template.add("shortType", shortType());
-		template.add("quoted", quoted());
-		template.add("customParameter", customParameter());
-		template.add("dotsWithUnderscore", dotsWithUnderscore());
-		return template;
-	}
 
 	private static Formatter customParameter() {
 		return value -> value.toString().substring(1, value.toString().length() - 1);

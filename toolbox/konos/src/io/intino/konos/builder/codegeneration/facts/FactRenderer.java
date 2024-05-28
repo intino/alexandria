@@ -11,7 +11,7 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamelCase;
+import static io.intino.itrules.formatters.StringFormatters.camelCase;
 import static java.util.stream.Collectors.toList;
 
 public class FactRenderer {
@@ -90,19 +90,12 @@ public class FactRenderer {
 	}
 
 	private String defaultValueOf(String javaType) {
-		switch (javaType) {
-			case "byte":
-			case "short":
-			case "int":
-			case "long":
-				return "0";
-			case "float":
-				return "0.0f";
-			case "double":
-				return "0.0";
-			default:
-				return "null";
-		}
+		return switch (javaType) {
+			case "byte", "short", "int", "long" -> "0";
+			case "float" -> "0.0f";
+			case "double" -> "0.0";
+			default -> "null";
+		};
 	}
 
 	private void addFactAttribute(String cube, FrameBuilder fb, SchemaSerialBuilder serialBuilder, Offset offset, Column column) {
@@ -161,7 +154,7 @@ public class FactRenderer {
 		return new FrameBuilder("column", "categorical")
 				.add("owner", cube)
 				.add("name", name)
-				.add("type", snakeCaseToCamelCase().format(axis.name$()).toString())
+				.add("type", camelCase().format(axis.name$()).toString())
 				.add("offset", offset)
 				.add("cube", cube)
 				.add("bits", column.asSizedData().asType().size());
@@ -184,22 +177,15 @@ public class FactRenderer {
 	}
 
 	private String unboxed(String primitive) {
-		switch (primitive) {
-			case "Byte":
-				return "byte";
-			case "Short":
-				return "short";
-			case "Integer":
-				return "int";
-			case "Long":
-			case "LongInteger":
-				return "long";
-			case "Float":
-				return "float";
-			case "Double":
-				return "double";
-		}
-		return primitive;
+		return switch (primitive) {
+			case "Byte" -> "byte";
+			case "Short" -> "short";
+			case "Integer" -> "int";
+			case "Long", "LongInteger" -> "long";
+			case "Float" -> "float";
+			case "Double" -> "double";
+			default -> primitive;
+		};
 	}
 
 	private int sizeOf(Axis.Categorical axis) {

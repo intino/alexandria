@@ -1,13 +1,12 @@
 package io.intino.konos.builder.codegeneration.main;
 
+import io.intino.builder.PostCompileConfigurationMainActionMessage;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
 import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.builder.PostCompileConfigurationMainActionMessage;
 import io.intino.konos.dsl.KonosGraph;
 import io.intino.magritte.framework.Layer;
 
@@ -40,7 +39,7 @@ public class MainRenderer extends Renderer {
 		File mainFile = javaFile(destination, "Main");
 		if (!mainFile.exists()) {
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(graph.core$().rootList().get(0).as(Layer.class)), mainFile.getAbsolutePath()));
-			writeFrame(destination, "Main", template().render(builder.toFrame()));
+			writeFrame(destination, "Main", new MainTemplate().render(builder.toFrame(), Formatters.all));
 			context.postCompileActionMessages().add(new PostCompileConfigurationMainActionMessage(configuration.module(), context.packageName() + ".Main"));
 		}
 	}
@@ -50,7 +49,4 @@ public class MainRenderer extends Renderer {
 		execute();
 	}
 
-	private Template template() {
-		return Formatters.customize(new MainTemplate());
-	}
 }

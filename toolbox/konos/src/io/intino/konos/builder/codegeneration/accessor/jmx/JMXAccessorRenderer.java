@@ -2,8 +2,6 @@ package io.intino.konos.builder.codegeneration.accessor.jmx;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
-import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
 import io.intino.konos.builder.codegeneration.services.jmx.JMXServerTemplate;
@@ -18,6 +16,7 @@ import java.io.File;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.codegeneration.Formatters.all;
 
 public class JMXAccessorRenderer extends Renderer {
 	private final Service.JMX service;
@@ -42,7 +41,7 @@ public class JMXAccessorRenderer extends Renderer {
 	private void createInterface(Service.JMX service) {
 		FrameBuilder frame = new FrameBuilder("jmx", "interface");
 		fillFrame(service, frame);
-		Commons.writeFrame(destinationPackage(), service.name$() + "MBean", interfaceTemplate().render(frame));
+		Commons.writeFrame(destinationPackage(), service.name$() + "MBean", new JMXServerTemplate().render(frame, all));
 	}
 
 	private File destinationPackage() {
@@ -52,7 +51,7 @@ public class JMXAccessorRenderer extends Renderer {
 	private void createService(Service.JMX service) {
 		FrameBuilder builder = new FrameBuilder("accessor");
 		fillFrame(service, builder);
-		Commons.writeFrame(destination, snakeCaseToCamelCase(service.name$()) + "JMXAccessor", template().render(builder.toFrame()));
+		Commons.writeFrame(destination, snakeCaseToCamelCase(service.name$()) + "JMXAccessor", new JMXAccessorTemplate().render(builder.toFrame(), all));
 	}
 
 	private void fillFrame(Service.JMX service, FrameBuilder builder) {
@@ -78,14 +77,6 @@ public class JMXAccessorRenderer extends Renderer {
 	private void setupParameters(List<Parameter> parameters, FrameBuilder builder) {
 		for (Parameter parameter : parameters)
 			builder.add("parameter", new FrameBuilder("parameter").add("name", parameter.name$()).add("type", formatType(parameter.asType())).toFrame());
-	}
-
-	private Template template() {
-		return Formatters.customize(new JMXAccessorTemplate());
-	}
-
-	private Template interfaceTemplate() {
-		return Formatters.customize(new JMXServerTemplate());
 	}
 
 }

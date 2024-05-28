@@ -1,7 +1,7 @@
 def type(display)
     package $package.mobile.displays.notifiers
 
-    import $package.mobile.displays.[$packageType~s.]$name+firstUpperCase~$proxy
+    import $package.mobile.displays.<<$packageType~s.>>$name+firstUpperCase~$proxy
     import kotlinx.serialization.json.JsonArray
     import kotlinx.serialization.json.JsonObject
     import kotlinx.serialization.json.JsonPrimitive
@@ -15,27 +15,27 @@ def type(display)
         override fun setup() {
             if (this.element == null || this.element.name() == null || this.pushLinked) return;
             super.setup();
-            [$notification...[$NL]]
-            [$event...[$NL]]
+            <<$notification...[$NL]>>
+            <<$event...[$NL]>>
     		this.pushLinked = true;
         }
 
     }
 end
 
-def attribute(extensionOf) trigger(import)
+def attribute(extensionOf) and trigger(import)
 	import $parent+firstUpperCase~Notifier from "./$parent+firstUpperCase~Notifier"
 end
 
-def attribute(component) trigger(import)
+def attribute(component) and trigger(import)
 	import Notifier from "alexandria-ui-elements/src/displays/notifiers/ComponentNotifier";
 end
 
-def attribute(accessible) trigger(import)
+def attribute(accessible) and trigger(import)
 	import Notifier from "alexandria-ui-elements/gen/displays/notifiers/ProxyDisplayNotifier";
 end
 
-def attribute(baseType) trigger(import)
+def attribute(baseType) and trigger(import)
 	import Notifier from "alexandria-ui-elements/gen/displays/notifiers/$type+firstUpperCase~Notifier";
 end
 
@@ -43,14 +43,14 @@ def trigger(import)
 	import Notifier from "./Notifier";
 end
 
-def attribute(accessible) trigger(proxy)
+def attribute(accessible) and trigger(proxy)
 	Proxy
 end
 
 def trigger(proxy)
 end
 
-def attribute(extensionOf) trigger(parentType)
+def attribute(extensionOf) and trigger(parentType)
 	$parent+firstUpperCase~Notifier
 end
 
@@ -59,50 +59,50 @@ def trigger(parentType)
 end
 
 def trigger(notification)
-    onMessage("$name+firstLowerCase")[$target].execute { whenReady { element.$name+firstLowerCase([$parameter+value]) } }
+    onMessage("$name+firstLowerCase")<<$target>>.execute { whenReady { element.$name+firstLowerCase(<<$parameter+value>>) } }
 end
 
-def type(parameter & datetime)
-    kotlinx.datetime.Instant.fromEpochMilliseconds(((it$["v"$]!! as JsonPrimitive).content).toLong())
+def type(parameter, datetime)
+    kotlinx.datetime.Instant.fromEpochMilliseconds(((it["v"]!! as JsonPrimitive).content).toLong())
 end
 
-def type(parameter & date)
-    kotlinx.datetime.Instant.fromEpochMilliseconds(((it$["v"$]!! as JsonPrimitive).content).toLong())
+def type(parameter, date)
+    kotlinx.datetime.Instant.fromEpochMilliseconds(((it["v"]!! as JsonPrimitive).content).toLong())
 end
 
-def type(parameter & real)
-	((it$["v"$]!! as JsonPrimitive).content).toDouble()
+def type(parameter, real)
+	((it["v"]!! as JsonPrimitive).content).toDouble()
 end
 
-def type(parameter & longinteger)
-	((it$["v"$]!! as JsonPrimitive).content).toLong()
+def type(parameter, longinteger)
+	((it["v"]!! as JsonPrimitive).content).toLong()
 end
 
-def type(parameter & integer)
-	((it$["v"$]!! as JsonPrimitive).content).toInt()
+def type(parameter, integer)
+	((it["v"]!! as JsonPrimitive).content).toInt()
 end
 
-def type(parameter & boolean)
-	((it$["v"$]!! as JsonPrimitive).content).toBoolean()
+def type(parameter, boolean)
+	((it["v"]!! as JsonPrimitive).content).toBoolean()
 end
 
-def type(parameter & object & list)
-	if (it$["v"$] != null) io.intino.alexandria.mobile.util.Json.list(it$["v"$] as JsonArray, $package.mobile.schemas.$value+firstUpperCase.empty()) else emptyList()
+def type(parameter, object, list)
+	if (it["v"] != null) io.intino.alexandria.mobile.util.Json.list(it["v"] as JsonArray, $package.mobile.schemas.$value+firstUpperCase.empty()) else emptyList()
 end
 
-def type(parameter & object)
-	if (it$["v"$] != null && !(it$["v"$] as JsonObject).isEmpty()) io.intino.alexandria.mobile.util.Json.parse((it$["v"$] as JsonObject).toString()) as $package.mobile.schemas.$value+firstUpperCase else $package.mobile.schemas.$value+firstUpperCase.empty()
+def type(parameter, object)
+	if (it["v"] != null && !(it["v"] as JsonObject).isEmpty()) io.intino.alexandria.mobile.util.Json.parse((it["v"] as JsonObject).toString()) as $package.mobile.schemas.$value+firstUpperCase else $package.mobile.schemas.$value+firstUpperCase.empty()
 end
 
-def type(parameter & list)
-    if (it.containsKey("v")) io.intino.alexandria.mobile.util.Json.list(it$["v"$] as JsonArray, $value()) else emptyList()
+def type(parameter, list)
+    if (it.containsKey("v")) io.intino.alexandria.mobile.util.Json.list(it["v"] as JsonArray, $value()) else emptyList()
 end
 
 def type(parameter)
-    if (it.containsKey("v")) (it$["v"$] as JsonPrimitive).content else ""
+    if (it.containsKey("v")) (it["v"] as JsonPrimitive).content else ""
 end
 
-def attribute(this:Display) trigger(target)
+def attribute(this, Display) and trigger(target)
 	.toSelf()
 end
 
@@ -110,5 +110,5 @@ def trigger(target)
 end
 
 def type(event)
-    onMessage("$name+firstLowerCase").toSelf().execute { whenReady { element.$name+firstLowerCase(if (it.containsKey("v")) (it$["v"$] as JsonPrimitive).content else "") } }
+    onMessage("$name+firstLowerCase").toSelf().execute { whenReady { element.$name+firstLowerCase(if (it.containsKey("v")) (it["v"] as JsonPrimitive).content else "") } }
 end

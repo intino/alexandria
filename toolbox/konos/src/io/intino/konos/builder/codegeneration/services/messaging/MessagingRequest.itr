@@ -27,7 +27,7 @@ def type(request)
 		public void accept(String request) {
 			try {
 				$call
-			} [$exception+catch]
+			} <<$exception+catch>>
 			catch (Throwable e) {
 				io.intino.alexandria.logger.Logger.error(e.getMessage(), e);
 			}
@@ -36,18 +36,18 @@ def type(request)
 		private $package.actions.$name+firstUpperCase~Action actionFor($parameter+signature) {
 			final $package.actions.$name+firstUpperCase~Action action = new $package.actions.$name+firstUpperCase~Action();
 			action.box = this.box;
-			[$parameter+assign]
+			<<$parameter+assign>>
 			return action;
 		}
 	}
 end
 
-def !type(void) trigger(call)
-	connector.sendMessage(responsePath, io.intino.alexandria.Json.toString(actionFor([io.intino.alexandria.Json.fromString(request, $parameter+type.class)]).execute()));
+def not type(void) and trigger(call)
+	connector.sendMessage(responsePath, io.intino.alexandria.Json.toString(actionFor(<<io.intino.alexandria.Json.fromString(request, $parameter+type.class)>>).execute()));
 end
 
 def trigger(call)
-	actionFor([io.intino.alexandria.Json.fromString(request, $parameter+type.class)]).execute();
+	actionFor(<<io.intino.alexandria.Json.fromString(request, $parameter+type.class)>>).execute();
 end
 
 def trigger(catch)
@@ -56,15 +56,15 @@ def trigger(catch)
 	}
 end
 
-def type(parameter) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = $name+SnakeCaseToCamelCase+firstLowerCase;
+def type(parameter) and trigger(assign)
+	action.$name+CamelCase = $name+CamelCase;
 end
 
-def type(parameter) trigger(signature)
-	$type+FirstUpperCase $name+SnakeCaseToCamelCase+firstLowerCase
+def type(parameter) and trigger(signature)
+	$type+FirstUpperCase $name+CamelCase
 end
 
-def type(parameter) trigger(type)
+def type(parameter) and trigger(type)
 	$type
 end
 

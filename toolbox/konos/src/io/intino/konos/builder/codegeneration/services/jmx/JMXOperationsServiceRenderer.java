@@ -2,7 +2,6 @@ package io.intino.konos.builder.codegeneration.services.jmx;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
@@ -49,7 +48,7 @@ public class JMXOperationsServiceRenderer extends Renderer {
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()));
 		for (Operation operation : service.operationList())
 			builder.add("operation", frameOf(operation));
-		Commons.writeFrame(genPackage(), service.name$() + "MBean", template().render(builder));
+		Commons.writeFrame(genPackage(), service.name$() + "MBean", new JMXServerTemplate().render(builder, Formatters.all));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(genPackage(), service.name$() + "MBean").getAbsolutePath()));
 
 	}
@@ -60,7 +59,7 @@ public class JMXOperationsServiceRenderer extends Renderer {
 				.add("box", boxName())
 				.add("package", packageName())
 				.add("operation", service.operationList().stream().map(this::frameOf).toArray(Frame[]::new));
-		Commons.writeFrame(genPackage(), service.name$(), template().render(builder));
+		Commons.writeFrame(genPackage(), service.name$(), new JMXServerTemplate().render(builder, Formatters.all));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(genPackage(), service.name$()).getAbsolutePath()));
 	}
 
@@ -93,10 +92,6 @@ public class JMXOperationsServiceRenderer extends Renderer {
 			if (parameter.i$(Data.List.class)) parameterBuilder.add("list");
 			builder.add("parameter", parameterBuilder.toFrame());
 		}
-	}
-
-	private Template template() {
-		return Formatters.customize(new JMXServerTemplate());
 	}
 
 	private File genPackage() {

@@ -1,15 +1,14 @@
 package io.intino.konos.builder.codegeneration.services.slack;
 
-import io.intino.konos.builder.context.CompilationContext;
 import io.intino.builder.PostCompileMethodActionMessage;
+import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.dsl.Service.SlackBot.Request;
 
 import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static io.intino.konos.builder.codegeneration.Formatters.firstLowerCase;
-import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamelCase;
+import static io.intino.itrules.formatters.StringFormatters.camelCase;
 
 class BotActionsUpdater {
 
@@ -28,7 +27,7 @@ class BotActionsUpdater {
 	}
 
 	private void addMethod(Request request) {
-		compilationContext.postCompileActionMessages().add(new PostCompileMethodActionMessage(compilationContext.module(), destination, firstLowerCase(snakeCaseToCamelCase().format(request.name$()).toString()), false, parameters(request), "String"));
+		compilationContext.postCompileActionMessages().add(new PostCompileMethodActionMessage(compilationContext.module(), destination, camelCase().format(request.name$()).toString(), false, parameters(request), "String"));
 	}
 
 	private List<String> parameters(Request request) {

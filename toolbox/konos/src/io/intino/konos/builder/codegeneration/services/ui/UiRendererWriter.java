@@ -2,9 +2,7 @@ package io.intino.konos.builder.codegeneration.services.ui;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
-import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.CodeGenerationHelper;
@@ -123,11 +121,6 @@ public abstract class UiRendererWriter implements RendererWriter {
 				!element.i$(conceptOf(CatalogComponents.DynamicTable.class)) &&
 				!element.i$(conceptOf(HelperComponents.Row.class)) &&
 				!element.i$(conceptOf(io.intino.konos.dsl.Template.class));
-	}
-
-	protected Template setup(Template template) {
-		if (template == null) return null;
-		return Formatters.customize(template);
 	}
 
 }

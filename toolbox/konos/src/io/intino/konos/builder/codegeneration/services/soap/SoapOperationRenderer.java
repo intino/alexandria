@@ -2,7 +2,6 @@ package io.intino.konos.builder.codegeneration.services.soap;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
@@ -45,7 +44,7 @@ public class SoapOperationRenderer extends Renderer {
 		Frame frame = frameOf(operation);
 		final String className = snakeCaseToCamelCase(operation.name$()) + "Operation";
 		File operationsPackage = new File(gen(Target.Server), OPERATIONS_PACKAGE);
-		Commons.writeFrame(operationsPackage, className, template().render(frame));
+		Commons.writeFrame(operationsPackage, className, new SoapOperationTemplate().render(frame, Formatters.all));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(operation), javaFile(operationsPackage, className).getAbsolutePath()));
 		createCorrespondingAction(operation);
 	}
@@ -78,7 +77,4 @@ public class SoapOperationRenderer extends Renderer {
 		return String.join(".", packageName(), "schemas") + "." + firstUpperCase(schema.name$());
 	}
 
-	private Template template() {
-		return Formatters.customize(new SoapOperationTemplate());
-	}
 }

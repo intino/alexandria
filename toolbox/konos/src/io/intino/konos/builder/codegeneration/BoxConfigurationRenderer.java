@@ -1,7 +1,6 @@
 package io.intino.konos.builder.codegeneration;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
 import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
@@ -31,7 +30,7 @@ public class BoxConfigurationRenderer extends Renderer {
 	public void render() {
 		FrameBuilder builder = new FrameBuilder("boxconfiguration");
 		final String boxName = fillFrame(builder);
-		Commons.writeFrame(gen(Target.Server), snakeCaseToCamelCase(boxName) + "Configuration", template().render(builder.toFrame()));
+		Commons.writeFrame(gen(Target.Server), snakeCaseToCamelCase(boxName) + "Configuration", new BoxConfigurationTemplate().render(builder.toFrame(), Formatters.all));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf((Layer) null), javaFile(gen(Target.Server), snakeCaseToCamelCase(boxName) + "Configuration").getAbsolutePath()));
 	}
 
@@ -55,9 +54,5 @@ public class BoxConfigurationRenderer extends Renderer {
 
 	private String nameOf(String parameter) {
 		return parameter.replace("-", " ").replace("_", " ");
-	}
-
-	private Template template() {
-		return Formatters.customize(new BoxConfigurationTemplate());
 	}
 }

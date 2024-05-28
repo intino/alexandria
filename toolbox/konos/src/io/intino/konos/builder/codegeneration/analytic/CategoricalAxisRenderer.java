@@ -1,7 +1,9 @@
 package io.intino.konos.builder.codegeneration.analytic;
 
 import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.formatters.StringFormatters;
 import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.dsl.Axis;
@@ -16,12 +18,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static io.intino.konos.builder.codegeneration.Formatters.customize;
-import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamelCase;
-import static io.intino.konos.builder.helpers.Commons.*;
+import static io.intino.konos.builder.helpers.Commons.javaFile;
+import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class CategoricalAxisRenderer {
-
 	public static final int LABEL_INDEX = 2;
 	public static final int MAX_EMBEDDED_COMPONENTS = 100;
 	private static final String VARIABLE_PATTERN = "[a-zA-Z][a-zA-Z0-9_]*";
@@ -52,8 +52,8 @@ public class CategoricalAxisRenderer {
 
 	private void writeAxisFrame(FrameBuilder fb, Axis.Categorical axis) {
 		writeFrame(new File(gen, "axes"),
-				firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString()),
-				customize(new CategoricalAxisTemplate()).render(fb.toFrame()));
+				StringFormatters.pascalCase().format(axis.name$()).toString(),
+				new CategoricalAxisTemplate().render(fb.toFrame(), Formatters.all));
 	}
 
 	private void addToCompiledFiles(Axis.Categorical axis) {
@@ -191,7 +191,7 @@ public class CategoricalAxisRenderer {
 	}
 
 	private String getJavaFilename(Axis.Categorical axis) {
-		return firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString());
+		return StringFormatters.pascalCase().format(axis.name$()).toString();
 	}
 
 

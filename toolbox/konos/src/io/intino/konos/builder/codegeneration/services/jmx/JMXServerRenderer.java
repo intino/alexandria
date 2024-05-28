@@ -1,7 +1,6 @@
 package io.intino.konos.builder.codegeneration.services.jmx;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
@@ -39,11 +38,7 @@ public class JMXServerRenderer extends Renderer {
 				.add("box", boxName())
 				.add("package", packageName());
 		if (!service.path().isEmpty()) frame.add("path", service.path());
-		writeFrame(gen(Target.Server), "JMX" + snakeCaseToCamelCase(service.name$()), template().render(frame.toFrame()));
+		writeFrame(gen(Target.Server), "JMX" + snakeCaseToCamelCase(service.name$()), new JMXServerTemplate().render(frame.toFrame(), Formatters.all));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Server), "JMX" + snakeCaseToCamelCase(service.name$())).getAbsolutePath()));
-	}
-
-	private Template template() {
-		return Formatters.customize(new JMXServerTemplate());
 	}
 }

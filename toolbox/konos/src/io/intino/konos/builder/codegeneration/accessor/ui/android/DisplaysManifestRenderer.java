@@ -19,6 +19,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static io.intino.konos.builder.codegeneration.Formatters.all;
 import static java.util.stream.Collectors.toSet;
 
 public class DisplaysManifestRenderer extends UIRenderer {
@@ -45,7 +46,7 @@ public class DisplaysManifestRenderer extends UIRenderer {
 		baseDisplays.forEach(d -> renderDisplay(d, result));
 		displays.stream().filter(d -> !renderedDisplays.contains(d.core$().id())).forEach(d -> renderDisplay(d, result));
 
-		Commons.write(new File(gen(Target.Android) + File.separator + "displays" + File.separator + "Displays.kt").toPath(), setup(new DisplaysManifestTemplate()).render(result.toFrame()));
+		Commons.write(new File(gen(Target.Android) + File.separator + "displays" + File.separator + "Displays.kt").toPath(), new DisplaysManifestTemplate().render(result.toFrame(), all));
 	}
 
 	private void renderAccessibleDisplays(Set<Display> displays, Set<PassiveView> baseDisplays) {
@@ -55,7 +56,7 @@ public class DisplaysManifestRenderer extends UIRenderer {
 		baseDisplays.stream().filter(d -> d.i$(Display.Accessible.class)).forEach(d -> renderDisplay(d, result, true));
 		displays.stream().filter(d -> !renderedDisplays.contains(d.core$().id()) && d.isAccessible()).forEach(d -> renderDisplay(d, result, true));
 
-		Commons.write(new File(gen(Target.Android) + File.separator + "displays" + File.separator + "AccessibleDisplays.kt").toPath(), setup(new DisplaysManifestTemplate()).render(result.toFrame()));
+		Commons.write(new File(gen(Target.Android) + File.separator + "displays" + File.separator + "AccessibleDisplays.kt").toPath(), new DisplaysManifestTemplate().render(result.toFrame(), all));
 	}
 
 	private Set<PassiveView> baseDisplays(Set<Display> displays) {

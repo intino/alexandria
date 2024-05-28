@@ -6,17 +6,17 @@ def type(continuous)
 	import java.util.stream.Collectors;
 	import java.util.stream.Stream;
 
-	public class $name+snakeCaseToCamelCase+FirstUpperCase implements Axis {
+	public class $name+PascalCase implements Axis {
 
 		public static final String TITLE = "$label";
 
 		private static final class Singleton {
-			private static final $name+snakeCaseToCamelCase+FirstUpperCase INSTANCE = new $name+snakeCaseToCamelCase+FirstUpperCase();
+			private static final $name+PascalCase INSTANCE = new $name+PascalCase();
 		}
 
 		// === STATIC METHODS === //
 
-		public static $name+snakeCaseToCamelCase+FirstUpperCase get() {
+		public static $name+PascalCase get() {
 			return Singleton.INSTANCE;
 		}
 
@@ -41,19 +41,19 @@ def type(continuous)
 		}
 
 		public static Range rangeOf(final double value) {
-			final Range$[] ranges = Singleton.INSTANCE.ranges;
+			final Range[] ranges = Singleton.INSTANCE.ranges;
 			int index = binarySearch(ranges, value);
 			index = index < 0 ? (index + 1) * -1 : index;
-			return ranges$[index >= ranges.length ? ranges.length - 1 : index];
+			return ranges[index >= ranges.length ? ranges.length - 1 : index];
 		}
 
-		private static int binarySearch(final Range$[] ranges, final double value) {
+		private static int binarySearch(final Range[] ranges, final double value) {
 			int low = 0;
 			int high = ranges.length - 1;
 
 			while (low <= high) {
 				final int mid = (low + high) >>> 1;
-				final double midVal = ranges$[mid].max;
+				final double midVal = ranges[mid].max;
 				final int comparison = Double.compare(midVal, value);
 
 				if (comparison < 0)
@@ -68,9 +68,9 @@ def type(continuous)
 
 		// === === //
 
-		private final Range$[] ranges = new Range$[$rangeSize];
+		private final Range[] ranges = new Range[$rangeSize];
 
-		private $name+snakeCaseToCamelCase+FirstUpperCase() {
+		private $name+PascalCase() {
 			$range+init...[$NL]
 		}
 
@@ -81,19 +81,19 @@ def type(continuous)
 
 		@Override
 		public Range getComponent(String id) {
-			return ranges$[Integer.parseInt(id)];
+			return ranges[Integer.parseInt(id)];
 		}
 
 		@Override
 		public Range getComponent(int index) {
-			return ranges$[index];
+			return ranges[index];
 		}
 
 		public List<Range> getRanges() {
 			return new AbstractList<>() {
 				@Override
 				public Range get(int index) {
-					return ranges$[index];
+					return ranges[index];
 				}
 
 				@Override
@@ -120,7 +120,7 @@ def type(continuous)
 
 		@Override
 		public String toString() {
-			return "$name+snakeCaseToCamelCase+FirstUpperCase";
+			return "$name+PascalCase";
 		}
 
 		public class Range implements Component {
@@ -162,7 +162,7 @@ def type(continuous)
 
 			@Override
 			public Axis axis() {
-				return $name+snakeCaseToCamelCase+FirstUpperCase.this;
+				return $name+PascalCase.this;
 			}
 
 			@Override
@@ -186,26 +186,26 @@ def type(continuous)
 	}
 end
 
-def type(range & lower) attribute(label) trigger(init)
-	ranges$[$index] = new Range($index, Double.MIN_VALUE, $bound, "$label");
+def type(range, lower) and attribute(label) and trigger(init)
+	ranges[$index] = new Range($index, Double.MIN_VALUE, $bound, "$label");
 end
 
-def type(range & upper) attribute(label) trigger(init)
-	ranges$[$index] = new Range($index, $bound, Double.MAX_VALUE, "$label");
+def type(range, upper) and attribute(label) and trigger(init)
+	ranges[$index] = new Range($index, $bound, Double.MAX_VALUE, "$label");
 end
 
-def type(range) attribute(label) trigger(init)
-	ranges$[$index] = new Range($index, $lower, $upper, "$label");
+def type(range) and attribute(label) and trigger(init)
+	ranges[$index] = new Range($index, $lower, $upper, "$label");
 end
 
-def type(range & lower) trigger(init)
-	ranges$[$index] = new Range($index, Double.MIN_VALUE, $bound, "< $bound");
+def type(range, lower) and trigger(init)
+	ranges[$index] = new Range($index, Double.MIN_VALUE, $bound, "< $bound");
 end
 
-def type(range & upper) trigger(init)
-	ranges$[$index] = new Range($index, $bound, Double.MAX_VALUE, "> $bound");
+def type(range, upper) and trigger(init)
+	ranges[$index] = new Range($index, $bound, Double.MAX_VALUE, "> $bound");
 end
 
-def type(range) trigger(init)
-	ranges$[$index] = new Range($index, $lower, $upper, "$lower - $upper");
+def type(range) and trigger(init)
+	ranges[$index] = new Range($index, $lower, $upper, "$lower - $upper");
 end

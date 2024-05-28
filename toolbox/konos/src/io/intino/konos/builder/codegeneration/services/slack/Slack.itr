@@ -1,4 +1,4 @@
-def type(slack & gen)
+def type(slack, gen)
 	package $package+ValidPackage;
 
 	import $package+ValidPackage.slack.*;
@@ -7,13 +7,13 @@ def type(slack & gen)
 	import java.io.IOException;
 	import java.util.Arrays;
 
-	public class $name+firstUpperCase+snakeCaseToCamelCase~SlackBot extends Bot {
-		private $name+snakeCaseToCamelCase+firstUpperCase~Slack $name+snakeCaseToCamelCase+firstLowerCase~Slack;
+	public class $name+pascalCase~SlackBot extends Bot {
+		private $name+PascalCase~Slack $name+CamelCase~Slack;
 		$level+field...[$NL]
 
-		public $name+firstUpperCase+snakeCaseToCamelCase~SlackBot($box+validname+FirstUpperCase~Box box, String token) {
+		public $name+pascalCase~SlackBot($box+validname+FirstUpperCase~Box box, String token) {
 			super(token);
-			$name+snakeCaseToCamelCase+firstLowerCase~Slack = new $name+snakeCaseToCamelCase+firstUpperCase~Slack(box);
+			$name+CamelCase~Slack = new $name+PascalCase~Slack(box);
 			$level+constructor...[$NL]
 
 			add("help", java.util.Collections.emptyList(), java.util.Collections.emptyList(), "Show this help", (properties, args) -> {
@@ -28,7 +28,7 @@ def type(slack & gen)
 					String command = context.command();
 					final String message = command.isEmpty() ? "" : "Exited from " + (command.contains("|") ? command.substring(command.lastIndexOf("|") + 1) : command) + " " + String.join(" ", Arrays.asList(context.getObjects()));
 					context.command(command.contains("|") ? command.substring(0, command.lastIndexOf("|")) : "");
-					context.objects(context.getObjects().length > 1 ? Arrays.copyOfRange(context.getObjects(), 0, context.getObjects().length - 1) : new String$[0$]);
+					context.objects(context.getObjects().length > 1 ? Arrays.copyOfRange(context.getObjects(), 0, context.getObjects().length - 1) : new String[0]);
 					return message;
 				}
 				return "";
@@ -40,7 +40,7 @@ def type(slack & gen)
 			$request+add...[$NL]
 			try {
 				connect();
-				this.$name+snakeCaseToCamelCase+firstLowerCase~Slack.init(session(), users());
+				this.$name+CamelCase~Slack.init(session(), users());
 				$level+init...[$NL]
 			} catch (IOException | javax.websocket.DeploymentException e) {
 				io.intino.alexandria.logger.Logger.error(e);
@@ -57,7 +57,7 @@ def type(slack & gen)
 	}
 end
 
-def type(slack & actions)
+def type(slack, actions)
 	package $package+ValidPackage.slack;
 
 	import $package+ValidPackage.$box+validname+FirstUpperCase~Box;
@@ -67,11 +67,11 @@ def type(slack & actions)
 
 	import java.util.Map;
 
-	public class $name+firstUpperCase+snakeCaseToCamelCase~Slack {
+	public class $name+pascalCase~Slack {
 
 		private $box+validname+FirstUpperCase~Box box;
 
-		public $name+firstUpperCase+snakeCaseToCamelCase~Slack($box+validname+FirstUpperCase~Box box) {
+		public $name+pascalCase~Slack($box+validname+FirstUpperCase~Box box) {
 			this.box = box;
 		}
 
@@ -84,30 +84,30 @@ def type(slack & actions)
 end
 
 
-def type(level) trigger(field)
+def type(level) and trigger(field)
 	private $name+slashToCamelCase+firstUpperCase~Slack $name+slashToCamelCase+firstLowerCase~Slack;
 end
 
-def type(level) trigger(constructor)
+def type(level) and trigger(constructor)
 	$name+slashToCamelCase+firstLowerCase~Slack = new $name+slashToCamelCase+firstUpperCase~Slack(box);
 end
 
-def type(level) trigger(init)
+def type(level) and trigger(init)
 	$name+slashToCamelCase+firstLowerCase~Slack.init(session(), users());
 end
 
-def type(request) trigger(add)
-	add("$name+lowerCase", "$context+lowercase", java.util.Arrays.asList($parameter+name...[, ]), java.util.Arrays.asList($component...[, ]), "$description", (properties, args) -> $type+slashToCamelCase+firstLowerCase~Slack.$name+snakeCaseToCamelCase+firstLowerCase(properties[, $parameter+cast...[, ]]));
+def type(request) and trigger(add)
+	add("$name+lowerCase", "$context+lowercase", java.util.Arrays.asList($parameter+name...[, ]), java.util.Arrays.asList($component...[, ]), "$description", (properties, args) -> $type+slashToCamelCase+firstLowerCase~Slack.$name+CamelCase(properties<<, $parameter+cast...[, ]>>));
 end
 
-def type(request & newMethod)
-	public String $name+snakeCaseToCamelCase+firstLowerCase(MessageProperties properties[, $parameter...[, ]]) {
+def type(request, newMethod)
+	public String $name+CamelCase(MessageProperties properties<<, $parameter...[, ]>>) {
 		return "";
 	}
 end
 
-def type(request) trigger(method)
-	public $responseType $name+snakeCaseToCamelCase+firstLowerCase(MessageProperties properties[, $parameter...[, ]]) {
+def type(request) and trigger(method)
+	public $responseType $name+CamelCase(MessageProperties properties<<, $parameter...[, ]>>) {
 		return "";
 	}
 end
@@ -116,32 +116,32 @@ def trigger(component)
 	"$value"
 end
 
-def type(parameter) trigger(name)
+def type(parameter) and trigger(name)
 	"$name"
 end
 
-def type(parameter & Boolean) trigger(cast)
-	args.length > $pos ? Boolean.parseBoolean(args$[~$pos]) : false
+def type(parameter, Boolean) and trigger(cast)
+	args.length > $pos ? Boolean.parseBoolean(args[~$pos]) : false
 end
 
-def type(parameter & Double) trigger(cast)
-	args.length > $pos ? Double.parseDouble(args$[~$pos]) : 0
+def type(parameter, Double) and trigger(cast)
+	args.length > $pos ? Double.parseDouble(args[~$pos]) : 0
 end
 
-def type(parameter & Integer) trigger(cast)
-	args.length > $pos ? Integer.parseInt(args$[~$pos]) : 0
+def type(parameter, Integer) and trigger(cast)
+	args.length > $pos ? Integer.parseInt(args[~$pos]) : 0
 end
 
-def type(parameter & String & multiple) trigger(cast)
+def type(parameter, String, multiple) and trigger(cast)
 	args
 end
 
-def type(parameter & String) trigger(cast)
-	args.length > $pos ? args$[~$pos] : ""
+def type(parameter, String) and trigger(cast)
+	args.length > $pos ? args[~$pos] : ""
 end
 
-def type(parameter & multiple)
-	$type~$[] $name
+def type(parameter, multiple)
+	$type~[] $name
 end
 
 def type(parameter)

@@ -1,8 +1,11 @@
 package io.intino.konos.builder.codegeneration.analytic;
 
+import io.intino.itrules.Engine;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
+import io.intino.itrules.template.Template;
 import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.konos.builder.codegeneration.facts.ColumnsTemplate;
 import io.intino.konos.builder.codegeneration.facts.FactRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
@@ -14,7 +17,6 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
-import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.*;
 
 public class CubeRenderer {
@@ -63,15 +65,15 @@ public class CubeRenderer {
 	}
 
 	private void write(Cube cube, FrameBuilder fb) {
-		Template template = customize(template(cube));
+		Template template = template(cube);
 
-		writeFrame(new File(gen, "cubes"), "Abstract" + firstUpperCase(cube.name$()), template.render(fb.toFrame()));
+		writeFrame(new File(gen, "cubes"), "Abstract" + firstUpperCase(cube.name$()), new Engine(template).addAll(Formatters.all).render(fb.toFrame()));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(cube),
 				javaFile(new File(gen, "cubes"), "Abstract" + firstUpperCase(cube.name$())).getAbsolutePath()));
 
 		if (alreadyRendered(new File(src, "cubes"), cube.name$())) return;
 
-		writeFrame(new File(src, "cubes"), cube.name$(), template.render(fb.add("src").toFrame()));
+		writeFrame(new File(src, "cubes"), cube.name$(), new Engine(template).addAll(Formatters.all).render(fb.add("src").toFrame()));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(cube),
 				javaFile(new File(src, "cubes"), firstUpperCase(cube.name$())).getAbsolutePath()));
 	}
@@ -185,7 +187,7 @@ public class CubeRenderer {
 	}
 
 	private Template template(Cube cube) {
-		return cube.isVirtual() ? new VirtualCubeTemplate() : new CubeWithGettersTemplate();
+		return cube.isVirtual() ? new VirtualCubeTemplate() : Template.compose(new CubeTemplate(), new ColumnsTemplate());
 	}
 
 	private boolean alreadyRendered(File destination, String name) {

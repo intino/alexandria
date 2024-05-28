@@ -3,7 +3,6 @@ package io.intino.konos.builder.codegeneration.schema;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Renderer;
-import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.dsl.Data;
 import io.intino.konos.dsl.Schema;
@@ -16,7 +15,6 @@ import static java.util.Collections.addAll;
 
 public class SchemaRenderer extends Renderer {
 	private final Schema schema;
-	private final File destination;
 	private final String packageName;
 	private final boolean serializationAnnotations;
 	private final SchemaWriter writer;
@@ -24,7 +22,6 @@ public class SchemaRenderer extends Renderer {
 	public SchemaRenderer(CompilationContext compilationContext, Schema schema, File destination, String packageName, boolean serializationAnnotations, SchemaWriter writer) {
 		super(compilationContext);
 		this.schema = schema;
-		this.destination = destination != null ? destination : gen(Target.Server);
 		this.writer = writer;
 		this.serializationAnnotations = serializationAnnotations;
 		this.packageName = packageName != null ? packageName : compilationContext.packageName();
