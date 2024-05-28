@@ -11,9 +11,7 @@ import io.intino.konos.dsl.Display;
 import io.intino.konos.dsl.Service;
 
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 @SuppressWarnings("Duplicates")
 public class DisplayListRenderer extends UIRenderer {
@@ -31,26 +29,29 @@ public class DisplayListRenderer extends UIRenderer {
 		asyncRender();
 	}
 
-	private void asyncRender() {
+	private void asyncRender() throws KonosException {
 		FrameBuilder.startCache();
 		DisplayRendererFactory factory = new DisplayRendererFactory();
 		ExecutorService service = Executors.newFixedThreadPool(displays.size() > 4 ? Runtime.getRuntime().availableProcessors() : 2, new NamedThreadFactory("displays"));
-		displays.stream().<Runnable>map(d -> () -> render(d, factory)).forEach(service::execute);
 		try {
+			List<Future<Boolean>> futures = displays.stream().<Callable>map(d -> () -> render(d, factory)).<Future<Boolean>>map(task -> service.submit(task)).toList();
 			service.shutdown();
 			service.awaitTermination(1, TimeUnit.HOURS);
-		} catch (InterruptedException e) {
+			for (Future<Boolean> future : futures) future.get();
+		} catch (Throwable e) {
 			Logger.error(e);
+			throw new KonosException(e.getMessage());
 		}
 		FrameBuilder.stopCache();
 	}
 
-	private void render(Display display, DisplayRendererFactory factory) {
+	private boolean render(Display display, DisplayRendererFactory factory) throws KonosException {
 		try {
 			factory.renderer(context, display, rendererWriter).execute();
 			FrameBuilder.clearCache();
-		} catch (KonosException e) {
-			Logger.error(e);
+			return true;
+		} catch (Throwable e) {
+			throw new KonosException(e.getMessage());
 		}
 	}
 }
