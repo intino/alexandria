@@ -7,7 +7,7 @@ def type(root)
 end
 
 def trigger(schema)
-	public [$inner] class $name+firstUpperCase [extends $parent] implements java.io.Serializable {
+	public <<$inner>> class $name+firstUpperCase <<extends $parent>> implements java.io.Serializable {
 
 		$attribute+declaration...[$NL]
 
@@ -15,11 +15,11 @@ def trigger(schema)
 
 		$attribute+setter...[$NL$NL]
 
-		[$schema...[$NL$NL]]
+		<<$schema...[$NL$NL]>>
 	}
 end
 
-def type(word & single) trigger(declaration)
+def type(word, single) and trigger(declaration)
 	private $type+FirstUpperCase $name+FirstLowerCase;
 
 	public enum $name+FirstUpperCase {
@@ -28,7 +28,7 @@ def type(word & single) trigger(declaration)
 
 end
 
-def type(word) type(list) trigger(declaration)
+def type(word) and type(list) and trigger(declaration)
 	private java.util.List<$type+FirstUpperCase> $name+FirstLowerCase = new java.util.ArrayList<>();
 
 	public enum $name+FirstUpperCase {
@@ -37,7 +37,7 @@ def type(word) type(list) trigger(declaration)
 
 end
 
-def type(word) type(set) trigger(declaration)
+def type(word) and type(set) and trigger(declaration)
 	private java.util.Set<$type+FirstUpperCase> $name+FirstLowerCase = new java.util.HashSet<>();
 
 	public enum $name+FirstUpperCase {
@@ -46,62 +46,62 @@ def type(word) type(set) trigger(declaration)
 
 end
 
-def type(primitive & single) trigger(declaration)
-	private $type $name+firstLowerCase[ = $defaultValue];
+def type(primitive, single) and trigger(declaration)
+	private $type $name+firstLowerCase<< = $defaultValue>>;
 end
 
-def !type(primitive) type(single) trigger(declaration)
-	private $type+firstUpperCase $name+firstLowerCase[ = $defaultValue];
+def not type(primitive) and type(single) and trigger(declaration)
+	private $type+firstUpperCase $name+firstLowerCase<< = $defaultValue>>;
 end
 
-def type(map) trigger(declaration)
+def type(map) and trigger(declaration)
 	private java.util.Map<$key+renderMapType, $value+renderMapType> $name+firstLowerCase = new java.util.HashMap<>();
 end
 
-def type(list) type(object | schema) trigger(declaration)
+def type(list) and (type(object) or type(schema)) and trigger(declaration)
 	private java.util.List<$type+firstUpperCase> $name+firstLowerCase = new java.util.ArrayList<>();
 end
 
-def type(list) trigger(declaration)
+def type(list) and trigger(declaration)
 	private java.util.List<$type> $name+firstLowerCase = new java.util.ArrayList<>();
 end
 
-def type(set) trigger(declaration)
+def type(set) and trigger(declaration)
 	private java.util.Set<$type> $name+firstLowerCase = new java.util.HashSet<>();
 end
 
-def type(word & single) trigger(getter)
-	public $type+FirstUpperCase $name+snakeCaseToCamelCase+FirstLowerCase() {
+def type(word, single) and trigger(getter)
+	public $type+FirstUpperCase $name+CamelCase() {
 		return $name+FirstLowerCase;
 	}
 end
 
-def type(object | word) type(list) trigger(getter)
-	public java.util.List<$type+firstUpperCase> $name+snakeCaseToCamelCase+firstLowerCase() {
+def (type(object) or type(word)) and type(list) and trigger(getter)
+	public java.util.List<$type+firstUpperCase> $name+CamelCase() {
 		return this.$name+firstLowerCase;
 	}
 end
 
-def type(object | word) type(set) trigger(getter)
-	public java.util.Set<$type+FirstUpperCase> $name+snakeCaseToCamelCase+FirstLowerCase() {
+def (type(object) or type(word)) and type(set) and trigger(getter)
+	public java.util.Set<$type+FirstUpperCase> $name+CamelCase() {
 		return $name+FirstLowerCase;
 	}
 end
 
-def type(primitive & single) trigger(getter)
-	public $type $name+snakeCaseToCamelCase+firstLowerCase() {
+def type(primitive, single) and trigger(getter)
+	public $type $name+CamelCase() {
 		return this.$name+firstLowerCase;
 	}
 end
 
-def !type(primitive) type(single) trigger(getter)
-	public $type+firstUpperCase $name+snakeCaseToCamelCase+firstLowerCase() {
+def not type(primitive) and type(single) and trigger(getter)
+	public $type+firstUpperCase $name+CamelCase() {
 		return this.$name+firstLowerCase;
 	}
 end
 
-def type(schema & list) trigger(getter)
-	public java.util.List<$type+firstUpperCase> $name+snakeCaseToCamelCase+firstLowerCase~List() {
+def type(schema, list) and trigger(getter)
+	public java.util.List<$type+firstUpperCase> $name+CamelCase~List() {
 		return this.$name+firstLowerCase;
 	}
 
@@ -115,96 +115,96 @@ def type(schema & list) trigger(getter)
 end
 
 
-def type(list) trigger(getter)
-	public java.util.List<$type> $name+snakeCaseToCamelCase+firstLowerCase() {
+def type(list) and trigger(getter)
+	public java.util.List<$type> $name+CamelCase() {
 		return this.$name+firstLowerCase;
 	}
 end
 
-def type(set) trigger(getter)
-	public java.util.Set<$type> $name+snakeCaseToCamelCase+firstLowerCase() {
+def type(set) and trigger(getter)
+	public java.util.Set<$type> $name+CamelCase() {
 		return this.$name+firstLowerCase;
 	}
 end
 
-def type(map) trigger(getter)
+def type(map) and trigger(getter)
 	public java.util.Map<$key+renderMapType, $value+renderMapType> $name+firstLowerCase() {
 		return this.$name+firstLowerCase;
 	}
 end
 
-def type(map) trigger(setter)
+def type(map) and trigger(setter)
 	public $element+firstUpperCase $name+firstLowerCase(java.util.Map<$key+renderMapType, $value+renderMapType> $name+firstLowerCase) {
 		this.$name+firstLowerCase = $name+firstLowerCase;
 		return this;
 	}
 end
 
-def type(list) trigger(renderMapType)
+def type(list) and trigger(renderMapType)
 	java.util.List<$type+firstUpperCase>
 end
 def trigger(renderMapType)
 	$type+firstUpperCase
 end
 
-def type(word & single) trigger(setter)
-	public $element+firstUpperCase $name+snakeCaseToCamelCase+firstLowerCase($type+FirstUpperCase $name+snakeCaseToCamelCase+firstLowerCase) {
-		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase;
+def type(word, single) and trigger(setter)
+	public $element+firstUpperCase $name+CamelCase($type+FirstUpperCase $name+CamelCase) {
+		this.$name+firstLowerCase = $name+CamelCase;
 		return this;
 	}
 end
-def type(word | object) type(list) trigger(setter)
-	public $element+firstUpperCase $name+snakeCaseToCamelCase+firstLowerCase(java.util.List<$type+FirstUpperCase> $name+snakeCaseToCamelCase+firstLowerCase) {
-		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase;
-		return this;
-	}
-end
-
-def type(word | object) type(set) trigger(setter)
-	public $element+firstUpperCase $name+snakeCaseToCamelCase+firstLowerCase(java.util.Set<$type+FirstUpperCase> $name+snakeCaseToCamelCase+firstLowerCase) {
-		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase;
+def (type(word) or type(object)) and type(list) and trigger(setter)
+	public $element+firstUpperCase $name+CamelCase(java.util.List<$type+FirstUpperCase> $name+CamelCase) {
+		this.$name+firstLowerCase = $name+CamelCase;
 		return this;
 	}
 end
 
-def type(primitive & single) trigger(setter)
-	public $element+firstUpperCase $name+snakeCaseToCamelCase+firstLowerCase($type $name+snakeCaseToCamelCase+firstLowerCase) {
-		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase;
+def (type(word) or type(object)) and type(set) and trigger(setter)
+	public $element+firstUpperCase $name+CamelCase(java.util.Set<$type+FirstUpperCase> $name+CamelCase) {
+		this.$name+firstLowerCase = $name+CamelCase;
 		return this;
 	}
 end
 
-def !type(primitive) type(single) trigger(setter)
-	public $element+firstUpperCase $name+snakeCaseToCamelCase+firstLowerCase($type+firstUpperCase $name+snakeCaseToCamelCase+firstLowerCase) {
-		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase;
+def type(primitive, single) and trigger(setter)
+	public $element+firstUpperCase $name+CamelCase($type $name+CamelCase) {
+		this.$name+firstLowerCase = $name+CamelCase;
 		return this;
 	}
 end
 
-def type(schema & list) trigger(setter)
-	public $element+firstUpperCase $name+snakeCaseToCamelCase+firstLowerCase~List(java.util.List<$type+firstUpperCase> $name+snakeCaseToCamelCase+firstLowerCase) {
-		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase;
+def not type(primitive) and type(single) and trigger(setter)
+	public $element+firstUpperCase $name+CamelCase($type+firstUpperCase $name+CamelCase) {
+		this.$name+firstLowerCase = $name+CamelCase;
 		return this;
 	}
 end
 
-def type(list) trigger(setter)
-	public $element+firstUpperCase $name+snakeCaseToCamelCase+firstLowerCase(java.util.List<$type> $name+snakeCaseToCamelCase+firstLowerCase) {
-		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase;
+def type(schema, list) and trigger(setter)
+	public $element+firstUpperCase $name+CamelCase~List(java.util.List<$type+firstUpperCase> $name+CamelCase) {
+		this.$name+firstLowerCase = $name+CamelCase;
 		return this;
 	}
 end
 
-def type(schema & set) trigger(setter)
-	public $element+firstUpperCase $name+snakeCaseToCamelCase+firstLowerCase~List(java.util.Set<$type+firstUpperCase> $name+snakeCaseToCamelCase+firstLowerCase) {
-		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase;
+def type(list) and trigger(setter)
+	public $element+firstUpperCase $name+CamelCase(java.util.List<$type> $name+CamelCase) {
+		this.$name+firstLowerCase = $name+CamelCase;
 		return this;
 	}
 end
 
-def type(set) trigger(setter)
-	public $element+firstUpperCase $name+snakeCaseToCamelCase+firstLowerCase(java.util.Set<$type> $name+snakeCaseToCamelCase+firstLowerCase) {
-		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase;
+def type(schema, set) and trigger(setter)
+	public $element+firstUpperCase $name+CamelCase~List(java.util.Set<$type+firstUpperCase> $name+CamelCase) {
+		this.$name+firstLowerCase = $name+CamelCase;
+		return this;
+	}
+end
+
+def type(set) and trigger(setter)
+	public $element+firstUpperCase $name+CamelCase(java.util.Set<$type> $name+CamelCase) {
+		this.$name+firstLowerCase = $name+CamelCase;
 		return this;
 	}
 end

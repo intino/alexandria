@@ -2,6 +2,7 @@ package io.intino.konos.builder.codegeneration.accessor.ui.web;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.accessor.ui.web.templates.DisplaysManifestTemplate;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
@@ -45,7 +46,7 @@ public class DisplaysManifestRenderer extends UIRenderer {
 		baseDisplays.forEach(d -> renderDisplay(d, result));
 		displays.stream().filter(d -> !renderedDisplays.contains(d.core$().id())).forEach(d -> renderDisplay(d, result));
 
-		Commons.write(new File(gen(Target.Accessor) + File.separator + "Displays.js").toPath(), setup(new DisplaysManifestTemplate()).render(result.toFrame()));
+		Commons.write(new File(gen(Target.Accessor) + File.separator + "Displays.js").toPath(), new DisplaysManifestTemplate().render(result.toFrame(), Formatters.all));
 	}
 
 	private void renderAccessibleDisplays(Set<Display> displays, Set<PassiveView> baseDisplays) {
@@ -54,7 +55,7 @@ public class DisplaysManifestRenderer extends UIRenderer {
 		baseDisplays.stream().filter(d -> d.i$(Display.Accessible.class)).forEach(d -> renderDisplay(d, result, true));
 		displays.stream().filter(d -> !renderedDisplays.contains(d.core$().id()) && d.isAccessible()).forEach(d -> renderDisplay(d, result, true));
 
-		Commons.write(new File(gen(Target.Accessor) + File.separator + "AccessibleDisplays.js").toPath(), setup(new DisplaysManifestTemplate()).render(result.toFrame()));
+		Commons.write(new File(gen(Target.Accessor) + File.separator + "AccessibleDisplays.js").toPath(), new DisplaysManifestTemplate().render(result.toFrame(), Formatters.all));
 	}
 
 	private Set<PassiveView> baseDisplays(Set<Display> displays) {

@@ -19,7 +19,7 @@ def type(accessor)
 
 	$schemaImport
 
-	public class $name+firstUpperCase+snakeCaseToCamelCase$~Accessor {
+	public class $name+pascalCase~Accessor {
 		private final URL url;
 		private final RestAccessorNotifier notifier = new RestAccessorNotifier();
 		private int timeoutMillis = 120 * 1_000;
@@ -28,18 +28,18 @@ def type(accessor)
 		$authentication+field
 		$enumParameter...[$NL$NL]
 
-		public $name+firstUpperCase+snakeCaseToCamelCase~Accessor(URL url[, $authentication+parameter]) {
+		public $name+pascalCase~Accessor(URL url<<, $authentication+parameter>>) {
 			this.url = url;
 			$authentication+assign
 		}
 
-		public $name+firstUpperCase+snakeCaseToCamelCase~Accessor(URL url, int timeoutMillis[, $authentication+parameter]) {
+		public $name+pascalCase~Accessor(URL url, int timeoutMillis<<, $authentication+parameter>>) {
 			this.url = url;
 			this.timeoutMillis = timeoutMillis;
 			$authentication+assign
 		}
 
-		public $name+firstUpperCase+snakeCaseToCamelCase~Accessor(URL url, int timeoutMillis, java.io.File outBoxDirectory, int intervalRetrySeconds[, $authentication+parameter]) {
+		public $name+pascalCase~Accessor(URL url, int timeoutMillis, java.io.File outBoxDirectory, int intervalRetrySeconds<<, $authentication+parameter>>) {
 			this.url = url;
 			this.timeoutMillis = timeoutMillis;
 			this.outBox = new io.intino.alexandria.restaccessor.OutBox(outBoxDirectory, intervalRetrySeconds);
@@ -65,16 +65,16 @@ def type(accessor)
 end
 
 def type(resource)
-	public $response $method+firstLowerCase~$name+snakeCaseToCamelCase+firstUpperCase($parameter+signature...[, ]) $exceptionResponses+declaration {
+	public $response $method+firstLowerCase~$name+PascalCase($parameter+signature...[, ]) $exceptionResponses+declaration {
 		RequestBuilder builder = new RequestBuilder(this.url).timeOut(this.timeoutMillis);
 		additionalHeaders.forEach((k,v) -> builder.headerParameter(k,v));
 		RequestBuilder.Request request = builder
-			[.$auth]
-			[.$parameter...[$NL.]]
+			<<.$auth>>
+			<<.$parameter...[$NL.]>>
 			.build(RequestBuilder.Method.$method+upperCase, $path);
 		try {
 			io.intino.alexandria.restaccessor.Response response = request.execute();
-			[$response+return]
+			<<$response+return>>
 		} catch (AlexandriaException e) {
 			$exceptionResponses+throws
 			if (outBox != null) outBox.push(request);
@@ -83,55 +83,55 @@ def type(resource)
 	}
 end
 
-def type(parameter & query & word) trigger(parameter)
-	queryParameter("$name", $name+snakeCaseToCamelCase+firstLowerCase.name())
+def type(parameter, query, word) and trigger(parameter)
+	queryParameter("$name", $name+CamelCase.name())
 end
 
-def type(parameter & query) trigger(parameter)
-	queryParameter("$name", $name+snakeCaseToCamelCase+firstLowerCase)
+def type(parameter, query) and trigger(parameter)
+	queryParameter("$name", $name+CamelCase)
 end
 
-def type(parameter & header & word) trigger(parameter)
-	headerParameter("$name", $name+snakeCaseToCamelCase+firstLowerCase.name())
+def type(parameter, header, word) and trigger(parameter)
+	headerParameter("$name", $name+CamelCase.name())
 end
 
-def type(parameter & header) trigger(parameter)
-	headerParameter("$name", $name+snakeCaseToCamelCase+firstLowerCase)
+def type(parameter, header) and trigger(parameter)
+	headerParameter("$name", $name+CamelCase)
 end
 
-def !type(file) type(parameter & body) trigger(parameter)
-	entityPart("$name", $name+snakeCaseToCamelCase+firstLowerCase)
+def not type(file) and type(parameter, body) and trigger(parameter)
+	entityPart("$name", $name+CamelCase)
 end
 
-def !type(file) type(parameter & form) trigger(parameter)
-	entityPart("$name", $name+snakeCaseToCamelCase+firstLowerCase)
+def not type(file) and type(parameter, form) and trigger(parameter)
+	entityPart("$name", $name+CamelCase)
 end
 
-def type(file) type(parameter) trigger(parameter)
-	entityPart($name+snakeCaseToCamelCase+firstLowerCase)
+def type(file) and type(parameter) and trigger(parameter)
+	entityPart($name+CamelCase)
 end
 
 def trigger(enumParameter)
-	public enum $class+snakeCaseToCamelCase+FirstUpperCase {
+	public enum $class+PascalCase {
 		$value...[, ]
 	}
 end
 
-def type(list) trigger(return)
+def type(list) and trigger(return)
 	return io.intino.alexandria.restaccessor.adapters.ResponseAdapter.adapt(response.content(), new com.google.gson.reflect.TypeToken<Array$value>(){}.getType());
 end
 
-def type(set) trigger(return)
+def type(set) and trigger(return)
 	return io.intino.alexandria.restaccessor.adapters.ResponseAdapter.adapt(response.content(), new com.google.gson.reflect.TypeToken<Hash$value>(){}.getType());
 end
 
-def type(file) trigger(return)
+def type(file) and trigger(return)
 	String filename = !response.headers().containsKey("Content-Disposition") ? "filename=content":
 		Arrays.stream(response.headers().get("Content-Disposition").split(";")).filter(c-> c.startsWith("filename")).findFirst().orElse(null);
-	return new io.intino.alexandria.Resource(filename.split("=")$[1], response.contentType(), response.contentAsStream());
+	return new io.intino.alexandria.Resource(filename.split("=")[1], response.contentType(), response.contentAsStream());
 end
 
-def !type(list) !attribute(value:void) trigger(return)
+def not type(list) and not attribute(value, void) and trigger(return)
 	return io.intino.alexandria.restaccessor.adapters.ResponseAdapter.adapt(response.content(), $value.class);
 end
 
@@ -143,10 +143,10 @@ def trigger(response)
 end
 
 def type(notification)
-	public void listen$name+snakeCaseToCamelCase+firstUppercase([$parameter+signature...[, ], ]java.util.function.Consumer<String> listener) throws InternalServerError {
+	public void listen$name+PascalCase(<<$parameter+signature...[, ], >>java.util.function.Consumer<String> listener) throws InternalServerError {
 		RequestBuilder.Request request = new RequestBuilder(this.url).timeOut(this.timeoutMillis)
-			[.$auth]
-			[.$parameter...[.]]
+			<<.$auth>>
+			<<.$parameter...[.]>>
 			.build(RequestBuilder.Method.POST, "$path");
 		try {
 			this.notifier.listen(listener, request.execute().content().trim());
@@ -155,81 +155,81 @@ def type(notification)
 		}
 	}
 
-	public void stopListen$name+snakeCaseToCamelCase+firstUppercase() {
+	public void stopListen$name+PascalCase() {
 		this.notifier.close();
 	}
 end
 
-def type(basic) trigger(auth)
+def type(basic) and trigger(auth)
 	basicAuth(this.user, this.pasword)
 end
 
-def type(bearer) trigger(auth)
+def type(bearer) and trigger(auth)
 	bearerAuth(this.token)
 end
 
-def type(authentication & basic) trigger(parameter)
+def type(authentication, basic) and trigger(parameter)
 	String user, String password
 end
 
-def type(authentication & bearer) trigger(parameter)
+def type(authentication, bearer) and trigger(parameter)
 	String token
 end
 
-def type(authentication & withCertificate) trigger(parameter)
+def type(authentication, withCertificate) and trigger(parameter)
 	URL certificate
 end
 
-def type(authentication & withCertificate) trigger(assign)
+def type(authentication, withCertificate) and trigger(assign)
 	this.certificate = certificate;
 end
 
-def type(authentication & basic) trigger(assign)
+def type(authentication, basic) and trigger(assign)
 	this.user = user;
 	this.password = password;
 end
 
-def type(authentication & bearer) trigger(assign)
+def type(authentication, bearer) and trigger(assign)
 	this.token = token;
 end
 
-def type(authentication & withCertificate) trigger(assign)
+def type(authentication, withCertificate) and trigger(assign)
 	this.certificate = certificate;
 end
 
-def type(authentication) type(basic) trigger(field)
+def type(authentication) and type(basic) and trigger(field)
 	private final String user;
 	private final String password;
 end
 
-def type(authentication) type(bearer) trigger(field)
+def type(authentication) and type(bearer) and trigger(field)
 	private final String token;
 end
 
-def type(authentication & withCertificate) trigger(field)
+def type(authentication, withCertificate) and trigger(field)
 	private final URL certificate;
 end
 
-def type(parameter) trigger(signature)
-	$parameterType $name+snakeCaseToCamelCase+firstLowerCase
+def type(parameter) and trigger(signature)
+	$parameterType $name+CamelCase
 end
 
-def type(exceptionResponses) trigger(throws)
+def type(exceptionResponses) and trigger(throws)
 	$exceptionResponse+throws...[$NLelse ]
 end
 
-def type(exceptionResponse) trigger(throws)
+def type(exceptionResponse) and trigger(throws)
 	if (e instanceof $exceptionName) throw (($exceptionName) e);
 end
 
-def type(exceptionResponses) trigger(declaration)
-	throws [$exceptionResponse+declaration...[, ],] InternalServerError
+def type(exceptionResponses) and trigger(declaration)
+	throws <<$exceptionResponse+declaration...[, ],>> InternalServerError
 end
 
-def type(exceptionResponse) trigger(declaration)
+def type(exceptionResponse) and trigger(declaration)
 	$exceptionName
 end
 
-def type(schemaImport) trigger(schemaImport)
+def type(schemaImport) and trigger(schemaImport)
 	import $package.schemas.*;
 end

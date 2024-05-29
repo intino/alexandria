@@ -1,9 +1,11 @@
 package io.intino.konos.builder.codegeneration.ui;
 
+import io.intino.itrules.Engine;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
+import io.intino.itrules.template.Template;
 import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.accessor.ui.web.templates.I18nTemplate;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
@@ -29,7 +31,7 @@ public class I18nRenderer extends UIRenderer {
 	@Override
 	public void render() {
 		FrameBuilder builder = buildFrame();
-		Commons.write(fileOf(folder(gen(target), "/", target), "I18n", target).toPath(), setup(template()).render(builder.toFrame()));
+		Commons.write(fileOf(folder(gen(target), "/", target), "I18n", target).toPath(), new Engine(template()).addAll(Formatters.all).render(builder.toFrame()));
 		if (target.equals(Target.Server))
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), fileOf(folder(gen(target), "/", target), "I18n", target).getAbsolutePath()));
 	}
@@ -79,7 +81,9 @@ public class I18nRenderer extends UIRenderer {
 	}
 
 	private Template template() {
-		return target == Target.Server ? new io.intino.konos.builder.codegeneration.services.ui.templates.I18nTemplate() : new I18nTemplate();
+		return target == Target.Server ?
+				new io.intino.konos.builder.codegeneration.services.ui.templates.I18nTemplate() :
+				new I18nTemplate();
 	}
 
 }

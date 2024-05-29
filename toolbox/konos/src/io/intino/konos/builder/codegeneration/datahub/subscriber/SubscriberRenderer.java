@@ -2,6 +2,7 @@ package io.intino.konos.builder.codegeneration.datahub.subscriber;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
@@ -13,7 +14,6 @@ import io.intino.konos.dsl.Subscriber;
 import java.io.File;
 import java.util.List;
 
-import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
@@ -44,7 +44,7 @@ public class SubscriberRenderer {
 			builder.add("typeName", type.substring(type.lastIndexOf(".") + 1));
 			context.classes().put(subscriber.getClass().getSimpleName() + "#" + subscriber.name$(), "subscribers." + subscriber.name$());
 			if (!alreadyRendered(srcSubscribers, subscriber.name$())) {
-				writeFrame(srcSubscribers, subscriber.name$(), customize(new SubscriberTemplate()).render(builder.toFrame()));
+				writeFrame(srcSubscribers, subscriber.name$(), new SubscriberTemplate().render(builder.toFrame(), Formatters.all));
 				context.compiledFiles().add(new OutputItem(context.sourceFileOf(subscriber), javaFile(srcSubscribers, subscriber.name$()).getAbsolutePath()));
 			}
 		}

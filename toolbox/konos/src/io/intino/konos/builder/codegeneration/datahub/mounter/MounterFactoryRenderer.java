@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration.datahub.mounter;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.CompilationContext.DataHubManifest;
@@ -15,7 +16,6 @@ import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
@@ -44,9 +44,9 @@ public class MounterFactoryRenderer {
 					add("mounter", map.get(event).stream().map(m -> baseFrame("mounter").add("datamart", m.core$().owner().name()).add("name", m.name$()).toFrame()).toArray(Frame[]::new)));
 		context.classes().put(Mounter.class.getSimpleName() + "#" + "MounterFactory", "mounters.mounterFactory");
 		Frame object = builder.toFrame();
-		writeFrame(genMounters, "MounterFactory", customize(new MounterFactoryTemplate()).render(object));
+		writeFrame(genMounters, "MounterFactory", new MounterFactoryTemplate().render(object, Formatters.all));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(mounters.get(0)), javaFile(genMounters, "MounterFactory").getAbsolutePath()));
-		writeFrame(genMounters, "Mounter", customize(new IMounterTemplate()).render(object));
+		writeFrame(genMounters, "Mounter", new IMounterTemplate().render(object, Formatters.all));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(mounters.get(0)), javaFile(genMounters, "Mounter").getAbsolutePath()));
 	}
 

@@ -7,11 +7,11 @@ def type(accessor)
 	import javax.jms.*;
 	$schemaImport
 
-	public class $name+snakeCaseToCamelCase+firstUpperCase~Accessor {
+	public class $name+PascalCase~Accessor {
 		private final io.intino.alexandria.terminal.JmsConnector connector;
 		private final String context;
 
-		public $name+snakeCaseToCamelCase+firstUpperCase~Accessor(io.intino.alexandria.terminal.JmsConnector connector, String context) {
+		public $name+PascalCase~Accessor(io.intino.alexandria.terminal.JmsConnector connector, String context) {
 			this.connector = connector;
 			this.context = context;
 		}
@@ -27,29 +27,29 @@ def type(accessor)
 	}
 end
 
-def type(request & reply) trigger(registerCallback)
-	public $service+snakeCaseToCamelCase+firstUpperCase~Accessor register$name+firstUpperCase~CallbackConsumer(Consumer<$response+type> consumer) {
+def type(request, reply) and trigger(registerCallback)
+	public $service+PascalCase~Accessor register$name+firstUpperCase~CallbackConsumer(Consumer<$response+type> consumer) {
 		connector.attachListener("response" + chainContext() + "$name", (r, c) -> consumer.accept(io.intino.alexandria.Json.fromString(r, $response+type.class)));
 		return this;
 	}
 end
 
 def type(request)
-	public void $name([$parameter+signature]) {
+	public void $name(<<$parameter+signature>>) {
 		connector.requestResponse("$path", io.intino.alexandria.Json.toString($parameter+name), "response" + chainContext() + "$name");
 	}
 end
 
-def type(value) trigger(type)
+def type(value) and trigger(type)
 	$type+FirstUpperCase
 end
 
-def type(value) trigger(signature)
-	$type $name+snakeCaseToCamelCase+firstLowerCase
+def type(value) and trigger(signature)
+	$type $name+CamelCase
 end
 
-def type(value) trigger(name)
-	$name+snakeCaseToCamelCase+firstLowerCase
+def type(value) and trigger(name)
+	$name+CamelCase
 end
 
 def type(schemaImport)

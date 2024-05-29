@@ -2,15 +2,17 @@ package io.intino.konos.builder.codegeneration.analytic;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.dsl.Axis;
 
 import java.io.File;
 import java.util.List;
 
-import static io.intino.konos.builder.codegeneration.Formatters.customize;
-import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamelCase;
-import static io.intino.konos.builder.helpers.Commons.*;
+import static io.intino.itrules.formatters.StringFormatters.camelCase;
+import static io.intino.itrules.formatters.StringFormatters.pascalCase;
+import static io.intino.konos.builder.helpers.Commons.javaFile;
+import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class ContinuousAxisRenderer {
 
@@ -26,8 +28,8 @@ public class ContinuousAxisRenderer {
 		FrameBuilder fb = new FrameBuilder("continuous");
 		addAxisBasicInfo(fb, axis);
 		setRanges(fb, axis);
-		writeFrame(new File(gen, "axes"), firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString()), customize(new ContinuousAxisTemplate()).render(fb.toFrame()));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(axis), javaFile(new File(gen, "axes"), firstUpperCase(snakeCaseToCamelCase().format(axis.name$()).toString())).getAbsolutePath()));
+		writeFrame(new File(gen, "axes"), pascalCase().format(axis.name$()).toString(), new ContinuousAxisTemplate().render(fb.toFrame(), Formatters.all));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(axis), javaFile(new File(gen, "axes"), pascalCase().format(axis.name$()).toString()).getAbsolutePath()));
 	}
 
 	private void setRanges(FrameBuilder fb, Axis.Continuous axis) {
@@ -55,7 +57,7 @@ public class ContinuousAxisRenderer {
 
 	private void addAxisBasicInfo(FrameBuilder fb, Axis.Continuous axis) {
 		fb.add("package", context.packageName())
-				.add("name", snakeCaseToCamelCase().format(axis.name$()).toString())
+				.add("name", camelCase().format(axis.name$()).toString())
 				.add("label", axis.label())
 				.add("rangeSize", axis.rangeList().size());
 	}

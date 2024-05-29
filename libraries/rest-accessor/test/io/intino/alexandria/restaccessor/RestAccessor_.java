@@ -8,7 +8,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -19,15 +18,16 @@ public class RestAccessor_ {
 	@Test
 	public void should_post_data_encoded_with_utf8() throws RestfulFailure {
 		io.intino.alexandria.restaccessor.RestAccessor client = new RestAccessor();
-		Response post = client.post(localhost(), "/encoding", new HashMap<String, String>() {{
+		Response post = client.post(localhost(), "/encoding", new HashMap<>() {{
 			put("param1", "holá");
 			put("param2", "adiós");
 		}});
+
 		Assert.assertEquals("name: param1, value: holá;name: param2, value: adiós;", post.content());
 	}
 
 	@Test
-	public void should_post_resource_encoded_with_utf8() throws RestfulFailure, IOException {
+	public void should_post_resource_encoded_with_utf8() throws RestfulFailure {
 		io.intino.alexandria.restaccessor.RestAccessor client = new RestAccessor();
 		Resource resource = new Resource("example", new ByteArrayInputStream(new byte[0]));
 //		resource.addParameter("param1", "holá");

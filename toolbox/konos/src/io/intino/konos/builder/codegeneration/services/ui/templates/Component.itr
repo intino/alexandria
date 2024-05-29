@@ -1,81 +1,82 @@
-def type(reference) trigger(declaration)
-	public [$ancestors+firstUpperCase...[.].] $name+firstUpperCase $name;
+def type(reference) and trigger(declaration)
+	public <<$ancestors+firstUpperCase...[.].>> $name+firstUpperCase $name;
 end
 
-def type(reference & item)
-	if ($name == null) $name = register(new $name+firstUpperCase([($concreteBox+firstUpperCase~Box)]box()).<$name+firstUpperCase>id("$id").<$name+firstUpperCase>item($owner.this.item()).owner($owner.this));
+def type(reference, item)
+	if ($name == null) $name = register(new $name+firstUpperCase(<<($concreteBox+firstUpperCase~Box)>>box()).<$name+firstUpperCase>id("$id").<$name+firstUpperCase>item($owner.this.item()).owner($owner.this));
 end
 
 def type(reference)
-	if ($name == null) $name = register(new $name+firstUpperCase([($concreteBox+firstUpperCase~Box)]box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+	if ($name == null) $name = register(new $name+firstUpperCase(<<($concreteBox+firstUpperCase~Box)>>box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
-def type(component & child & collection & embedded) trigger(declarations)
+def type(component, child, collection, embedded) and trigger(declarations)
+
 end
 
-def type(component & child & collection) trigger(declarations)
-	public [$ancestors+firstUpperCase...[.].] $name+firstUpperCase $name;
-	[$component+declarations...[$NL]]
+def type(component, child, collection) and trigger(declarations)
+	public <<$ancestors+firstUpperCase...[.].>> $name+firstUpperCase $name;
+	<<$component+declarations...[$NL]>>
 end
 
-def type(component & child & displaystamp & single) trigger(declarations)
-	public [$ancestors+firstUpperCase...[.].] $name+firstUpperCase $name;
-	[$component+declarations...[$NL]]
+def type(component, child, displaystamp, single) and trigger(declarations)
+	public <<$ancestors+firstUpperCase...[.].>> $name+firstUpperCase $name;
+	<<$component+declarations...[$NL]>>
 end
 
-def type(component & child & ownertemplatestamp & single) trigger(declarations)
+def type(component, child, ownertemplatestamp, single) and trigger(declarations)
 	public $ownerPackage.$template+firstUpperCase $name;
 end
 
-def type(component & child & proxystamp & single) trigger(declarations)
-	public [$ancestors+firstUpperCase...[.].] $name+firstUpperCase $name;
+def type(component, child, proxystamp, single) and trigger(declarations)
+	public <<$ancestors+firstUpperCase...[.].>> $name+firstUpperCase $name;
 end
 
-def type(component & child & basestamp & single) trigger(declarations)
+def type(component, child, basestamp, single) and trigger(declarations)
 	public $template+firstUpperCase $name;
 end
 
-def type(component & child) trigger(declarations)
-	public [$ancestors+firstUpperCase...[.].] $name+firstUpperCase $name;
-	[$component+declarations...[$NL]]
+def type(component, child) and trigger(declarations)
+	public <<$ancestors+firstUpperCase...[.].>> $name+firstUpperCase $name;
+	<<$component+declarations...[$NL]>>
 end
 
-def type(component & child & displaystamp) trigger(declaration)
-	public [$ancestors+firstUpperCase...[.].] $name+firstUpperCase $name;
+def type(component, child, displaystamp) and trigger(declaration)
+	public <<$ancestors+firstUpperCase...[.].>> $name+firstUpperCase $name;
 end
 
-def type(component & child & ownertemplatestamp & single) trigger(declaration)
+def type(component, child, ownertemplatestamp, single) and trigger(declaration)
 	public $ownerPackage.$template+firstUpperCase $name;
 end
 
-def type(component & child & proxystamp & single) trigger(declaration)
-	public [$ancestors+firstUpperCase...[.].] $name+firstUpperCase $name;
+def type(component, child, proxystamp, single) and trigger(declaration)
+	public <<$ancestors+firstUpperCase...[.].>> $name+firstUpperCase $name;
 end
 
-def type(component & child & basestamp & single) trigger(declaration)
+def type(component, child, basestamp, single) and trigger(declaration)
 	public $template+firstUpperCase $name;
 end
 
-def type(component & child) trigger(declaration)
-	public [$ancestors+firstUpperCase...[.].] $name+firstUpperCase $name;
+def type(component, child) and trigger(declaration)
+	public <<$ancestors+firstUpperCase...[.].>> $name+firstUpperCase $name;
 end
 
-def type(component) trigger(unregister)
+def type(component) and trigger(unregister)
 	if ($name != null) $name.unregister();
 end
 
-def type(method & multiple & collapsable)
-	[$editableMethods]
-	[$editableClass]
+def type(method, multiple, collapsable)
+	<<$editableMethods>>
+	<<$editableClass>>
 	@Override
-	public $componentName add([$objectType value, ]String label, String description) {
-		$componentName child = new $componentName(box()[.$componentOwnerBox+lowerCase()]);
+	public $componentName add(<<$objectType value, >>String label, String description) {
+		$componentName child = new $componentName(box()<<.$componentOwnerBox+lowerCase()>>);
 		child.id(java.util.UUID.randomUUID().toString());
 		child.properties().put("label", label);
 		child.properties().put("description", description);
 		add(child, "$name");
-		[child.value($objectTypeValue);]
-		notifyAdd(child[, $objectTypeValue]);
+		<<child.value($objectTypeValue);>>
+		notifyAdd(child<<, $objectTypeValue>>);
 		return child;
 	}
 	@Override
@@ -86,21 +87,21 @@ def type(method & multiple & collapsable)
 		super.clear("$name");
 	}
 	@Override
-	protected $componentName add([$objectType value]) {
+	protected $componentName add(<<$objectType value>>) {
 		return add(value, null, null);
 	}
 end
 
-def type(method & multiple)
-	[$editableMethods]
-	[$editableClass]
+def type(method, multiple)
+	<<$editableMethods>>
+	<<$editableClass>>
 	@Override
-	public $componentName add([$objectType value]) {
-		$componentName child = new $componentName(box()[.$componentOwnerBox+lowerCase()]);
+	public $componentName add(<<$objectType value>>) {
+		$componentName child = new $componentName(box()<<.$componentOwnerBox+lowerCase()>>);
 		child.id(java.util.UUID.randomUUID().toString());
 		add(child, "$name");
-		[child.value($objectTypeValue);]
-		notifyAdd(child[, $objectTypeValue]);
+		<<child.value($objectTypeValue);>>
+		notifyAdd(child<<, $objectTypeValue>>);
 		return child;
 	}
 	@Override
@@ -112,7 +113,7 @@ def type(method & multiple)
 	}
 end
 
-def type(method & highlighted)
+def type(method, highlighted)
 	public $name+firstUpperCase textColor(String color) {
 		this._textColor(color);
 		this._refreshHighlight();
@@ -126,7 +127,7 @@ def type(method & highlighted)
 	}
 end
 
-def type(method & signed)
+def type(method, signed)
 	public String signSecret() {
 	    return this._signSecret();
 	}
@@ -140,7 +141,7 @@ def type(method & signed)
 	}
 end
 
-def type(method & addressable)
+def type(method, addressable)
 	@Override
 	public $name+firstUpperCase address(java.util.function.Function<String, String> addressFromPathResolver) {
 		address(addressFromPathResolver.apply(path()));
@@ -148,7 +149,7 @@ def type(method & addressable)
 	}
 end
 
-def type(method & collectionbox)
+def type(method, collectionbox)
 	@Override
 	public $name+firstUpperCase set(java.util.function.Function<String, String> addressFromPathResolver) {
 		address(addressFromPathResolver.apply(path()));
@@ -156,138 +157,138 @@ def type(method & collectionbox)
 	}
 end
 
-def type(method & collection & table)
-	[$selectionMethod]
+def type(method, collection, table)
+	<<$selectionMethod>>
 
-	public $name+firstUpperCase~Row create([$itemClass item]) {
-		$name+firstUpperCase~Row row = new $name+firstUpperCase~Row([($concreteBox+firstUpperCase~Box)]box());
+	public $name+firstUpperCase~Row create(<<$itemClass item>>) {
+		$name+firstUpperCase~Row row = new $name+firstUpperCase~Row(<<($concreteBox+firstUpperCase~Box)>>box());
 		row.id(java.util.UUID.randomUUID().toString());
-		[row.item($itemVariable);]
+		<<row.item($itemVariable);>>
 		return row;
 	}
 end
 
-def type(method & collection & dynamictable)
-	[$selectionMethod]
+def type(method, collection, dynamictable)
+	<<$selectionMethod>>
 
-	public $name+firstUpperCase~Row create([$itemClass item]) {
-		$name+firstUpperCase~Row row = new $name+firstUpperCase~Row([($concreteBox+firstUpperCase~Box)]box());
+	public $name+firstUpperCase~Row create(<<$itemClass item>>) {
+		$name+firstUpperCase~Row row = new $name+firstUpperCase~Row(<<($concreteBox+firstUpperCase~Box)>>box());
 		row.id(java.util.UUID.randomUUID().toString());
-		[row.item($itemVariable);]
+		<<row.item($itemVariable);>>
 		return row;
 	}
 end
 
-def type(method & collection)
+def type(method, collection)
 	$selectionMethod
-	[$item+addMethod...[$NL$NL]]
+	<<$item+addMethod...[$NL$NL]>>
 
-	[$item+removeMethod...[$NL$NL]]
+	<<$item+removeMethod...[$NL$NL]>>
 end
 
-def type(component & child) trigger(method)
+def type(component, child) and trigger(method)
 end
 
-def type(component & child & displaystamp) trigger(class)
+def type(component, child, displaystamp) and trigger(class)
 	public class $name+firstUpperCase extends $extends $implements {
-		[$reference+declaration...[$NL]]
-		[$component+declaration...[$NL]]
+		<<$reference+declaration...[$NL]>>
+		<<$component+declaration...[$NL]>>
 
 		public $name+firstUpperCase($abstractBox+type box) {
 			super(box);
-			[$properties+common]
-			[$properties+specific]
+			<<$properties+common>>
+			<<$properties+specific>>
 		}
 
 		@Override
 		public void $methodName() {
 			super.init();
-			[$reference...[$NL]]
-			[$component+child...[$NL]]
+			<<$reference...[$NL]>>
+			<<$component+child...[$NL]>>
 		}
 
 		@Override
 		public void unregister() {
 			super.unregister();
-			[$component+unregister...[$NL]]
+			<<$component+unregister...[$NL]>>
 		}
 		$methods
-		[$component+class...[$NL$NL]]
-		[$component+method...[$NL$NL]]
+		<<$component+class...[$NL$NL]>>
+		<<$component+method...[$NL$NL]>>
 	}
 end
 
-def type(component & child & proxystamp) trigger(class)
+def type(component, child, proxystamp) and trigger(class)
 	public class $name+firstUpperCase extends $extends $implements {
-		[$reference+declaration...[$NL]]
-		[$component+declaration...[$NL]]
+		<<$reference+declaration...[$NL]>>
+		<<$component+declaration...[$NL]>>
 
 		public $name+firstUpperCase($abstractBox+type box) {
 			super(box);
-			[$properties+common]
-			[$properties+specific]
+			<<$properties+common>>
+			<<$properties+specific>>
 		}
 
 		@Override
 		public void $methodName() {
 			super.init();
-			[$reference...[$NL]]
-			[$component+child...[$NL]]
+			<<$reference...[$NL]>>
+			<<$component+child...[$NL]>>
 		}
 
 		@Override
 		public void unregister() {
 			super.unregister();
-			[$component+unregister...[$NL]]
+			<<$component+unregister...[$NL]>>
 		}
 		$methods
-		[$component+class...[$NL$NL]]
-		[$component+method...[$NL$NL]]
+		<<$component+class...[$NL$NL]>>
+		<<$component+method...[$NL$NL]>>
 	}
 end
 
-def type(component & child & basestamp & single) trigger(class)
+def type(component, child, basestamp, single) and trigger(class)
 end
 
-def type(component & child & collection & embedded) trigger(class)
-	public class $name+firstUpperCase extends $package.ui.displays[.$packageType~s].$name+firstUpperCase {
+def type(component, child, collection, embedded) and trigger(class)
+	public class $name+firstUpperCase extends $package.ui.displays<<.$packageType~s>>.$name+firstUpperCase {
 		public $name+firstUpperCase($abstractBox+type box) {
 			this(($concreteBox+firstUpperCase~Box)box);
 		}
 		public $name+firstUpperCase($concreteBox+firstUpperCase~Box box) {
 			super(box);
-			[$properties+common]
-			[$properties+specific]
+			<<$properties+common>>
+			<<$properties+specific>>
 		}
 	}
 end
 
-def type(component & child & collection) trigger(class)
+def type(component, child, collection) and trigger(class)
 	public class $name+firstUpperCase extends $extends $implements {
-		[$reference+declaration...[$NL]]
-		[$component+declaration...[$NL]]
+		<<$reference+declaration...[$NL]>>
+		<<$component+declaration...[$NL]>>
 
 		public $name+firstUpperCase($abstractBox+type box) {
 			super(box);
-			[$properties+common]
-			[$properties+specific]
+			<<$properties+common>>
+			<<$properties+specific>>
 		}
 
 		@Override
 		public void $methodName() {
 			super.$methodName();
-			[$reference...[$NL]]
-			[$component+child...[$NL]]
+			<<$reference...[$NL]>>
+			<<$component+child...[$NL]>>
 		}
 
 		@Override
 		public void unregister() {
 			super.unregister();
-			[$component+unregister...[$NL]]
+			<<$component+unregister...[$NL]>>
 		}
 		$methods
-		[$component+class...[$NL$NL]]
-		[$component+method...[$NL$NL]]
+		<<$component+class...[$NL$NL]>>
+		<<$component+method...[$NL$NL]>>
 	}
 end
 
@@ -295,102 +296,102 @@ def attribute(notifyReady)
 	notifyReady();
 end
 
-def type(component & child & block & conditional) trigger(class)
+def type(component, child, block, conditional) and trigger(class)
 	public class $name+firstUpperCase extends $extends $implements {
-		[$reference+declaration...[$NL]]
-		[$component+declaration...[$NL]]
+		<<$reference+declaration...[$NL]>>
+		<<$component+declaration...[$NL]>>
 
 		public $name+firstUpperCase($abstractBox+type box) {
 			super(box);
-			[$properties+common]
-			[$properties+specific]
+			<<$properties+common>>
+			<<$properties+specific>>
 		}
 
 		@Override
 		public void $methodName() {
 			super.init();
-			[$reference...[$NL]]
-			[$component+child...[$NL]]
-			[$component+conditionalReferences...[$NL]]
+			<<$reference...[$NL]>>
+			<<$component+child...[$NL]>>
+			<<$component+conditionalReferences...[$NL]>>
 		}
 
 		@Override
 		public void unregister() {
 			super.unregister();
-			[$component+unregister...[$NL]]
+			<<$component+unregister...[$NL]>>
 		}
 		$methods
-		[$component+class...[$NL$NL]]
-		[$component+method...[$NL$NL]]
+		<<$component+class...[$NL$NL]>>
+		<<$component+method...[$NL$NL]>>
 	}
 end
 
-def type(component & child) trigger(class)
+def type(component, child) and trigger(class)
 	public class $name+firstUpperCase extends $extends $implements {
-		[$reference+declaration...[$NL]]
-		[$component+declaration...[$NL]]
+		<<$reference+declaration...[$NL]>>
+		<<$component+declaration...[$NL]>>
 
 		public $name+firstUpperCase($abstractBox+type box) {
 			super(box);
-			[$properties+common]
-			[$properties+specific]
+			<<$properties+common>>
+			<<$properties+specific>>
 		}
 
 		@Override
 		public void $methodName() {
 			super.init();
-			[$reference...[$NL]]
-			[$component+child...[$NL]]
+			<<$reference...[$NL]>>
+			<<$component+child...[$NL]>>
 		}
 
 		@Override
 		public void unregister() {
 			super.unregister();
-			[$component+unregister...[$NL]]
+			<<$component+unregister...[$NL]>>
 		}
 		$methods
-		[$component+class...[$NL$NL]]
-		[$component+method...[$NL$NL]]
+		<<$component+class...[$NL$NL]>>
+		<<$component+method...[$NL$NL]>>
 	}
 end
 
-def type(extends & multiple & image)
-	io.intino.alexandria.ui.displays.components.MultipleImage<$abstractBox+type, [$componentPrefix+firstUpperCase~.]$componentName, $objectType>
+def type(extends, multiple, image)
+	io.intino.alexandria.ui.displays.components.MultipleImage<$abstractBox+type, <<$componentPrefix+firstUpperCase~.>>$componentName, $objectType>
 end
 
-def type(extends & multiple)
-	io.intino.alexandria.ui.displays.components.Multiple<$abstractBox+type, [$componentPrefix+firstUpperCase~.]$componentName, $objectType>
+def type(extends, multiple)
+	io.intino.alexandria.ui.displays.components.Multiple<$abstractBox+type, <<$componentPrefix+firstUpperCase~.>>$componentName, $objectType>
 end
 
-def type(extends & collection & grid)
+def type(extends, collection, grid)
 	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet...[]<io.intino.alexandria.ui.displays.notifiers.$type+firstUpperCase$facet...[]~Notifier, $abstractBox+type, $itemClass>
 end
 
-def type(extends & collection & table)
+def type(extends, collection, table)
 	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet...[]<$abstractBox+type, io.intino.alexandria.ui.displays.components.Row, $itemClass>
 end
 
-def type(extends & collection & dynamictable)
+def type(extends, collection, dynamictable)
 	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet...[]<$abstractBox+type, io.intino.alexandria.ui.displays.components.Row, $itemClass>
 end
 
-def type(extends & collection)
+def type(extends, collection)
 	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet...[]<$abstractBox+type, $componentType, $itemClass>
 end
 
-def type(extends & item)
+def type(extends, item)
 	io.intino.alexandria.ui.displays.components.Item<$abstractBox+type, $itemClass>
 end
 
-def type(extends & displaystamp)
+def type(extends, displaystamp)
 	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet...[]<io.intino.alexandria.ui.displays.notifiers.$type+firstUpperCase$facet...[]~Notifier, $abstractBox+type>
 end
 
-def type(extends & proxystamp)
+def type(extends, proxystamp)
 	io.intino.alexandria.ui.displays.components.ProxyStamp<io.intino.alexandria.ui.displays.notifiers.ProxyStampNotifier, $abstractBox+type>
 end
 
-def type(extends & basestamp)
+def type(extends, basestamp)
 	$type+firstUpperCase
 end
 
@@ -398,143 +399,143 @@ def type(extends)
 	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet...[]<io.intino.alexandria.ui.displays.notifiers.$type+firstUpperCase$facet...[]~Notifier, $abstractBox+type>
 end
 
-def type(component & child & multipleblock) trigger(rootChildReferences)
+def type(component, child, multipleblock) and trigger(rootChildReferences)
 end
 
-def type(component & child & collection & embedded) trigger(rootChildReferences)
+def type(component, child, collection, embedded) and trigger(rootChildReferences)
 end
 
-def type(component & child & collection) trigger(rootChildReferences)
-	[if ($parent != null)] $name = [$ancestorsNotMe...[.].]$name;
-	[$component+rootChildReferences...[$NL]]
+def type(component, child, collection) and trigger(rootChildReferences)
+	<<if ($parent != null)>> $name = <<$ancestorsNotMe...[.].>>$name;
+	<<$component+rootChildReferences...[$NL]>>
 end
 
-def type(component & child) trigger(rootChildReferences)
-	[if ($parent != null)] $name = [$ancestorsNotMe...[.].]$name;
-	[$component+rootChildReferences...[$NL]]
+def type(component, child) and trigger(rootChildReferences)
+	<<if ($parent != null)>> $name = <<$ancestorsNotMe...[.].>>$name;
+	<<$component+rootChildReferences...[$NL]>>
 end
 
-def type(component & child & collection & embedded) trigger(childReferences)
+def type(component, child, collection, embedded) and trigger(childReferences)
 end
 
-def type(component & child & collection) trigger(childReferences)
-	[if ($parent != null)] $name = [$ancestors...[.].]$name;
-	[$component+childReferences...[$NL]]
+def type(component, child, collection) and trigger(childReferences)
+	<<if ($parent != null)>> $name = <<$ancestors...[.].>>$name;
+	<<$component+childReferences...[$NL]>>
 end
 
-def type(component & child) trigger(childReferences)
-	[if ($parent != null)] $name = [$ancestors...[.].]$name;
-	[$component+childReferences...[$NL]]
+def type(component, child) and trigger(childReferences)
+	<<if ($parent != null)>> $name = <<$ancestors...[.].>>$name;
+	<<$component+childReferences...[$NL]>>
 end
 
-def type(component & child & collection & embedded) trigger(rootReferences)
+def type(component, child, collection, embedded) and trigger(rootReferences)
 end
 
-def type(component & child & collection) trigger(rootReferences)
+def type(component, child, collection) and trigger(rootReferences)
 	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
-	[$component+rootChildReferences...[$NL]]
+	<<$component+rootChildReferences...[$NL]>>
 end
 
-def type(component & child & displaystamp) trigger(rootReferences)
+def type(component, child, displaystamp) and trigger(rootReferences)
 	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
-	[$component+rootChildReferences...[$NL]]
+	<<$component+rootChildReferences...[$NL]>>
 end
 
-def type(component & child & ownertemplatestamp & multiple) trigger(rootReferences)
-	if ($name == null) $name = register(new $ownerPackage.$name+firstUpperCase([($ownerBox~Box)]box().owner()).<$ownerPackage.$name+firstUpperCase>id("$id").owner($owner.this));
+def type(component, child, ownertemplatestamp, multiple) and trigger(rootReferences)
+	if ($name == null) $name = register(new $ownerPackage.$name+firstUpperCase(<<($ownerBox~Box)>>box().owner()).<$ownerPackage.$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
-def type(component & child & proxystamp & multiple) trigger(rootReferences)
-	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
-end
-
-def type(component & child & basestamp & multiple) trigger(rootReferences)
-	if ($name == null) $name = register(new $name+firstUpperCase([($concreteBox+firstUpperCase~Box)]box()).<$name+firstUpperCase>id("$id").owner($owner.this));
-end
-
-def type(component & child & ownertemplatestamp & single) trigger(rootReferences)
-	if ($name == null) $name = register(new $ownerPackage.$template+firstUpperCase$generic([($ownerBox~Box)]box().owner()).<$ownerPackage.$template+firstUpperCase$generic>id("$id").owner($owner.this));
-end
-
-def type(component & child & proxystamp & single) trigger(rootReferences)
+def type(component, child, proxystamp, multiple) and trigger(rootReferences)
 	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
-def type(component & child & basestamp & single) trigger(rootReferences)
-	if ($name == null) $name = register(new $template+firstUpperCase$generic([($concreteBox+firstUpperCase~Box)]box()).id("$id"));
+def type(component, child, basestamp, multiple) and trigger(rootReferences)
+	if ($name == null) $name = register(new $name+firstUpperCase(<<($concreteBox+firstUpperCase~Box)>>box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
-def type(component & child) trigger(rootReferences)
+def type(component, child, ownertemplatestamp, single) and trigger(rootReferences)
+	if ($name == null) $name = register(new $ownerPackage.$template+firstUpperCase$generic(<<($ownerBox~Box)>>box().owner()).<$ownerPackage.$template+firstUpperCase$generic>id("$id").owner($owner.this));
+end
+
+def type(component, child, proxystamp, single) and trigger(rootReferences)
 	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
-	[$component+rootChildReferences...[$NL]]
 end
 
-def type(component & child & collection & embedded) trigger(references)
+def type(component, child, basestamp, single) and trigger(rootReferences)
+	if ($name == null) $name = register(new $template+firstUpperCase$generic(<<($concreteBox+firstUpperCase~Box)>>box()).id("$id"));
 end
 
-def type(component & child & collection) trigger(references)
+def type(component, child) and trigger(rootReferences)
 	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
-	[$component+childReferences...[$NL]]
+	<<$component+rootChildReferences...[$NL]>>
 end
 
-def type(component & child) trigger(references)
+def type(component, child, collection, embedded) and trigger(references)
+end
+
+def type(component, child, collection) and trigger(references)
 	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
-	[$component+childReferences...[$NL]]
+	<<$component+childReferences...[$NL]>>
 end
 
-def type(component & child & block & conditional) trigger(conditionalReferences)
+def type(component, child) and trigger(references)
+	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+	<<$component+childReferences...[$NL]>>
 end
 
-def type(component & child & block) trigger(conditionalReferences)
-	[$component+conditionalReferences...[$NL]]
+def type(component, child, block, conditional) and trigger(conditionalReferences)
 end
 
-def type(component & child) trigger(conditionalReferences)
-	if ($owner.this.$name == null) $owner.this.$name = [$ancestorsNotMe...[.].]$name;
-	[$binding...[$NL]]
-	[$attachedTo]
+def type(component, child, block) and trigger(conditionalReferences)
+	<<$component+conditionalReferences...[$NL]>>
 end
 
-def type(component & child & collection & embedded) trigger(initializations)
+def type(component, child) and trigger(conditionalReferences)
+	if ($owner.this.$name == null) $owner.this.$name = <<$ancestorsNotMe...[.].>>$name;
+	<<$binding...[$NL]>>
+	<<$attachedTo>>
 end
 
-def type(component & child & collection) trigger(initializations)
-	[$binding...[$NL]]
-	[$attachedTo]
-	[$component+initializations...[$NL]]
+def type(component, child, collection, embedded) and trigger(initializations)
 end
 
-def type(component & child) trigger(initializations)
-	[$binding...[$NL]]
-	[$attachedTo]
-	[$component+initializations...[$NL]]
+def type(component, child, collection) and trigger(initializations)
+	<<$binding...[$NL]>>
+	<<$attachedTo>>
+	<<$component+initializations...[$NL]>>
 end
 
-def type(component & child & displaystamp)
+def type(component, child) and trigger(initializations)
+	<<$binding...[$NL]>>
+	<<$attachedTo>>
+	<<$component+initializations...[$NL]>>
+end
+
+def type(component, child, displaystamp)
 	if ($name == null) $name = $owner.this.$name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
-def type(component & child & ownertemplatestamp & multiple)
-	if ($name == null) $name = $owner.this.$name = register(new $name+firstUpperCase([($concreteBox+firstUpperCase~Box)]box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+def type(component, child, ownertemplatestamp, multiple)
+	if ($name == null) $name = $owner.this.$name = register(new $name+firstUpperCase(<<($concreteBox+firstUpperCase~Box)>>box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
-def type(component & child & basestamp & multiple)
-	if ($name == null) $name = $owner.this.$name = register(new $name+firstUpperCase([($concreteBox+firstUpperCase~Box)]box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+def type(component, child, basestamp, multiple)
+	if ($name == null) $name = $owner.this.$name = register(new $name+firstUpperCase(<<($concreteBox+firstUpperCase~Box)>>box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
-def type(component & child & ownertemplatestamp & single)
-	if ($name == null) $name = $owner.this.$name = register(new $ownerPackage.$template+firstUpperCase$generic([($ownerBox~Box)]box().owner()).<$ownerPackage.$template+firstUpperCase$generic>id("$id").owner($owner.this));
+def type(component, child, ownertemplatestamp, single)
+	if ($name == null) $name = $owner.this.$name = register(new $ownerPackage.$template+firstUpperCase$generic(<<($ownerBox~Box)>>box().owner()).<$ownerPackage.$template+firstUpperCase$generic>id("$id").owner($owner.this));
 end
 
-def type(component & child & proxystamp & single)
-	if ($name == null) $name = $owner.this.$name = register(new $name+firstUpperCase([($concreteBox+firstUpperCase~Box)]box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+def type(component, child, proxystamp, single)
+	if ($name == null) $name = $owner.this.$name = register(new $name+firstUpperCase(<<($concreteBox+firstUpperCase~Box)>>box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
-def type(component & child & basestamp & single)
-	if ($name == null) $name = $owner.this.$name = register(new $template+firstUpperCase$generic([($concreteBox+firstUpperCase~Box)]box()).id("$id"));
+def type(component, child, basestamp, single)
+	if ($name == null) $name = $owner.this.$name = register(new $template+firstUpperCase$generic(<<($concreteBox+firstUpperCase~Box)>>box()).id("$id"));
 end
 
-def type(component & child)
+def type(component, child)
 	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
@@ -542,87 +543,87 @@ def type(facet)
 	$name+firstUpperCase
 end
 
-def type(binding & toolbar)
-	if ($name != null) $name.bindTo([$ancestorsNotMe...[.].]$collection);
+def type(binding, toolbar)
+	if ($name != null) $name.bindTo(<<$ancestorsNotMe...[.].>>$collection);
 end
 
-def type(binding & grouping)
+def type(binding, grouping)
 	if ($name != null) $name.bindTo($collection...[,]);
 end
 
-def type(binding & datenavigator)
+def type(binding, datenavigator)
 	if ($name != null) $name.bindTo($component...[,]);
 end
 
-def type(binding & groupingToolbar)
+def type(binding, groupingToolbar)
 	if ($name != null) $name.bindTo($grouping...[,]);
 end
 
-def type(binding & sorting)
+def type(binding, sorting)
 	if ($name != null) $name.bindTo($collection...[,]);
 end
 
-def type(binding & searchbox)
+def type(binding, searchbox)
 	if ($name != null) $name.bindTo($collection...[,]);
 end
 
-def type(binding & download)
+def type(binding, download)
 	if ($name != null) $name.bindTo($collection...[,]);
 end
 
-def type(binding & temporalslider)
+def type(binding, temporalslider)
 	if ($name != null) $name.bindTo($collection...[,]);
 end
 
-def type(binding & openblock)
+def type(binding, openblock)
 	if ($name != null) $name.bindTo($block);
 end
 
-def type(binding & closeblock)
+def type(binding, closeblock)
 	if ($name != null) $name.bindTo($block);
 end
 
-def type(binding & opendialog)
+def type(binding, opendialog)
 	if ($name != null) $name.bindTo($dialog);
 end
 
-def type(binding & closedialog)
+def type(binding, closedialog)
 	if ($name != null) $name.bindTo($dialog);
 end
 
-def type(binding & opendrawer)
+def type(binding, opendrawer)
 	if ($name != null) $name.bindTo($drawer);
 end
 
-def type(binding & closedrawer)
+def type(binding, closedrawer)
 	if ($name != null) $name.bindTo($drawer);
 end
 
-def type(binding & openpopover)
+def type(binding, openpopover)
 	if ($name != null) $name.bindTo($popover);
 end
 
-def type(binding & opennextitem)
+def type(binding, opennextitem)
 	if ($name != null) $name.bindTo($collection);
 end
 
-def type(binding & openpreviousitem)
+def type(binding, openpreviousitem)
 	if ($name != null) $name.bindTo($collection);
 end
 
-def type(binding & decisiondialog)
+def type(binding, decisiondialog)
 	if ($name != null) $name.bindTo($selector);
 end
 
-def type(binding & collectiondialog)
+def type(binding, collectiondialog)
 	if ($name != null) $name.bindTo($collection);
 end
 
-def type(binding & collectionbox & add)
+def type(binding, collectionbox, add)
 	if ($name != null) $name.bindTo($name.$collection);
 end
 
-def type(binding & collectionbox)
+def type(binding, collectionbox)
 	if ($name != null) $name.bindTo($collection);
 end
 
@@ -630,51 +631,51 @@ def type(binding)
 	if ($name != null) $name.bindTo($selector, "$option");
 end
 
-def type(attachedTo & grouping)
+def type(attachedTo, grouping)
 	if ($name != null) $name.attachTo($grouping);
 end
 
-def type(implements & selectable)
+def type(implements, selectable)
 	implements io.intino.alexandria.ui.displays.components.collection.Selectable
 end
 
-def type(implements & multiple & collapsable)
-	implements io.intino.alexandria.ui.displays.components.multiple.Collapsable<$abstractBox+type, [$componentPrefix+firstUpperCase~.]$componentName, $objectType>
+def type(implements, multiple, collapsable)
+	implements io.intino.alexandria.ui.displays.components.multiple.Collapsable<$abstractBox+type, <<$componentPrefix+firstUpperCase~.>>$componentName, $objectType>
 end
 
-def type(implements & multiple)
-	implements io.intino.alexandria.ui.displays.components.multiple.NonCollapsable<$abstractBox+type, [$componentPrefix+firstUpperCase~.]$componentName, $objectType>
+def type(implements, multiple)
+	implements io.intino.alexandria.ui.displays.components.multiple.NonCollapsable<$abstractBox+type, <<$componentPrefix+firstUpperCase~.>>$componentName, $objectType>
 end
 
-def type(implements & option)
+def type(implements, option)
 	implements io.intino.alexandria.ui.displays.components.selector.SelectorOption
 end
 
-def type(implements & dynamicloaded)
+def type(implements, dynamicloaded)
 	implements io.intino.alexandria.ui.displays.components.DynamicLoaded
 end
 
-def type(implements & addressable & action)
+def type(implements, addressable, action)
 	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
 end
 
-def type(implements & addressable & openlayer)
+def type(implements, addressable, openlayer)
 	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
 end
 
-def type(implements & addressable & selector)
+def type(implements, addressable, selector)
 	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
 end
 
-def type(implements & addressable & grouping)
+def type(implements, addressable, grouping)
 	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
 end
 
-def type(implements & addressable & searchbox)
+def type(implements, addressable, searchbox)
 	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
 end
 
-def type(implements & addressable & sorting)
+def type(implements, addressable, sorting)
 	implements io.intino.alexandria.ui.displays.components.addressable.Addressed<$name+firstUpperCase>
 end
 
@@ -682,354 +683,354 @@ def type(implements)
 	implements --undefined--
 end
 
-def type(properties & actionable) trigger(common)
-	[_title("$title");]
-	[_color("$color");]
-	[_readonly($readonly);]
-	[_mode(io.intino.alexandria.ui.displays.components.Actionable.Mode.valueOf("$mode+firstUpperCase"));]
-	[_signMode(io.intino.alexandria.ui.displays.components.Actionable.SignMode.valueOf("$signMode+firstUpperCase"));]
-	[_signChecker(_$signChecker());]
-	[$actionableMode]
+def type(properties, actionable) and trigger(common)
+	<<_title("$title");>>
+	<<_color("$color");>>
+	<<_readonly($readonly);>>
+	<<_mode(io.intino.alexandria.ui.displays.components.Actionable.Mode.valueOf("$mode+firstUpperCase"));>>
+	<<_signMode(io.intino.alexandria.ui.displays.components.Actionable.SignMode.valueOf("$signMode+firstUpperCase"));>>
+	<<_signChecker(_$signChecker());>>
+	<<$actionableMode>>
 end
 
-def type(properties & appDirectory) trigger(common)
-	[_icon("$icon");]
+def type(properties, appDirectory) and trigger(common)
+	<<_icon("$icon");>>
 end
 
-def type(properties & dashboard) trigger(common)
-	[$parameter...[$NL]]
+def type(properties, dashboard) and trigger(common)
+	<<$parameter...[$NL]>>
 end
 
-def type(properties) trigger(common)
-	[label("$label");]
-	[name("$name");]
-	[_color("$color");]
+def type(properties) and trigger(common)
+	<<label("$label");>>
+	<<name("$name");>>
+	<<_color("$color");>>
 end
 
-def type(properties & proxyStamp) trigger(specific)
+def type(properties, proxyStamp) and trigger(specific)
 	_proxy(new $proxyPackage.$proxyDisplay+firstUpperCase(new io.intino.alexandria.ui.spark.pages.Unit("$proxyUseName", $proxyUseUrl)));
-	[$parameter...[$NL]]
+	<<$parameter...[$NL]>>
 end
 
-def type(properties & selector) trigger(specific)
-	[_multipleSelection($multipleSelection);]
-	[_readonly($readonly);]
-	[_path("$path");]
+def type(properties, selector) and trigger(specific)
+	<<_multipleSelection($multipleSelection);>>
+	<<_readonly($readonly);>>
+	<<_path("$path");>>
 end
 
-def type(properties & grouping) trigger(specific)
-	[_path("$path");]
+def type(properties, grouping) and trigger(specific)
+	<<_path("$path");>>
 end
 
-def type(properties & kpi) trigger(specific)
-	[_value($value);]
+def type(properties, kpi) and trigger(specific)
+	<<_value($value);>>
 end
 
-def type(properties & sorting) trigger(specific)
-	[_path("$path");]
+def type(properties, sorting) and trigger(specific)
+	<<_path("$path");>>
 end
 
-def type(properties & searchbox) trigger(specific)
-	[_path("$path");]
+def type(properties, searchbox) and trigger(specific)
+	<<_path("$path");>>
 end
 
-def type(properties & materialicon) trigger(specific)
-	[_icon("$icon");]
+def type(properties, materialicon) and trigger(specific)
+	<<_icon("$icon");>>
 end
 
-def type(properties & icon) trigger(specific)
-	[$icon+resourceMethod]
+def type(properties, icon) and trigger(specific)
+	<<$icon+resourceMethod>>
 end
 
-def type(properties & microsite) trigger(specific)
-	[$site+resourceMethod]
+def type(properties, microsite) and trigger(specific)
+	<<$site+resourceMethod>>
 end
 
-def type(properties & block) trigger(specific)
-	[$background+resourceMethod]
-	[$badge]
-	[$drawer]
-	[$popover]
+def type(properties, block) and trigger(specific)
+	<<$background+resourceMethod>>
+	<<$badge>>
+	<<$drawer>>
+	<<$popover>>
 end
 
-def type(properties & image & avatar) trigger(specific)
-	[_text("$text");]
+def type(properties, image, avatar) and trigger(specific)
+	<<_text("$text");>>
 end
 
-def type(properties & image & multiple & componentClass) trigger(specific)
-	[$value+resourceMethod]
-	[$defaultValue+resourceMethod]
-	[_readonly($readonly);]
+def type(properties, image, multiple, componentClass) and trigger(specific)
+	<<$value+resourceMethod>>
+	<<$defaultValue+resourceMethod>>
+	<<_readonly($readonly);>>
 end
 
-def type(properties & image & multiple) trigger(specific)
-	[_readonly($readonly);]
+def type(properties, image, multiple) and trigger(specific)
+	<<_readonly($readonly);>>
 end
 
-def type(properties & image) trigger(specific)
-	[$value+resourceMethod]
-	[$defaultValue+resourceMethod]
-	[_readonly($readonly);]
+def type(properties, image) and trigger(specific)
+	<<$value+resourceMethod>>
+	<<$defaultValue+resourceMethod>>
+	<<_readonly($readonly);>>
 end
 
-def type(properties & file & multiple & componentClass) trigger(specific)
-	[$value+resourceMethod]
-	[_readonly($readonly);]
+def type(properties, file, multiple, componentClass) and trigger(specific)
+	<<$value+resourceMethod>>
+	<<_readonly($readonly);>>
 end
 
-def type(properties & file & multiple) trigger(specific)
-	[_readonly($readonly);]
+def type(properties, file, multiple) and trigger(specific)
+	<<_readonly($readonly);>>
 end
 
-def type(properties & file) trigger(specific)
-	[$value+resourceMethod]
-	[_readonly($readonly);]
+def type(properties, file) and trigger(specific)
+	<<$value+resourceMethod>>
+	<<_readonly($readonly);>>
 end
 
-def type(properties & openpage) trigger(specific)
-	[_path("$path");]
+def type(properties, openpage) and trigger(specific)
+	<<_path("$path");>>
 end
 
-def type(properties & openlayer) trigger(specific)
-	[_path("$path");]
-	[_transition(io.intino.alexandria.ui.displays.components.OpenLayer.Transition.valueOf("$transition"));]
+def type(properties, openlayer) and trigger(specific)
+	<<_path("$path");>>
+	<<_transition(io.intino.alexandria.ui.displays.components.OpenLayer.Transition.valueOf("$transition"));>>
 end
 
-def type(properties & openpopover) trigger(specific)
-	[ _triggerEvent(io.intino.alexandria.ui.displays.components.OpenPopover.TriggerEvent.$triggerEvent);]
+def type(properties, openpopover) and trigger(specific)
+	<< _triggerEvent(io.intino.alexandria.ui.displays.components.OpenPopover.TriggerEvent.$triggerEvent);>>
 end
 
-def type(properties & opensite) trigger(specific)
-	[_site("$site");]
+def type(properties, opensite) and trigger(specific)
+	<<_site("$site");>>
 end
 
-def type(properties & switch) trigger(specific)
-	[_path("$path");]
-	[_state(io.intino.alexandria.ui.displays.events.actionable.ToggleEvent.State.valueOf("$state"));]
+def type(properties, switch) and trigger(specific)
+	<<_path("$path");>>
+	<<_state(io.intino.alexandria.ui.displays.events.actionable.ToggleEvent.State.valueOf("$state"));>>
 end
 
-def type(properties & toggle) trigger(specific)
-	[_path("$path");]
-	[_state(io.intino.alexandria.ui.displays.events.actionable.ToggleEvent.State.valueOf("$state"));]
+def type(properties, toggle) and trigger(specific)
+	<<_path("$path");>>
+	<<_state(io.intino.alexandria.ui.displays.events.actionable.ToggleEvent.State.valueOf("$state"));>>
 end
 
-def type(properties & copytoclipboard) trigger(specific)
-	[_text("$text");]
+def type(properties, copytoclipboard) and trigger(specific)
+	<<_text("$text");>>
 end
 
-def type(properties & signText) trigger(specific)
-	[_text("$text");]
-	[_signFormat(io.intino.alexandria.ui.displays.components.SignAction.SignFormat.valueOf("$signFormat"));]
+def type(properties, signText) and trigger(specific)
+	<<_text("$text");>>
+	<<_signFormat(io.intino.alexandria.ui.displays.components.SignAction.SignFormat.valueOf("$signFormat"));>>
 end
 
-def type(properties & signDocument) trigger(specific)
-    [_document($owner.class.getResource("$value"));]
+def type(properties, signDocument) and trigger(specific)
+    <<_document($owner.class.getResource("$value"));>>
 end
 
-def type(properties & action) trigger(specific)
-	[_path("$path");]
+def type(properties, action) and trigger(specific)
+	<<_path("$path");>>
 end
 
-def type(properties & export) trigger(specific)
-	[_from($from~L);]
-	[_to($to~L);]
-	[_min($min~L);]
-	[_max($max~L);]
-	[_range($rangeMin,$rangeMax);]
-	[_options(java.util.Arrays.asList("$option...[","]"));]
+def type(properties, export) and trigger(specific)
+	<<_from($from~L);>>
+	<<_to($to~L);>>
+	<<_min($min~L);>>
+	<<_max($max~L);>>
+	<<_range($rangeMin,$rangeMax);>>
+	<<_options(java.util.Arrays.asList("$option...[","]"));>>
 end
 
-def type(properties & download) trigger(specific)
-	[_options(java.util.Arrays.asList("$option...[","]"));]
+def type(properties, download) and trigger(specific)
+	<<_options(java.util.Arrays.asList("$option...[","]"));>>
 end
 
-def type(properties & download & selection) trigger(specific)
-	[_options(java.util.Arrays.asList("$option...[","]"));]
+def type(properties, download, selection) and trigger(specific)
+	<<_options(java.util.Arrays.asList("$option...[","]"));>>
 end
 
-def type(properties & chart) trigger(specific)
-	[_query("$query");]
-	[_serverUrl("$serverUrl");]
-	[$input+inputMethod]
-	[_output("$output");]
+def type(properties, chart) and trigger(specific)
+	<<_query("$query");>>
+	<<_serverUrl("$serverUrl");>>
+	<<$input+inputMethod>>
+	<<_output("$output");>>
 end
 
-def type(properties & appDirectory & fromFile) trigger(specific)
-	[$source+fileMethod]
+def type(properties, appDirectory, fromFile) and trigger(specific)
+	<<$source+fileMethod>>
 end
 
-def type(properties & appDirectory & fromResource) trigger(specific)
-	[$source+resourceMethod]
+def type(properties, appDirectory, fromResource) and trigger(specific)
+	<<$source+resourceMethod>>
 end
 
-def type(properties & appDirectory & inline) trigger(specific)
+def type(properties, appDirectory, inline) and trigger(specific)
 	$application...[$NL]
 end
 
-def type(properties & datenavigator) trigger(specific)
-	[_selected(java.time.Instant.ofEpochMilli($value~L));]
-	[_range(java.time.Instant.ofEpochMilli($from~L), java.time.Instant.ofEpochMilli($to~L));]
-	[_scales($scale...[,]);]
+def type(properties, datenavigator) and trigger(specific)
+	<<_selected(java.time.Instant.ofEpochMilli($value~L));>>
+	<<_range(java.time.Instant.ofEpochMilli($from~L), java.time.Instant.ofEpochMilli($to~L));>>
+	<<_scales($scale...[,]);>>
 end
 
 def type(scale)
     io.intino.alexandria.Scale.$value+firstUpperCase
 end
 
-def type(properties & timeline) trigger(specific)
-	[_mode(io.intino.alexandria.ui.displays.components.Timeline.Mode.valueOf("$mode+firstUpperCase"));]
+def type(properties, timeline) and trigger(specific)
+	<<_mode(io.intino.alexandria.ui.displays.components.Timeline.Mode.valueOf("$mode+firstUpperCase"));>>
 end
 
-def type(properties & eventline) trigger(specific)
-	[_arrangement(io.intino.alexandria.ui.displays.components.Eventline.Arrangement.valueOf("$arrangement+firstUpperCase"));]
+def type(properties, eventline) and trigger(specific)
+	<<_arrangement(io.intino.alexandria.ui.displays.components.Eventline.Arrangement.valueOf("$arrangement+firstUpperCase"));>>
 end
 
 def type(appDirectoryApplication)
-	_add("$name", "$url")[$translation...[]];
+	_add("$name", "$url")<<$translation...[]>>;
 end
 
 def type(appDirectoryApplicationTranslation)
 	.translation("$language", "$name")
 end
 
-def type(properties & dashboard & shiny) trigger(specific)
-	[$serverScript+resourceMethod]
-	[$uiScript+resourceMethod]
-	[$resource+resourceMethod...[$NL]]
+def type(properties, dashboard, shiny) and trigger(specific)
+	<<$serverScript+resourceMethod>>
+	<<$uiScript+resourceMethod>>
+	<<$resource+resourceMethod...[$NL]>>
 end
 
-def type(properties & documenteditor & collabora) trigger(specific)
-    [_document("$document");]
-	[_editorUrl("$editorUrl");]
+def type(properties, documenteditor, collabora) and trigger(specific)
+    <<_document("$document");>>
+	<<_editorUrl("$editorUrl");>>
 end
 
-def type(properties & dashboard & metabase) trigger(specific)
-	[_url("$url");]
-	[_secretKey("$secretKey");]
-	[_bordered($bordered);]
-	[_titled($titled);]
-	[_theme(io.intino.alexandria.ui.displays.components.DashboardMetabase.Theme.$theme);]
+def type(properties, dashboard, metabase) and trigger(specific)
+	<<_url("$url");>>
+	<<_secretKey("$secretKey");>>
+	<<_bordered($bordered);>>
+	<<_titled($titled);>>
+	<<_theme(io.intino.alexandria.ui.displays.components.DashboardMetabase.Theme.$theme);>>
 end
 
-def type(properties & number & multiple & componentClass) trigger(specific)
-	[_value($value);]
-	[_min($min);]
-	[_max($max);]
-	[_readonly($readonly);]
+def type(properties, number, multiple, componentClass) and trigger(specific)
+	<<_value($value);>>
+	<<_min($min);>>
+	<<_max($max);>>
+	<<_readonly($readonly);>>
 end
 
-def type(properties & number & multiple) trigger(specific)
-	[_readonly($readonly);]
+def type(properties, number, multiple) and trigger(specific)
+	<<_readonly($readonly);>>
 end
 
-def type(properties & number) trigger(specific)
-	[_value($value);]
-	[_min($min);]
-	[_max($max);]
-	[_readonly($readonly);]
+def type(properties, number) and trigger(specific)
+	<<_value($value);>>
+	<<_min($min);>>
+	<<_max($max);>>
+	<<_readonly($readonly);>>
 end
 
-def type(properties & date & multiple & componentClass) trigger(specific)
-	[_value(java.time.Instant.ofEpochMilli($value~L));]
-	[_min(java.time.Instant.ofEpochMilli($min~L));]
-	[_max(java.time.Instant.ofEpochMilli($max~L));]
-	[_readonly($readonly);]
+def type(properties, date, multiple, componentClass) and trigger(specific)
+	<<_value(java.time.Instant.ofEpochMilli($value~L));>>
+	<<_min(java.time.Instant.ofEpochMilli($min~L));>>
+	<<_max(java.time.Instant.ofEpochMilli($max~L));>>
+	<<_readonly($readonly);>>
 end
 
-def type(properties & date & multiple) trigger(specific)
-	[_readonly($readonly);]
+def type(properties, date, multiple) and trigger(specific)
+	<<_readonly($readonly);>>
 end
 
-def type(properties & date) trigger(specific)
-	[_value(java.time.Instant.ofEpochMilli($value~L));]
-	[_min(java.time.Instant.ofEpochMilli($min~L));]
-	[_max(java.time.Instant.ofEpochMilli($max~L));]
-	[_readonly($readonly);]
+def type(properties, date) and trigger(specific)
+	<<_value(java.time.Instant.ofEpochMilli($value~L));>>
+	<<_min(java.time.Instant.ofEpochMilli($min~L));>>
+	<<_max(java.time.Instant.ofEpochMilli($max~L));>>
+	<<_readonly($readonly);>>
 end
 
-def type(properties & text & multiple & componentClass) trigger(specific)
-	[_value("$defaultValue");]
-	[_readonly($readonly);]
+def type(properties, text, multiple, componentClass) and trigger(specific)
+	<<_value("$defaultValue");>>
+	<<_readonly($readonly);>>
 end
 
-def type(properties & text & multiple) trigger(specific)
-	[_readonly($readonly);]
+def type(properties, text, multiple) and trigger(specific)
+	<<_readonly($readonly);>>
 end
 
-def type(properties & text) trigger(specific)
-	[_value("$defaultValue");]
-	[_readonly($readonly);]
-	[_pattern("$pattern");]
+def type(properties, text) and trigger(specific)
+	<<_value("$defaultValue");>>
+	<<_readonly($readonly);>>
+	<<_pattern("$pattern");>>
 end
 
-def type(properties & location & multiple & componentClass) trigger(specific)
-	[$icon+resourceMethod]
-	[_value("$value");]
-	[_readonly($readonly);]
+def type(properties, location, multiple, componentClass) and trigger(specific)
+	<<$icon+resourceMethod>>
+	<<_value("$value");>>
+	<<_readonly($readonly);>>
 end
 
-def type(properties & location & multiple) trigger(specific)
-	[_readonly($readonly);]
+def type(properties, location, multiple) and trigger(specific)
+	<<_readonly($readonly);>>
 end
 
-def type(properties & location) trigger(specific)
-	[$icon+resourceMethod]
-	[_value("$value");]
-	[_readonly($readonly);]
+def type(properties, location) and trigger(specific)
+	<<$icon+resourceMethod>>
+	<<_value("$value");>>
+	<<_readonly($readonly);>>
 end
 
-def type(properties & collection & map) trigger(specific)
-	[_type(io.intino.alexandria.ui.displays.components.Map.Type.valueOf("$type"));]
-	[$icon+resourceMethod]
-	[$layer+resourceMethod]
+def type(properties, collection, map) and trigger(specific)
+	<<_type(io.intino.alexandria.ui.displays.components.Map.Type.valueOf("$type"));>>
+	<<$icon+resourceMethod>>
+	<<$layer+resourceMethod>>
 end
 
-def type(properties & collection) trigger(specific)
-	[_source(new io.intino.alexandria.ui.sources.$sourceClass+firstUpperCase());]
-	[$column...[$NL]]
-	[_pageSize($pageSize);]
+def type(properties, collection) and trigger(specific)
+	<<_source(new io.intino.alexandria.ui.sources.$sourceClass+firstUpperCase());>>
+	<<$column...[$NL]>>
+	<<_pageSize($pageSize);>>
 end
 
-def type(properties & slider) trigger(specific)
-	[_value($value);]
-	[_range($min,$max);]
-	[_animation($interval,$loop);]
-	[_readonly($readonly);]
-	[$ordinal+ordinalMethod...[$NL]]
+def type(properties, slider) and trigger(specific)
+	<<_value($value);>>
+	<<_range($min,$max);>>
+	<<_animation($interval,$loop);>>
+	<<_readonly($readonly);>>
+	<<$ordinal+ordinalMethod...[$NL]>>
 end
 
-def type(properties & rangeslider) trigger(specific)
-	[_value($from,$to);]
-	[_range($min,$max);]
-	[_animation($interval,$loop);]
-	[_readonly($readonly);]
-	[$ordinal+ordinalMethod...[$NL]]
+def type(properties, rangeslider) and trigger(specific)
+	<<_value($from,$to);>>
+	<<_range($min,$max);>>
+	<<_animation($interval,$loop);>>
+	<<_readonly($readonly);>>
+	<<$ordinal+ordinalMethod...[$NL]>>
 end
 
-def type(properties & temporalslider) trigger(specific)
-	[_value($value);]
-	[_range(java.time.Instant.ofEpochMilli($min~L),java.time.Instant.ofEpochMilli($max~L));]
-	[_animation($interval,$loop);]
-	[_readonly($readonly);]
-	[$ordinal+ordinalMethod...[$NL]]
+def type(properties, temporalslider) and trigger(specific)
+	<<_value($value);>>
+	<<_range(java.time.Instant.ofEpochMilli($min~L),java.time.Instant.ofEpochMilli($max~L));>>
+	<<_animation($interval,$loop);>>
+	<<_readonly($readonly);>>
+	<<$ordinal+ordinalMethod...[$NL]>>
 end
 
-def type(properties & collectiondialog) trigger(specific)
-	[_allowSearch($allowSearch);]
+def type(properties, collectiondialog) and trigger(specific)
+	<<_allowSearch($allowSearch);>>
 end
 
-def type(properties & frame) trigger(specific)
-	[_url("$url");]
+def type(properties, frame) and trigger(specific)
+	<<_url("$url");>>
 end
 
-def type(properties) trigger(specific)
+def type(properties) and trigger(specific)
 end
 
-def type(inputMethod & csv) trigger(inputMethod)
+def type(inputMethod, csv) and trigger(inputMethod)
 	_input(new io.intino.alexandria.ui.displays.components.chart.datasources.CSVDataSource($owner.class.getResource("$value")));
 end
 
-def type(inputMethod & source) trigger(inputMethod)
+def type(inputMethod, source) and trigger(inputMethod)
 	_input(new $value());
 end
 
@@ -1038,52 +1039,52 @@ def type(parameterMethod)
 end
 
 def trigger(fileMethod)
-	_$name(new java.io.File("$value")[, "$extraParam"]);
+	_$name(new java.io.File("$value")<<, "$extraParam">>);
 end
 
 def trigger(resourceMethod)
-	_$name($owner.class.getResource("$value")[, "$extraParam"]);
+	_$name($owner.class.getResource("$value")<<, "$extraParam">>);
 end
 
 def trigger(ordinalMethod)
 	_add(new io.intino.alexandria.ui.displays.components.slider.ordinals.$name+firstUpperCase~Ordinal());
 end
 
-def type(actionableMode & splitbutton)
-	[_options(java.util.Arrays.asList("$option...[","]"));]
-	[_option("$default");]
+def type(actionableMode, splitbutton)
+	<<_options(java.util.Arrays.asList("$option...[","]"));>>
+	<<_option("$default");>>
 end
 
-def type(actionableMode & iconsplitbutton)
-	[_options(java.util.Arrays.asList("$option...[","]"));]
-	[_option("$default");]
-	[_icon("$icon");]
+def type(actionableMode, iconsplitbutton)
+	<<_options(java.util.Arrays.asList("$option...[","]"));>>
+	<<_option("$default");>>
+	<<_icon("$icon");>>
 end
 
-def type(actionableMode & materialiconsplitbutton)
-	[_options(java.util.Arrays.asList("$option...[","]"));]
-	[_option("$default");]
-	[_icon("$icon");]
+def type(actionableMode, materialiconsplitbutton)
+	<<_options(java.util.Arrays.asList("$option...[","]"));>>
+	<<_option("$default");>>
+	<<_icon("$icon");>>
 end
 
-def type(actionableMode & iconbutton)
+def type(actionableMode, iconbutton)
 	_icon("$icon");
 end
 
-def type(actionableMode & icontoggle)
+def type(actionableMode, icontoggle)
 	_icon("$icon");
 end
 
-def type(actionableMode & materialiconbutton)
+def type(actionableMode, materialiconbutton)
 	_icon("$icon");
 end
 
-def type(actionableMode & materialicontoggle)
+def type(actionableMode, materialicontoggle)
 	_icon("$icon");
 end
 
 def type(badge)
-	[_value($value);]
+	<<_value($value);>>
 end
 
 def type(drawer)
@@ -1114,38 +1115,38 @@ def type(editableClass)
 	public class $componentName extends $componentType {
 		public $componentName($abstractBox+type box) {
 			super(box);
-			[$componentProperties+common]
-			[$componentProperties+specific]
+			<<$componentProperties+common>>
+			<<$componentProperties+specific>>
 		}
 	}
 end
 
-def type(item) trigger(addDeclaration)
-	$name(add$name+firstUpperCase(new $name+firstUpperCase(box())[, $itemVariable]))
+def type(item) and trigger(addDeclaration)
+	$name(add$name+firstUpperCase(new $name+firstUpperCase(box())<<, $itemVariable>>))
 end
 
-def type(item) trigger(type)
+def type(item) and trigger(type)
 	$name+firstUpperCase
 end
 
-def type(item) trigger(addRow)
+def type(item) and trigger(addRow)
 	$name = register(add$name+firstUpperCase(box()));
 end
 
-def type(item) trigger(property)
+def type(item) and trigger(property)
 	public $name+firstUpperCase $name;
 end
 
-def type(item) trigger(addMethod)
-	$methodAccessibility $name+firstUpperCase create$methodName+firstUpperCase([$itemClass element]) {
-		$name+firstUpperCase result = new $name+firstUpperCase([($concreteBox+firstUpperCase~Box)]box());
+def type(item) and trigger(addMethod)
+	$methodAccessibility $name+firstUpperCase create$methodName+firstUpperCase(<<$itemClass element>>) {
+		$name+firstUpperCase result = new $name+firstUpperCase(<<($concreteBox+firstUpperCase~Box)>>box());
 		result.id(java.util.UUID.randomUUID().toString());
-		[result.item($itemVariable);]
+		<<result.item($itemVariable);>>
 		return result;
 	}
 end
 
-def type(itemClass & map)
+def type(itemClass, map)
 	io.intino.alexandria.ui.model.PlaceMark<$value>
 end
 
@@ -1153,7 +1154,7 @@ def type(itemClass)
 	$value
 end
 
-def type(itemVariable & map)
+def type(itemVariable, map)
 	element.item()
 end
 
@@ -1161,12 +1162,12 @@ def type(itemVariable)
 	element
 end
 
-def type(useUrl & custom)
+def type(useUrl, custom)
 	box().configuration().get("$value")
 end
 
 def type(column)
-	_add(new io.intino.alexandria.ui.model.datasource.grid.GridColumn<$itemClass>().name("$name").label("$label").type(io.intino.alexandria.ui.model.datasource.grid.GridColumn.Type.$type)[.width($width)][.sortable($sortable)][.address("$address")][.fixed($fixed)][.pattern("$pattern")]);
+	_add(new io.intino.alexandria.ui.model.datasource.grid.GridColumn<$itemClass>().name("$name").label("$label").type(io.intino.alexandria.ui.model.datasource.grid.GridColumn.Type.$type)<<.width($width)>><<.sortable($sortable)>><<.address("$address")>><<.fixed($fixed)>><<.pattern("$pattern")>>);
 end
 
 def type(useUrl)

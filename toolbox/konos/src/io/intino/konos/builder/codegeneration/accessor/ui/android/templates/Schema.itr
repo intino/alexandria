@@ -9,8 +9,8 @@ def type(root)
 end
 
 def trigger(schema)
-    [$inner]
-	open class $name+firstUpperCase [: $parent()] {
+    <<$inner>>
+	open class $name+firstUpperCase <<: $parent()>> {
 
 		$attribute+declaration...[$NL]
 
@@ -26,11 +26,11 @@ def trigger(schema)
             }
         }
 
-		[$schema...[$NL$NL]]
+		<<$schema...[$NL$NL]>>
 	}
 end
 
-def type(word & single) trigger(declaration)
+def type(word, single) and trigger(declaration)
     private lateinit var $name+FirstLowerCase : $type+FirstUpperCase
 
 	enum class $name+FirstUpperCase {
@@ -39,7 +39,7 @@ def type(word & single) trigger(declaration)
 
 end
 
-def type(word & multiple) trigger(declaration)
+def type(word, multiple) and trigger(declaration)
 	private var $name+FirstLowerCase : List<$type+FirstUpperCase> = arrayListOf()
 
 	enum class $name+FirstUpperCase {
@@ -48,52 +48,52 @@ def type(word & multiple) trigger(declaration)
 
 end
 
-def type(primitive & single) trigger(declaration)
-	private[ $lateInit~lateinit] var $name+firstLowerCase : $typeFrame[ = $defaultValue]
+def type(primitive, single) and trigger(declaration)
+	private<< $lateInit~lateinit>> var $name+firstLowerCase : $typeFrame<< = $defaultValue>>
 end
 
-def !type(primitive) type(single) trigger(declaration)
-	private[ $lateInit~lateinit] var $name+firstLowerCase : $type+firstUpperCase[ = $defaultValue]
+def not type(primitive) and type(single) and trigger(declaration)
+	private<< $lateInit~lateinit>> var $name+firstLowerCase : $type+firstUpperCase<< = $defaultValue>>
 end
 
-def type(map) trigger(declaration)
+def type(map) and trigger(declaration)
 	private var $name+firstLowerCase : Map<$key+renderMapType, $value+renderMapType> = mapOf()
 end
 
-def type(multiple) type(object | schema) trigger(declaration)
+def type(multiple) and (type(object) or type(schema)) and trigger(declaration)
 	private var $name+firstLowerCase : List<$type+firstUpperCase> = arrayListOf()
 end
 
-def type(multiple) trigger(declaration)
+def type(multiple) and trigger(declaration)
 	private var $name+firstLowerCase : List<$type> = arrayListOf()
 end
 
-def type(word & single) trigger(getter)
-	fun $name+snakeCaseToCamelCase+FirstLowerCase() : $type+FirstUpperCase {
+def type(word, single) and trigger(getter)
+	fun $name+CamelCase() : $type+FirstUpperCase {
 		return $name+FirstLowerCase
 	}
 end
 
-def type(word & multiple) trigger(getter)
-	fun $name+snakeCaseToCamelCase+FirstLowerCase() : List<$type+FirstUpperCase> {
+def type(word, multiple) and trigger(getter)
+	fun $name+CamelCase() : List<$type+FirstUpperCase> {
 		return $name+FirstLowerCase
 	}
 end
 
-def type(primitive & single) trigger(getter)
-	fun $name+snakeCaseToCamelCase+firstLowerCase() : $typeFrame {
+def type(primitive, single) and trigger(getter)
+	fun $name+CamelCase() : $typeFrame {
 		return this.$name+firstLowerCase
 	}
 end
 
-def !type(primitive) type(single) trigger(getter)
-	fun $name+snakeCaseToCamelCase+firstLowerCase() : $type+firstUpperCase {
+def not type(primitive) and type(single) and trigger(getter)
+	fun $name+CamelCase() : $type+firstUpperCase {
 		return this.$name+firstLowerCase
 	}
 end
 
-def type(multiple & schema) trigger(getter)
-	fun $name+snakeCaseToCamelCase+firstLowerCase~List() : List<$type+firstUpperCase> {
+def type(multiple, schema) and trigger(getter)
+	fun $name+CamelCase~List() : List<$type+firstUpperCase> {
 		return this.$name+firstLowerCase
 	}
 
@@ -106,32 +106,32 @@ def type(multiple & schema) trigger(getter)
 	}
 end
 
-def type(multiple & object) trigger(getter)
-	fun $name+snakeCaseToCamelCase+firstLowerCase() : List<$type+firstUpperCase> {
+def type(multiple, object) and trigger(getter)
+	fun $name+CamelCase() : List<$type+firstUpperCase> {
 		return this.$name+firstLowerCase
 	}
 end
 
-def type(multiple) trigger(getter)
-	fun $name+snakeCaseToCamelCase+firstLowerCase() : List<$type> {
+def type(multiple) and trigger(getter)
+	fun $name+CamelCase() : List<$type> {
 		return this.$name+firstLowerCase
 	}
 end
 
-def type(map) trigger(getter)
+def type(map) and trigger(getter)
 	fun $name+firstLowerCase() : Map<$key+renderMapType, $value+renderMapType> {
 		return this.$name+firstLowerCase
 	}
 end
 
-def type(map) trigger(setter)
+def type(map) and trigger(setter)
 	fun $name+firstLowerCase($name+firstLowerCase : Map<$key+renderMapType, $value+renderMapType>) : $element+firstUpperCase {
 		this.$name+firstLowerCase = $name+firstLowerCase
 		return this
 	}
 end
 
-def type(list) trigger(renderMapType)
+def type(list) and trigger(renderMapType)
 	List<$type+firstUpperCase>
 end
 
@@ -139,116 +139,116 @@ def trigger(renderMapType)
 	$type+firstUpperCase
 end
 
-def type(word & single) trigger(setter)
-	fun $name+snakeCaseToCamelCase+firstLowerCase($name+snakeCaseToCamelCase+firstLowerCase : $type+FirstUpperCase) : $element+firstUpperCase {
-		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase
+def type(word, single) and trigger(setter)
+	fun $name+CamelCase($name+CamelCase : $type+FirstUpperCase) : $element+firstUpperCase {
+		this.$name+firstLowerCase = $name+CamelCase
 		return this
 	}
 end
 
-def type(word & multiple) trigger(setter)
-	fun $name+snakeCaseToCamelCase+firstLowerCase($name+snakeCaseToCamelCase+firstLowerCase : List<$type+FirstUpperCase>) : $element+firstUpperCase {
-		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase
+def type(word, multiple) and trigger(setter)
+	fun $name+CamelCase($name+CamelCase : List<$type+FirstUpperCase>) : $element+firstUpperCase {
+		this.$name+firstLowerCase = $name+CamelCase
 		return this
 	}
 end
 
-def type(primitive & single) trigger(setter)
-	fun $name+snakeCaseToCamelCase+firstLowerCase($name+snakeCaseToCamelCase+firstLowerCase : $typeFrame) : $element+firstUpperCase {
-		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase
+def type(primitive, single) and trigger(setter)
+	fun $name+CamelCase($name+CamelCase : $typeFrame) : $element+firstUpperCase {
+		this.$name+firstLowerCase = $name+CamelCase
 		return this
 	}
 end
 
-def !type(primitive) type(single) trigger(setter)
-	fun $name+snakeCaseToCamelCase+firstLowerCase($name+snakeCaseToCamelCase+firstLowerCase : $type+firstUpperCase) : $element+firstUpperCase {
-		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase;
+def not type(primitive) and type(single) and trigger(setter)
+	fun $name+CamelCase($name+CamelCase : $type+firstUpperCase) : $element+firstUpperCase {
+		this.$name+firstLowerCase = $name+CamelCase;
 		return this
 	}
 end
 
-def type(multiple & object) trigger(setter)
-	fun $name+firstLowerCase($name+snakeCaseToCamelCase+firstLowerCase : List<$type+firstUpperCase>) : $element+firstUpperCase {
-		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase
+def type(multiple, object) and trigger(setter)
+	fun $name+firstLowerCase($name+CamelCase : List<$type+firstUpperCase>) : $element+firstUpperCase {
+		this.$name+firstLowerCase = $name+CamelCase
 		return this
 	}
 end
 
-def type(multiple & schema) trigger(setter)
-	fun $name+snakeCaseToCamelCase+firstLowerCase~List($name+snakeCaseToCamelCase+firstLowerCase : List<$type+firstUpperCase>) : $element+firstUpperCase {
-		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase
+def type(multiple, schema) and trigger(setter)
+	fun $name+CamelCase~List($name+CamelCase : List<$type+firstUpperCase>) : $element+firstUpperCase {
+		this.$name+firstLowerCase = $name+CamelCase
 		return this
 	}
 end
 
-def type(multiple) trigger(setter)
-	fun $name+snakeCaseToCamelCase+firstLowerCase($name+snakeCaseToCamelCase+firstLowerCase : List<$type>) : $element+firstUpperCase {
-		this.$name+firstLowerCase = $name+snakeCaseToCamelCase+firstLowerCase
+def type(multiple) and trigger(setter)
+	fun $name+CamelCase($name+CamelCase : List<$type>) : $element+firstUpperCase {
+		this.$name+firstLowerCase = $name+CamelCase
 		return this
 	}
 end
 
-def type(multiple) trigger(init)
+def type(multiple) and trigger(init)
     result.$name+firstLowerCase = emptyList();
 end
 
-def type(single & object) trigger(init)
-    result.$name+firstLowerCase = $type+snakeCaseToCamelCase+firstUpperCase.empty()
+def type(single, object) and trigger(init)
+    result.$name+firstLowerCase = $type+PascalCase.empty()
 end
 
-def type(single) trigger(init)
+def type(single) and trigger(init)
     result.$name+firstLowerCase = $typeFrame+empty
 end
 
-def type(typeFrame & datetime) trigger(empty)
+def type(typeFrame, datetime) and trigger(empty)
     null!!
 end
 
-def type(typeFrame & date) trigger(empty)
+def type(typeFrame, date) and trigger(empty)
     null!!
 end
 
-def type(typeFrame & real) trigger(empty)
+def type(typeFrame, real) and trigger(empty)
     null!!
 end
 
-def type(typeFrame & boolean) trigger(empty)
+def type(typeFrame, boolean) and trigger(empty)
     false
 end
 
-def type(typeFrame & integer) trigger(empty)
+def type(typeFrame, integer) and trigger(empty)
     null!!
 end
 
-def type(typeFrame & longinteger) trigger(empty)
+def type(typeFrame, longinteger) and trigger(empty)
     null!!
 end
 
-def type(typeFrame & word) trigger(empty)
+def type(typeFrame, word) and trigger(empty)
     null!!
 end
 
-def type(typeFrame) trigger(empty)
+def type(typeFrame) and trigger(empty)
     ""
 end
 
-def type(typeFrame & datetime)
+def type(typeFrame, datetime)
     kotlinx.datetime.Instant
 end
 
-def type(typeFrame & date)
+def type(typeFrame, date)
     kotlinx.datetime.Instant
 end
 
-def type(typeFrame & real)
+def type(typeFrame, real)
     Double
 end
 
-def type(typeFrame & integer)
+def type(typeFrame, integer)
     Int
 end
 
-def type(typeFrame & longinteger)
+def type(typeFrame, longinteger)
     Long
 end
 

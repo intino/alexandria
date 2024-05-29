@@ -2,6 +2,7 @@ package io.intino.konos.builder.codegeneration.accessor.ui.android;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.accessor.ui.android.templates.ThemeTemplate;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
@@ -39,12 +40,12 @@ public class ThemeRenderer extends UIRenderer {
 		FrameBuilder builder = new FrameBuilder("theme");
 		builder.add("type", new FrameBuilder("type", service.graph().theme().type().name()));
 		usedFormats.stream().filter(u -> !u.isEmpty()).forEach(f -> builder.add("format", formatFrameOf(f)));
-		Commons.write(new File(res(Target.AndroidResource) + File.separator + "values" + File.separator + "styles.xml").toPath(), setup(new ThemeTemplate()).render(builder.toFrame()));
+		Commons.write(new File(res(Target.AndroidResource) + File.separator + "values" + File.separator + "styles.xml").toPath(), new ThemeTemplate().render(builder.toFrame(), Formatters.all));
 	}
 
 	private void renderColors() {
 		FrameBuilder builder = new FrameBuilder("colors");
-		Commons.write(new File(res(Target.AndroidResource) + File.separator + "values" + File.separator + "colors.xml").toPath(), setup(new ThemeTemplate()).render(builder.toFrame()));
+		Commons.write(new File(res(Target.AndroidResource) + File.separator + "values" + File.separator + "colors.xml").toPath(), new ThemeTemplate().render(builder.toFrame(), Formatters.all));
 	}
 
 	private Frame formatFrameOf(String usedFormat) {
@@ -59,7 +60,7 @@ public class ThemeRenderer extends UIRenderer {
 	}
 
 	private void addDefaultAttributes(FrameBuilder result, String[] usedFormats) {
-		List<String> defaultTextSizes = Arrays.stream(usedFormats).map(this::defaultTextSize).filter(Objects::nonNull).collect(Collectors.toList());
+		List<String> defaultTextSizes = Arrays.stream(usedFormats).map(this::defaultTextSize).filter(Objects::nonNull).toList();
 		if (!defaultTextSizes.isEmpty()) result.add("defaultTextSize", defaultTextSizes.get(0));
 	}
 
@@ -141,7 +142,7 @@ public class ThemeRenderer extends UIRenderer {
 		String[] parts = value.split(" ");
 		StringBuilder result = new StringBuilder();
 		for (String part : parts) {
-			if (result.length() > 0) result.append(" ");
+			if (!result.isEmpty()) result.append(" ");
 			result.append(part.contains("px") ? Math.round(Integer.parseInt(part.replace("px", ""))) + "px" : part);
 		}
 		return result.toString();

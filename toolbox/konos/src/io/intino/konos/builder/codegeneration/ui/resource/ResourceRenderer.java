@@ -2,6 +2,7 @@ package io.intino.konos.builder.codegeneration.ui.resource;
 
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.codegeneration.services.ui.templates.ResourceTemplate;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
@@ -12,7 +13,6 @@ import io.intino.konos.dsl.Service;
 import io.intino.magritte.framework.Layer;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.resourceFilename;
@@ -41,7 +41,7 @@ public class ResourceRenderer extends UIRenderer {
 		if (resource.isConfidential()) builder.add("confidential", "");
 		builder.add("page", buildBaseFrame().add("page").add(isMobile(uiService) ? "mobile" : "no-mobile").add("name", resource.name$()));
 
-		Commons.writeFrame(resourceFolder(gen(target), target), resourceFilename(resource.name$()), setup(new ResourceTemplate()).render(builder.toFrame()));
+		Commons.writeFrame(resourceFolder(gen(target), target), resourceFilename(resource.name$()), new ResourceTemplate().render(builder.toFrame(), Formatters.all));
 		if (target.equals(Target.Server))
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(resource), javaFile(resourceFolder(gen(target), target), resourceFilename(resource.name$())).getAbsolutePath()));
 
@@ -51,7 +51,7 @@ public class ResourceRenderer extends UIRenderer {
 	private FrameBuilder[] parameters(Service.UI.Resource resource) {
 		Service.UI service = resource.core$().ownerAs(Service.UI.class);
 		List<String> parameters = Commons.extractUrlPathParameters(resource.path());
-		parameters.addAll(resource.parameterList().stream().map(Layer::name$).collect(Collectors.toList()));
+		parameters.addAll(resource.parameterList().stream().map(Layer::name$).toList());
 		return parameters.stream().map(parameter -> new FrameBuilder().add("parameter").add(isMobile(service) ? "mobile" : "no-mobile")
 				.add("name", parameter).add("resource", resource.name$())).toArray(FrameBuilder[]::new);
 	}

@@ -3,87 +3,87 @@ def type(manifest)
 	export { $display+export...[,] }
 end
 
-def type(item & accessible) trigger(import)
+def type(item, accessible) and trigger(import)
 	import $name+firstUppercase~Proxy from "./displays/items/$name+firstUppercase~Proxy"
 end
 
-def type(item) trigger(import)
+def type(item) and trigger(import)
 	import $name+firstUppercase from "../$directory/displays/items/$name+firstUppercase"
 end
 
-def type(row & accessible) trigger(import)
+def type(row, accessible) and trigger(import)
 	import $name+firstUppercase~Proxy from "./displays/rows/$name+firstUppercase~Proxy"
 end
 
-def type(row) trigger(import)
+def type(row) and trigger(import)
 	import $name+firstUppercase from "../$directory/displays/rows/$name+firstUppercase"
 end
 
-def type(table & accessible) trigger(import)
+def type(table, accessible) and trigger(import)
 	import $name+firstUppercase~Proxy from "./displays/tables/$name+firstUppercase~Proxy"
 end
 
-def type(table) trigger(import)
+def type(table) and trigger(import)
 	import $name+firstUppercase from "../$directory/displays/tables/$name+firstUppercase"
 end
 
-def type(list & accessible) trigger(import)
+def type(list, accessible) and trigger(import)
 	import $name+firstUppercase~Proxy from "./displays/lists/$name+firstUppercase~Proxy"
 end
 
-def type(list) trigger(import)
+def type(list) and trigger(import)
 	import $name+firstUppercase from "../$directory/displays/lists/$name+firstUppercase"
 end
 
-def type(magazine & accessible) trigger(import)
+def type(magazine, accessible) and trigger(import)
 	import $name+firstUppercase~Proxy from "./displays/magazines/$name+firstUppercase~Proxy"
 end
 
-def type(magazine) trigger(import)
+def type(magazine) and trigger(import)
 	import $name+firstUppercase from "../$directory/displays/magazines/$name+firstUppercase"
 end
 
-def type(template & accessible) trigger(import)
+def type(template, accessible) and trigger(import)
 	import $name+firstUppercase~Proxy from "./displays/templates/$name+firstUppercase~Proxy"
 end
 
-def type(map & accessible) trigger(import)
+def type(map, accessible) and trigger(import)
 	import $name+firstUppercase~Proxy from "./displays/maps/$name+firstUppercase~Proxy"
 end
 
-def type(map) trigger(import)
+def type(map) and trigger(import)
 	import $name+firstUppercase from "../$directory/displays/maps/$name+firstUppercase"
 end
 
-def type(template) trigger(import)
+def type(template) and trigger(import)
 	import $name+firstUppercase from "../gen/displays/templates/$name+firstUppercase"
 end
 
-def type(block & accessible) trigger(import)
+def type(block, accessible) and trigger(import)
 	import $name+firstUppercase~Proxy from "./displays/blocks/$name+firstUppercase~Proxy"
 end
 
-def type(block) trigger(import)
+def type(block) and trigger(import)
 	import $name+firstUppercase from "../$directory/displays/blocks/$name+firstUppercase"
 end
 
-def type(component & accessible) trigger(import)
+def type(component, accessible) and trigger(import)
 	import $name+firstUppercase~Proxy from "./displays/components/$name+firstUppercase~Proxy"
 end
 
-def type(component) trigger(import)
+def type(component) and trigger(import)
 	import $name+firstUppercase from "../$directory/displays/components/$name+firstUppercase"
 end
 
-def type(display & accessible) trigger(import)
+def type(display, accessible) and trigger(import)
 	import $name+firstUppercase~Proxy from "./displays/$name+firstUppercase~Proxy"
 end
 
-def type(display) trigger(import)
+def type(display) and trigger(import)
 	import $name+firstUppercase from "../$directory/displays/$name+firstUppercase"
 end
 
-def type(display) trigger(export)
+def type(display) and trigger(export)
 	$name+firstUppercase~$accessible
 end
 

@@ -46,34 +46,34 @@ def type(interface)
 
 		static Axis byName(String name) {
 			switch(name) {
-				[$axis+NameCase...[$NL]]
+				<<$axis+NameCase...[$NL]>>
 			}
 			return null;
 		}
 
 		static Axis byLabel(String label) {
 			switch(label) {
-				[$axis+LabelCase...[$NL]]
+				<<$axis+LabelCase...[$NL]>>
 			}
 			return null;
 		}
 
 		static List<Axis> all() {
 			return List.of(
-				[$axis+ListElement...[,$NL]]
+				<<$axis+ListElement...[,$NL]>>
 			);
 		}
 	}
 end
 
-def type(axis) trigger(NameCase)
-	case "$axis+snakeCaseToCamelCase+firstUpperCase": return $axis+snakeCaseToCamelCase+firstUpperCase.get();
+def type(axis) and trigger(NameCase)
+	case "$axis+PascalCase": return $axis+PascalCase.get();
 end
 
-def type(axis) trigger(LabelCase)
-	case $axis+snakeCaseToCamelCase+firstUpperCase.TITLE: return $axis+snakeCaseToCamelCase+firstUpperCase.get();
+def type(axis) and trigger(LabelCase)
+	case $axis+PascalCase.TITLE: return $axis+PascalCase.get();
 end
 
-def type(axis) trigger(ListElement)
-	$axis+snakeCaseToCamelCase+firstUpperCase.get()
+def type(axis) and trigger(ListElement)
+	$axis+PascalCase.get()
 end

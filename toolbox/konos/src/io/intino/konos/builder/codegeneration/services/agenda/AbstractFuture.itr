@@ -61,10 +61,10 @@ end
 
 def trigger(methods)
 	public void $name+firstLowerCase() {
-		on$name+firstUpperCase($parameter+call...[, ][, $optionParameter+optionCall...[, ]]);
+		on$name+firstUpperCase($parameter+call...[, ]<<, $optionParameter+optionCall...[, ]>>);
 	}
 
-	protected abstract void on$name+firstUpperCase($parameter+signature...[, ][, $optionParameter+signature...[, ]]);
+	protected abstract void on$name+firstUpperCase($parameter+signature...[, ]<<, $optionParameter+signature...[, ]>>);
 end
 
 def trigger(getter)

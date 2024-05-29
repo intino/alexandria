@@ -1,8 +1,9 @@
 package io.intino.konos.builder.codegeneration.schema;
 
+import io.intino.itrules.Engine;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
+import io.intino.itrules.template.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.context.CompilationContext;
@@ -14,7 +15,7 @@ import java.io.File;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 
 public class DefaultSchemaWriter extends SchemaWriter {
-	private boolean serializationAnnotations;
+	private final boolean serializationAnnotations;
 
 	public DefaultSchemaWriter(CompilationContext context, File destination, String packageName, boolean serializationAnnotations) {
 		super(context, destination, packageName);
@@ -24,7 +25,7 @@ public class DefaultSchemaWriter extends SchemaWriter {
 	@Override
 	public void write(Schema schema, Frame frame) {
 		File packageFolder = schemaFolder(schema);
-		Commons.writeFrame(packageFolder, schema.name$(), template().render(new FrameBuilder("root").add("root", packageName).add("package", packageName(schema)).add("schema", frame)));
+		Commons.writeFrame(packageFolder, schema.name$(), new Engine(template()).addAll(Formatters.all).render(new FrameBuilder("root").add("root", packageName).add("package", packageName(schema)).add("schema", frame)));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(schema), javaFile(packageFolder, schema.name$()).getAbsolutePath()));
 	}
 
@@ -34,10 +35,7 @@ public class DefaultSchemaWriter extends SchemaWriter {
 	}
 
 	private Template template() {
-		return Formatters.customize(serializationAnnotations ? new SchemaAnnotatedTemplate() : new SchemaTemplate()).add("typeFormat", (value) -> {
-			if (value.toString().contains(".")) return Formatters.firstLowerCase(value.toString());
-			else return value;
-		});
+		return serializationAnnotations ? new SchemaAnnotatedTemplate() : new SchemaTemplate();
 	}
 
 }

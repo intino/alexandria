@@ -5,9 +5,9 @@ def type(boxConfiguration)
 	import java.util.HashMap;
 	import java.io.File;
 
-	public class $name+SnakeCaseToCamelCase+firstUpperCase~Configuration extends [$parent~Configuration?io.intino.alexandria.core.BoxConfiguration] {
+	public class $name+PascalCase~Configuration extends <<$parent~Configuration?io.intino.alexandria.core.BoxConfiguration>> {
 
-		public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration(String$[] args) {
+		public $name+PascalCase~Configuration(String[] args) {
 			super(args);
 		}
 
@@ -19,38 +19,38 @@ def type(boxConfiguration)
 	}
 end
 
-def type(file) trigger(parameter)
-	public File $name+camelCase+firstLowerCase() {
+def type(file) and trigger(parameter)
+	public File $name+CamelCase() {
 		return get("$value") == null ? null : new File(get("$value"));
 	}
 end
 
 def trigger(parameter)
-	public String $name+camelCase+firstLowerCase() {
+	public String $name+CamelCase() {
 		return get("$value");
 	}
 end
 
-def type(custom) trigger(replace)
+def type(custom) and trigger(replace)
 	.replace("{$name}", $name+validname+firstLowerCase)
 end
 
-def type(custom) trigger(signature)
+def type(custom) and trigger(signature)
 	$type $name+validname+firstLowerCase
 end
-def type(custom) trigger(name)
+def type(custom) and trigger(name)
 	$name+validname+firstLowerCase
 end
 
-def type(custom) trigger(field)
+def type(custom) and trigger(field)
 	public $type $name+validname+firstLowerCase = "";
 end
 
-def type(custom) trigger(assign)
+def type(custom) and trigger(assign)
 	this.$conf+validname+firstLowerCase~Configuration.$name+validname+firstLowerCase = $name+validname+firstLowerCase;
 end
 
-def type(custom) trigger(parameter)
+def type(custom) and trigger(parameter)
 	args.get("$conf+firstLowerCase~_$name+validname+firstLowerCase")
 end
 

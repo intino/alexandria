@@ -3,7 +3,9 @@ package io.intino.konos.builder.codegeneration.ui.resource;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.action.ActionRenderer;
+import io.intino.konos.builder.codegeneration.action.ActionTemplate;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.CodeGenerationHelper;
@@ -13,7 +15,6 @@ import io.intino.magritte.framework.Layer;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.format;
@@ -25,7 +26,7 @@ public class PageRenderer extends ActionRenderer {
 	private final CompilationContext compilationContext;
 	private final Service.UI.Resource resource;
 	private final Service.UI service;
-	private Target target;
+	private final Target target;
 
 	public PageRenderer(CompilationContext compilationContext, Service.UI.Resource resource, Target target) {
 		super(compilationContext, types(resource.core$().ownerAs(Service.UI.class)));
@@ -65,11 +66,11 @@ public class PageRenderer extends ActionRenderer {
 	private void writeWebPage(FrameBuilder builder) {
 		compilationContext.classes().put(resource.getClass().getSimpleName() + "#" + firstUpperCase(resource.core$().name()), "actions" + "." + firstUpperCase(snakeCaseToCamelCase(resource.name$())) + suffix(Target.Server));
 		if (!alreadyRendered(src(target), resource.name$())) {
-			writeFrame(destinationPackage(src(target)), resource.name$() + suffix(target), template().render(builder.toFrame()));
+			writeFrame(destinationPackage(src(target)), resource.name$() + suffix(target), new ActionTemplate().render(builder.toFrame(), Formatters.all));
 			if (target.equals(Target.Server))
 				context.compiledFiles().add(new OutputItem(context.sourceFileOf(resource), javaFile(destinationPackage(src(target)), resource.name$() + suffix(target)).getAbsolutePath()));
 		}
-		writeFrame(destinationPackage(gen(target)), "Abstract" + firstUpperCase(resource.name$()) + suffix(target), template().render(builder.add("gen").toFrame()));
+		writeFrame(destinationPackage(gen(target)), "Abstract" + firstUpperCase(resource.name$()) + suffix(target), new ActionTemplate().render(builder.add("gen").toFrame(), Formatters.all));
 		if (target.equals(Target.Server))
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(resource), javaFile(destinationPackage(gen(target)), "Abstract" + firstUpperCase(resource.name$()) + suffix(target)).getAbsolutePath()));
 	}
@@ -78,10 +79,10 @@ public class PageRenderer extends ActionRenderer {
 		Target target = Target.MobileShared;
 		compilationContext.classes().put(resource.getClass().getSimpleName() + "#" + firstUpperCase(resource.core$().name()), "actions" + "." + firstUpperCase(snakeCaseToCamelCase(resource.name$())) + suffix(Target.MobileShared));
 		if (!alreadyRendered(src(Target.Server), resource.name$(), target)) {
-			writeFrame(destinationPackage(src(Target.Server)), resource.name$() + suffix(target), template().render(builder.toFrame()));
+			writeFrame(destinationPackage(src(Target.Server)), resource.name$() + suffix(target), new ActionTemplate().render(builder.toFrame(), Formatters.all));
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(resource), javaFile(destinationPackage(src(Target.Server)), resource.name$() + suffix(target)).getAbsolutePath()));
 		}
-		writeFrame(destinationPackage(gen(Target.Server)), "Abstract" + firstUpperCase(resource.name$()) + suffix(target), template().render(builder.add("gen").toFrame()));
+		writeFrame(destinationPackage(gen(Target.Server)), "Abstract" + firstUpperCase(resource.name$()) + suffix(target), new ActionTemplate().render(builder.add("gen").toFrame(), Formatters.all));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(resource), javaFile(destinationPackage(gen(Target.Server)), "Abstract" + firstUpperCase(resource.name$()) + suffix(target)).getAbsolutePath()));
 	}
 
@@ -140,7 +141,7 @@ public class PageRenderer extends ActionRenderer {
 
 	private FrameBuilder[] parameters() {
 		List<String> parameters = extractUrlPathParameters(resource.path());
-		parameters.addAll(resource.parameterList().stream().map(Layer::name$).collect(Collectors.toList()));
+		parameters.addAll(resource.parameterList().stream().map(Layer::name$).toList());
 		return parameters.stream().map(parameter -> new FrameBuilder().add("parameter")
 				.add("type", "String")
 				.add("name", parameter)).toArray(FrameBuilder[]::new);
@@ -161,5 +162,4 @@ public class PageRenderer extends ActionRenderer {
 		result.add("ui");
 		return result.toArray(new String[0]);
 	}
-
 }

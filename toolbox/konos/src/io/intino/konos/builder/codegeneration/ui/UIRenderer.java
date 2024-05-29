@@ -1,8 +1,6 @@
 package io.intino.konos.builder.codegeneration.ui;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
-import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
@@ -38,16 +36,8 @@ public abstract class UIRenderer extends Renderer {
 		return context.classes();
 	}
 
-	protected Template setup(Template template) {
-		return addFormats(template);
-	}
-
 	protected String path(Display display, Target target) {
 		return CodeGenerationHelper.displayPath(null, typeOf(display), target);
-	}
-
-	protected Template addFormats(Template template) {
-		return Formatters.customize(template);
 	}
 
 	protected String typeOf(Layer element) {

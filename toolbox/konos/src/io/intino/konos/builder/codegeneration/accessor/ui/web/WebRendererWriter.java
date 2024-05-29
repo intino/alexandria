@@ -1,8 +1,10 @@
 package io.intino.konos.builder.codegeneration.accessor.ui.web;
 
+import io.intino.itrules.Engine;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
+import io.intino.itrules.template.Template;
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.accessor.ui.web.templates.*;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.codegeneration.services.ui.UiRendererWriter;
@@ -13,6 +15,7 @@ import io.intino.magritte.framework.Layer;
 
 import java.io.File;
 
+import static io.intino.itrules.template.Template.compose;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.*;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 
@@ -35,7 +38,7 @@ public class WebRendererWriter extends UiRendererWriter {
 		Frame frame = builder.toFrame();
 		String name = nameOfPassiveViewFile(element, frame, "Notifier");
 		if (!hasConcreteNotifier(element)) return false;
-		writeFrame(displayNotifierFolder(gen(), target), element, name, notifierTemplate(element, builder).render(frame));
+		writeFrame(displayNotifierFolder(gen(), target), element, name, new PassiveViewNotifierTemplate().render(frame, Formatters.all));
 		return true;
 	}
 
@@ -46,7 +49,7 @@ public class WebRendererWriter extends UiRendererWriter {
 		Frame frame = builder.toFrame();
 		String name = nameOfPassiveViewFile(element, frame, "Requester");
 		if (!hasConcreteRequester(element)) return false;
-		writeFrame(displayRequesterFolder(gen(), target), element, name, requesterTemplate(element, builder).render(frame));
+		writeFrame(displayRequesterFolder(gen(), target), element, name, new PassiveViewRequesterTemplate().render(frame, Formatters.all));
 		return true;
 	}
 
@@ -60,27 +63,20 @@ public class WebRendererWriter extends UiRendererWriter {
 		if (accessible || template == null) return false;
 		String name = nameOfPassiveViewFile(element, frame, "PushRequester");
 		if (!hasConcreteRequester(element)) return false;
-		writeFrame(displayRequesterFolder(gen(), target), element, name, template.render(frame));
+		writeFrame(displayRequesterFolder(gen(), target), element, name, new Engine(template).addAll(Formatters.all).render(frame));
 		return true;
 	}
 
 	public Template srcTemplate(Layer layer, FrameBuilder builder) {
 		if (builder.is("accessible")) return null;
 		if (!ElementHelper.isRoot(layer)) return null;
-		return setup(new DisplayTemplate());
+		return new DisplayTemplate();
 	}
 
 	public Template genTemplate(Layer layer, FrameBuilder builder) {
-		if (layer.i$(io.intino.konos.dsl.Template.Desktop.class)) return setup(new AbstractDesktopTemplate());
-		return setup(new AbstractDisplayTemplate());
-	}
-
-	public Template notifierTemplate(PassiveView element, FrameBuilder builder) {
-		return setup(new PassiveViewNotifierTemplate());
-	}
-
-	public Template requesterTemplate(PassiveView element, FrameBuilder builder) {
-		return setup(new PassiveViewRequesterTemplate());
+		if (layer.i$(io.intino.konos.dsl.Template.Desktop.class))
+			return compose(new ComponentTemplate(), new AbstractDesktopSkeletonTemplate());
+		return compose(new ComponentTemplate(), new AbstractDisplaySkeletonTemplate());
 	}
 
 	public Template pushRequesterTemplate(PassiveView element, FrameBuilder builder) {
@@ -93,14 +89,14 @@ public class WebRendererWriter extends UiRendererWriter {
 		if (template == null) return;
 		File sourceFile = displayFile(src(), newDisplay, type, target);
 		if (sourceFile.exists()) return;
-		writeFrame(displayFolder(src(), type, target), element, newDisplay, template.render(builder.toFrame()));
+		writeFrame(displayFolder(src(), type, target), element, newDisplay, new Engine(template).addAll(Formatters.all).render(builder.toFrame()));
 	}
+
 
 	private void writeGen(Layer element, String type, FrameBuilder builder) {
 		Template template = genTemplate(element, builder);
 		if (template == null) return;
 		final String newDisplay = displayName(element, isAccessible(builder));
-		writeFrame(displayFolder(gen(), type, target), element, newDisplay, template.render(builder.add("gen").toFrame()));
+		writeFrame(displayFolder(gen(), type, target), element, newDisplay, new Engine(template).addAll(Formatters.all).render(builder.add("gen").toFrame()));
 	}
-
 }

@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
+
 public class RESTResourceActionRenderer extends ActionRenderer {
 	private final Resource.Operation operation;
 

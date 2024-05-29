@@ -13,6 +13,7 @@ import io.intino.konos.dsl.Theme;
 
 import java.io.File;
 
+import static io.intino.konos.builder.codegeneration.Formatters.all;
 import static io.intino.konos.dsl.Theme.Type.Normal;
 
 public class ThemeRenderer extends UIRenderer {
@@ -34,7 +35,7 @@ public class ThemeRenderer extends UIRenderer {
 				builder.add("format", frameOf("readonly", theme.readonly().format().content()));
 		}
 		service.graph().formatList().forEach(r -> builder.add("format", frameOf(r)));
-		Commons.write(new File(gen(Target.Accessor) + File.separator + "Theme.js").toPath(), setup(new ThemeTemplate()).render(builder.toFrame()));
+		Commons.write(new File(gen(Target.Accessor) + File.separator + "Theme.js").toPath(), new ThemeTemplate().render(builder.toFrame(), all));
 	}
 
 	private Frame palette(Theme theme) {

@@ -1,4 +1,4 @@
-def type(display & accessible)
+def type(display, accessible)
 	package $package+validPackage.ui.displays.notifiers;
 
 	import io.intino.alexandria.exceptions.*;
@@ -25,12 +25,12 @@ def type(display)
 			super(display, carrier);
 		}
 
-		[$notification...[$NL$NL]]
-		[$event...[$NL$NL]]
+		<<$notification...[$NL$NL]>>
+		<<$event...[$NL$NL]>>
 	}
 end
 
-def attribute(extensionOf) trigger(parentType)
+def attribute(extensionOf) and trigger(parentType)
 	$parent+firstUpperCase~Notifier
 end
 
@@ -38,9 +38,9 @@ def trigger(parentType)
 	io.intino.alexandria.ui.displays.notifiers.$value+FirstUpperCase~Notifier
 end
 
-def type(notification) trigger(notification)
-	public void $name+firstLowercase([$parameter value]) {
-		put[$target]("$name+firstLowercase"[, "v", $parameter+call]);
+def type(notification) and trigger(notification)
+	public void $name+firstLowercase(<<$parameter value>>) {
+		put<<$target>>("$name+firstLowercase"<<, "v", $parameter+call>>);
 	}
 end
 
@@ -50,11 +50,11 @@ def type(event)
 	}
 end
 
-def type(parameter) trigger(call)
+def type(parameter) and trigger(call)
 	value
 end
 
-def type(list) trigger(parameter)
+def type(list) and trigger(parameter)
 	java.util.List<$value>
 end
 
@@ -66,15 +66,15 @@ def type(schemaImport)
 	import $package.schemas.*;
 end
 
-def attribute(this:All) trigger(target)
+def attribute(this, All) and trigger(target)
 	ToAll
 end
 
-def attribute(this:Display) trigger(target)
+def attribute(this, Display) and trigger(target)
 	ToDisplay
 end
 
-def attribute(this:Client) trigger(target)
+def attribute(this, Client) and trigger(target)
 end
 
 def type(proxyMessage)

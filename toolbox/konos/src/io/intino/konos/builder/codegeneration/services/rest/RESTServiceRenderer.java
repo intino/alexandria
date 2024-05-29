@@ -4,8 +4,8 @@ import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.zip.Zip;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.codegeneration.swagger.SwaggerProfileGenerator;
@@ -65,7 +65,7 @@ public class RESTServiceRenderer extends Renderer {
 	}
 
 	private void createConfigFile(File api) {
-		Template template = customize(new ApiPortalConfigurationTemplate());
+		var template = new ApiPortalConfigurationTemplate();
 		FrameBuilder frame = new FrameBuilder("api").add("url", services.stream().filter(Service.REST::generateDocs).map(Layer::name$).toArray(String[]::new));
 		Service.REST service = services.get(0);
 		if (service.color() != null) frame.add("color", service.color());
@@ -76,7 +76,7 @@ public class RESTServiceRenderer extends Renderer {
 		if (service.logo() != null) copyLogoToImages(new File(api, "images"), service.logo());
 		if (service.favicon() != null) copyFaviconToImages(new File(api, "images"), service.favicon());
 		try {
-			Files.write(new File(api, "config.json").toPath(), template.render(frame).getBytes());
+			Files.writeString(new File(api, "config.json").toPath(), template.render(frame, Formatters.all));
 		} catch (IOException e) {
 			Logger.error(e);
 		}
@@ -132,7 +132,7 @@ public class RESTServiceRenderer extends Renderer {
 			}
 		}
 		classes().put(service.getClass().getSimpleName() + "#" + service.name$(), className);
-		Commons.writeFrame(gen, className, template().render(builder.toFrame()));
+		Commons.writeFrame(gen, className, new RESTServiceTemplate().render(builder.toFrame(), Formatters.all));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Server), className).getAbsolutePath()));
 	}
 
@@ -140,7 +140,7 @@ public class RESTServiceRenderer extends Renderer {
 		if (javaFile(src(Target.Server), service + "Authenticator").exists()) return;
 		FrameBuilder builder = new FrameBuilder(typeOf(authentication)).add("box", boxName()).add("service", service).add("package", packageName());
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(authentication), javaFile(src(Target.Server), service + "Authenticator").getAbsolutePath()));
-		Commons.writeFrame(src(Target.Server), service + "Authenticator", authenticatorTemplate().render(builder.toFrame()));
+		Commons.writeFrame(src(Target.Server), service + "Authenticator", new RestAuthenticatorTemplate().render(builder.toFrame(), Formatters.all));
 	}
 
 	private String typeOf(Service.REST.Authentication authentication) {
@@ -179,11 +179,4 @@ public class RESTServiceRenderer extends Renderer {
 		return builder.toFrame();
 	}
 
-	private Template template() {
-		return customize(new RESTServiceTemplate());
-	}
-
-	private Template authenticatorTemplate() {
-		return customize(new RestAuthenticatorTemplate());
-	}
 }

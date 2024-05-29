@@ -16,14 +16,14 @@ def type(i18n)
 
 		function addWords(dictionary, words) {
 			if (words == null) return;
-			for (var index in words) dictionary$[index$] = words$[index$];
+			for (var index in words) dictionary[index] = words[index];
 			return dictionary;
 		};
 
 		var loader = {
 			load: (lang) => {
-				if (cache$[lang$] == null) cache$[lang$] = merge(translators$[lang$], lang);
-				return cache$[lang$];
+				if (cache[lang] == null) cache[lang] = merge(translators[lang], lang);
+				return cache[lang];
 			}
 		};
 
@@ -43,10 +43,10 @@ def type(translation)
 	"$text" : "$value"
 end
 
-def type(use) trigger(import)
+def type(use) and trigger(import)
 	import $name+firstUpperCase~I18n from "$service+camelCaseToSnakeCase~/gen/I18n";
 end
 
-def type(use) trigger(addWords)
+def type(use) and trigger(addWords)
 	addWords(dictionary, $name+firstUpperCase~I18n.load(lang));
 end

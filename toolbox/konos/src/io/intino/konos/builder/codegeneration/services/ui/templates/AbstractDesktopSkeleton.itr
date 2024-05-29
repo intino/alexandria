@@ -6,8 +6,8 @@ def type(desktop)
 	import io.intino.alexandria.ui.displays.components.*;
 	import $package.ui.*;
 	$schemaImport
-	import $package+validPackage.$box+firstUpperCase~Box;[
-	import $package+validPackage.ui.displays.desktops.$abstract$name+firstUpperCase;]
+	import $package+validPackage.$box+firstUpperCase~Box;<<
+	import $package+validPackage.ui.displays.desktops.$abstract$name+firstUpperCase;>>
 
 	$templatesImport
 	$blocksImport
@@ -15,11 +15,11 @@ def type(desktop)
 	$rowsImport
 	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
 
-	public class [$abstract]$name+firstUpperCase$parametrized extends io.intino.alexandria.ui.displays.$type+firstUpperCase<$name+firstUpperCase~Notifier, $abstractBox+type> {
+	public class <<$abstract>>$name+firstUpperCase$parametrized extends io.intino.alexandria.ui.displays.$type+firstUpperCase<$name+firstUpperCase~Notifier, $abstractBox+type> {
 		public $name+firstUpperCase~Header header;
 		public $name+firstUpperCase~Tabs tabs;
 
-		public [$abstract]$name+firstUpperCase($abstractBox+type box) {
+		public <<$abstract>>$name+firstUpperCase($abstractBox+type box) {
 			super(box);
 			id("$id");
 		}
@@ -31,9 +31,9 @@ def type(desktop)
 			tabs = register(new $name+firstUpperCase~Tabs<>(box()).id("$tabBarId"));
 		}
 
-		public class $name+firstUpperCase~Header[<$abstractBox+extension>] extends io.intino.alexandria.ui.displays.components.Header<$abstractBox+type> {
-			[$attribute...[$NL]]
-			[$component+declarations...[$NL]]
+		public class $name+firstUpperCase~Header<<~<$abstractBox+extension>~>> extends io.intino.alexandria.ui.displays.components.Header<$abstractBox+type> {
+			<<$attribute...[$NL]>>
+			<<$component+declarations...[$NL]>>
 
 			public $name+firstUpperCase~Header($abstractBox+type box) {
 				super(box);
@@ -43,19 +43,19 @@ def type(desktop)
 			public void init() {
 				super.init();
 				$componentReferences
-				[$component+initializations...[$NL]]
+				<<$component+initializations...[$NL]>>
 			}
 
 			@Override
 			public void remove() {
 				super.remove();
-				[$component+unregister...[$NL]]
+				<<$component+unregister...[$NL]>>
 			}
-			[$component+class...[$NL]]
-			[$component+method...[$NL]]
+			<<$component+class...[$NL]>>
+			<<$component+method...[$NL]>>
 		}
 
-		public class $name+firstUpperCase~Tabs[<$abstractBox+extension>] extends io.intino.alexandria.ui.displays.components.Tabs<$abstractBox+type> {
+		public class $name+firstUpperCase~Tabs<<~<$abstractBox+extension>~>> extends io.intino.alexandria.ui.displays.components.Tabs<$abstractBox+type> {
 			public $name+firstUpperCase~Tabs($abstractBox+type box) {
 				super(box);
 				$tabs...[$NL]
@@ -80,7 +80,7 @@ def type(rowsImport)
 	import $package+validPackage.ui.displays.rows.*;
 end
 
-def type(componentReferences & forRoot)
+def type(componentReferences, forRoot)
 	$component+rootReferences...[$NL]
 end
 

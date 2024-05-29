@@ -6,6 +6,8 @@ import io.intino.konos.dsl.Service;
 import java.util.Collections;
 import java.util.Map;
 
+import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
+
 public class SoapOperationActionRenderer extends ActionRenderer {
 
 	private final Service.Soap.Operation operation;

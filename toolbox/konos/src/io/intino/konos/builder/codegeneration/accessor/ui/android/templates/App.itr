@@ -31,9 +31,9 @@ def type(manifest)
     </manifest>
 end
 
-def type(resource & main)
+def type(resource, main)
     <activity
-        android:name=".pages.$name+snakecaseToCamelCase+firstUpperCase~Activity"
+        android:name=".pages.$name+PascalCase~Activity"
         android:exported="true"
         android:windowSoftInputMode="adjustNothing">
         <intent-filter>
@@ -45,13 +45,13 @@ end
 
 def type(resource)
     <activity
-        android:name=".pages.$name+snakecaseToCamelCase+firstUpperCase~Activity"
+        android:name=".pages.$name+PascalCase~Activity"
         android:exported="true"
         android:windowSoftInputMode="adjustNothing">
     </activity>
 end
 
-def type(gradle & settings)
+def type(gradle, settings)
     pluginManagement {
         repositories {
             google()
@@ -72,7 +72,7 @@ def type(gradle & settings)
     include(":shared")
 end
 
-def type(gradle & android)
+def type(gradle, android)
     plugins {
         id("com.android.application")
         kotlin("android")
@@ -130,7 +130,7 @@ def type(gradle & android)
     }
 end
 
-def type(gradle & shared)
+def type(gradle, shared)
     plugins {
         kotlin("multiplatform")
         id("org.jetbrains.kotlin.plugin.serialization")
@@ -222,12 +222,12 @@ def type(strings)
 end
 
 def type(component)
-    <declare-styleable name="$name+firstUpperCase"[ parent="$parent+firstUpperCase"]>
+    <declare-styleable name="$name+firstUpperCase"<< parent="$parent+firstUpperCase">>~>
         $attribute...[$NL]
     </declare-styleable>
 end
 
-def type(attribute & root)
+def type(attribute, root)
     <attr name="$name+lowerCase" format="string" />
 end
 

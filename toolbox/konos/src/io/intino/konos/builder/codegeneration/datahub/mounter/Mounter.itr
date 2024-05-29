@@ -31,60 +31,60 @@ def trigger(method)
 	}
 end
 
-def type(tank) trigger(field)
-	io.intino.alexandria.datalake.Datalake.EventStore.Tank $name+camelCase+firstLowerCase;
+def type(tank) and trigger(field)
+	io.intino.alexandria.datalake.Datalake.EventStore.Tank $name+CamelCase;
 end
 
-def type(tank) trigger(content)
-	$name+camelCase+firstLowerCase.content()
+def type(tank) and trigger(content)
+	$name+CamelCase.content()
 end
 
-def type(tank) trigger(constructor)
-	this.$name+camelCase+firstLowerCase = box.datalake().eventStore().tank(t -> t.name().equals("$qn")).get();
+def type(tank) and trigger(constructor)
+	this.$name+CamelCase = box.datalake().eventStore().tank(t -> t.name().equals("$qn")).get();
 end
 
 def trigger(column)
-	new MappColumnStreamer(box.datalake().setStore().tank("$fullName").on(timetag).index()).add(new SimpleSelector("$name", ColumnStream.Type.$type+FirstUpperCase, $mounter+snakeCaseToCamelCase+FirstUpperCase~MounterFunctions.$name+firstLowerCase$facet()));
+	new MappColumnStreamer(box.datalake().setStore().tank("$fullName").on(timetag).index()).add(new SimpleSelector("$name", ColumnStream.Type.$type+FirstUpperCase, $mounter+PascalCase~MounterFunctions.$name+firstLowerCase$facet()));
 end
 
-def type(column) attribute(type:Long) trigger(method)
+def type(column) and attribute(type, Long) and trigger(method)
 	public static Function<Item, $type+FirstUpperCase> $name+validName+firstLowerCase$facet() {
 		return Item::key;
 	}
 end
 
-def type(column) attribute(type:Double) trigger(method)
+def type(column) and attribute(type, Double) and trigger(method)
 	public static Function<Item, $type+FirstUpperCase> $name+validName+firstLowerCase$facet() {
 		return i -> $type+FirstUpperCase.valueOf(i.value());
 	}
 end
 
-def type(column) attribute(type:Integer) trigger(method)
+def type(column) and attribute(type, Integer) and trigger(method)
 	public static Function<Item, $type+FirstUpperCase> $name+validName+firstLowerCase$facet() {
 		return i -> Double.valueOf(i.value());
 	}
 end
 
 
-def type(column) attribute(type:Timetag) trigger(method)
+def type(column) and attribute(type, Timetag) and trigger(method)
 	public static Function<Item, io.intino.alexandria.Timetag> $name+validName+firstLowerCase$facet() {
 		return i -> io.intino.alexandria.Timetag.of(i.value());
 	}
 end
 
-def type(column) attribute(type:Boolean) trigger(method)
+def type(column) and attribute(type, Boolean) and trigger(method)
 	public static Function<Item, Boolean> $name+validName+firstLowerCase$facet() {
 		return i -> Boolean.parseBoolean(i.value());
 	}
 end
 
-def type(column) attribute(type:Nominal) trigger(method)
+def type(column) and attribute(type, Nominal) and trigger(method)
 	public static Function<Item, String> $name+validName+firstLowerCase$facet() {
 		return Item::value;
 	}
 end
 
-def type(column) trigger(method)
+def type(column) and trigger(method)
 	public static Function<Item, $type+FirstUpperCase> $name+validName+firstLowerCase$facet() {
 		return Item::value;
 	}
@@ -98,11 +98,11 @@ def type(schemaImport)
 	import $package.schemas.*;
 end
 
-def type(schema) trigger(typeClass)
+def type(schema) and trigger(typeClass)
 	$package.schemas.$name+FirstUpperCase
 end
 
-def type(schema) trigger(typeName)
+def type(schema) and trigger(typeName)
 	$name+firstLowerCase
 end
 

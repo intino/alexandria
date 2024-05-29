@@ -335,8 +335,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (component.i$(conceptOf(OtherComponents.ProxyStamp.class))) return false;
 		if (component.i$(conceptOf(OtherComponents.BaseStamp.class))) return true;
 		if (component.i$(conceptOf(HelperComponents.Row.class))) return true;
-		if (component.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class))) return true;
-		return false;
+		return component.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class));
 	}
 
 	protected boolean isEmbeddedComponent(Component component) {

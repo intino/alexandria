@@ -1,19 +1,19 @@
 def type(desktop)
 	import React from "react";
 	import { Header as UiHeader, Tabs as UiTabs } from "alexandria-ui-elements/gen/Displays";
-	[$alexandriaComponentImport...[$NL]]
-	[$projectComponentImport...[$NL]]
-	import AlexandriaDesktop from "alexandria-ui-elements/src/displays/Desktop";[
-	import $notDecorated+firstUpperCase~Notifier from "../notifiers/$notDecorated+firstUpperCase~Notifier";][
-	import $notDecorated+firstUpperCase~Requester from "../requesters/$notDecorated+firstUpperCase~Requester";]
+	<<$alexandriaComponentImport...[$NL]>>
+	<<$projectComponentImport...[$NL]>>
+	import AlexandriaDesktop from "alexandria-ui-elements/src/displays/Desktop";<<
+	import $notDecorated+firstUpperCase~Notifier from "../notifiers/$notDecorated+firstUpperCase~Notifier";>><<
+	import $notDecorated+firstUpperCase~Requester from "../requesters/$notDecorated+firstUpperCase~Requester";>>
 
-	export default class [$abstract]$name+firstUpperCase extends AlexandriaDesktop {
+	export default class <<$abstract>>$name+firstUpperCase extends AlexandriaDesktop {
 
 		constructor(props) {
-			super(props);[
+			super(props);<<
 			loadActivity()
-			this.notifier = new $notDecorated+firstUpperCase~Notifier(this);][
-			this.requester = new $notDecorated+firstUpperCase~Requester(this);]
+			this.notifier = new $notDecorated+firstUpperCase~Notifier(this);>><<
+			this.requester = new $notDecorated+firstUpperCase~Requester(this);>>
 		};
 
 		render() {
@@ -36,5 +36,5 @@ def type(alexandriaComponentImport)
 end
 
 def type(projectComponentImport)
-	import { $type+firstUpperCase as Displays$type+firstUpperCase } from "../[$packageTypeRelativeDirectory]Displays";
+	import { $type+firstUpperCase as Displays$type+firstUpperCase } from "../<<$packageTypeRelativeDirectory>>Displays";
 end

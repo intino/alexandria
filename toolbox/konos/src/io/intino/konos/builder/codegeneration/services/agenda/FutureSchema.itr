@@ -7,17 +7,17 @@ def type(future)
 	import java.time.temporal.ChronoUnit;
 
 	public class $name+firstUpperCase~Schema {
-		[$parameter+field...[$NL]]
-		[$option+field...[$NL]]
+		<<$parameter+field...[$NL]>>
+		<<$option+field...[$NL]>>
 		Timeout timeout;
 
-		[$parameter+getter...[$NL$NL]]
+		<<$parameter+getter...[$NL$NL]>>
 
-		[$parameter+setter...[$NL$NL]]
+		<<$parameter+setter...[$NL$NL]>>
 
-		[$option+getter...[$NL$NL]]
+		<<$option+getter...[$NL$NL]>>
 
-		[$option+setter...[$NL$NL]]
+		<<$option+setter...[$NL$NL]>>
 
 		public Timeout timeout() {
 			return timeout == null ? timeout = new Timeout(null) : timeout;
@@ -44,19 +44,19 @@ def type(future)
 	}
 end
 
-def type(option) trigger(class)
+def type(option) and trigger(class)
 	public static class $name+firstUpperCase extends AgendaService.Option {
-		[$optionParameter+field...[$NL]]
+		<<$optionParameter+field...[$NL]>>
 
 		public $name+firstUpperCase($optionParameter+signature...[, ]) {
-			[$optionParameter+assign...[$NL]]
+			<<$optionParameter+assign...[$NL]>>
 		}
 
-		[$optionParameter+getter...[$NL$NL]]
+		<<$optionParameter+getter...[$NL$NL]>>
 	}
 end
 
-def type(option) trigger(getter)
+def type(option) and trigger(getter)
 	public $future+firstUpperCase~Schema.$name+firstUpperCase $name+firstLowerCase() {
 		return $name+firstLowerCase == null ? $name+firstLowerCase = new $name+firstUpperCase($optionParameter+nullParameter...[, ]) : $name+firstLowerCase;
 	}
@@ -68,7 +68,7 @@ def trigger(getter)
 	}
 end
 
-def type(option) trigger(setter)
+def type(option) and trigger(setter)
 	public $future+firstUpperCase~Schema $name+firstLowerCase($name+firstUpperCase $name+firstLowerCase) {
 		this.$name+firstLowerCase = $name+firstLowerCase;
 		return this;
@@ -86,11 +86,11 @@ def trigger(assign)
 	this.$name = $name;
 end
 
-def type(parameter) trigger(field)
+def type(parameter) and trigger(field)
 	private $type $name+firstLowerCase;
 end
 
-def type(option) trigger(field)
+def type(option) and trigger(field)
 	private $name+FirstUpperCase $name+firstLowerCase;
 end
 

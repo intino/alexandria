@@ -6,11 +6,12 @@ import io.intino.alexandria.sqlpredicate.expressions.functions.FilterFunction;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FunctionCallExpression implements Expression {
-	protected static final HashMap<String, FunctionRegistration> functionRegistry = new HashMap<>();
+    protected static final Map<String, FunctionRegistration> functionRegistry = new HashMap<>();
 	protected String functionName;
-	protected java.util.ArrayList<Expression> arguments;
+    protected List<Expression> arguments;
 	protected FilterFunction function;
 
 	static {
@@ -60,7 +61,6 @@ public class FunctionCallExpression implements Expression {
 	public int getNumArguments() {
 		return arguments.size();
 	}
-
 
 	public Expression getArgument(int which) {
 		return arguments.get(which);

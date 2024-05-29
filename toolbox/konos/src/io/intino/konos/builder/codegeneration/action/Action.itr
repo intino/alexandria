@@ -1,38 +1,38 @@
-def type(action & jms & process) !type(ui)
+def type(action, jms, process) and not type(ui)
 	package $package+validPackage.actions;
 
-	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
+	import $package+validPackage.$box+PascalCase~Box;
 	$schemaImport
 
-	public class $name+firstUpperCase~Action implements $package.$service+firstUpperCase~Service.InboxDispatcher<[$returnType?Void]> {
+	public class $name+firstUpperCase~Action implements $package.$service+firstUpperCase~Service.InboxDispatcher<~<<$returnType?Void>>~> {
 		private $box+firstUpperCase~Box box;
 
 		public $name+firstUpperCase~Action($box+firstUpperCase~Box box) {
 			this.box = box;
 		}
 
-		public void onRequest([$parameter+onlyType input]) {
+		public void onRequest(<<$parameter+onlyType input>>) {
 			//TODO save input
 		}
 
-		public [$returnType?Void] onResponse() {
+		public <<$returnType?Void>> onResponse() {
 			return null;
 		}
 	}
 end
 
-def type(action & notification) !type(ui)
+def type(action, notification) and not type(ui)
 	package $package+validPackage.actions;
 
-	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
+	import $package+validPackage.$box+PascalCase~Box;
 	import io.intino.alexandria.exceptions.*;
 	import io.intino.alexandria.http.pushservice.Client;
 	import io.intino.alexandria.http.spark.SparkNotifier;
 
-	public class $name+snakecaseToCamelCase+firstUpperCase~Action {
-		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
+	public class $name+PascalCase~Action {
+		public $box+PascalCase~Box box;
 		$contextProperty
-		[$parameter+type...[$NL]]
+		<<$parameter+type...[$NL]>>
 
 		public void onOpen(Client client, SparkNotifier notifier) {
 			//register listener
@@ -44,21 +44,21 @@ def type(action & notification) !type(ui)
 	}
 end
 
-def type(action & rest) !type(ui)
+def type(action, rest) and not type(ui)
 	package $package+validPackage.actions;
 
-	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
+	import $package+validPackage.$box+PascalCase~Box;
 	import io.intino.alexandria.exceptions.*;
 	import java.time.*;
 	import java.util.*;
 	$schemaImport
 
-	public class $name+snakecaseToCamelCase+firstUpperCase~Action implements io.intino.alexandria.rest.RequestErrorHandler {
-		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
+	public class $name+PascalCase~Action implements io.intino.alexandria.rest.RequestErrorHandler {
+		public $box+PascalCase~Box box;
 		$contextProperty
-		[$parameter+type...[$NL]]
+		<<$parameter+type...[$NL]>>
 
-		public [$returnType?void] execute() [throws $throws+FirstUpperCase...[, ]] {
+		public <<$returnType?void>> execute() <<throws $throws+FirstUpperCase...[, ]>> {
 			$returnType+return
 		}
 
@@ -69,37 +69,37 @@ def type(action & rest) !type(ui)
 	}
 end
 
-def type(action) !type(ui)
+def type(action) and not type(ui)
 	package $package+validPackage.actions;
 
-	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
+	import $package+validPackage.$box+PascalCase~Box;
 	$schemaImport
 
-	public class $name+snakecaseToCamelCase+firstUpperCase~Action {
-		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
+	public class $name+PascalCase~Action {
+		public $box+PascalCase~Box box;
 		$contextProperty
-		[$parameter+type...[$NL]]
+		<<$parameter+type...[$NL]>>
 
-		public [$returnType?void] execute() [throws $throws+FirstUpperCase...[, ]] {
+		public <<$returnType?void>> execute() <<throws $throws+FirstUpperCase...[, ]>> {
 			$returnType+return
 		}
 	}
 end
 
-def type(ui & accessibleDisplay)
+def type(ui, accessibleDisplay)
 	package $package+validPackage.ui.pages;
 
-	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
-	import $package+validPackage.ui.displays[.$packageType~s].$display+snakecaseToCamelCase+firstUpperCase;
+	import $package+validPackage.$box+PascalCase~Box;
+	import $package+validPackage.ui.displays<<.$packageType~s>>.$display+PascalCase;
 	import io.intino.alexandria.ui.Soul;
 
-	public class $name+snakecaseToCamelCase+firstUpperCase~ProxyPage extends io.intino.alexandria.ui.spark.pages.ProxyPage {
-		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
-		[$parameter+type...[$NL]]
+	public class $name+PascalCase~ProxyPage extends io.intino.alexandria.ui.spark.pages.ProxyPage {
+		public $box+PascalCase~Box box;
+		<<$parameter+type...[$NL]>>
 		public Soul soul;
 
 		public void execute() {
-			$display+snakecaseToCamelCase+firstUpperCase display = new $display+snakecaseToCamelCase+firstUpperCase(box);
+			$display+PascalCase display = new $display+PascalCase(box);
 			display.id(personifiedDisplay);
 			$parameter+methodCall...[$NL]
 			soul.register(display);
@@ -109,20 +109,20 @@ def type(ui & accessibleDisplay)
 	}
 end
 
-def type(ui & mobile & action & gen)
+def type(ui, mobile, action, gen)
     package $package+validPackage.ui.pages;
 
-	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
+	import $package+validPackage.$box+PascalCase~Box;
 
     import java.util.Collections;
     import java.util.List;
 
-    public abstract class Abstract$name+snakecaseToCamelCase+firstUpperCase~MobilePage extends io.intino.alexandria.ui.spark.pages.MobilePage {
-		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
+    public abstract class Abstract$name+PascalCase~MobilePage extends io.intino.alexandria.ui.spark.pages.MobilePage {
+		public $box+PascalCase~Box box;
 
         public String redirectUrl() { return null; }
 
-        public String execute() [throws $throws+FirstUpperCase...[, ]] {
+        public String execute() <<throws $throws+FirstUpperCase...[, ]>> {
             List<String> connections = pushConnections(Collections.emptyList(), session.id(), session.discoverLanguage(), session.browser());
             return String.join(",", connections);
         }
@@ -130,7 +130,7 @@ def type(ui & mobile & action & gen)
     }
 end
 
-def type(ui & mobile & action)
+def type(ui, mobile, action)
 	package $package+validPackage.ui.pages;
 
 	import io.intino.alexandria.exceptions.*;
@@ -138,37 +138,37 @@ def type(ui & mobile & action)
 	import java.util.*;
 	import $importTemplates+validPackage.ui.displays.templates.*;
 
-	public class $name+snakecaseToCamelCase+firstUpperCase~MobilePage extends Abstract$name+snakecaseToCamelCase+firstUpperCase~MobilePage {
-		[$parameter+type...[$NL]]
-		[$editor+parameter]
+	public class $name+PascalCase~MobilePage extends Abstract$name+PascalCase~MobilePage {
+		<<$parameter+type...[$NL]>>
+		<<$editor+parameter>>
 
 		$component
 	}
 end
 
-def type(ui & action & gen & asset)
+def type(ui, action, gen, asset)
 	package $package+validPackage.ui.pages;
 
-	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
+	import $package+validPackage.$box+PascalCase~Box;
 
-	public abstract class Abstract$name+snakecaseToCamelCase+firstUpperCase~Page extends io.intino.alexandria.ui.spark.pages.Page {
-		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
+	public abstract class Abstract$name+PascalCase~Page extends io.intino.alexandria.ui.spark.pages.Page {
+		public $box+PascalCase~Box box;
 	}
 end
 
-def type(ui & action & gen)
+def type(ui, action, gen)
 	package $package+validPackage.ui.pages;
 
-	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
+	import $package+validPackage.$box+PascalCase~Box;
 	import io.intino.alexandria.exceptions.*;
 	import java.util.*;
 
-	public abstract class Abstract$name+snakecaseToCamelCase+firstUpperCase~Page extends io.intino.alexandria.ui.spark.pages.WebPage {
-		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
+	public abstract class Abstract$name+PascalCase~Page extends io.intino.alexandria.ui.spark.pages.WebPage {
+		public $box+PascalCase~Box box;
 
-		public Abstract$name+snakecaseToCamelCase+firstUpperCase~Page() { super("$uiService+camelCaseToSnakeCase+lowerCase"); }
+		public Abstract$name+PascalCase~Page() { super("$uiService+camelCaseToSnakeCase+lowerCase"); }
 
-		public $returnType execute() [throws $throws+FirstUpperCase...[, ]] {
+		public $returnType execute() <<throws $throws+FirstUpperCase...[, ]>> {
 			$executeBody
 		}
 
@@ -179,12 +179,12 @@ def type(ui & action & gen)
 
 		@Override
 		protected java.net.URL favicon() {
-			return [$favicon?null;]
+			return <<$favicon?null;>>
 		}
 	}
 end
 
-def type(returnType & asset)
+def type(returnType, asset)
 	io.intino.alexandria.Resource
 end
 
@@ -192,19 +192,19 @@ def type(returnType)
     String
 end
 
-def type(executeBody & static)
+def type(executeBody, static)
 	return "$text";
 end
 
-def type(executeBody & asset)
+def type(executeBody, asset)
 	return null;
 end
 
 def type(executeBody)
-	return super.template("$templateName"[, Arrays.asList($usedUnit...[,])]);
+	return super.template("$templateName"<<, Arrays.asList($usedUnit...[,])>>);
 end
 
-def type(title & configuration)
+def type(title, configuration)
 	"{$title}".replace("{$title}", box.configuration().get("$title"))
 end
 
@@ -216,7 +216,7 @@ def trigger(favicon)
 	this.getClass().getResource("$this");
 end
 
-def type(ui & action) !type(gen)
+def type(ui, action) and not type(gen)
 	package $package+validPackage.ui.pages;
 
 	import io.intino.alexandria.exceptions.*;
@@ -224,39 +224,39 @@ def type(ui & action) !type(gen)
 	import java.util.*;
 	import $importTemplates+validPackage.ui.displays.templates.*;
 
-	public class $name+snakecaseToCamelCase+firstUpperCase~Page extends Abstract$name+snakecaseToCamelCase+firstUpperCase~Page {
-		[$parameter+type...[$NL]]
-		[$editor+parameter]
+	public class $name+PascalCase~Page extends Abstract$name+PascalCase~Page {
+		<<$parameter+type...[$NL]>>
+		<<$editor+parameter>>
 
 		$component
 	}
 end
 
-def type(parameter & fileData) trigger(type)
-	public io.intino.alexandria.Resource $name+snakecaseToCamelCase+FirstLowerCase;
+def type(parameter, fileData) and trigger(type)
+	public io.intino.alexandria.Resource $name+CamelCase;
 end
 
-def type(parameter & list) trigger(type)
-	public java.util.List<$type> $name+snakecaseToCamelCase+FirstLowerCase;
+def type(parameter, list) and trigger(type)
+	public java.util.List<$type> $name+CamelCase;
 end
 
-def type(parameter & word) trigger(type)
-	public String $name+snakecaseToCamelCase+FirstLowerCase;
+def type(parameter, word) and trigger(type)
+	public String $name+CamelCase;
 end
 
-def type(parameter) trigger(type)
-	public $type $name+snakecaseToCamelCase+FirstLowerCase;
+def type(parameter) and trigger(type)
+	public $type $name+CamelCase;
 end
 
-def type(parameter) trigger(methodCall)
-	display.$name+snakecaseToCamelCase+FirstLowerCase($name+snakecaseToCamelCase+FirstLowerCase);
+def type(parameter) and trigger(methodCall)
+	display.$name+CamelCase($name+CamelCase);
 end
 
-def type(fileData) trigger(onlyType)
+def type(fileData) and trigger(onlyType)
 	io.intino.alexandria.Resource
 end
 
-def type(list) trigger(onlyType)
+def type(list) and trigger(onlyType)
 	java.util.List<$type>
 end
 
@@ -264,29 +264,29 @@ def trigger(onlyType)
 	$type
 end
 
-def type(editor) trigger(parameter)
+def type(editor) and trigger(parameter)
 	public io.intino.alexandria.Resource document;
 	public io.intino.alexandria.ui.services.EditorService.Permission permission;
 end
 
-def attribute(this:void) trigger(return)
+def attribute(this, void) and trigger(return)
 end
 
 def trigger(return)
 	return null;
 end
 
-def type(schemaImport) trigger(schemaImport)
+def type(schemaImport) and trigger(schemaImport)
 	import $package.schemas.*;
 end
 
-def type(component & static)
+def type(component, static)
 	public String execute() {
 		return super.execute();
 	}
 end
 
-def type(component & asset)
+def type(component, asset)
 	public io.intino.alexandria.Resource execute() {
 		return null;
 	}
@@ -297,8 +297,8 @@ def type(component)
 		return new io.intino.alexandria.ui.Soul(session) {
 			@Override
 			public void personify() {
-				$value+snakecaseToCamelCase+firstUpperCase component = new $value+snakecaseToCamelCase+firstUpperCase(box);
-				[$editor+component]
+				$value+PascalCase component = new $value+PascalCase(box);
+				<<$editor+component>>
 				register(component);
 				component.init();
 			}
@@ -306,21 +306,21 @@ def type(component)
 	}
 end
 
-def type(editor) trigger(component)
+def type(editor) and trigger(component)
 	component.document(document);
 	component.permission(permission);
-	component.display(new $display+snakecaseToCamelCase+firstUpperCase(box));
+	component.display(new $display+PascalCase(box));
 end
 
-def type(usedUnit & standard)
+def type(usedUnit, standard)
 	new io.intino.alexandria.ui.spark.pages.Unit("$name","$url")
 end
 
-def type(usedUnit & custom)
+def type(usedUnit, custom)
 	new io.intino.alexandria.ui.spark.pages.Unit("$name",box.configuration().get("$url"))
 end
 
-def type(contextProperty & spark)
+def type(contextProperty, spark)
 	public io.intino.alexandria.http.spark.SparkContext context;
 end
 

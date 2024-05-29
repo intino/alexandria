@@ -6,10 +6,8 @@ import io.intino.alexandria.sqlpredicate.expressions.*;
 import io.intino.alexandria.sqlpredicate.expressions.functions.FilterFunction;
 import io.intino.alexandria.sqlpredicate.parser.*;
 
-import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -379,8 +377,8 @@ public class SqlPredicate {
 						left = functionCallExpr();
 					} else {
 						switch ((jjNtk == -1) ? jj_ntk_f() : jjNtk) {
-							case TRUE, FALSE, NULL, DECIMAL_LITERAL, HEX_LITERAL, OCTAL_LITERAL, FLOATING_POINT_LITERAL, STRING_LITERAL, ID, 34 ->
-									left = primaryExpr();
+							case TRUE, FALSE, NULL, DECIMAL_LITERAL, HEX_LITERAL, OCTAL_LITERAL, FLOATING_POINT_LITERAL,
+								 STRING_LITERAL, ID, 34 -> left = primaryExpr();
 							default -> {
 								jj_consume_token(-1);
 								throw new ParseException();
@@ -417,8 +415,8 @@ public class SqlPredicate {
 	private Expression primaryExpr() throws ParseException {
 		Expression left;
 		switch ((jjNtk == -1) ? jj_ntk_f() : jjNtk) {
-			case TRUE, FALSE, NULL, DECIMAL_LITERAL, HEX_LITERAL, OCTAL_LITERAL, FLOATING_POINT_LITERAL, STRING_LITERAL ->
-					left = literal();
+			case TRUE, FALSE, NULL, DECIMAL_LITERAL, HEX_LITERAL, OCTAL_LITERAL, FLOATING_POINT_LITERAL,
+				 STRING_LITERAL -> left = literal();
 			case ID -> left = variable();
 			case 34 -> {
 				jj_consume_token(34);
@@ -1055,7 +1053,7 @@ public class SqlPredicate {
 		return jj_3R_comparisonExpression_305_5_45();
 	}
 
-	private PredicateParserTokenManager toketSource;
+	private final PredicateParserTokenManager toketSource;
 	SimpleCharStream jjInputStream;
 	private Token token;
 	private int jjNtk;
@@ -1065,47 +1063,6 @@ public class SqlPredicate {
 	SqlPredicate(Reader stream) {
 		jjInputStream = new SimpleCharStream(stream, 1, 1);
 		toketSource = new PredicateParserTokenManager(jjInputStream);
-		token = new Token();
-		jjNtk = -1;
-	}
-
-	SqlPredicate(InputStream stream, String encoding) {
-		try {
-			jjInputStream = new SimpleCharStream(stream, encoding, 1, 1);
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
-		}
-		toketSource = new PredicateParserTokenManager(jjInputStream);
-		token = new Token();
-		jjNtk = -1;
-	}
-
-	private void reInit(InputStream stream) {
-		reInit(stream, null);
-	}
-
-	private void reInit(InputStream stream, String encoding) {
-		try {
-			jjInputStream.reInit(stream, encoding, 1, 1);
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
-		}
-		toketSource.ReInit(jjInputStream);
-		token = new Token();
-		jjNtk = -1;
-	}
-
-	private void reInit(Reader stream) {
-		if (jjInputStream == null) {
-			jjInputStream = new SimpleCharStream(stream, 1, 1);
-		} else {
-			jjInputStream.reInit(stream, 1, 1);
-		}
-		if (toketSource == null) {
-			toketSource = new PredicateParserTokenManager(jjInputStream);
-		}
-
-		toketSource.ReInit(jjInputStream);
 		token = new Token();
 		jjNtk = -1;
 	}

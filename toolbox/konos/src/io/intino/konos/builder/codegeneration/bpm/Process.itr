@@ -1,4 +1,4 @@
-def type(process & src)
+def type(process, src)
 	package $package+validPackage.bpm;
 
 	import io.intino.alexandria.bpm.Task;
@@ -13,14 +13,14 @@ def type(process & src)
 			super(id, box);
 		}
 
-		$name+firstUpperCase($box+firstUpperCase~Box box[, $parameter+signature...[, ]]) {
+		$name+firstUpperCase($box+firstUpperCase~Box box<<, $parameter+signature...[, ]>>) {
 			super(java.util.UUID.randomUUID().toString(), box);
-			[$parameter+put...[$NL]]
+			<<$parameter+put...[$NL]>>
 		}
 
 		$state+execute...[$NL$NL]
 
-		[$state+accept...[$NL$NL]]
+		<<$state+accept...[$NL$NL]>>
 	}
 end
 
@@ -46,8 +46,8 @@ def type(process)
 		}
 
 		private void init() {
-			[$state...[$NL]]
-			[$link...[$NL]]
+			<<$state...[$NL]>>
+			<<$link...[$NL]>>
 		}
 
 		@Override
@@ -57,7 +57,7 @@ def type(process)
 
 		$state+abstractExecute...[$NL$NL]
 
-		[$state+abstractaccept...[$NL$NL]]
+		<<$state+abstractaccept...[$NL$NL]>>
 
 		$state+method...[$NL$NL]
 	}
@@ -95,33 +95,33 @@ def trigger(abstractAccept)
 	}
 end
 
-def type(conditional) trigger(accept)
+def type(conditional) and trigger(accept)
 	protected boolean accept$method+FirstUpperCase() {
 		return true;
 	}
 end
 
 def trigger(state)
-	addState(new io.intino.alexandria.bpm.State("$label", execute$method+firstUpperCase()[, $type+lowercase+FirstUpperCase...[, ]]));
+	addState(new io.intino.alexandria.bpm.State("$label", execute$method+firstUpperCase()<<, $type+lowercase+FirstUpperCase...[, ]>>));
 end
 
 def trigger(link)
 	addLink(new io.intino.alexandria.bpm.Link("$from", "$to", $type+linkType));
 end
 
-def attribute(this:Default) trigger(linkType)
+def attribute(this, Default) and trigger(linkType)
 	io.intino.alexandria.bpm.Link.Type.Default
 end
 
-def attribute(this:Line) trigger(linkType)
+def attribute(this, Line) and trigger(linkType)
 	io.intino.alexandria.bpm.Link.Type.Inclusive
 end
 
-def attribute(this:Exclusive) trigger(linkType)
+def attribute(this, Exclusive) and trigger(linkType)
 	io.intino.alexandria.bpm.Link.Type.Exclusive
 end
 
-def attribute(this:Inclusive) trigger(linkType)
+def attribute(this, Inclusive) and trigger(linkType)
 	io.intino.alexandria.bpm.Link.Type.Inclusive
 end
 

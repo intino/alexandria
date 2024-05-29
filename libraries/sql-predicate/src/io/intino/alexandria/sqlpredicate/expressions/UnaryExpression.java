@@ -33,7 +33,7 @@ public abstract class UnaryExpression implements Expression {
 
 	public static BooleanExpression createInExpression(PropertyExpression right, List<Object> elements, final boolean not) {
 		Collection<Object> t;
-		if (elements.size() == 0) t = null;
+        if (elements.isEmpty()) t = null;
 		else if (elements.size() < 5) t = elements;
 		else t = new HashSet<>(elements);
 		final Collection<Object> inList = t;

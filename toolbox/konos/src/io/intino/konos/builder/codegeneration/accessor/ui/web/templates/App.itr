@@ -19,7 +19,7 @@ def type(app)
 			self.configuration = configuration;
 			self.configuration.appUrls = loadUrls(configuration.baseUrls);
 			self.configuration.appUrl = (app) => {
-				return self.configuration.appUrls$[app$] != null ? self.configuration.appUrls$[app$] : self.configuration.baseUrl;
+				return self.configuration.appUrls[app] != null ? self.configuration.appUrls[app] : self.configuration.baseUrl;
 			};
 			self.services = {
 				pushService: PushService,
@@ -40,8 +40,8 @@ def type(app)
 			let result = {};
 			if (urlList == null) return result;
 			for (let i=0; i<urlList.length; i++) {
-				const urlInfo = urlList$[i$].split("_##_");
-				result$[urlInfo$[0$]$] = urlInfo$[1$];
+				const urlInfo = urlList[i].split("_##_");
+				result[urlInfo[0]] = urlInfo[1];
 			}
 			return result;
 		}
@@ -54,9 +54,9 @@ def type(app)
 			window.setTimeout(() => {
 				const pushConnections = Application.configuration.pushConnections;
 				for (let i=0; i<pushConnections.length; i++) {
-					const connection = pushConnections$[i$].split("_##_");
-					if (connection$[0$].toLowerCase() !== "default") continue;
-					PushService.openConnection(connection$[0$], connection$[1$]);
+					const connection = pushConnections[i].split("_##_");
+					if (connection[0].toLowerCase() !== "default") continue;
+					PushService.openConnection(connection[0], connection[1]);
 				}
 			}, 100);
 		}
@@ -65,7 +65,7 @@ def type(app)
 
 	function loadAppUrl() {
 		let url = window.location.pathname !== "/" ? window.location.pathname : "";
-		[$pattern...[$NL]]
+		<<$pattern...[$NL]>>
 		if (url.lastIndexOf("/") > 0) url = url.substr(0, window.location.pathname.lastIndexOf('/'));
 		if (url === "/") url = "";
 		return url + "/$serviceName/";
@@ -78,11 +78,11 @@ def type(pattern)
 	url = url.replace(new RegExp("$value", 'g'), "");
 end
 
-def type(page) trigger(import)
+def type(page) and trigger(import)
 	import $templateName+firstUpperCase~Page from "../pages/$templateName+firstUpperCase~Page";
 end
 
-def type(page) trigger(render)
+def type(page) and trigger(render)
 	const requireGoogleApi = Application.configuration.googleApiKey != null && Application.configuration.googleApiKey !== "";
 	const content = requireGoogleApi ? <GoogleApiLoader onLoad={openPushService()}><$templateName+firstUpperCase~Page/></GoogleApiLoader> : <$templateName+firstUpperCase~Page/>;
 	const $templateName+firstLowerCase = document.getElementById("$templateName+firstUpperCase");

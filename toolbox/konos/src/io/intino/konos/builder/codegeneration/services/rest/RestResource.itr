@@ -16,36 +16,36 @@ def type(notification)
 
 	$schemaImport
 
-	public class $name+snakeCaseToCamelCase+firstUpperCase~Notification implements Resource {
+	public class $name+PascalCase~Notification implements Resource {
 
 		private $box+FirstUpperCase~Box box;
 		private SparkManager<?> manager;
 
-		public $name+snakeCaseToCamelCase+firstUpperCase~Notification($box+FirstUpperCase~Box box, SparkManager manager) {
+		public $name+PascalCase~Notification($box+FirstUpperCase~Box box, SparkManager manager) {
 			this.box = box;
 			this.manager = manager;
 		}
 
-		public void execute() [throws $throws...[, ]] {
+		public void execute() <<throws $throws...[, ]>> {
 			Session session = manager.currentSession();
 			String clientId = java.util.UUID.randomUUID().toString();
-			$package+validPackage.actions.$name+snakeCaseToCamelCase+firstUpperCase~Action action = fill(new $package+validPackage.actions.$name+firstUpperCase~Action());
+			$package+validPackage.actions.$name+PascalCase~Action action = fill(new $package+validPackage.actions.$name+firstUpperCase~Action());
 			manager.pushService().onOpen(client -> {
 				action.onOpen((Client)client, notifier(session, (Client)client));
 				return true;
 			});
 			manager.pushService().onClose(clientId).execute((java.util.function.Consumer<Client>) action::onClose);
-			[$returnType+methodCall]manager.baseUrl().replace("http", "ws") + "/_alexandria/push?id=" + clientId[$returnType+ending];
+			<<$returnType+methodCall>>manager.baseUrl().replace("http", "ws") + "/_alexandria/push?id=" + clientId<<$returnType+ending>>;
 		}
 
-		private $package+validPackage.actions.$name+snakeCaseToCamelCase+firstUpperCase~Action fill($package+validPackage.actions.$name+snakeCaseToCamelCase+firstUpperCase~Action action) {
+		private $package+validPackage.actions.$name+PascalCase~Action fill($package+validPackage.actions.$name+PascalCase~Action action) {
 			action.box = this.box;
 			action.context = context();
-			[$parameter+assign...[$NL]]
+			<<$parameter+assign...[$NL]>>
 			return action;
 		}
 
-		[$returnType+method]
+		<<$returnType+method>>
 
 		private SparkNotifier notifier(Session session, Client client) {
 			return new SparkNotifier(new MessageCarrier(manager.pushService(), session, client));
@@ -53,7 +53,7 @@ def type(notification)
 
 		private io.intino.alexandria.http.spark.SparkContext context() {
 			io.intino.alexandria.http.spark.SparkContext context = new io.intino.alexandria.http.spark.SparkContext(manager);
-			[$authenticationValidator+put]
+			<<$authenticationValidator+put>>
 			context.put("ip", manager.ip());
 			return context;
 		}
@@ -78,33 +78,33 @@ def type(resource)
 
 	$schemaImport
 
-	public class $operation+firstUpperCase$name+snakeCaseToCamelCase+firstUpperCase~Resource implements Resource {
-		[$word+declaration...[$NL]]
+	public class $operation+firstUpperCase$name+PascalCase~Resource implements Resource {
+		<<$word+declaration...[$NL]>>
 
 		private $box+FirstUpperCase~Box box;
 		private SparkManager<SparkPushService> manager;
 
-		public $operation+firstUpperCase$name+snakeCaseToCamelCase+firstUpperCase~Resource($box+FirstUpperCase~Box box, SparkManager manager) {
+		public $operation+firstUpperCase$name+PascalCase~Resource($box+FirstUpperCase~Box box, SparkManager manager) {
 			this.box = box;
 			this.manager = manager;
 		}
 
 		public void execute() throws AlexandriaException {
-			[$returnType+methodCall]fill(new $package+validPackage.actions.$operation+firstUpperCase$name+snakeCaseToCamelCase+firstUpperCase~Action()).execute()[$returnType+ending];
+			<<$returnType+methodCall>>fill(new $package+validPackage.actions.$operation+firstUpperCase$name+PascalCase~Action()).execute()<<$returnType+ending>>;
 		}
 
-		private $package+validPackage.actions.$operation+firstUpperCase$name+snakeCaseToCamelCase+firstUpperCase~Action fill($package+validPackage.actions.$operation+firstUpperCase$name+snakeCaseToCamelCase+firstUpperCase~Action action) throws AlexandriaException {
+		private $package+validPackage.actions.$operation+firstUpperCase$name+PascalCase~Action fill($package+validPackage.actions.$operation+firstUpperCase$name+PascalCase~Action action) throws AlexandriaException {
 			action.box = this.box;
 			action.context = context();
 			try {
-				[$parameter+assign...[$NL]]
+				<<$parameter+assign...[$NL]>>
 			} catch (Throwable e) {
 				action.onMalformedRequest(e);
 			}
 			return action;
 		}
 
-		[$returnType+method]
+		<<$returnType+method>>
 
 		private io.intino.alexandria.http.spark.SparkContext context() {
 			io.intino.alexandria.http.spark.SparkContext context = new io.intino.alexandria.http.spark.SparkContext(manager);
@@ -115,114 +115,114 @@ def type(resource)
 	}
 end
 
-def type(word) trigger(declaration)
-	public enum $name+SnakeCaseToCamelCase+FirstUpperCase {
+def type(word) and trigger(declaration)
+	public enum $name+PascalCase {
 		$words...[, ];
 	}
 end
 
-def attribute(void) trigger(methodCall)
+def attribute(void) and trigger(methodCall)
 end
 
 
-def type(redirect) trigger(methodCall)
+def type(redirect) and trigger(methodCall)
 	redirect(
 end
 
-def type(response) trigger(methodCall)
+def type(response) and trigger(methodCall)
 	write(
 end
 
-def attribute(void) trigger(ending)
+def attribute(void) and trigger(ending)
 end
 
 def trigger(ending)
 	)
 end
 
-def attribute(void) trigger(write)
+def attribute(void) and trigger(write)
 end
 
 
-def type(redirect) trigger(method)
+def type(redirect) and trigger(method)
 	private void redirect(String url) {
 		manager.redirect(url);
 	}
 end
 
-def type(response & multipart) trigger(method)
-	private void write($value+firstUpperCase+ReturnTypeFormatter object) {
+def type(response, multipart) and trigger(method)
+	private void write($value object) {
 		manager.write(object.content());
 	}
 end
-def type(response & file) trigger(method)
-	private void write($value+firstUpperCase+ReturnTypeFormatter object) {
+def type(response, file) and trigger(method)
+	private void write($value object) {
 		manager.write(object);
 	}
 end
 
-def type(response) trigger(method)
-	private void write($value+firstUpperCase+ReturnTypeFormatter object) {
-		manager.write(io.intino.alexandria.rest.ResponseAdapter.adapt(object)[, "$format"]);
+def type(response) and trigger(method)
+	private void write($value object) {
+		manager.write(io.intino.alexandria.rest.ResponseAdapter.adapt(object)<<, "$format">>);
 	}
 end
 
-def type(parameter) trigger(type)
+def type(parameter) and trigger(type)
 	$parameterType
 end
 
-def type(parameter & defaultvalue) attribute(in:body) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~OrDefault("$defaultValue"), $parameterType);
+def type(parameter, defaultvalue) and attribute(in, body) and trigger(assign)
+	action.$name+CamelCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~OrDefault("$defaultValue"), $parameterType);
 end
 
-def type(parameter & defaultvalue) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~OrDefault("$name", "$defaultValue"), $parameterType);
+def type(parameter, defaultvalue) and trigger(assign)
+	action.$name+CamelCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~OrDefault("$name", "$defaultValue"), $parameterType);
 end
 
-def type(parameter & file & list) attribute(in:form) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.fromPartsAsResources();
+def type(parameter, file, list) and attribute(in, form) and trigger(assign)
+	action.$name+CamelCase = manager.fromPartsAsResources();
 end
 
-def type(parameter & file) attribute(in:form) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.from$in+firstUpperCase~AsResource("$name");
+def type(parameter, file) and attribute(in, form) and trigger(assign)
+	action.$name+CamelCase = manager.from$in+firstUpperCase~AsResource("$name");
 end
 
-def type(parameter & required & file) attribute(in:form) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.from$in+firstUpperCase~AsResourceOrElseThrow("$name", () -> new BadRequest("Parameter missed: $name"));
+def type(parameter, required, file) and attribute(in, form) and trigger(assign)
+	action.$name+CamelCase = manager.from$in+firstUpperCase~AsResourceOrElseThrow("$name", () -> new BadRequest("Parameter missed: $name"));
 end
 
-def type(parameter) attribute(in:form) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~AsString("$name"), $parameterType);
+def type(parameter) and attribute(in, form) and trigger(assign)
+	action.$name+CamelCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~AsString("$name"), $parameterType);
 end
 
-def type(parameter & required) attribute(in:form) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~AsStringOrElseThrow("$name", () -> new BadRequest("Parameter missed: $name")), $parameterType);
+def type(parameter, required) and attribute(in, form) and trigger(assign)
+	action.$name+CamelCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~AsStringOrElseThrow("$name", () -> new BadRequest("Parameter missed: $name")), $parameterType);
 end
 
-def type(parameter & file)  attribute(in:body) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = new io.intino.alexandria.Resource("$name", manager.fromBodyAsBytes());
+def type(parameter, file) and  attribute(in, body) and trigger(assign)
+	action.$name+CamelCase = new io.intino.alexandria.Resource("$name", manager.fromBodyAsBytes());
 end
 
-def type(parameter) attribute(in:body) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase(), $parameterType);
+def type(parameter) and attribute(in, body) and trigger(assign)
+	action.$name+CamelCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase(), $parameterType);
 end
 
-def type(parameter & required) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~OrElseThrow("$name", () -> new BadRequest("Parameter missed: $name")), $parameterType);
+def type(parameter, required) and trigger(assign)
+	action.$name+CamelCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~OrElseThrow("$name", () -> new BadRequest("Parameter missed: $name")), $parameterType);
 end
 
-def type(parameter) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase("$name"), $parameterType);
+def type(parameter) and trigger(assign)
+	action.$name+CamelCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase("$name"), $parameterType);
 end
 
-def type(list) trigger(parameterType)
+def type(list) and trigger(parameterType)
 	new com.google.gson.reflect.TypeToken<java.util.List<$value>>(){}.getType()
 end
 
-def type(authenticationValidator & Custom) trigger(put)
+def type(authenticationValidator, Custom) and trigger(put)
 end
 
-def type(authenticationValidator) trigger(put)
+def type(authenticationValidator) and trigger(put)
 	context.put("Authorization", manager.fromHeader("Authorization") != null ? manager.fromHeader("Authorization").replace("$type ", "") : null);
 end
 

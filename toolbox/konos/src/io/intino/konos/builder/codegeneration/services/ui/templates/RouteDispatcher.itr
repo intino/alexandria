@@ -1,4 +1,4 @@
-def type(dispatcher & gen)
+def type(dispatcher, gen)
 	package $package.ui.displays;
 
 	import io.intino.alexandria.ui.Soul;
@@ -21,18 +21,18 @@ def type(dispatcher & gen)
 		public void dispatch(Soul soul, String address) {
 			address = address.replaceFirst(soul.session().browser().basePath(), "");
 			List<String> params = paramsOf(address);
-			[$resource+call...[$NL]]
+			<<$resource+call...[$NL]>>
 		}
 
-		[$resource+declaration...[$NL]]
+		<<$resource+declaration...[$NL]>>
 
 		private void registerPatterns() {
 			if (patterns.size() > 0) return;
-			[$resource+patternRegister...[$NL]]
+			<<$resource+patternRegister...[$NL]>>
 		}
 
 		private String patternOf(String address) {
-			[$resource+pattern...[$NL]]
+			<<$resource+pattern...[$NL]>>
 			return null;
 		}
 
@@ -46,15 +46,15 @@ def type(dispatcher & gen)
 			Matcher m = p.matcher(address);
 			if (!m.find()) return Collections.emptyList();
 			List<String> result = new ArrayList<>();
-			for (int i=1; i<=m.groupCount(); i++) result.add(m.group(i).split("\\\\?")$[0$]);
+			for (int i=1; i<=m.groupCount(); i++) result.add(m.group(i).split("\\\\?")[0]);
 			return addQueryStringParams(address, result);
 		}
 
 		private List<String> addQueryStringParams(String address, List<String> result) {
 			if (address.indexOf("?") == -1) return result;
-			String$[$] parameters = address.split("\\\\?")$[1$].split("&");
+			String[] parameters = address.split("\\\\?")[1].split("&");
 			for (int i = 0; i < parameters.length; i++) {
-				result.add(parameters$[i$].split("=")$[1$]);
+				result.add(parameters[i].split("=")[1]);
 			}
 			return result;
 		}
@@ -68,55 +68,55 @@ def type(dispatcher)
 	import io.intino.alexandria.ui.Soul;
 
 	public class RouteDispatcher extends AbstractRouteDispatcher {
-		[$resource+implementation...[$NL]]
+		<<$resource+implementation...[$NL]>>
 	}
 end
 
-def type(resource & main) trigger(call)
-	if (address.length() <= 1) { dispatch$name+firstUpperCase(soul[, $param+call...[, ]]); return; }
+def type(resource, main) and trigger(call)
+	if (address.length() <= 1) { dispatch$name+firstUpperCase(soul<<, $param+call...[, ]>>); return; }
 end
 
-def type(resource) trigger(call)
-	if (address.matches(patterns.get("$name"))) { dispatch$name+firstUpperCase(soul[, $param+call...[, ]]); return; }
+def type(resource) and trigger(call)
+	if (address.matches(patterns.get("$name"))) { dispatch$name+firstUpperCase(soul<<, $param+call...[, ]>>); return; }
 end
 
-def type(resource & main) trigger(declaration)
+def type(resource, main) and trigger(declaration)
 end
 
-def type(resource) trigger(declaration)
-	public abstract void dispatch$name+firstUpperCase(Soul soul[, $param...[, ]]);
+def type(resource) and trigger(declaration)
+	public abstract void dispatch$name+firstUpperCase(Soul soul<<, $param...[, ]>>);
 end
 
-def type(resource & main) trigger(implementation)
+def type(resource, main) and trigger(implementation)
 end
 
-def type(resource) trigger(implementation)
+def type(resource) and trigger(implementation)
 	@Override
-	public void dispatch$name+firstUpperCase(Soul soul[, $param...[, ]]) {
+	public void dispatch$name+firstUpperCase(Soul soul<<, $param...[, ]>>) {
 		// TODO
 	}
 end
 
-def type(resource & main) trigger(patternRegister)
+def type(resource, main) and trigger(patternRegister)
 end
 
-def type(resource) trigger(patternRegister)
+def type(resource) and trigger(patternRegister)
 	patterns.put("$name", "$pattern");
 end
 
-def type(resource & main) trigger(pattern)
+def type(resource, main) and trigger(pattern)
 	if (address.matches(patterns.get("$name"))) return patterns.get("$name");
 end
 
-def type(resource) trigger(pattern)
+def type(resource) and trigger(pattern)
 	else if (address.matches(patterns.get("$name"))) return patterns.get("$name");
 end
 
-def type(param & optional) trigger(call)
+def type(param, optional) and trigger(call)
 	params.size() > $index ? params.get($index) : null
 end
 
-def type(param) trigger(call)
+def type(param) and trigger(call)
 	params.get($index)
 end
 

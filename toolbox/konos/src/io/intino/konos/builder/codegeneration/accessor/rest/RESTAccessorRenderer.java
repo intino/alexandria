@@ -2,7 +2,6 @@ package io.intino.konos.builder.codegeneration.accessor.rest;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.schema.SchemaListRenderer;
@@ -57,12 +56,12 @@ public class RESTAccessorRenderer extends Renderer {
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()));
 		builder.add("resource", service.core$().findNode(Resource.class).stream().map(this::framesOf).flatMap(List::stream).toArray(Frame[]::new));
 		builder.add("notification", service.notificationList().stream().map(this::frameOf).toArray(Frame[]::new));
-		for (Parameter enumParameter : enumParameters.values().stream().flatMap(Collection::stream).collect(Collectors.toList()))
+		for (Parameter enumParameter : enumParameters.values().stream().flatMap(Collection::stream).toList())
 			builder.add("enumParameter", new FrameBuilder("enumParameter")
 					.add("name", enumParameter.name$())
 					.add("class", enumParameter.core$().ownerAs(Resource.class).name$() + firstUpperCase(enumParameter.name$()))
 					.add("value", enumParameter.asWord().values().toArray(String[]::new)));
-		writeFrame(destination, snakeCaseToCamelCase(service.name$()) + "Accessor", template().render(builder));
+		writeFrame(destination, snakeCaseToCamelCase(service.name$()) + "Accessor", new RESTAccessorTemplate().render(builder, Formatters.all));
 	}
 
 	private void setupAuthentication(Service.REST restService, FrameBuilder builder) {
@@ -161,7 +160,7 @@ public class RESTAccessorRenderer extends Renderer {
 				builder.append(" + \"/\" + ").append(asMethodParameter(pathPortion.substring(1)));
 			else builder.append(" + \"/").append(pathPortion).append("\"");
 		}
-		return builder.toString().substring(3);
+		return builder.substring(3);
 	}
 
 	private String asMethodParameter(String parameter) {
@@ -197,10 +196,6 @@ public class RESTAccessorRenderer extends Renderer {
 		return new FrameBuilder("exceptionResponse")
 				.add("code", Unauthorized.value())
 				.add("exceptionName", Unauthorized.name()).toFrame();
-	}
-
-	private Template template() {
-		return Formatters.customize(new RESTAccessorTemplate());
 	}
 
 	public static String firstLowerCase(String value) {

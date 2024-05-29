@@ -16,18 +16,18 @@ def type(builder)
 	import org.apache.commons.io.FileUtils;
 	import java.util.List;
 
-	public class $name+snakeCaseToCamelCase+firstUpperCase {
+	public class $name+PascalCase {
 
 		private static final int DEFAULT_BUFFER_SIZE = 1_000_000;
 
 		private final File stage;
 		private Session session;
 
-		public $name+snakeCaseToCamelCase+firstUpperCase(File stage) {
+		public $name+PascalCase(File stage) {
 			this(stage, DEFAULT_BUFFER_SIZE);
 		}
 
-		public $name+snakeCaseToCamelCase+firstUpperCase(File stage, int factBufferSize) {
+		public $name+PascalCase(File stage, int factBufferSize) {
 			this.stage = stage;
 			this.session = new Session(stage, factBufferSize);
 		}
@@ -91,7 +91,7 @@ def type(builder)
 
 			public static void seal(File destination, File stage) {
 				File tempFolder = tempFolder(stage);
-				File$[] files = FileUtils.listFiles(stage, new String$[]{"session"}, true).toArray(new File$[0]);
+				File[] files = FileUtils.listFiles(stage, new String[]{"session"}, true).toArray(new File[0]);
 				LedSessionSorter.sort(files, (Function<File, File>) f -> datamartFile(destination, cleanedNameOf(f)), tempFolder);
 			}
 

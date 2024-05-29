@@ -6,13 +6,13 @@ def type(webpack)
 
 	module.exports = {
 		module: {
-			rules: $[
+			rules: [
 				{
 					test: /\\.js$$/,
 					$exclude
 					options: {
 						rootMode: "upward",
-						presets: $['@babel/preset-env'],
+						presets: ['@babel/preset-env'],
 						cacheDirectory: true
 					},
 					loader: "babel-loader"
@@ -33,22 +33,22 @@ def type(webpack)
 		output: {
 			path: "$outDirectory/$serviceName/www/$serviceName",
 			publicPath: '$$basePath/$serviceName/',
-			filename: "$[name].js"
+			filename: "[name].js"
 		},
 		resolve: {
 			alias: {
-				[$alias]
+				<<$alias>>
 				"app-elements": path.resolve(__dirname, '.'),
 				"$serviceName": path.resolve(__dirname, '.')
 			}
 		},
-		plugins: $[
+		plugins: [
 			new CircularDependencyPlugin({
 				failOnError: false,
 				allowAsyncCycles: false,
 				cwd: process.cwd(),
 			}),
-			new CopyWebpackPlugin($[{
+			new CopyWebpackPlugin([{
 				from: 'res',
 				to: './res'
 			}]),
@@ -57,7 +57,7 @@ def type(webpack)
 	};
 end
 
-def type(exclude & alexandriaProject)
+def type(exclude, alexandriaProject)
 	exclude: /(node_modules)/,
 end
 
@@ -65,19 +65,19 @@ def type(exclude)
 	exclude: /node_modules\\/(?!($use...[|])\\/).*/,
 end
 
-def type(alias & alexandriaProject)
+def type(alias, alexandriaProject)
 	"alexandria-ui-elements": path.resolve(__dirname, '.'),
 end
 
-def type(page) trigger(gen)
+def type(page) and trigger(gen)
 	'$templateName' : './gen/apps/$templateName+firstUppercase~.js'
 end
 
-def type(page) trigger(plugin)
+def type(page) and trigger(plugin)
 	new HtmlWebPackPlugin({
 		hash: true,
 		title: "Test UI",
-		chunks: $['$templateName'],
+		chunks: ['$templateName'],
 		template: "./src/$templateName.html",
 		filename: "./$templateName.html"
 	})

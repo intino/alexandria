@@ -1,7 +1,6 @@
 package io.intino.konos.builder.codegeneration.services.cli;
 
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
@@ -17,7 +16,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.itrules.formatters.StringFormatters.pascalCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 import static java.util.Collections.emptyList;
@@ -45,24 +44,24 @@ public class CliRenderer extends Renderer {
 
 	private void writeService(Service.CLI service) {
 		final FrameBuilder builder = buildFrame(service).add("service");
-		String className = snakeCaseToCamelCase(service.name$()) + "Service";
-		writeFrame(gen(Target.Server), className, template().render(builder));
+		String className = pascalCase().format(service.name$()) + "Service";
+		writeFrame(gen(Target.Server), className, new CliTemplate().render(builder, Formatters.all));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Server), className).getAbsolutePath()));
 	}
 
 	private void writeAuthenticator(Service.CLI service) {
 		final FrameBuilder builder = buildFrame(service).add("authenticator");
-		String className = snakeCaseToCamelCase(service.name$()) + "ServiceAuthenticator";
+		String className = pascalCase().format(service.name$()) + "ServiceAuthenticator";
 		File srcFile = javaFile(src(Target.Server), className);
 		if (srcFile.exists()) return;
-		writeFrame(src(Target.Server), className, template().render(builder));
+		writeFrame(src(Target.Server), className, new CliTemplate().render(builder, Formatters.all));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(src(Target.Server), className).getAbsolutePath()));
 	}
 
 	private void writeCli(Service.CLI service) {
 		final FrameBuilder builder = buildFrame(service);
-		String className = snakeCaseToCamelCase(service.name$());
-		writeFrame(gen(Target.Server), className, template().render(builder));
+		String className = pascalCase().format(service.name$()).toString();
+		writeFrame(gen(Target.Server), className, new CliTemplate().render(builder, Formatters.all));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Server), className).getAbsolutePath()));
 	}
 
@@ -86,18 +85,18 @@ public class CliRenderer extends Renderer {
 
 	private void processCommand(Service.CLI.Command command) {
 		FrameBuilder builder = buildFrame(command);
-		String className = snakeCaseToCamelCase(command.name$()) + "Command";
-		writeFrame(new File(gen(Target.Server) + File.separator + "cli" + File.separator + "commands"), className, commandTemplate().render(builder));
-		className = snakeCaseToCamelCase(command.name$()) + "Action";
+		String className = pascalCase().format(command.name$()) + "Command";
+		writeFrame(new File(gen(Target.Server) + File.separator + "cli" + File.separator + "commands"), className, new CliCommandTemplate().render(builder, Formatters.all));
+		className = pascalCase().format(command.name$()) + "Action";
 		File srcFile = javaFile(new File(src(Target.Server) + File.separator + "actions"), className);
 		if (!srcFile.exists())
-			writeFrame(new File(src(Target.Server) + File.separator + "actions"), className, actionTemplate().render(builder));
+			writeFrame(new File(src(Target.Server) + File.separator + "actions"), className, new CliActionTemplate().render(builder, Formatters.all));
 	}
 
 	private void processConfirmationCommand(String option, List<Service.CLI.Command> commandList) {
 		FrameBuilder builder = buildConfirmationCommand(option, commandList);
-		String className = snakeCaseToCamelCase(option) + "Command";
-		writeFrame(new File(gen(Target.Server) + File.separator + "cli" + File.separator + "commands"), className, commandTemplate().render(builder));
+		String className = pascalCase().format(option) + "Command";
+		writeFrame(new File(gen(Target.Server) + File.separator + "cli" + File.separator + "commands"), className, new CliCommandTemplate().render(builder, Formatters.all));
 	}
 
 	private FrameBuilder buildConfirmationCommand(String option, List<Service.CLI.Command> commandList) {
@@ -224,18 +223,6 @@ public class CliRenderer extends Renderer {
 		if (parameterList.isEmpty()) result.add("empty");
 		parameterList.forEach(p -> result.add("item", p));
 		return result;
-	}
-
-	private Template template() {
-		return Formatters.customize(new CliTemplate());
-	}
-
-	private Template commandTemplate() {
-		return Formatters.customize(new CliCommandTemplate());
-	}
-
-	private Template actionTemplate() {
-		return Formatters.customize(new CliActionTemplate());
 	}
 
 }

@@ -15,6 +15,7 @@ import io.intino.konos.dsl.Template;
 import java.io.File;
 
 import static cottons.utils.StringHelper.camelCaseToSnakeCase;
+import static io.intino.konos.builder.codegeneration.Formatters.all;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.createIfNotExists;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.hasAbstractClass;
 import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
@@ -36,14 +37,14 @@ public class ResourceRenderer extends io.intino.konos.builder.codegeneration.ui.
 		builder.add("html");
 		File file = new File(src(target) + File.separator + resource.asPage().template().name$() + ".html");
 		if (file.exists()) return;
-		Commons.write(file.toPath(), setup(new PageTemplate()).render(builder.toFrame()));
+		Commons.write(file.toPath(), new PageTemplate().render(builder.toFrame(), all));
 	}
 
 	private void writeJavascript(FrameBuilder builder) {
 		builder.add("js");
 		File destiny = createIfNotExists(new File(gen(target) + File.separator + "pages" + File.separator));
 		File file = new File(destiny + File.separator + firstUpperCase(resource.asPage().template().name$()) + "Page.js");
-		Commons.write(file.toPath(), setup(new PageTemplate()).render(builder.toFrame()));
+		Commons.write(file.toPath(), new PageTemplate().render(builder.toFrame(), all));
 	}
 
 	@Override

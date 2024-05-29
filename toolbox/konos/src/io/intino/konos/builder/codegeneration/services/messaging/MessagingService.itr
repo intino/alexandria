@@ -27,8 +27,8 @@ def type(request)
 	connector.attachListener($path+format, (r, c) -> new $package.requests.$name+firstUpperCase~Request(box, connector, c).accept(r));
 end
 
-def type(path) trigger(format)
-	"$name"[$custom...[]]
+def type(path) and trigger(format)
+	"$name"<<$custom...[]>>
 end
 
 def trigger(custom)

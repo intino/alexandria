@@ -2,7 +2,6 @@ package io.intino.konos.builder.codegeneration.accessor.ui.web;
 
 import cottons.utils.StringHelper;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.accessor.ui.web.templates.AppTemplate;
 import io.intino.konos.builder.codegeneration.accessor.ui.web.templates.PassiveViewTemplate;
 import io.intino.konos.builder.codegeneration.accessor.ui.web.templates.WebPackTemplate;
@@ -17,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static io.intino.konos.builder.codegeneration.Formatters.all;
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.createIfNotExists;
 import static java.util.stream.Collectors.toList;
@@ -43,7 +43,7 @@ public class AppRenderer extends UIRenderer {
 			builder.add("page", new FrameBuilder("page").add("templateName", r.asPage().template().name$()).toFrame());
 			builder.add("serviceName", context.serviceDirectory() != null ? context.serviceDirectory().getName() : "");
 			addPatterns(r.asPage().template(), builder);
-			Commons.write(new File(gen(Target.Accessor) + File.separator + "apps" + File.separator + firstUpperCase(r.asPage().template().name$()) + ".js").toPath(), setup(new AppTemplate()).render(builder.toFrame()));
+			Commons.write(new File(gen(Target.Accessor) + File.separator + "apps" + File.separator + firstUpperCase(r.asPage().template().name$()) + ".js").toPath(), new AppTemplate().render(builder.toFrame(), all));
 		});
 	}
 
@@ -53,15 +53,15 @@ public class AppRenderer extends UIRenderer {
 	}
 
 	private void writePassiveView() {
-		Template template = new PassiveViewTemplate();
+		var template = new PassiveViewTemplate();
 		File notifiersFile = createIfNotExists(new File(gen(Target.Accessor) + "/displays/notifiers"));
 		File requestersFile = createIfNotExists(new File(gen(Target.Accessor) + "/displays/requesters"));
-		Commons.write(new File(notifiersFile + File.separator + "Notifier.js").toPath(), template.render(new FrameBuilder("notifier")));
-		Commons.write(new File(requestersFile + File.separator + "Requester.js").toPath(), template.render(new FrameBuilder("requester")));
+		Commons.write(new File(notifiersFile + File.separator + "Notifier.js").toPath(), template.render(new FrameBuilder("notifier"), all));
+		Commons.write(new File(requestersFile + File.separator + "Requester.js").toPath(), template.render(new FrameBuilder("requester"), all));
 	}
 
 	private void writeWebPack() {
-		Template template = new WebPackTemplate();
+		var template = new WebPackTemplate();
 		FrameBuilder builder = new FrameBuilder("webpack");
 		builder.add("outDirectory", normalize(context.configuration().outDirectory().getParentFile().getAbsolutePath()));
 		builder.add("exclude", alexandriaFrame("exclude"));
@@ -69,7 +69,7 @@ public class AppRenderer extends UIRenderer {
 		builder.add("serviceName", context.serviceDirectory() != null ? context.serviceDirectory().getName() : "");
 		if (isAlexandria(project())) builder.add("alexandriaProject", "true");
 		resourcesWithTemplate().forEach(r -> builder.add("page", new FrameBuilder("page").add("templateName", r.asPage().template().name$()).toFrame()));
-		Commons.write(new File(root(Target.Accessor), "webpack.config.js").toPath(), setup(template).render(builder.toFrame()));
+		Commons.write(new File(root(Target.Accessor), "webpack.config.js").toPath(), template.render(builder.toFrame(), all));
 	}
 
 	private Object normalize(String path) {

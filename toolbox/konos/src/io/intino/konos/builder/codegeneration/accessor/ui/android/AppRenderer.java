@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static io.intino.konos.builder.codegeneration.Formatters.all;
+
 public class AppRenderer extends UIRenderer {
 	private final List<Service.UI> serviceList;
 
@@ -54,28 +56,28 @@ public class AppRenderer extends UIRenderer {
 	}
 
 	private void writeManifest(FrameBuilder builder) {
-		Commons.write(new File(root(Target.Android) + context.androidRelativePath() + File.separator + "AndroidManifest.xml").toPath(), setup(new AppTemplate()).render(builder.toFrame()));
+		Commons.write(new File(root(Target.Android) + context.androidRelativePath() + File.separator + "AndroidManifest.xml").toPath(), new AppTemplate().render(builder.toFrame(), all));
 	}
 
 	private void writeSettingsGradle(FrameBuilder builder) {
-		Commons.write(new File(root(Target.Android) + File.separator + "settings.gradle.kts").toPath(), setup(new AppTemplate()).render(builder.toFrame()));
+		Commons.write(new File(root(Target.Android) + File.separator + "settings.gradle.kts").toPath(), new AppTemplate().render(builder.toFrame(), all));
 	}
 
 	private void writeAndroidGradle(FrameBuilder builder) {
-		Commons.write(new File(root(Target.Android) + File.separator + "android" + File.separator + "build.gradle.kts").toPath(), setup(new AppTemplate()).render(builder.toFrame()));
+		Commons.write(new File(root(Target.Android) + File.separator + "android" + File.separator + "build.gradle.kts").toPath(), new AppTemplate().render(builder.toFrame(), all));
 	}
 
 	private void writeSharedGradle(FrameBuilder builder) {
-		Commons.write(new File(root(Target.Android) + File.separator + "shared" + File.separator + "build.gradle.kts").toPath(), setup(new AppTemplate()).render(builder.toFrame()));
+		Commons.write(new File(root(Target.Android) + File.separator + "shared" + File.separator + "build.gradle.kts").toPath(), new AppTemplate().render(builder.toFrame(), all));
 	}
 
 	private void writeProperties(FrameBuilder builder) {
 		addProperties(builder);
-		Commons.write(new File(res(Target.Android) + File.separator + "values" + File.separator + "properties.xml").toPath(), setup(new AppTemplate()).render(builder.toFrame()));
+		Commons.write(new File(res(Target.Android) + File.separator + "values" + File.separator + "properties.xml").toPath(), new AppTemplate().render(builder.toFrame(), all));
 	}
 
 	private void writeStrings(FrameBuilder builder) {
-		Commons.write(new File(res(Target.Android) + File.separator + "values" + File.separator + "strings.xml").toPath(), setup(new AppTemplate()).render(builder.toFrame()));
+		Commons.write(new File(res(Target.Android) + File.separator + "values" + File.separator + "strings.xml").toPath(), new AppTemplate().render(builder.toFrame(), all));
 	}
 
 	private static final Map<String, List<String>> ComponentPropertiesMap = new HashMap<>() {{

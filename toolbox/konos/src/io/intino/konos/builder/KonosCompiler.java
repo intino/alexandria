@@ -50,7 +50,7 @@ public class KonosCompiler {
 			if (needRebuild)
 				addRebuildNeededMessage(new KonosException("The build has required an updated of dependencies. Please rebuild module for complete compilation"));
 			return compiledFiles;
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			processCompilationException(e);
 		} finally {
 			addWarnings(context.warningMessages());
@@ -123,7 +123,7 @@ public class KonosCompiler {
 		}
 	}
 
-	private void processCompilationException(Exception e) {
+	private void processCompilationException(Throwable e) {
 		if (e instanceof KonosException) {
 			addErrorMessage((KonosException) e);
 			return;

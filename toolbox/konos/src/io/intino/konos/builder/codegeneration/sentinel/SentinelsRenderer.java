@@ -2,7 +2,6 @@ package io.intino.konos.builder.codegeneration.sentinel;
 
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
@@ -20,7 +19,6 @@ import java.util.Set;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
-import static java.util.stream.Collectors.toList;
 
 public class SentinelsRenderer extends Renderer {
 	private final List<Sentinel> sentinels;
@@ -38,16 +36,15 @@ public class SentinelsRenderer extends Renderer {
 				.add("box", boxName())
 				.add("sentinel", processSentinels());
 		if (sentinels.stream().anyMatch(Sentinel::isWebHook)) builder.add("hasWebhook", ",");
-		Commons.writeFrame(gen(Target.Server), "Sentinels", template().render(
-				builder.toFrame()));
+		Commons.writeFrame(gen(Target.Server), "Sentinels", new SentinelsTemplate().render(builder.toFrame(), Formatters.all));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(sentinels.get(0)), javaFile(gen(Target.Server), "Sentinels").getAbsolutePath()));
 	}
 
 	private Frame[] processSentinels() throws KonosException {
 		List<Frame> list = new ArrayList<>();
-		list.addAll(sentinels.stream().filter(t -> t.i$(Sentinel.SystemListener.class)).map(t -> t.a$(Sentinel.SystemListener.class)).map(this::processSentinel).collect(toList()));
+		list.addAll(sentinels.stream().filter(t -> t.i$(Sentinel.SystemListener.class)).map(t -> t.a$(Sentinel.SystemListener.class)).map(this::processSentinel).toList());
 		list.addAll(fileListeners());
-		list.addAll(sentinels.stream().filter(t -> t.i$(Sentinel.WebHook.class)).map(t -> t.a$(Sentinel.WebHook.class)).map(this::processWebHookSentinel).collect(toList()));
+		list.addAll(sentinels.stream().filter(t -> t.i$(Sentinel.WebHook.class)).map(t -> t.a$(Sentinel.WebHook.class)).map(this::processWebHookSentinel).toList());
 		for (Sentinel t : sentinels)
 			if (t.i$(Sentinel.WebHook.class)) new WebHookActionRenderer(context, t.asWebHook()).execute();
 		return list.toArray(new Frame[0]);
@@ -108,9 +105,5 @@ public class SentinelsRenderer extends Renderer {
 			builder.add("file", Commons.fileFrame(sentinel.file(), packageName(), context.archetypeQN()));
 		else builder.add("file", new FrameBuilder("custom", "file").add("path", custom.iterator().next()));
 		return builder.toFrame();
-	}
-
-	private Template template() {
-		return Formatters.customize(new SentinelsTemplate());
 	}
 }

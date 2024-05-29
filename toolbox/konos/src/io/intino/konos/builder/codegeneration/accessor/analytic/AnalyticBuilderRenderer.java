@@ -1,13 +1,15 @@
 package io.intino.konos.builder.codegeneration.accessor.analytic;
 
 import io.intino.alexandria.logger.Logger;
+import io.intino.itrules.Engine;
 import io.intino.itrules.FrameBuilder;
-import io.intino.itrules.Template;
+import io.intino.itrules.template.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
 import io.intino.konos.builder.codegeneration.analytic.AxisInterfaceRenderer;
 import io.intino.konos.builder.codegeneration.analytic.CategoricalAxisRenderer;
 import io.intino.konos.builder.codegeneration.analytic.ContinuousAxisRenderer;
+import io.intino.konos.builder.codegeneration.facts.ColumnsTemplate;
 import io.intino.konos.builder.codegeneration.facts.FactRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
@@ -71,10 +73,8 @@ public class AnalyticBuilderRenderer extends Renderer {
 	}
 
 	private void renderCubes(KonosGraph graph) {
-		graph.cubeList().stream().filter(c -> !c.isVirtual()).forEach(cube -> {
-			writeFrame(new File(destinationDirectory(), "cubes"), cube.name$() + "Schema",
-					cubeTemplate().render(renderCube(cube).toFrame()));
-		});
+		graph.cubeList().stream().filter(c -> !c.isVirtual()).forEach(cube -> writeFrame(new File(destinationDirectory(), "cubes"), cube.name$() + "Schema",
+				new Engine(cubeTemplate()).addAll(Formatters.all).render(renderCube(cube).toFrame())));
 	}
 
 	private FrameBuilder renderCube(Cube cube) {
@@ -92,18 +92,14 @@ public class AnalyticBuilderRenderer extends Renderer {
 				context.boxName() + "AnalyticBuilder");
 		graph.cubeList().stream().filter(c -> !c.isVirtual()).forEach(cube -> builder.add("cube",
 				new FrameBuilder("cube").add("name", cube.name$())));
-		writeFrame(destinationDirectory(), context.boxName() + "AnalyticBuilder", builderTemplate().render(builder.toFrame()));
+		writeFrame(destinationDirectory(), context.boxName() + "AnalyticBuilder", new AnalyticBuilderTemplate().render(builder.toFrame(), Formatters.all));
 	}
 
 	private File destinationDirectory() {
 		return new File(srcDestination, packageName.replace(".", "/") + "/analytic");
 	}
 
-	private Template builderTemplate() {
-		return Formatters.customize(new AnalyticBuilderTemplate());
-	}
-
 	private Template cubeTemplate() {
-		return Formatters.customize(new CubeWithColumnsTemplate());
+		return Template.compose(new CubeTemplate(), new ColumnsTemplate());
 	}
 }

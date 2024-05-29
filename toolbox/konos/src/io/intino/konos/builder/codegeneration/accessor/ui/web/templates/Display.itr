@@ -1,13 +1,13 @@
-def type(display & accessible)
+def type(display, accessible)
 end
 
-def type(display & template)
+def type(display, template)
 end
 
-def type(display & collection)
+def type(display, collection)
 	import React from "react";
 	import { withStyles } from '@material-ui/core/styles';
-	import Abstract$name+firstUpperCase from "../../$packageTypeRelativeDirectory~gen/displays[/$packageType~s]/Abstract$name+firstUpperCase";
+	import Abstract$name+firstUpperCase from "../../$packageTypeRelativeDirectory~gen/displays<</$packageType~s>>/Abstract$name+firstUpperCase";
 	import $name+firstUpperCase~Notifier from "../../$packageTypeRelativeDirectory~gen/displays/notifiers/$name+firstUpperCase~Notifier";
 	import $name+firstUpperCase~Requester from "../../$packageTypeRelativeDirectory~gen/displays/requesters/$name+firstUpperCase~Requester";
 	import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
@@ -36,7 +36,7 @@ end
 def type(display)
 	import React from "react";
 	import { withStyles } from '@material-ui/core/styles';
-	import Abstract$name+firstUpperCase from "../../$packageTypeRelativeDirectory~gen/displays[/$packageType~s]/Abstract$name+firstUpperCase";
+	import Abstract$name+firstUpperCase from "../../$packageTypeRelativeDirectory~gen/displays<</$packageType~s>>/Abstract$name+firstUpperCase";
 	import $name+firstUpperCase~Notifier from "../../$packageTypeRelativeDirectory~gen/displays/notifiers/$name+firstUpperCase~Notifier";
 	import $name+firstUpperCase~Requester from "../../$packageTypeRelativeDirectory~gen/displays/requesters/$name+firstUpperCase~Requester";
 	import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
@@ -60,7 +60,7 @@ def type(display)
 end
 
 def type(notification)
-	$name = ([$parameter~value]) => {
+	$name = (<<$parameter~value>>) => {
 	};
 end
 

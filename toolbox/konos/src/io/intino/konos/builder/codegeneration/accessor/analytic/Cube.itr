@@ -54,19 +54,19 @@ def type(cube)
 			return SERIAL_UUID;
 		}
 
-		[$column+getter...[$NL$NL]]
+		<<$column+getter...[$NL$NL]>>
 
-		[$column+setter...[$NL$NL]]
+		<<$column+setter...[$NL$NL]>>
 
 		@Override
 		public String toString() {
 			return "$name+FirstUpperCase{"
 					+ "id=" + id()
-					[$column+toString...[$NL]]
+					<<$column+toString...[$NL]>>
 					+ '}';
 		}
 
-		[$split]
+		<<$split>>
 
 
 		public static class Builder extends HeapLedStreamBuilder<$name> {
@@ -110,12 +110,12 @@ def type(cube)
 		public static class Reader {
 
 			public static List<LedStream<$name>> readAll(File root, Divisiones.Component division) {
-				File$[] leds = getLedFiles(new File(root, "$cube." + division.id()));
+				File[] leds = getLedFiles(new File(root, "$cube." + division.id()));
 				return Arrays.stream(leds).map(Reader::openLedStream).collect(Collectors.toList());
 			}
 
 			public static List<LedStream<$name>> read(File root, Divisiones.Component division, Timetag from, Timetag to) {
-				File$[] leds = getLedFiles(new File(root, "$cube." + division.id()));
+				File[] leds = getLedFiles(new File(root, "$cube." + division.id()));
 				return Arrays.stream(leds)
 					.filter(led -> {
 						final String name = led.getName();
@@ -127,7 +127,7 @@ def type(cube)
 			}
 
 			public static LedStream<$name> read(File root, Divisiones.Component division, Timetag timetag) {
-				File$[] leds = getLedFiles(new File(root, "$cube." + division.id()));
+				File[] leds = getLedFiles(new File(root, "$cube." + division.id()));
 				return Arrays.stream(leds)
 					.filter(led -> {
 						final String name = led.getName();
@@ -139,15 +139,15 @@ def type(cube)
 			}
 
 			public static LedStream<$name> readFirst(File root, Divisiones.Component division) {
-				File$[] leds = getLedFiles(new File(root, "$cube." + division.id()));
+				File[] leds = getLedFiles(new File(root, "$cube." + division.id()));
 				if(leds.length == 0) return LedStream.empty($name.class);
-				return openLedStream(leds$[0]);
+				return openLedStream(leds[0]);
 			}
 
 			public static LedStream<$name> readLast(File root, Divisiones.Component division) {
-				File$[] leds = getLedFiles(new File(root, "$cube." + division.id()));
+				File[] leds = getLedFiles(new File(root, "$cube." + division.id()));
 				if(leds.length == 0) return LedStream.empty($name.class);
-				return openLedStream(leds$[leds.length - 1]);
+				return openLedStream(leds[leds.length - 1]);
 			}
 
 			public static LedStream<$name> readLedStream(File ledFile) {
@@ -163,9 +163,9 @@ def type(cube)
 				return new LedReader(led).read($name.class);
 			}
 
-			private static File$[] getLedFiles(File dir) {
-				File$[] leds = dir.listFiles(f -> f.getName().endsWith(".led"));
-				if(leds == null || leds.length == 0) return new File$[0];
+			private static File[] getLedFiles(File dir) {
+				File[] leds = dir.listFiles(f -> f.getName().endsWith(".led"));
+				if(leds == null || leds.length == 0) return new File[0];
 				Arrays.sort(leds, Comparator.comparing(File::getName));
 				return leds;
 			}
@@ -208,7 +208,7 @@ def trigger(split)
 end
 
 def trigger(asEnum)
-	$value+snakeCaseToCamelCase {
+	$value+CamelCase {
 		public String qn() {
 			return "$qn";
 		}

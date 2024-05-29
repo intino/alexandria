@@ -1,8 +1,8 @@
-def type(display & accessible)
+def type(display, accessible)
 end
 
-def type(display & template)
-    package $package.mobile.android.displays[.$packageType~s]
+def type(display, template)
+    package $package.mobile.android.displays<<.$packageType~s>>
 
     import android.content.Context
     import android.util.AttributeSet
@@ -14,15 +14,15 @@ def type(display & template)
         init {
             this.notifier = TemplateNotifier(this)
             this.requester = TemplateRequester(this)
-            [$component+transfer...[$NL]]
+            <<$component+transfer...[$NL]>>
         }
     }
 end
 
-def type(display & collection)
+def type(display, collection)
 	import React from "react";
 	import { withStyles } from '@material-ui/core/styles';
-	import Abstract$name+firstUpperCase from "../../$packageTypeRelativeDirectory~gen/displays[/$packageType~s]/Abstract$name+firstUpperCase";
+	import Abstract$name+firstUpperCase from "../../$packageTypeRelativeDirectory~gen/displays<</$packageType~s>>/Abstract$name+firstUpperCase";
 	import $name+firstUpperCase~Notifier from "../../$packageTypeRelativeDirectory~gen/displays/notifiers/$name+firstUpperCase~Notifier";
 	import $name+firstUpperCase~Requester from "../../$packageTypeRelativeDirectory~gen/displays/requesters/$name+firstUpperCase~Requester";
 	import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
@@ -48,8 +48,8 @@ def type(display & collection)
 	DisplayFactory.register("$name+firstUpperCase", withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase)));
 end
 
-def type(display & interface)
-    package $package.mobile.displays[.$packageType~s]
+def type(display, interface)
+    package $package.mobile.displays<<.$packageType~s>>
 
     $schemaImport
 
@@ -59,7 +59,7 @@ def type(display & interface)
 end
 
 def type(display)
-    package $package.mobile.android.displays[.$packageType~s]
+    package $package.mobile.android.displays<<.$packageType~s>>
 
     import android.content.Context
     import android.util.AttributeSet
@@ -70,7 +70,7 @@ def type(display)
     import $package.mobile.android.R
     $schemaImport
 
-    open class $name+firstUpperCase<DR: $name+firstUpperCase~Requester, DN: $name+firstUpperCase~Notifier> @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0, layout: Int? = null) $displayExtends, $package.mobile.displays[.$packageType~s].$name+firstUpperCase {
+    open class $name+firstUpperCase<DR: $name+firstUpperCase~Requester, DN: $name+firstUpperCase~Notifier> @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0, layout: Int? = null) $displayExtends, $package.mobile.displays<<.$packageType~s>>.$name+firstUpperCase {
 
         init {
 			this.requester = $name+firstUpperCase~Requester(this) as DR
@@ -83,12 +83,12 @@ def type(display)
     }
 end
 
-def type(notification) trigger(interface)
-    fun $name([value : $parameter])
+def type(notification) and trigger(interface)
+    fun $name(<<value : $parameter>>)
 end
 
 def type(notification)
-    override fun $name([value: $parameter]) {
+    override fun $name(<<value: $parameter>>) {
     }
 end
 
@@ -96,19 +96,19 @@ def trigger(parameterValue)
 	value
 end
 
-def type(date) trigger(parameter)
+def type(date) and trigger(parameter)
     kotlinx.datetime.Instant
 end
 
-def type(datetime) trigger(parameter)
+def type(datetime) and trigger(parameter)
     kotlinx.datetime.Instant
 end
 
-def type(integer) trigger(parameter)
+def type(integer) and trigger(parameter)
     Int
 end
 
-def type(list) trigger(parameter)
+def type(list) and trigger(parameter)
     kotlin.collections.List<$value>
 end
 
@@ -116,75 +116,75 @@ def trigger(parameter)
     $value
 end
 
-def type(displayExtends & generic) trigger(interface)
+def type(displayExtends, generic) and trigger(interface)
 	: $parentMobileShared
 end
 
-def type(displayExtends & generic & isExtensionOf)
+def type(displayExtends, generic, isExtensionOf)
 	: $parent<DR, DN>(context, attrs, defStyleAttr, defStyleRes)
 end
 
-def type(displayExtends & generic)
+def type(displayExtends, generic)
 	: $parent<DR, DN>(context, attrs, defStyleAttr, defStyleRes, IntArray(0))
 end
 
-def type(displayExtends & template) trigger(interface)
+def type(displayExtends, template) and trigger(interface)
 	: io.intino.alexandria.mobile.displays.components.Template
 end
 
-def type(displayExtends & template)
+def type(displayExtends, template)
 	: io.intino.alexandria.mobile.android.displays.components.Template<DR, DN>(context, attrs, defStyleAttr, defStyleRes)
 end
 
-def type(displayExtends & table) trigger(interface)
+def type(displayExtends, table) and trigger(interface)
 	: io.intino.alexandria.mobile.displays.components.$type+firstUpperCase$facet...[]
 end
 
-def type(displayExtends & table)
+def type(displayExtends, table)
 	: io.intino.alexandria.mobile.android.displays.components.$type+firstUpperCase$facet...[]<DR, DN>(context, attrs, defStyleAttr, defStyleRes)
 end
 
-def type(displayExtends & dynamictable) trigger(interface)
+def type(displayExtends, dynamictable) and trigger(interface)
 	: io.intino.alexandria.mobile.displays.components.$type+firstUpperCase$facet...[]
 end
 
-def type(displayExtends & dynamictable)
+def type(displayExtends, dynamictable)
 	: io.intino.alexandria.mobile.android.displays.components.$type+firstUpperCase$facet...[]<DR, DN>(context, attrs, defStyleAttr, defStyleRes)
 end
 
-def type(displayExtends & collection) trigger(interface)
+def type(displayExtends, collection) and trigger(interface)
 	: io.intino.alexandria.mobile.displays.components.$type+firstUpperCase$facet...[]
 end
 
-def type(displayExtends & collection)
+def type(displayExtends, collection)
 	: io.intino.alexandria.mobile.android.displays.components.$type+firstUpperCase$facet...[]<DR, DN>(context, attrs, defStyleAttr, defStyleRes)
 end
 
-def type(displayExtends & item) trigger(interface)
+def type(displayExtends, item) and trigger(interface)
 	: io.intino.alexandria.mobile.displays.components.Item
 end
 
-def type(displayExtends & item)
+def type(displayExtends, item)
 	: io.intino.alexandria.mobile.android.displays.components.Item<DR, DN>(context, attrs, defStyleAttr, defStyleRes)
 end
 
-def type(displayExtends & row) trigger(interface)
+def type(displayExtends, row) and trigger(interface)
 	: io.intino.alexandria.mobile.displays.components.Row
 end
 
-def type(displayExtends & row)
+def type(displayExtends, row)
 	: io.intino.alexandria.mobile.android.displays.components.Row<DR, DN>(context, attrs, defStyleAttr, defStyleRes)
 end
 
-def type(displayExtends & dialog) trigger(interface)
+def type(displayExtends, dialog) and trigger(interface)
 	: io.intino.alexandria.mobile.displays.components.Dialog
 end
 
-def type(displayExtends & dialog)
+def type(displayExtends, dialog)
 	: io.intino.alexandria.mobile.android.displays.components.Dialog<DR, DN>(context, attrs, defStyleAttr, defStyleRes)
 end
 
-def type(displayExtends) trigger(interface)
+def type(displayExtends) and trigger(interface)
 	: io.intino.alexandria.mobile.displays.$type+firstUpperCase
 end
 

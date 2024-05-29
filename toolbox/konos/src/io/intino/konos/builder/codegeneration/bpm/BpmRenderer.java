@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration.bpm;
 
 import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.formatters.StringFormatters;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
@@ -26,7 +27,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.codegeneration.bpm.parser.State.Type;
 import static io.intino.konos.builder.codegeneration.bpm.parser.State.Type.Initial;
 import static io.intino.konos.builder.codegeneration.bpm.parser.State.Type.Terminal;
@@ -69,7 +69,7 @@ public class BpmRenderer extends Renderer {
 				add(compilationContext.boxName()).
 				add("process", processes.stream().filter(p -> file(p) != null).map(p -> frameOf(p, file(p))).toArray(FrameBuilder[]::new));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(graph.workflow()), javaFile(gen, "Workflow").getAbsolutePath()));
-		writeFrame(gen, "Workflow", customize(new WorkflowTemplate()).render(builder.toFrame()));
+		writeFrame(gen, "Workflow", new WorkflowTemplate().render(builder.toFrame(), Formatters.all));
 	}
 
 
@@ -92,10 +92,10 @@ public class BpmRenderer extends Renderer {
 	private void renderProcess(Process process, File file) {
 		final FrameBuilder builder = frameOf(process, file);
 		compilationContext.classes().put(process.getClass().getSimpleName() + "#" + process.name$(), "bpm." + process.name$());
-		writeFrame(gen, "Abstract" + firstUpperCase(process.name$()), customize(new ProcessTemplate()).render(builder.toFrame()));
+		writeFrame(gen, "Abstract" + firstUpperCase(process.name$()), new ProcessTemplate().render(builder.toFrame(), Formatters.all));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(process), javaFile(gen, "Abstract" + firstUpperCase(process.name$())).getAbsolutePath()));
 		if (!alreadyRendered(src, process.name$())) {
-			writeFrame(src, process.name$(), customize(new ProcessTemplate()).render(builder.add("src").toFrame()));
+			writeFrame(src, process.name$(), new ProcessTemplate().render(builder.add("src").toFrame(), Formatters.all));
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(process), javaFile(src(Target.Server), process.name$()).getAbsolutePath()));
 		}
 	}
@@ -156,7 +156,7 @@ public class BpmRenderer extends Renderer {
 	}
 
 	private String format(State state) {
-		return Formatters.snakeCaseToCamelCase().format(Normalizer.normalize(state.label().replaceAll(" |/", "_"), Normalizer.Form.NFKD)).toString();
+		return StringFormatters.camelCase().format(Normalizer.normalize(state.label().replaceAll(" |/", "_"), Normalizer.Form.NFKD)).toString();
 	}
 
 	private boolean alreadyRendered(File destination, String action) {
