@@ -152,6 +152,14 @@ public class KonosGraph extends io.intino.konos.dsl.AbstractGraph {
 		return set;
 	}
 
+	public boolean hasAndroidServices() {
+		return serviceList(this::isAndroid).findAny().isPresent();
+	}
+
+	public boolean isAndroid(Service service) {
+		return service.isUI() && service.asUI().targets().contains(Service.UI.Targets.Android);
+	}
+
 	@SuppressWarnings("Duplicates")
 	private static Set<String> extractParameters(String text) {
 		Set<String> list = new LinkedHashSet<>();

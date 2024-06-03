@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration;
 
 import io.intino.alexandria.logger.Logger;
+import io.intino.builder.BuildConstants.Mode;
 import io.intino.konos.builder.codegeneration.accessor.PomGenerator;
 import io.intino.konos.builder.codegeneration.accessor.analytic.AnalyticBuilderRenderer;
 import io.intino.konos.builder.codegeneration.accessor.messaging.MessagingAccessorRenderer;
@@ -31,7 +32,6 @@ import io.intino.konos.builder.codegeneration.services.soap.SoapServiceRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
-import io.intino.builder.BuildConstants.Mode;
 import io.intino.konos.dsl.KonosGraph;
 import io.intino.konos.dsl.Service;
 
@@ -106,8 +106,9 @@ public class FullRenderer {
 			new AnalyticBuilderRenderer(context, graph, new File(dir, "src"), new File(analyticBasePath(), "res")).render();
 			pomGenerator.generate("analytic", dir);
 		}
-		androidClient();
+		if (graph.hasAndroidServices()) androidClient();
 	}
+
 
 	private File analyticBasePath() {
 		return new File(context.configuration().genDirectory(), "analytic#analytic");
