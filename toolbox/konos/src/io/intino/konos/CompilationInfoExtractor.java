@@ -119,6 +119,9 @@ class CompilationInfoExtractor {
 			case PARAMETERS:
 				configuration.parameters(reader.readLine().split(";"));
 				break;
+			case INVOKED_PHASE:
+				configuration.invokedPhase(io.intino.builder.CompilerConfiguration.Phase.valueOf(reader.readLine()));
+				break;
 			case GENERATION_PACKAGE:
 				configuration.generationPackage(reader.readLine());
 				break;

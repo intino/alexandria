@@ -17,6 +17,8 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import java.util.logging.StreamHandler;
 
+import static io.intino.builder.CompilerConfiguration.Phase;
+
 public class CompilerConfiguration implements Cloneable {
 	private static final Logger LOG = Logger.getGlobal();
 
@@ -63,6 +65,7 @@ public class CompilerConfiguration implements Cloneable {
 	private Mode mode = Mode.Build;
 	private Configuration.Repository releaseDistributionRepository;
 	private Configuration.Repository snapshotDistributionRepository;
+	private Phase invokedPhase;
 
 	public CompilerConfiguration() {
 		setWarningLevel(1);
@@ -321,6 +324,15 @@ public class CompilerConfiguration implements Cloneable {
 	public CompilerConfiguration snapshotDistributionRepository(Configuration.Repository repository) {
 		this.snapshotDistributionRepository = repository;
 		return this;
+	}
+
+	public void invokedPhase(Phase phase) {
+		this.invokedPhase = phase;
+
+	}
+
+	public Phase invokedPhase() {
+		return invokedPhase;
 	}
 
 	public static class DslConfiguration {
