@@ -28,7 +28,7 @@ public abstract class SchemaWriter {
 	}
 
 	protected File schemaFolder(Schema schema) {
-		return new File(destination, SchemaHelper.subPackage(schema));
+		return new File(destination, packageName.replace(".", File.separator) + File.separator + SchemaHelper.subPackage(schema));
 	}
 
 }

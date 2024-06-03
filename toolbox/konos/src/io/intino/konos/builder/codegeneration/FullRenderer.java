@@ -86,41 +86,33 @@ public class FullRenderer {
 		new AnalyticRenderer(context, graph).execute();
 	}
 
+	private static final String ACCESSOR = "-accessor";
 
 	private void accessors() throws KonosException {
 		final PomGenerator pomGenerator = new PomGenerator(context);
-		for (Service.REST rest : graph.restServiceList()) {
-			final File dir = genDirectory(context.configuration().genDirectory(), "rest#", rest.name$());
-			new RESTAccessorRenderer(context, rest, dir).render();
-			File pom = pomGenerator.generate("rest", dir.getParentFile());
-			context.postCompileActionMessages().add(new ArtifactBuildActionMessage(context.module(), pom, pomGenerator.coors(dir.getParentFile()), context.configuration().invokedPhase().name()));
+		for (Service.REST service : graph.restServiceList()) {
+			var root = new File(context.configuration().genDirectory(), "rest#" + service.name$() + ACCESSOR);
+			new RESTAccessorRenderer(context, service, new File(root, "src")).render();
+			File pom = pomGenerator.generate("rest", root);
+			context.postCompileActionMessages().add(new ArtifactBuildActionMessage(context.module(), pom, pomGenerator.coors(root), context.configuration().invokedPhase().name()));
 		}
 //		for (Service.JMX jmx : graph.jmxServiceList())
 //			new JMXAccessorRenderer(context, jmx, genDirectory(context.configuration().genDirectory(), "jmx#", jmx.name$())).render();
 		for (Service.Messaging service : graph.messagingServiceList()) {
-			final File srcDir = genDirectory(context.configuration().genDirectory(), "messaging#", service.name$());
-			new MessagingAccessorRenderer(context, service, srcDir).render();
-			File pom = pomGenerator.generate("messaging", srcDir.getParentFile());
-			context.postCompileActionMessages().add(new ArtifactBuildActionMessage(context.module(), pom, pomGenerator.coors(srcDir.getParentFile()), context.configuration().invokedPhase().name()));
+			var root = new File(context.configuration().genDirectory(), "messaging#" + service.name$() + ACCESSOR);
+			new MessagingAccessorRenderer(context, service, new File(root, "src")).render();
+			File pom = pomGenerator.generate("messaging", root);
+			context.postCompileActionMessages().add(new ArtifactBuildActionMessage(context.module(), pom, pomGenerator.coors(root), context.configuration().invokedPhase().name()));
 		}
-
 		if (!graph.cubeList().isEmpty()) {
-			final File dir = analyticBasePath();
-			new AnalyticBuilderRenderer(context, graph, new File(dir, "src"), new File(analyticBasePath(), "res")).render();
-			File pom = pomGenerator.generate("analytic", dir);
-			context.postCompileActionMessages().add(new ArtifactBuildActionMessage(context.module(), pom, pomGenerator.coors(dir.getParentFile()), context.configuration().invokedPhase().name()));
+			var root = new File(context.configuration().genDirectory(), "analytic#analytic" + ACCESSOR);
+			new AnalyticBuilderRenderer(context, graph, new File(root, "src"), new File(root, "res")).render();
+			File pom = pomGenerator.generate("analytic", root);
+			context.postCompileActionMessages().add(new ArtifactBuildActionMessage(context.module(), pom, pomGenerator.coors(root.getParentFile()), context.configuration().invokedPhase().name()));
 		}
 		if (graph.hasAndroidServices()) androidClient();
 	}
 
-
-	private File analyticBasePath() {
-		return new File(context.configuration().genDirectory(), "analytic#analytic");
-	}
-
-	private File genDirectory(File tempDirectory, String serviceType, String serviceName) {
-		return new File(tempDirectory, serviceType + serviceName + File.separator + "src");
-	}
 
 	private void schemas() throws KonosException {
 		new SchemaListRenderer(context, graph).execute();
