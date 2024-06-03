@@ -10,6 +10,9 @@ import io.intino.konos.builder.context.CompilationContext;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 public class PomGenerator {
@@ -21,19 +24,35 @@ public class PomGenerator {
 		this.conf = context.configuration();
 	}
 
-	public void generate(String serviceType, File dir) {
-		createPom(dir, serviceType, context.configuration().groupId().toLowerCase(), dir.getName().split("#")[0], context.configuration().version());
+	public File generate(String serviceType, File dir) {
+		return createPom(dir, serviceType, context.configuration().groupId().toLowerCase(), dir.getName().split("#")[1], context.configuration().version());
 	}
 
-	private void createPom(File root, String serviceType, String group, String artifact, String version) {
+	private File createPom(File root, String serviceType, String group, String artifact, String version) {
 		final FrameBuilder builder = new FrameBuilder("pom").add("group", group).add("artifact", artifact).add("version", version);
 		if (conf.releaseDistributionRepository() != null)
 			buildRepoFrame(builder, conf.releaseDistributionRepository(), true, false);
 		if (conf.snapshotDistributionRepository() != null)
 			buildRepoFrame(builder, conf.snapshotDistributionRepository(), true, true);
-		builder.add("dependency", new FrameBuilder(serviceType).add("value", "").add("version", "$" + serviceType).toFrame());
+		builder.add("dependency", new FrameBuilder(serviceType).add("value", "").add("version", versionOf(serviceType)).toFrame());
 		final File pomFile = new File(root, "pom.xml");
 		write(builder, pomFile);
+		return pomFile;
+	}
+
+	public String coors(File dir) {
+		return String.join(":", context.configuration().groupId().toLowerCase(), dir.getName().split("#")[1], context.configuration().version());
+	}
+
+	private String versionOf(String serviceType) {
+		String artifact = "";
+		if ("rest".equals(serviceType)) artifact = "io.intino.alexandria:rest-accessor";
+		else if ("messaging".equals(serviceType)) artifact = "io.intino.alexandria:terminal-jms";
+		else if ("analytic".equals(serviceType)) artifact = "io.intino.alexandria:led";
+		List<String> versions = new ArrayList<>(new ArtifactoryConnector(conf.releaseDistributionRepository()).versions(artifact));
+		if (versions.isEmpty()) return "";
+		Collections.sort(versions);
+		return versions.get(versions.size() - 1);
 	}
 
 	private void write(FrameBuilder builder, File pomFile) {

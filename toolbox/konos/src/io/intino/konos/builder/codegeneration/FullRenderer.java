@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration;
 
 import io.intino.alexandria.logger.Logger;
+import io.intino.builder.ArtifactBuildActionMessage;
 import io.intino.builder.BuildConstants.Mode;
 import io.intino.konos.builder.codegeneration.accessor.PomGenerator;
 import io.intino.konos.builder.codegeneration.accessor.analytic.AnalyticBuilderRenderer;
@@ -91,20 +92,23 @@ public class FullRenderer {
 		for (Service.REST rest : graph.restServiceList()) {
 			final File dir = genDirectory(context.configuration().genDirectory(), "rest#", rest.name$());
 			new RESTAccessorRenderer(context, rest, dir).render();
-			pomGenerator.generate("rest", dir);
+			File pom = pomGenerator.generate("rest", dir.getParentFile());
+			context.postCompileActionMessages().add(new ArtifactBuildActionMessage(context.module(), pom, pomGenerator.coors(dir.getParentFile()), context.configuration().invokedPhase().name()));
 		}
 //		for (Service.JMX jmx : graph.jmxServiceList())
 //			new JMXAccessorRenderer(context, jmx, genDirectory(context.configuration().genDirectory(), "jmx#", jmx.name$())).render();
 		for (Service.Messaging service : graph.messagingServiceList()) {
-			final File dir = genDirectory(context.configuration().genDirectory(), "messaging#", service.name$());
-			new MessagingAccessorRenderer(context, service, dir).render();
-			pomGenerator.generate("messaging", dir);
+			final File srcDir = genDirectory(context.configuration().genDirectory(), "messaging#", service.name$());
+			new MessagingAccessorRenderer(context, service, srcDir).render();
+			File pom = pomGenerator.generate("messaging", srcDir.getParentFile());
+			context.postCompileActionMessages().add(new ArtifactBuildActionMessage(context.module(), pom, pomGenerator.coors(srcDir.getParentFile()), context.configuration().invokedPhase().name()));
 		}
 
 		if (!graph.cubeList().isEmpty()) {
 			final File dir = analyticBasePath();
 			new AnalyticBuilderRenderer(context, graph, new File(dir, "src"), new File(analyticBasePath(), "res")).render();
-			pomGenerator.generate("analytic", dir);
+			File pom = pomGenerator.generate("analytic", dir);
+			context.postCompileActionMessages().add(new ArtifactBuildActionMessage(context.module(), pom, pomGenerator.coors(dir.getParentFile()), context.configuration().invokedPhase().name()));
 		}
 		if (graph.hasAndroidServices()) androidClient();
 	}
