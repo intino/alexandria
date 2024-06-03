@@ -32,6 +32,7 @@ public class RESTAccessorRenderer extends Renderer {
 	private final Service.REST service;
 	private final File destination;
 	private final Map<String, List<Parameter>> enumParameters;
+	private final String packageName;
 
 	public RESTAccessorRenderer(CompilationContext compilationContext, Service.REST restService, File destination) {
 		super(compilationContext);
@@ -39,21 +40,22 @@ public class RESTAccessorRenderer extends Renderer {
 		this.destination = destination;
 		this.destination.mkdirs();
 		this.enumParameters = new HashMap<>();
+		this.packageName = packageName().replace(".konos", "");
 	}
 
 	@Override
 	public void render() throws KonosException {
-		new SchemaListRenderer(context, service.graph(), destination, true).execute();
+		new SchemaListRenderer(context, service.graph(), destination, packageName, true).execute();
 		processService(service);
 	}
 
 	private void processService(Service.REST service) {
 		FrameBuilder builder = new FrameBuilder("accessor");
 		builder.add("name", service.name$());
-		builder.add("package", packageName());
+		builder.add("package", packageName);
 		setupAuthentication(service, builder);
 		if (!service.graph().schemaList().isEmpty())
-			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()));
+			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName));
 		builder.add("resource", service.core$().findNode(Resource.class).stream().map(this::framesOf).flatMap(List::stream).toArray(Frame[]::new));
 		builder.add("notification", service.notificationList().stream().map(this::frameOf).toArray(Frame[]::new));
 		for (Parameter enumParameter : enumParameters.values().stream().flatMap(Collection::stream).toList())
@@ -61,7 +63,7 @@ public class RESTAccessorRenderer extends Renderer {
 					.add("name", enumParameter.name$())
 					.add("class", enumParameter.core$().ownerAs(Resource.class).name$() + firstUpperCase(enumParameter.name$()))
 					.add("value", enumParameter.asWord().values().toArray(String[]::new)));
-		writeFrame(destination, snakeCaseToCamelCase(service.name$()) + "Accessor", new RESTAccessorTemplate().render(builder, Formatters.all));
+		writeFrame(new File(destination, packageName.replace(".", File.separator)), snakeCaseToCamelCase(service.name$()) + "Accessor", new RESTAccessorTemplate().render(builder, Formatters.all));
 	}
 
 	private void setupAuthentication(Service.REST restService, FrameBuilder builder) {
@@ -89,7 +91,7 @@ public class RESTAccessorRenderer extends Renderer {
 		FrameBuilder builder = new FrameBuilder("resource")
 				.add("path", processPath(Commons.path(operation.core$().ownerAs(Resource.class))))
 				.add("response", new FrameBuilder(responseType(operation.response())).
-						add("value", customizeMultipart(operation.response(), Commons.returnType(operation.response(), packageName()))))
+						add("value", customizeMultipart(operation.response(), Commons.returnType(operation.response(), packageName))))
 				.add("method", operation.getClass().getSimpleName())
 				.add("name", operation.core$().owner().name())
 				.add("parameter", parameters(operation.core$().ownerAs(Resource.class).parameterList()))
@@ -140,14 +142,14 @@ public class RESTAccessorRenderer extends Renderer {
 				enumParameters.get(resource).add(parameter);
 			type = firstUpperCase(snakeCaseToCamelCase(resource) + firstUpperCase(snakeCaseToCamelCase(parameter.name$())));
 		} else type = (parameter.isObject() && parameter.asObject().isComponent() ?
-				String.join(".", packageName(), "schemas.") : "") + parameter.asType().type();
+				String.join(".", packageName, "schemas.") : "") + parameter.asType().type();
 		if (parameter.isList()) return "List<" + type + ">";
 		if (parameter.isSet()) return "Set<" + type + ">";
 		return type;
 	}
 
 	private String parameterType(Notification.Parameter parameter) {
-		String type = (parameter.isObject() && parameter.asObject().isComponent() ? String.join(".", packageName(), "schemas.") : "") + parameter.asType().type();
+		String type = (parameter.isObject() && parameter.asObject().isComponent() ? String.join(".", packageName, "schemas.") : "") + parameter.asType().type();
 		if (parameter.isList()) return "List<" + type + ">";
 		if (parameter.isSet()) return "Set<" + type + ">";
 		return type;

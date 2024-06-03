@@ -7,7 +7,7 @@ gal2
 module
 api
 outputpath
-/var/folders/5h/dcs6rj7s1wlg7qfq43zxt5hc0000gn/T/konos_accessors2390224910731522045
+/var/folders/5h/dcs6rj7s1wlg7qfq43zxt5hc0000gn/T/konos_accessors15177839756245061111
 final_outputpath
 /Users/oroncal/workspace/infrastructure/gal2/out/production/api
 res.path
@@ -28,9 +28,9 @@ api
 version
 1.0.0-SNAPSHOT
 dsl
-konos:12.1.1
+konos:12.1.2
 language
-konos:12.1.1
+konos:12.1.2
 level
 Model
 module.parameters
@@ -43,6 +43,8 @@ distribution.snapshot
 monentia-maven#https://artifactory.monentia.es/artifactory/libs-snapshot-local
 distribution.release
 monentia-maven#https://artifactory.monentia.es/artifactory/libs-release-local
+current.dependencies
+io.intino.alexandria:core-framework:2.2.0,io.intino.alexandria:logger4j:1.0.1,io.intino.alexandria:rest:3.9.4,io.intino.itrules:engine:1.0.1
 encoding
 UTF-8
 phase

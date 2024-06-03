@@ -45,7 +45,7 @@ public class MessagingAccessorRenderer extends Renderer {
 		final Set<String> customParameters = extractCustomParameters(requests);
 		builder.add("request", requests.stream().map(request -> processRequest(request, jmsService).toFrame()).toArray(Frame[]::new));
 		for (String parameter : customParameters) builder.add("custom", parameter);
-		Commons.writeFrame(destination, snakeCaseToCamelCase(jmsService.name$()) + "Accessor", new MessagingAccessorTemplate().render(builder.toFrame(), Formatters.all));
+		Commons.writeFrame(new File(destination, packageName().replace(".", File.separator)), snakeCaseToCamelCase(jmsService.name$()) + "Accessor", new MessagingAccessorTemplate().render(builder.toFrame(), Formatters.all));
 	}
 
 	private Set<String> extractCustomParameters(List<Service.Messaging.Request> requests) {
@@ -61,10 +61,8 @@ public class MessagingAccessorRenderer extends Renderer {
 				.add("path", "service" + chainContext(service.context()) + request.path());
 		if (request.parameter() != null)
 			builder.add("parameter", parameterFrame(request.parameter()));
-		if (request.response() != null && request.response().isType()) {
-			builder.add("reply");
-			builder.add("response", responseFrame(request.response()));
-		}
+		if (request.response() != null && request.response().isType())
+			builder.add("reply").add("response", responseFrame(request.response()));
 		return builder;
 	}
 
