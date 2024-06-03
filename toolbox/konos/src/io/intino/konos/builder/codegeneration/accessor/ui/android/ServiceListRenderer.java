@@ -25,13 +25,10 @@ public class ServiceListRenderer extends UIRenderer {
 
 	@Override
 	public void render() throws KonosException {
-		List<Service.UI> services = graph.serviceList(this::isAndroid).map(Service::asUI).collect(Collectors.toList());
+		List<Service.UI> services = graph.serviceList(graph::isAndroid).map(Service::asUI).collect(Collectors.toList());
 		for (Service.UI s : services) new ServiceCreator(context, s, genDirectoryProvider.apply(s)).execute();
+		if (services.isEmpty()) return;
 		new AppRenderer(context, services).execute();
-		if (!services.isEmpty()) new RouteDispatcherRenderer(context, services, Target.Android).execute();
-	}
-
-	private boolean isAndroid(Service service) {
-		return service.isUI() && service.asUI().targets().contains(Service.UI.Targets.Android);
+		new RouteDispatcherRenderer(context, services, Target.Android).execute();
 	}
 }
