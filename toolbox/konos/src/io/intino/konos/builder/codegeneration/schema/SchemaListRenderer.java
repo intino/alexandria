@@ -20,7 +20,7 @@ public class SchemaListRenderer extends Renderer {
 	private final SchemaWriter writer;
 
 	public SchemaListRenderer(CompilationContext context, KonosGraph graph) {
-		this(context, graph, null);
+		this(context, graph, context.configuration().genDirectory());
 	}
 
 	public SchemaListRenderer(CompilationContext context, KonosGraph graph, File destination) {
