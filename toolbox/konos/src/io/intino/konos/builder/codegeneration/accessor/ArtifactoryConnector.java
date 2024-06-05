@@ -15,7 +15,7 @@ public class ArtifactoryConnector {
 	private final List<Configuration.Repository> repositories;
 
 	public ArtifactoryConnector(Configuration.Repository repository) {
-		this(List.of(repository));
+		this(repository == null ? List.of() : List.of(repository));
 	}
 
 	public ArtifactoryConnector(List<Configuration.Repository> repositories) {
