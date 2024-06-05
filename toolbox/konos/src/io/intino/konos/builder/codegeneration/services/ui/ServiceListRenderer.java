@@ -33,7 +33,7 @@ public class ServiceListRenderer extends UIRenderer {
 	}
 
 	private void processUIService(Service.UI service) throws KonosException {
-		context.serviceDirectory(new File(context.configuration().moduleDirectory().getParentFile(), Formatters.camelCaseToSnakeCase().format(service.name$()).toString()));
+		context.serviceDirectory(new File(context.configuration().moduleDirectory().getParentFile(), Formatters.camelCaseToKebabCase().format(service.name$()).toString()));
 		new ServiceRenderer(context, service).execute();
 		new DisplayListRenderer(context, service, writer()).execute();
 	}
