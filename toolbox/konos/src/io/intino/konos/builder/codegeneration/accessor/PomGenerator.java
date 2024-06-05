@@ -6,6 +6,7 @@ import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.context.CompilationContext;
+import io.intino.konos.builder.context.KonosException;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,20 +25,24 @@ public class PomGenerator {
 		this.conf = context.configuration();
 	}
 
-	public File generate(String serviceType, File dir) {
+	public File generate(String serviceType, File dir) throws KonosException {
 		return createPom(dir, serviceType, context.configuration().groupId().toLowerCase(), dir.getName().split("#")[1], context.configuration().version());
 	}
 
-	private File createPom(File root, String serviceType, String group, String artifact, String version) {
-		final FrameBuilder builder = new FrameBuilder("pom").add("group", group).add("artifact", artifact).add("version", version);
-		if (conf.releaseDistributionRepository() != null)
-			buildRepoFrame(builder, conf.releaseDistributionRepository(), true, false);
-		if (conf.snapshotDistributionRepository() != null)
-			buildRepoFrame(builder, conf.snapshotDistributionRepository(), true, true);
-		builder.add("dependency", new FrameBuilder(serviceType).add("value", "").add("version", versionOf(serviceType)).toFrame());
-		final File pomFile = new File(root, "pom.xml");
-		write(builder, pomFile);
-		return pomFile;
+	private File createPom(File root, String serviceType, String group, String artifact, String version) throws KonosException {
+		try {
+			final FrameBuilder builder = new FrameBuilder("pom").add("group", group).add("artifact", artifact).add("version", version);
+			if (conf.releaseDistributionRepository() != null)
+				buildRepoFrame(builder, conf.releaseDistributionRepository(), true, false);
+			if (conf.snapshotDistributionRepository() != null)
+				buildRepoFrame(builder, conf.snapshotDistributionRepository(), true, true);
+			builder.add("dependency", new FrameBuilder(serviceType).add("value", "").add("version", versionOf(serviceType)).toFrame());
+			final File pomFile = new File(root, "pom.xml");
+			write(builder, pomFile);
+			return pomFile;
+		} catch (Throwable e) {
+			throw new KonosException(e.getMessage(), e);
+		}
 	}
 
 	public String coors(File dir) {
