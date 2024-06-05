@@ -68,7 +68,7 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
         this.collection = (Collection) collection;
         collection().ifPresent(c -> collection.onSelect((event) -> {
             updateSelection(event);
-            if (multipleSelection()) ((Collection) collection).reload();
+            if (multipleSelection()) ((Collection) collection).reloadWithSelection();
             else notifier.close();
         }));
     }
@@ -136,7 +136,7 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
 
     public void unSelect(String option) {
         updateSelection(selection.stream().filter(i -> !option.equals(valueOf(i))).collect(Collectors.toList()));
-        collection().ifPresent(Collection::reload);
+        collection().ifPresent(Collection::reloadWithSelection);
     }
 
     protected void reloadComponents() { // Override base selector behavior

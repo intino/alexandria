@@ -56,7 +56,7 @@ public class CollectionDialog<DN extends CollectionDialogNotifier, B extends Box
 	private <T> void updateSelection(List<T> selection) {
 		this.selection = selection;
 		notifier.refreshSelectionCount(selection.size());
-		collection.reload();
+		collection.reloadWithSelection();
 	}
 
 	private void notifySelection(List selection) {

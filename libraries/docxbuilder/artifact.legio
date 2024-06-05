@@ -7,6 +7,3 @@ Artifact("io.intino.alexandria", "1.2.6") docx-builder
 		Test("junit", "junit", "4.13")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
-
-Repository("intino-maven")
-	Release("https://artifactory.intino.io/artifactory/releases")

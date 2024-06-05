@@ -98,6 +98,14 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         selection(Collections.emptyList());
     }
 
+    public void reloadWithSelection() {
+        if (behavior == null) return;
+        List<Integer> selectedIndexList = itemsIndexOf(selection);
+        behavior.reload();
+        notifyRefreshItemCount();
+        refreshSelection(selectedIndexList);
+    }
+
     public boolean ready() {
         return ready;
     }
