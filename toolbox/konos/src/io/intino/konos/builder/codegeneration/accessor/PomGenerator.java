@@ -31,7 +31,10 @@ public class PomGenerator {
 
 	private File createPom(File root, String serviceType, String group, String artifact, String version) throws KonosException {
 		try {
-			final FrameBuilder builder = new FrameBuilder("pom").add("group", group).add("artifact", artifact).add("version", version);
+			final FrameBuilder builder = new FrameBuilder("pom")
+					.add("group", group)
+					.add("artifact", artifact)
+					.add("version", version);
 			if (conf.releaseDistributionRepository() != null)
 				buildRepoFrame(builder, conf.releaseDistributionRepository(), true, false);
 			if (conf.snapshotDistributionRepository() != null)

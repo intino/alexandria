@@ -91,7 +91,7 @@ public class FullRenderer {
 	private void accessors() throws KonosException {
 		final PomGenerator pomGenerator = new PomGenerator(context);
 		for (Service.REST service : graph.restServiceList()) {
-			var root = new File(context.configuration().genDirectory(), "rest#" + service.name$() + ACCESSOR);
+			var root = new File(context.configuration().genDirectory(), "rest#" + accessorName(service.asService()));
 			new RESTAccessorRenderer(context, service, new File(root, "src")).render();
 			File pom = pomGenerator.generate("rest", root);
 			context.postCompileActionMessages().add(new ArtifactBuildActionMessage(context.module(), pom, pomGenerator.coors(root), context.configuration().invokedPhase().name()));
@@ -99,13 +99,13 @@ public class FullRenderer {
 //		for (Service.JMX jmx : graph.jmxServiceList())
 //			new JMXAccessorRenderer(context, jmx, genDirectory(context.configuration().genDirectory(), "jmx#", jmx.name$())).render();
 		for (Service.Messaging service : graph.messagingServiceList()) {
-			var root = new File(context.configuration().genDirectory(), "messaging#" + service.name$() + ACCESSOR);
+			var root = new File(context.configuration().genDirectory(), "messaging#" + accessorName(service.asService()));
 			new MessagingAccessorRenderer(context, service, new File(root, "src")).render();
 			File pom = pomGenerator.generate("messaging", root);
 			context.postCompileActionMessages().add(new ArtifactBuildActionMessage(context.module(), pom, pomGenerator.coors(root), context.configuration().invokedPhase().name()));
 		}
 		if (!graph.cubeList().isEmpty()) {
-			var root = new File(context.configuration().genDirectory(), "analytic#analytic" + ACCESSOR);
+			var root = new File(context.configuration().genDirectory(), "analytic#" + context.configuration().project() + "-analytic" + ACCESSOR);
 			new AnalyticBuilderRenderer(context, graph, new File(root, "src"), new File(root, "res")).render();
 			File pom = pomGenerator.generate("analytic", root);
 			context.postCompileActionMessages().add(new ArtifactBuildActionMessage(context.module(), pom, pomGenerator.coors(root.getParentFile()), context.configuration().invokedPhase().name()));
@@ -113,6 +113,9 @@ public class FullRenderer {
 		if (graph.hasAndroidServices()) androidClient();
 	}
 
+	private String accessorName(Service service) {
+		return context.configuration().project() + "-" + service.name$() + ACCESSOR;
+	}
 
 	private void schemas() throws KonosException {
 		new SchemaListRenderer(context, graph).execute();

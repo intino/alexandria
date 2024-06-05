@@ -2,13 +2,13 @@ package io.intino.konos.builder.codegeneration.accessor.ui.web;
 
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.zip.Zip;
+import io.intino.builder.PostCompileDependantWebModuleActionMessage;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.utils.FileHelper;
-import io.intino.builder.PostCompileDependantWebModuleActionMessage;
 import io.intino.konos.dsl.Service;
 
 import java.io.File;
@@ -27,7 +27,7 @@ public class ServiceCreator extends UIRenderer {
 	public void render() throws KonosException {
 		try {
 			context.postCompileActionMessages().add(new PostCompileDependantWebModuleActionMessage(context.configuration().module(), service.name$()));
-			context.serviceDirectory(new File(context.configuration().moduleDirectory().getParentFile(), Formatters.camelCaseToSnakeCase().format(service.name$()).toString()));
+			context.serviceDirectory(new File(context.configuration().moduleDirectory().getParentFile(), Formatters.camelCaseToKebabCase().format(service.name$()).toString()));
 			if (!context.serviceDirectory().exists()) createSkeleton();
 			new ServiceRenderer(context, service).execute();
 		} catch (IOException e) {

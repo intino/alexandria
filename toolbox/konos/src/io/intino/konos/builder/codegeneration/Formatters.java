@@ -18,7 +18,7 @@ public class Formatters {
 
 	static {
 		all.put("validname", validName());
-		all.put("camelCaseToSnakeCase", camelCaseToSnakeCase());
+		all.put("camelCaseToSnakeCase", camelCaseToKebabCase());
 		all.put("escapeHtml", escapeHtml());
 		all.put("returnType", returnType());
 		all.put("returnTypeFormatter", returnTypeFormatter());
@@ -36,7 +36,7 @@ public class Formatters {
 		return (value) -> StringHelper.snakeCaseToCamelCase(value.toString().replace(".", "-"));
 	}
 
-	public static Formatter camelCaseToSnakeCase() {
+	public static Formatter camelCaseToKebabCase() {
 		return value -> StringHelper.camelCaseToSnakeCase(value.toString());
 	}
 
