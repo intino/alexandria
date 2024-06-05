@@ -79,6 +79,6 @@
     <orderEntry type="library" name="Intino: io.intino.magritte:framework:5.2.1" level="project" />
     <orderEntry type="library" name="Intino: io.intino.tara:language:1.6.1" level="project" />
     <orderEntry type="library" name="Intino: io.intino.itrules:engine:2.0.1" level="project" />
-    <orderEntry type="library" name="Intino: tara.dsl:konos:12.1.6" level="project" />
+    <orderEntry type="library" name="Intino: tara.dsl:konos:12.1.7" level="project" />
   </component>
 </module>

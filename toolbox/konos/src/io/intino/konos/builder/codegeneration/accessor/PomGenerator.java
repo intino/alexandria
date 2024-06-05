@@ -49,7 +49,7 @@ public class PomGenerator {
 	}
 
 	public String coors(File dir) {
-		return String.join(":", context.configuration().groupId().toLowerCase(), dir.getName().split("#")[1], context.configuration().version());
+		return String.join(":", context.configuration().groupId().toLowerCase().toLowerCase(), dir.getName().split("#")[1].toLowerCase(), context.configuration().version());
 	}
 
 	private String versionOf(String serviceType) {
