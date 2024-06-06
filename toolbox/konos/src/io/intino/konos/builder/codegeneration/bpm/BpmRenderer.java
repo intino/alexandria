@@ -46,8 +46,8 @@ public class BpmRenderer extends Renderer {
 		this.compilationContext = compilationContext;
 		this.workflow = graph.workflow();
 		this.processes = workflow != null ? graph.workflow().processList() : Collections.emptyList();
-		this.src = new File(compilationContext.src(Target.Server), "bpm");
-		this.gen = new File(compilationContext.gen(Target.Server), "bpm");
+		this.src = new File(compilationContext.src(Target.Service), "bpm");
+		this.gen = new File(compilationContext.gen(Target.Service), "bpm");
 		this.graph = graph;
 	}
 
@@ -96,7 +96,7 @@ public class BpmRenderer extends Renderer {
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(process), javaFile(gen, "Abstract" + firstUpperCase(process.name$())).getAbsolutePath()));
 		if (!alreadyRendered(src, process.name$())) {
 			writeFrame(src, process.name$(), new ProcessTemplate().render(builder.add("src").toFrame(), Formatters.all));
-			context.compiledFiles().add(new OutputItem(context.sourceFileOf(process), javaFile(src(Target.Server), process.name$()).getAbsolutePath()));
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(process), javaFile(src(Target.Service), process.name$()).getAbsolutePath()));
 		}
 	}
 

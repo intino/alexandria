@@ -42,7 +42,7 @@ public class ResourceRenderer extends UIRenderer {
 		builder.add("page", buildBaseFrame().add("page").add(isMobile(uiService) ? "mobile" : "no-mobile").add("name", resource.name$()));
 
 		Commons.writeFrame(resourceFolder(gen(target), target), resourceFilename(resource.name$()), new ResourceTemplate().render(builder.toFrame(), Formatters.all));
-		if (target.equals(Target.Server))
+		if (target.equals(Target.Service))
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(resource), javaFile(resourceFolder(gen(target), target), resourceFilename(resource.name$())).getAbsolutePath()));
 
 		new PageRenderer(context, resource, target).execute();

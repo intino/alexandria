@@ -29,7 +29,7 @@ public class SoapServiceRenderer extends Renderer {
 	}
 
 	public void render() {
-		services.forEach((service) -> processService(service.a$(Service.Soap.class), gen(Target.Server)));
+		services.forEach((service) -> processService(service.a$(Service.Soap.class), gen(Target.Service)));
 	}
 
 	private void processService(Service.Soap service, File gen) {
@@ -42,7 +42,7 @@ public class SoapServiceRenderer extends Renderer {
 		final String className = snakeCaseToCamelCase(service.name$()) + "Service";
 		classes().put(service.getClass().getSimpleName() + "#" + service.name$(), className);
 		Commons.writeFrame(gen, className, new SoapServiceTemplate().render(builder.toFrame(), Formatters.all));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Server), className).getAbsolutePath()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Service), className).getAbsolutePath()));
 	}
 
 	private Frame[] framesOf(List<Operation> operations) {

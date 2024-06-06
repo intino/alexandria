@@ -1,14 +1,6 @@
 def type(display, accessible)
 	package $package.ui.displays<<.$packageType~s>>;
 
-	$templatesImport
-	$tablesImport
-	$listsImport
-	$magazinesImport
-	$mapsImport
-	$dynamicTablesImport
-	$blocksImport
-	$itemsImport
 	import $package+validPackage.ui.displays.notifiers.$name+PascalCase~ProxyNotifier;
 	import io.intino.alexandria.ui.displays.ProxyDisplay;
 	import io.intino.alexandria.ui.services.push.UISession;

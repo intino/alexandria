@@ -22,7 +22,7 @@ import static io.intino.konos.builder.helpers.Commons.javaFile;
 public class ServerRendererWriter extends UiRendererWriter {
 
 	public ServerRendererWriter(CompilationContext context) {
-		super(context, Target.Server);
+		super(context, Target.Service);
 	}
 
 	public boolean write(Layer element, String type, FrameBuilder builder) {

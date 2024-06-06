@@ -64,26 +64,26 @@ public class PageRenderer extends ActionRenderer {
 	}
 
 	private void writeWebPage(FrameBuilder builder) {
-		compilationContext.classes().put(resource.getClass().getSimpleName() + "#" + firstUpperCase(resource.core$().name()), "actions" + "." + firstUpperCase(snakeCaseToCamelCase(resource.name$())) + suffix(Target.Server));
+		compilationContext.classes().put(resource.getClass().getSimpleName() + "#" + firstUpperCase(resource.core$().name()), "actions" + "." + firstUpperCase(snakeCaseToCamelCase(resource.name$())) + suffix(Target.Service));
 		if (!alreadyRendered(src(target), resource.name$())) {
 			writeFrame(destinationPackage(src(target)), resource.name$() + suffix(target), new ActionTemplate().render(builder.toFrame(), Formatters.all));
-			if (target.equals(Target.Server))
+			if (target.equals(Target.Service))
 				context.compiledFiles().add(new OutputItem(context.sourceFileOf(resource), javaFile(destinationPackage(src(target)), resource.name$() + suffix(target)).getAbsolutePath()));
 		}
 		writeFrame(destinationPackage(gen(target)), "Abstract" + firstUpperCase(resource.name$()) + suffix(target), new ActionTemplate().render(builder.add("gen").toFrame(), Formatters.all));
-		if (target.equals(Target.Server))
+		if (target.equals(Target.Service))
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(resource), javaFile(destinationPackage(gen(target)), "Abstract" + firstUpperCase(resource.name$()) + suffix(target)).getAbsolutePath()));
 	}
 
 	private void writeMobilePage(FrameBuilder builder) {
 		Target target = Target.MobileShared;
 		compilationContext.classes().put(resource.getClass().getSimpleName() + "#" + firstUpperCase(resource.core$().name()), "actions" + "." + firstUpperCase(snakeCaseToCamelCase(resource.name$())) + suffix(Target.MobileShared));
-		if (!alreadyRendered(src(Target.Server), resource.name$(), target)) {
-			writeFrame(destinationPackage(src(Target.Server)), resource.name$() + suffix(target), new ActionTemplate().render(builder.toFrame(), Formatters.all));
-			context.compiledFiles().add(new OutputItem(context.sourceFileOf(resource), javaFile(destinationPackage(src(Target.Server)), resource.name$() + suffix(target)).getAbsolutePath()));
+		if (!alreadyRendered(src(Target.Service), resource.name$(), target)) {
+			writeFrame(destinationPackage(src(Target.Service)), resource.name$() + suffix(target), new ActionTemplate().render(builder.toFrame(), Formatters.all));
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(resource), javaFile(destinationPackage(src(Target.Service)), resource.name$() + suffix(target)).getAbsolutePath()));
 		}
-		writeFrame(destinationPackage(gen(Target.Server)), "Abstract" + firstUpperCase(resource.name$()) + suffix(target), new ActionTemplate().render(builder.add("gen").toFrame(), Formatters.all));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(resource), javaFile(destinationPackage(gen(Target.Server)), "Abstract" + firstUpperCase(resource.name$()) + suffix(target)).getAbsolutePath()));
+		writeFrame(destinationPackage(gen(Target.Service)), "Abstract" + firstUpperCase(resource.name$()) + suffix(target), new ActionTemplate().render(builder.add("gen").toFrame(), Formatters.all));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(resource), javaFile(destinationPackage(gen(Target.Service)), "Abstract" + firstUpperCase(resource.name$()) + suffix(target)).getAbsolutePath()));
 	}
 
 	private FrameBuilder executeBodyFrame() {
@@ -149,7 +149,7 @@ public class PageRenderer extends ActionRenderer {
 
 	@Override
 	protected File destinationPackage(File destiny) {
-		return new File(destiny, format(CodeGenerationHelper.Pages, Target.Server));
+		return new File(destiny, format(CodeGenerationHelper.Pages, Target.Service));
 	}
 
 	@Override

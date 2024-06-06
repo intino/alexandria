@@ -82,7 +82,7 @@ public abstract class UiRendererWriter implements RendererWriter {
 			packageFolder.mkdirs();
 			File file = fileOf(packageFolder, name, target);
 			Files.write(file.toPath(), text.getBytes(StandardCharsets.UTF_8));
-			if (!target.equals(Target.Server)) return;
+			if (!target.equals(Target.Service)) return;
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(element), javaFile(packageFolder, name).getAbsolutePath()));
 		} catch (IOException e) {
 			Logger.getGlobal().severe(e.getMessage());

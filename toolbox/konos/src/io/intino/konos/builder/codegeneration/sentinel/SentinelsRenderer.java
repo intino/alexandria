@@ -36,8 +36,8 @@ public class SentinelsRenderer extends Renderer {
 				.add("box", boxName())
 				.add("sentinel", processSentinels());
 		if (sentinels.stream().anyMatch(Sentinel::isWebHook)) builder.add("hasWebhook", ",");
-		Commons.writeFrame(gen(Target.Server), "Sentinels", new SentinelsTemplate().render(builder.toFrame(), Formatters.all));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(sentinels.get(0)), javaFile(gen(Target.Server), "Sentinels").getAbsolutePath()));
+		Commons.writeFrame(gen(Target.Service), "Sentinels", new SentinelsTemplate().render(builder.toFrame(), Formatters.all));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(sentinels.get(0)), javaFile(gen(Target.Service), "Sentinels").getAbsolutePath()));
 	}
 
 	private Frame[] processSentinels() throws KonosException {

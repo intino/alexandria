@@ -22,7 +22,7 @@ public class CodeGenerationHelper {
 	public static final String Pages = "%spages";
 
 	public static boolean hasAbstractClass(Layer element, Target target) {
-		if (target == Target.Server) return true;
+		if (target == Target.Service) return true;
 		return !element.i$(conceptOf(io.intino.konos.dsl.Template.class)) &&
 				!element.i$(conceptOf(CatalogComponents.Table.class)) &&
 				!element.i$(conceptOf(CatalogComponents.DynamicTable.class)) &&
@@ -100,11 +100,11 @@ public class CodeGenerationHelper {
 	}
 
 	public static String uiSubPath(Target target) {
-		return target == Target.Server ? UI + "/" : "";
+		return target == Target.Service || target == Target.AccessibleAccessor ? UI + "/" : "";
 	}
 
 	public static File fileOf(File file, String name, Target target) {
-		if (target == Target.Server) return javaFile(file, name);
+		if (target == Target.Service || target == Target.AccessibleAccessor) return javaFile(file, name);
 		if (target == Target.Android || target == Target.MobileShared) return kotlinFile(file, name);
 		if (target == Target.AndroidResource) return xmlFile(file, name);
 		return javascriptFile(file, name);

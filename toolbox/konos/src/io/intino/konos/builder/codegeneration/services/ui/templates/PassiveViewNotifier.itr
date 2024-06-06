@@ -3,7 +3,6 @@ def type(display, accessible)
 
 	import io.intino.alexandria.exceptions.*;
 	import $package+validPackage.*;
-	$schemaImport
 
 	public class $name+FirstUpperCase~ProxyNotifier extends io.intino.alexandria.ui.displays.notifiers.ProxyDisplayNotifier  {
 		public $name+FirstUpperCase~ProxyNotifier(io.intino.alexandria.ui.displays.Display display, io.intino.alexandria.http.pushservice.MessageCarrier carrier) {

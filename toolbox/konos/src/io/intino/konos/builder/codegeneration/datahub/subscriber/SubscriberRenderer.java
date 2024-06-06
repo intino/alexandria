@@ -25,7 +25,7 @@ public class SubscriberRenderer {
 	public SubscriberRenderer(CompilationContext context, KonosGraph graph) {
 		this.context = context;
 		this.subscribers = graph.subscriberList();
-		this.srcSubscribers = new File(context.src(Target.Server), "subscribers");
+		this.srcSubscribers = new File(context.src(Target.Service), "subscribers");
 	}
 
 	public void execute() throws KonosException {

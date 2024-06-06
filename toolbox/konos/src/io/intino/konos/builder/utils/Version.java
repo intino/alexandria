@@ -2,6 +2,7 @@ package io.intino.konos.builder.utils;
 
 import io.intino.konos.builder.context.KonosException;
 
+import java.util.Comparator;
 import java.util.logging.Logger;
 
 import static java.lang.Integer.parseInt;
@@ -95,4 +96,15 @@ public class Version implements Comparable<Version> {
 			return false;
 		return this.compareTo((Version) that) == 0;
 	}
+
+	public static Comparator<? super String> comparator() {
+		return (o1, o2) -> {
+			try {
+				return new Version(o1).compareTo(new Version(o2));
+			} catch (KonosException e) {
+				return 0;
+			}
+		};
+	}
+
 }

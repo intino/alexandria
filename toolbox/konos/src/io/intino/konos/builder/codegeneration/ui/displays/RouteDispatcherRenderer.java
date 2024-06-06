@@ -47,7 +47,7 @@ public class RouteDispatcherRenderer extends UIRenderer {
 		if (target != Target.Android && !routeDispatcher.exists())
 			Commons.write(routeDispatcher.toPath(), new Engine(template()).addAll(Formatters.all).render(builder.toFrame()));
 		Commons.write(fileOf(displaysFolder(gen(target), target), target != Target.Android ? "AbstractRouteDispatcher" : "RouteDispatcher", target).toPath(), new Engine(template()).addAll(Formatters.all).render(builder.add("gen").toFrame()));
-		if (target.equals(Target.Server))
+		if (target.equals(Target.Service))
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(serviceList.get(0)), fileOf(displaysFolder(gen(target), target), "AbstractRouteDispatcher", target).getAbsolutePath()));
 	}
 

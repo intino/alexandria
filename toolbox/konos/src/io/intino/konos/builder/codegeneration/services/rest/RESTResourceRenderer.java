@@ -51,7 +51,7 @@ public class RESTResourceRenderer extends Renderer {
 		for (Operation operation : resource.operationList()) {
 			Frame frame = frameOf(resource, operation);
 			final String className = snakeCaseToCamelCase(operation.getClass().getSimpleName() + "_" + resource.name$()) + "Resource";
-			File resourcesPackage = new File(gen(Target.Server), RESOURCES_PACKAGE);
+			File resourcesPackage = new File(gen(Target.Service), RESOURCES_PACKAGE);
 			Commons.writeFrame(resourcesPackage, className, new RestResourceTemplate().render(frame, Formatters.all));
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(resource), javaFile(resourcesPackage, className).getAbsolutePath()));
 			createCorrespondingAction(operation);
@@ -66,7 +66,7 @@ public class RESTResourceRenderer extends Renderer {
 		builder.add("parameter", notificationParameters(notification.parameterList()));
 		builder.add("returnType", notificationResponse());
 		if (service.authentication() != null) builder.add("throws", "Unauthorized");
-		File genNotifications = new File(gen(Target.Server), NOTIFICATIONS_PACKAGE);
+		File genNotifications = new File(gen(Target.Service), NOTIFICATIONS_PACKAGE);
 		Commons.writeFrame(genNotifications, className, new RestResourceTemplate().render(builder.toFrame(), Formatters.all));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(genNotifications, className).getAbsolutePath()));
 

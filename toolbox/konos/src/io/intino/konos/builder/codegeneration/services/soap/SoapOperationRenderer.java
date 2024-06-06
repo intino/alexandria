@@ -43,7 +43,7 @@ public class SoapOperationRenderer extends Renderer {
 	private void processOperation(Operation operation) throws KonosException {
 		Frame frame = frameOf(operation);
 		final String className = snakeCaseToCamelCase(operation.name$()) + "Operation";
-		File operationsPackage = new File(gen(Target.Server), OPERATIONS_PACKAGE);
+		File operationsPackage = new File(gen(Target.Service), OPERATIONS_PACKAGE);
 		Commons.writeFrame(operationsPackage, className, new SoapOperationTemplate().render(frame, Formatters.all));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(operation), javaFile(operationsPackage, className).getAbsolutePath()));
 		createCorrespondingAction(operation);

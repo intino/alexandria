@@ -42,19 +42,19 @@ public class SlackRenderer extends Renderer {
 		for (String level : collectLevels(service).keySet())
 			builder.add("level", new FrameBuilder("level").add("name", level).toFrame());
 		String className = snakeCaseToCamelCase(service.name$()) + "SlackBot";
-		writeFrame(gen(Target.Server), className, new SlackTemplate().render(builder, Formatters.all));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Server), className).getAbsolutePath()));
+		writeFrame(gen(Target.Service), className, new SlackTemplate().render(builder, Formatters.all));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Service), className).getAbsolutePath()));
 
-		if (alreadyRendered(new File(src(Target.Server), "slack"), srcName)) updateBot(service, srcName);
+		if (alreadyRendered(new File(src(Target.Service), "slack"), srcName)) updateBot(service, srcName);
 		else newBotActions(service);
 	}
 
 	private void updateBot(Service.SlackBot service, String name) {
-		new BotActionsUpdater(context, Commons.javaFile(new File(src(Target.Server), "slack"), name), service.requestList()).update();
+		new BotActionsUpdater(context, Commons.javaFile(new File(src(Target.Service), "slack"), name), service.requestList()).update();
 	}
 
 	private void newBotActions(Service.SlackBot service) {
-		final File directory = new File(src(Target.Server), "slack");
+		final File directory = new File(src(Target.Service), "slack");
 		if (!alreadyRendered(directory, snakeCaseToCamelCase(service.name$()) + "Slack"))
 			writeFrame(directory, snakeCaseToCamelCase(service.name$()) + "Slack", new SlackTemplate().render(createFrameBuilder(service.name$(), service.requestList(), false), Formatters.all));
 		Map<String, List<Request>> groups = collectLevels(service);

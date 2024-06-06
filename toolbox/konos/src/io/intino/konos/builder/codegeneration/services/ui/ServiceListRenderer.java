@@ -28,13 +28,13 @@ public class ServiceListRenderer extends UIRenderer {
 	public void render() throws KonosException {
 		List<Service.UI> uiServices = graph.serviceList(Service::isUI).map(Service::asUI).collect(toList());
 		for (Service.UI service : uiServices) processUIService(service);
-		new ResourceListRenderer(context, graph, Target.Server).execute();
-		if (!uiServices.isEmpty()) new RouteDispatcherRenderer(context, uiServices, Target.Server).execute();
+		new ResourceListRenderer(context, graph, Target.Service).execute();
+		if (!uiServices.isEmpty()) new RouteDispatcherRenderer(context, uiServices, Target.Service).execute();
 	}
 
 	private void processUIService(Service.UI service) throws KonosException {
 		context.serviceDirectory(new File(context.configuration().moduleDirectory().getParentFile(), Formatters.camelCaseToKebabCase().format(service.name$()).toString()));
-		new ServiceRenderer(context, service).execute();
+		new ServiceRenderer(context, service, Target.Service).execute();
 		new DisplayListRenderer(context, service, writer()).execute();
 	}
 

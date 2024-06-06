@@ -95,6 +95,6 @@ public class JMXOperationsServiceRenderer extends Renderer {
 	}
 
 	private File genPackage() {
-		return new File(gen(Target.Server), "jmx");
+		return new File(gen(Target.Service), "jmx");
 	}
 }

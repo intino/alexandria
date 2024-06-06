@@ -43,12 +43,12 @@ public class RESTServiceRenderer extends Renderer {
 	}
 
 	public void render() {
-		services.forEach((service) -> processService(service.a$(Service.REST.class), gen(Target.Server)));
+		services.forEach((service) -> processService(service.a$(Service.REST.class), gen(Target.Service)));
 		if (services.stream().anyMatch(Service.REST::generateDocs)) generateApiPortal();
 	}
 
 	private void generateApiPortal() {
-		final File api = new File(res(Target.Server), "www" + File.separator + "api");
+		final File api = new File(res(Target.Service), "www" + File.separator + "api");
 		copyAssets(api);
 		File data = new File(api, "data");
 		data.mkdirs();
@@ -133,14 +133,14 @@ public class RESTServiceRenderer extends Renderer {
 		}
 		classes().put(service.getClass().getSimpleName() + "#" + service.name$(), className);
 		Commons.writeFrame(gen, className, new RESTServiceTemplate().render(builder.toFrame(), Formatters.all));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Server), className).getAbsolutePath()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Service), className).getAbsolutePath()));
 	}
 
 	private void createAuthenticatorClass(Service.REST.Authentication authentication, String service) {
-		if (javaFile(src(Target.Server), service + "Authenticator").exists()) return;
+		if (javaFile(src(Target.Service), service + "Authenticator").exists()) return;
 		FrameBuilder builder = new FrameBuilder(typeOf(authentication)).add("box", boxName()).add("service", service).add("package", packageName());
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(authentication), javaFile(src(Target.Server), service + "Authenticator").getAbsolutePath()));
-		Commons.writeFrame(src(Target.Server), service + "Authenticator", new RestAuthenticatorTemplate().render(builder.toFrame(), Formatters.all));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(authentication), javaFile(src(Target.Service), service + "Authenticator").getAbsolutePath()));
+		Commons.writeFrame(src(Target.Service), service + "Authenticator", new RestAuthenticatorTemplate().render(builder.toFrame(), Formatters.all));
 	}
 
 	private String typeOf(Service.REST.Authentication authentication) {

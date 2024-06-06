@@ -24,9 +24,9 @@ public class AnalyticRenderer extends Renderer {
 
 	public AnalyticRenderer(CompilationContext context, KonosGraph graph) {
 		super(context);
-		this.src = new File(context.src(Target.Server), "analytic");
-		this.gen = new File(context.gen(Target.Server), "analytic");
-		final File res = context.res(Target.Server).getAbsoluteFile();
+		this.src = new File(context.src(Target.Service), "analytic");
+		this.gen = new File(context.gen(Target.Service), "analytic");
+		final File res = context.res(Target.Service).getAbsoluteFile();
 		this.graph = graph;
 		this.factRenderer = new FactRenderer();
 		this.categoricalAxisRenderer = new CategoricalAxisRenderer(context, gen, res);

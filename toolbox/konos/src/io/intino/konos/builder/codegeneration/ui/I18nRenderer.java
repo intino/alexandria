@@ -13,6 +13,7 @@ import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.dsl.Service;
 import io.intino.konos.dsl.Translator;
 
+import java.io.File;
 import java.util.List;
 
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.fileOf;
@@ -21,18 +22,24 @@ import static io.intino.konos.builder.helpers.CodeGenerationHelper.folder;
 public class I18nRenderer extends UIRenderer {
 	private final Service.UI service;
 	private final Target target;
+	private final File destination;
 
 	public I18nRenderer(CompilationContext compilationContext, Service.UI service, Target target) {
+		this(compilationContext, service, target, null);
+	}
+
+	public I18nRenderer(CompilationContext compilationContext, Service.UI service, Target target, File destination) {
 		super(compilationContext);
 		this.service = service;
 		this.target = target;
+		this.destination = destination;
 	}
 
 	@Override
 	public void render() {
 		FrameBuilder builder = buildFrame();
-		Commons.write(fileOf(folder(gen(target), "/", target), "I18n", target).toPath(), new Engine(template()).addAll(Formatters.all).render(builder.toFrame()));
-		if (target.equals(Target.Server))
+		Commons.write(fileOf(destinationFolder(), "I18n", target).toPath(), new Engine(template()).addAll(Formatters.all).render(builder.toFrame()));
+		if (target.equals(Target.Service))
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), fileOf(folder(gen(target), "/", target), "I18n", target).getAbsolutePath()));
 	}
 
@@ -81,9 +88,12 @@ public class I18nRenderer extends UIRenderer {
 	}
 
 	private Template template() {
-		return target == Target.Server ?
+		return target == Target.Service || target == Target.AccessibleAccessor ?
 				new io.intino.konos.builder.codegeneration.services.ui.templates.I18nTemplate() :
 				new I18nTemplate();
 	}
 
+	private File destinationFolder() {
+		return destination != null ? destination : folder(gen(target), "/", target);
+	}
 }

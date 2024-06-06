@@ -41,7 +41,7 @@ public class MessagingRequestRenderer extends Renderer {
 	}
 
 	private void processRequest(Request request) throws KonosException {
-		File packageFolder = new File(gen(Target.Server), REQUESTS);
+		File packageFolder = new File(gen(Target.Service), REQUESTS);
 		writeFrame(packageFolder, snakeCaseToCamelCase(request.name$()) + "Request", new MessagingRequestTemplate().render(fillRequestFrame(request)));
 		context.compiledFiles().add(new OutputItem(context.sourceFileOf(request), javaFile(packageFolder, snakeCaseToCamelCase(request.name$()) + "Request").getAbsolutePath()));
 		createCorrespondingAction(request);
