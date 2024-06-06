@@ -13,6 +13,7 @@ import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.dsl.Display;
 import io.intino.konos.dsl.Service;
 
+import java.io.File;
 import java.util.List;
 import java.util.Set;
 
@@ -24,30 +25,39 @@ import static io.intino.konos.dsl.PassiveView.Request.ResponseType.Asset;
 
 public class ServiceRenderer extends UIRenderer {
 	private final Service.UI service;
+	private final Target target;
+	private final File destination;
 
-	public ServiceRenderer(CompilationContext compilationContext, Service.UI service) {
+	public ServiceRenderer(CompilationContext compilationContext, Service.UI service, Target target) {
+		this(compilationContext, service, target, null);
+	}
+
+	public ServiceRenderer(CompilationContext compilationContext, Service.UI service, Target target, File destination) {
 		super(compilationContext);
 		this.service = service;
+		this.target = target;
+		this.destination = destination;
 	}
 
 	@Override
 	public void render() throws KonosException {
 		createUi();
-		new I18nRenderer(context, service, Target.Server).execute();
+		if (target == Target.Service) new I18nRenderer(context, service, target).execute();
 	}
 
 	private void createUi() {
 		final List<Display> displays = service.graph().rootDisplays(context.graphName());
 		FrameBuilder builder = buildFrame().add("ui").add("name", service.name$()).add("resource", resourcesFrame(service.resourceList()));
 		if (userHome(service) != null) builder.add("userHome", userHome(service).name$());
+		if (target == Target.AccessibleAccessor) builder.add("accessibleAccessor");
 		if (!displays.isEmpty()) {
 			builder.add("display", displaysFrame(displays)).add("displaysImport", packageName());
 			boolean hasNotifiers = displays.stream().anyMatch(this::hasConcreteNotifier);
 			if (hasNotifiers) builder.add("notifiersImport", packageName()).add("requestersImport", packageName());
 		}
 		if (service.authentication() != null) builder.add("auth", service.authentication().by());
-		writeFrame(serviceFolder(gen(Target.Server)), serviceFilename(service.name$()), new ServiceTemplate().render(builder.toFrame(), Formatters.all));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(serviceFolder(gen(Target.Server)), serviceFilename(service.name$())).getAbsolutePath()));
+		writeFrame(serviceFolder(destination()), serviceFilename(service.name$()), new ServiceTemplate().render(builder.toFrame(), Formatters.all));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(serviceFolder(gen(Target.Service)), serviceFilename(service.name$())).getAbsolutePath()));
 	}
 
 	private Frame[] resourcesFrame(List<Service.UI.Resource> resourceList) {
@@ -94,6 +104,10 @@ public class ServiceRenderer extends UIRenderer {
 		if (display.requestList().stream().anyMatch(r -> r.responseType().equals(Asset)))
 			builder.add("asset", display.name$());
 		return builder;
+	}
+
+	private File destination() {
+		return destination != null ? destination : gen(Target.Service);
 	}
 
 }

@@ -43,7 +43,7 @@ public class AnalyticBuilderRenderer extends Renderer {
 		this.srcDestination.mkdirs();
 		this.packageName = compilationContext.packageName();
 		this.factRenderer = new FactRenderer();
-		final File res = context.res(Target.Server).getAbsoluteFile();
+		final File res = context.res(Target.Service).getAbsoluteFile();
 		this.categoricalAxisRenderer = new CategoricalAxisRenderer(context, srcDestination, res);
 		this.continuousAxisRenderer = new ContinuousAxisRenderer(context, srcDestination);
 	}
@@ -57,7 +57,7 @@ public class AnalyticBuilderRenderer extends Renderer {
 	}
 
 	private void copyResourcesToDestination() {
-		final File resources = new File(context.res(Target.Server).getAbsoluteFile(), "analytic");
+		final File resources = new File(context.res(Target.Service).getAbsoluteFile(), "analytic");
 		try {
 			FileUtils.copyDirectory(resources, new File(resDestination, resources.getName()));
 		} catch (IOException e) {

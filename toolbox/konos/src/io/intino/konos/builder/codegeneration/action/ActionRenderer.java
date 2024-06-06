@@ -36,7 +36,7 @@ public abstract class ActionRenderer extends Renderer {
 	}
 
 	protected boolean alreadyRendered(File destiny, String action) {
-		return alreadyRendered(destiny, action, Target.Server);
+		return alreadyRendered(destiny, action, Target.Service);
 	}
 
 	protected boolean alreadyRendered(File destiny, String action, Target target) {
@@ -52,7 +52,7 @@ public abstract class ActionRenderer extends Renderer {
 		if (!alreadyRendered(destiny, name)) {
 			createNewClass(name, serviceName, response, parameters, exceptions, schemas);
 		} else {
-			File newDestination = javaFile(destinationPackage(destiny), firstUpperWithCamel(name) + suffix(Target.Server));
+			File newDestination = javaFile(destinationPackage(destiny), firstUpperWithCamel(name) + suffix(Target.Service));
 			new ActionUpdater(context, newDestination, packageName(), parameters, exceptions, response).update();
 		}
 	}
@@ -62,7 +62,7 @@ public abstract class ActionRenderer extends Renderer {
 		if (!alreadyRendered(destiny, name))
 			createNewClass(name, serviceName, response, toMap(parameters), exceptions, schemas);
 		else {
-			File newDestination = javaFile(destinationPackage(destiny), firstUpperWithCamel(name) + suffix(Target.Server));
+			File newDestination = javaFile(destinationPackage(destiny), firstUpperWithCamel(name) + suffix(Target.Service));
 			new ActionUpdater(context, newDestination, packageName(), toMap(parameters), exceptions, response).update();
 		}
 	}
@@ -93,8 +93,8 @@ public abstract class ActionRenderer extends Renderer {
 		if (!schemas.isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName).toFrame());
 		File packageFolder = destinationPackage(destination());
-		context.compiledFiles().add(new OutputItem(packageFolder.getAbsolutePath(), javaFile(packageFolder, firstUpperWithCamel(name) + suffix(Target.Server)).getAbsolutePath()));
-		Commons.writeFrame(packageFolder, firstUpperWithCamel(name) + suffix(Target.Server), new ActionTemplate().render(builder.toFrame(), Formatters.all));
+		context.compiledFiles().add(new OutputItem(packageFolder.getAbsolutePath(), javaFile(packageFolder, firstUpperWithCamel(name) + suffix(Target.Service)).getAbsolutePath()));
+		Commons.writeFrame(packageFolder, firstUpperWithCamel(name) + suffix(Target.Service), new ActionTemplate().render(builder.toFrame(), Formatters.all));
 	}
 
 	private static String firstUpperWithCamel(String name) {
@@ -120,6 +120,6 @@ public abstract class ActionRenderer extends Renderer {
 	}
 
 	private File destination() {
-		return src(Target.Server);
+		return src(Target.Service);
 	}
 }

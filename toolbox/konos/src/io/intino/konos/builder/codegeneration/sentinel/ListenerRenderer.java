@@ -54,8 +54,8 @@ public class ListenerRenderer extends Renderer {
 				.add("box", boxName())
 				.add("package", packageName())
 				.add("parameter", parameters());
-		if (!alreadyRendered(src(Target.Server), sentinel.a$(Sentinel.class)))
-			writeFrame(actionsPackage(src(Target.Server)), sentinel.name$() + "Action", new ActionTemplate().render(frame, all));
+		if (!alreadyRendered(src(Target.Service), sentinel.a$(Sentinel.class)))
+			writeFrame(actionsPackage(src(Target.Service)), sentinel.name$() + "Action", new ActionTemplate().render(frame, all));
 	}
 
 	private Frame[] parameters() {
@@ -66,11 +66,11 @@ public class ListenerRenderer extends Renderer {
 	}
 
 	private void createCorrespondingAction(Sentinel sentinel) {
-		if (!alreadyRendered(src(Target.Server), sentinel)) {
-			context.compiledFiles().add(new OutputItem(context.sourceFileOf(sentinel), javaFile(actionsPackage(src(Target.Server)), sentinel.name$() + "Action").getAbsolutePath()));
-			writeFrame(actionsPackage(src(Target.Server)), sentinel.name$() + "Action", new ActionTemplate().render(actionFrame(sentinel), all));
+		if (!alreadyRendered(src(Target.Service), sentinel)) {
+			context.compiledFiles().add(new OutputItem(context.sourceFileOf(sentinel), javaFile(actionsPackage(src(Target.Service)), sentinel.name$() + "Action").getAbsolutePath()));
+			writeFrame(actionsPackage(src(Target.Service)), sentinel.name$() + "Action", new ActionTemplate().render(actionFrame(sentinel), all));
 		} else
-			new ActionUpdater(context, javaFile(actionsPackage(src(Target.Server)), sentinel.name$() + "Action"), "actions", Collections.emptyMap(), Collections.emptyList(), null).update();
+			new ActionUpdater(context, javaFile(actionsPackage(src(Target.Service)), sentinel.name$() + "Action"), "actions", Collections.emptyMap(), Collections.emptyList(), null).update();
 	}
 
 	private Frame actionFrame(Sentinel sentinel) {
@@ -89,7 +89,7 @@ public class ListenerRenderer extends Renderer {
 	}
 
 	private File destinyPackage() {
-		return new File(gen(Target.Server), "scheduling");
+		return new File(gen(Target.Service), "scheduling");
 	}
 
 

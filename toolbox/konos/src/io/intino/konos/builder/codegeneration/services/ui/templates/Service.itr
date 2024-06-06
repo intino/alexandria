@@ -1,3 +1,17 @@
+def type(ui, accessibleAccessor)
+	package $package+validPackage.ui;
+
+	import io.intino.alexandria.ui.UISpark;
+	import io.intino.alexandria.ui.services.push.PushService;
+
+	public class $name+PascalCase~Service extends io.intino.alexandria.ui.UI {
+
+		public static void initDisplays(UISpark spark, PushService pushService) {
+		}
+
+	}
+end
+
 def type(ui)
 	package $package+validPackage.ui;
 	<<import $displaysImport+validPackage.ui.displays.*;>>

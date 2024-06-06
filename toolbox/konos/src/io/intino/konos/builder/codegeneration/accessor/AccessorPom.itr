@@ -96,6 +96,14 @@ def type(rest) and trigger(dependency)
 	</dependency>
 end
 
+def type(ui) and trigger(dependency)
+	<dependency>
+		<groupId>io.intino.alexandria</groupId>
+		<artifactId>ui-framework</artifactId>
+		<version>$version</version>
+	</dependency>
+end
+
 def type(jmx) and trigger(dependency)
 	<dependency>
 		<groupId>io.intino.alexandria</groupId>

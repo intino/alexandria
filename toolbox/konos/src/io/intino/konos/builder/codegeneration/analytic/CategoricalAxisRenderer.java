@@ -182,7 +182,7 @@ public class CategoricalAxisRenderer {
 	}
 
 	private String axisResource(String resource) {
-		Path res = context.res(Target.Server).toPath();
+		Path res = context.res(Target.Service).toPath();
 		return res.relativize(new File(resource).toPath().toAbsolutePath()).toFile().getPath().replace("\\", "/");
 	}
 

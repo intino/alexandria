@@ -30,7 +30,7 @@ public class SchemaListRenderer extends Renderer {
 	public SchemaListRenderer(CompilationContext context, KonosGraph graph, File destination, String packageName) {
 		super(context);
 		this.schemas = graph.core$().find(Schema.class).stream().filter(s -> !s.core$().owner().is(Schema.class)).collect(toList());
-		this.destination = destination != null ? destination : gen(Target.Server);
+		this.destination = destination != null ? destination : gen(Target.Service);
 		this.packageName = packageName != null ? packageName : context.packageName();
 		this.serializationAnnotations = false;
 		this.writer = new DefaultSchemaWriter(context, this.destination, this.packageName, false);
@@ -39,7 +39,7 @@ public class SchemaListRenderer extends Renderer {
 	public SchemaListRenderer(CompilationContext context, KonosGraph graph, File destination, String packageName, boolean serializationAnnotations) {
 		super(context);
 		this.schemas = graph.core$().find(Schema.class).stream().filter(s -> !s.core$().owner().is(Schema.class)).collect(toList());
-		this.destination = destination != null ? destination : gen(Target.Server);
+		this.destination = destination != null ? destination : gen(Target.Service);
 		this.packageName = packageName;
 		this.serializationAnnotations = serializationAnnotations;
 		this.writer = new DefaultSchemaWriter(context, this.destination, this.packageName, this.serializationAnnotations);
@@ -48,7 +48,7 @@ public class SchemaListRenderer extends Renderer {
 	public SchemaListRenderer(CompilationContext context, KonosGraph graph, File destination, String packageName, SchemaWriter writer) {
 		super(context);
 		this.schemas = graph.core$().find(Schema.class).stream().filter(s -> !s.core$().owner().is(Schema.class)).collect(toList());
-		this.destination = destination != null ? destination : gen(Target.Server);
+		this.destination = destination != null ? destination : gen(Target.Service);
 		this.packageName = packageName;
 		this.serializationAnnotations = false;
 		this.writer = writer;

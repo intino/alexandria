@@ -34,8 +34,8 @@ public class MessagingServiceRenderer extends Renderer {
 
 	private void processService(Service.Messaging service) {
 		FrameBuilder builder = frameBuilder(service);
-		writeFrame(gen(Target.Server), nameOf(service), new MessagingServiceTemplate().render(builder.toFrame(), all));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Server), nameOf(service)).getAbsolutePath()));
+		writeFrame(gen(Target.Service), nameOf(service), new MessagingServiceTemplate().render(builder.toFrame(), all));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Service), nameOf(service)).getAbsolutePath()));
 	}
 
 	private FrameBuilder frameBuilder(Service.Messaging service) {

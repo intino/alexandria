@@ -28,7 +28,7 @@ public class ExceptionRenderer extends Renderer {
 	}
 
 	public void clean() {
-		File folder = destinyPackage(gen(Target.Server));
+		File folder = destinyPackage(gen(Target.Service));
 		if (!folder.exists()) return;
 		List<String> filenames = exceptions.stream().map(e -> javaFile(folder, e.name$()).getAbsolutePath()).collect(toList());
 		Arrays.stream(Objects.requireNonNull(folder.listFiles((file, name) -> !filenames.contains(name)))).forEach(File::delete);
@@ -39,9 +39,9 @@ public class ExceptionRenderer extends Renderer {
 	}
 
 	private void processException(io.intino.konos.dsl.Exception exception) {
-		writeFrame(destinyPackage(gen(Target.Server)), exception.name$(), new ExceptionTemplate().render(
+		writeFrame(destinyPackage(gen(Target.Service)), exception.name$(), new ExceptionTemplate().render(
 				frame(exception), Formatters.all));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(exception), javaFile(destinyPackage(gen(Target.Server)), exception.name$()).getAbsolutePath()));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(exception), javaFile(destinyPackage(gen(Target.Service)), exception.name$()).getAbsolutePath()));
 	}
 
 	private Frame frame(io.intino.konos.dsl.Exception exception) {

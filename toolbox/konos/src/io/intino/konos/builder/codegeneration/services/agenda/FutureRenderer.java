@@ -15,7 +15,7 @@ import java.util.stream.IntStream;
 
 import static io.intino.konos.builder.codegeneration.Formatters.all;
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
-import static io.intino.konos.builder.codegeneration.services.ui.Target.Server;
+import static io.intino.konos.builder.codegeneration.services.ui.Target.Service;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 import static io.intino.konos.dsl.Service.Agenda.Future;
@@ -43,7 +43,7 @@ public class FutureRenderer extends Renderer {
 	}
 
 	private void renderSrc(Frame frame) {
-		File agendaPackage = new File(src(Server), "agenda");
+		File agendaPackage = new File(src(Service), "agenda");
 		File file = javaFile(agendaPackage, firstUpperCase(future.name$()));
 		if (file.exists()) return;
 		writeFrame(agendaPackage, firstUpperCase(future.name$()), new FutureTemplate().render(frame, all));
@@ -51,13 +51,13 @@ public class FutureRenderer extends Renderer {
 	}
 
 	private void renderAbstract(Frame frame) {
-		writeFrame(new File(gen(Server), "agenda"), "Abstract" + firstUpperCase(future.name$()), new AbstractFutureTemplate().render(frame, all));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(future), javaFile(new File(gen(Server), "agenda"), "Abstract" + firstUpperCase(future.name$())).getAbsolutePath()));
+		writeFrame(new File(gen(Service), "agenda"), "Abstract" + firstUpperCase(future.name$()), new AbstractFutureTemplate().render(frame, all));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(future), javaFile(new File(gen(Service), "agenda"), "Abstract" + firstUpperCase(future.name$())).getAbsolutePath()));
 	}
 
 	private void renderSchema(Frame frame) {
-		writeFrame(new File(gen(Server), "agenda"), firstUpperCase(future.name$()) + "Schema", new FutureSchemaTemplate().render(frame, all));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(future), javaFile(new File(gen(Server), "agenda"), firstUpperCase(future.name$()) + "Schema").getAbsolutePath()));
+		writeFrame(new File(gen(Service), "agenda"), firstUpperCase(future.name$()) + "Schema", new FutureSchemaTemplate().render(frame, all));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(future), javaFile(new File(gen(Service), "agenda"), firstUpperCase(future.name$()) + "Schema").getAbsolutePath()));
 	}
 
 	private FrameBuilder futureFrame() {

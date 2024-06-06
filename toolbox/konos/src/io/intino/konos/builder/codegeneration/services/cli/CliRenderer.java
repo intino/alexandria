@@ -45,24 +45,24 @@ public class CliRenderer extends Renderer {
 	private void writeService(Service.CLI service) {
 		final FrameBuilder builder = buildFrame(service).add("service");
 		String className = pascalCase().format(service.name$()) + "Service";
-		writeFrame(gen(Target.Server), className, new CliTemplate().render(builder, Formatters.all));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Server), className).getAbsolutePath()));
+		writeFrame(gen(Target.Service), className, new CliTemplate().render(builder, Formatters.all));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Service), className).getAbsolutePath()));
 	}
 
 	private void writeAuthenticator(Service.CLI service) {
 		final FrameBuilder builder = buildFrame(service).add("authenticator");
 		String className = pascalCase().format(service.name$()) + "ServiceAuthenticator";
-		File srcFile = javaFile(src(Target.Server), className);
+		File srcFile = javaFile(src(Target.Service), className);
 		if (srcFile.exists()) return;
-		writeFrame(src(Target.Server), className, new CliTemplate().render(builder, Formatters.all));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(src(Target.Server), className).getAbsolutePath()));
+		writeFrame(src(Target.Service), className, new CliTemplate().render(builder, Formatters.all));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(src(Target.Service), className).getAbsolutePath()));
 	}
 
 	private void writeCli(Service.CLI service) {
 		final FrameBuilder builder = buildFrame(service);
 		String className = pascalCase().format(service.name$()).toString();
-		writeFrame(gen(Target.Server), className, new CliTemplate().render(builder, Formatters.all));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Server), className).getAbsolutePath()));
+		writeFrame(gen(Target.Service), className, new CliTemplate().render(builder, Formatters.all));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Service), className).getAbsolutePath()));
 	}
 
 	private void writeCommands(Service.CLI service) {
@@ -86,17 +86,17 @@ public class CliRenderer extends Renderer {
 	private void processCommand(Service.CLI.Command command) {
 		FrameBuilder builder = buildFrame(command);
 		String className = pascalCase().format(command.name$()) + "Command";
-		writeFrame(new File(gen(Target.Server) + File.separator + "cli" + File.separator + "commands"), className, new CliCommandTemplate().render(builder, Formatters.all));
+		writeFrame(new File(gen(Target.Service) + File.separator + "cli" + File.separator + "commands"), className, new CliCommandTemplate().render(builder, Formatters.all));
 		className = pascalCase().format(command.name$()) + "Action";
-		File srcFile = javaFile(new File(src(Target.Server) + File.separator + "actions"), className);
+		File srcFile = javaFile(new File(src(Target.Service) + File.separator + "actions"), className);
 		if (!srcFile.exists())
-			writeFrame(new File(src(Target.Server) + File.separator + "actions"), className, new CliActionTemplate().render(builder, Formatters.all));
+			writeFrame(new File(src(Target.Service) + File.separator + "actions"), className, new CliActionTemplate().render(builder, Formatters.all));
 	}
 
 	private void processConfirmationCommand(String option, List<Service.CLI.Command> commandList) {
 		FrameBuilder builder = buildConfirmationCommand(option, commandList);
 		String className = pascalCase().format(option) + "Command";
-		writeFrame(new File(gen(Target.Server) + File.separator + "cli" + File.separator + "commands"), className, new CliCommandTemplate().render(builder, Formatters.all));
+		writeFrame(new File(gen(Target.Service) + File.separator + "cli" + File.separator + "commands"), className, new CliCommandTemplate().render(builder, Formatters.all));
 	}
 
 	private FrameBuilder buildConfirmationCommand(String option, List<Service.CLI.Command> commandList) {

@@ -30,8 +30,8 @@ public class BoxConfigurationRenderer extends Renderer {
 	public void render() {
 		FrameBuilder builder = new FrameBuilder("boxconfiguration");
 		final String boxName = fillFrame(builder);
-		Commons.writeFrame(gen(Target.Server), snakeCaseToCamelCase(boxName) + "Configuration", new BoxConfigurationTemplate().render(builder.toFrame(), Formatters.all));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf((Layer) null), javaFile(gen(Target.Server), snakeCaseToCamelCase(boxName) + "Configuration").getAbsolutePath()));
+		Commons.writeFrame(gen(Target.Service), snakeCaseToCamelCase(boxName) + "Configuration", new BoxConfigurationTemplate().render(builder.toFrame(), Formatters.all));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf((Layer) null), javaFile(gen(Target.Service), snakeCaseToCamelCase(boxName) + "Configuration").getAbsolutePath()));
 	}
 
 	private String fillFrame(FrameBuilder builder) {

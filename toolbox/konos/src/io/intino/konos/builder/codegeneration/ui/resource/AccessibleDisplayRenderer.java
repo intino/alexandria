@@ -37,7 +37,7 @@ public class AccessibleDisplayRenderer extends UIRenderer {
 		builder.add("render", renderFrame());
 
 		builder.add("parameter", parameters(display));
-		if (target == Target.Server) {
+		if (target == Target.Service) {
 			Commons.writeFrame(resourceFolder(gen(target), target), resourceFilename(display.name$(), "ProxyResource"), new ResourceTemplate().render(builder.toFrame(), Formatters.all));
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(display), javaFile(resourceFolder(gen(target), target), resourceFilename(display.name$(), "ProxyResource")).getAbsolutePath()));
 		}

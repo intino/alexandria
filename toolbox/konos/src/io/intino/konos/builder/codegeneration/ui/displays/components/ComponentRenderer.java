@@ -113,7 +113,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	private void addReferences(Component component, FrameBuilder builder) {
 		Set<Component> components = new LinkedHashSet<>(references(component));
-		if (writer.target() == Target.Server) builder.add("componentReferences", componentReferencesFrame());
+		if (writer.target() == Target.Service) builder.add("componentReferences", componentReferencesFrame());
 		components.forEach(c -> builder.add("reference", referenceFrame(c)));
 	}
 

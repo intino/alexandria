@@ -27,7 +27,7 @@ public class MounterFactoryRenderer {
 	public MounterFactoryRenderer(CompilationContext context, KonosGraph graph) {
 		this.context = context;
 		this.mounters = graph.datamartList().stream().map(Datamart::mounterList).flatMap(Collection::stream).collect(Collectors.toList());
-		this.genMounters = new File(context.gen(Target.Server), "mounters");
+		this.genMounters = new File(context.gen(Target.Service), "mounters");
 	}
 
 	public void execute() throws KonosException {

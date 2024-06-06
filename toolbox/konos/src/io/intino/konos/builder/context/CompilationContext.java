@@ -93,7 +93,7 @@ public class CompilationContext {
 
 	public File root(Target target) {
 		String rootDir;
-		if (target == Target.Server) rootDir = configuration.moduleDirectory().getAbsolutePath();
+		if (target == Target.Service) rootDir = configuration.moduleDirectory().getAbsolutePath();
 		else if (target == Target.Accessor) rootDir = configuration.serviceDirectory().getAbsolutePath();
 		else if (target == Target.Android || target == Target.AndroidResource || target == Target.MobileShared)
 			rootDir = configuration.serviceDirectory().getAbsolutePath();
@@ -103,7 +103,7 @@ public class CompilationContext {
 
 	public File res(Target target) {
 		File resDir;
-		if (target == Target.Server) resDir = configuration.resDirectory();
+		if (target == Target.Service) resDir = configuration.resDirectory();
 		else if (target == Target.Android || target == Target.AndroidResource)
 			resDir = new File(root(target) + androidRelativePath() + File.separator + "res");
 		else resDir = accessorRes();
@@ -112,7 +112,7 @@ public class CompilationContext {
 
 	public File src(Target target) {
 		File srcDir;
-		if (target == Target.Server)
+		if (target == Target.Service)
 			srcDir = new File(configuration.srcDirectory(), packageName().replace(".", File.separator));
 		else if (target == Target.Android)
 			srcDir = new File(root(target) + androidRelativePath() + File.separator + "java", packageName().replace(".", File.separator) + File.separator + "mobile" + File.separator + "android");
@@ -124,7 +124,7 @@ public class CompilationContext {
 
 	public File gen(Target target) {
 		File genDir;
-		if (target == Target.Server)
+		if (target == Target.Service)
 			genDir = new File(configuration.genDirectory(), packageName().replace(".", File.separator));
 		else if (target == Target.Android)
 			genDir = new File(root(target) + androidRelativePath() + File.separator + "java", packageName().replace(".", File.separator) + File.separator + "mobile" + File.separator + "android");

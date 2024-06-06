@@ -31,6 +31,11 @@ public class AcceptedKonosRunner {
 	}
 
 	@Test
+	public void ui_proxies() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/konos/ui-proxies.txt")});
+	}
+
+	@Test
 	public void ui() {
 		KonoscRunner.main(new String[]{temp(home + "confFiles/konos/ui.txt")});
 	}

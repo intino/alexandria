@@ -30,12 +30,12 @@ public class BoxRenderer extends Renderer {
 	public void render() {
 		if (configuration() == null) return;
 		final String name = context.boxName();
-		if (Commons.javaFile(src(Target.Server), snakeCaseToCamelCase(name) + "Box").exists()) return;
+		if (Commons.javaFile(src(Target.Service), snakeCaseToCamelCase(name) + "Box").exists()) return;
 		FrameBuilder builder = new FrameBuilder("Box").add("package", packageName()).add("name", name);
 		if (hasModel) builder.add("tara", fillTara());
 		if (!graph.uiServiceList().isEmpty()) builder.add("hasUi", new FrameBuilder().add("package", packageName()));
-		context.compiledFiles().add(new OutputItem(src(Target.Server).getAbsolutePath(), javaFile(src(Target.Server), snakeCaseToCamelCase(name) + "Box").getAbsolutePath()));
-		Commons.writeFrame(src(Target.Server), snakeCaseToCamelCase(name) + "Box", new BoxTemplate().render(builder.toFrame(), Formatters.all));
+		context.compiledFiles().add(new OutputItem(src(Target.Service).getAbsolutePath(), javaFile(src(Target.Service), snakeCaseToCamelCase(name) + "Box").getAbsolutePath()));
+		Commons.writeFrame(src(Target.Service), snakeCaseToCamelCase(name) + "Box", new BoxTemplate().render(builder.toFrame(), Formatters.all));
 	}
 
 	private Frame fillTara() {

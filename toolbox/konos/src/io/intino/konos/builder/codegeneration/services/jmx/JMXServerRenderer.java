@@ -38,7 +38,7 @@ public class JMXServerRenderer extends Renderer {
 				.add("box", boxName())
 				.add("package", packageName());
 		if (!service.path().isEmpty()) frame.add("path", service.path());
-		writeFrame(gen(Target.Server), "JMX" + snakeCaseToCamelCase(service.name$()), new JMXServerTemplate().render(frame.toFrame(), Formatters.all));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Server), "JMX" + snakeCaseToCamelCase(service.name$())).getAbsolutePath()));
+		writeFrame(gen(Target.Service), "JMX" + snakeCaseToCamelCase(service.name$()), new JMXServerTemplate().render(frame.toFrame(), Formatters.all));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(service), javaFile(gen(Target.Service), "JMX" + snakeCaseToCamelCase(service.name$())).getAbsolutePath()));
 	}
 }

@@ -43,8 +43,8 @@ public class AbstractBoxRenderer extends Renderer {
 		sentinels(root);
 		terminal(root);
 		workflow(root);
-		Commons.writeFrame(context.gen(Target.Server), "AbstractBox", new AbstractBoxTemplate().render(root.toFrame(), Formatters.all));
-		context.compiledFiles().add(new OutputItem(sourceFileOf(graph), javaFile(gen(Target.Server), "AbstractBox").getAbsolutePath()));
+		Commons.writeFrame(context.gen(Target.Service), "AbstractBox", new AbstractBoxTemplate().render(root.toFrame(), Formatters.all));
+		context.compiledFiles().add(new OutputItem(sourceFileOf(graph), javaFile(gen(Target.Service), "AbstractBox").getAbsolutePath()));
 		notifyNewParameters();
 	}
 
