@@ -4,10 +4,12 @@ import io.intino.alexandria.Resource;
 import io.intino.alexandria.exceptions.AlexandriaError;
 import io.intino.alexandria.logger.Logger;
 import spark.Response;
-import spark.utils.IOUtils;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 
 class SparkWriter {
@@ -61,7 +63,7 @@ class SparkWriter {
 
 	private void writeResource(Resource resource, boolean embedded) {
 		try {
-			writeResponse(resource.name(), resource.stream(), embedded, response.raw());
+			writeResponse(resource, embedded, response.raw());
 		} catch (IOException e) {
 			Logger.error(e);
 		}
@@ -94,14 +96,33 @@ class SparkWriter {
 		}
 	}
 
+	private void writeResponse(Resource resource, boolean embedded, HttpServletResponse response) {
+		try {
+			String filename = resource.name();
+			String contentType = resource.metadata().contentType();
+			response.setContentType(contentType);
+			resource.metadata().properties().forEach(response::setHeader);
+			response.setHeader("Content-Disposition", (embedded ? "inline" : "attachment") + ";filename=\"" + (filename != null ? filename : ("resource." + MimeTypes.getExtension(contentType))) + "\"");
+			writeResponseStream(resource.stream(), response);
+		} catch (IOException ignored) {
+		}
+	}
+
 	private void writeResponse(String filename, InputStream stream, boolean embedded, HttpServletResponse response) {
 		try {
-			byte[] content = IOUtils.toByteArray(stream);
-			String contentType = filename != null ? MimeTypes.getFromFilename(filename) : MimeTypes.getFromStream(new ByteArrayInputStream(content));
+			String contentType = filename != null ? MimeTypes.getFromFilename(filename) : "application/octet-stream";
 			response.setContentType(contentType);
 			response.setHeader("Content-Disposition", (embedded ? "inline" : "attachment") + ";filename=\"" + (filename != null ? filename : ("resource." + MimeTypes.getExtension(contentType))) + "\"");
-			writeResponse(content, response);
+			writeResponseStream(stream, response);
 		} catch (IOException ignored) {
+		}
+	}
+
+	private void writeResponseStream(InputStream stream, HttpServletResponse response) throws IOException {
+		try (stream) {
+			long size = stream.transferTo(response.getOutputStream());
+			response.setContentLengthLong(size);
+			response.getOutputStream().flush();
 		}
 	}
 
