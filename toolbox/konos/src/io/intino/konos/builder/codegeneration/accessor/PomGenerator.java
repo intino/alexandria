@@ -7,6 +7,7 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
+import io.intino.konos.builder.utils.Version;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,11 +56,12 @@ public class PomGenerator {
 	private String versionOf(String serviceType) {
 		String artifact = "";
 		if ("rest".equals(serviceType)) artifact = "io.intino.alexandria:rest-accessor";
+		else if ("ui".equals(serviceType)) artifact = "io.intino.alexandria:ui-framework";
 		else if ("messaging".equals(serviceType)) artifact = "io.intino.alexandria:terminal-jms";
 		else if ("analytic".equals(serviceType)) artifact = "io.intino.alexandria:led";
 		List<String> versions = new ArrayList<>(new ArtifactoryConnector(conf.releaseDistributionRepository()).versions(artifact));
 		if (versions.isEmpty()) return "";
-		Collections.sort(versions);
+		Collections.sort(versions, Version.comparator());
 		return versions.get(versions.size() - 1);
 	}
 

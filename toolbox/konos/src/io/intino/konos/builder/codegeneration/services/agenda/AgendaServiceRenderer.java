@@ -41,8 +41,8 @@ public class AgendaServiceRenderer extends Renderer {
 				.add("future", processFutures(agenda.futureList()));
 		if (!agenda.graph().schemaList().isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()).toFrame());
-		Commons.writeFrame(gen(Target.Server), "AgendaService", new AgendaServiceTemplate().render(builder.toFrame(), Formatters.all));
-		context.compiledFiles().add(new OutputItem(context.sourceFileOf(agenda), javaFile(gen(Target.Server), "AgendaService").getAbsolutePath()));
+		Commons.writeFrame(gen(Target.Service), "AgendaService", new AgendaServiceTemplate().render(builder.toFrame(), Formatters.all));
+		context.compiledFiles().add(new OutputItem(context.sourceFileOf(agenda), javaFile(gen(Target.Service), "AgendaService").getAbsolutePath()));
 		for (Agenda.Future future : agenda.futureList()) new FutureRenderer(context, future).render();
 	}
 
