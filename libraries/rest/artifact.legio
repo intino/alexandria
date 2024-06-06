@@ -8,5 +8,3 @@ Artifact("io.intino.alexandria", "3.9.7") rest
 
 	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
-
-Repository("intino-maven") > Release("https://artifactory.intino.io/artifactory/releases")
