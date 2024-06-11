@@ -33,6 +33,7 @@ class KonosCompilerRunner {
 		final CompilerConfiguration config = new CompilerConfiguration();
 		final Map<File, Boolean> sources = new LinkedHashMap<>();
 		CompilationInfoExtractor.getInfoFromArgsFile(argsFile, config, sources);
+		config.configurationDirectory(new File(config.intinoProjectDirectory(), "konos" + File.separator + config.module()));
 		config.setVerbose(verbose);
 		config.out(System.out);
 		this.out = config.out();
