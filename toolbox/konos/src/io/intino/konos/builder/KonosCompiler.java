@@ -1,5 +1,6 @@
 package io.intino.konos.builder;
 
+import io.intino.builder.CompilerConfiguration;
 import io.intino.builder.PostCompileActionMessage;
 import io.intino.builder.PostCompileConfigurationDependencyActionMessage;
 import io.intino.konos.CompilerMessage;

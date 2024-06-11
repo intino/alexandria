@@ -1,6 +1,6 @@
 package io.intino.konos.builder.utils;
 
-import io.intino.konos.builder.CompilerConfiguration;
+import io.intino.builder.CompilerConfiguration;
 import io.intino.konos.dsl.KonosGraph;
 import io.intino.magritte.builder.StashBuilder;
 import io.intino.magritte.framework.loaders.ClassFinder;
