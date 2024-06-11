@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino", "12.2.0") konos
+Artifact("io.intino", "12.2.1") konos
 	Dsl("Proteo", "1.0.2")
 		Builder("io.intino.magritte", "builder", "7.0.3", "dsl")
 		OutputDsl > Builder("io.intino", "konos") as ArtifactVersionFollower

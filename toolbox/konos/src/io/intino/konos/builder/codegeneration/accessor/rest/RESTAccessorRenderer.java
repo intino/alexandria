@@ -51,7 +51,8 @@ public class RESTAccessorRenderer extends Renderer {
 
 	private void processService(Service.REST service) {
 		FrameBuilder builder = new FrameBuilder("accessor");
-		builder.add("name", service.name$());
+		String name = configuration().project() + "-" + service.name$();
+		builder.add("name", name);
 		builder.add("package", packageName);
 		setupAuthentication(service, builder);
 		if (!service.graph().schemaList().isEmpty())
@@ -63,7 +64,7 @@ public class RESTAccessorRenderer extends Renderer {
 					.add("name", enumParameter.name$())
 					.add("class", enumParameter.core$().ownerAs(Resource.class).name$() + firstUpperCase(enumParameter.name$()))
 					.add("value", enumParameter.asWord().values().toArray(String[]::new)));
-		writeFrame(new File(destination, packageName.replace(".", File.separator)), snakeCaseToCamelCase(service.name$()) + "Accessor", new RESTAccessorTemplate().render(builder, Formatters.all));
+		writeFrame(new File(destination, packageName.replace(".", File.separator)), snakeCaseToCamelCase(name) + "Accessor", new RESTAccessorTemplate().render(builder, Formatters.all));
 	}
 
 	private void setupAuthentication(Service.REST restService, FrameBuilder builder) {
