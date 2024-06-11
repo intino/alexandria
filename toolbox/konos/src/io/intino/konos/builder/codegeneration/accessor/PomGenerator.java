@@ -2,9 +2,9 @@ package io.intino.konos.builder.codegeneration.accessor;
 
 import io.intino.Configuration;
 import io.intino.alexandria.logger.Logger;
+import io.intino.builder.CompilerConfiguration;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.utils.Version;

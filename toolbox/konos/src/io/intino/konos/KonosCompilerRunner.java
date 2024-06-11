@@ -1,7 +1,8 @@
 package io.intino.konos;
 
+import io.intino.builder.CompilationInfoExtractor;
+import io.intino.builder.CompilerConfiguration;
 import io.intino.builder.PostCompileActionMessage;
-import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.KonosCompiler;
 import io.intino.konos.builder.OutputItem;
 import org.apache.commons.io.FileUtils;
