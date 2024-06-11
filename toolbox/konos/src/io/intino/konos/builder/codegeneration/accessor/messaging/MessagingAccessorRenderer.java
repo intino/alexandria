@@ -32,20 +32,21 @@ public class MessagingAccessorRenderer extends Renderer {
 	@Override
 	public void render() throws KonosException {
 		new SchemaListRenderer(context, service.graph(), destination).execute();
-		processService(service);
+		processService();
 	}
 
-	private void processService(Service.Messaging jmsService) {
+	private void processService() {
 		FrameBuilder builder = new FrameBuilder("accessor");
-		builder.add("name", jmsService.name$());
+		String name = configuration().project() + "-" + service.name$();
+		builder.add("name", name);
 		builder.add("package", packageName());
-		if (!jmsService.graph().schemaList().isEmpty())
+		if (!service.graph().schemaList().isEmpty())
 			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()).toFrame());
-		final List<Service.Messaging.Request> requests = jmsService.core$().findNode(Service.Messaging.Request.class);
+		final List<Service.Messaging.Request> requests = service.core$().findNode(Service.Messaging.Request.class);
 		final Set<String> customParameters = extractCustomParameters(requests);
-		builder.add("request", requests.stream().map(request -> processRequest(request, jmsService).toFrame()).toArray(Frame[]::new));
+		builder.add("request", requests.stream().map(request -> processRequest(request, service).toFrame()).toArray(Frame[]::new));
 		for (String parameter : customParameters) builder.add("custom", parameter);
-		Commons.writeFrame(new File(destination, packageName().replace(".", File.separator)), snakeCaseToCamelCase(jmsService.name$()) + "Accessor", new MessagingAccessorTemplate().render(builder.toFrame(), Formatters.all));
+		Commons.writeFrame(new File(destination, packageName().replace(".", File.separator)), snakeCaseToCamelCase(name) + "Accessor", new MessagingAccessorTemplate().render(builder.toFrame(), Formatters.all));
 	}
 
 	private Set<String> extractCustomParameters(List<Service.Messaging.Request> requests) {
