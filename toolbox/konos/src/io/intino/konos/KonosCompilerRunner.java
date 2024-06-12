@@ -1,7 +1,8 @@
 package io.intino.konos;
 
+import io.intino.builder.CompilationInfoExtractor;
+import io.intino.builder.CompilerConfiguration;
 import io.intino.builder.PostCompileActionMessage;
-import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.KonosCompiler;
 import io.intino.konos.builder.OutputItem;
 import org.apache.commons.io.FileUtils;
@@ -32,6 +33,7 @@ class KonosCompilerRunner {
 		final CompilerConfiguration config = new CompilerConfiguration();
 		final Map<File, Boolean> sources = new LinkedHashMap<>();
 		CompilationInfoExtractor.getInfoFromArgsFile(argsFile, config, sources);
+		config.configurationDirectory(new File(config.intinoProjectDirectory(), "konos" + File.separator + config.module()));
 		config.setVerbose(verbose);
 		config.out(System.out);
 		this.out = config.out();

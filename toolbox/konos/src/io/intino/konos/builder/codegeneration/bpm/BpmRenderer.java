@@ -60,7 +60,7 @@ public class BpmRenderer extends Renderer {
 	private void renderWorkflow() throws KonosException {
 		if (processes.isEmpty()) return;
 		if (compilationContext.dataHubManifest() == null)
-			throw new KonosException("Is required the Data hub declaration in artifact to instance subscribers");
+			throw new KonosException("Data hub declaration is required in artifact in order to declare a workflow");
 		FrameBuilder builder = new FrameBuilder("workflow").
 				add("box", compilationContext.boxName()).
 				add("package", compilationContext.packageName()).

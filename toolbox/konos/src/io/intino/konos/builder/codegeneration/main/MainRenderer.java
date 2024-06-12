@@ -1,8 +1,8 @@
 package io.intino.konos.builder.codegeneration.main;
 
+import io.intino.builder.CompilerConfiguration;
 import io.intino.builder.PostCompileConfigurationMainActionMessage;
 import io.intino.itrules.FrameBuilder;
-import io.intino.konos.builder.CompilerConfiguration;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
