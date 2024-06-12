@@ -33,7 +33,7 @@ public class ActionableExamplesMold extends AbstractActionableExamplesMold<Alexa
         operation14.onExecute((event) -> operation14.notifyUser("User clicked operation " + event.option()));
         operation15.onExecute((event) -> operation15.notifyUser("User clicked operation " + event.option()));
         operation16.onExecute((event) -> operation16.notifyUser("User clicked operation"));
-        //operation18.signInfoProvider(signInfoProvider());
+        operation18.signInfoProvider(signInfoProvider());
         operation18.onExecute((event) -> operation18.notifyUser("User clicked operation"));
     }
 

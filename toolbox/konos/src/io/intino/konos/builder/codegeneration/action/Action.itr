@@ -166,7 +166,7 @@ def type(ui, action, gen)
 	public abstract class Abstract$name+PascalCase~Page extends io.intino.alexandria.ui.spark.pages.WebPage {
 		public $box+PascalCase~Box box;
 
-		public Abstract$name+PascalCase~Page() { super("$uiService+camelCaseToSnakeCase+lowerCase"); }
+		public Abstract$name+PascalCase~Page() { super("$uiService+camelCaseToKebabCase+lowerCase"); }
 
 		public $returnType execute() <<throws $throws+FirstUpperCase...[, ]>> {
 			$executeBody

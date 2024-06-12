@@ -34,7 +34,7 @@ public class PassiveViewNotifierTemplate extends Template {
 		rules.add(rule().condition(allTypes("parameter", "object")).output(literal("if (it[\"v\"] != null && !(it[\"v\"] as JsonObject).isEmpty()) io.intino.alexandria.mobile.util.Json.parse((it[\"v\"] as JsonObject).toString()) as ")).output(placeholder("package")).output(literal(".mobile.schemas.")).output(placeholder("value", "firstUpperCase")).output(literal(" else ")).output(placeholder("package")).output(literal(".mobile.schemas.")).output(placeholder("value", "firstUpperCase")).output(literal(".empty()")));
 		rules.add(rule().condition(allTypes("parameter", "list")).output(literal("if (it.containsKey(\"v\")) io.intino.alexandria.mobile.util.Json.list(it[\"v\"] as JsonArray, ")).output(placeholder("value")).output(literal("()) else emptyList()")));
 		rules.add(rule().condition(allTypes("parameter")).output(literal("if (it.containsKey(\"v\")) (it[\"v\"] as JsonPrimitive).content else \"\"")));
-		rules.add(rule().condition(all(attribute("", "Display"), trigger("target"))).output(literal(".toSelf()")));
+		rules.add(rule().condition(all(attribute("","Display"), trigger("target"))).output(literal(".toSelf()")));
 		rules.add(rule().condition(trigger("target")));
 		rules.add(rule().condition(allTypes("event")).output(literal("onMessage(\"")).output(placeholder("name", "firstLowerCase")).output(literal("\").toSelf().execute { whenReady { element.")).output(placeholder("name", "firstLowerCase")).output(literal("(if (it.containsKey(\"v\")) (it[\"v\"] as JsonPrimitive).content else \"\") } }")));
 		return rules;

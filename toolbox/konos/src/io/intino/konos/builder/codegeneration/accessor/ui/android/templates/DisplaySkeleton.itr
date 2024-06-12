@@ -10,7 +10,7 @@ def type(display, template)
     import io.intino.alexandria.mobile.displays.notifiers.TemplateNotifier
     import io.intino.alexandria.mobile.displays.requesters.TemplateRequester
 
-    open class $name+firstUpperCase @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0, layout: Int? = null) : io.intino.alexandria.mobile.android.displays.components.Template<TemplateRequester, TemplateNotifier>(context, attrs, defStyleAttr, defStyleRes, R.layout.$name+camelCaseToUnderscoreCase+lowerCase) {
+    open class $name+firstUpperCase @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0, layout: Int? = null) : io.intino.alexandria.mobile.android.displays.components.Template<TemplateRequester, TemplateNotifier>(context, attrs, defStyleAttr, defStyleRes, R.layout.$name+camelCaseToSnakeCase+lowerCase) {
         init {
             this.notifier = TemplateNotifier(this)
             this.requester = TemplateRequester(this)
@@ -75,7 +75,7 @@ def type(display)
         init {
 			this.requester = $name+firstUpperCase~Requester(this) as DR
 			this.notifier = $name+firstUpperCase~Notifier(this) as DN
-            inflate(viewContext(), layout ?: R.layout.$name+camelCaseToUnderscoreCase+lowerCase, this)
+            inflate(viewContext(), layout ?: R.layout.$name+camelCaseToSnakeCase+lowerCase, this)
         }
 
 		$notification...[$NL$NL]

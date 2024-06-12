@@ -12,7 +12,7 @@ def type(header, child) and trigger(transfer)
     $component+transfer...[$NL]
 end
 
-def type(tabs, child) and trigger(transfer)
+def type(selector, child) and trigger(transfer)
     val $parentPath+dotsWithUnderscore~_$id = findViewById<$extends<*, *>>(R.id.<<$parentPath+dotsWithUnderscore~_>>$id)
     $parentPath+dotsWithUnderscore~_$id.transfer(listOf($component+transferFind...[,]))
     $component+transfer...[$NL]
@@ -134,7 +134,7 @@ def type(properties, image) and trigger(specific)
 end
 
 def type(properties, file) and trigger(specific)
-	<< alexandria:file_width="$width">><< alexandria:file_height="$height">><< alexandria:file_preview="$preview">><< alexandria:file_drop_zone="$dropZone">><< alexandria:file_max_size="$maxSize">><< alexandria:file_allowed_types="[$allowedTypes$>>"]
+	<< alexandria:file_width="$width">><< alexandria:file_height="$height">><< alexandria:file_preview="$preview">><< alexandria:file_drop_zone="$dropZone">><< alexandria:file_max_size="$maxSize">><< alexandria:file_allowed_types="[$allowedTypes]">>
 end
 
 def type(properties, chart) and trigger(specific)
@@ -154,7 +154,7 @@ def type(properties, block) and trigger(specific)
 end
 
 def type(properties, date) and trigger(specific)
-	<< alexandria:date_pattern="$pattern">><< alexandria:date_mode="$mode">><< alexandria:date_value="new Date($value)">><< alexandria:date_time_picker="$timePicker">><< alexandria:date_mask="$mask">><< alexandria:date_embedded="$embedded">><< alexandria:date_allow_empty="$allowEmpty">><< alexandria:date_views="['$view...[',']'$>>"]<< alexandria:date_shrink="$shrink">>
+	<< alexandria:date_pattern="$pattern">><< alexandria:date_mode="$mode">><< alexandria:date_value="new Date($value)">><< alexandria:date_time_picker="$timePicker">><< alexandria:date_mask="$mask">><< alexandria:date_embedded="$embedded">><< alexandria:date_allow_empty="$allowEmpty">><< alexandria:date_views="['$view...[',']']">><< alexandria:date_shrink="$shrink">>
 end
 
 def type(properties, user) and trigger(specific)
@@ -178,7 +178,7 @@ def type(properties, text) and trigger(specific)
 end
 
 def type(properties, location) and trigger(specific)
-	<< alexandria:location_center="{lat:$centerLat,lng:$centerLng}">><< alexandria:location_zoom="{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}">><< alexandria:location_modes="['$mode...[',']'$>>"]<< alexandria:location_controls="$controls">>
+	<< alexandria:location_center="{lat:$centerLat,lng:$centerLng}">><< alexandria:location_zoom="{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}">><< alexandria:location_modes="['$mode...[',']']">><< alexandria:location_controls="$controls">>
 end
 
 def type(properties, map) and trigger(specific)
@@ -210,19 +210,19 @@ def type(properties, toggle) and trigger(specific)
 end
 
 def type(properties, splitbutton) and trigger(specific)
-	<< alexandria:split_button_options="['$option...[',']'$>>"]<< alexandria:split_button_default_option="$default">>
+	<< alexandria:split_button_options="['$option...[',']']">><< alexandria:split_button_default_option="$default">>
 end
 
 def type(properties, export) and trigger(specific)
-	<< alexandria:export_from="$from">><< alexandria:export_to="$to">><< alexandria:export_min="$min">><< alexandria:export_max="$max">><< alexandria:export_range="{min:$rangeMin,max:$rangeMax}">><< alexandria:export_options="['$option...[',']'$>>"]
+	<< alexandria:export_from="$from">><< alexandria:export_to="$to">><< alexandria:export_min="$min">><< alexandria:export_max="$max">><< alexandria:export_range="{min:$rangeMin,max:$rangeMax}">><< alexandria:export_options="['$option...[',']']">>
 end
 
 def type(properties, download) and trigger(specific)
-	<< alexandria:download_options="['$option...[',']'$>>"]
+	<< alexandria:download_options="['$option...[',']']">>
 end
 
 def type(properties, download, selection) and trigger(specific)
-	<< alexandria:download_options="['$option...[',']'$>>"]
+	<< alexandria:download_options="['$option...[',']']">>
 end
 
 def type(properties, searchbox) and trigger(specific)
@@ -254,7 +254,7 @@ def type(properties, htmlviewer) and trigger(specific)
 end
 
 def type(properties, microsite) and trigger(specific)
-	<< alexandria:microsite_download_operations="['$downloadOperation...[',']'$>>"]
+	<< alexandria:microsite_download_operations="['$downloadOperation...[',']']">>
 end
 
 def type(properties) and trigger(specific)

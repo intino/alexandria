@@ -103,7 +103,7 @@ def type(display, noAbstract)
 	import io.intino.alexandria.mobile.displays.requesters.$requester~Requester
 	import $package.mobile.android.R
 
-	class $name+firstUpperCase @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : $displayExtends<$requester~Requester, $notifier~Notifier>(context, attrs, defStyleAttr, defStyleRes, R.layout.$name+camelCaseToUnderscoreCase+lowerCase) {
+	class $name+firstUpperCase @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0) : $displayExtends<$requester~Requester, $notifier~Notifier>(context, attrs, defStyleAttr, defStyleRes, R.layout.$name+camelCaseToSnakeCase+lowerCase) {
 
 		init {
 			this.notifier = $notifier~Notifier(this);
@@ -181,7 +181,7 @@ def type(display)
         init {
             this.requester = $notDecorated+firstUpperCase~Requester(this) as DR
             this.notifier = $notDecorated+firstUpperCase~Notifier(this) as DN
-            inflate(viewContext(), layout ?: R.layout.$name+camelCaseToUnderscoreCase+lowerCase, this)
+            inflate(viewContext(), layout ?: R.layout.$name+camelCaseToSnakeCase+lowerCase, this)
         }
 
 		$notification...[$NL$NL]

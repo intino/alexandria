@@ -7,6 +7,7 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.OutputItem;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.accessor.ui.android.templates.SchemaTemplate;
+import io.intino.konos.builder.codegeneration.schema.SchemaHelper;
 import io.intino.konos.builder.codegeneration.schema.SchemaWriter;
 import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.context.CompilationContext;
@@ -47,4 +48,10 @@ public class AndroidSchemaWriter extends SchemaWriter {
 			else return value;
 		};
 	}
+
+	@Override
+	protected File schemaFolder(Schema schema) {
+		return new File(destination, SchemaHelper.subPackage(schema));
+	}
+
 }

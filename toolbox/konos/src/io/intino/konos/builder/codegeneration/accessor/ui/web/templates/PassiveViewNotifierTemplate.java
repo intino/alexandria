@@ -26,7 +26,7 @@ public class PassiveViewNotifierTemplate extends Template {
 		rules.add(rule().condition(trigger("notification")).output(literal("this.when(\"")).output(placeholder("name")).output(literal("\")")).output(expression().output(placeholder("target"))).output(literal(".execute((")).output(expression().output(placeholder("parameter", "call"))).output(literal(") => this.element.")).output(placeholder("name")).output(literal("(")).output(expression().output(placeholder("parameter", "value"))).output(literal("));")));
 		rules.add(rule().condition(all(allTypes("parameter"), trigger("call"))).output(literal("parameters")));
 		rules.add(rule().condition(all(allTypes("parameter"), trigger("value"))).output(literal("parameters.v")));
-		rules.add(rule().condition(all(attribute("", "Display"), trigger("target"))).output(literal(".toSelf()")));
+		rules.add(rule().condition(all(attribute("","Display"), trigger("target"))).output(literal(".toSelf()")));
 		rules.add(rule().condition(trigger("target")));
 		rules.add(rule().condition(allTypes("event")).output(literal("this.when(\"")).output(placeholder("name", "firstLowerCase")).output(literal("\").toSelf().execute((parameters) => this.element.notifyProxyMessage(\"")).output(placeholder("name", "firstLowerCase")).output(literal("\"));")));
 		return rules;

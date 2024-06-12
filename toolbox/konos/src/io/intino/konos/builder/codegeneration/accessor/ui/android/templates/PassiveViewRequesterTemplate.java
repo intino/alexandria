@@ -35,10 +35,15 @@ public class PassiveViewRequesterTemplate extends Template {
 		rules.add(rule().condition(all(attribute("download"), trigger("method"))).output(literal("Application.fileService()!!.download")));
 		rules.add(rule().condition(trigger("method")).output(literal("Application.pushService(element.activity())!!.send")));
 		rules.add(rule().condition(allTypes("schemaImport")).output(literal("import ")).output(placeholder("package")).output(literal(".mobile.schemas.*;")));
+		rules.add(rule().condition(allTypes("parameterType", "date", "list")).output(literal("List<kotlinx.datetime.Instant>")));
 		rules.add(rule().condition(allTypes("parameterType", "date")).output(literal("kotlinx.datetime.Instant")));
+		rules.add(rule().condition(allTypes("parameterType", "datetime", "list")).output(literal("List<kotlinx.datetime.Instant>")));
 		rules.add(rule().condition(allTypes("parameterType", "datetime")).output(literal("kotlinx.datetime.Instant")));
+		rules.add(rule().condition(allTypes("parameterType", "integer", "list")).output(literal("List<Int>")));
 		rules.add(rule().condition(allTypes("parameterType", "integer")).output(literal("Int")));
+		rules.add(rule().condition(allTypes("parameterType", "file", "list")).output(literal("List<ByteArray?>")));
 		rules.add(rule().condition(allTypes("parameterType", "file")).output(literal("ByteArray?")));
+		rules.add(rule().condition(allTypes("parameterType", "list")).output(literal("List<")).output(placeholder("value")).output(literal(">")));
 		rules.add(rule().condition(allTypes("parameterType")).output(placeholder("value")));
 		return rules;
 	}

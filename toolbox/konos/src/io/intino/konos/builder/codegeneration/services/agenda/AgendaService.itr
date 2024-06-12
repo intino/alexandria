@@ -188,13 +188,13 @@ def trigger(private)
 	}
 
 	private Collection<File> $name+firstLowerCase~Files() {
-		File directory = new File(root, "$name+camelCaseToSnakeCase/");
+		File directory = new File(root, "$name+camelCaseToKebabCase/");
 		directory.mkdirs();
 		return FileUtils.listFiles(directory, new String[]{"json"}, true);
 	}
 
 	private File $name+firstLowerCase~File($parameter+signature...[, ]) {
-		File directory = new File(root, "$name+camelCaseToSnakeCase/");
+		File directory = new File(root, "$name+camelCaseToKebabCase/");
 		directory.mkdirs();
 		return new File(directory, $parameter+names...[ + "##" + ] + ".json");
 	}
