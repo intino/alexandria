@@ -13,7 +13,7 @@ public class ThemeTemplate extends Template {
 
 	public List<Rule> ruleSet() {
 		List<Rule> rules = new ArrayList<>();
-		rules.add(rule().condition(allTypes("theme")).output(literal("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<resources>\n    <style name=\"AppTheme\" parent=\"")).output(placeholder("type")).output(literal("\"/>\n    ")).output(placeholder("format").multiple("\n")).output(literal("\n</resources>")));
+		rules.add(rule().condition(allTypes("theme")).output(literal("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<resources>\n    <style name=\"AppTheme\" parent=\"")).output(placeholder("type")).output(literal("\"/>\n    <style name=\"FullScreenDialog\" parent=\"AppTheme\">\n        <item name=\"android:windowFullscreen\">true</item>\n        <item name=\"android:windowAnimationStyle\">@android:style/Animation.Dialog</item>\n    </style>\n    ")).output(placeholder("format").multiple("\n")).output(literal("\n</resources>")));
 		rules.add(rule().condition(allTypes("type", "Normal")).output(literal("Theme.Material3.Light")));
 		rules.add(rule().condition(allTypes("type", "Dark")).output(literal("Theme.Material3.Dark")));
 		rules.add(rule().condition(allTypes("format")).output(literal("<style name=\"")).output(placeholder("name")).output(literal("\">\n    ")).output(expression().output(literal("<item name=\"android:textSize\"")).output(literal(">")).output(placeholder("defaultTextSize")).output(literal("</item")).output(literal(">"))).output(literal("\n    ")).output(placeholder("attribute").multiple("\n")).output(literal("\n</style>")));

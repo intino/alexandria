@@ -60,7 +60,7 @@ class CollectionDialog extends AbstractCollectionDialog {
                 <Divider component="li" style={{listStyle:"none"}}/>
                 <DialogActions>
                     <Button onClick={this.handleClose.bind(this)} color="primary" style={{marginRight:'10px'}}>{this.cancelLabel()}</Button>
-                    <Button ref={this.acceptButton} onClick={this.handleAccept.bind(this)} color="primary" variant="contained" disabled={this.state.selectionCount<=0}>{this.acceptLabel()}</Button>
+                    <Button ref={this.acceptButton} onClick={this.handleAccept.bind(this)} color="primary" variant="contained">{this.acceptLabel()}</Button>
                 </DialogActions>
             </React.Fragment>
 	    );

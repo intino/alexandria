@@ -2,6 +2,10 @@ def type(theme)
     <?xml version="1.0" encoding="UTF-8"?>
     <resources>
         <style name="AppTheme" parent="$type"/>
+        <style name="FullScreenDialog" parent="AppTheme">
+            <item name="android:windowFullscreen">true</item>
+            <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        </style>
         $format...[$NL]
     </resources>
 end

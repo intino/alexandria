@@ -26,7 +26,8 @@ public class MobileDocsTemplate extends AbstractMobileDocsTemplate<AlexandriaUiB
 		widgetList.onAddItem(this::refresh);
 		widgetTypeSelector.onSelect(this::refreshWidgets);
 		widgetStamp.onBack(e -> showCatalogBlock());
-		open(Model.widget(Model.WidgetType.Selector));
+		open(Model.widget(Model.WidgetType.Dialog));
+		//open(Model.widget(Model.WidgetType.Selector));
 		//widgetTypeSelector.select("operationOption");
 	}
 

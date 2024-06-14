@@ -18,15 +18,24 @@ def type(selector, child) and trigger(transfer)
     $component+transfer...[$NL]
 end
 
+def type(alertdialog, child) and trigger(transfer)
+end
+
+def type(abstractdialog, child) and trigger(transfer)
+    val $parentPath+dotsWithUnderscore~_$id = findViewById<$extends<*, *>>(R.id.<<$parentPath+dotsWithUnderscore~_>>$id)
+    $parentPath+dotsWithUnderscore~_$id.transfer(listOf($component+transferFind...[,]))
+    $component+transfer...[$NL]
+end
+
 def type(child) and trigger(transfer)
 end
 
 def type(child, basestamp) and trigger(transferFind)
-    findViewById<$extends<*, *>>(R.id.<<$parentPath+dotsWithUnderscore~_>>$id)
+    findViewById(R.id.<<$parentPath+dotsWithUnderscore~_>>$id)
 end
 
 def type(child) and trigger(transferFind)
-    findViewById<$extends<*, *>>(R.id.<<$parentPath+dotsWithUnderscore~_>>$id)
+    findViewById(R.id.<<$parentPath+dotsWithUnderscore~_>>$id)
 end
 
 def type(child) and trigger(declaration)
@@ -44,6 +53,10 @@ def type(child) and trigger(add)
 end
 
 def type(component, child, item)
+end
+
+def type(component, child, block, parentIsSelector)
+    <io.intino.alexandria.mobile.android.displays.components.Text android:id="@+id/<<$parentPath+~.>>$id" android:layout_height="wrap_content" android:layout_width="wrap_content" alexandria:alexandria_name="option" alexandria:text_mode="normal" alexandria:text_value="Not supported in mobile list view"></io.intino.alexandria.mobile.android.displays.components.Text~>
 end
 
 def type(component, child)
