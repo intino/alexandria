@@ -39,7 +39,7 @@ def type(word, single) and trigger(declaration)
 
 end
 
-def type(word, multiple) and trigger(declaration)
+def type(word, list) and trigger(declaration)
 	private var $name+FirstLowerCase : List<$type+FirstUpperCase> = arrayListOf()
 
 	enum class $name+FirstUpperCase {
@@ -60,11 +60,11 @@ def type(map) and trigger(declaration)
 	private var $name+firstLowerCase : Map<$key+renderMapType, $value+renderMapType> = mapOf()
 end
 
-def type(multiple) and (type(object) or type(schema)) and trigger(declaration)
+def type(list) and (type(object) or type(schema)) and trigger(declaration)
 	private var $name+firstLowerCase : List<$type+firstUpperCase> = arrayListOf()
 end
 
-def type(multiple) and trigger(declaration)
+def type(list) and trigger(declaration)
 	private var $name+firstLowerCase : List<$type> = arrayListOf()
 end
 
@@ -74,7 +74,7 @@ def type(word, single) and trigger(getter)
 	}
 end
 
-def type(word, multiple) and trigger(getter)
+def type(word, list) and trigger(getter)
 	fun $name+CamelCase() : List<$type+FirstUpperCase> {
 		return $name+FirstLowerCase
 	}
@@ -92,7 +92,7 @@ def not type(primitive) and type(single) and trigger(getter)
 	}
 end
 
-def type(multiple, schema) and trigger(getter)
+def type(list, schema) and trigger(getter)
 	fun $name+CamelCase~List() : List<$type+firstUpperCase> {
 		return this.$name+firstLowerCase
 	}
@@ -106,13 +106,13 @@ def type(multiple, schema) and trigger(getter)
 	}
 end
 
-def type(multiple, object) and trigger(getter)
+def type(list, object) and trigger(getter)
 	fun $name+CamelCase() : List<$type+firstUpperCase> {
 		return this.$name+firstLowerCase
 	}
 end
 
-def type(multiple) and trigger(getter)
+def type(list) and trigger(getter)
 	fun $name+CamelCase() : List<$type> {
 		return this.$name+firstLowerCase
 	}
@@ -146,7 +146,7 @@ def type(word, single) and trigger(setter)
 	}
 end
 
-def type(word, multiple) and trigger(setter)
+def type(word, list) and trigger(setter)
 	fun $name+CamelCase($name+CamelCase : List<$type+FirstUpperCase>) : $element+firstUpperCase {
 		this.$name+firstLowerCase = $name+CamelCase
 		return this
@@ -167,28 +167,28 @@ def not type(primitive) and type(single) and trigger(setter)
 	}
 end
 
-def type(multiple, object) and trigger(setter)
+def type(list, object) and trigger(setter)
 	fun $name+firstLowerCase($name+CamelCase : List<$type+firstUpperCase>) : $element+firstUpperCase {
 		this.$name+firstLowerCase = $name+CamelCase
 		return this
 	}
 end
 
-def type(multiple, schema) and trigger(setter)
+def type(list, schema) and trigger(setter)
 	fun $name+CamelCase~List($name+CamelCase : List<$type+firstUpperCase>) : $element+firstUpperCase {
 		this.$name+firstLowerCase = $name+CamelCase
 		return this
 	}
 end
 
-def type(multiple) and trigger(setter)
+def type(list) and trigger(setter)
 	fun $name+CamelCase($name+CamelCase : List<$type>) : $element+firstUpperCase {
 		this.$name+firstLowerCase = $name+CamelCase
 		return this
 	}
 end
 
-def type(multiple) and trigger(init)
+def type(list) and trigger(init)
     result.$name+firstLowerCase = emptyList();
 end
 

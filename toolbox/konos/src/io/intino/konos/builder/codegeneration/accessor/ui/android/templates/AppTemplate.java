@@ -23,7 +23,7 @@ public class AppTemplate extends Template {
 		rules.add(rule().condition(allTypes("strings")).output(literal("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<resources>\n    <string name=\"app_name\">")).output(placeholder("project")).output(literal("</string>\n</resources>")));
 		rules.add(rule().condition(allTypes("component")).output(literal("<declare-styleable name=\"")).output(placeholder("name", "firstUpperCase")).output(literal("\"")).output(expression().output(literal(" parent=\"")).output(placeholder("parent", "firstUpperCase")).output(literal("\""))).output(literal(">\n    ")).output(placeholder("attribute").multiple("\n")).output(literal("\n</declare-styleable>")));
 		rules.add(rule().condition(allTypes("attribute", "root")).output(literal("<attr name=\"")).output(placeholder("name", "lowerCase")).output(literal("\" format=\"string\" />")));
-		rules.add(rule().condition(allTypes("attribute")).output(literal("<attr name=\"")).output(placeholder("component", "camelCaseToUnderscoreCase", "lowerCase")).output(literal("_")).output(placeholder("name", "lowerCase")).output(literal("\" format=\"string\" />")));
+		rules.add(rule().condition(allTypes("attribute")).output(literal("<attr name=\"")).output(placeholder("component", "camelCaseToSnakeCase", "lowerCase")).output(literal("_")).output(placeholder("name", "lowerCase")).output(literal("\" format=\"string\" />")));
 		return rules;
 	}
 

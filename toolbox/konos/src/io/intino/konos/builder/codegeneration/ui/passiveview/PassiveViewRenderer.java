@@ -391,13 +391,20 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 			if (request.isList()) parameterFrame.add("list");
 			result.add("parameter", parameterFrame);
 			result.add("parameterType", request.asType().type());
-			result.add("customParameterType", new FrameBuilder("parameterType", request.asType().getClass().getSimpleName().replace("Data", "")).add("value", request.asType().type()));
+			result.add("customParameterType", customParameterType(request));
 			result.add("parameterSignature", "value");
 		} else result.add("nullParameter", "null");
 		if (request.responseType() == Asset) result.add("method", new FrameBuilder().add("download", "download"));
 		else if (request.isFile()) result.add("method", new FrameBuilder().add("upload", "upload"));
 		else result.add("method", new FrameBuilder());
 		return result.toFrame();
+	}
+
+	private static FrameBuilder customParameterType(Request request) {
+		FrameBuilder result = new FrameBuilder("parameterType", request.asType().getClass().getSimpleName().replace("Data", ""));
+		if (request.isList()) result.add("list");
+		result.add("value", request.asType().type());
+		return result;
 	}
 
 	private static String parameter(Request request, String packageName) {

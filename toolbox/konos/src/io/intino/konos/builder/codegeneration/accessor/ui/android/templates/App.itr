@@ -232,5 +232,5 @@ def type(attribute, root)
 end
 
 def type(attribute)
-    <attr name="$component+camelCaseToUnderscoreCase+lowerCase~_$name+lowerCase" format="string" />
+    <attr name="$component+camelCaseToSnakeCase+lowerCase~_$name+lowerCase" format="string" />
 end

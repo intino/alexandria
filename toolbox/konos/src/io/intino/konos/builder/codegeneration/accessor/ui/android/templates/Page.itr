@@ -31,7 +31,7 @@ def type(resource, main)
             Application.onVerifyPermissions { type, callback -> verifyPermissions(type, callback) }
             Application.onPickFile { callback -> pickFile(callback) }
             Application.start("$name", "$url", pushService(withParams("$url$path")) { showNoConnectionDialog(); })
-            setContentView(R.layout.$name+camelCaseToUnderscoreCase+lowerCase~_activity)
+            setContentView(R.layout.$name+camelCaseToSnakeCase+lowerCase~_activity)
         }
 
 
@@ -54,7 +54,7 @@ def type(resource)
             Application.onPickFile { callback -> pickFile(callback) }
             Application.close("$name")
             Application.open("$name", "$url", pushService(withParams("$url$path")) { showNoConnectionDialog(); })
-            setContentView(R.layout.$name+camelCaseToUnderscoreCase+lowerCase~_activity)
+            setContentView(R.layout.$name+camelCaseToSnakeCase+lowerCase~_activity)
         }
 
     }

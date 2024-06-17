@@ -22,10 +22,10 @@ public class ProcessTemplate extends Template {
 		rules.add(rule().condition(all(allTypes("conditional"), trigger("accept"))).output(literal("protected boolean accept")).output(placeholder("method", "FirstUpperCase")).output(literal("() {\n\treturn true;\n}")));
 		rules.add(rule().condition(trigger("state")).output(literal("addState(new io.intino.alexandria.bpm.State(\"")).output(placeholder("label")).output(literal("\", execute")).output(placeholder("method", "firstUpperCase")).output(literal("()")).output(expression().output(literal(", ")).output(placeholder("type", "lowercase", "FirstUpperCase").multiple(", "))).output(literal("));")));
 		rules.add(rule().condition(trigger("link")).output(literal("addLink(new io.intino.alexandria.bpm.Link(\"")).output(placeholder("from")).output(literal("\", \"")).output(placeholder("to")).output(literal("\", ")).output(placeholder("type", "linkType")).output(literal("));")));
-		rules.add(rule().condition(all(attribute("", "Default"), trigger("linktype"))).output(literal("io.intino.alexandria.bpm.Link.Type.Default")));
-		rules.add(rule().condition(all(attribute("", "Line"), trigger("linktype"))).output(literal("io.intino.alexandria.bpm.Link.Type.Inclusive")));
-		rules.add(rule().condition(all(attribute("", "Exclusive"), trigger("linktype"))).output(literal("io.intino.alexandria.bpm.Link.Type.Exclusive")));
-		rules.add(rule().condition(all(attribute("", "Inclusive"), trigger("linktype"))).output(literal("io.intino.alexandria.bpm.Link.Type.Inclusive")));
+		rules.add(rule().condition(all(attribute("","Default"), trigger("linktype"))).output(literal("io.intino.alexandria.bpm.Link.Type.Default")));
+		rules.add(rule().condition(all(attribute("","Line"), trigger("linktype"))).output(literal("io.intino.alexandria.bpm.Link.Type.Inclusive")));
+		rules.add(rule().condition(all(attribute("","Exclusive"), trigger("linktype"))).output(literal("io.intino.alexandria.bpm.Link.Type.Exclusive")));
+		rules.add(rule().condition(all(attribute("","Inclusive"), trigger("linktype"))).output(literal("io.intino.alexandria.bpm.Link.Type.Inclusive")));
 		rules.add(rule().condition(trigger("put")).output(literal("put(")).output(placeholder("", "firstUpperCase")).output(literal(", ")).output(placeholder("", "firstLowerCase")).output(literal(");")));
 		rules.add(rule().condition(trigger("signature")).output(literal("String ")).output(placeholder("", "firstLowerCase")));
 		rules.add(rule().condition(trigger("fieldname")).output(literal("private static final String ")).output(placeholder("", "FirstUpperCase")).output(literal(" = \"")).output(placeholder("")).output(literal("\";")));

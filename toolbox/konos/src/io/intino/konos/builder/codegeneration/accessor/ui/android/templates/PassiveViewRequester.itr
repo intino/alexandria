@@ -101,20 +101,40 @@ def type(schemaImport)
 	import $package.mobile.schemas.*;
 end
 
+def type(parameterType, date, list)
+    List<kotlinx.datetime.Instant>
+end
+
 def type(parameterType, date)
     kotlinx.datetime.Instant
+end
+
+def type(parameterType, datetime, list)
+    List<kotlinx.datetime.Instant>
 end
 
 def type(parameterType, datetime)
     kotlinx.datetime.Instant
 end
 
+def type(parameterType, integer, list)
+    List<Int>
+end
+
 def type(parameterType, integer)
     Int
 end
 
+def type(parameterType, file, list)
+    List<ByteArray?>
+end
+
 def type(parameterType, file)
     ByteArray?
+end
+
+def type(parameterType, list)
+    List<$value>
 end
 
 def type(parameterType)

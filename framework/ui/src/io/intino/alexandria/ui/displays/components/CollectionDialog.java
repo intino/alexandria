@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.components.collection.Selectable;
 import io.intino.alexandria.ui.displays.events.SelectionEvent;
 import io.intino.alexandria.ui.displays.events.SelectionListener;
@@ -28,13 +29,16 @@ public class CollectionDialog<DN extends CollectionDialogNotifier, B extends Box
 		createSearchBox();
 	}
 
-	@Override
+	@	Override
 	public void open() {
 		super.open();
 		selection = new ArrayList<>();
 		notifier.refreshSelectionCount(selection.size());
 		searchBox().ifPresent(sb -> sb.search(""));
-		if (collection != null) collection.init();
+		if (collection != null) {
+			collection.init();
+			collection.reload();
+		}
 	}
 
     public CollectionDialog onSelect(SelectionListener listener) {
@@ -55,8 +59,8 @@ public class CollectionDialog<DN extends CollectionDialogNotifier, B extends Box
 
 	private <T> void updateSelection(List<T> selection) {
 		this.selection = selection;
-		notifier.refreshSelectionCount(selection.size());
-		collection.reloadWithSelection();
+		//notifier.refreshSelectionCount(selection.size());
+		//collection.reloadWithSelection();
 	}
 
 	private void notifySelection(List selection) {
@@ -76,6 +80,10 @@ public class CollectionDialog<DN extends CollectionDialogNotifier, B extends Box
 	}
 
 	public void accept() {
+		if (selection.isEmpty()) {
+			notifyUser("Select an option", UserMessage.Type.Error);
+			return;
+		}
 		close();
 		notifySelection(selection);
 	}

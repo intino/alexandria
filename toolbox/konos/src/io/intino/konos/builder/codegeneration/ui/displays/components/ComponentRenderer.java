@@ -41,6 +41,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		addOwner(builder);
 		addProperties(builder);
 		if (buildChildren) builder.add("child");
+		if (element.i$(Block.class) && element.core$().owner().is(Selector.class)) builder.add("parentIsSelector");
 		builder.add("methodName", element.i$(conceptOf(Block.Conditional.class)) && !element.i$(conceptOf(Block.Multiple.class)) ? "initConditional" : "init");
 		addSpecificTypes(builder);
 		addParentPath(element, builder);

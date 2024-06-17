@@ -44,7 +44,7 @@ def type(translation)
 end
 
 def type(use) and trigger(import)
-	import $name+firstUpperCase~I18n from "$service+camelCaseToSnakeCase~/gen/I18n";
+	import $name+firstUpperCase~I18n from "$service+camelCaseToKebabCase~/gen/I18n";
 end
 
 def type(use) and trigger(addWords)

@@ -38,7 +38,7 @@ def type(future)
 		}
 
 		public class URI {
-			public static final String Path = "$name+camelCaseToSnakeCase/";
+			public static final String Path = "$name+camelCaseToKebabCase/";
 
 			public List<String> ids() {
 				return List.of($option+id...[, ]);

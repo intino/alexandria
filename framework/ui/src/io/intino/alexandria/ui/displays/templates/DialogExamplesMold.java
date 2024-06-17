@@ -29,25 +29,25 @@ public class DialogExamplesMold extends AbstractDialogExamplesMold<UiFrameworkBo
             return true;
         });
         acceptButton.onExecute((event -> {
+            dialog1.close();
             String value1 = field1.value() != null && !field1.value().isEmpty() ? field1.value() : "(no value)";
             String value2 = field2.value() != null && !field2.value().isEmpty() ? field2.value() : "(no value)";
             String value = "field1: " + value1 + ", field2: " + value2;
-            acceptButton.notifyUser("Se ha seleccionado " + value, UserMessage.Type.Info);
-            dialog1.close();
+            DialogExamplesMold.this.notifyUser("Se ha seleccionado " + value, UserMessage.Type.Info);
         }));
     }
 
     private void initDialog2() {
         dialog2.onSelect((event -> {
             String option = (String) event.selection().get(0);
-            dialog2.notifyUser("Se ha seleccionado la opción " + option, UserMessage.Type.Info);
+            DialogExamplesMold.this.notifyUser("Se ha seleccionado la opción " + option, UserMessage.Type.Info);
         }));
     }
 
     private void initDialog4() {
         dialog4.onSelect((event -> {
             Person person = (Person) event.selection().get(0);
-            dialog2.notifyUser("Se ha seleccionado " + person.firstName(), UserMessage.Type.Info);
+            DialogExamplesMold.this.notifyUser("Se ha seleccionado " + person.firstName(), UserMessage.Type.Info);
         }));
         list1.source(Datasources.personDatasource());
         list1.onAddItem(this::onAddItem);
