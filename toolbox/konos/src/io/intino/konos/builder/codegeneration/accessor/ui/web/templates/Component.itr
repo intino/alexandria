@@ -111,7 +111,7 @@ def type(properties, image) and trigger(specific)
 end
 
 def type(properties, file) and trigger(specific)
-	<< width="$width">><< height="$height">><< preview={$preview}>><< dropZone={$dropZone}>><< maxSize={$maxSize}>><< allowedTypes={[$allowedTypes$>>}]
+	<< width="$width">><< height="$height">><< preview={$preview}>><< dropZone={$dropZone}>><< maxSize={$maxSize}>><< allowedTypes={[$allowedTypes]}>>
 end
 
 def type(properties, chart) and trigger(specific)
@@ -131,7 +131,7 @@ def type(properties, block) and trigger(specific)
 end
 
 def type(properties, date) and trigger(specific)
-	<< pattern="$pattern">><< mode="$mode">><< value={new Date($value)}>><< timePicker={$timePicker}>><< mask="$mask">><< embedded={$embedded}>><< allowEmpty={$allowEmpty}>><< views={["$view...[","]"$>>}]<< shrink={$shrink}>>
+	<< pattern="$pattern">><< mode="$mode">><< value={new Date($value)}>><< timePicker={$timePicker}>><< mask="$mask">><< embedded={$embedded}>><< allowEmpty={$allowEmpty}>><< views={["$view...[","]"]}>><< shrink={$shrink}>>
 end
 
 def type(properties, user) and trigger(specific)
@@ -155,7 +155,7 @@ def type(properties, text) and trigger(specific)
 end
 
 def type(properties, location) and trigger(specific)
-	<< center={{lat:$centerLat,lng:$centerLng}}>><< zoom={{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}}>><< modes={["$mode...[","]"$>>}]<< controls="$controls">>
+	<< center={{lat:$centerLat,lng:$centerLng}}>><< zoom={{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}}>><< modes={["$mode...[","]"]}>><< controls="$controls">>
 end
 
 def type(properties, map) and trigger(specific)
@@ -187,19 +187,19 @@ def type(properties, toggle) and trigger(specific)
 end
 
 def type(properties, splitbutton) and trigger(specific)
-	<< options={["$option...[","]"$>>}]<< defaultOption="$default">><< icon="$icon">>
+	<< options={["$option...[","]"]}>><< defaultOption="$default">><< icon="$icon">>
 end
 
 def type(properties, export) and trigger(specific)
-	<< from={$from}>><< to={$to}>><< min={$min}>><< max={$max}>><< range={{min:$rangeMin,max:$rangeMax}}>><< options={["$option...[","]"$>>}]
+	<< from={$from}>><< to={$to}>><< min={$min}>><< max={$max}>><< range={{min:$rangeMin,max:$rangeMax}}>><< options={["$option...[","]"]}>>
 end
 
 def type(properties, download) and trigger(specific)
-	<< options={["$option...[","]"$>>}]
+	<< options={["$option...[","]"]}>>
 end
 
 def type(properties, download, selection) and trigger(specific)
-	<< options={["$option...[","]"$>>}]
+	<< options={["$option...[","]"]}>>
 end
 
 def type(properties, searchbox) and trigger(specific)
@@ -211,7 +211,7 @@ def type(properties, slider) and trigger(specific)
 end
 
 def type(properties, rangeslider) and trigger(specific)
-	<< range={{min:$min,max:$max}}>><< value={[$from,$to$>>}]<< minimumDistance={$minimumDistance}>>
+	<< range={{min:$min,max:$max}}>><< value={[$from,$to]}>><< minimumDistance={$minimumDistance}>>
 end
 
 def type(properties, grouping) and trigger(specific)
@@ -248,7 +248,7 @@ def type(properties, eventline) and trigger(specific)
 end
 
 def type(properties, microsite) and trigger(specific)
-	<< downloadOperations={["$downloadOperation...[","]"$>>}]
+	<< downloadOperations={["$downloadOperation...[","]"]}>>
 end
 
 def type(properties) and trigger(specific)
