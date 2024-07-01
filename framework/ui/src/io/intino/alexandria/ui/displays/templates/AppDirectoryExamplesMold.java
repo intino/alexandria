@@ -14,4 +14,10 @@ public class AppDirectoryExamplesMold extends AbstractAppDirectoryExamplesMold<U
         appDirectory2.selected("Google");
         appDirectory2.refresh();
     }
+
+    @Override
+    public void refresh() {
+        super.refresh();
+        appDirectory2.refresh();
+    }
 }

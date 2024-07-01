@@ -54,6 +54,12 @@ public class GridExamplesMold extends AbstractGridExamplesMold<UiFrameworkBox> {
         grid.source(new ExampleDatasource(session()));
     }
 
+    @Override
+    public void refresh() {
+        super.refresh();
+        grid.reload();
+    }
+
     private static class ExampleDatasource extends GridDatasource<GridItem> {
         private final UISession session;
 

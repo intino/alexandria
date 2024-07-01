@@ -394,7 +394,10 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 			result.add("customParameterType", customParameterType(request));
 			result.add("parameterSignature", "value");
 		} else result.add("nullParameter", "null");
-		if (request.responseType() == Asset) result.add("method", new FrameBuilder().add("download", "download"));
+		if (request.responseType() == Asset) {
+			result.add("method", new FrameBuilder().add("download", "download"));
+			result.add("returnType", new FrameBuilder().add("download", "download"));
+		}
 		else if (request.isFile()) result.add("method", new FrameBuilder().add("upload", "upload"));
 		else result.add("method", new FrameBuilder());
 		return result.toFrame();

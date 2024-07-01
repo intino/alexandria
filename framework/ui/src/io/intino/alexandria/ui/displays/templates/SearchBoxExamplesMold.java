@@ -19,6 +19,12 @@ public class SearchBoxExamplesMold extends AbstractSearchBoxExamplesMold<Alexand
         list1.onAddItem(this::onAddItem);
     }
 
+    @Override
+    public void refresh() {
+        super.refresh();
+        list1.reload();
+    }
+
     private void onAddItem(AddItemEvent event) {
         if (event.component() instanceof SearchBox1Mold) {
             SearchBox1Mold component = event.component();

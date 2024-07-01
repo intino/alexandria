@@ -23,7 +23,14 @@ public class SortingExamplesMold extends AbstractSortingExamplesMold<AlexandriaU
 		selector.onSelect(event -> list2.sortings(event.selection()));
     }
 
-    private void onAddItem(AddItemEvent event) {
+	@Override
+	public void refresh() {
+		super.refresh();
+		list1.reload();
+		list2.reload();
+	}
+
+	private void onAddItem(AddItemEvent event) {
         if (event.component() instanceof Sorting1Mold) {
             Sorting1Mold component = event.component();
             Person person = event.item();

@@ -26,7 +26,7 @@ public class ExportExamplesMold extends AbstractExportExamplesMold<AlexandriaUiB
         return (event) -> new UIFile() {
             @Override
             public String label() {
-                return format(event);
+                return format(event) + ".pdf";
             }
 
             @Override
@@ -37,6 +37,6 @@ public class ExportExamplesMold extends AbstractExportExamplesMold<AlexandriaUiB
     }
 
     private String format(ExportEvent event) {
-        return "example " + event.from() + "-" + event.to() + (!event.option().isEmpty() ? "-" + event.option() : "");
+        return "example " + event.from() + "-" + event.to() + (event.option() != null && !event.option().isEmpty() ? "-" + event.option() : "");
     }
 }

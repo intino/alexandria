@@ -33,6 +33,13 @@ public class GroupingExamplesMold extends AbstractGroupingExamplesMold<Alexandri
         city.onAttachedChanges(e -> notifyUser("City grouping: Country changes its value", UserMessage.Type.Info));
     }
 
+    @Override
+    public void refresh() {
+        super.refresh();
+        list1.reload();
+        list2.reload();
+    }
+
     private void onAddItem(AddItemEvent event) {
         if (event.component() instanceof Grouping1Mold) {
             Grouping1Mold component = event.component();

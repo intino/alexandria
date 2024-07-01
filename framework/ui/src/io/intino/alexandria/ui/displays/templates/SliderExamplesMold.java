@@ -46,6 +46,19 @@ public class SliderExamplesMold extends AbstractSliderExamplesMold<AlexandriaUiB
         slider8.refresh();
     }
 
+    @Override
+    public void refresh() {
+        super.refresh();
+        slider1.refresh();
+        slider2.refresh();
+        slider3.refresh();
+        slider4.refresh();
+        slider5.refresh();
+        slider6.refresh();
+        slider7.refresh();
+        slider8.refresh();
+    }
+
     private Ordinal ordinal() {
         return new Ordinal() {
             @Override

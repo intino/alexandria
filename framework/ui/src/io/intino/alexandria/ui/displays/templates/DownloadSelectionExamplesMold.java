@@ -38,6 +38,12 @@ public class DownloadSelectionExamplesMold extends AbstractDownloadSelectionExam
         });
     }
 
+    @Override
+    public void refresh() {
+        super.refresh();
+        list6.reload();
+    }
+
     private void init(io.intino.alexandria.ui.displays.components.List list, PageDatasource datasource) {
         list.source(datasource);
         list.onAddItem(this::onAddItem);

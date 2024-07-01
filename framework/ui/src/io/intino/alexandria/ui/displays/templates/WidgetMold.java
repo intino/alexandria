@@ -37,6 +37,7 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
         super.init();
         events.display(new EventsDisplay(box()));
         backTrigger.onExecute(e -> notifyBack());
+        downloadSelectionExamples.onShow(e -> downloadSelectionExamples.refresh());
     }
 
     @Override
@@ -58,46 +59,87 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
     private void updateExamplesVisibility() {
         Widget widget = item();
         textExamples.visible(widget instanceof TextWidget);
+        if (textExamples.isVisible()) textExamples.textExamplesMold.refresh();
         numberExamples.visible(widget instanceof NumberWidget);
+        if (numberExamples.isVisible()) numberExamples.numberExamplesMold.refresh();
         fileExamples.visible(widget instanceof FileWidget);
+        if (fileExamples.isVisible()) fileExamples.fileExamplesMold.refresh();
         imageExamples.visible(widget instanceof ImageWidget);
+        if (imageExamples.isVisible()) imageExamples.imageExamplesMold.refresh();
         dateExamples.visible(widget instanceof DateWidget);
+        if (dateExamples.isVisible()) dateExamples.dateExamplesMold.refresh();
         multipleExamples.visible(widget instanceof MultipleWidget);
+        if (multipleExamples.isVisible()) multipleExamples.multipleExamplesMold.refresh();
         chartExamples.visible(widget instanceof ChartWidget);
+        if (chartExamples.isVisible()) chartExamples.chartExamplesMold.refresh();
         dashboardExamples.visible(widget instanceof DashboardWidget);
+        if (dashboardExamples.isVisible()) dashboardExamples.dashboardExamplesMold.refresh();
         appDirectoryExamples.visible(widget instanceof AppDirectoryWidget);
+        if (appDirectoryExamples.isVisible()) appDirectoryExamples.appDirectoryExamplesMold.refresh();
         digitalSignatureExamples.visible(widget instanceof DigitalSignatureWidget);
+        if (digitalSignatureExamples.isVisible()) digitalSignatureExamples.digitalSignatureExamplesMold.refresh();
         blockExamples.visible(widget instanceof BlockWidget);
+        if (blockExamples.isVisible()) blockExamples.blockExamplesMold.refresh();
         listExamples.visible(widget instanceof ListWidget);
+        if (listExamples.isVisible()) listExamples.listExamplesMold.refresh();
         tableExamples.visible(widget instanceof TableWidget);
+        if (tableExamples.isVisible()) tableExamples.tableExamplesMold.refresh();
         dynamicTableExamples.visible(widget instanceof DynamicTableWidget);
+        if (dynamicTableExamples.isVisible()) dynamicTableExamples.dynamicTableExamplesMold.refresh();
         gridExamples.visible(widget instanceof GridWidget);
+        if (gridExamples.isVisible()) gridExamples.gridExamplesMold.refresh();
         mapExamples.visible(widget instanceof MapWidget);
+        if (mapExamples.isVisible()) mapExamples.mapExamplesMold.refresh();
         exportExamples.visible(widget instanceof ExportWidget);
+        if (exportExamples.isVisible()) exportExamples.exportExamplesMold.refresh();
         downloadExamples.visible(widget instanceof DownloadWidget);
+        if (downloadExamples.isVisible()) downloadExamples.downloadExamplesMold.refresh();
         downloadSelectionExamples.visible(widget instanceof DownloadSelectionWidget);
+        if (downloadSelectionExamples.isVisible()) downloadSelectionExamples.downloadSelectionExamplesMold.refresh();
         actionableExamples.visible(widget instanceof ActionableWidget && !(widget instanceof ExportWidget) && !(widget instanceof DownloadWidget) && !(widget instanceof DownloadSelectionWidget));
+        if (actionableExamples.isVisible()) actionableExamples.actionableExamplesMold.refresh();
         groupingExamples.visible(widget instanceof GroupingWidget);
+        if (groupingExamples.isVisible()) groupingExamples.groupingExamplesMold.refresh();
         groupingToolbarExamples.visible(widget instanceof GroupingToolbarWidget);
+        if (groupingToolbarExamples.isVisible()) groupingToolbarExamples.groupingToolbarExamplesMold.refresh();
         sortingExamples.visible(widget instanceof SortingWidget);
+        if (sortingExamples.isVisible()) sortingExamples.sortingExamplesMold.refresh();
         searchBoxExamples.visible(widget instanceof SearchBoxWidget);
+        if (searchBoxExamples.isVisible()) searchBoxExamples.searchBoxExamplesMold.refresh();
         sliderExamples.visible(widget instanceof SliderWidget);
+        if (sliderExamples.isVisible()) sliderExamples.sliderExamplesMold.refresh();
         dialogExamples.visible(widget instanceof DialogWidget);
+        if (dialogExamples.isVisible()) dialogExamples.dialogExamplesMold.refresh();
         layerExamples.visible(widget instanceof LayerWidget);
+        if (layerExamples.isVisible()) layerExamples.layerExamplesMold.refresh();
         dividerExamples.visible(widget instanceof DividerWidget);
+        if (dividerExamples.isVisible()) dividerExamples.dividerExamplesMold.refresh();
         userExamples.visible(widget instanceof UserWidget);
+        if (userExamples.isVisible()) userExamples.userExamplesMold.refresh();
         locationExamples.visible(widget instanceof LocationWidget);
+        if (locationExamples.isVisible()) locationExamples.locationExamplesMold.refresh();
         selectorExamples.visible(widget instanceof SelectorWidget);
+        if (selectorExamples.isVisible()) selectorExamples.selectorExamplesMold.refresh();
         stepperExamples.visible(widget instanceof StepperWidget);
+        if (stepperExamples.isVisible()) stepperExamples.stepperExamplesMold.refresh();
         frameExamples.visible(widget instanceof FrameWidget);
+        if (frameExamples.isVisible()) frameExamples.frameExamplesMold.refresh();
         microSiteExamples.visible(widget instanceof MicroSiteWidget);
+        if (microSiteExamples.isVisible()) microSiteExamples.microSiteExamplesMold.refresh();
         htmlViewerExamples.visible(widget instanceof HtmlViewerWidget);
+        if (htmlViewerExamples.isVisible()) htmlViewerExamples.htmlViewerExamplesMold.refresh();
         dateNavigatorExamples.visible(widget instanceof DateNavigatorWidget);
+        if (dateNavigatorExamples.isVisible()) dateNavigatorExamples.dateNavigatorExamplesMold.refresh();
         timelineExamples.visible(widget instanceof TimelineWidget);
+        if (timelineExamples.isVisible()) timelineExamples.timelineExamplesMold.refresh();
         eventlineExamples.visible(widget instanceof EventlineWidget);
+        if (eventlineExamples.isVisible()) eventlineExamples.eventlineExamplesMold.refresh();
         reelExamples.visible(widget instanceof ReelWidget);
+        if (reelExamples.isVisible()) reelExamples.reelExamplesMold.refresh();
         documentEditorExamples.visible(widget instanceof DocumentEditorWidget);
+        if (documentEditorExamples.isVisible()) documentEditorExamples.documentEditorExamplesMold.refresh();
         kpiExamples.visible(widget instanceof KpiWidget);
+        if (kpiExamples.isVisible()) kpiExamples.kpiExamplesMold.refresh();
     }
 
     private void updateInfo() {

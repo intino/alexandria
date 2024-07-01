@@ -22,6 +22,14 @@ public class MapExamplesMold extends AbstractMapExamplesMold<AlexandriaUiBox> {
         init(map3, Datasources.heatDatasource());
     }
 
+    @Override
+    public void refresh() {
+        super.refresh();
+        map1.reload();
+        map2.reload();
+        map3.reload();
+    }
+
     private void init(io.intino.alexandria.ui.displays.components.Map map, MapDatasource datasource) {
         map.source(datasource);
         map.onAddItem(this::onAddItem);

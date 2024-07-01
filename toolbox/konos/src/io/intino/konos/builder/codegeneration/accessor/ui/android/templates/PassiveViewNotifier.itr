@@ -94,6 +94,10 @@ def type(parameter, object)
 	if (it["v"] != null && !(it["v"] as JsonObject).isEmpty()) io.intino.alexandria.mobile.util.Json.parse((it["v"] as JsonObject).toString()) as $package.mobile.schemas.$value+firstUpperCase else $package.mobile.schemas.$value+firstUpperCase.empty()
 end
 
+def type(parameter, text, list)
+    if (it.containsKey("v")) io.intino.alexandria.mobile.util.Json.list(it["v"] as JsonArray) else emptyList()
+end
+
 def type(parameter, list)
     if (it.containsKey("v")) io.intino.alexandria.mobile.util.Json.list(it["v"] as JsonArray, $value()) else emptyList()
 end

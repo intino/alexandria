@@ -49,7 +49,7 @@ def type(word, list) and trigger(declaration)
 end
 
 def type(primitive, single) and trigger(declaration)
-	private<< $lateInit~lateinit>> var $name+firstLowerCase : $typeFrame<< = $defaultValue>>
+	$typeFrame+serialization private<< $lateInit~lateinit>> var $name+firstLowerCase : $typeFrame<< = $defaultValue>>
 end
 
 def not type(primitive) and type(single) and trigger(declaration)
@@ -230,6 +230,13 @@ end
 
 def type(typeFrame) and trigger(empty)
     ""
+end
+
+def type(typeFrame, datetime) and trigger(serialization)
+    @Serializable(with = io.intino.alexandria.mobile.util.InstantSerializer::class)
+end
+
+def type(typeFrame) and trigger(serialization)
 end
 
 def type(typeFrame, datetime)
