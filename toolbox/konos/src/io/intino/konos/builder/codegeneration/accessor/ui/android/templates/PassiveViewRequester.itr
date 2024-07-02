@@ -10,7 +10,7 @@ def type(display)
     $schemaImport
 
     open class $name+firstUpperCase$proxy~Requester(private var element: $name+firstUpperCase$proxy) : $parentType(element) {
-        <<$request...[$NL]>>
+        <<$request...[$NL]~>>
     }
 end
 
@@ -30,13 +30,13 @@ def trigger(parentType)
 end
 
 def type(parameter) and trigger(request)
-    fun $name(value: String) {
+    fun $name(value: String)<< : $returnType>> {
         $method(UiMessage("$name", "$display+lowercase", element.shortId(), $parameter$nullParameter, element.owner(), element.context()), element.ownerUnit());
     }
 end
 
 def trigger(request)
-    fun $name(<<$parameterSignature: $customParameterType>>) {
+    fun $name(<<$parameterSignature: $customParameterType>>)<< : $returnType>> {
         $method(UiMessage("$name", "$display+lowercase", element.shortId(), $parameter$nullParameter, element.owner(), element.context()), element.ownerUnit());
     }
 end
@@ -90,11 +90,18 @@ def attribute(upload) and trigger(method)
 end
 
 def attribute(download) and trigger(method)
-	Application.fileService()!!.download
+	return Application.fileService()!!.download
 end
 
 def trigger(method)
 	Application.pushService(element.activity())!!.send
+end
+
+def attribute(download) and trigger(returnType)
+	io.intino.alexandria.mobile.UiFile
+end
+
+def trigger(returnType)
 end
 
 def type(schemaImport)

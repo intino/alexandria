@@ -34,7 +34,9 @@ def type(display, res, noAbstract, scrollable)
         android:layout_height="match_parent"
         alexandria:flexDirection="$layout">
 
-        <ScrollView android:layout_width="match_parent"
+        <ScrollView
+            android:id="@+id/$name+camelCaseToSnakeCase~_scroll"
+            android:layout_width="match_parent"
 		    android:layout_height="match_parent"
 		    android:fillViewport="true">
 

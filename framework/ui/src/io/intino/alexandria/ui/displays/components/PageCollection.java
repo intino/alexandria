@@ -20,7 +20,7 @@ public abstract class PageCollection<DN extends PageCollectionNotifier, B extend
 
     @Override
     public void didMount() {
-        notifier.setup(new PageCollectionSetup().pageSize(pageSize).itemCount(behavior() != null ? behavior().itemCount() : 0));
+        notifier.setupPageCollection((PageCollectionSetup) new PageCollectionSetup().pageSize(pageSize).itemCount(behavior() != null ? behavior().itemCount() : 0));
         notifyReady();
     }
 

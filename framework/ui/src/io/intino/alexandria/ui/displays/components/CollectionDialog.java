@@ -29,6 +29,12 @@ public class CollectionDialog<DN extends CollectionDialogNotifier, B extends Box
 		createSearchBox();
 	}
 
+	@Override
+	public void init() {
+		super.init();
+		createSearchBox();
+	}
+
 	@	Override
 	public void open() {
 		super.open();
@@ -70,6 +76,7 @@ public class CollectionDialog<DN extends CollectionDialogNotifier, B extends Box
 
 	private void createSearchBox() {
 		if (!allowSearch) return;
+		if (searchBox != null) removeChild(searchBox, DefaultInstanceContainer);
 		this.searchBox = new SearchBox<>(box());
 		if (collection != null) searchBox().ifPresent(searchBox -> searchBox.bindTo(collection));
 		add(searchBox);

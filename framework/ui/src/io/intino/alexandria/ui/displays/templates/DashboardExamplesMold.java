@@ -16,6 +16,13 @@ public class DashboardExamplesMold extends AbstractDashboardExamplesMold<UiFrame
         initMetabaseDashboard();
     }
 
+    @Override
+    public void refresh() {
+        super.refresh();
+        shinyDashboard.refresh();
+        metabaseDashboard.refresh();
+    }
+
     private void initShinyDashboard() {
         shinyDashboard.adminMode(true);
         shinyDashboard.driver(new Driver("http://10.13.13.37:3838"));

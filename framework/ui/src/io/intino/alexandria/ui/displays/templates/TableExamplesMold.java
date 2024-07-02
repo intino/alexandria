@@ -29,6 +29,13 @@ public class TableExamplesMold extends AbstractTableExamplesMold<AlexandriaUiBox
         table.onAddItem(this::onAddItem);
     }
 
+    @Override
+    public void refresh() {
+        super.refresh();
+        table1.reload();
+        table2.reload();
+    }
+
     private void onAddItem(AddItemEvent event) {
         Person person = event.item();
 

@@ -24,7 +24,7 @@ public class DownloadExamplesMold extends AbstractDownloadExamplesMold<Alexandri
         return (event) -> new UIFile() {
             @Override
             public String label() {
-                return "example" + (!event.option().isEmpty() ? " - " + event.option() : "") + ".pdf";
+                return "example" + (event.option() != null && !event.option().isEmpty() ? " - " + event.option() : "") + ".pdf";
             }
 
             @Override

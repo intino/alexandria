@@ -1,6 +1,32 @@
 def type(display, accessible)
 end
 
+def type(display, template, scrollable)
+    package $package.mobile.android.displays<<.$packageType~s>>
+
+    import android.content.Context
+    import android.util.AttributeSet
+    import android.view.View
+    import android.widget.ScrollView
+    import io.intino.alexandria.mobile.android.R
+    import io.intino.alexandria.mobile.displays.notifiers.TemplateNotifier
+    import io.intino.alexandria.mobile.displays.requesters.TemplateRequester
+
+    open class $name+firstUpperCase @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, defStyleRes: Int = 0, layout: Int? = null) : io.intino.alexandria.mobile.android.displays.components.Template<TemplateRequester, TemplateNotifier>(context, attrs, defStyleAttr, defStyleRes, R.layout.$name+camelCaseToSnakeCase+lowerCase) {
+        init {
+            this.notifier = TemplateNotifier(this)
+            this.requester = TemplateRequester(this)
+            val scroller = findViewById<ScrollView>(R.id.$name+camelCaseToSnakeCase~_scroll)
+            <<$component+transfer...[$NL]>>
+            scroller.setOnTouchListener { _, _ ->
+                scroller.requestDisallowInterceptTouchEvent(false)
+                false
+            }
+            <<$component+scrolling...[$NL]>>
+        }
+    }
+end
+
 def type(display, template)
     package $package.mobile.android.displays<<.$packageType~s>>
 

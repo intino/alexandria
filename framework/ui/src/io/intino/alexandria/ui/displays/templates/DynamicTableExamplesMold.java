@@ -37,6 +37,12 @@ public class DynamicTableExamplesMold extends AbstractDynamicTableExamplesMold<U
         //dynamicTable1.onSelectRows(e -> notifyUser("Selection: " + serialize(e.selection()), UserMessage.Type.Info));
     }
 
+    @Override
+    public void refresh() {
+        super.refresh();
+        dynamicTable1.reload();
+    }
+
     private String serialize(Map<Section, List<String>> selection) {
         return selection.entrySet().stream().map(e -> e.getKey().label() + ": " + String.join(",", e.getValue())).collect(Collectors.joining(";"));
     }

@@ -19,6 +19,12 @@ public class GroupingToolbarExamplesMold extends AbstractGroupingToolbarExamples
         list1.onAddItem(this::onAddItem);
     }
 
+    @Override
+    public void refresh() {
+        super.refresh();
+        list1.reload();
+    }
+
     private void onAddItem(AddItemEvent event) {
         GroupingToolbar1Mold component = event.component();
         Person person = event.item();

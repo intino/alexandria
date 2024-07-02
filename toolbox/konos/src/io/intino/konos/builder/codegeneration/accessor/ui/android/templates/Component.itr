@@ -18,6 +18,12 @@ def type(selector, child) and trigger(transfer)
     $component+transfer...[$NL]
 end
 
+def type(toolbar, child) and trigger(transfer)
+    val $parentPath+dotsWithUnderscore~_$id = findViewById<$extends<*, *>>(R.id.<<$parentPath+dotsWithUnderscore~_>>$id)
+    $parentPath+dotsWithUnderscore~_$id.transfer(listOf($component+transferFind...[,]))
+    $component+transfer...[$NL]
+end
+
 def type(alertdialog, child) and trigger(transfer)
 end
 
@@ -28,6 +34,20 @@ def type(abstractdialog, child) and trigger(transfer)
 end
 
 def type(child) and trigger(transfer)
+end
+
+def type(block, child) and trigger(scrolling)
+    $component+scrolling...[$NL]
+end
+
+def type(collection, child) and trigger(scrolling)
+    findViewById<View>(R.id.<<$parentPath+dotsWithUnderscore~_>>$id).setOnTouchListener { _, _ ->
+        scroller.requestDisallowInterceptTouchEvent(true)
+        false
+    }
+end
+
+def type(child) and trigger(scrolling)
 end
 
 def type(child, basestamp) and trigger(transferFind)
@@ -61,9 +81,9 @@ end
 
 def type(component, child)
 	<$extends android:id="@+id/<<$parentPath+~.>>$id"<< android:layout_height="wrap_content" android:layout_width="wrap_content">>$properties+common$properties+specific<< $code>>~>
-		<<$reference...[$NL]>>
+		<<$reference...[$NL]~>>
 		<<$methods>>
-		<<$component+child...[$NL]>>
+		<<$component+child...[$NL]~>>
 	<<~</$extends>~>>
 end
 
@@ -227,7 +247,7 @@ def type(properties, splitbutton) and trigger(specific)
 end
 
 def type(properties, export) and trigger(specific)
-	<< alexandria:export_from="$from">><< alexandria:export_to="$to">><< alexandria:export_min="$min">><< alexandria:export_max="$max">><< alexandria:export_range="{min:$rangeMin,max:$rangeMax}">><< alexandria:export_options="['$option...[',']']">>
+	<< alexandria:export_from="$from">><< alexandria:export_to="$to">><< alexandria:export_min="$min">><< alexandria:export_max="$max">><< alexandria:export_range="{'min':$rangeMin,'max':$rangeMax}">><< alexandria:export_options="['$option...[',']']">>
 end
 
 def type(properties, download) and trigger(specific)

@@ -26,8 +26,10 @@ public class MobileDocsTemplate extends AbstractMobileDocsTemplate<AlexandriaUiB
 		widgetList.onAddItem(this::refresh);
 		widgetTypeSelector.onSelect(this::refreshWidgets);
 		widgetStamp.onBack(e -> showCatalogBlock());
-		open(Model.widget(Model.WidgetType.Dialog));
+		//open(Model.widget(Model.WidgetType.Dialog));
 		//open(Model.widget(Model.WidgetType.Selector));
+		open(Model.widget(Model.WidgetType.Export));
+		//open(Model.widget(Model.WidgetType.List));
 		//widgetTypeSelector.select("operationOption");
 	}
 
@@ -64,7 +66,6 @@ public class MobileDocsTemplate extends AbstractMobileDocsTemplate<AlexandriaUiB
 		showWidgetBlock();
 		widgetStamp.mode(WidgetMold.Mode.Embedded);
 		widgetStamp.item(widget);
-		widgetStamp.refresh();
 	}
 
 	private void showCatalogBlock() {
