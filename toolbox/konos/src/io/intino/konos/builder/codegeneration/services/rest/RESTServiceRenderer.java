@@ -48,7 +48,7 @@ public class RESTServiceRenderer extends Renderer {
 	}
 
 	private void generateApiPortal() {
-		final File api = new File(res(Target.Service), "www" + File.separator + "api");
+		final File api = new File(res(Target.Service), "www" + File.separator + "doc");
 		copyAssets(api);
 		File data = new File(api, "data");
 		data.mkdirs();
