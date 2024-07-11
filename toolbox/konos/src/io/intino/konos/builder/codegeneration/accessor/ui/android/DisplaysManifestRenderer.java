@@ -85,6 +85,7 @@ public class DisplaysManifestRenderer extends UIRenderer {
 	private <D extends PassiveView> Frame display(D display, boolean accessible) {
 		FrameBuilder result = new FrameBuilder("display", typeOf(display));
 
+		result.add("package", packageName());
 		result.add("name", nameOf(display));
 		result.add("directory", ElementHelper.isRoot(display) ? "src" : "gen");
 

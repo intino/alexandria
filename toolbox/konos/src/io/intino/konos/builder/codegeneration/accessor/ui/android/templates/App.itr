@@ -52,6 +52,8 @@ def type(resource)
 end
 
 def type(gradle, settings)
+    enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
     pluginManagement {
         repositories {
             google()
@@ -69,13 +71,14 @@ def type(gradle, settings)
 
     rootProject.name = "$project"
     include(":android")
+    include(":android-library")
     include(":shared")
 end
 
 def type(gradle, android)
     plugins {
-        id("com.android.application")
-        kotlin("android")
+        alias(libs.plugins.androidApplication)
+        alias(libs.plugins.kotlinAndroid)
     }
 
     android {
@@ -86,15 +89,36 @@ def type(gradle, android)
             minSdk = 32
             targetSdk = 34
             versionCode = 1
-            versionName = "1.0"
+            versionName = "$version"
+            setProperty("archivesBaseName", "$project-$version")
+        }
+    }
+
+    dependencies {
+        implementation(projects.androidLibrary)
+        implementation(projects.shared)
+    }
+end
+
+def type(gradle, androidLibrary)
+    plugins {
+        alias(libs.plugins.androidLibrary)
+        alias(libs.plugins.kotlinAndroid)
+        alias(libs.plugins.compose.compiler)
+    }
+
+    android {
+        namespace = "$package.mobile.android"
+        compileSdk = 34
+        defaultConfig {
+            minSdk = 32
+            version = "$version"
+            setProperty("archivesBaseName", "$project-$version")
         }
         buildFeatures {
             compose = true
         }
-        composeOptions {
-            kotlinCompilerExtensionVersion = "1.4.4"
-        }
-        packagingOptions {
+        packaging {
             resources {
                 excludes += "/META-INF/{AL2.0,LGPL2.1}"
             }
@@ -108,33 +132,32 @@ def type(gradle, android)
             sourceCompatibility = JavaVersion.VERSION_18
             targetCompatibility = JavaVersion.VERSION_18
         }
+        kotlinOptions {
+            jvmTarget = JavaVersion.VERSION_18.getMajorVersion()
+        }
     }
 
     dependencies {
-        implementation(project(":shared"))
-        implementation("androidx.compose.ui:ui:1.5.4")
-        implementation("androidx.compose.ui:ui-tooling:1.5.4")
-        implementation("androidx.compose.ui:ui-tooling-preview:1.5.4")
-        implementation("androidx.compose.foundation:foundation:1.5.4")
-        implementation("androidx.compose.material:material:1.5.4")
-        implementation("androidx.activity:activity-compose:1.8.2")
-        implementation("com.google.android.material:material:1.11.0")
-        implementation("com.google.android.flexbox:flexbox:3.0.0")
-        implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
-        implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
-        implementation("androidx.databinding:databinding-runtime:8.2.0")
-        implementation("com.caverock:androidsvg-aar:1.4")
-        implementation("com.squareup.okhttp3:okhttp:4.9.0")
-        implementation("com.google.android.gms:play-services-maps:18.2.0")
-        implementation("com.malinskiy:materialicons:1.0.3")
+        implementation(projects.shared)
+        implementation(libs.android.material)
+        implementation(libs.android.flexbox)
+        implementation(libs.kotlinx.datetime)
+        implementation(libs.androidx.activity.compose)
+        implementation(libs.androidx.databinding)
+        implementation(libs.caverock)
+        implementation(libs.http)
+        implementation(libs.android.maps)
+        implementation(libs.material.icons)
+        implementation(files("./libs/alexandria-5.1.25-release.aar"))
+        implementation(files("./libs/alexandria-shared-5.1.25-release.aar"))
     }
 end
 
 def type(gradle, shared)
     plugins {
-        kotlin("multiplatform")
-        id("org.jetbrains.kotlin.plugin.serialization")
-        id("com.android.library")
+        alias(libs.plugins.kotlinMultiplatform)
+        alias(libs.plugins.androidLibrary)
+        alias(libs.plugins.kotlinSerialization)
     }
 
     kotlin {
@@ -147,49 +170,22 @@ def type(gradle, shared)
         ).forEach {
             it.binaries.framework {
                 baseName = "shared"
+                isStatic = true
             }
         }
 
         sourceSets {
-            val commonMain by getting {
-                dependencies {
-                    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
-                    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-                    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.8.22")
-                    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
-                }
+            commonMain.dependencies {
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.kotlin.stdlib)
+                implementation(libs.kotlinx.datetime)
             }
-            val commonTest by getting {
-                dependencies {
-                    implementation(kotlin("test"))
-                }
-            }
-            val androidMain by getting {
-                dependencies {
-                    implementation("com.google.android.material:material:1.11.0")
-                    implementation("com.google.android.flexbox:flexbox:3.0.0")
-                    implementation("com.squareup.okhttp3:okhttp:4.9.0")
-                    implementation("com.android.volley:volley:1.2.1")
-                }
-            }
-            val androidTest by getting
-            val iosX64Main by getting
-            val iosArm64Main by getting
-            val iosSimulatorArm64Main by getting
-            val iosMain by creating {
-                dependsOn(commonMain)
-                iosX64Main.dependsOn(this)
-                iosArm64Main.dependsOn(this)
-                iosSimulatorArm64Main.dependsOn(this)
-            }
-            val iosX64Test by getting
-            val iosArm64Test by getting
-            val iosSimulatorArm64Test by getting
-            val iosTest by creating {
-                dependsOn(commonTest)
-                iosX64Test.dependsOn(this)
-                iosArm64Test.dependsOn(this)
-                iosSimulatorArm64Test.dependsOn(this)
+            androidMain.dependencies {
+                implementation(libs.android.material)
+                implementation(libs.android.flexbox)
+                implementation(libs.http)
+                implementation(libs.volley)
             }
         }
     }
@@ -198,8 +194,9 @@ def type(gradle, shared)
         namespace = "$package.mobile"
         compileSdk = 34
         defaultConfig {
-            minSdk = 32
-            targetSdk = 34
+            minSdk = 24
+            version = "$version"
+            setProperty("archivesBaseName", "$project-~shared-$version")
         }
         compileOptions {
             sourceCompatibility = JavaVersion.VERSION_18

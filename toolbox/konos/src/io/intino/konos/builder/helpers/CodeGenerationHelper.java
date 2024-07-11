@@ -67,12 +67,16 @@ public class CodeGenerationHelper {
 		return type.equalsIgnoreCase("display") || type.equalsIgnoreCase("AccessibleDisplay") ? format(Displays, target) : String.format(DisplaysType, uiSubPath(target), type).toLowerCase();
 	}
 
-	public static File displayRequesterFolder(File folder, Target target) {
-		return new File(folder, format(Requesters, target));
+	public static File displaysFolder(File folder, String type, Target target) {
+		return new File(folder, String.format(DisplaysType, uiSubPath(target), type.toLowerCase()));
 	}
 
-	public static File displayNotifierFolder(File folder, Target target) {
+	public static File displayNotifiersFolder(File folder, Target target) {
 		return new File(folder, format(Notifiers, target));
+	}
+
+	public static File displayRequestersFolder(File folder, Target target) {
+		return new File(folder, format(Requesters, target));
 	}
 
 	public static File resourceFolder(File folder, Target target) {

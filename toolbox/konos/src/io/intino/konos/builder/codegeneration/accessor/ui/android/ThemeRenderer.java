@@ -10,6 +10,7 @@ import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.dsl.Format;
 import io.intino.konos.dsl.Service;
+import io.intino.konos.dsl.Theme;
 import io.intino.magritte.framework.Layer;
 
 import java.io.File;
@@ -37,8 +38,9 @@ public class ThemeRenderer extends UIRenderer {
 	}
 
 	private void renderFormats() {
+		Theme theme = service.graph().theme();
 		FrameBuilder builder = new FrameBuilder("theme");
-		builder.add("type", new FrameBuilder("type", service.graph().theme().type().name()));
+		builder.add("type", new FrameBuilder("type", theme != null ? theme.type().name() : Theme.Type.Normal.name()));
 		usedFormats.stream().filter(u -> !u.isEmpty()).forEach(f -> builder.add("format", formatFrameOf(f)));
 		Commons.write(new File(res(Target.AndroidResource) + File.separator + "values" + File.separator + "styles.xml").toPath(), new ThemeTemplate().render(builder.toFrame(), Formatters.all));
 	}

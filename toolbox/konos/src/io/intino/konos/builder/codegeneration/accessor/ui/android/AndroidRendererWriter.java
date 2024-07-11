@@ -38,7 +38,7 @@ public class AndroidRendererWriter extends UiRendererWriter {
 		Frame frame = builder.toFrame();
 		String name = nameOfPassiveViewFile(element, frame, "Notifier");
 		if (!hasConcreteNotifier(element)) return false;
-		writeFrame(displayNotifierFolder(src(Target.MobileShared), target), element, name, new PassiveViewNotifierTemplate().render(frame, Formatters.all));
+		writeFrame(displayNotifiersFolder(src(Target.MobileShared), target), element, name, new PassiveViewNotifierTemplate().render(frame, Formatters.all));
 		return true;
 	}
 
@@ -47,7 +47,7 @@ public class AndroidRendererWriter extends UiRendererWriter {
 		Frame frame = builder.toFrame();
 		String name = nameOfPassiveViewFile(element, frame, "Requester");
 		if (!hasConcreteRequester(element)) return false;
-		writeFrame(displayRequesterFolder(gen(Target.MobileShared), target), element, name, new PassiveViewRequesterTemplate().render(frame, Formatters.all));
+		writeFrame(displayRequestersFolder(gen(Target.MobileShared), target), element, name, new PassiveViewRequesterTemplate().render(frame, Formatters.all));
 		return true;
 	}
 
