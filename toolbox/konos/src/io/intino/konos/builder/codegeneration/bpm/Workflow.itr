@@ -1,4 +1,4 @@
-def type(workflow)
+rule type(workflow)
 	package $package+validPackage.bpm;
 
 	import io.intino.alexandria.bpm.PersistenceManager;
@@ -33,26 +33,20 @@ def type(workflow)
 			};
 		}
 	}
-end
 
-def trigger(publicMethod)
+rule trigger(publicMethod)
 	public void launch$name+firstUpperCase($parameter+signature...[, ]) {
 		registerProcess(new $name+firstUpperCase(box<<, $parameter+firstLowerCase...[, ]>>));
 	}
-end
 
-def trigger(signature)
+rule trigger(signature)
 	String $this+firstLowerCase
-end
 
-def trigger(process)
+rule trigger(process)
 	case "$name+FirstUpperCase": return new $name+firstUpperCase(id, box);
-end
 
-def type(archetype) and trigger(customizeDirectory)
+rule type(archetype) and trigger(customizeDirectory)
 	new $package.Archetype(box.configuration().home()).$path
-end
 
-def trigger(customizeDirectory)
+rule trigger(customizeDirectory)
 	new java.io.File("$path")
-end

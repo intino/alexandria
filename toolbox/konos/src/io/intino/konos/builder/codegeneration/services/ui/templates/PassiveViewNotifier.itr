@@ -1,4 +1,4 @@
-def type(display, accessible)
+rule type(display, accessible)
 	package $package+validPackage.ui.displays.notifiers;
 
 	import io.intino.alexandria.exceptions.*;
@@ -9,9 +9,8 @@ def type(display, accessible)
 			super(display, carrier);
 		}
 	}
-end
 
-def type(display)
+rule type(display)
 	package $package+validPackage.ui.displays.notifiers;
 
 	import io.intino.alexandria.exceptions.*;
@@ -27,57 +26,44 @@ def type(display)
 		<<$notification...[$NL$NL]>>
 		<<$event...[$NL$NL]>>
 	}
-end
 
-def attribute(extensionOf) and trigger(parentType)
+rule attribute(extensionOf) and trigger(parentType)
 	$parent+firstUpperCase~Notifier
-end
 
-def trigger(parentType)
+rule trigger(parentType)
 	io.intino.alexandria.ui.displays.notifiers.$value+FirstUpperCase~Notifier
-end
 
-def type(notification) and trigger(notification)
+rule type(notification) and trigger(notification)
 	public void $name+firstLowercase(<<$parameter value>>) {
 		put<<$target>>("$name+firstLowercase"<<, "v", $parameter+call>>);
 	}
-end
 
-def type(event)
+rule type(event)
 	public void $name+firstLowerCase() {
 		putToDisplay("$name+firstLowerCase");
 	}
-end
 
-def type(parameter) and trigger(call)
+rule type(parameter) and trigger(call)
 	value
-end
 
-def type(list) and trigger(parameter)
+rule type(list) and trigger(parameter)
 	java.util.List<$value>
-end
 
-def trigger(parameter)
+rule trigger(parameter)
 	$value
-end
 
-def type(schemaImport)
+rule type(schemaImport)
 	import $package.schemas.*;
-end
 
-def attribute(this, All) and trigger(target)
+rule attribute(this, All) and trigger(target)
 	ToAll
-end
 
-def attribute(this, Display) and trigger(target)
+rule attribute(this, Display) and trigger(target)
 	ToDisplay
-end
 
-def attribute(this, Client) and trigger(target)
-end
+rule attribute(this, Client) and trigger(target)
 
-def type(proxyMessage)
+rule type(proxyMessage)
 	public void notifyProxyMessage(String name) {
 		putToDisplay("notifyProxyMessage", "v", name);
 	}
-end

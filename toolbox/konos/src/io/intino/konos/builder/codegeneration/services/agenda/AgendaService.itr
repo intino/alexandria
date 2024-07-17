@@ -1,4 +1,4 @@
-def type(service)
+rule type(service)
 	package $package+ValidPackage;
 
 	import $package+validPackage.$box+PascalCase~Box;
@@ -125,9 +125,8 @@ def type(service)
 			}
 		}
 	}
-end
 
-def type(future) and trigger(class)
+rule type(future) and trigger(class)
 	public class $name+firstUpperCase~Futures {
 		public List<$name+firstUpperCase> all($parameter+predicateSignature...[, ]) {
 			return $name+firstLowerCase~Files().stream()
@@ -141,9 +140,8 @@ def type(future) and trigger(class)
 
 		<<$option+execute...[$NL]>>
 	}
-end
 
-def trigger(register)
+rule trigger(register)
 	private void register$name+firstUpperCase($name+firstUpperCase~Schema schema) {
 		File file = $name+firstLowerCase~File($parameter+schemaParameter...[, ]);
 		register(schema, file);
@@ -155,28 +153,23 @@ def trigger(register)
 		sources.put(schema.timeout().id, file);
 		timeouts.put("$name+firstUpperCase#" + schema.timeout().id, schema.timeout().on());
 	}
-end
 
-def trigger(load)
+rule trigger(load)
 	$name+firstLowerCase~Files().forEach(file -> register(fromString(read(file), $name+firstUpperCase~Schema.class), file));
-end
 
-def trigger(route)
+rule trigger(route)
 	server.route(BaseUri + Abstract$name+firstUpperCase.URI.Path + ":id").post(manager -> execute$name+firstUpperCase(manager.fromPath("id")));
-end
 
-def trigger(ifOption)
+rule trigger(ifOption)
 	if ("$name".equalsIgnoreCase(option)) {
 		future.schema().$name+firstLowerCase(new $future+firstUpperCase~Schema.$name+firstUpperCase($optionParameter+argIndex...[, ]));
 		future.$name+firstLowerCase();
 	}
-end
 
-def trigger(putOption)
+rule trigger(putOption)
 	sources.put(schema.$name+firstLowerCase~().id, file);
-end
 
-def trigger(private)
+rule trigger(private)
 	private void clean($name+firstUpperCase future) {
 		future.uri().ids().forEach(i -> {
 			final File file = sources.remove(i);
@@ -205,15 +198,13 @@ def trigger(private)
 		future.schema(fromString(read(file), $name+firstUpperCase~Schema.class));
 		return future;
 	}
-end
 
-def type(option) and trigger(execute)
+rule type(option) and trigger(execute)
 	public void $name+firstLowerCase($future+FirstUpperCase $future+FirstLowerCase<<, $optionParameter+signature...[, ]>>) {
 		execute($future+FirstLowerCase, "$name+firstLowerCase"<<, $optionParameter+names...[, ]>>);
 	}
-end
 
-def type(future) and trigger(execute)
+rule type(future) and trigger(execute)
 	private void execute$name+firstUpperCase(String id) {
 		final File file = sources.get(id);
 		if (file == null) return;
@@ -228,19 +219,16 @@ def type(future) and trigger(execute)
 		future.timeout();
 		clean(future);
 	}
-end
 
-def trigger(else)
+rule trigger(else)
 	else
-end
 
-def trigger(getter)
+rule trigger(getter)
 	public $name+firstUpperCase~Futures $name+firstLowerCase() {
 		return new $name+firstUpperCase~Futures();
 	}
-end
 
-def trigger(removeMethod)
+rule trigger(removeMethod)
 	public boolean $name+firstLowerCase($parameter+signature...[, ]) {
 		final File file = $name+firstLowerCase~File($parameter+names...[, ]);
 		final $name+firstUpperCase $name+firstLowerCase = AgendaService.this.load$name+firstUpperCase(file);
@@ -250,68 +238,54 @@ def trigger(removeMethod)
 		if (file.exists()) return file.delete();
 		return false;
 	}
-end
 
-def trigger(createMethod)
+rule trigger(createMethod)
 	public $name+firstUpperCase $name+firstLowerCase($parameter+signature...[, ]) {
 		return new $name+firstUpperCase($parameter+names...[, ]);
 	}
-end
 
-def trigger(timeout)
+rule trigger(timeout)
 	if (k.startsWith("$name+FirstUpperCase#")) box.agenda().execute$name+FirstUpperCase(k.split("#")[1]);
-end
 
-def trigger(predicateSignature)
+rule trigger(predicateSignature)
 	Predicate<$type> $name
-end
 
-def trigger(signature)
+rule trigger(signature)
 	$type $name
-end
 
-def trigger(names)
+rule trigger(names)
 	$name
-end
 
-def trigger(argIndex)
+rule trigger(argIndex)
 	params[$index]
-end
 
-def type(Boolean) and trigger(test)
+rule type(Boolean) and trigger(test)
 	$name.test(Boolean.valueOf(f.getName().split("##")[$index]))
-end
 
-def type(Double) and trigger(test)
+rule type(Double) and trigger(test)
 	$name.test(Double.parseDouble(f.getName().split("##")[$index]))
-end
 
 
-def type(Integer) and trigger(test)
+rule type(Integer) and trigger(test)
 	$name.test(Integer.parseInt(f.getName().split("##")[$index]))
-end
 
 
-def trigger(test)
+rule trigger(test)
 	$name.test(f.getName().split("##")[$index])
-end
 
-def trigger(schemaParameter)
+rule trigger(schemaParameter)
 	schema.$name()
-end
 
-def trigger(fluid)
+rule trigger(fluid)
 	$name+firstLowerCase($name+firstLowerCase)
-end
 
-def trigger(optionCreate)
+rule trigger(optionCreate)
 	public $future+firstUpperCase $name+firstLowerCase($optionParameter+signature...[, ]) {
 		schema.$name+firstLowerCase(new $future+firstUpperCase~Schema.$name+firstUpperCase($optionParameter+names...[, ]));
 		return this;
 	}
-end
 
-def trigger(createClass)
+rule trigger(createClass)
 	public class $name+firstUpperCase {
 		private final $name+firstUpperCase~Schema schema;
 
@@ -330,20 +304,15 @@ def trigger(createClass)
 			register$name+firstUpperCase~(schema);
 		}
 	}
-end
 
-def type(schemaImport)
+rule type(schemaImport)
 	import $package.schemas.*;
-end
 
-def type(archetype) and trigger(customizeDirectory)
+rule type(archetype) and trigger(customizeDirectory)
 	new $package.Archetype(box.configuration().home()).$path.root()
-end
 
-def type(custom) and trigger(customizeDirectory)
+rule type(custom) and trigger(customizeDirectory)
 	new File(box.configuration().get("$path+customParameter"))
-end
 
-def trigger(customizeDirectory)
+rule trigger(customizeDirectory)
 	new java.io.File("$path+customParameter")
-end

@@ -1,4 +1,4 @@
-def type(notifier)
+rule type(notifier)
 	export default class Notifier {
 		static subscriptions = [];
 
@@ -81,9 +81,8 @@ def type(notifier)
 			this.pushRegistrations.splice(0, this.pushRegistrations.length);
 		};
 	}
-end
 
-def type(requester)
+rule type(requester)
 	import history from "alexandria-ui-elements/src/util/History";
 
 	export default class Requester {
@@ -118,4 +117,3 @@ def type(requester)
 			return true;
 		};
 	}
-end

@@ -1,4 +1,4 @@
-def type(boxConfiguration)
+rule type(boxConfiguration)
 	package $package;
 
 	import java.util.Map;
@@ -17,42 +17,32 @@ def type(boxConfiguration)
 			return new java.io.File(args.getOrDefault("home", System.getProperty("user.home")));
 		}
 	}
-end
 
-def type(file) and trigger(parameter)
+rule type(file) and trigger(parameter)
 	public File $name+CamelCase() {
 		return get("$value") == null ? null : new File(get("$value"));
 	}
-end
 
-def trigger(parameter)
+rule trigger(parameter)
 	public String $name+CamelCase() {
 		return get("$value");
 	}
-end
 
-def type(custom) and trigger(replace)
+rule type(custom) and trigger(replace)
 	.replace("{$name}", $name+validname+firstLowerCase)
-end
 
-def type(custom) and trigger(signature)
+rule type(custom) and trigger(signature)
 	$type $name+validname+firstLowerCase
-end
-def type(custom) and trigger(name)
+rule type(custom) and trigger(name)
 	$name+validname+firstLowerCase
-end
 
-def type(custom) and trigger(field)
+rule type(custom) and trigger(field)
 	public $type $name+validname+firstLowerCase = "";
-end
 
-def type(custom) and trigger(assign)
+rule type(custom) and trigger(assign)
 	this.$conf+validname+firstLowerCase~Configuration.$name+validname+firstLowerCase = $name+validname+firstLowerCase;
-end
 
-def type(custom) and trigger(parameter)
+rule type(custom) and trigger(parameter)
 	args.get("$conf+firstLowerCase~_$name+validname+firstLowerCase")
-end
 
-def trigger(empty)
-end
+rule trigger(empty)

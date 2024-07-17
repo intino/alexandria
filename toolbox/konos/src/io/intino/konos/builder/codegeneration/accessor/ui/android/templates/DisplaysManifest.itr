@@ -1,4 +1,4 @@
-def type(manifest)
+rule type(manifest)
     package $package.mobile.android.displays
 
     import android.content.Context
@@ -18,51 +18,39 @@ def type(manifest)
         }
 
     }
-end
 
-def type(display, row) and trigger(import)
+rule type(display, row) and trigger(import)
     import $package.mobile.android.displays.rows.$name+firstUppercase
-end
 
-def type(display, row)
+rule type(display, row)
     "$name+firstUppercase" -> $name+firstUppercase~(context)
-end
 
-def type(display, mold) and trigger(import)
+rule type(display, mold) and trigger(import)
     import $package.mobile.android.displays.components.$name+firstUppercase
-end
 
-def type(display, mold)
+rule type(display, mold)
     "$name+firstUppercase" -> $name+firstUppercase~(context)
-end
 
-def type(display, item) and trigger(import)
+rule type(display, item) and trigger(import)
     import $package.mobile.android.displays.items.$name+firstUppercase
-end
 
-def type(display, item)
+rule type(display, item)
     "$name+firstUppercase" -> $name+firstUppercase~(context)
-end
 
-def type(display, template) and trigger(import)
+rule type(display, template) and trigger(import)
     import $package.mobile.android.displays.templates.$name+firstUppercase
-end
 
-def type(display, template)
+rule type(display, template)
     "$name+firstUppercase" -> $name+firstUppercase~(context)
-end
 
-def type(component) and trigger(import)
+rule type(component) and trigger(import)
     import $package.mobile.android.displays.components.$name+firstUppercase
     import $package.mobile.displays.notifiers.$name+firstUppercase~Notifier
     import $package.mobile.displays.requesters.$name+firstUppercase~Requester
-end
 
-def type(display) and trigger(import)
+rule type(display) and trigger(import)
     import $package.mobile.displays.notifiers.$name+firstUppercase~Notifier
     import $package.mobile.displays.requesters.$name+firstUppercase~Requester
-end
 
-def type(display)
+rule type(display)
     "$name+firstUppercase" -> $name+firstUppercase~<$name+firstUppercase~Requester, $name+firstUppercase~Notifier>(context)
-end

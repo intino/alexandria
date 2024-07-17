@@ -1,4 +1,4 @@
-def type(theme)
+rule type(theme)
     <?xml version="1.0" encoding="UTF-8"?>
     <resources>
         <style name="AppTheme" parent="$type"/>
@@ -8,35 +8,29 @@ def type(theme)
         </style>
         $format...[$NL]
     </resources>
-end
 
-def type(type, Normal)
+rule type(type, Normal)
     Theme.Material3.Light
-end
 
-def type(type, Dark)
+rule type(type, Dark)
     Theme.Material3.Dark
-end
 
-def type(format)
+rule type(format)
     <style name="$name">
         <<~<item name="android:textSize">$defaultTextSize</item>~>>
         $attribute...[$NL]
     </style>
-end
 
-def type(attribute, sizeable)
+rule type(attribute, sizeable)
     <item name="android:$topName">$left</item>
     <item name="android:$rightName">$right</item>
     <item name="android:$bottomName">$bottom</item>
     <item name="android:$leftName">$left</item>
-end
 
-def type(attribute)
+rule type(attribute)
     <item name="android:$name">$value</item>
-end
 
-def type(colors)
+rule type(colors)
     <?xml version="1.0" encoding="utf-8"?>
     <resources>
         <color name="white">#FFFFFF</color>
@@ -197,4 +191,3 @@ def type(colors)
         <color name="Navy">#000080</color>
         <color name="Black">#000000</color>
     </resources>
-end

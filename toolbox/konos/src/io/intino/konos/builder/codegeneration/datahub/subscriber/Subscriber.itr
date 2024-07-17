@@ -1,4 +1,4 @@
-def type(subscriber)
+rule type(subscriber)
 	package $package+validPackage.subscribers;
 
 	import $package+validPackage.$box+firstUpperCase~Box;
@@ -14,4 +14,3 @@ def type(subscriber)
 
 		}
 	}
-end

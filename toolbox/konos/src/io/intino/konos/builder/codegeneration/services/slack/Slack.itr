@@ -1,4 +1,4 @@
-def type(slack, gen)
+rule type(slack, gen)
 	package $package+ValidPackage;
 
 	import $package+ValidPackage.slack.*;
@@ -55,9 +55,8 @@ def type(slack, gen)
 			return parameters.isEmpty() ? "" : " <" + String.join("> <", parameters) + ">";
 		}
 	}
-end
 
-def type(slack, actions)
+rule type(slack, actions)
 	package $package+ValidPackage.slack;
 
 	import $package+ValidPackage.$box+validname+FirstUpperCase~Box;
@@ -81,69 +80,53 @@ def type(slack, actions)
 
 		$request+method...[$NL$NL]
 	}
-end
 
 
-def type(level) and trigger(field)
+rule type(level) and trigger(field)
 	private $name+slashToCamelCase+firstUpperCase~Slack $name+slashToCamelCase+firstLowerCase~Slack;
-end
 
-def type(level) and trigger(constructor)
+rule type(level) and trigger(constructor)
 	$name+slashToCamelCase+firstLowerCase~Slack = new $name+slashToCamelCase+firstUpperCase~Slack(box);
-end
 
-def type(level) and trigger(init)
+rule type(level) and trigger(init)
 	$name+slashToCamelCase+firstLowerCase~Slack.init(session(), users());
-end
 
-def type(request) and trigger(add)
+rule type(request) and trigger(add)
 	add("$name+lowerCase", "$context+lowercase", java.util.Arrays.asList($parameter+name...[, ]), java.util.Arrays.asList($component...[, ]), "$description", (properties, args) -> $type+slashToCamelCase+firstLowerCase~Slack.$name+CamelCase(properties<<, $parameter+cast...[, ]>>));
-end
 
-def type(request, newMethod)
+rule type(request, newMethod)
 	public String $name+CamelCase(MessageProperties properties<<, $parameter...[, ]>>) {
 		return "";
 	}
-end
 
-def type(request) and trigger(method)
+rule type(request) and trigger(method)
 	public $responseType $name+CamelCase(MessageProperties properties<<, $parameter...[, ]>>) {
 		return "";
 	}
-end
 
-def trigger(component)
+rule trigger(component)
 	"$value"
-end
 
-def type(parameter) and trigger(name)
+rule type(parameter) and trigger(name)
 	"$name"
-end
 
-def type(parameter, Boolean) and trigger(cast)
+rule type(parameter, Boolean) and trigger(cast)
 	args.length > $pos ? Boolean.parseBoolean(args[~$pos]) : false
-end
 
-def type(parameter, Double) and trigger(cast)
+rule type(parameter, Double) and trigger(cast)
 	args.length > $pos ? Double.parseDouble(args[~$pos]) : 0
-end
 
-def type(parameter, Integer) and trigger(cast)
+rule type(parameter, Integer) and trigger(cast)
 	args.length > $pos ? Integer.parseInt(args[~$pos]) : 0
-end
 
-def type(parameter, String, multiple) and trigger(cast)
+rule type(parameter, String, multiple) and trigger(cast)
 	args
-end
 
-def type(parameter, String) and trigger(cast)
+rule type(parameter, String) and trigger(cast)
 	args.length > $pos ? args[~$pos] : ""
-end
 
-def type(parameter, multiple)
+rule type(parameter, multiple)
 	$type~[] $name
-end
 
-def type(parameter)
+rule type(parameter)
 	$type $name
-end

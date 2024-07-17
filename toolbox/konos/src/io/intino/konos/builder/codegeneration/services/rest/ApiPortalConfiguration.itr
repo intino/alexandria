@@ -1,4 +1,4 @@
-def type(api)
+rule type(api)
 	{
 	  "urls": [
 		$url...[,$NL]
@@ -9,11 +9,9 @@ def type(api)
 	  "color": "$color",
 	  "selectorBorderColor": ""
 	}
-end
 
-def trigger(url)
+rule trigger(url)
 	{
 	  "url": "./data/$this.json",
 	  "name": "$this"
 	}
-end

@@ -1,4 +1,4 @@
-def type(dispatcher)
+rule type(dispatcher)
     package $package.mobile.android.displays
 
     import android.content.Context
@@ -75,30 +75,22 @@ def type(dispatcher)
         }
 
     }
-end
 
-def type(resource, main) and trigger(import)
-end
+rule type(resource, main) and trigger(import)
 
-def type(resource) and trigger(import)
+rule type(resource) and trigger(import)
     import $package.mobile.android.pages.$name+firstUpperCase~Activity
-end
 
-def type(resource, main) and trigger(patternRegister)
-end
+rule type(resource, main) and trigger(patternRegister)
 
-def type(resource) and trigger(patternRegister)
+rule type(resource) and trigger(patternRegister)
     info.put("$name", RouteInfo("$pattern", $name+firstUpperCase~Activity::class.java, listOf($param...[,])))
-end
 
-def type(resource, main) and trigger(info)
+rule type(resource, main) and trigger(info)
     if (matches(address, info.get("$name")!!)) return info.get("$name")
-end
 
-def type(resource) and trigger(info)
+rule type(resource) and trigger(info)
     else if (matches(address, info.get("$name")!!)) return info.get("$name")
-end
 
-def type(param)
+rule type(param)
 	"$name"
-end

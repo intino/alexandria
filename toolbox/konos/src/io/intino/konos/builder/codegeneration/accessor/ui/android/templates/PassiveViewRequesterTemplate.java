@@ -33,7 +33,7 @@ public class PassiveViewRequesterTemplate extends Template {
 		rules.add(rule().condition(trigger("parameter")).output(literal("Uri.encode(value)")));
 		rules.add(rule().condition(all(attribute("upload"), trigger("method"))).output(literal("Application.fileService()!!.upload")));
 		rules.add(rule().condition(all(attribute("download"), trigger("method"))).output(literal("return Application.fileService()!!.download")));
-		rules.add(rule().condition(trigger("method")).output(literal("Application.pushService(element.activity())!!.send")));
+		rules.add(rule().condition(trigger("method")).output(literal("Application.pushService(element.activity())!!.s")));
 		rules.add(rule().condition(all(attribute("download"), trigger("returntype"))).output(literal("io.intino.alexandria.mobile.UiFile")));
 		rules.add(rule().condition(trigger("returntype")));
 		rules.add(rule().condition(allTypes("schemaImport")).output(literal("import ")).output(placeholder("package")).output(literal(".mobile.schemas.*;")));

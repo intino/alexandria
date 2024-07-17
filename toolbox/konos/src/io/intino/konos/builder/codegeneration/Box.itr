@@ -1,4 +1,4 @@
-def type(box)
+rule type(box)
 	package $package;
 
 	public class $name+PascalCase~Box extends AbstractBox {
@@ -40,34 +40,28 @@ def type(box)
 		<<$rest>>
 		<<$authenticationValidator>>
 	}
-end
 
-def trigger(hide)
+rule trigger(hide)
 
-end
 
-def trigger(authservice)
+rule trigger(authservice)
 	protected io.intino.alexandria.ui.services.AuthService authService(java.net.URL authServiceUrl) {
 		//TODO add your authService
 		return null;
 	}
-end
 
-def trigger(rest)
+rule trigger(rest)
 	protected io.intino.alexandria.ui.services.AuthService authService(java.net.URL authServiceUrl) {
 		//TODO add your authService
 		return null;
 	}	
-end
 
-def type(datamartsLoad) and trigger(datamartSourceSelector)
+rule type(datamartsLoad) and trigger(datamartSourceSelector)
 	protected String $datamartsLoad() {
 		return null;//TODO add ss selector using SQL syntax
 	}
-end
 
-def trigger(authenticationValidator)
+rule trigger(authenticationValidator)
 	public io.intino.alexandria.http.security.$type+FirstUpperCase~AuthenticationValidator authenticationValidator() {
 		return token -> false;
 	}
-end

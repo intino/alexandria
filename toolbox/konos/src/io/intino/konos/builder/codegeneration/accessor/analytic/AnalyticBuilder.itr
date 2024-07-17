@@ -1,4 +1,4 @@
-def type(builder)
+rule type(builder)
 	package $package+validPackage.analytic;
 
 	import $package+validPackage.analytic.cubes.schemas.*;
@@ -115,10 +115,8 @@ def type(builder)
 			}
 		}
 	}
-end
 
-def trigger(put)
+rule trigger(put)
 	public void put$name+FirstUpperCase(String tank, Timetag timetag, java.util.function.Consumer<$name+FirstUpperCase~Schema> fact) {
 		session.put(tank, timetag, $name+FirstUpperCase~Schema.class, fact);
 	}
-end

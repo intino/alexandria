@@ -1,4 +1,4 @@
-def type(theme)
+rule type(theme)
 	import { createTheme } from '@material-ui/core/styles';
 
 	const Theme = (function () {
@@ -26,9 +26,8 @@ def type(theme)
 	})();
 
 	export default Theme;
-end
 
-def type(palette)
+rule type(palette)
 	<<type : "$type+lowerCase",
 	>><<primary : { main: "$primary" },
 	>><<secondary : { main: "$secondary" },
@@ -39,14 +38,11 @@ def type(palette)
 		primary: "#888",
 		secondary: '#ddd'
 	}
-end
 
-def type(typography)
+rule type(typography)
 	fontFamily : '$fontFamily',
 	fontSize : $fontSize,
 	useNextVariants: true
-end
 
-def type(format)
+rule type(format)
 	$name: { $content }
-end

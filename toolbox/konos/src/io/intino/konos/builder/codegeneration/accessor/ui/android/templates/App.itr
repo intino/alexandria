@@ -1,4 +1,4 @@
-def type(manifest)
+rule type(manifest)
     <?xml version="1.0" encoding="utf-8"?>
     <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -29,9 +29,8 @@ def type(manifest)
         </application>
 
     </manifest>
-end
 
-def type(resource, main)
+rule type(resource, main)
     <activity
         android:name=".pages.$name+PascalCase~Activity"
         android:exported="true"
@@ -41,17 +40,15 @@ def type(resource, main)
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
     </activity>
-end
 
-def type(resource)
+rule type(resource)
     <activity
         android:name=".pages.$name+PascalCase~Activity"
         android:exported="true"
         android:windowSoftInputMode="adjustNothing">
     </activity>
-end
 
-def type(gradle, settings)
+rule type(gradle, settings)
     enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
     pluginManagement {
@@ -73,9 +70,8 @@ def type(gradle, settings)
     include(":android")
     include(":android-library")
     include(":shared")
-end
 
-def type(gradle, android)
+rule type(gradle, android)
     plugins {
         alias(libs.plugins.androidApplication)
         alias(libs.plugins.kotlinAndroid)
@@ -98,9 +94,8 @@ def type(gradle, android)
         implementation(projects.androidLibrary)
         implementation(projects.shared)
     }
-end
 
-def type(gradle, androidLibrary)
+rule type(gradle, androidLibrary)
     plugins {
         alias(libs.plugins.androidLibrary)
         alias(libs.plugins.kotlinAndroid)
@@ -151,9 +146,8 @@ def type(gradle, androidLibrary)
         implementation(files("./libs/alexandria-5.1.25-release.aar"))
         implementation(files("./libs/alexandria-shared-5.1.25-release.aar"))
     }
-end
 
-def type(gradle, shared)
+rule type(gradle, shared)
     plugins {
         alias(libs.plugins.kotlinMultiplatform)
         alias(libs.plugins.androidLibrary)
@@ -203,31 +197,25 @@ def type(gradle, shared)
             targetCompatibility = JavaVersion.VERSION_18
         }
     }
-end
 
-def type(properties)
+rule type(properties)
     <resources>
         $component...[$NL]
     </resources>
-end
 
-def type(strings)
+rule type(strings)
     <?xml version="1.0" encoding="utf-8"?>
     <resources>
         <string name="app_name">$project</string>
     </resources>
-end
 
-def type(component)
+rule type(component)
     <declare-styleable name="$name+firstUpperCase"<< parent="$parent+firstUpperCase">>~>
         $attribute...[$NL]
     </declare-styleable>
-end
 
-def type(attribute, root)
+rule type(attribute, root)
     <attr name="$name+lowerCase" format="string" />
-end
 
-def type(attribute)
+rule type(attribute)
     <attr name="$component+camelCaseToSnakeCase+lowerCase~_$name+lowerCase" format="string" />
-end

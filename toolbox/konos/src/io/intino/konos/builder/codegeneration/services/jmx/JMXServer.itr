@@ -1,4 +1,4 @@
-def type(jmxserver)
+rule type(jmxserver)
 	package $package+ValidPackage;
 
 	import io.intino.alexandria.jmx.JMXServer;
@@ -21,9 +21,8 @@ def type(jmxserver)
 			return map;
 		}
 	}
-end
 
-def type(jmx) and type(interface)
+rule type(jmx) and type(interface)
 	package $package+ValidPackage.jmx;
 
 	import io.intino.alexandria.logger.Logger;
@@ -41,28 +40,23 @@ def type(jmx) and type(interface)
 
 		$operation+signature...[$NL$NL]
 	}
-end
 
-def type(operation) and trigger(signature)
+rule type(operation) and trigger(signature)
 	@Description("$description")
 	@Parameters({$parameter+displayName...[, ]})
 	$returnType $name+CamelCase($parameter+withType...[, ]);
-end
 
-def type(parameter) and trigger(displayName)
+rule type(parameter) and trigger(displayName)
 	"$name"
-end
 
-def type(parameter, list) and trigger(withType)
+rule type(parameter, list) and trigger(withType)
 	java.util.List<$type> $name
-end
 
-def type(parameter) and trigger(withType)
+rule type(parameter) and trigger(withType)
 	$type $name
-end
 
 
-def type(jmx) and type(implementation)
+rule type(jmx) and type(implementation)
 	package $package+ValidPackage.jmx;
 
 	import io.intino.alexandria.logger.Logger;
@@ -86,9 +80,8 @@ def type(jmx) and type(implementation)
 
 		$operation+implementation...[$NL$NL]
 	}
-end
 
-def type(operation) and trigger(implementation)
+rule type(operation) and trigger(implementation)
 	public $returnType $name+CamelCase+validName+firstLowerCase($parameter+withType...[, ]) {
 		try {
 		$package+ValidPackage.actions.$action+PascalCase~Action action = new $package+ValidPackage.actions.$action+PascalCase~Action();
@@ -100,32 +93,24 @@ def type(operation) and trigger(implementation)
 			throw e;
 		}
 	}
-end
 
-def type(operation) and trigger(help)
+rule type(operation) and trigger(help)
 	"$returnType $name+CamelCase+validName+firstLowerCase($parameter+withType...[, ])<<: $description>>"
-end
 
 
-def type(parameter) and trigger(assign)
+rule type(parameter) and trigger(assign)
 	action.$name = $name;
-end
 
-def type(returnType) and attribute(value,void) and trigger(return)
-end
+rule type(returnType) and attribute(value,void) and trigger(return)
 
-def type(returnType) and trigger(return)
+rule type(returnType) and trigger(return)
 	return
-end
 
-def type(returnType, list) and trigger(returnType)
+rule type(returnType, list) and trigger(returnType)
 	java.util.List<$value>
-end
 
-def type(returnType) and trigger(returnType)
+rule type(returnType) and trigger(returnType)
 	$value
-end
 
-def trigger(quoted)
+rule trigger(quoted)
 	"$value"
-end

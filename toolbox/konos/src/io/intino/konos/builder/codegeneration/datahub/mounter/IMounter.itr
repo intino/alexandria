@@ -1,4 +1,4 @@
-def type(factory)
+rule type(factory)
 	package $package.mounters;
 
 	import io.intino.alexandria.event.Event;
@@ -6,4 +6,3 @@ def type(factory)
 	public interface Mounter {
 		void handle(Event event);
 	}
-end

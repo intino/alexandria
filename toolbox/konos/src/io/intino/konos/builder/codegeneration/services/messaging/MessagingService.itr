@@ -1,4 +1,4 @@
-def type(messaging)
+rule type(messaging)
 	package $package;
 
 	import io.intino.alexandria.terminal.Connector;
@@ -21,16 +21,12 @@ def type(messaging)
 			$request...[$NL]
 		}
 	}
-end
 
-def type(request)
+rule type(request)
 	connector.attachListener($path+format, (r, c) -> new $package.requests.$name+firstUpperCase~Request(box, connector, c).accept(r));
-end
 
-def type(path) and trigger(format)
+rule type(path) and trigger(format)
 	"$name"<<$custom...[]>>
-end
 
-def trigger(custom)
+rule trigger(custom)
 	.replace("{$value}", configuration.get("$value"))
-end

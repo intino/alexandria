@@ -1,4 +1,4 @@
-def type(exception)
+rule type(exception)
 	package $package.exceptions;
 
 	import io.intino.alexandria.exceptions.*;
@@ -15,4 +15,3 @@ def type(exception)
 			super(message, parameters);
 		}
 	}
-end

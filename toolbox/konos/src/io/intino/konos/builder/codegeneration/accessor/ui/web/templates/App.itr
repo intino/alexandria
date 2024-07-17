@@ -1,4 +1,4 @@
-def type(app)
+rule type(app)
 	__webpack_public_path__ = loadAppUrl();
 
 	import React from "react";
@@ -72,20 +72,16 @@ def type(app)
 	}
 
 	launchApplication();
-end
 
-def type(pattern)
+rule type(pattern)
 	url = url.replace(new RegExp("$value", 'g'), "");
-end
 
-def type(page) and trigger(import)
+rule type(page) and trigger(import)
 	import $templateName+firstUpperCase~Page from "../pages/$templateName+firstUpperCase~Page";
-end
 
-def type(page) and trigger(render)
+rule type(page) and trigger(render)
 	const requireGoogleApi = Application.configuration.googleApiKey != null && Application.configuration.googleApiKey !== "";
 	const content = requireGoogleApi ? <GoogleApiLoader onLoad={openPushService()}><$templateName+firstUpperCase~Page/></GoogleApiLoader> : <$templateName+firstUpperCase~Page/>;
 	const $templateName+firstLowerCase = document.getElementById("$templateName+firstUpperCase");
 	if ($templateName+firstLowerCase) ReactDOM.render(<DisplayRouter id="__router__" owner={()=>""} context={()=>""}>{content}</DisplayRouter>, $templateName+firstLowerCase);
 	if (!requireGoogleApi) openPushService();
-end

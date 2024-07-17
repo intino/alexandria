@@ -1,322 +1,243 @@
-def type(reference)
+rule type(reference)
 	<Displays$name+firstUppercase context={this._context.bind(this)} owner={this._owner.bind(this)} id="<<$parentPath~.>>$id"$properties+common$properties+specific></Displays$name+firstUppercase>
-end
 
-def type(block, child) and trigger(transfer)
+rule type(block, child) and trigger(transfer)
     $component+transfer...[$NL]
-end
 
-def type(header, child) and trigger(transfer)
+rule type(header, child) and trigger(transfer)
     val $parentPath+dotsWithUnderscore~_$id = findViewById<$extends<*, *>>(R.id.<<$parentPath+dotsWithUnderscore~_>>$id)
     $parentPath+dotsWithUnderscore~_$id.transfer(listOf($component+transferFind...[,]))
     $component+transfer...[$NL]
-end
 
-def type(selector, child) and trigger(transfer)
+rule type(selector, child) and trigger(transfer)
     val $parentPath+dotsWithUnderscore~_$id = findViewById<$extends<*, *>>(R.id.<<$parentPath+dotsWithUnderscore~_>>$id)
     $parentPath+dotsWithUnderscore~_$id.transfer(listOf($component+transferFind...[,]))
     $component+transfer...[$NL]
-end
 
-def type(toolbar, child) and trigger(transfer)
+rule type(toolbar, child) and trigger(transfer)
     val $parentPath+dotsWithUnderscore~_$id = findViewById<$extends<*, *>>(R.id.<<$parentPath+dotsWithUnderscore~_>>$id)
     $parentPath+dotsWithUnderscore~_$id.transfer(listOf($component+transferFind...[,]))
     $component+transfer...[$NL]
-end
 
-def type(alertdialog, child) and trigger(transfer)
-end
+rule type(alertdialog, child) and trigger(transfer)
 
-def type(abstractdialog, child) and trigger(transfer)
+rule type(abstractdialog, child) and trigger(transfer)
     val $parentPath+dotsWithUnderscore~_$id = findViewById<$extends<*, *>>(R.id.<<$parentPath+dotsWithUnderscore~_>>$id)
     $parentPath+dotsWithUnderscore~_$id.transfer(listOf($component+transferFind...[,]))
     $component+transfer...[$NL]
-end
 
-def type(child) and trigger(transfer)
-end
+rule type(child) and trigger(transfer)
 
-def type(block, child) and trigger(scrolling)
+rule type(block, child) and trigger(scrolling)
     $component+scrolling...[$NL]
-end
 
-def type(collection, child) and trigger(scrolling)
+rule type(collection, child) and trigger(scrolling)
     findViewById<View>(R.id.<<$parentPath+dotsWithUnderscore~_>>$id).setOnTouchListener { _, _ ->
         scroller.requestDisallowInterceptTouchEvent(true)
         false
     }
-end
 
-def type(child) and trigger(scrolling)
-end
+rule type(child) and trigger(scrolling)
 
-def type(child, basestamp) and trigger(transferFind)
+rule type(child, basestamp) and trigger(transferFind)
     findViewById(R.id.<<$parentPath+dotsWithUnderscore~_>>$id)
-end
 
-def type(child) and trigger(transferFind)
+rule type(child) and trigger(transferFind)
     findViewById(R.id.<<$parentPath+dotsWithUnderscore~_>>$id)
-end
 
-def type(child) and trigger(declaration)
-end
+rule type(child) and trigger(declaration)
 
-def type(block, child) and trigger(child)
+rule type(block, child) and trigger(child)
 	$value
-end
 
-def type(child) and trigger(child)
+rule type(child) and trigger(child)
 	$value
-end
 
-def type(child) and trigger(add)
-end
+rule type(child) and trigger(add)
 
-def type(component, child, item)
-end
+rule type(component, child, item)
 
-def type(component, child, block, parentIsSelector)
+rule type(component, child, block, parentIsSelector)
     <io.intino.alexandria.mobile.android.displays.components.Text android:id="@+id/<<$parentPath+~.>>$id" android:layout_height="wrap_content" android:layout_width="wrap_content" alexandria:alexandria_name="option" alexandria:text_mode="normal" alexandria:text_value="Not supported in mobile list view"></io.intino.alexandria.mobile.android.displays.components.Text~>
-end
 
-def type(component, child)
+rule type(component, child)
 	<$extends android:id="@+id/<<$parentPath+~.>>$id"<< android:layout_height="wrap_content" android:layout_width="wrap_content">>$properties+common$properties+specific<< $code>>~>
 		<<$reference...[$NL]~>>
 		<<$methods>>
 		<<$component+child...[$NL]~>>
 	<<~</$extends>~>>
-end
 
-def type(extends, multiple, image)
+rule type(extends, multiple, image)
 	io.intino.alexandria.mobile.android.displays.components.MultipleImage
-end
 
-def type(extends, multiple)
+rule type(extends, multiple)
 	io.intino.alexandria.mobile.android.displays.components.Multiple
-end
 
-def type(extends, displaystamp)
+rule type(extends, displaystamp)
 	io.intino.alexandria.mobile.android.displays.components.$type+firstUpperCase$facet...[]
-end
 
-def type(extends, proxystamp)
+rule type(extends, proxystamp)
 	io.intino.alexandria.mobile.android.displays.components.ProxyStamp
-end
 
-def type(extends, basestamp)
+rule type(extends, basestamp)
 	$package.mobile.android.displays.templates.$type+firstUpperCase
-end
 
-def type(extends)
+rule type(extends)
 	io.intino.alexandria.mobile.android.displays.components.$type+firstUpperCase$facet...[]
-end
 
-def type(facet)
+rule type(facet)
 	$name+firstUpperCase
-end
 
-def type(method)
-end
+rule type(method)
 
-def type(properties, actionable) and trigger(common)
+rule type(properties, actionable) and trigger(common)
 	<< alexandria:actionable_title="$title">><< alexandria:alexandria_name="$name">><< alexandria:actionable_target="$target">><< alexandria:actionable_mode="$actionableMode">><< alexandria:actionable_icon="$icon">><< alexandria:actionable_affirmed="$affirmed">><< alexandria:actionable_traceable="$traceable">><< alexandria:actionable_signed="{'mode':'$signMode','text':'$signText','reason':'$reasonText'}">><< alexandria:actionable_readonly="$readonly">><< alexandria:actionable_size="$size">><< style="@style/$format...[_]">><< alexandria:actionable_highlighted="$highlighted">><< alexandria:alexandria_visible="$visible">><< alexandria:alexandria_style="$style">><< alexandria:alexandria_color="$color">>
-end
 
-def type(properties, abstractslider) and trigger(common)
+rule type(properties, abstractslider) and trigger(common)
 	<< alexandria:alexandria_label="$label">><< style="@style/$format...[_]">><< alexandria:alexandria_color="$color">><< alexandria:abstract_slider_traceable="$traceable">><< alexandria:abstract_slider_arrangement="$arrangement">><< alexandria:abstract_slider_animation="{interval:$interval,loop:$loop}">><< alexandria:abstract_slider_readonly="$readonly">><< alexandria:alexandria_visible="$visible">><< alexandria:abstract_slider_style="$style">><< alexandria:abstract_slider_position="$position">>
-end
 
-def type(properties, appDirectory) and trigger(common)
+rule type(properties, appDirectory) and trigger(common)
 	<< alexandria:app_directory_icon="$icon">><< alexandria:alexandria_visible="$visible">><< alexandria:alexandria_style="$style">>
-end
 
-def type(properties, dashboard) and trigger(common)
+rule type(properties, dashboard) and trigger(common)
 	<< alexandria:dashboard_width="$width">><< alexandria:dashboard_height="$height">><< alexandria:alexandria_style="$style">>
-end
 
-def type(properties) and trigger(common)
+rule type(properties) and trigger(common)
     << alexandria:alexandria_name="$name">><< alexandria:alexandria_label="$label">><< style="@style/$format...[_]">><< alexandria:alexandria_color="$color">><< alexandria:alexandria_visible="$visible">><< alexandria:alexandria_traceable="$traceable">><< alexandria:alexandria_multiple_instances="$instances">><< alexandria:alexandria_multiple_arrangement="$multipleArrangement">><< alexandria:alexandria_multiple_no_items_message="$multipleNoItemsMessage">><< alexandria:alexandria_multiple_spacing="$multipleSpacing">><< alexandria:alexandria_multiple_editable="$multipleEditable">><< alexandria:alexandria_multiple_wrap="$multipleWrapItems">><< alexandria:alexandria_multiple_collapsed="$multipleCollapsed">><< alexandria:alexandria_multiple_count_min="$multipleMin">><< alexandria:alexandria_multiple_count_max="$multipleMax">><< alexandria:alignContent="$multipleAlign" alexandria:alignItems="$multipleAlign" alexandria:showDivider="middle">><< alexandria:alexandria_style="$style">>
-end
 
-def type(properties, openpopover) and trigger(specific)
+rule type(properties, openpopover) and trigger(specific)
 	<< alexandria:open_popover_trigger_event="$triggerEvent">>
-end
 
-def type(properties, signtext) and trigger(specific)
+rule type(properties, signtext) and trigger(specific)
 	<< alexandria:sign_text_content="$text">><< alexandria:sign_text_format="$signFormat">>
-end
 
-def type(properties, template) and trigger(specific)
+rule type(properties, template) and trigger(specific)
 	<< alexandria:template_layout="$layout...[ ]">><< alexandria:template_width="$width">><< alexandria:template_height="$height">><< alexandria:template_spacing="$spacing">>
-end
 
-def type(properties, basestamp) and trigger(specific)
+rule type(properties, basestamp) and trigger(specific)
 	<< alexandria:base_stamp_spacing="$spacing">>
-end
 
-def type(properties, materialicon) and trigger(specific)
+rule type(properties, materialicon) and trigger(specific)
 	<< alexandria:material_icon_icon="$icon">>
-end
 
-def type(properties, selector) and trigger(specific)
+rule type(properties, selector) and trigger(specific)
 	<< alexandria:selector_multiple_selection="$multipleSelection">><< alexandria:selector_readonly="$readonly">><< alexandria:selector_focused="$focused">><< alexandria:selector_placeholder="$placeholder">><< alexandria:selector_selected="$selected">><< alexandria:selector_layout="$layout">><< alexandria:selector_size="$size">><< alexandria:selector_max_menu_height="$maxMenuHeight">><< alexandria:selector_allow_other="$allowOther">><< alexandria:selector_scroll_buttons="$scrollButtons">><< alexandria:selector_view="$view">>
-end
 
-def type(properties, image) and trigger(specific)
+rule type(properties, image) and trigger(specific)
 	<< alexandria:image_width="$width">><< alexandria:image_height="$height">><< alexandria:image_mobile_reduce_factor="$mobileReduceFactor">><< alexandria:image_allow_full_screen="$allowFullscreen">>
-end
 
-def type(properties, file) and trigger(specific)
+rule type(properties, file) and trigger(specific)
 	<< alexandria:file_width="$width">><< alexandria:file_height="$height">><< alexandria:file_preview="$preview">><< alexandria:file_drop_zone="$dropZone">><< alexandria:file_max_size="$maxSize">><< alexandria:file_allowed_types="[$allowedTypes]">>
-end
 
-def type(properties, chart) and trigger(specific)
+rule type(properties, chart) and trigger(specific)
 	<< alexandria:chart_width="$width">><< alexandria:chart_height="$height">>
-end
 
-def type(properties, alertdialog) and trigger(specific)
+rule type(properties, alertdialog) and trigger(specific)
 	<< alexandria:alert_dialog_title="$title">><< alexandria:alert_dialog_modal="$modal">><< alexandria:alert_dialog_full_screen="$fullscreen">><< alexandria:alert_dialog_message="$message">><< alexandria:alert_dialog_close_label="$closeLabel">><< alexandria:alert_dialog_accept_label="$acceptLabel">><< alexandria:alert_dialog_width="$width">><< alexandria:alert_dialog_height="$height">><< alexandria:alert_dialog_animation="{'mode':'$mode','direction':'$transitionDirection','duration':'$transitionDuration'}">>
-end
 
-def type(properties, abstractdialog) and trigger(specific)
+rule type(properties, abstractdialog) and trigger(specific)
 	<< alexandria:abstract_dialog_title="$title">><< alexandria:abstract_dialog_modal="$modal">><< alexandria:abstract_dialog_full_screen="$fullscreen">><< alexandria:abstract_dialog_width="$width">><< alexandria:abstract_dialog_height="$height">><< alexandria:abstract_dialog_animation="{'mode':'$mode','direction':'$transitionDirection','duration':'$transitionDuration'}">>
-end
 
-def type(properties, block) and trigger(specific)
+rule type(properties, block) and trigger(specific)
 	<< alexandria:block_layout="$layout...[ ]">><< alexandria:block_width="$width">><< alexandria:block_height="$height">><< alexandria:showDivider="middle">><< alexandria:dividerDrawable="@drawable/spacing_$spacing">><< alexandria:block_paper="$paperBoolean">><< android:background="@drawable/$paper">><< $badge>><< $drawer>><< $popover>><< alexandria:block_animation="{'mode':'$mode','direction':'$transitionDirection','duration':'$transitionDuration'}">><< alexandria:block_hidden="$hidden">><< alexandria:block_auto_size="$autoSize">><< android:visibility="$conditional~gone">>
-end
 
-def type(properties, date) and trigger(specific)
+rule type(properties, date) and trigger(specific)
 	<< alexandria:date_pattern="$pattern">><< alexandria:date_mode="$mode">><< alexandria:date_value="new Date($value)">><< alexandria:date_time_picker="$timePicker">><< alexandria:date_mask="$mask">><< alexandria:date_embedded="$embedded">><< alexandria:date_allow_empty="$allowEmpty">><< alexandria:date_views="['$view...[',']']">><< alexandria:date_shrink="$shrink">>
-end
 
-def type(properties, user) and trigger(specific)
+rule type(properties, user) and trigger(specific)
 	<< alexandria:user_mode="$mode">>
-end
 
-def type(properties, number) and trigger(specific)
+rule type(properties, number) and trigger(specific)
 	<< alexandria:number_value="$value">><< alexandria:number_prefix="$prefix">><< alexandria:number_suffix="$suffix">><< alexandria:number_min="$min">><< alexandria:number_max="$max">><< alexandria:number_step="$step">><< alexandria:number_readonly="$readonly">><< alexandria:number_focused="$focused">><< alexandria:number_decimals="$decimals">><< alexandria:number_expanded="$expanded">><< alexandria:number_helper_text="$helperText">><< alexandria:number_shrink="$shrink">>
-end
 
-def type(properties, header) and trigger(specific)
+rule type(properties, header) and trigger(specific)
 	<< alexandria:header_position="$position">><< alexandria:header_width="$width">><< alexandria:header_height="$height">><< alexandria:header_elevation="$elevation">>
-end
 
-def type(properties, code) and trigger(specific)
+rule type(properties, code) and trigger(specific)
 	<< alexandria:code_mode="$mode">><< alexandria:code_language="$language">><< alexandria:code_highlighted=$highlighted>>
-end
 
-def type(properties, text) and trigger(specific)
+rule type(properties, text) and trigger(specific)
 	<< alexandria:text_mode="$mode">><< alexandria:text_edition_mode="$editionMode">><< alexandria:text_max_length="$maxLength">><< alexandria:text_rows="$rows">><< alexandria:text_prefix="$prefix">><< alexandria:text_suffix="$suffix">><< alexandria:text_translate="$translate">><< alexandria:text_crop_with_ellipsis="$cropWithEllipsis">><< alexandria:text_value="$defaultValue+escapeHtml">><< alexandria:text_placeholder="$placeholder">><< alexandria:text_readonly="$readonly">><< alexandria:text_focused="$focused">><< $highlighted>><< alexandria:text_type="$type">><< alexandria:text_helper_text="$helperText">><< alexandria:text_shrink="$shrink">><< alexandria:text_pattern="$pattern">>
-end
 
-def type(properties, location) and trigger(specific)
+rule type(properties, location) and trigger(specific)
 	<< alexandria:location_center="{lat:$centerLat,lng:$centerLng}">><< alexandria:location_zoom="{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}">><< alexandria:location_modes="['$mode...[',']']">><< alexandria:location_controls="$controls">>
-end
 
-def type(properties, map) and trigger(specific)
+rule type(properties, map) and trigger(specific)
 	<< alexandria:map_page_size="$pageSize">><< alexandria:map_type="$type">><< alexandria:map_item_height="$itemHeight">><< alexandria:map_center="{lat:$centerLat,lng:$centerLng}">><< alexandria:map_zoom="{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}">><< alexandria:map_controls="$controls">>
-end
 
-def type(properties, collection) and trigger(specific)
+rule type(properties, collection) and trigger(specific)
 	<< alexandria:collection_no_items_message="$noItemsMessage">><< alexandria:map_no_items_found_message="$noItemsFoundMessage">><< alexandria:collection_page_size="$pageSize">><< alexandria:collection_item_height="$itemHeight">><< alexandria:collection_scrolling_mark="$scrollingMark">><< alexandria:collection_navigable="$navigable">><< alexandria:collection_selection="$selection">>
-end
 
-def type(properties, heading) and trigger(specific)
+rule type(properties, heading) and trigger(specific)
 	 alexandria:heading_style="{width:'$width~%',paddingRight:'10px'<<,$paddingLeft:'10px'>>}"<< alexandria:heading_hidden="$hidden">>
-end
 
-def type(properties, item) and trigger(specific)
+rule type(properties, item) and trigger(specific)
 	 alexandria:item_style="{width:'$width~%',paddingRight:'10px'<<,$paddingLeft:'10px'>>}"<< alexandria:item_hidden="$hidden">>
-end
 
-def type(properties, spinner) and trigger(specific)
+rule type(properties, spinner) and trigger(specific)
 	<< alexandria:spinner_mode="$mode">><< alexandria:spinner_size="$size">>
-end
 
-def type(properties, switch) and trigger(specific)
+rule type(properties, switch) and trigger(specific)
 	<< alexandria:switch_state="$state">>
-end
 
-def type(properties, toggle) and trigger(specific)
+rule type(properties, toggle) and trigger(specific)
 	<< alexandria:toggle_state="$state">>
-end
 
-def type(properties, splitbutton) and trigger(specific)
+rule type(properties, splitbutton) and trigger(specific)
 	<< alexandria:split_button_options="['$option...[',']']">><< alexandria:split_button_default_option="$default">>
-end
 
-def type(properties, export) and trigger(specific)
+rule type(properties, export) and trigger(specific)
 	<< alexandria:export_from="$from">><< alexandria:export_to="$to">><< alexandria:export_min="$min">><< alexandria:export_max="$max">><< alexandria:export_range="{'min':$rangeMin,'max':$rangeMax}">><< alexandria:export_options="['$option...[',']']">>
-end
 
-def type(properties, download) and trigger(specific)
+rule type(properties, download) and trigger(specific)
 	<< alexandria:download_options="['$option...[',']']">>
-end
 
-def type(properties, download, selection) and trigger(specific)
+rule type(properties, download, selection) and trigger(specific)
 	<< alexandria:download_options="['$option...[',']']">>
-end
 
-def type(properties, searchbox) and trigger(specific)
+rule type(properties, searchbox) and trigger(specific)
 	<< alexandria:search_box_placeholder="$placeholder">><< alexandria:search_box_show_count_message="$showCountMessage">>
-end
 
-def type(properties, slider) and trigger(specific)
+rule type(properties, slider) and trigger(specific)
 	<< alexandria:slider_range="{min:$min,max:$max}">><< alexandria:slider_value="$value">>
-end
 
-def type(properties, grouping) and trigger(specific)
+rule type(properties, grouping) and trigger(specific)
 	<< alexandria:grouping_page_size="$pageSize">><< alexandria:grouping_placeholder="$placeholder">>
-end
 
-def type(properties, stepper) and trigger(specific)
+rule type(properties, stepper) and trigger(specific)
    << alexandria:stepper_orientation="$orientation+lowercase">><< alexandria:stepper_position="$position+lowercase">>
-end
 
-def type(properties, frame) and trigger(specific)
+rule type(properties, frame) and trigger(specific)
    << alexandria:frame_width="$width">><< alexandria:frame_height="$height">><< alexandria:frame_url="$url">>
-end
 
-def type(properties, sorting) and trigger(specific)
+rule type(properties, sorting) and trigger(specific)
 	<< alexandria:sorting_mode="$mode">><< alexandria:sorting_align="$align">>
-end
 
-def type(properties, htmlviewer) and trigger(specific)
+rule type(properties, htmlviewer) and trigger(specific)
 	<< alexandria:html_viewer_content="$content+escapeHtml">>
-end
 
-def type(properties, microsite) and trigger(specific)
+rule type(properties, microsite) and trigger(specific)
 	<< alexandria:microsite_download_operations="['$downloadOperation...[',']']">>
-end
 
-def type(properties) and trigger(specific)
-end
+rule type(properties) and trigger(specific)
 
-def type(badge)
+rule type(badge)
 	mode="$mode"<< value="$value">><< max="$max">><< showZero="$showZero">>
-end
 
-def type(drawer)
+rule type(drawer)
 	position="$position" variant="$variant"
-end
 
-def type(popover)
+rule type(popover)
 	position="$position"
-end
 
-def type(code)
+rule type(code)
 	alexandria:text_value="$value+escapeHtml"
-end
 
-def type(highlighted)
+rule type(highlighted)
 	alexandria:alexandria_highlighted="$text" alexandria:alexandria_highlighted_background="$background"
-end
 
-def type(actionableMode)
+rule type(actionableMode)
 	$mode
-end
 
-def type(histogram)
+rule type(histogram)
 	{alwaysVisible:$alwaysVisible,type:"$type"}
-end

@@ -1,4 +1,4 @@
-def type(interface)
+rule type(interface)
 	package $package+ValidPackage.analytic;
 
 	import $package+ValidPackage.analytic.axes.*;
@@ -64,16 +64,12 @@ def type(interface)
 			);
 		}
 	}
-end
 
-def type(axis) and trigger(NameCase)
+rule type(axis) and trigger(NameCase)
 	case "$axis+PascalCase": return $axis+PascalCase.get();
-end
 
-def type(axis) and trigger(LabelCase)
+rule type(axis) and trigger(LabelCase)
 	case $axis+PascalCase.TITLE: return $axis+PascalCase.get();
-end
 
-def type(axis) and trigger(ListElement)
+rule type(axis) and trigger(ListElement)
 	$axis+PascalCase.get()
-end

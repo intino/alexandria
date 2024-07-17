@@ -1,4 +1,4 @@
-def type(box)
+rule type(box)
 	package $package;
 
 	import java.util.LinkedHashMap;
@@ -189,25 +189,21 @@ def type(box)
             }
         }
 	}
-end
 
-def trigger(empty)
+rule trigger(empty)
 	;
-end
 
-def type(logger) and trigger(logger)
+rule type(logger) and trigger(logger)
 	io.intino.alexandria.logger4j.Logger.init();
-end
 
-def type(connector) and trigger(import)
+rule type(connector) and trigger(import)
 	import io.intino.alexandria.terminal.Connector;
-end
 
-def trigger(uiBox)
+rule trigger(uiBox)
 	io.intino.alexandria.ui.AlexandriaUiBox
-end
 
-def type(service, ui) and trigger(setupMethod)
+rule type(service, ui) and trigger(setupMethod)
+    protected void beforeSetup$name+firstUpperCase~Ui(io.intino.alexandria.ui.UISpark sparkInstance) {}
 	public void setup$name+firstUpperCase~Ui() {
 		<<if($parameter == null || $parameter.isEmpty())>> return;
 		this.authService = <<this.authService($authentication)?null>>;
@@ -216,98 +212,83 @@ def type(service, ui) and trigger(setupMethod)
 		io.intino.alexandria.http.AlexandriaSparkBuilder.addParameters(this.authService);
 		this.pushService = new io.intino.alexandria.ui.services.push.PushService();
 		io.intino.alexandria.ui.UISpark sparkInstance = (io.intino.alexandria.ui.UISpark) io.intino.alexandria.http.AlexandriaSparkBuilder.instance();
+		beforeSetup$name+firstUpperCase~Ui(sparkInstance);
 		$package+validPackage.ui.$name+PascalCase~Service.init(sparkInstance, ($configuration+PascalCase~Box) this, pushService, new $package+validPackage.ui.displays.RouteDispatcher());
 		$use...[$NL]
 		io.intino.alexandria.ui.UiElementsService.initDisplays(sparkInstance, pushService);
 	}
-end
 
-def type(service, cli) and trigger(setupMethod)
+rule type(service, cli) and trigger(setupMethod)
 	public void setupCli() {
 		<<if($parameter == null || $parameter.isEmpty())>> return;
 		<<io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/")>>;
 	}
-end
 
-def type(service, soap) and trigger(setup)
+rule type(service, soap) and trigger(setup)
 	<<if($parameter != null && !$parameter.isEmpty()) >>io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/");
-end
 
-def type(terminal) and trigger(setup)
+rule type(terminal) and trigger(setup)
 	this.terminal = new $qn(connector);
-end
 
-def type(connector) and trigger(setup)
+rule type(connector) and trigger(setup)
 	this.connector = io.intino.alexandria.terminal.ConnectorFactory.createConnector(new io.intino.alexandria.jms.ConnectionConfig($parameter...[, ]), $additionalParameter...[,]);
-end
 
-def type(service, jmx) and trigger(jmx)
+rule type(service, jmx) and trigger(jmx)
 	this.$name+CamelCase = new JMX$name+PascalCase().init((($configuration+PascalCase~Box) this));
 	Logger.info("Jmx service $name: started!");
-end
 
-def type(service, slack) and trigger(slack)
+rule type(service, slack) and trigger(slack)
 	if ($parameter == null || $parameter.isEmpty()) return;
 	this.$name+CamelCase = new $name+PascalCase~SlackBot(($configuration+PascalCase~Box) this, $parameter);
 	Logger.info("Slack service $name: started!");
-end
 
-def type(service, rest) and trigger(rest)
+rule type(service, rest) and trigger(rest)
 	<<if($parameter == null || $parameter.isEmpty()) return;>>
 	io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/");
 	<<$name+PascalCase~Service.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), ($configuration+PascalCase~Box) this);>>
 	<<io.intino.alexandria.http.AlexandriaSparkBuilder.instance().start();>>
 	Logger.info("Rest service $name: started at port " + $parameter + "!");
-end
 
-def type(service, soap) and trigger(soap)
+rule type(service, soap) and trigger(soap)
 	<<$name+PascalCase~Service.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), ($configuration+PascalCase~Box) this);>>
 	<<io.intino.alexandria.http.AlexandriaSparkBuilder.instance().start();
 	Logger.info("Soap service $name: started!");>>
-end
 
-def type(service, ui) and trigger(ui)
+rule type(service, ui) and trigger(ui)
 	setup$name+firstUpperCase~Ui();
 	<<this.initTranslatorService()>>;
 	io.intino.alexandria.ui.UISpark spark$name+firstUpperCase~Instance = (io.intino.alexandria.ui.UISpark) io.intino.alexandria.http.AlexandriaSparkBuilder.instance();
 	spark$name+firstUpperCase~Instance.start();
 	Logger.info("UI $name: started at port " + $parameter + "!");
-end
 
-def trigger(use)
+rule trigger(use)
 	<<$this.initDisplays(sparkInstance, pushService);>>
-end
 
-def type(service, messaging) and trigger(messaging)
+rule type(service, messaging) and trigger(messaging)
 	this.$name+CamelCase = new $name+PascalCase~Service(this.connector, ($configuration+PascalCase~Box) this);
 	Logger.info("Messaging service $name: started!");
-end
 
-def type(service, agenda) and trigger(agenda)
+rule type(service, agenda) and trigger(agenda)
 	if (this.agenda != null) return;
 	this.agenda = new $name+PascalCase~Service(($configuration+PascalCase~Box) this);
 	this.agenda.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), scheduler);
 	io.intino.alexandria.http.AlexandriaSparkBuilder.instance().start();
 	Logger.info("Agenda service: started!");
-end
 
-def type(service, cli) and trigger(cli)
+rule type(service, cli) and trigger(cli)
     setupCli();
     $name+PascalCase~Service $name+CamelCase~Service = new $name+PascalCase~Service();
     $name+CamelCase~Service.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), ($configuration+PascalCase~Box) this, new $name+PascalCase(($configuration+PascalCase~Box)this));
     io.intino.alexandria.http.AlexandriaSparkBuilder.instance().start();
     Logger.info("$name+firstUpperCase service: started!");
-end
 
-def type(sentinel) and trigger(init)
+rule type(sentinel) and trigger(init)
 	Sentinels.init(this.scheduler, this.configuration.home() <<$hasWebhook io.intino.alexandria.http.AlexandriaSparkBuilder.instance()>>, ($configuration+PascalCase~Box) this);
-end
 
-def type(workflow) and trigger(init)
+rule type(workflow) and trigger(init)
 	this.workflow = new $package.bpm.Workflow(($box+PascalCase~Box)this<<, $parameter>>);
-end
 
-def type(connector) and trigger(init)
+rule type(connector) and trigger(init)
 	if (!(this.connector instanceof io.intino.alexandria.terminal.JmsConnector) || ((io.intino.alexandria.terminal.JmsConnector) this.connector).connection() != null) return;
 	final io.intino.alexandria.terminal.JmsConnector connector = (io.intino.alexandria.terminal.JmsConnector) this.connector;
 	if (connector.connection() == null) connector.start();
@@ -318,9 +299,8 @@ def type(connector) and trigger(init)
 		} catch (InterruptedException e) {
 			Logger.error(e);
 		}
-end
 
-def type(terminal) and trigger(init)
+rule type(terminal) and trigger(init)
 	if (this.terminal != null) {
 		java.time.Instant sealStamp = this.terminal.requestLastSeal();
 		Logger.info("Last seal on " + sealStamp.toString());
@@ -328,67 +308,52 @@ def type(terminal) and trigger(init)
 		this.terminal.initDatamarts(<<$datamartsLoad()>>);
 		$subscriber...[$NL]
 	}
-end
 
-def type(datamartsLoad) and trigger(datamartSourceSelector)
+rule type(datamartsLoad) and trigger(datamartSourceSelector)
 	protected abstract String $datamartsLoad();
-end
 
-def type(subscriber, durable, filtered) and trigger(subscriber)
+rule type(subscriber, durable, filtered) and trigger(subscriber)
 	this.terminal.subscribe(($terminal.$eventQn+FirstUpperCase~Consumer) (e, t) -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e, t), "$subscriberId", filter, null);
-end
 
-def type(subscriber, durable) and trigger(subscriber)
+rule type(subscriber, durable) and trigger(subscriber)
 	this.terminal.subscribe(($terminal.$eventQn+FirstUpperCase~Consumer) (e, t) -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e, t), "$subscriberId");
-end
 
-def type(subscriber) and trigger(subscriber)
+rule type(subscriber) and trigger(subscriber)
 	this.terminal.subscribe(($terminal.$eventQn+FirstUpperCase~Consumer) (e, t) -> new $package.subscribers.$name+FirstUpperCase(($box+firstUpperCase~Box) AbstractBox.this).accept(e, t));
-end
 
-def trigger(split)
+rule trigger(split)
 	$type.Split.$value
-end
 
-def type(service, jmx) and trigger(field)
+rule type(service, jmx) and trigger(field)
 	protected io.intino.alexandria.jmx.JMXServer $name+CamelCase;
-end
 
-def type(service, slack) and trigger(field)
+rule type(service, slack) and trigger(field)
 	private io.intino.alexandria.slack.Bot $name+CamelCase;
-end
 
-def type(service, messaging) and trigger(field)
+rule type(service, messaging) and trigger(field)
 	private $name+PascalCase~Service $name+CamelCase;
-end
 
-def type(sentinel) and trigger(field)
+rule type(sentinel) and trigger(field)
 	private io.intino.alexandria.scheduler.AlexandriaScheduler scheduler = new io.intino.alexandria.scheduler.AlexandriaScheduler();
-end
 
-def type(connector) and trigger(field)
+rule type(connector) and trigger(field)
 	protected io.intino.alexandria.terminal.Connector connector;
-end
 
-def type(terminal) and trigger(field)
+rule type(terminal) and trigger(field)
 	protected $qn terminal;
-end
 
-def type(workflow) and trigger(field)
+rule type(workflow) and trigger(field)
 	protected $package.bpm.Workflow workflow;
-end
 
-def type(agenda) and trigger(field)
+rule type(agenda) and trigger(field)
 	protected AgendaService agenda;
-end
 
-def type(service, messaging) and trigger(getter)
+rule type(service, messaging) and trigger(getter)
 	public $name+PascalCase~Service $name+CamelCase() {
 		return $name+CamelCase;
 	}
-end
 
-def type(terminal) and trigger(getter)
+rule type(terminal) and trigger(getter)
 	public $qn terminal() {
 		return this.terminal;
 	}
@@ -396,78 +361,63 @@ def type(terminal) and trigger(getter)
 	protected io.intino.alexandria.terminal.Connector datahubConnector() {
 		return this.connector;
 	}
-end
 
-def type(workflow) and trigger(getter)
+rule type(workflow) and trigger(getter)
 	public $package.bpm.Workflow workflow() {
 		return this.workflow;
 	}
-end
 
 
-def type(agenda) and trigger(getter)
+rule type(agenda) and trigger(getter)
 	public AgendaService agenda() {
 		return this.agenda;
 	}
-end
 
-def type(service, slack) and trigger(getter)
+rule type(service, slack) and trigger(getter)
 	public $name+PascalCase~SlackBot $name+CamelCase() {
 		return ($name+PascalCase~SlackBot) $name+CamelCase;
 	}
-end
 
-def type(service) and trigger(getter)
-end
+rule type(service) and trigger(getter)
 
-def trigger(spark)
+rule trigger(spark)
 	io.intino.alexandria.http.AlexandriaSparkBuilder.instance().stop();
-end
 
-def type(connector) and trigger(stop)
+rule type(connector) and trigger(stop)
 	if (connector instanceof io.intino.alexandria.terminal.JmsConnector) ((io.intino.alexandria.terminal.JmsConnector) connector).stop();
-end
 
-def type(service, slack) and trigger(stop)
+rule type(service, slack) and trigger(stop)
 	this.$name+CamelCase.disconnect();
-end
 
-def type(service) and trigger(stop)
-end
+rule type(service) and trigger(stop)
 
-def type(service)
-end
+rule type(service)
 
-def type(sentinel) and trigger(getter)
+rule type(sentinel) and trigger(getter)
 	public io.intino.alexandria.scheduler.AlexandriaScheduler scheduler() {
 		return this.scheduler;
 	}
-end
 
-def trigger(authservice)
+rule trigger(authservice)
 	protected abstract io.intino.alexandria.ui.services.AuthService authService(java.net.URL authServiceUrl);
-end
 
-def trigger(translatorServiceInitialization)
+rule trigger(translatorServiceInitialization)
 	private void initTranslatorService() {
 		translatorService = new io.intino.alexandria.ui.services.TranslatorService();
 		$useDictionaries...[$NL]
 		translatorService.addAll($package+validPackage.I18n.dictionaries());
 		translatorService.addAll(io.intino.alexandria.I18n.dictionaries());
 	}
-end
 
-def trigger(useDictionaries)
+rule trigger(useDictionaries)
 	translatorService.addAll($this);
-end
 
-def trigger(pushService)
+rule trigger(pushService)
 	public PushService pushService() {
 		return pushService;
 	}
-end
 
-def trigger(registerSoul)
+rule trigger(registerSoul)
 	public java.util.List<Soul> souls() {
 		return new java.util.ArrayList<>(uiSouls.values());
 	}
@@ -495,68 +445,51 @@ def trigger(registerSoul)
 	private void notifySoulsClosed() {
 		soulsClosedListeners.forEach(l -> l.accept());
 	}
-end
 
 
-def type(conf, file) and trigger(additionalParameter)
+rule type(conf, file) and trigger(additionalParameter)
 	configuration().get("$value") == null ? null : new java.io.File(configuration().get("$value"))
-end
 
-def type(conf) and trigger(additionalParameter)
+rule type(conf) and trigger(additionalParameter)
 	configuration().get("$value")
-end
 
-def type(conf, file) and trigger(parameter)
+rule type(conf, file) and trigger(parameter)
 	configuration().get("$value") == null ? null : new java.io.File(configuration().get("$value"))
-end
 
-def type(conf) and trigger(parameter)
+rule type(conf) and trigger(parameter)
 	configuration().get("$value")
-end
 
-def type(custom) and trigger(parameter)
+rule type(custom) and trigger(parameter)
 	configuration().get("$value+customParameter")
-end
 
-def type(custom) and trigger(authentication)
+rule type(custom) and trigger(authentication)
 	url(configuration().get("$value+customParameter"))
-end
 
-def type(custom) and trigger(edition)
+rule type(custom) and trigger(edition)
 	url(configuration().get("$value+customParameter"))
-end
 
-def type(file) and trigger(parameter)
+rule type(file) and trigger(parameter)
 	$value
-end
 
-def type(int) and trigger(parameter)
+rule type(int) and trigger(parameter)
 	$value
-end
 
-def trigger(parameter)
+rule trigger(parameter)
 	"$value"
-end
 
-def trigger(authentication)
+rule trigger(authentication)
 	url("$value")
-end
 
-def trigger(edition)
+rule trigger(edition)
 	url("$value")
-end
 
-def trigger(parentInit)
-end
+rule trigger(parentInit)
 
-def trigger(hide)
+rule trigger(hide)
 
-end
 
-def trigger(hideUi)
+rule trigger(hideUi)
 	;
-end
 
-def trigger(hideUi)
+rule trigger(hideUi)
 	;
-end

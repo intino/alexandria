@@ -1,4 +1,4 @@
-def type(listener)
+rule type(listener)
 	package $package+ValidPackage.scheduling;
 
 	import org.quartz.JobExecutionContext;
@@ -13,10 +13,8 @@ def type(listener)
 			$target...[$NL]
 		}
 	}
-end
 
-def trigger(target)
+rule trigger(target)
 	$package+ValidPackage.actions.$name+firstUpperCase~Action action = new $package+ValidPackage.actions.$name+firstUpperCase~Action();
 	action.box = box;
 	action.execute();
-end

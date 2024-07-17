@@ -1,4 +1,4 @@
-def type(cube, src)
+rule type(cube, src)
 	package $package.analytic.cubes;
 
 	import io.intino.alexandria.Timetag;
@@ -57,9 +57,8 @@ def type(cube, src)
 			<<$customIndicator+implementation...[$NL$NL]>>
 		}
 	}
-end
 
-def type(cube)
+rule type(cube)
 	package $package.analytic.cubes;
 
 	import io.intino.alexandria.Timetag;
@@ -506,96 +505,77 @@ def type(cube)
 			}
 		}
 	}
-end
 
-def type(indicator) and trigger(enum)
+rule type(indicator) and trigger(enum)
 	$fieldName+PascalCase~("$label", "$unit", Mode.$mode, false)
-end
 
-def type(customIndicator) and trigger(enum)
+rule type(customIndicator) and trigger(enum)
 	$fieldName+PascalCase~("$label", "$unit", Mode.$mode, true)
-end
 
-def type(indicator) and trigger(switchCase)
+rule type(indicator) and trigger(switchCase)
 	case $fieldName+PascalCase: return $name+CamelCase;
-end
 
-def type(customIndicator) and trigger(switchCase)
+rule type(customIndicator) and trigger(switchCase)
 	case $fieldName+PascalCase: return $name+CamelCase;
-end
 
-def type(index) and trigger(field)
+rule type(index) and trigger(field)
 	private final SparseLongList ids = new SparseLongList();
-end
 
-def type(index) and trigger(append)
+rule type(index) and trigger(append)
 	ids.add(fact.id());
-end
 
-def type(index) and trigger(append2)
+rule type(index) and trigger(append2)
 	ids.addAll(aggregation.ids);
-end
 
-def type(index) and trigger(getter)
+rule type(index) and trigger(getter)
 	public List<Long> ids() {
 		return ids.asList();
 	}
-end
 
-def trigger(nbits)
+rule trigger(nbits)
 	NBits
-end
 
-def type(customFilter) and trigger(method)
+rule type(customFilter) and trigger(method)
 	public Abstract$cube+firstUpperCase filter$name+PascalCase() {
 		filter = filter.and($cube+FirstUpperCase::$name+CamelCase~Filter);
 		return this;
 	}
-end
 
-def type(customFilter) and trigger(staticMethod)
+rule type(customFilter) and trigger(staticMethod)
 	public static boolean $name+CamelCase~Filter(Fact fact) {
 		// TODO
 		return true;
 	}
-end
 
-def type(customDimension, categorical) and trigger(staticMethod)
+rule type(customDimension, categorical) and trigger(staticMethod)
 	public static $axis+PascalCase.Component $name+CamelCase~Function(Fact fact) {
 		// TODO
 		return $axis+PascalCase.NA;
 	}
-end
 
-def type(customDimension, continuous) and trigger(staticMethod)
+rule type(customDimension, continuous) and trigger(staticMethod)
 	public static $axis+PascalCase.Range $name+CamelCase~Function(Fact fact) {
 		// TODO
 		return $axis+PascalCase.component(0);
 	}
-end
 
-def type(dimension) and trigger(switchCaseGroupBy)
+rule type(dimension) and trigger(switchCaseGroupBy)
 	case $axis+PascalCase.TITLE: return groupBy$name+PascalCase();
-end
 
-def type(dimension) and trigger(switchCaseFunction)
+rule type(dimension) and trigger(switchCaseFunction)
 	case $axis+PascalCase.TITLE: return $cube+FirstUpperCase::$name+CamelCase~Function;
-end
 
-def type(dimension, categorical) and trigger(switchCaseFilter)
+rule type(dimension, categorical) and trigger(switchCaseFilter)
 	case $axis+PascalCase.TITLE: return filter$name+PascalCase((Set<$axis+PascalCase.Component>) components);
-end
 
-def type(dimension, continuous) and trigger(switchCaseFilter)
+rule type(dimension, continuous) and trigger(switchCaseFilter)
 	case $axis+PascalCase.TITLE: return filter$name+PascalCase((Set<$axis+PascalCase.Range>) components);
-end
 
 
-def type(dimension) and trigger(getInstance)
+rule type(dimension) and trigger(getInstance)
 	$axis+PascalCase.get()
-end
 
-def type(dimension, categorical) and trigger(method)
+rule type(dimension, categorical) and trigger(method)
 	public Abstract$cube+firstUpperCase filter$name+PascalCase(Set<$axis+PascalCase.Component> $axis+CamelCase) {
 		if(filters.containsKey($axis+PascalCase.get())) return this;
 		Predicate<Fact> f = v -> $name+CamelCase~Filter(v, $axis+CamelCase);
@@ -618,9 +598,8 @@ def type(dimension, categorical) and trigger(method)
 	public static $axis+PascalCase.Component $name+CamelCase+firstLowerCase~Function(Fact fact) {
 		return fact.$source+CamelCase+firstLowerCase()<<.$child+CamelCase+firstLowerCase()>>;
 	}
-end
 
-def type(customDimension, categorical) and trigger(method)
+rule type(customDimension, categorical) and trigger(method)
 	public Abstract$cube+firstUpperCase filter$name+PascalCase(Set<$axis+PascalCase.Component> $axis+CamelCase+firstLowerCase) {
 		if(filters.containsKey($axis+PascalCase.get())) return this;
 		Predicate<Fact> f = v -> $name+CamelCase+firstLowerCase~Filter(v, $axis+CamelCase+firstLowerCase);
@@ -639,9 +618,8 @@ def type(customDimension, categorical) and trigger(method)
 	public static boolean $name+CamelCase+firstLowerCase~Filter(Fact fact, Set<$axis+PascalCase.Component> $axis+CamelCase+firstLowerCase) {
 		return $axis+CamelCase+firstLowerCase.contains($cube+FirstUpperCase.$name+CamelCase+firstLowerCase~Function(fact));
 	}
-end
 
-def type(dimension, continuous) and trigger(method)
+rule type(dimension, continuous) and trigger(method)
 	public Abstract$cube+firstUpperCase filter$name+PascalCase(Set<$axis+PascalCase.Range> $axis+CamelCase+firstLowerCase) {
 		if(filters.containsKey($axis+PascalCase.get())) return this;
 		Predicate<Fact> f = v -> $name+CamelCase+firstLowerCase~Filter(v, $axis+CamelCase+firstLowerCase);
@@ -664,9 +642,8 @@ def type(dimension, continuous) and trigger(method)
 	public static $axis+PascalCase.Range $name+CamelCase+firstLowerCase~Function(Fact fact) {
 		return $axis+PascalCase.rangeOf(fact.$source+CamelCase+firstLowerCase());
 	}
-end
 
-def type(customDimension, continuous) and trigger(method)
+rule type(customDimension, continuous) and trigger(method)
 	public Abstract$cube+firstUpperCase filter$name+PascalCase(Set<$axis+PascalCase.Range> $axis+CamelCase+firstLowerCase) {
 		if(filters.containsKey($axis+PascalCase.get())) return this;
 		Predicate<Fact> f = v -> $name+CamelCase+firstLowerCase~Filter(v, $axis+CamelCase+firstLowerCase);
@@ -685,57 +662,45 @@ def type(customDimension, continuous) and trigger(method)
 	public static boolean $name+CamelCase+firstLowerCase~Filter(Fact fact, Set<$axis+PascalCase.Range> $axis+CamelCase+firstLowerCase) {
 		return $axis+CamelCase+firstLowerCase.contains($cube+FirstUpperCase.$name+CamelCase+firstLowerCase~Function(fact));
 	}
-end
 
-def type(indicator) and trigger(toString)
+rule type(indicator) and trigger(toString)
 	 + ", $name+firstLowerCase=" + $name+firstLowerCase~()
-end
 
-def type(customIndicator) and trigger(toString)
+rule type(customIndicator) and trigger(toString)
 	 + ", $name+firstLowerCase=" + $name+firstLowerCase~()
-end
 
-def type(indicator) and trigger(sum)
+rule type(indicator) and trigger(sum)
 	$name+firstLowerCase += fact.$source+firstLowerCase();
-end
 
-def type(indicator) and trigger(sumAggregation)
+rule type(indicator) and trigger(sumAggregation)
 	$name+firstLowerCase += aggregation.$name+firstLowerCase;
-end
 
-def type(customIndicator, sum) and trigger(sumAggregation)
+rule type(customIndicator, sum) and trigger(sumAggregation)
 	if($name+firstLowerCase != Long_NaN && aggregation.$name+firstLowerCase != Long_NaN)
 		$name+firstLowerCase += aggregation.$name+firstLowerCase;
-end
 
-def type(customIndicator, average) and trigger(sumAggregation)
+rule type(customIndicator, average) and trigger(sumAggregation)
 	if(!Double.isNaN($name+firstLowerCase) && !Double.isNaN(aggregation.$name+firstLowerCase))
 		$name+firstLowerCase += aggregation.$name+firstLowerCase;
-end
 
-def type(indicator, average) and trigger(field)
+rule type(indicator, average) and trigger(field)
 	protected double $name+firstLowerCase;
-end
 
-def type(customIndicator, average) and trigger(field)
+rule type(customIndicator, average) and trigger(field)
 	protected double $name+firstLowerCase = Double.NaN;
-end
 
-def type(indicator, sum) and trigger(field)
+rule type(indicator, sum) and trigger(field)
 	protected long $name+firstLowerCase;
-end
 
-def type(customIndicator, sum) and trigger(field)
+rule type(customIndicator, sum) and trigger(field)
 	protected long $name+firstLowerCase = Long_NaN;
-end
 
-def type(indicator, average) and trigger(getter)
+rule type(indicator, average) and trigger(getter)
 	public double $name+firstLowerCase() {
 		return $name+firstLowerCase / (double) aggregationDistinct;
 	}
-end
 
-def type(customIndicator, average) and trigger(getter)
+rule type(customIndicator, average) and trigger(getter)
 	public final double $name+firstLowerCase() {
 		if(Double.isNaN($name+firstLowerCase))
 			$name+firstLowerCase = calculate$name+firstUpperCase();
@@ -745,15 +710,13 @@ def type(customIndicator, average) and trigger(getter)
 	protected double calculate$name+firstUpperCase() {
 		return 0.0;
 	}
-end
 
-def type(indicator, sum) and trigger(getter)
+rule type(indicator, sum) and trigger(getter)
 	public long $name+firstLowerCase() {
 		return $name+firstLowerCase;
 	}
-end
 
-def type(customIndicator, sum) and trigger(getter)
+rule type(customIndicator, sum) and trigger(getter)
 	public final long $name+firstLowerCase() {
 		if($name+firstLowerCase == Long_NaN)
 			$name+firstLowerCase = calculate$name+firstUpperCase();
@@ -763,79 +726,64 @@ def type(customIndicator, sum) and trigger(getter)
 	protected long calculate$name+firstUpperCase() {
 		return 0L;
 	}
-end
 
-def type(index) and trigger(index)
+rule type(index) and trigger(index)
 	ids.size()
-end
 
-def type(indicator, average) and trigger(staticMethod)
+rule type(indicator, average) and trigger(staticMethod)
 	public static double $name(Fact fact) {
 		return 0.0;
 	}
-end
 
-def type(indicator, sum) and trigger(staticMethod)
+rule type(indicator, sum) and trigger(staticMethod)
 	public static long $name(Fact fact) {
 		return 0;
 	}
-end
 
-def type(customIndicator, sum) and trigger(implementation)
+rule type(customIndicator, sum) and trigger(implementation)
 	@Override
 	protected long calculate$name+firstUpperCase() {
 		// TODO: calculate and return $name+firstLowerCase
 		return 0;
 	}
-end
 
-def type(customIndicator, average) and trigger(implementation)
+rule type(customIndicator, average) and trigger(implementation)
 	@Override
 	protected double calculate$name+firstUpperCase() {
 		// TODO: calculate and return $name+firstLowerCase
 		return 0.0;
 	}
-end
 
-def type(split) and trigger(parameter)
+rule type(split) and trigger(parameter)
 	String $name+firstLowerCase
-end
 
-def type(split) and trigger(setParameter)
+rule type(split) and trigger(setParameter)
 	Set<String> $name+firstLowerCase
-end
 
-def type(split) and trigger(assign)
+rule type(split) and trigger(assign)
 	this.$name+firstLowerCase = $name+firstLowerCase;
-end
 
-def type(split) and trigger(name)
+rule type(split) and trigger(name)
 	$name+firstLowerCase
-end
 
-def type(split) and trigger(nameUpper)
+rule type(split) and trigger(nameUpper)
 	$name+firstUpperCase
-end
 
-def type(split) and trigger(field)
+rule type(split) and trigger(field)
 	protected final String $name+firstLowerCase;
-end
 
-def type(split) and trigger(method)
+rule type(split) and trigger(method)
 	private static Set<String> all$name+FirstUpperCase() {
 		return java.util.Set.of($value+quoted...[, ]);
 	}
-end
 
-def type(dimension) and trigger(ifGroupBy)
+rule type(dimension) and trigger(ifGroupBy)
 	if(axis.equals($axis+PascalCase.get())) return groupBy$name+PascalCase();
-end
 
-def type(dimension) and trigger(ifFilterBy)
+rule type(dimension) and trigger(ifFilterBy)
 	if(axis.equals($axis+PascalCase.get())) return filter$name+PascalCase();
-end
 
-def trigger(dimension)
+rule trigger(dimension)
 	public static Predicate<$cube+FirstUpperCase.Fact> $axis+CamelCase+firstLowerCase(Set<$axis+PascalCase.Component> $axis+CamelCase+firstLowerCase~List) {
 		return r -> $axis+CamelCase+firstLowerCase~List.contains(r.$axis+CamelCase+firstLowerCase());
 	}
@@ -843,21 +791,17 @@ def trigger(dimension)
 	public static Function<$cube+FirstUpperCase.Fact, String> $axis+CamelCase+firstLowerCase() {
 		return r -> r.$axis+CamelCase+firstLowerCase().id();
 	}
-end
 
-def type(column) and trigger(toString)
+rule type(column) and trigger(toString)
 	+ ", $name=" + $name()
-end
 
-def type(splitted) and attribute(splitted, true) and trigger(create)
+rule type(splitted) and attribute(splitted, true) and trigger(create)
 	public static List<Loader> create(File root, Timetag from, Timetag to, Collection<String> split) {
 		return split.stream().map(s -> new Loader(new Loader.Datasource(root, from, to), s)).collect(Collectors.toList());
 	}
-end
 
-def type(splitted) and attribute(splitted, false) and trigger(create)
+rule type(splitted) and attribute(splitted, false) and trigger(create)
 	public static List<Loader> create(File root, Timetag from, Timetag to) {
 		return List.of(new Loader(new Loader.Datasource(root, from, to)));
 	}
-end
 

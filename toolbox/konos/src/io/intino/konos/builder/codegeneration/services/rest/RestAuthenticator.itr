@@ -1,4 +1,4 @@
-def type(basic)
+rule type(basic)
 	package $package+ValidPackage;
 
 	public class $service+pascalCase~Authenticator {
@@ -12,9 +12,8 @@ def type(basic)
 			return false;
 		}
 	}
-end
 
-def type(bearer)
+rule type(bearer)
 	package $package+ValidPackage;
 
 	public class $service+pascalCase~Authenticator {
@@ -28,9 +27,8 @@ def type(bearer)
 			return false;
 		}
 	}
-end
 
-def type(custom)
+rule type(custom)
 	package $package+ValidPackage;
 
     import java.util.Map;
@@ -46,4 +44,3 @@ def type(custom)
 			return false;
 		}
 	}
-end

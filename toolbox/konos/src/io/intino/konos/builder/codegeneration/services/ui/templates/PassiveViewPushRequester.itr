@@ -1,4 +1,4 @@
-def type(display)
+rule type(display)
 	package $package+validPackage.ui.displays.requesters;
 
 	import $package+validPackage.ui.displays.<<$packageType~s.>>$name+FirstUpperCase;
@@ -25,60 +25,45 @@ def type(display)
 		}
 
 	}
-end
 
-def attribute(this, Display) and trigger(class)
+rule attribute(this, Display) and trigger(class)
 	Display
-end
 
-def type(request, file) and trigger(request)
-end
+rule type(request, file) and trigger(request)
 
-def type(request, asset) and trigger(request)
-end
+rule type(request, asset) and trigger(request)
 
-def type(request) and trigger(request)
+rule type(request) and trigger(request)
 	if (operation.equals("$name")) {
 		display.$name($parameter);
 		return;
 	}
-end
 
-def type(list) and trigger(parameter)
+rule type(list) and trigger(parameter)
 	java.util.List.of(io.intino.alexandria.Json.fromString(data, $value~[].class))
-end
 
-def type(parameter, file) and trigger(parameter)
-end
+rule type(parameter, file) and trigger(parameter)
 
-def type(parameter, String) and trigger(parameter)
+rule type(parameter, String) and trigger(parameter)
 	data
-end
 
-def type(parameter, Double) and trigger(parameter)
+rule type(parameter, Double) and trigger(parameter)
 	Double.parseDouble(data)
-end
 
-def type(parameter, Integer) and trigger(parameter)
+rule type(parameter, Integer) and trigger(parameter)
 	Integer.parseInt(data)
-end
 
-def type(parameter, Long) and trigger(parameter)
+rule type(parameter, Long) and trigger(parameter)
 	Long.parseLong(data)
-end
 
-def type(parameter, DateTime) and trigger(parameter)
+rule type(parameter, DateTime) and trigger(parameter)
 	data != null ? java.time.Instant.ofEpochMilli(Long.parseLong(data)) : null
-end
 
-def type(parameter) and trigger(parameter)
+rule type(parameter) and trigger(parameter)
 	io.intino.alexandria.Json.fromString(data, $value.class)
-end
 
 def	trigger(parameter)
 	aaaaa
-end
 
-def type(schemaImport)
+rule type(schemaImport)
 	import $package.schemas.*;
-end

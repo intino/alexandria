@@ -1,4 +1,4 @@
-def type(cube)
+rule type(cube)
 	package $package+validPackage~.analytic.cubes.schemas;
 
 	import io.intino.alexandria.led.HeapLedStreamBuilder;
@@ -186,13 +186,11 @@ def type(cube)
 			}
 		}
 	}
-end
 
-def trigger(axisImport)
+rule trigger(axisImport)
 	import $this.axis.*;
-end
 
-def trigger(split)
+rule trigger(split)
 	public enum Split {
 		$enum+asEnum...[, ];
 
@@ -205,16 +203,13 @@ def trigger(split)
 			return null;
 		}
 	}
-end
 
-def trigger(asEnum)
+rule trigger(asEnum)
 	$value+CamelCase {
 		public String qn() {
 			return "$qn";
 		}
 	}
-end
 
-def trigger(nbits)
+rule trigger(nbits)
 	NBits
-end

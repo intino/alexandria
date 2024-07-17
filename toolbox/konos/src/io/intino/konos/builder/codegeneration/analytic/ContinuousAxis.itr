@@ -1,4 +1,4 @@
-def type(continuous)
+rule type(continuous)
 	package $package+ValidPackage.analytic.axes;
 
 	import $package+ValidPackage.analytic.Axis;
@@ -184,28 +184,21 @@ def type(continuous)
 			}
 		}
 	}
-end
 
-def type(range, lower) and attribute(label) and trigger(init)
+rule type(range, lower) and attribute(label) and trigger(init)
 	ranges[$index] = new Range($index, Double.MIN_VALUE, $bound, "$label");
-end
 
-def type(range, upper) and attribute(label) and trigger(init)
+rule type(range, upper) and attribute(label) and trigger(init)
 	ranges[$index] = new Range($index, $bound, Double.MAX_VALUE, "$label");
-end
 
-def type(range) and attribute(label) and trigger(init)
+rule type(range) and attribute(label) and trigger(init)
 	ranges[$index] = new Range($index, $lower, $upper, "$label");
-end
 
-def type(range, lower) and trigger(init)
+rule type(range, lower) and trigger(init)
 	ranges[$index] = new Range($index, Double.MIN_VALUE, $bound, "< $bound");
-end
 
-def type(range, upper) and trigger(init)
+rule type(range, upper) and trigger(init)
 	ranges[$index] = new Range($index, $bound, Double.MAX_VALUE, "> $bound");
-end
 
-def type(range) and trigger(init)
+rule type(range) and trigger(init)
 	ranges[$index] = new Range($index, $lower, $upper, "$lower - $upper");
-end

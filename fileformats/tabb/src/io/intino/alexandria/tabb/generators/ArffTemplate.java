@@ -1,19 +1,34 @@
 package io.intino.alexandria.tabb.generators;
 
-import io.intino.itrules.RuleSet;
-import io.intino.itrules.Template;
+import io.intino.itrules.template.Rule;
+import io.intino.itrules.template.Template;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static io.intino.itrules.template.condition.predicates.Predicates.*;
+import static io.intino.itrules.template.outputs.Outputs.literal;
+import static io.intino.itrules.template.outputs.Outputs.placeholder;
 
 public class ArffTemplate extends Template {
 
-	public RuleSet ruleSet() {
-		return new RuleSet().add(
-			rule().condition((type("arff"))).output(literal("@RELATION relation\n\n")).output(mark("attribute").multiple("\n")).output(literal("\n\n@DATA\n")),
-			rule().condition((trigger("attribute"))).output(literal("@ATTRIBUTE ")).output(mark("name")).output(literal(" ")).output(mark("type")),
-			rule().condition((type("nominal")), (trigger("type"))).output(literal("{")).output(mark("value", "quoted").multiple(",")).output(literal("}")),
-			rule().condition((type("date")), (trigger("type"))).output(literal("DATE \"")).output(mark("format")).output(literal("\"")),
-			rule().condition((type("numeric")), (trigger("type"))).output(literal("NUMERIC")),
-			rule().condition((type("string")), (trigger("type"))).output(literal("string")),
-			rule().condition((trigger("quoted"))).output(literal("\"")).output(mark("")).output(literal("\""))
-		);
+	public List<Rule> ruleSet() {
+		List<Rule> rules = new ArrayList<>();
+		rules.add(rule().condition(allTypes("arff")).output(literal("@RELATION relation\n\n")).output(placeholder("attribute").multiple("\n")).output(literal("\n\n@DATA\n")));
+		rules.add(rule().condition(trigger("attribute")).output(literal("@ATTRIBUTE ")).output(placeholder("name")).output(literal(" ")).output(placeholder("type")));
+		rules.add(rule().condition(all(allTypes("Nominal"), trigger("type"))).output(literal("{")).output(placeholder("value", "quoted").multiple(",")).output(literal("}")));
+		rules.add(rule().condition(all(allTypes("Date"), trigger("type"))).output(literal("DATE \"")).output(placeholder("format")).output(literal("\"")));
+		rules.add(rule().condition(all(allTypes("Numeric"), trigger("type"))).output(literal("NUMERIC")));
+		rules.add(rule().condition(all(allTypes("String"), trigger("type"))).output(literal("string")));
+		rules.add(rule().condition(trigger("quoted")).output(literal("\"")).output(placeholder("")).output(literal("\"")));
+		return rules;
+	}
+
+	public String render(Object object) {
+		return new io.intino.itrules.Engine(this).render(object);
+	}
+
+	public String render(Object object, java.util.Map<String, io.intino.itrules.Formatter> formatters) {
+		return new io.intino.itrules.Engine(this).addAll(formatters).render(object);
 	}
 }

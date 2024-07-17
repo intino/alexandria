@@ -1,25 +1,18 @@
-def type(box, decorated) and trigger(extension)
+rule type(box, decorated) and trigger(extension)
 	B extends Box
-end
 
-def type(box) and trigger(extension)
-end
+rule type(box) and trigger(extension)
 
-def type(box, decorated) and trigger(extensionTagged)
+rule type(box, decorated) and trigger(extensionTagged)
 	<B extends Box>
-end
 
-def type(box) and trigger(extensionTagged)
-end
+rule type(box) and trigger(extensionTagged)
 
-def type(box, decorated) and trigger(type)
+rule type(box, decorated) and trigger(type)
 	B
-end
 
-def type(box, accessible) and trigger(type)
+rule type(box, accessible) and trigger(type)
 	Box
-end
 
-def type(box) and trigger(type)
+rule type(box) and trigger(type)
 	$box+firstUpperCase~Box
-end

@@ -22,8 +22,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.Configuration.Artifact.Dsl.Level.Model;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.createIfNotExists;
-import static io.intino.tara.builder.core.CompilerConfiguration.Level.Model;
 
 public class CompilationContext {
 	private final List<File> sources;

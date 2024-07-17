@@ -1,4 +1,4 @@
-def type(mounter)
+rule type(mounter)
 	package $package+validPackage.$datamart+validPackage+lowercase.mounters;
 
 	import $package+validPackage.$box+firstUpperCase~Box;
@@ -19,93 +19,74 @@ def type(mounter)
 			$type+switch...[$NL~else ]
 		}
 	}
-end
 
-def trigger(switch)
+rule trigger(switch)
 	if (event.type().equals("$name")) handle(($fullType) event);
-end
 
-def trigger(method)
+rule trigger(method)
 	public void handle($fullType event) {
 
 	}
-end
 
-def type(tank) and trigger(field)
+rule type(tank) and trigger(field)
 	io.intino.alexandria.datalake.Datalake.EventStore.Tank $name+CamelCase;
-end
 
-def type(tank) and trigger(content)
+rule type(tank) and trigger(content)
 	$name+CamelCase.content()
-end
 
-def type(tank) and trigger(constructor)
+rule type(tank) and trigger(constructor)
 	this.$name+CamelCase = box.datalake().eventStore().tank(t -> t.name().equals("$qn")).get();
-end
 
-def trigger(column)
+rule trigger(column)
 	new MappColumnStreamer(box.datalake().setStore().tank("$fullName").on(timetag).index()).add(new SimpleSelector("$name", ColumnStream.Type.$type+FirstUpperCase, $mounter+PascalCase~MounterFunctions.$name+firstLowerCase$facet()));
-end
 
-def type(column) and attribute(type, Long) and trigger(method)
+rule type(column) and attribute(type, Long) and trigger(method)
 	public static Function<Item, $type+FirstUpperCase> $name+validName+firstLowerCase$facet() {
 		return Item::key;
 	}
-end
 
-def type(column) and attribute(type, Double) and trigger(method)
+rule type(column) and attribute(type, Double) and trigger(method)
 	public static Function<Item, $type+FirstUpperCase> $name+validName+firstLowerCase$facet() {
 		return i -> $type+FirstUpperCase.valueOf(i.value());
 	}
-end
 
-def type(column) and attribute(type, Integer) and trigger(method)
+rule type(column) and attribute(type, Integer) and trigger(method)
 	public static Function<Item, $type+FirstUpperCase> $name+validName+firstLowerCase$facet() {
 		return i -> Double.valueOf(i.value());
 	}
-end
 
 
-def type(column) and attribute(type, Timetag) and trigger(method)
+rule type(column) and attribute(type, Timetag) and trigger(method)
 	public static Function<Item, io.intino.alexandria.Timetag> $name+validName+firstLowerCase$facet() {
 		return i -> io.intino.alexandria.Timetag.of(i.value());
 	}
-end
 
-def type(column) and attribute(type, Boolean) and trigger(method)
+rule type(column) and attribute(type, Boolean) and trigger(method)
 	public static Function<Item, Boolean> $name+validName+firstLowerCase$facet() {
 		return i -> Boolean.parseBoolean(i.value());
 	}
-end
 
-def type(column) and attribute(type, Nominal) and trigger(method)
+rule type(column) and attribute(type, Nominal) and trigger(method)
 	public static Function<Item, String> $name+validName+firstLowerCase$facet() {
 		return Item::value;
 	}
-end
 
-def type(column) and trigger(method)
+rule type(column) and trigger(method)
 	public static Function<Item, $type+FirstUpperCase> $name+validName+firstLowerCase$facet() {
 		return Item::value;
 	}
-end
 
-def trigger(format)
+rule trigger(format)
 	.add(TabbBuilder.Format.$this+lowercase)
-end
 
-def type(schemaImport)
+rule type(schemaImport)
 	import $package.schemas.*;
-end
 
-def type(schema) and trigger(typeClass)
+rule type(schema) and trigger(typeClass)
 	$package.schemas.$name+FirstUpperCase
-end
 
-def type(schema) and trigger(typeName)
+rule type(schema) and trigger(typeName)
 	$name+firstLowerCase
-end
 
-def trigger(typeName)
+rule trigger(typeName)
 	message
-end

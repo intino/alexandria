@@ -1,4 +1,4 @@
-def type(accessor)
+rule type(accessor)
 	package $package+validPackage;
 
 	import io.intino.alexandria.exceptions.*;
@@ -25,33 +25,26 @@ def type(accessor)
 		}
 
 	}
-end
 
-def type(request, reply) and trigger(registerCallback)
+rule type(request, reply) and trigger(registerCallback)
 	public $service+PascalCase~Accessor register$name+firstUpperCase~CallbackConsumer(Consumer<$response+type> consumer) {
 		connector.attachListener("response" + chainContext() + "$name", (r, c) -> consumer.accept(io.intino.alexandria.Json.fromString(r, $response+type.class)));
 		return this;
 	}
-end
 
-def type(request)
+rule type(request)
 	public void $name(<<$parameter+signature>>) {
 		connector.requestResponse("$path", io.intino.alexandria.Json.toString($parameter+name), "response" + chainContext() + "$name");
 	}
-end
 
-def type(value) and trigger(type)
+rule type(value) and trigger(type)
 	$type+FirstUpperCase
-end
 
-def type(value) and trigger(signature)
+rule type(value) and trigger(signature)
 	$type $name+CamelCase
-end
 
-def type(value) and trigger(name)
+rule type(value) and trigger(name)
 	$name+CamelCase
-end
 
-def type(schemaImport)
+rule type(schemaImport)
 	import $package.schemas.*;
-end

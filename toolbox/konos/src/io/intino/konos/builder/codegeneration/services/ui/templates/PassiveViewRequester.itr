@@ -1,4 +1,4 @@
-def type(display, accessible)
+rule type(display, accessible)
 	package $package+validPackage.ui.displays.requesters;
 
 	import $package+validPackage.ui.displays.<<$packageType~s.>>$name+FirstUppercase;
@@ -27,9 +27,8 @@ def type(display, accessible)
 			super.execute();
 		}
 	}
-end
 
-def type(display)
+rule type(display)
 	package $package+validPackage.ui.displays.requesters;
 
 	import $package+validPackage.ui.displays.<<$packageType~s.>>$name+FirstUpperCase;
@@ -58,76 +57,59 @@ def type(display)
 			super.execute();
 		}
 	}
-end
 
-def attribute(extensionOf) and trigger(parentType)
+rule attribute(extensionOf) and trigger(parentType)
 	$parent+firstUpperCase~Requester
-end
 
-def trigger(parentType)
+rule trigger(parentType)
 	io.intino.alexandria.ui.displays.requesters.<<$type+class+FirstUpperCase>>~Requester
-end
 
-def attribute(this, Display) and trigger(class)
+rule attribute(this, Display) and trigger(class)
 	Display
-end
 
-def type(request, asset) and trigger(request)
+rule type(request, asset) and trigger(request)
 	if (operation.equals("$name")) {
 		io.intino.alexandria.ui.spark.UIFile file = display.$name($parameter);
 		if (file == null) return;
 		manager.write(file.content(), file.label(), file.embedded());
 		return;
 	}
-end
 
-def type(request) and trigger(request)
+rule type(request) and trigger(request)
 	if (operation.equals("$name")) {
 		display.$name($parameter);
 		return;
 	}
-end
 
-def type(parameter, accessible) and trigger(parameter)
+rule type(parameter, accessible) and trigger(parameter)
 	display.$value+firstLowercase(manager.fromQuery("$value"));
-end
 
-def type(list) and trigger(parameter)
+rule type(list) and trigger(parameter)
 	java.util.List.of(io.intino.alexandria.Json.fromString(manager.fromQuery("v"), $value~[].class))
-end
 
-def type(parameter, file) and trigger(parameter)
+rule type(parameter, file) and trigger(parameter)
 	manager.fromFormAsResource("v")
-end
 
-def type(parameter, String) and trigger(parameter)
+rule type(parameter, String) and trigger(parameter)
 	manager.fromQuery("v")
-end
 
-def type(parameter, Double) and trigger(parameter)
+rule type(parameter, Double) and trigger(parameter)
 	Double.parseDouble(manager.fromQuery("v"))
-end
 
-def type(parameter, Integer) and trigger(parameter)
+rule type(parameter, Integer) and trigger(parameter)
 	Integer.parseInt(manager.fromQuery("v"))
-end
 
-def type(parameter, Long) and trigger(parameter)
+rule type(parameter, Long) and trigger(parameter)
 	Long.parseLong(manager.fromQuery("v"))
-end
 
-def type(parameter, DateTime) and trigger(parameter)
+rule type(parameter, DateTime) and trigger(parameter)
 	manager.fromQuery("v") != null ? java.time.Instant.ofEpochMilli(Long.parseLong(manager.fromQuery("v"))) : null
-end
 
-def type(parameter) and trigger(parameter)
+rule type(parameter) and trigger(parameter)
 	io.intino.alexandria.Json.fromString(manager.fromQuery("v"), $value.class)
-end
 
 def	trigger(parameter)
 	aaaaa $value
-end
 
-def type(schemaImport)
+rule type(schemaImport)
 	import $package.schemas.*;
-end

@@ -1,4 +1,4 @@
-def type(future)
+rule type(future)
 	package $package+validPackage.agenda;
 
 	$schemaImport
@@ -56,64 +56,51 @@ def type(future)
 			$option+optionGetterURI...[$NL]
 		}
 	}
-end
 
 
-def trigger(methods)
+rule trigger(methods)
 	public void $name+firstLowerCase() {
 		on$name+firstUpperCase($parameter+call...[, ]<<, $optionParameter+optionCall...[, ]>>);
 	}
 
 	protected abstract void on$name+firstUpperCase($parameter+signature...[, ]<<, $optionParameter+signature...[, ]>>);
-end
 
-def trigger(getter)
+rule trigger(getter)
 	protected $type $name() {
 		return schema.$name();
 	}
-end
 
-def trigger(optionGetter)
+rule trigger(optionGetter)
 	$optionParameter+optionParameterGetter...[$NL$NL]
-end
 
-def trigger(optionParameterGetter)
+rule trigger(optionParameterGetter)
 	protected $type $owner+firstLowerCase~$name+FirstUpperCase() {
 		return schema.$owner+firstLowerCase().$name+FirstLowerCase();
 	}
-end
 
-def trigger(call)
+rule trigger(call)
 	$name+firstLowerCase()
-end
 
-def trigger(optionCall)
+rule trigger(optionCall)
 	$owner+firstLowerCase$name+firstUpperCase()
-end
 
-def trigger(signature)
+rule trigger(signature)
 	$type $name+firstLowerCase
-end
 
 
-def trigger(id)
+rule trigger(id)
 	schema.$name+firstLowerCase().id
-end
 
-def trigger(getterURI)
+rule trigger(getterURI)
 	if (schema.$name+firstLowerCase().id.equals(id)) return "$name+firstLowerCase";
-end
 
-def trigger(optionGetterURI)
+rule trigger(optionGetterURI)
 	public String $name+firstLowerCase() {
 		return BaseUri + Path + schema.$name+firstLowerCase().id;
 	}
-end
 
-def trigger(map)
+rule trigger(map)
 	"$name+firstLowerCase", schema.$name+firstLowerCase().id
-end
 
-def type(schemaImport)
+rule type(schemaImport)
 	import $package.schemas.*;
-end

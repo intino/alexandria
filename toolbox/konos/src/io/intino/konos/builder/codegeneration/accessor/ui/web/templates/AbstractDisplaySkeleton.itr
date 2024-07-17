@@ -1,4 +1,4 @@
-def type(display, accessible)
+rule type(display, accessible)
 	import React from "react";
 	<<$alexandriaBlockImport>>
 	<<$alexandriaTemplateStampImport>>
@@ -23,9 +23,8 @@ def type(display, accessible)
 	}
 
 	<<$displayRegistration+declaration>>
-end
 
-def type(display, noAbstract)
+rule type(display, noAbstract)
 	import React from "react";
 	import { withStyles } from '@material-ui/core/styles';
 	<<$alexandriaBlockImport>>
@@ -67,24 +66,20 @@ def type(display, noAbstract)
 
 	export default withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase));
 	DisplayFactory.register("$name+firstUpperCase", withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase)));
-end
 
-def type(accessibleNotifierImport, accessible)
+rule type(accessibleNotifierImport, accessible)
 	import $name+firstUpperCase~Notifier from "$serviceName/gen/displays/notifiers/$name+firstUpperCase~Notifier";
-end
 
-def type(accessibleNotifierImport)
+rule type(accessibleNotifierImport)
 	import $name+firstUpperCase~Notifier from "alexandria-ui-elements/gen/displays/notifiers/$notifier~Notifier";
-end
 
-def type(notifyProxyMethod)
+rule type(notifyProxyMethod)
 	notifyProxyMessage = (name) => {
 		if (!this.props.onProxyMessage) return;
 		this.props.onProxyMessage(name);
 	};
-end
 
-def type(display, collection)
+rule type(display, collection)
 	import React from "react";
 	<<$alexandriaBlockImport>>
 	<<$alexandriaTemplateStampImport>>
@@ -108,9 +103,8 @@ def type(display, collection)
 	}
 
 	<<$displayRegistration+declaration>>
-end
 
-def type(display)
+rule type(display)
 	import React from "react";
 	<<$alexandriaBlockImport>>
 	<<$alexandriaTemplateStampImport>>
@@ -144,115 +138,86 @@ def type(display)
 	}
 
 	<<$displayRegistration+declaration>>
-end
 
-def type(displayRegistration) and trigger(import)
+rule type(displayRegistration) and trigger(import)
 	import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-end
 
-def type(displayRegistration, accessible) and trigger(declaration)
+rule type(displayRegistration, accessible) and trigger(declaration)
 	DisplayFactory.register("$name+PascalCase~Proxy", $name+PascalCase~Proxy);
-end
 
-def type(displayRegistration) and trigger(declaration)
+rule type(displayRegistration) and trigger(declaration)
 	DisplayFactory.register("$name+firstUpperCase", $name+firstUpperCase);
-end
 
-def type(alexandriaImport)
+rule type(alexandriaImport)
 	import Ui$name+firstUpperCase from "alexandria-ui-elements/src/displays/components/$name+firstUpperCase";
-end
 
-def type(alexandriaImport, embedded)
+rule type(alexandriaImport, embedded)
 	import { Embedded$name+firstUpperCase as Ui$name+firstUpperCase } from "alexandria-ui-elements/src/displays/components/$name+firstUpperCase";
-end
 
-def type(alexandriaComponentImport)
+rule type(alexandriaComponentImport)
 	import Ui$type+firstUpperCase$facet...[] from "alexandria-ui-elements/<<$componentTarget>>/displays/<<$componentDirectory/>>$type+firstUpperCase$facet...[]";
-end
 
-def type(projectComponentImport, ownertemplatestamp)
+rule type(projectComponentImport, ownertemplatestamp)
 	import Displays$name+firstUpperCase from "$ownerModuleName/gen/displays/templates/$name+firstUpperCase";
-end
 
-def type(projectComponentImport)
+rule type(projectComponentImport)
 	import Displays$name+firstUpperCase from "$serviceName/<<$directory>>/displays/<<$componentDirectory/>>$name+firstUpperCase";
-end
 
-def type(displayExtends, generic, isExtensionOf)
+rule type(displayExtends, generic, isExtensionOf)
 	Displays~$parent
-end
 
-def type(displayExtends, generic)
+rule type(displayExtends, generic)
 	Ui~$parent
-end
 
-def type(displayExtends)
+rule type(displayExtends)
 	Ui~$type+firstUpperCase
-end
 
-def type(renderTag, template) and trigger(end)
+rule type(renderTag, template) and trigger(end)
 	</UiBlock>
-end
 
-def type(renderTag, block) and trigger(end)
+rule type(renderTag, block) and trigger(end)
 	</UiBlock>
-end
 
-def type(renderTag, item) and trigger(end)
+rule type(renderTag, item) and trigger(end)
 	</div>
-end
 
-def type(renderTag) and trigger(end)
+rule type(renderTag) and trigger(end)
 	</React.Fragment>
-end
 
-def type(renderTag, template)
+rule type(renderTag, template)
 	<UiBlock<<$properties+common$properties+specific>> style={{...this.props.style,...display}}>
-end
 
-def type(renderTag, block)
+rule type(renderTag, block)
 	<UiBlock<<$properties+common$properties+specific>> style={{...this.props.style,...display}}>
-end
 
-def type(renderTag, item)
+rule type(renderTag, item)
 	<div style={{width:"100%",height:"100%",...this.props.style,...this.style(),...display}} className={className}>
-end
 
-def type(renderTag)
+rule type(renderTag)
 	<React.Fragment>
-end
 
-def type(renderTagAttributes, block)
+rule type(renderTagAttributes, block)
 	$properties+common$properties+specific
-end
 
-def type(renderTagAttributes)
-end
+rule type(renderTagAttributes)
 
-def attribute(parent) and trigger(import)
+rule attribute(parent) and trigger(import)
 	import Displays$parent+firstUpperCase from "../../../src/displays/$parentDirectory/$parent+firstUpperCase";
-end
 
-def attribute(accessible) and trigger(import)
+rule attribute(accessible) and trigger(import)
 	import Ui$value+firstUpperCase from "alexandria-ui-elements/src/displays/ProxyDisplay";
-end
 
-def attribute(baseDisplay) and trigger(import)
+rule attribute(baseDisplay) and trigger(import)
 	import Ui$value+firstUpperCase from "alexandria-ui-elements/src/displays/Display";
-end
 
-def attribute(baseComponent) and trigger(import)
+rule attribute(baseComponent) and trigger(import)
 	import Ui$value+firstUpperCase from "alexandria-ui-elements/src/displays/components/Component";
-end
 
-def attribute(embeddedComponent) and trigger(import)
+rule attribute(embeddedComponent) and trigger(import)
 	import { Embedded$value+firstUpperCase as Ui$value+firstUpperCase } from "alexandria-ui-elements/src/displays/components/$value+firstUpperCase";
-end
 
-def attribute(component) and trigger(import)
+rule attribute(component) and trigger(import)
 	import Ui$value+firstUpperCase from "alexandria-ui-elements/src/displays/components/$value+firstUpperCase";
-end
 
-def trigger(import)
+rule trigger(import)
 	import Ui$value+firstUpperCase from "alexandria-ui-elements/src/displays/$value+firstUpperCase";
-end
