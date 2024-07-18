@@ -1,283 +1,212 @@
-def type(reference)
+rule type(reference)
 	<Displays$name+firstUppercase context={this._context.bind(this)} owner={this._owner.bind(this)} id="<<$parentPath~.>>$id"$properties+common$properties+specific></Displays$name+firstUppercase>
-end
 
-def type(child) and trigger(declaration)
-end
+rule type(child) and trigger(declaration)
 
-def type(block, child) and trigger(child)
+rule type(block, child) and trigger(child)
 	$value
-end
 
-def type(child) and trigger(child)
+rule type(child) and trigger(child)
 	$value
-end
 
-def type(child) and trigger(add)
-end
+rule type(child) and trigger(add)
 
-def type(component, child, item)
-end
+rule type(component, child, item)
 
-def type(component, child)
+rule type(component, child)
 	<$extends context={this._context.bind(this)} owner={this._owner.bind(this)} id="<<$parentPath~.>>$id"$properties+common$properties+specific<< $code>>~>
 		<<$reference...[$NL]>>
 		<<$methods>>
 		<<$component+child...[$NL]>>
 	<<~</$extends>~>>
-end
 
-def type(extends, multiple, image)
+rule type(extends, multiple, image)
 	UiMultipleImage
-end
 
-def type(extends, multiple)
+rule type(extends, multiple)
 	UiMultiple
-end
 
-def type(extends, displaystamp)
+rule type(extends, displaystamp)
 	Ui$type+firstUpperCase$facet...[]
-end
 
-def type(extends, proxystamp)
+rule type(extends, proxystamp)
 	UiProxyStamp
-end
 
-def type(extends, basestamp)
+rule type(extends, basestamp)
 	Displays$type+firstUpperCase
-end
 
-def type(extends)
+rule type(extends)
 	Ui$type+firstUpperCase$facet...[]
-end
 
-def type(facet)
+rule type(facet)
 	$name+firstUpperCase
-end
 
-def type(method)
-end
+rule type(method)
 
-def type(properties, actionable) and trigger(common)
+rule type(properties, actionable) and trigger(common)
 	<< title="$title">><< name="$name">><< target="$target">><< mode="$actionableMode">><< icon="$icon">><< affirmed="$affirmed">><< traceable={$traceable}>><< signed={{mode:"$signMode",text:"$signText",reason:"$reasonText"}}>><< readonly={$readonly}>><< size="$size">><< format="$format...[ ]">><< highlighted="$highlighted">><< visible={$visible}>><< style="$style">><< color="$color">>
-end
 
-def type(properties, abstractslider) and trigger(common)
+rule type(properties, abstractslider) and trigger(common)
 	<< label="$label">><< format="$format...[ ]">><< color="$color">><< traceable={$traceable}>><< arrangement="$arrangement">><< animation={{interval:$interval,loop:$loop}}>><< readonly={$readonly}>><< visible={$visible}>><< style="$style">><< position="$position">>
-end
 
-def type(properties, appDirectory) and trigger(common)
+rule type(properties, appDirectory) and trigger(common)
 	<< icon="$icon">><< visible={$visible}>><< style="$style">>
-end
 
-def type(properties, dashboard) and trigger(common)
+rule type(properties, dashboard) and trigger(common)
 	<< width="$width">><< height="$height">><< style="$style">>
-end
 
-def type(properties) and trigger(common)
+rule type(properties) and trigger(common)
 	<< name="$name">><< label="$label">><< format="$format...[ ]">><< color="$color">><< visible={$visible}>><< traceable={$traceable}>><< multiple={{instances:"$instances",arrangement:"$multipleArrangement",noItemsMessage:"$multipleNoItemsMessage",spacing:$multipleSpacing,editable:$multipleEditable,wrap:$multipleWrapItems,collapsed:$multipleCollapsed,count:{min:$multipleMin,max:$multipleMax}}}>><< style="$style">>
-end
 
-def type(properties, openpopover) and trigger(specific)
+rule type(properties, openpopover) and trigger(specific)
 	<< triggerEvent="$triggerEvent">>
-end
 
-def type(properties, signtext) and trigger(specific)
+rule type(properties, signtext) and trigger(specific)
 	<< text="$text">><< signFormat="$signFormat">>
-end
 
-def type(properties, kpi) and trigger(specific)
+rule type(properties, kpi) and trigger(specific)
 	<< mode="$mode">><< unit="$unit">><< textColor="$textColor">><< backgroundColor="$backgroundColor">><< highlightedColor="$highlightedColor">><< value="$value">><< size="$size">><< textPosition="$textPosition">>
-end
 
-def type(properties, template) and trigger(specific)
+rule type(properties, template) and trigger(specific)
 	<< layout="$layout...[ ]">><< width="$width">><< height="$height">><< spacing="$spacing">>
-end
 
-def type(properties, basestamp) and trigger(specific)
+rule type(properties, basestamp) and trigger(specific)
 	<< spacing="$spacing">>
-end
 
-def type(properties, materialicon) and trigger(specific)
+rule type(properties, materialicon) and trigger(specific)
 	<< icon="$icon">>
-end
 
-def type(properties, selector) and trigger(specific)
+rule type(properties, selector) and trigger(specific)
 	<< multipleSelection={$multipleSelection}>><< readonly={$readonly}>><< focused={$focused}>><< placeholder="$placeholder">><< selected="$selected">><< layout="$layout">><< size="$size">><< maxMenuHeight={$maxMenuHeight}>><< allowOther="$allowOther">><< scrollButtons="$scrollButtons">><< view="$view">>
-end
 
-def type(properties, image) and trigger(specific)
+rule type(properties, image) and trigger(specific)
 	<< width="$width">><< height="$height">><< mobileReduceFactor={$mobileReduceFactor}>><< allowFullscreen={$allowFullscreen}>>
-end
 
-def type(properties, file) and trigger(specific)
+rule type(properties, file) and trigger(specific)
 	<< width="$width">><< height="$height">><< preview={$preview}>><< dropZone={$dropZone}>><< maxSize={$maxSize}>><< allowedTypes={[$allowedTypes]}>>
-end
 
-def type(properties, chart) and trigger(specific)
+rule type(properties, chart) and trigger(specific)
 	<< width="$width">><< height="$height">>
-end
 
-def type(properties, alertdialog) and trigger(specific)
+rule type(properties, alertdialog) and trigger(specific)
 	<< title="$title">><< modal={$modal}>><< fullscreen={$fullscreen}>><< message="$message">><< closeLabel="$closeLabel">><< acceptLabel="$acceptLabel">><< width="$width">><< height="$height">><< animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}>>
-end
 
-def type(properties, abstractdialog) and trigger(specific)
+rule type(properties, abstractdialog) and trigger(specific)
 	<< title="$title">><< modal={$modal}>><< fullscreen={$fullscreen}>><< width="$width">><< height="$height">><< animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}>>
-end
 
-def type(properties, block) and trigger(specific)
+rule type(properties, block) and trigger(specific)
 	<< layout="$layout...[ ]">><< width="$width">><< height="$height">><< spacing="$spacing">><< $paper>><< $badge>><< $drawer>><< $popover>><< animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}>><< hidden="$hidden">><< splitMobileLabel="$splitMobileLabel">><< autoSize={$autoSize}>>
-end
 
-def type(properties, date) and trigger(specific)
+rule type(properties, date) and trigger(specific)
 	<< pattern="$pattern">><< mode="$mode">><< value={new Date($value)}>><< timePicker={$timePicker}>><< mask="$mask">><< embedded={$embedded}>><< allowEmpty={$allowEmpty}>><< views={["$view...[","]"]}>><< shrink={$shrink}>>
-end
 
-def type(properties, user) and trigger(specific)
+rule type(properties, user) and trigger(specific)
 	<< mode="$mode">>
-end
 
-def type(properties, number) and trigger(specific)
+rule type(properties, number) and trigger(specific)
 	<< value={$value}>><< prefix="$prefix">><< suffix="$suffix">><< min={$min}>><< max={$max}>><< step={$step}>><< readonly={$readonly}>><< focused={$focused}>><< decimals={$decimals}>><< expanded={$expanded}>><< helperText="$helperText">><< shrink={$shrink}>>
-end
 
-def type(properties, header) and trigger(specific)
+rule type(properties, header) and trigger(specific)
 	<< position="$position">><< width="$width">><< height="$height">><< elevation={$elevation}>>
-end
 
-def type(properties, code) and trigger(specific)
+rule type(properties, code) and trigger(specific)
 	<< mode="$mode">><< language="$language">><< highlighted=$highlighted>>
-end
 
-def type(properties, text) and trigger(specific)
+rule type(properties, text) and trigger(specific)
 	<< mode="$mode">><< editionMode="$editionMode">><< maxLength={$maxLength}>><< rows={$rows}>><< prefix="$prefix">><< suffix="$suffix">><< translate={$translate}>><< cropWithEllipsis={$cropWithEllipsis}>><< value="$defaultValue">><< placeholder="$placeholder">><< readonly={$readonly}>><< focused={$focused}>><< highlighted={$highlighted}>><< type="$type">><< helperText="$helperText">><< shrink={$shrink}>>
-end
 
-def type(properties, location) and trigger(specific)
+rule type(properties, location) and trigger(specific)
 	<< center={{lat:$centerLat,lng:$centerLng}}>><< zoom={{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}}>><< modes={["$mode...[","]"]}>><< controls="$controls">>
-end
 
-def type(properties, map) and trigger(specific)
+rule type(properties, map) and trigger(specific)
 	<< pageSize={$pageSize}>><< type="$type">><< itemHeight={$itemHeight}>><< center={{lat:$centerLat,lng:$centerLng}}>><< zoom={{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}}>><< controls="$controls">><< selection="$selection">>
-end
 
-def type(properties, collection) and trigger(specific)
+rule type(properties, collection) and trigger(specific)
 	<< noItemsMessage="$noItemsMessage">><< noItemsFoundMessage="$noItemsFoundMessage">><< pageSize={$pageSize}>><< itemHeight={$itemHeight}>><< scrollingMark={$scrollingMark}>><< navigable="$navigable">><< selection="$selection">>
-end
 
-def type(properties, heading) and trigger(specific)
+rule type(properties, heading) and trigger(specific)
 	 style={{width:"$width~%",paddingRight:"10px"<<,$paddingLeft:"10px">>}}<< hidden="$hidden">>
-end
 
-def type(properties, item) and trigger(specific)
+rule type(properties, item) and trigger(specific)
 	 style={{width:"$width~%",paddingRight:"10px"<<,$paddingLeft:"10px">>}}<< hidden="$hidden">>
-end
 
-def type(properties, spinner) and trigger(specific)
+rule type(properties, spinner) and trigger(specific)
 	<< mode="$mode">><< size={$size}>>
-end
 
-def type(properties, switch) and trigger(specific)
+rule type(properties, switch) and trigger(specific)
 	<< state="$state">>
-end
 
-def type(properties, toggle) and trigger(specific)
+rule type(properties, toggle) and trigger(specific)
 	<< state="$state">>
-end
 
-def type(properties, splitbutton) and trigger(specific)
+rule type(properties, splitbutton) and trigger(specific)
 	<< options={["$option...[","]"]}>><< defaultOption="$default">><< icon="$icon">>
-end
 
-def type(properties, export) and trigger(specific)
+rule type(properties, export) and trigger(specific)
 	<< from={$from}>><< to={$to}>><< min={$min}>><< max={$max}>><< range={{min:$rangeMin,max:$rangeMax}}>><< options={["$option...[","]"]}>>
-end
 
-def type(properties, download) and trigger(specific)
+rule type(properties, download) and trigger(specific)
 	<< options={["$option...[","]"]}>>
-end
 
-def type(properties, download, selection) and trigger(specific)
+rule type(properties, download, selection) and trigger(specific)
 	<< options={["$option...[","]"]}>>
-end
 
-def type(properties, searchbox) and trigger(specific)
+rule type(properties, searchbox) and trigger(specific)
 	<< placeholder="$placeholder">><< showCountMessage="$showCountMessage">>
-end
 
-def type(properties, slider) and trigger(specific)
+rule type(properties, slider) and trigger(specific)
 	<< range={{min:$min,max:$max}}>><< value={$value}>>
-end
 
-def type(properties, rangeslider) and trigger(specific)
+rule type(properties, rangeslider) and trigger(specific)
 	<< range={{min:$min,max:$max}}>><< value={[$from,$to]}>><< minimumDistance={$minimumDistance}>>
-end
 
-def type(properties, grouping) and trigger(specific)
+rule type(properties, grouping) and trigger(specific)
 	<< pageSize={$pageSize}>><< placeholder="$placeholder">>
-end
 
-def type(properties, stepper) and trigger(specific)
+rule type(properties, stepper) and trigger(specific)
    << orientation="$orientation+lowercase">><< position="$position+lowercase">>
-end
 
-def type(properties, frame) and trigger(specific)
+rule type(properties, frame) and trigger(specific)
    << width="$width">><< height="$height">><< url="$url">>
-end
 
-def type(properties, sorting) and trigger(specific)
+rule type(properties, sorting) and trigger(specific)
 	<< mode="$mode">><< align="$align">>
-end
 
-def type(properties, htmlviewer) and trigger(specific)
+rule type(properties, htmlviewer) and trigger(specific)
 	<< content="$content">>
-end
 
-def type(properties, timeline) and trigger(specific)
+rule type(properties, timeline) and trigger(specific)
 	<< mode="$mode">>
-end
 
-def type(properties, documenteditor, collabora) and trigger(specific)
+rule type(properties, documenteditor, collabora) and trigger(specific)
 	<< editorUrl="$editorUrl">><< accessToken="$accessToken">>
-end
 
-def type(properties, eventline) and trigger(specific)
+rule type(properties, eventline) and trigger(specific)
 	<< arrangement="$arrangement">>
 	<< toolbarArrangement="$toolbarArrangement">>
-end
 
-def type(properties, microsite) and trigger(specific)
+rule type(properties, microsite) and trigger(specific)
 	<< downloadOperations={["$downloadOperation...[","]"]}>>
-end
 
-def type(properties) and trigger(specific)
-end
+rule type(properties) and trigger(specific)
 
-def type(badge)
+rule type(badge)
 	mode="$mode"<< value={$value}>><< max={$max}>><< showZero={$showZero}>>
-end
 
-def type(drawer)
+rule type(drawer)
 	position="$position" variant="$variant"
-end
 
-def type(popover)
+rule type(popover)
 	position="$position"
-end
 
-def type(code)
+rule type(code)
 	value="$value"
-end
 
-def type(highlighted)
+rule type(highlighted)
 	{text:"$text",background:"$background"}
-end
 
-def type(actionableMode)
+rule type(actionableMode)
 	$mode
-end
 
-def type(histogram)
+rule type(histogram)
 	{alwaysVisible:$alwaysVisible,type:"$type"}
-end

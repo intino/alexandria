@@ -1,4 +1,4 @@
-def type(dispatcher, gen)
+rule type(dispatcher, gen)
 	package $package.ui.displays;
 
 	import io.intino.alexandria.ui.Soul;
@@ -60,9 +60,8 @@ def type(dispatcher, gen)
 		}
 
 	}
-end
 
-def type(dispatcher)
+rule type(dispatcher)
 	package $package.ui.displays;
 
 	import io.intino.alexandria.ui.Soul;
@@ -70,56 +69,42 @@ def type(dispatcher)
 	public class RouteDispatcher extends AbstractRouteDispatcher {
 		<<$resource+implementation...[$NL]>>
 	}
-end
 
-def type(resource, main) and trigger(call)
+rule type(resource, main) and trigger(call)
 	if (address.length() <= 1) { dispatch$name+firstUpperCase(soul<<, $param+call...[, ]>>); return; }
-end
 
-def type(resource) and trigger(call)
+rule type(resource) and trigger(call)
 	if (address.matches(patterns.get("$name"))) { dispatch$name+firstUpperCase(soul<<, $param+call...[, ]>>); return; }
-end
 
-def type(resource, main) and trigger(declaration)
-end
+rule type(resource, main) and trigger(declaration)
 
-def type(resource) and trigger(declaration)
+rule type(resource) and trigger(declaration)
 	public abstract void dispatch$name+firstUpperCase(Soul soul<<, $param...[, ]>>);
-end
 
-def type(resource, main) and trigger(implementation)
-end
+rule type(resource, main) and trigger(implementation)
 
-def type(resource) and trigger(implementation)
+rule type(resource) and trigger(implementation)
 	@Override
 	public void dispatch$name+firstUpperCase(Soul soul<<, $param...[, ]>>) {
 		// TODO
 	}
-end
 
-def type(resource, main) and trigger(patternRegister)
-end
+rule type(resource, main) and trigger(patternRegister)
 
-def type(resource) and trigger(patternRegister)
+rule type(resource) and trigger(patternRegister)
 	patterns.put("$name", "$pattern");
-end
 
-def type(resource, main) and trigger(pattern)
+rule type(resource, main) and trigger(pattern)
 	if (address.matches(patterns.get("$name"))) return patterns.get("$name");
-end
 
-def type(resource) and trigger(pattern)
+rule type(resource) and trigger(pattern)
 	else if (address.matches(patterns.get("$name"))) return patterns.get("$name");
-end
 
-def type(param, optional) and trigger(call)
+rule type(param, optional) and trigger(call)
 	params.size() > $index ? params.get($index) : null
-end
 
-def type(param) and trigger(call)
+rule type(param) and trigger(call)
 	params.get($index)
-end
 
-def type(param)
+rule type(param)
 	String $name
-end

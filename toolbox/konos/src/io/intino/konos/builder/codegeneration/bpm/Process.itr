@@ -1,4 +1,4 @@
-def type(process, src)
+rule type(process, src)
 	package $package+validPackage.bpm;
 
 	import io.intino.alexandria.bpm.Task;
@@ -22,9 +22,8 @@ def type(process, src)
 
 		<<$state+accept...[$NL$NL]>>
 	}
-end
 
-def type(process)
+rule type(process)
 	package $package+validPackage.bpm;
 
 	import static io.intino.alexandria.bpm.State.Type.*;
@@ -61,9 +60,8 @@ def type(process)
 
 		$state+method...[$NL$NL]
 	}
-end
 
-def trigger(method)
+rule trigger(method)
 	private Task execute$method+firstUpperCase() {
 		return new Task(Task.Type.$taskType) {
 			@Override
@@ -77,62 +75,48 @@ def trigger(method)
 			}
 		};
 	}
-end
 
-def trigger(abstractExecute)
+rule trigger(abstractExecute)
 	protected abstract void $method+FirstLowerCase();
-end
 
-def trigger(execute)
+rule trigger(execute)
 	protected void $method+FirstLowerCase() {
 
 	}
-end
 
-def trigger(abstractAccept)
+rule trigger(abstractAccept)
 	protected boolean accept$method+FirstUpperCase() {
 		return true;
 	}
-end
 
-def type(conditional) and trigger(accept)
+rule type(conditional) and trigger(accept)
 	protected boolean accept$method+FirstUpperCase() {
 		return true;
 	}
-end
 
-def trigger(state)
+rule trigger(state)
 	addState(new io.intino.alexandria.bpm.State("$label", execute$method+firstUpperCase()<<, $type+lowercase+FirstUpperCase...[, ]>>));
-end
 
-def trigger(link)
+rule trigger(link)
 	addLink(new io.intino.alexandria.bpm.Link("$from", "$to", $type+linkType));
-end
 
-def attribute(this, Default) and trigger(linkType)
+rule attribute(this, Default) and trigger(linkType)
 	io.intino.alexandria.bpm.Link.Type.Default
-end
 
-def attribute(this, Line) and trigger(linkType)
+rule attribute(this, Line) and trigger(linkType)
 	io.intino.alexandria.bpm.Link.Type.Inclusive
-end
 
-def attribute(this, Exclusive) and trigger(linkType)
+rule attribute(this, Exclusive) and trigger(linkType)
 	io.intino.alexandria.bpm.Link.Type.Exclusive
-end
 
-def attribute(this, Inclusive) and trigger(linkType)
+rule attribute(this, Inclusive) and trigger(linkType)
 	io.intino.alexandria.bpm.Link.Type.Inclusive
-end
 
-def trigger(put)
+rule trigger(put)
 	put($this+firstUpperCase, $this+firstLowerCase);
-end
 
-def trigger(signature)
+rule trigger(signature)
 	String $this+firstLowerCase
-end
 
-def trigger(fieldName)
+rule trigger(fieldName)
 	private static final String $this+FirstUpperCase = "$this";
-end

@@ -1,4 +1,4 @@
-def type(action, jms, process) and not type(ui)
+rule type(action, jms, process) and not type(ui)
 	package $package+validPackage.actions;
 
 	import $package+validPackage.$box+PascalCase~Box;
@@ -19,9 +19,8 @@ def type(action, jms, process) and not type(ui)
 			return null;
 		}
 	}
-end
 
-def type(action, notification) and not type(ui)
+rule type(action, notification) and not type(ui)
 	package $package+validPackage.actions;
 
 	import $package+validPackage.$box+PascalCase~Box;
@@ -42,9 +41,8 @@ def type(action, notification) and not type(ui)
 			//unregister listener
 		}
 	}
-end
 
-def type(action, rest) and not type(ui)
+rule type(action, rest) and not type(ui)
 	package $package+validPackage.actions;
 
 	import $package+validPackage.$box+PascalCase~Box;
@@ -67,9 +65,8 @@ def type(action, rest) and not type(ui)
 			throw new BadRequest("Malformed request");
 		}
 	}
-end
 
-def type(action) and not type(ui)
+rule type(action) and not type(ui)
 	package $package+validPackage.actions;
 
 	import $package+validPackage.$box+PascalCase~Box;
@@ -84,9 +81,8 @@ def type(action) and not type(ui)
 			$returnType+return
 		}
 	}
-end
 
-def type(ui, accessibleDisplay)
+rule type(ui, accessibleDisplay)
 	package $package+validPackage.ui.pages;
 
 	import $package+validPackage.$box+PascalCase~Box;
@@ -107,9 +103,8 @@ def type(ui, accessibleDisplay)
 			display.refresh();
 		}
 	}
-end
 
-def type(ui, mobile, action, gen)
+rule type(ui, mobile, action, gen)
     package $package+validPackage.ui.pages;
 
 	import $package+validPackage.$box+PascalCase~Box;
@@ -128,9 +123,8 @@ def type(ui, mobile, action, gen)
         }
 
     }
-end
 
-def type(ui, mobile, action)
+rule type(ui, mobile, action)
 	package $package+validPackage.ui.pages;
 
 	import io.intino.alexandria.exceptions.*;
@@ -144,9 +138,8 @@ def type(ui, mobile, action)
 
 		$component
 	}
-end
 
-def type(ui, action, gen, asset)
+rule type(ui, action, gen, asset)
 	package $package+validPackage.ui.pages;
 
 	import $package+validPackage.$box+PascalCase~Box;
@@ -154,9 +147,8 @@ def type(ui, action, gen, asset)
 	public abstract class Abstract$name+PascalCase~Page extends io.intino.alexandria.ui.spark.pages.Page {
 		public $box+PascalCase~Box box;
 	}
-end
 
-def type(ui, action, gen)
+rule type(ui, action, gen)
 	package $package+validPackage.ui.pages;
 
 	import $package+validPackage.$box+PascalCase~Box;
@@ -182,41 +174,32 @@ def type(ui, action, gen)
 			return <<$favicon?null;>>
 		}
 	}
-end
 
-def type(returnType, asset)
+rule type(returnType, asset)
 	io.intino.alexandria.Resource
-end
 
-def type(returnType)
+rule type(returnType)
     String
-end
 
-def type(executeBody, static)
+rule type(executeBody, static)
 	return "$text";
-end
 
-def type(executeBody, asset)
+rule type(executeBody, asset)
 	return null;
-end
 
-def type(executeBody)
+rule type(executeBody)
 	return super.template("$templateName"<<, Arrays.asList($usedUnit...[,])>>);
-end
 
-def type(title, configuration)
+rule type(title, configuration)
 	"{$title}".replace("{$title}", box.configuration().get("$title"))
-end
 
-def type(title)
+rule type(title)
 	"$title"
-end
 
-def trigger(favicon)
+rule trigger(favicon)
 	this.getClass().getResource("$this");
-end
 
-def type(ui, action) and not type(gen)
+rule type(ui, action) and not type(gen)
 	package $package+validPackage.ui.pages;
 
 	import io.intino.alexandria.exceptions.*;
@@ -230,69 +213,54 @@ def type(ui, action) and not type(gen)
 
 		$component
 	}
-end
 
-def type(parameter, fileData) and trigger(type)
+rule type(parameter, fileData) and trigger(type)
 	public io.intino.alexandria.Resource $name+CamelCase;
-end
 
-def type(parameter, list) and trigger(type)
+rule type(parameter, list) and trigger(type)
 	public java.util.List<$type> $name+CamelCase;
-end
 
-def type(parameter, word) and trigger(type)
+rule type(parameter, word) and trigger(type)
 	public String $name+CamelCase;
-end
 
-def type(parameter) and trigger(type)
+rule type(parameter) and trigger(type)
 	public $type $name+CamelCase;
-end
 
-def type(parameter) and trigger(methodCall)
+rule type(parameter) and trigger(methodCall)
 	display.$name+CamelCase($name+CamelCase);
-end
 
-def type(fileData) and trigger(onlyType)
+rule type(fileData) and trigger(onlyType)
 	io.intino.alexandria.Resource
-end
 
-def type(list) and trigger(onlyType)
+rule type(list) and trigger(onlyType)
 	java.util.List<$type>
-end
 
-def trigger(onlyType)
+rule trigger(onlyType)
 	$type
-end
 
-def type(editor) and trigger(parameter)
+rule type(editor) and trigger(parameter)
 	public io.intino.alexandria.Resource document;
 	public io.intino.alexandria.ui.services.EditorService.Permission permission;
-end
 
-def attribute(this, void) and trigger(return)
-end
+rule attribute(this, void) and trigger(return)
 
-def trigger(return)
+rule trigger(return)
 	return null;
-end
 
-def type(schemaImport) and trigger(schemaImport)
+rule type(schemaImport) and trigger(schemaImport)
 	import $package.schemas.*;
-end
 
-def type(component, static)
+rule type(component, static)
 	public String execute() {
 		return super.execute();
 	}
-end
 
-def type(component, asset)
+rule type(component, asset)
 	public io.intino.alexandria.Resource execute() {
 		return null;
 	}
-end
 
-def type(component)
+rule type(component)
 	public io.intino.alexandria.ui.Soul prepareSoul(io.intino.alexandria.ui.services.push.UIClient client) {
 		return new io.intino.alexandria.ui.Soul(session) {
 			@Override
@@ -304,26 +272,20 @@ def type(component)
 			}
 		};
 	}
-end
 
-def type(editor) and trigger(component)
+rule type(editor) and trigger(component)
 	component.document(document);
 	component.permission(permission);
 	component.display(new $display+PascalCase(box));
-end
 
-def type(usedUnit, standard)
+rule type(usedUnit, standard)
 	new io.intino.alexandria.ui.spark.pages.Unit("$name","$url")
-end
 
-def type(usedUnit, custom)
+rule type(usedUnit, custom)
 	new io.intino.alexandria.ui.spark.pages.Unit("$name",box.configuration().get("$url"))
-end
 
-def type(contextProperty, spark)
+rule type(contextProperty, spark)
 	public io.intino.alexandria.http.spark.SparkContext context;
-end
 
-def type(contextProperty)
+rule type(contextProperty)
 	public io.intino.alexandria.Context context = new io.intino.alexandria.Context();
-end

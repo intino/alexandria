@@ -1,4 +1,4 @@
-def type(factory)
+rule type(factory)
 	package $package.mounters;
 
 	import io.intino.alexandria.event.Event;
@@ -29,13 +29,10 @@ def type(factory)
 			});
 		}
 	}
-end
 
-def trigger(put)
+rule trigger(put)
 	mountersByClass.put($eventType.class, java.util.List.of($mounter...[, ]));
 	mountersByType.put("$type", java.util.List.of($mounter...[, ]));
-end
 
-def trigger(mounter)
+rule trigger(mounter)
 	new $package.$datamart+lowercase.mounters.$name+FirstUpperCase(box)
-end

@@ -22,8 +22,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.Configuration.Artifact.Dsl.Level.Model;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.createIfNotExists;
-import static io.intino.tara.builder.core.CompilerConfiguration.Level.Model;
 
 public class CompilationContext {
 	private final List<File> sources;
@@ -105,7 +105,7 @@ public class CompilationContext {
 		File resDir;
 		if (target == Target.Service) resDir = configuration.resDirectory();
 		else if (target == Target.Android || target == Target.AndroidResource)
-			resDir = new File(root(target) + androidRelativePath() + File.separator + "res");
+			resDir = new File(root(target) + androidLibraryRelativePath() + File.separator + "res");
 		else resDir = accessorRes();
 		return createIfNotExists(resDir);
 	}
@@ -115,7 +115,7 @@ public class CompilationContext {
 		if (target == Target.Service)
 			srcDir = new File(configuration.srcDirectory(), packageName().replace(".", File.separator));
 		else if (target == Target.Android)
-			srcDir = new File(root(target) + androidRelativePath() + File.separator + "java", packageName().replace(".", File.separator) + File.separator + "mobile" + File.separator + "android");
+			srcDir = new File(root(target) + androidLibraryRelativePath() + File.separator + "java", packageName().replace(".", File.separator) + File.separator + "mobile" + File.separator + "android");
 		else if (target == Target.MobileShared)
 			srcDir = new File(root(target) + androidSharedRelativePath(), packageName().replace(".", File.separator) + File.separator + "mobile");
 		else srcDir = accessorSrc();
@@ -127,7 +127,7 @@ public class CompilationContext {
 		if (target == Target.Service)
 			genDir = new File(configuration.genDirectory(), packageName().replace(".", File.separator));
 		else if (target == Target.Android)
-			genDir = new File(root(target) + androidRelativePath() + File.separator + "java", packageName().replace(".", File.separator) + File.separator + "mobile" + File.separator + "android");
+			genDir = new File(root(target) + androidLibraryRelativePath() + File.separator + "java", packageName().replace(".", File.separator) + File.separator + "mobile" + File.separator + "android");
 		else if (target == Target.MobileShared)
 			genDir = new File(root(target) + androidSharedRelativePath(), packageName().replace(".", File.separator) + File.separator + "mobile");
 		else genDir = accessorGen();
@@ -183,6 +183,10 @@ public class CompilationContext {
 
 	public String androidRelativePath() {
 		return File.separator + "android" + File.separator + "src" + File.separator + "main";
+	}
+
+	public String androidLibraryRelativePath() {
+		return File.separator + "android-library" + File.separator + "src" + File.separator + "main";
 	}
 
 	public String androidSharedRelativePath() {

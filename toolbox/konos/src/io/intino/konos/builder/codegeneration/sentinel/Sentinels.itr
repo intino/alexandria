@@ -1,4 +1,4 @@
-def type(sentinels)
+rule type(sentinels)
 	package $package+ValidPackage;
 
 	import $package+ValidPackage.$box+FirstUpperCase~Box;
@@ -41,9 +41,8 @@ def type(sentinels)
 			return set;
 		}
 	}
-end
 
-def type(sentinel) and type(FileListener) and trigger(init)
+rule type(sentinel) and type(FileListener) and trigger(init)
 	File directory = $file+customizeDirectory;
 	if (directory != null && directory.exists()) scheduler.watchDirectory("$name", directory, (file, event) -> {
 				$package+ValidPackage.actions.$name+CamelCase~Action action = new $package+ValidPackage.actions.$name+CamelCase~Action();
@@ -53,58 +52,45 @@ def type(sentinel) and type(FileListener) and trigger(init)
 				action.execute();
 			}, $event+fullEvent...[, ]);
 	else if (directory != null) Logger.warn("Directory " + directory + " not found");
-end
 
-def type(archetype) and trigger(customizeDirectory)
+rule type(archetype) and trigger(customizeDirectory)
 	new $package.Archetype(home).$path
-end
 
-def type(custom) and trigger(customizeDirectory)
+rule type(custom) and trigger(customizeDirectory)
 	box.configuration().get("$path") == null ? null : new java.io.File(box.configuration().get("$path"))
-end
 
-def trigger(customizeDirectory)
+rule trigger(customizeDirectory)
 	new java.io.File("$path")
-end
 
-def type(sentinel) and type(webhook) and trigger(init)
+rule type(sentinel) and type(webhook) and trigger(init)
 	webServer.route($path+format).get(manager -> $name+CamelCase~Action(manager).execute());
-end
 
-def type(sentinel) and type(webhook) and trigger(actionCall)
+rule type(sentinel) and type(webhook) and trigger(actionCall)
 	private static $name+PascalCase~Action $name+CamelCase~Action(io.intino.alexandria.http.spark.SparkManager manager) {
 		$name+PascalCase~Action action = new $name+PascalCase~Action();
 		$parameter+assign...[$NL]
 		return action;
 	}
-end
 
-def type(sentinel) and trigger(init)
+rule type(sentinel) and trigger(init)
 	job = newJob($package+ValidPackage.scheduling.$name+PascalCase~Listener.class).withIdentity("$name").build();
 	job.getJobDataMap().put("box", box);
 	scheduler.scheduleJob(job, newSet($job...[, ]), true);
-end
 
-def trigger(assign)
+rule trigger(assign)
 	action.$name+CamelCase = manager.from$in+firstUpperCase("$name");
-end
 
-def type(path) and trigger(format)
+rule type(path) and trigger(format)
 	"$name"<<$custom...[]>>
-end
 
-def trigger(fullEvent)
+rule trigger(fullEvent)
 	io.intino.alexandria.scheduler.directory.DirectorySentinel.Event.$this
-end
 
-def type(cronTrigger) and trigger(job)
+rule type(cronTrigger) and trigger(job)
 	newTrigger().withIdentity("$name").withSchedule(cronSchedule("$pattern")<<.inTimeZone(TimeZone.getTimeZone(ZoneId.of("$timeZone")))>>).build()
-end
 
-def type(onBootTrigger) and type(delay) and trigger(job)
+rule type(onBootTrigger) and type(delay) and trigger(job)
 	newTrigger().startAt(java.util.Date.from(java.time.Instant.now().plus($delay, java.time.temporal.ChronoUnit.MILLIS))).build()
-end
 
-def type(onBootTrigger) and trigger(job)
+rule type(onBootTrigger) and trigger(job)
 	newTrigger().startNow().build()
-end

@@ -1,4 +1,4 @@
-def type(accessor)
+rule type(accessor)
 	package $package+ValidPackage;
 
 	import java.util.List;
@@ -26,22 +26,17 @@ def type(accessor)
 
 		$operation...[$NL$NL]
 	}
-end
 
-def type(operation)
+rule type(operation)
 	public $returnType+firstUpperCase+ReturnTypeFormatter $name+validName+firstLowerCase($parameter+signature...[, ]) {
 		return bean != null ? bean.$name+validName+firstLowerCase($parameter+name...[, ]) : null;
 	}
-end
 
-def type(parameter) and trigger(signature)
+rule type(parameter) and trigger(signature)
 	$type $name+validName+firstLowerCase
-end
 
-def type(parameter) and trigger(name)
+rule type(parameter) and trigger(name)
 	$name+validName+firstLowerCase
-end
 
-def type(schemaImport) and trigger(schemaImport)
+rule type(schemaImport) and trigger(schemaImport)
 	import $package.schemas.*;
-end

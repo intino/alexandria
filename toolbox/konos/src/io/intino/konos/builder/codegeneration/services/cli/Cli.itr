@@ -1,4 +1,4 @@
-def type(cli, service)
+rule type(cli, service)
     package $package+ValidPackage;
 
     import io.intino.alexandria.cli.CliManager;
@@ -17,9 +17,8 @@ def type(cli, service)
                     .post(manager -> manager.write(io.intino.alexandria.rest.ResponseAdapter.adapt(new CliManager(cli, io.intino.alexandria.rest.RequestAdapter.adapt(manager.fromBody(), BotTalk.class)).execute(manager.fromHeader("Authorization").replace("Bearer ", "")))));
         }
     }
-end
 
-def type(cli, authenticator)
+rule type(cli, authenticator)
 	package $package+ValidPackage;
 
 	public class $name+pascalCase~ServiceAuthenticator {
@@ -33,9 +32,8 @@ def type(cli, authenticator)
 			return false;
 		}
 	}
-end
 
-def type(cli)
+rule type(cli)
 	package $package+ValidPackage;
 
 	import io.intino.alexandria.cli.Cli;
@@ -78,20 +76,15 @@ def type(cli)
             return parameters.isEmpty() ? "" : " <" + String.join("> <", parameters) + ">";
         }
     }
-end
 
-def type(confirmation)
+rule type(confirmation)
     addQuestionOption("$option", (properties, command, args) -> new $option+firstUpperCase~Command(box).execute(properties, command, args));
-end
 
-def type(command)
+rule type(command)
     add("$command", "$abbreviation", "$description", $parameters, $preconditions, "$postcondition", (properties, command, args) -> new $name+firstUpperCase~Command(box).execute(properties, command, args));
-end
 
-def type(list, empty)
+rule type(list, empty)
     emptyList()
-end
 
-def type(list)
+rule type(list)
     List.of("$item...[", "]")
-end

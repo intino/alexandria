@@ -1,4 +1,4 @@
-def type(root)
+rule type(root)
 	package $package+ValidPackage;
 
 	import $root.*;
@@ -6,9 +6,8 @@ def type(root)
 
     @Serializable
 	$schema
-end
 
-def trigger(schema)
+rule trigger(schema)
     <<$inner>>
 	open class $name+firstUpperCase <<: $parent()>> {
 
@@ -28,71 +27,59 @@ def trigger(schema)
 
 		<<$schema...[$NL$NL]>>
 	}
-end
 
-def type(word, single) and trigger(declaration)
+rule type(word, single) and trigger(declaration)
     private lateinit var $name+FirstLowerCase : $type+FirstUpperCase
 
 	enum class $name+FirstUpperCase {
 		$words...[, ]
 	}
 
-end
 
-def type(word, list) and trigger(declaration)
+rule type(word, list) and trigger(declaration)
 	private var $name+FirstLowerCase : List<$type+FirstUpperCase> = arrayListOf()
 
 	enum class $name+FirstUpperCase {
 		$words...[, ]
 	}
 
-end
 
-def type(primitive, single) and trigger(declaration)
+rule type(primitive, single) and trigger(declaration)
 	$typeFrame+serialization private<< $lateInit~lateinit>> var $name+firstLowerCase : $typeFrame<< = $defaultValue>>
-end
 
-def not type(primitive) and type(single) and trigger(declaration)
+rule not type(primitive) and type(single) and trigger(declaration)
 	private<< $lateInit~lateinit>> var $name+firstLowerCase : $type+firstUpperCase<< = $defaultValue>>
-end
 
-def type(map) and trigger(declaration)
+rule type(map) and trigger(declaration)
 	private var $name+firstLowerCase : Map<$key+renderMapType, $value+renderMapType> = mapOf()
-end
 
-def type(list) and (type(object) or type(schema)) and trigger(declaration)
+rule type(list) and (type(object) or type(schema)) and trigger(declaration)
 	private var $name+firstLowerCase : List<$type+firstUpperCase> = arrayListOf()
-end
 
-def type(list) and trigger(declaration)
+rule type(list) and trigger(declaration)
 	private var $name+firstLowerCase : List<$type> = arrayListOf()
-end
 
-def type(word, single) and trigger(getter)
+rule type(word, single) and trigger(getter)
 	fun $name+CamelCase() : $type+FirstUpperCase {
 		return $name+FirstLowerCase
 	}
-end
 
-def type(word, list) and trigger(getter)
+rule type(word, list) and trigger(getter)
 	fun $name+CamelCase() : List<$type+FirstUpperCase> {
 		return $name+FirstLowerCase
 	}
-end
 
-def type(primitive, single) and trigger(getter)
+rule type(primitive, single) and trigger(getter)
 	fun $name+CamelCase() : $typeFrame {
 		return this.$name+firstLowerCase
 	}
-end
 
-def not type(primitive) and type(single) and trigger(getter)
+rule not type(primitive) and type(single) and trigger(getter)
 	fun $name+CamelCase() : $type+firstUpperCase {
 		return this.$name+firstLowerCase
 	}
-end
 
-def type(list, schema) and trigger(getter)
+rule type(list, schema) and trigger(getter)
 	fun $name+CamelCase~List() : List<$type+firstUpperCase> {
 		return this.$name+firstLowerCase
 	}
@@ -104,165 +91,131 @@ def type(list, schema) and trigger(getter)
 	fun $name+firstLowerCase(predicate : java.util.function.Predicate<$type+firstUpperCase>) : $type+firstUpperCase {
 		return this.$name+firstLowerCase.stream().filter(predicate).findFirst().orElse(null)
 	}
-end
 
-def type(list, object) and trigger(getter)
+rule type(list, object) and trigger(getter)
 	fun $name+CamelCase() : List<$type+firstUpperCase> {
 		return this.$name+firstLowerCase
 	}
-end
 
-def type(list) and trigger(getter)
+rule type(list) and trigger(getter)
 	fun $name+CamelCase() : List<$type> {
 		return this.$name+firstLowerCase
 	}
-end
 
-def type(map) and trigger(getter)
+rule type(map) and trigger(getter)
 	fun $name+firstLowerCase() : Map<$key+renderMapType, $value+renderMapType> {
 		return this.$name+firstLowerCase
 	}
-end
 
-def type(map) and trigger(setter)
+rule type(map) and trigger(setter)
 	fun $name+firstLowerCase($name+firstLowerCase : Map<$key+renderMapType, $value+renderMapType>) : $element+firstUpperCase {
 		this.$name+firstLowerCase = $name+firstLowerCase
 		return this
 	}
-end
 
-def type(list) and trigger(renderMapType)
+rule type(list) and trigger(renderMapType)
 	List<$type+firstUpperCase>
-end
 
-def trigger(renderMapType)
+rule trigger(renderMapType)
 	$type+firstUpperCase
-end
 
-def type(word, single) and trigger(setter)
+rule type(word, single) and trigger(setter)
 	fun $name+CamelCase($name+CamelCase : $type+FirstUpperCase) : $element+firstUpperCase {
 		this.$name+firstLowerCase = $name+CamelCase
 		return this
 	}
-end
 
-def type(word, list) and trigger(setter)
+rule type(word, list) and trigger(setter)
 	fun $name+CamelCase($name+CamelCase : List<$type+FirstUpperCase>) : $element+firstUpperCase {
 		this.$name+firstLowerCase = $name+CamelCase
 		return this
 	}
-end
 
-def type(primitive, single) and trigger(setter)
+rule type(primitive, single) and trigger(setter)
 	fun $name+CamelCase($name+CamelCase : $typeFrame) : $element+firstUpperCase {
 		this.$name+firstLowerCase = $name+CamelCase
 		return this
 	}
-end
 
-def not type(primitive) and type(single) and trigger(setter)
+rule not type(primitive) and type(single) and trigger(setter)
 	fun $name+CamelCase($name+CamelCase : $type+firstUpperCase) : $element+firstUpperCase {
 		this.$name+firstLowerCase = $name+CamelCase;
 		return this
 	}
-end
 
-def type(list, object) and trigger(setter)
+rule type(list, object) and trigger(setter)
 	fun $name+firstLowerCase($name+CamelCase : List<$type+firstUpperCase>) : $element+firstUpperCase {
 		this.$name+firstLowerCase = $name+CamelCase
 		return this
 	}
-end
 
-def type(list, schema) and trigger(setter)
+rule type(list, schema) and trigger(setter)
 	fun $name+CamelCase~List($name+CamelCase : List<$type+firstUpperCase>) : $element+firstUpperCase {
 		this.$name+firstLowerCase = $name+CamelCase
 		return this
 	}
-end
 
-def type(list) and trigger(setter)
+rule type(list) and trigger(setter)
 	fun $name+CamelCase($name+CamelCase : List<$type>) : $element+firstUpperCase {
 		this.$name+firstLowerCase = $name+CamelCase
 		return this
 	}
-end
 
-def type(list) and trigger(init)
+rule type(list) and trigger(init)
     result.$name+firstLowerCase = emptyList();
-end
 
-def type(single, object) and trigger(init)
+rule type(single, object) and trigger(init)
     result.$name+firstLowerCase = $type+PascalCase.empty()
-end
 
-def type(single) and trigger(init)
+rule type(single) and trigger(init)
     result.$name+firstLowerCase = $typeFrame+empty
-end
 
-def type(typeFrame, datetime) and trigger(empty)
+rule type(typeFrame, datetime) and trigger(empty)
     null!!
-end
 
-def type(typeFrame, date) and trigger(empty)
+rule type(typeFrame, date) and trigger(empty)
     null!!
-end
 
-def type(typeFrame, real) and trigger(empty)
+rule type(typeFrame, real) and trigger(empty)
     null!!
-end
 
-def type(typeFrame, boolean) and trigger(empty)
+rule type(typeFrame, boolean) and trigger(empty)
     false
-end
 
-def type(typeFrame, integer) and trigger(empty)
+rule type(typeFrame, integer) and trigger(empty)
     null!!
-end
 
-def type(typeFrame, longinteger) and trigger(empty)
+rule type(typeFrame, longinteger) and trigger(empty)
     null!!
-end
 
-def type(typeFrame, word) and trigger(empty)
+rule type(typeFrame, word) and trigger(empty)
     null!!
-end
 
-def type(typeFrame) and trigger(empty)
+rule type(typeFrame) and trigger(empty)
     ""
-end
 
-def type(typeFrame, datetime) and trigger(serialization)
+rule type(typeFrame, datetime) and trigger(serialization)
     @Serializable(with = io.intino.alexandria.mobile.util.InstantSerializer::class)
-end
 
-def type(typeFrame) and trigger(serialization)
-end
+rule type(typeFrame) and trigger(serialization)
 
-def type(typeFrame, datetime)
+rule type(typeFrame, datetime)
     kotlinx.datetime.Instant
-end
 
-def type(typeFrame, date)
+rule type(typeFrame, date)
     kotlinx.datetime.Instant
-end
 
-def type(typeFrame, real)
+rule type(typeFrame, real)
     Double
-end
 
-def type(typeFrame, integer)
+rule type(typeFrame, integer)
     Int
-end
 
-def type(typeFrame, longinteger)
+rule type(typeFrame, longinteger)
     Long
-end
 
-def type(typeFrame)
+rule type(typeFrame)
     $value
-end
 
-def trigger(inner)
+rule trigger(inner)
     @kotlinx.serialization.Serializable
-end

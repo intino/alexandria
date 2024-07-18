@@ -25,8 +25,7 @@ public class PassiveViewPushRequesterTemplate extends Template {
 		rules.add(rule().condition(all(allTypes("parameter", "Integer"), trigger("parameter"))).output(literal("Integer.parseInt(data)")));
 		rules.add(rule().condition(all(allTypes("parameter", "Long"), trigger("parameter"))).output(literal("Long.parseLong(data)")));
 		rules.add(rule().condition(all(allTypes("parameter", "DateTime"), trigger("parameter"))).output(literal("data != null ? java.time.Instant.ofEpochMilli(Long.parseLong(data)) : null")));
-		rules.add(rule().condition(all(allTypes("parameter"), trigger("parameter"))).output(literal("io.intino.alexandria.Json.fromString(data, ")).output(placeholder("value")).output(literal(".class)")));
-		rules.add(rule().condition(trigger("parameter")).output(literal("aaaaa")));
+		rules.add(rule().condition(all(allTypes("parameter"), trigger("parameter"))).output(literal("io.intino.alexandria.Json.fromString(data, ")).output(placeholder("value")).output(literal(".class)\n\ndef\ttrigger(parameter)\naaaaa")));
 		rules.add(rule().condition(allTypes("schemaImport")).output(literal("import ")).output(placeholder("package")).output(literal(".schemas.*;")));
 		return rules;
 	}

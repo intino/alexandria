@@ -1,4 +1,4 @@
-def type(i18n)
+rule type(i18n)
 	package $package;
 
 	import io.intino.alexandria.ui.services.translator.Dictionary;
@@ -25,14 +25,11 @@ def type(i18n)
 			$translator...[$NL]
 		}>>
 	}
-end
 
-def type(translator)
+rule type(translator)
 	dictionaries.put("$language", new Dictionary() {{
 		$translation...[$NL]
 	}}.language("$language"));
-end
 
-def type(translation)
+rule type(translation)
 	put("$text", "$value");
-end

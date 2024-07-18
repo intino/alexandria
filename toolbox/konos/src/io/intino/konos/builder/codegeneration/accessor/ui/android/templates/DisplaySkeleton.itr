@@ -1,14 +1,13 @@
-def type(display, accessible)
-end
+rule type(display, accessible)
 
-def type(display, template, scrollable)
+rule type(display, template, scrollable)
     package $package.mobile.android.displays<<.$packageType~s>>
 
     import android.content.Context
     import android.util.AttributeSet
     import android.view.View
     import android.widget.ScrollView
-    import io.intino.alexandria.mobile.android.R
+    import $package.mobile.android.R
     import io.intino.alexandria.mobile.displays.notifiers.TemplateNotifier
     import io.intino.alexandria.mobile.displays.requesters.TemplateRequester
 
@@ -25,14 +24,13 @@ def type(display, template, scrollable)
             <<$component+scrolling...[$NL]>>
         }
     }
-end
 
-def type(display, template)
+rule type(display, template)
     package $package.mobile.android.displays<<.$packageType~s>>
 
     import android.content.Context
     import android.util.AttributeSet
-    import io.intino.alexandria.mobile.android.R
+    import $package.mobile.android.R
     import io.intino.alexandria.mobile.displays.notifiers.TemplateNotifier
     import io.intino.alexandria.mobile.displays.requesters.TemplateRequester
 
@@ -43,9 +41,8 @@ def type(display, template)
             <<$component+transfer...[$NL]>>
         }
     }
-end
 
-def type(display, collection)
+rule type(display, collection)
 	import React from "react";
 	import { withStyles } from '@material-ui/core/styles';
 	import Abstract$name+firstUpperCase from "../../$packageTypeRelativeDirectory~gen/displays<</$packageType~s>>/Abstract$name+firstUpperCase";
@@ -72,9 +69,8 @@ def type(display, collection)
 
 	export default withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase));
 	DisplayFactory.register("$name+firstUpperCase", withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase)));
-end
 
-def type(display, interface)
+rule type(display, interface)
     package $package.mobile.displays<<.$packageType~s>>
 
     $schemaImport
@@ -82,9 +78,8 @@ def type(display, interface)
     interface $name+firstUpperCase $displayExtends+interface {
         $notification+interface...[$NL$NL]
     }
-end
 
-def type(display)
+rule type(display)
     package $package.mobile.android.displays<<.$packageType~s>>
 
     import android.content.Context
@@ -107,117 +102,88 @@ def type(display)
 		$notification...[$NL$NL]
 
     }
-end
 
-def type(notification) and trigger(interface)
+rule type(notification) and trigger(interface)
     fun $name(<<value : $parameter>>)
-end
 
-def type(notification)
+rule type(notification)
     override fun $name(<<value: $parameter>>) {
     }
-end
 
-def trigger(parameterValue)
+rule trigger(parameterValue)
 	value
-end
 
-def type(date) and trigger(parameter)
+rule type(date) and trigger(parameter)
     kotlinx.datetime.Instant
-end
 
-def type(datetime) and trigger(parameter)
+rule type(datetime) and trigger(parameter)
     kotlinx.datetime.Instant
-end
 
-def type(integer) and trigger(parameter)
+rule type(integer) and trigger(parameter)
     Int
-end
 
-def type(list) and trigger(parameter)
+rule type(list) and trigger(parameter)
     kotlin.collections.List<$value>
-end
 
-def trigger(parameter)
+rule trigger(parameter)
     $value
-end
 
-def type(displayExtends, generic) and trigger(interface)
+rule type(displayExtends, generic) and trigger(interface)
 	: $parentMobileShared
-end
 
-def type(displayExtends, generic, isExtensionOf)
+rule type(displayExtends, generic, isExtensionOf)
 	: $parent<DR, DN>(context, attrs, defStyleAttr, defStyleRes)
-end
 
-def type(displayExtends, generic)
+rule type(displayExtends, generic)
 	: $parent<DR, DN>(context, attrs, defStyleAttr, defStyleRes, IntArray(0))
-end
 
-def type(displayExtends, template) and trigger(interface)
+rule type(displayExtends, template) and trigger(interface)
 	: io.intino.alexandria.mobile.displays.components.Template
-end
 
-def type(displayExtends, template)
+rule type(displayExtends, template)
 	: io.intino.alexandria.mobile.android.displays.components.Template<DR, DN>(context, attrs, defStyleAttr, defStyleRes)
-end
 
-def type(displayExtends, table) and trigger(interface)
+rule type(displayExtends, table) and trigger(interface)
 	: io.intino.alexandria.mobile.displays.components.$type+firstUpperCase$facet...[]
-end
 
-def type(displayExtends, table)
+rule type(displayExtends, table)
 	: io.intino.alexandria.mobile.android.displays.components.$type+firstUpperCase$facet...[]<DR, DN>(context, attrs, defStyleAttr, defStyleRes)
-end
 
-def type(displayExtends, dynamictable) and trigger(interface)
+rule type(displayExtends, dynamictable) and trigger(interface)
 	: io.intino.alexandria.mobile.displays.components.$type+firstUpperCase$facet...[]
-end
 
-def type(displayExtends, dynamictable)
+rule type(displayExtends, dynamictable)
 	: io.intino.alexandria.mobile.android.displays.components.$type+firstUpperCase$facet...[]<DR, DN>(context, attrs, defStyleAttr, defStyleRes)
-end
 
-def type(displayExtends, collection) and trigger(interface)
+rule type(displayExtends, collection) and trigger(interface)
 	: io.intino.alexandria.mobile.displays.components.$type+firstUpperCase$facet...[]
-end
 
-def type(displayExtends, collection)
+rule type(displayExtends, collection)
 	: io.intino.alexandria.mobile.android.displays.components.$type+firstUpperCase$facet...[]<DR, DN>(context, attrs, defStyleAttr, defStyleRes)
-end
 
-def type(displayExtends, item) and trigger(interface)
+rule type(displayExtends, item) and trigger(interface)
 	: io.intino.alexandria.mobile.displays.components.Item
-end
 
-def type(displayExtends, item)
+rule type(displayExtends, item)
 	: io.intino.alexandria.mobile.android.displays.components.Item<DR, DN>(context, attrs, defStyleAttr, defStyleRes)
-end
 
-def type(displayExtends, row) and trigger(interface)
+rule type(displayExtends, row) and trigger(interface)
 	: io.intino.alexandria.mobile.displays.components.Row
-end
 
-def type(displayExtends, row)
+rule type(displayExtends, row)
 	: io.intino.alexandria.mobile.android.displays.components.Row<DR, DN>(context, attrs, defStyleAttr, defStyleRes)
-end
 
-def type(displayExtends, dialog) and trigger(interface)
+rule type(displayExtends, dialog) and trigger(interface)
 	: io.intino.alexandria.mobile.displays.components.Dialog
-end
 
-def type(displayExtends, dialog)
+rule type(displayExtends, dialog)
 	: io.intino.alexandria.mobile.android.displays.components.Dialog<DR, DN>(context, attrs, defStyleAttr, defStyleRes)
-end
 
-def type(displayExtends) and trigger(interface)
+rule type(displayExtends) and trigger(interface)
 	: io.intino.alexandria.mobile.displays.$type+firstUpperCase
-end
 
-def type(displayExtends)
+rule type(displayExtends)
 	: io.intino.alexandria.mobile.android.displays.$type+firstUpperCase<DR, DN>(context, attrs, defStyleAttr, defStyleRes, IntArray(0))
-end
 
-def type(schemaImport)
+rule type(schemaImport)
 	import $package.mobile.schemas.*;
-end

@@ -1,4 +1,4 @@
-def type(ui)
+rule type(ui)
 	package $package+validPackage;
 	<<import $dialogsImport+validPackage.dialogs.*;>>
 	<<import $displaysImport+validPackage.displays.*;>>
@@ -45,78 +45,61 @@ def type(ui)
 			$dialog+notifier...[$NL]
 		}
 	}
-end
 
-def type(resource) and trigger(path)
+rule type(resource) and trigger(path)
 	$path...[$NL]
-end
 
-def trigger(userHome)
+rule trigger(userHome)
 	spark.route("/alexandria/user").get(manager -> new $this+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
-end
 
-def type(display, accessible) and trigger(path)
+rule type(display, accessible) and trigger(path)
 	spark.route("/$name+lowercase~proxy/:displayId/personify").post(manager -> new $name+firstUpperCase~ProxyResource(box, manager, notifierProvider()).execute()); //AAA
-end
 
-def type(display) and trigger(path)
-end
+rule type(display) and trigger(path)
 
-def type(path, editor)
+rule type(path, editor)
 	spark.route("$value"<<$custom...[]>>).get(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
 	spark.route("$value"<<$custom...[]>>).post(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
-end
 
-def type(path)
+rule type(path)
 	spark.route("$value"<<$custom...[]>>).get(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
-end
 
-def type(display, proxy) and trigger(notifier)
+rule type(display, proxy) and trigger(notifier)
 	register($name+firstUpperCase~ProxyNotifier.class).forDisplay($package+validPackage.displays.$name+firstUpperCase~Proxy.class);
-end
 
-def type(display) and trigger(notifier)
+rule type(display) and trigger(notifier)
 	register($name+firstUpperCase~Notifier.class).forDisplay($package+validPackage.displays.$name+firstUpperCase.class);
 	<<$display+notifier>>
-end
 
-def type(dialog) and trigger(notifier)
+rule type(dialog) and trigger(notifier)
 	register(io.intino.alexandria.ui.displays.AlexandriaDialogNotifier.class).forDisplay($package+validPackage.dialogs.$name+firstUpperCase.class);
-end
 
-def trigger(custom)
+rule trigger(custom)
 	.replace("{$this}", configuration.get("$this"))
-end
 
-def type(display, proxy) and trigger(proxy)
+rule type(display, proxy) and trigger(proxy)
 	spark.route("/$name+lowercase~proxy/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());//CCC
 	spark.route("/$name+lowercase~proxy/:displayId").post(manager -> new $name+firstUpperCase~ProxyRequester(manager, notifierProvider()).execute());
 	spark.route("/$name+lowercase~proxy/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
-end
 
-def type(display)
+rule type(display)
 	spark.route("/$name+lowercase/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());//BBB
 	spark.route("/$name+lowercase/:displayId").post(manager -> new $name+firstUppercase~Requester(manager, notifierProvider()).execute());
 	<<$asset>>
 	spark.route("/$name+lowercase/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
 	$display+proxy
-end
 
-def type(dialog)
+rule type(dialog)
 	spark.route("/$name+lowercase/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());
 	spark.route("/$name+lowercase/:displayId").post(manager -> new io.intino.alexandria.ui.displays.AlexandriaDialogRequester(manager, notifierProvider()).execute());
 	spark.route("/$name+lowercase/:displayId").get(manager -> new io.intino.alexandria.ui.displays.AlexandriaDialogRequester(manager, notifierProvider()).execute());
 	spark.route("/$name+lowercase/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
-end
 
-def trigger(asset)
+rule trigger(asset)
 	spark.route("/$this+lowercase/:displayId").get(manager -> new $this+firstUppercase~Requester(manager, notifierProvider()).execute());
-end
 
-def trigger(quoted)
+rule trigger(quoted)
 	"$value"
-end
 
-def type(custom) and trigger(custom)
+rule type(custom) and trigger(custom)
 	.replace("{$value}", configuration.get("$value"))
-end

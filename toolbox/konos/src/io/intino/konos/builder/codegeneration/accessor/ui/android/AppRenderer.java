@@ -30,6 +30,7 @@ public class AppRenderer extends UIRenderer {
 		writeManifest(buildFrame().add("manifest"));
 		writeSettingsGradle(buildFrame().add("settings"));
 		writeAndroidGradle(buildFrame().add("android"));
+		writeAndroidLibraryGradle(buildFrame().add("androidLibrary"));
 		writeSharedGradle(buildFrame().add("shared"));
 		writeProperties(buildFrame().add("properties"));
 		writeStrings(buildFrame().add("strings"));
@@ -40,6 +41,7 @@ public class AppRenderer extends UIRenderer {
 		FrameBuilder result = super.buildFrame();
 		result.add("gradle");
 		result.add("project", context.project());
+		result.add("version", context.configuration().version());
 		resources().stream().filter(Service.UI.Resource::isPage).forEach(r -> result.add("resource", resourceFrame(r)));
 		return result;
 	}
@@ -57,6 +59,7 @@ public class AppRenderer extends UIRenderer {
 
 	private void writeManifest(FrameBuilder builder) {
 		Commons.write(new File(root(Target.Android) + context.androidRelativePath() + File.separator + "AndroidManifest.xml").toPath(), new AppTemplate().render(builder.toFrame(), all));
+		Commons.write(new File(root(Target.Android) + context.androidLibraryRelativePath() + File.separator + "AndroidManifest.xml").toPath(), new AppTemplate().render(builder.toFrame(), all));
 	}
 
 	private void writeSettingsGradle(FrameBuilder builder) {
@@ -65,6 +68,10 @@ public class AppRenderer extends UIRenderer {
 
 	private void writeAndroidGradle(FrameBuilder builder) {
 		Commons.write(new File(root(Target.Android) + File.separator + "android" + File.separator + "build.gradle.kts").toPath(), new AppTemplate().render(builder.toFrame(), all));
+	}
+
+	private void writeAndroidLibraryGradle(FrameBuilder builder) {
+		Commons.write(new File(root(Target.Android) + File.separator + "android-library" + File.separator + "build.gradle.kts").toPath(), new AppTemplate().render(builder.toFrame(), all));
 	}
 
 	private void writeSharedGradle(FrameBuilder builder) {

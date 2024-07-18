@@ -1,4 +1,4 @@
-def type(desktop)
+rule type(desktop)
 	import React from "react";
 	import { Header as UiHeader, Tabs as UiTabs } from "alexandria-ui-elements/gen/Displays";
 	<<$alexandriaComponentImport...[$NL]>>
@@ -29,12 +29,9 @@ def type(desktop)
 			);
 		}
 	}
-end
 
-def type(alexandriaComponentImport)
+rule type(alexandriaComponentImport)
 	import { $type+firstUpperCase as Ui$type+firstUpperCase } from "alexandria-ui-elements/gen/Displays";
-end
 
-def type(projectComponentImport)
+rule type(projectComponentImport)
 	import { $type+firstUpperCase as Displays$type+firstUpperCase } from "../<<$packageTypeRelativeDirectory>>Displays";
-end

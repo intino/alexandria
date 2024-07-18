@@ -1,4 +1,4 @@
-def type(ui, accessibleAccessor)
+rule type(ui, accessibleAccessor)
 	package $package+validPackage.ui;
 
 	import io.intino.alexandria.ui.UISpark;
@@ -10,9 +10,8 @@ def type(ui, accessibleAccessor)
 		}
 
 	}
-end
 
-def type(ui)
+rule type(ui)
 	package $package+validPackage.ui;
 	<<import $displaysImport+validPackage.ui.displays.*;>>
 	<<import $notifiersImport+validPackage.ui.displays.notifiers.*;>>
@@ -61,61 +60,48 @@ def type(ui)
 
 		$display+method...[$NL]
 	}
-end
 
-def type(resource) and trigger(path)
+rule type(resource) and trigger(path)
 	$path...[$NL]
-end
 
-def trigger(userHome)
+rule trigger(userHome)
 	spark.route("/alexandria/user").get(manager -> new $this+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
-end
 
-def type(display, accessible) and trigger(path)
+rule type(display, accessible) and trigger(path)
 	spark.route("/$name+lowercase~proxy/:displayId/personify").post(manager -> new $name+firstUpperCase~ProxyResource(box, manager, notifierProvider()).execute());
-end
 
-def type(display) and trigger(path)
-end
+rule type(display) and trigger(path)
 
-def type(path, editor)
+rule type(path, editor)
 	spark.route("$value"<<$custom...[]>>).get(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
 	spark.route("$value"<<$custom...[]>>).post(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
-end
 
-def type(path)
+rule type(path)
 	spark.route("$value"<<$custom...[]>>).get(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
-end
 
-def type(display, proxy) and trigger(notifier)
+rule type(display, proxy) and trigger(notifier)
 	register($name+firstUpperCase~ProxyNotifier.class).forDisplay($package+validPackage.ui.displays.<<$type~s.>>$name+firstUpperCase~Proxy.class);
-end
 
-def type(display, genericNotifier) and trigger(notifier)
+rule type(display, genericNotifier) and trigger(notifier)
 	register(io.intino.alexandria.ui.displays.notifiers.$generic+firstUpperCase~Notifier.class).forDisplay($package+validPackage.ui.displays.<<$type~s.>>$name+firstUpperCase.class);
 	<<$display+notifier>>
-end
 
-def type(display) and trigger(notifier)
+rule type(display) and trigger(notifier)
 	register($name+firstUpperCase~Notifier.class).forDisplay($package+validPackage.ui.displays.<<$type~s.>>$name+firstUpperCase.class);
 	<<$display+notifier>>
-end
 
-def trigger(custom)
+rule trigger(custom)
 	.replace("{$this}", configuration.get("$this"))
-end
 
-def type(display, proxy) and trigger(proxy)
+rule type(display, proxy) and trigger(proxy)
 	spark.route("/$name+lowercase~proxy/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());
 	spark.route("/$name+lowercase~proxy/:displayId").post(manager -> new $name+firstUpperCase~ProxyRequester(manager, notifierProvider()).execute());
 	spark.route("/$name+lowercase~proxy/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
-end
 
-def type(display) and trigger(init)
+rule type(display) and trigger(init)
 	init$name+firstUpperCase(spark, pushService);
-end
 
-def type(display) and trigger(method)
+rule type(display) and trigger(method)
 	private static void init$name+firstUpperCase(UISpark spark, PushService pushService) {
 		spark.route("/$name+lowercase/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());
 		spark.route("/$name+lowercase/:displayId").post(manager -> new $requesterType~Requester(manager, notifierProvider()).execute());
@@ -124,19 +110,14 @@ def type(display) and trigger(method)
 		pushService.register("$name+lowercase", new $requesterType~PushRequester());
 		$display+proxy
 	}
-end
 
-def type(display)
-end
+rule type(display)
 
-def trigger(asset)
+rule trigger(asset)
 	spark.route("/$this+lowercase/:displayId").get(manager -> new $this+firstUppercase~Requester(manager, notifierProvider()).execute());
-end
 
-def trigger(quoted)
+rule trigger(quoted)
 	"$this"
-end
 
-def type(custom) and trigger(custom)
+rule type(custom) and trigger(custom)
 	.replace("{$this}", configuration.get("$this"))
-end

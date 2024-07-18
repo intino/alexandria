@@ -151,7 +151,7 @@ Concept:Named Service
 	Facet UI
 		var word[]:{Web Android IOS} targets = Web
 		var function:HomesProvider homeList = 'return self.resourceList().stream().filter(Service.UI.Resource::isMain).collect(toList());';
-		var function:TemplatesProvider templates = 'return self.resourceList().stream().map(r -> r.asPage().template()).collect(Collectors.toList());';
+		var function:TemplatesProvider templates = 'return self.resourceList().stream().filter(r -> r.isPage()).map(r -> r.asPage().template()).collect(Collectors.toList());';
     	Concept Use
     		var string package
     		var string name

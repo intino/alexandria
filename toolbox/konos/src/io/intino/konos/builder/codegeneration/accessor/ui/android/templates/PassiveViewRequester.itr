@@ -1,4 +1,4 @@
-def type(display)
+rule type(display)
     package $package.mobile.displays.requesters
 
     import io.intino.alexandria.mobile.Application
@@ -12,138 +12,103 @@ def type(display)
     open class $name+firstUpperCase$proxy~Requester(private var element: $name+firstUpperCase$proxy) : $parentType(element) {
         <<$request...[$NL]~>>
     }
-end
 
-def attribute(accessible) and trigger(proxy)
+rule attribute(accessible) and trigger(proxy)
 	Proxy
-end
 
-def trigger(proxy)
-end
+rule trigger(proxy)
 
-def attribute(extensionOf) and trigger(parentType)
+rule attribute(extensionOf) and trigger(parentType)
 	$parent+firstUpperCase~Requester
-end
 
-def trigger(parentType)
+rule trigger(parentType)
 	io.intino.alexandria.mobile.displays.requesters.<<$type+class+FirstUpperCase>>~Requester
-end
 
-def type(parameter) and trigger(request)
+rule type(parameter) and trigger(request)
     fun $name(value: String)<< : $returnType>> {
         $method(UiMessage("$name", "$display+lowercase", element.shortId(), $parameter$nullParameter, element.owner(), element.context()), element.ownerUnit());
     }
-end
 
-def trigger(request)
+rule trigger(request)
     fun $name(<<$parameterSignature: $customParameterType>>)<< : $returnType>> {
         $method(UiMessage("$name", "$display+lowercase", element.shortId(), $parameter$nullParameter, element.owner(), element.context()), element.ownerUnit());
     }
-end
 
-def type(object) and trigger(parameter)
+rule type(object) and trigger(parameter)
     Uri.encode(Json.stringify(value, $type.serializer()))
-end
 
-def type(list, file) and trigger(parameter)
+rule type(list, file) and trigger(parameter)
 	if (value != null) Uri.encode(Json.stringify(arrayListOf("BASE64:" + io.intino.alexandria.mobile.util.Base64.encoder.encode(value).decodeToString()))) else null
-end
 
-def type(list) and trigger(parameter)
+rule type(list) and trigger(parameter)
     Uri.encode(Json.stringify(value))
-end
 
-def type(file) and trigger(parameter)
+rule type(file) and trigger(parameter)
 	if (value != null) "BASE64:" + io.intino.alexandria.mobile.util.Base64.encoder.encode(value).decodeToString() else null
-end
 
-def type(boolean) and trigger(parameter)
+rule type(boolean) and trigger(parameter)
 	value.toString()
-end
 
-def type(LongInteger) and trigger(parameter)
+rule type(LongInteger) and trigger(parameter)
 	value.toString()
-end
 
-def type(Integer) and trigger(parameter)
+rule type(Integer) and trigger(parameter)
 	value.toString()
-end
 
-def type(Real) and trigger(parameter)
+rule type(Real) and trigger(parameter)
 	value.toString()
-end
 
-def type(Date) and trigger(parameter)
+rule type(Date) and trigger(parameter)
 	value.toEpochMilliseconds().toString()
-end
 
-def type(DateTime) and trigger(parameter)
+rule type(DateTime) and trigger(parameter)
 	value.toEpochMilliseconds().toString()
-end
 
-def trigger(parameter)
+rule trigger(parameter)
 	Uri.encode(value)
-end
 
-def attribute(upload) and trigger(method)
+rule attribute(upload) and trigger(method)
 	Application.fileService()!!.upload
-end
 
-def attribute(download) and trigger(method)
+rule attribute(download) and trigger(method)
 	return Application.fileService()!!.download
-end
 
-def trigger(method)
-	Application.pushService(element.activity())!!.send
-end
-
-def attribute(download) and trigger(returnType)
+rule trigger(method)
+	Application.pushService(element.activity())!!.s
+rule attribute(download) and trigger(returnType)
 	io.intino.alexandria.mobile.UiFile
-end
 
-def trigger(returnType)
-end
+rule trigger(returnType)
 
-def type(schemaImport)
+rule type(schemaImport)
 	import $package.mobile.schemas.*;
-end
 
-def type(parameterType, date, list)
+rule type(parameterType, date, list)
     List<kotlinx.datetime.Instant>
-end
 
-def type(parameterType, date)
+rule type(parameterType, date)
     kotlinx.datetime.Instant
-end
 
-def type(parameterType, datetime, list)
+rule type(parameterType, datetime, list)
     List<kotlinx.datetime.Instant>
-end
 
-def type(parameterType, datetime)
+rule type(parameterType, datetime)
     kotlinx.datetime.Instant
-end
 
-def type(parameterType, integer, list)
+rule type(parameterType, integer, list)
     List<Int>
-end
 
-def type(parameterType, integer)
+rule type(parameterType, integer)
     Int
-end
 
-def type(parameterType, file, list)
+rule type(parameterType, file, list)
     List<ByteArray?>
-end
 
-def type(parameterType, file)
+rule type(parameterType, file)
     ByteArray?
-end
 
-def type(parameterType, list)
+rule type(parameterType, list)
     List<$value>
-end
 
-def type(parameterType)
+rule type(parameterType)
     $value
-end

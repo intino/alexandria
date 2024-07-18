@@ -33,8 +33,8 @@ public class AgendaServiceTemplate extends Template {
 		rules.add(rule().condition(trigger("names")).output(placeholder("name")));
 		rules.add(rule().condition(trigger("argindex")).output(literal("params[")).output(placeholder("index")).output(literal("]")));
 		rules.add(rule().condition(all(allTypes("Boolean"), trigger("test"))).output(placeholder("name")).output(literal(".test(Boolean.valueOf(f.getName().split(\"##\")[")).output(placeholder("index")).output(literal("]))")));
-		rules.add(rule().condition(all(allTypes("Double"), trigger("test"))).output(placeholder("name")).output(literal(".test(Double.parseDouble(f.getName().split(\"##\")[")).output(placeholder("index")).output(literal("]))")));
-		rules.add(rule().condition(all(allTypes("Integer"), trigger("test"))).output(placeholder("name")).output(literal(".test(Integer.parseInt(f.getName().split(\"##\")[")).output(placeholder("index")).output(literal("]))")));
+		rules.add(rule().condition(all(allTypes("Double"), trigger("test"))).output(placeholder("name")).output(literal(".test(Double.parseDouble(f.getName().split(\"##\")[")).output(placeholder("index")).output(literal("]))\n")));
+		rules.add(rule().condition(all(allTypes("Integer"), trigger("test"))).output(placeholder("name")).output(literal(".test(Integer.parseInt(f.getName().split(\"##\")[")).output(placeholder("index")).output(literal("]))\n")));
 		rules.add(rule().condition(trigger("test")).output(placeholder("name")).output(literal(".test(f.getName().split(\"##\")[")).output(placeholder("index")).output(literal("])")));
 		rules.add(rule().condition(trigger("schemaparameter")).output(literal("schema.")).output(placeholder("name")).output(literal("()")));
 		rules.add(rule().condition(trigger("fluid")).output(placeholder("name", "firstLowerCase")).output(literal("(")).output(placeholder("name", "firstLowerCase")).output(literal(")")));

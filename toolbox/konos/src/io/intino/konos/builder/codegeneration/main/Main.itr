@@ -1,4 +1,4 @@
-def type(main)
+rule type(main)
 	package $package;
 
 	public class Main {
@@ -9,8 +9,6 @@ def type(main)
 			Runtime.getRuntime().addShutdownHook(new Thread(box::stop));
 		}
 	}
-end
 
-def type(model) and trigger(model)
+rule type(model) and trigger(model)
 	io.intino.magritte.framework.Graph graph = new io.intino.magritte.framework.Graph().loadStashes("$name");
-end

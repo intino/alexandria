@@ -1,4 +1,4 @@
-def type(command, confirmation)
+rule type(command, confirmation)
     package $package+validPackage.cli.commands;
 
     import io.intino.alexandria.cli.Cli;
@@ -25,9 +25,8 @@ def type(command, confirmation)
         }
 
     }
-end
 
-def type(command)
+rule type(command)
 	package $package+validPackage.cli.commands;
 
     import io.intino.alexandria.cli.Command;
@@ -67,52 +66,40 @@ def type(command)
         }
 
     }
-end
 
-def type(execute, multiline)
+rule type(execute, multiline)
     new $response+type($response+definitionDeclaration, fill(new $name+firstUppercase~Action(), properties, args).execute())
-end
 
-def type(execute, confirmation)
+rule type(execute, confirmation)
     new $response+type("$question", List.of("$option...[", "]"), fill(new $name+firstUppercase~Action(), properties, args).execute())
-end
 
-def type(execute)
+rule type(execute)
     new $response+type(fill(new $name+firstUppercase~Action(), properties, args).execute())
-end
 
-def type(parameter, list)
+rule type(parameter, list)
     action.$name = java.util.Arrays.asList(args);
-end
 
-def type(parameter)
+rule type(parameter)
     action.$name = args.length > $index ? args[$index] : null;
-end
 
-def type(response, multiline) and trigger(type)
+rule type(response, multiline) and trigger(type)
     io.intino.alexandria.cli.response.MultiLine
-end
 
-def type(response, attachment) and trigger(type)
+rule type(response, attachment) and trigger(type)
     io.intino.alexandria.cli.response.Attachment
-end
 
-def type(response, confirmation) and trigger(type)
+rule type(response, confirmation) and trigger(type)
     io.intino.alexandria.cli.response.Question
-end
 
-def type(response) and trigger(type)
+rule type(response) and trigger(type)
     io.intino.alexandria.cli.response.Text
-end
 
-def type(response, confirmation) and trigger(method)
+rule type(response, confirmation) and trigger(method)
     $option+method...[$NL]
-end
 
-def type(response) and trigger(method)
-end
+rule type(response) and trigger(method)
 
-def type(response, multiline) and trigger(provider)
+rule type(response, multiline) and trigger(provider)
     public static class MultiLineProvider extends io.intino.alexandria.cli.response.MultiLineProvider {
         $line+declaration...[$NL]
 
@@ -131,25 +118,20 @@ def type(response, multiline) and trigger(provider)
             return null;
         }
     }
-end
 
-def type(response, multiline) and trigger(definition)
+rule type(response, multiline) and trigger(definition)
     $line+definition...[$NL]
-end
 
-def type(response, multiline) and trigger(definitionDeclaration)
+rule type(response, multiline) and trigger(definitionDeclaration)
     List.of($line+definitionDeclaration...[, ])
-end
 
-def type(line, multiple) and trigger(declaration)
+rule type(line, multiple) and trigger(declaration)
     private List<MessageData> $name+firstLowerCase = new ArrayList<>();
-end
 
-def type(line) and trigger(declaration)
+rule type(line) and trigger(declaration)
     private MessageData $name+firstLowerCase = new MessageData();
-end
 
-def type(line, multiple) and trigger(method)
+rule type(line, multiple) and trigger(method)
     public MultiLineProvider add$name+firstUpperCase($name+firstUpperCase value) {
         this.$name+firstLowerCase.add(value);
         return this;
@@ -159,55 +141,42 @@ def type(line, multiple) and trigger(method)
         this.$name+firstLowerCase.addAll(values);
         return this;
     }
-end
 
-def type(line) and trigger(method)
+rule type(line) and trigger(method)
     public MultiLineProvider $name+firstLowerCase~Variable(String variable, String value) {
         this.$name+firstLowerCase.add(variable, value);
         return this;
     }
-end
 
-def type(line, multiple) and trigger(class)
+rule type(line, multiple) and trigger(class)
     public static class $name+firstUpperCase extends MessageData {
     }
-end
 
-def type(line) and trigger(class)
-end
+rule type(line) and trigger(class)
 
-def type(line, multiple) and trigger(data)
-end
+rule type(line, multiple) and trigger(data)
 
-def type(line) and trigger(data)
+rule type(line) and trigger(data)
     if (line.equals("$name")) return $name+firstLowerCase;
-end
 
-def type(line, multiple) and trigger(dataList)
+rule type(line, multiple) and trigger(dataList)
     if (line.equals("$name")) return $name+firstLowerCase;
-end
 
-def type(line) and trigger(dataList)
-end
+rule type(line) and trigger(dataList)
 
-def type(line) and trigger(definition)
+rule type(line) and trigger(definition)
     private static final Line $name+firstUpperCase~Line = new Line("$name", "$content", $addBreak, $multiple<<, "$dependant">>);
-end
 
-def type(line) and trigger(definitionDeclaration)
+rule type(line) and trigger(definitionDeclaration)
     $name+firstUpperCase~Line
-end
 
-def type(condition)
+rule type(condition)
     if (lastCommand.name().equals("$command")) return new $commandName+firstUpperCase~Command(box).when$option+firstUpperCase(properties, lastCommand.name(), lastCommand.parameters().toArray(new String[0]));
-end
 
-def type(option)
+rule type(option)
     public io.intino.alexandria.cli.response.Text when$value+firstUppercase(MessageProperties properties, String command, String... args) {
         return fill(new $commandName+firstUppercase~Action(), properties, args).when$value+firstUppercase();
     }
-end
 
-def type(multiple)
+rule type(multiple)
     new Line.Multiple($value, Line.Multiple.Arrangement.valueOf("$arrangement"))
-end

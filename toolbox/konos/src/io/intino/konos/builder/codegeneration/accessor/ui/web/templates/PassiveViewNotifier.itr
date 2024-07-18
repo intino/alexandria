@@ -1,4 +1,4 @@
-def type(display)
+rule type(display)
 	$import
 
 	export default class $name+firstUpperCase~$proxy~Notifier extends $parentType {
@@ -15,62 +15,46 @@ def type(display)
 			this.pushLinked = true;
 		};
 	}
-end
 
-def attribute(extensionOf) and trigger(import)
+rule attribute(extensionOf) and trigger(import)
 	import $parent+firstUpperCase~Notifier from "./$parent+firstUpperCase~Notifier"
-end
 
-def attribute(component) and trigger(import)
+rule attribute(component) and trigger(import)
 	import Notifier from "alexandria-ui-elements/src/displays/notifiers/ComponentNotifier";
-end
 
-def attribute(accessible) and trigger(import)
+rule attribute(accessible) and trigger(import)
 	import Notifier from "alexandria-ui-elements/gen/displays/notifiers/ProxyDisplayNotifier";
-end
 
-def attribute(baseType) and trigger(import)
+rule attribute(baseType) and trigger(import)
 	import Notifier from "alexandria-ui-elements/gen/displays/notifiers/$type+firstUpperCase~Notifier";
-end
 
-def trigger(import)
+rule trigger(import)
 	import Notifier from "./Notifier";
-end
 
-def attribute(accessible) and trigger(proxy)
+rule attribute(accessible) and trigger(proxy)
 	Proxy
-end
 
-def trigger(proxy)
-end
+rule trigger(proxy)
 
-def attribute(extensionOf) and trigger(parentType)
+rule attribute(extensionOf) and trigger(parentType)
 	$parent+firstUpperCase~Notifier
-end
 
-def trigger(parentType)
+rule trigger(parentType)
 	Notifier
-end
 
-def trigger(notification)
+rule trigger(notification)
 	this.when("$name")<<$target>>.execute((<<$parameter+call>>) => this.element.$name(<<$parameter+value>>));
-end
 
-def type(parameter) and trigger(call)
+rule type(parameter) and trigger(call)
 	parameters
-end
 
-def type(parameter) and trigger(value)
+rule type(parameter) and trigger(value)
 	parameters.v
-end
 
-def attribute(this, Display) and trigger(target)
+rule attribute(this, Display) and trigger(target)
 	.toSelf()
-end
 
-def trigger(target)
-end
+rule trigger(target)
 
-def type(event)
+rule type(event)
 	this.when("$name+firstLowerCase").toSelf().execute((parameters) => this.element.notifyProxyMessage("$name+firstLowerCase"));
-end

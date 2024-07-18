@@ -1,4 +1,4 @@
-def type(accessor)
+rule type(accessor)
 	package $package+ValidPackage;
 
 	import java.util.List;
@@ -62,9 +62,8 @@ def type(accessor)
 
 		$notification...[$NL$NL]
 	}
-end
 
-def type(resource)
+rule type(resource)
 	public $response $method+firstLowerCase~$name+PascalCase($parameter+signature...[, ]) $exceptionResponses+declaration {
 		RequestBuilder builder = new RequestBuilder(this.url).timeOut(this.timeoutMillis);
 		additionalHeaders.forEach((k,v) -> builder.headerParameter(k,v));
@@ -81,68 +80,53 @@ def type(resource)
 			throw new InternalServerError(e.message());
 		}
 	}
-end
 
-def type(parameter, query, word) and trigger(parameter)
+rule type(parameter, query, word) and trigger(parameter)
 	queryParameter("$name", $name+CamelCase.name())
-end
 
-def type(parameter, query) and trigger(parameter)
+rule type(parameter, query) and trigger(parameter)
 	queryParameter("$name", $name+CamelCase)
-end
 
-def type(parameter, header, word) and trigger(parameter)
+rule type(parameter, header, word) and trigger(parameter)
 	headerParameter("$name", $name+CamelCase.name())
-end
 
-def type(parameter, header) and trigger(parameter)
+rule type(parameter, header) and trigger(parameter)
 	headerParameter("$name", $name+CamelCase)
-end
 
-def not type(file) and type(parameter, body) and trigger(parameter)
+rule not type(file) and type(parameter, body) and trigger(parameter)
 	entityPart("$name", $name+CamelCase)
-end
 
-def not type(file) and type(parameter, form) and trigger(parameter)
+rule not type(file) and type(parameter, form) and trigger(parameter)
 	entityPart("$name", $name+CamelCase)
-end
 
-def type(file) and type(parameter) and trigger(parameter)
+rule type(file) and type(parameter) and trigger(parameter)
 	entityPart($name+CamelCase)
-end
 
-def trigger(enumParameter)
+rule trigger(enumParameter)
 	public enum $class+PascalCase {
 		$value...[, ]
 	}
-end
 
-def type(list) and trigger(return)
+rule type(list) and trigger(return)
 	return io.intino.alexandria.restaccessor.adapters.ResponseAdapter.adapt(response.content(), new com.google.gson.reflect.TypeToken<Array$value>(){}.getType());
-end
 
-def type(set) and trigger(return)
+rule type(set) and trigger(return)
 	return io.intino.alexandria.restaccessor.adapters.ResponseAdapter.adapt(response.content(), new com.google.gson.reflect.TypeToken<Hash$value>(){}.getType());
-end
 
-def type(file) and trigger(return)
+rule type(file) and trigger(return)
 	String filename = !response.headers().containsKey("Content-Disposition") ? "filename=content":
 		Arrays.stream(response.headers().get("Content-Disposition").split(";")).filter(c-> c.startsWith("filename")).findFirst().orElse(null);
 	return new io.intino.alexandria.Resource(filename.split("=")[1], response.contentType(), response.contentAsStream());
-end
 
-def not type(list) and not attribute(value, void) and trigger(return)
+rule not type(list) and not attribute(value, void) and trigger(return)
 	return io.intino.alexandria.restaccessor.adapters.ResponseAdapter.adapt(response.content(), $value.class);
-end
 
-def trigger(return)
-end
+rule trigger(return)
 
-def trigger(response)
+rule trigger(response)
 	$value
-end
 
-def type(notification)
+rule type(notification)
 	public void listen$name+PascalCase(<<$parameter+signature...[, ], >>java.util.function.Consumer<String> listener) throws InternalServerError {
 		RequestBuilder.Request request = new RequestBuilder(this.url).timeOut(this.timeoutMillis)
 			<<.$auth>>
@@ -158,78 +142,59 @@ def type(notification)
 	public void stopListen$name+PascalCase() {
 		this.notifier.close();
 	}
-end
 
-def type(basic) and trigger(auth)
+rule type(basic) and trigger(auth)
 	basicAuth(this.user, this.pasword)
-end
 
-def type(bearer) and trigger(auth)
+rule type(bearer) and trigger(auth)
 	bearerAuth(this.token)
-end
 
-def type(authentication, basic) and trigger(parameter)
+rule type(authentication, basic) and trigger(parameter)
 	String user, String password
-end
 
-def type(authentication, bearer) and trigger(parameter)
+rule type(authentication, bearer) and trigger(parameter)
 	String token
-end
 
-def type(authentication, withCertificate) and trigger(parameter)
+rule type(authentication, withCertificate) and trigger(parameter)
 	URL certificate
-end
 
-def type(authentication, withCertificate) and trigger(assign)
+rule type(authentication, withCertificate) and trigger(assign)
 	this.certificate = certificate;
-end
 
-def type(authentication, basic) and trigger(assign)
+rule type(authentication, basic) and trigger(assign)
 	this.user = user;
 	this.password = password;
-end
 
-def type(authentication, bearer) and trigger(assign)
+rule type(authentication, bearer) and trigger(assign)
 	this.token = token;
-end
 
-def type(authentication, withCertificate) and trigger(assign)
+rule type(authentication, withCertificate) and trigger(assign)
 	this.certificate = certificate;
-end
 
-def type(authentication) and type(basic) and trigger(field)
+rule type(authentication) and type(basic) and trigger(field)
 	private final String user;
 	private final String password;
-end
 
-def type(authentication) and type(bearer) and trigger(field)
+rule type(authentication) and type(bearer) and trigger(field)
 	private final String token;
-end
 
-def type(authentication, withCertificate) and trigger(field)
+rule type(authentication, withCertificate) and trigger(field)
 	private final URL certificate;
-end
 
-def type(parameter) and trigger(signature)
+rule type(parameter) and trigger(signature)
 	$parameterType $name+CamelCase
-end
 
-def type(exceptionResponses) and trigger(throws)
+rule type(exceptionResponses) and trigger(throws)
 	$exceptionResponse+throws...[$NLelse ]
-end
 
-def type(exceptionResponse) and trigger(throws)
+rule type(exceptionResponse) and trigger(throws)
 	if (e instanceof $exceptionName) throw (($exceptionName) e);
-end
 
-def type(exceptionResponses) and trigger(declaration)
+rule type(exceptionResponses) and trigger(declaration)
 	throws <<$exceptionResponse+declaration...[, ],>> InternalServerError
-end
 
-def type(exceptionResponse) and trigger(declaration)
+rule type(exceptionResponse) and trigger(declaration)
 	$exceptionName
-end
 
-def type(schemaImport) and trigger(schemaImport)
+rule type(schemaImport) and trigger(schemaImport)
 	import $package.schemas.*;
-end

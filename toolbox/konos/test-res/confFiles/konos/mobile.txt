@@ -66,7 +66,7 @@ module.path
 outputpath
 /Users/mcaballero/Proyectos/alexandria-mobile
 final_outputpath
-/Users/mcaballero/Proyectos/alexandria/out/production/ui/
+/Users/mcaballero/Proyectos/alexandria-mobile
 res.path
 /Users/mcaballero/Proyectos/alexandria/framework/ui/res
 repository.path

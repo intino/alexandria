@@ -1,4 +1,4 @@
-def type(future)
+rule type(future)
 	package $package+validPackage.agenda;
 
 	import $package+validPackage.$box+PascalCase~Box;
@@ -18,23 +18,18 @@ def type(future)
 
 		}
 	}
-end
 
-def trigger(option)
+rule trigger(option)
 	@Override
 	protected void on$name+firstUpperCase($parameter+signature...[, ]<<, $optionParameter+signature...[, ]>>) {
 
 	}
-end
 
-def trigger(signature)
+rule trigger(signature)
 	$type $name
-end
 
-def trigger(names)
+rule trigger(names)
 	$name
-end
 
-def type(schemaImport)
+rule type(schemaImport)
 	import $package.schemas.*;
-end

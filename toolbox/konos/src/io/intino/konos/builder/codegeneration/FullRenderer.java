@@ -34,6 +34,7 @@ import io.intino.konos.builder.codegeneration.services.soap.SoapServiceRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
+import io.intino.konos.dsl.Display;
 import io.intino.konos.dsl.KonosGraph;
 import io.intino.konos.dsl.Service;
 
@@ -112,6 +113,7 @@ public class FullRenderer {
 			context.postCompileActionMessages().add(new ArtifactBuildActionMessage(context.module(), pom, pomGenerator.coors(root.getParentFile()), context.configuration().invokedPhase().name()));
 		}
 		for (Service.UI service : graph.uiServiceList()) {
+			if (service.templates().stream().noneMatch(Display::isAccessible)) continue;
 			var root = new File(context.configuration().genDirectory(), "ui#" + accessorName(service.asService()));
 			new UiAccessibleAccessorRenderer(context, service, new File(root, "src")).render();
 			File pom = pomGenerator.generate("ui", root);
@@ -199,7 +201,7 @@ public class FullRenderer {
 
 	private void androidClient() throws KonosException {
 		ComponentRenderer.clearCache();
-		new io.intino.konos.builder.codegeneration.accessor.ui.android.ServiceListRenderer(context, graph, service -> context.configuration().genDirectory()).execute();
+		new io.intino.konos.builder.codegeneration.accessor.ui.android.ServiceListRenderer(context, graph, service -> new File(context.configuration().outDirectory().getParentFile(), Formatters.camelCaseToKebabCase().format(context.configuration().project()) + "-mobile")).execute();
 		AndroidSchemaWriter schemaWriter = new AndroidSchemaWriter(context);
 		new SchemaListRenderer(context, graph, schemaWriter.destination(), schemaWriter.packageName(), schemaWriter).execute();
 		ComponentRenderer.clearCache();

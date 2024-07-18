@@ -1,14 +1,14 @@
 import React from "react";
 import AceEditor from 'react-ace';
 
-import "brace/mode/html";
-import "brace/mode/java";
-import "brace/mode/javascript";
-import "brace/mode/r";
+import "ace-builds/src-noconflict/mode-html";
+import "ace-builds/src-noconflict/mode-java";
+import "ace-builds/src-noconflict/mode-javascript";
+import "ace-builds/src-noconflict/mode-r";
 import "./mode/inl";
 
-import "brace/theme/eclipse";
-import "brace/theme/monokai";
+import "ace-builds/src-noconflict/theme-eclipse";
+import "ace-builds/src-noconflict/theme-monokai";
 
 export default function TextEditableCodeAce(props) {
     const aceMode = props.language.toLowerCase();

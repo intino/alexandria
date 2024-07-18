@@ -1,32 +1,25 @@
-def type(arff)
+rule type(arff)
 	@RELATION relation
 
 	$attribute...[$NL]
 
 	@DATA
 
-end
 
-def trigger(attribute)
+rule trigger(attribute)
 	@ATTRIBUTE $name $type
-end
 
-def type(Nominal) trigger(type)
+rule type(Nominal) and trigger(type)
 	{$value+quoted...[,]}
-end
 
-def type(Date) trigger(type)
+rule type(Date) and trigger(type)
 	DATE "$format"
-end
 
-def type(Numeric) trigger(type)
+rule type(Numeric) and trigger(type)
 	NUMERIC
-end
 
-def type(String) trigger(type)
+rule type(String) and trigger(type)
 	string
-end
 
-def trigger(quoted)
+rule trigger(quoted)
 	"$this"
-end

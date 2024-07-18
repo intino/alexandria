@@ -1,4 +1,4 @@
-def type(resource, template)
+rule type(resource, template)
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,9 +14,8 @@ def type(resource, template)
 		android:layout_height="match_parent">
 	</$package+validPackage.mobile.android.displays.templates.$pageDisplay+firstUpperCase>
 </androidx.constraintlayout.widget.ConstraintLayout>
-end
 
-def type(resource, main)
+rule type(resource, main)
     package $package+validPackage.mobile.android.pages
 
     import android.os.Bundle
@@ -36,9 +35,8 @@ def type(resource, main)
 
 
     }
-end
 
-def type(resource)
+rule type(resource)
     package $package+validPackage.mobile.android.pages
 
     import android.os.Bundle
@@ -58,20 +56,15 @@ def type(resource)
         }
 
     }
-end
 
-def attribute(hasAbstract) and trigger(origin)
+rule attribute(hasAbstract) and trigger(origin)
 	../../src
-end
 
-def attribute(decorated) and trigger(origin)
+rule attribute(decorated) and trigger(origin)
 	../../gen
-end
 
-def trigger(origin)
+rule trigger(origin)
 	..
-end
 
-def type(accessibleImport)
+rule type(accessibleImport)
 	import $service+firstUpperCase~AccessibleDisplays from '$elements/gen/AccessibleDisplays';
-end

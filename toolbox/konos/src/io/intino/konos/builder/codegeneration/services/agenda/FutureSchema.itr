@@ -1,4 +1,4 @@
-def type(future)
+rule type(future)
 	package $package+validPackage.agenda;
 
 	$schemaImport
@@ -42,9 +42,8 @@ def type(future)
 			}
 		}
 	}
-end
 
-def type(option) and trigger(class)
+rule type(option) and trigger(class)
 	public static class $name+firstUpperCase extends AgendaService.Option {
 		<<$optionParameter+field...[$NL]>>
 
@@ -54,54 +53,43 @@ def type(option) and trigger(class)
 
 		<<$optionParameter+getter...[$NL$NL]>>
 	}
-end
 
-def type(option) and trigger(getter)
+rule type(option) and trigger(getter)
 	public $future+firstUpperCase~Schema.$name+firstUpperCase $name+firstLowerCase() {
 		return $name+firstLowerCase == null ? $name+firstLowerCase = new $name+firstUpperCase($optionParameter+nullParameter...[, ]) : $name+firstLowerCase;
 	}
-end
 
-def trigger(getter)
+rule trigger(getter)
 	public $type $name+firstLowerCase() {
 		return $name+firstLowerCase;
 	}
-end
 
-def type(option) and trigger(setter)
+rule type(option) and trigger(setter)
 	public $future+firstUpperCase~Schema $name+firstLowerCase($name+firstUpperCase $name+firstLowerCase) {
 		this.$name+firstLowerCase = $name+firstLowerCase;
 		return this;
 	}
-end
 
-def trigger(setter)
+rule trigger(setter)
 	public $owner+firstUpperCase~Schema $name+firstLowerCase($type+firstUpperCase $name+firstLowerCase) {
 		this.$name+firstLowerCase = $name+firstLowerCase;
 		return this;
 	}
-end
 
-def trigger(assign)
+rule trigger(assign)
 	this.$name = $name;
-end
 
-def type(parameter) and trigger(field)
+rule type(parameter) and trigger(field)
 	private $type $name+firstLowerCase;
-end
 
-def type(option) and trigger(field)
+rule type(option) and trigger(field)
 	private $name+FirstUpperCase $name+firstLowerCase;
-end
 
-def trigger(signature)
+rule trigger(signature)
 	$type $name
-end
 
-def type(schemaImport)
+rule type(schemaImport)
 	import $package.schemas.*;
-end
 
-def trigger(nullParameter)
+rule trigger(nullParameter)
 	null
-end

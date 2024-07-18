@@ -1,4 +1,4 @@
-def type(resource, accessibleDisplay)
+rule type(resource, accessibleDisplay)
 	package $package+validPackage.ui.resources;
 
 	import $package+validPackage.$box+PascalCase~Box;
@@ -93,9 +93,8 @@ def type(resource, accessibleDisplay)
 			manager.write("OK");
 		}
 	}
-end
 
-def type(render, confidential)
+rule type(render, confidential)
 	try {
 		if (!isLogged(accessToken()))
 			throw new Unauthorized("user is not logged");
@@ -107,13 +106,11 @@ def type(render, confidential)
 	} catch (Throwable error) {
 		throw new Unauthorized("could not render component");
 	}
-end
 
-def type(render)
+rule type(render)
 	render();
-end
 
-def type(resource, static)
+rule type(resource, static)
 	package $package+validPackage.ui.resources;
 
 	import $package+validPackage.$box+PascalCase~Box;
@@ -172,9 +169,8 @@ def type(resource, static)
 		}
 
 	}
-end
 
-def type(resource, asset)
+rule type(resource, asset)
 	package $package+validPackage.ui.resources;
 
 	import $package+validPackage.$box+PascalCase~Box;
@@ -233,9 +229,8 @@ def type(resource, asset)
 		}
 
 	}
-end
 
-def type(resource)
+rule type(resource)
 	package $package+validPackage.ui.resources;
 
 	import $package+validPackage.$box+PascalCase~Box;
@@ -332,58 +327,44 @@ def type(resource)
 		}
 
 	}
-end
 
-def trigger(parameters)
+rule trigger(parameters)
 	page.document = loadDocument();
 	page.permission = loadPermission();
-end
 
-def type(parameter, mobile) and trigger(dispatch)
+rule type(parameter, mobile) and trigger(dispatch)
     page instanceof $resource+firstUpperCase~MobilePage ? (($resource+firstUpperCase~MobilePage)page).$name+CamelCase : (($resource+firstUpperCase~Page)page).$name+CamelCase
-end
 
-def type(parameter) and trigger(dispatch)
+rule type(parameter) and trigger(dispatch)
     (($resource+firstUpperCase~Page)page).$name+CamelCase
-end
 
-def type(parameter, mobile)
+rule type(parameter, mobile)
     if (page instanceof $resource+firstUpperCase~MobilePage) (($resource+firstUpperCase~MobilePage)page).$name+CamelCase = parameterValue("$name");
     else (($resource+firstUpperCase~Page)page).$name+CamelCase = parameterValue("$name");
-end
 
-def type(parameter)
+rule type(parameter)
 	(($resource+firstUpperCase~Page)page).$name+CamelCase = parameterValue("$name");
-end
 
-def type(googleApiKey) and trigger(format)
+rule type(googleApiKey) and trigger(format)
 	"$name"<<$custom...[]>>
-end
 
-def trigger(custom)
+rule trigger(custom)
 	.replace("{$this}", box.configuration().get("$this"))
-end
 
-def type(page, mobile) and trigger(import)
+rule type(page, mobile) and trigger(import)
 	import $package+validPackage.ui.pages.$name+firstUpperCase~MobilePage;
-end
 
-def type(page) and trigger(import)
-end
+rule type(page) and trigger(import)
 
-def type(page, mobile) and trigger(instance)
+rule type(page, mobile) and trigger(instance)
     manager.fromQuery("device") != null ? new $name+firstUpperCase~MobilePage() : new $name+firstUpperCase~Page()
-end
 
-def type(page) and trigger(instance)
+rule type(page) and trigger(instance)
     new $name+firstUpperCase~Page()
-end
 
-def type(page, mobile) and trigger(box)
+rule type(page, mobile) and trigger(box)
     if (page instanceof $name+firstUpperCase~MobilePage) (($name+firstUpperCase~MobilePage)page).box = box;
     else (($name+firstUpperCase~Page)page).box = box;
-end
 
-def type(page) and trigger(box)
+rule type(page) and trigger(box)
     (($name+firstUpperCase~Page)page).box = box;
-end

@@ -1,4 +1,4 @@
-def type(axis)
+rule type(axis)
 	package $package+ValidPackage.analytic.axes;
 
 	import $package+ValidPackage.analytic.Axis;
@@ -170,122 +170,96 @@ def type(axis)
 			}
 		}
 	}
-end
 
-def type(component)
+rule type(component)
 	public static final Component $name = new Component($index, "$id"<<, "$label">><<, $include+constructor...[, ]>>);
-end
 
-def attribute(name, label) and trigger(declaration)
+rule attribute(name, label) and trigger(declaration)
 	private final String $name+firstLowerCase;
-end
 
-def type(include) and attribute(name, label) and trigger(staticGetter)
+rule type(include) and attribute(name, label) and trigger(staticGetter)
 	public static $axis+PascalCase.Component componentByLabel(String label) {
 		return stream().filter(c -> c.label().equals(label)).findFirst().orElse(NA);
 	}
-end
 
-def type(include) and attribute(type, continuous) and trigger(staticGetter)
+rule type(include) and attribute(type, continuous) and trigger(staticGetter)
 	public static $axis+PascalCase.Component componentBy$label+PascalCase($name+PascalCase.Range range) {
 		return stream().filter(c -> c.$label+CamelCase().equals(range)).findFirst().orElse(NA);
 	}
-end
 
-def type(include) and attribute(type, categorical) and trigger(staticGetter)
+rule type(include) and attribute(type, categorical) and trigger(staticGetter)
 	public static $axis+PascalCase.Component componentBy$label+PascalCase($name+PascalCase.Component component) {
 		return stream().filter(c -> c.$label+CamelCase().equals(component)).findFirst().orElse(NA);
 	}
-end
 
-def type(include) and attribute(type, continuous) and trigger(declaration)
+rule type(include) and attribute(type, continuous) and trigger(declaration)
 	private final $name+PascalCase.Range $label+CamelCase;
-end
 
-def type(include) and attribute(type, categorical) and trigger(declaration)
+rule type(include) and attribute(type, categorical) and trigger(declaration)
 	private final $name+PascalCase.Component $label+CamelCase;
-end
 
-def attribute(name, label) and trigger(getter)
+rule attribute(name, label) and trigger(getter)
 	public String $name+CamelCase() {
 		return $name+CamelCase;
 	}
-end
 
-def trigger(getter) and attribute(type, continuous)
+rule trigger(getter) and attribute(type, continuous)
 	public $name+PascalCase.Range $label+CamelCase() {
 		return $label+CamelCase;
 	}
-end
 
-def trigger(getter) and attribute(type, categorical)
+rule trigger(getter) and attribute(type, categorical)
 	public $name+PascalCase.Component $label+CamelCase() {
 		return $label+CamelCase;
 	}
-end
 
-def trigger(toString)
+rule trigger(toString)
 	sb.append(", $label+CamelCase=").append($label+CamelCase);
-end
 
-def attribute(name, label) and trigger(defaultValue)
+rule attribute(name, label) and trigger(defaultValue)
 	"$id"
-end
 
-def trigger(defaultValue) and attribute(type, categorical)
+rule trigger(defaultValue) and attribute(type, categorical)
 	$name+PascalCase.NA
-end
 
-def trigger(defaultValue) and attribute(type, continuous)
+rule trigger(defaultValue) and attribute(type, continuous)
 	$name+PascalCase.component(0)
-end
 
-def attribute(name, label) and trigger(parameter)
+rule attribute(name, label) and trigger(parameter)
 	String $name+CamelCase
-end
 
-def attribute(type, categorical) and trigger(parameter)
+rule attribute(type, categorical) and trigger(parameter)
 	$name+PascalCase.Component $label+CamelCase
-end
 
-def attribute(type, continuous) and trigger(parameter)
+rule attribute(type, continuous) and trigger(parameter)
 	$name+PascalCase.Range $label+CamelCase
-end
 
-def attribute(name, label) and trigger(constructorFromTsv)
+rule attribute(name, label) and trigger(constructorFromTsv)
 	l.length > $index ? l[$index] : "NA"
-end
 
-def trigger(constructorFromTsv) and attribute(type, continuous)
+rule trigger(constructorFromTsv) and attribute(type, continuous)
 	l.length > $index ? $name+PascalCase.rangeOf(Double.parseDouble(l[$index])) : $name+PascalCase.component(0)
-end
 
-def trigger(constructorFromTsv) and attribute(type, categorical)
+rule trigger(constructorFromTsv) and attribute(type, categorical)
 	l.length > $index ? $name+PascalCase.component(l[$index]) : $name+PascalCase.NA
-end
 
-def trigger(constructor)
+rule trigger(constructor)
 	$name+PascalCase.component("$id")
-end
 
-def trigger(assign)
+rule trigger(assign)
 	this.$label+CamelCase = $label+CamelCase;
-end
 
-def trigger(put)
+rule trigger(put)
 	components.put($index, $name+FirstUpperCase);
 	componentsByName.put("$name", $name+FirstUpperCase);
-end
 
-def trigger(field)
+rule trigger(field)
 	public static final Component $name+PascalCase = new Component($index, "$name"<<, "$label">>);
-end
 
-def type(components) and attribute(embedded, true) and trigger(load)
+rule type(components) and attribute(embedded, true) and trigger(load)
 	this.components = new Component[] {NA<<, $component...[, ]>>};
-end
 
-def type(components) and attribute(embedded, false) and trigger(load)
+rule type(components) and attribute(embedded, false) and trigger(load)
 	Component[] components = new Component[0];
 	java.io.InputStream resource = getClass().getResourceAsStream("$resource");
 	if(resource == null) throw new IllegalStateException("$name+PascalCase: Resource " + "$resource" + " not found");
@@ -297,4 +271,3 @@ def type(components) and attribute(embedded, false) and trigger(load)
 			io.intino.alexandria.logger.Logger.error("Failed to load components of $name+PascalCase", e);
 		}
 		this.components = components;
-end

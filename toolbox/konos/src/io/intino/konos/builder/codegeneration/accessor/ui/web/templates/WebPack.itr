@@ -1,4 +1,4 @@
-def type(webpack)
+rule type(webpack)
 	const path = require("path");
 	const HtmlWebPackPlugin = require("html-webpack-plugin");
 	const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -7,14 +7,20 @@ def type(webpack)
 	module.exports = {
 		module: {
 			rules: [
+                {
+                    test: /node_modules\\/ace-linters*/,
+                    use: { loader: 'babel-loader', options: { presets: ['@babel/preset-env'] } }
+                },
+                {
+                    test: /\\.mjs$$/,
+                    include: /node_modules/,
+                    type: "javascript/auto",
+                    loader: "babel-loader"
+                },
 				{
 					test: /\\.js$$/,
 					$exclude
-					options: {
-						rootMode: "upward",
-						presets: ['@babel/preset-env'],
-						cacheDirectory: true
-					},
+					options: { rootMode: "upward", presets: ['@babel/preset-env'], cacheDirectory: true },
 					loader: "babel-loader"
 				},
 				{
@@ -55,25 +61,20 @@ def type(webpack)
 			$page+plugin...[,$NL]
 		]
 	};
-end
 
-def type(exclude, alexandriaProject)
+rule type(exclude, alexandriaProject)
 	exclude: /(node_modules)/,
-end
 
-def type(exclude)
+rule type(exclude)
 	exclude: /node_modules\\/(?!($use...[|])\\/).*/,
-end
 
-def type(alias, alexandriaProject)
+rule type(alias, alexandriaProject)
 	"alexandria-ui-elements": path.resolve(__dirname, '.'),
-end
 
-def type(page) and trigger(gen)
+rule type(page) and trigger(gen)
 	'$templateName' : './gen/apps/$templateName+firstUppercase~.js'
-end
 
-def type(page) and trigger(plugin)
+rule type(page) and trigger(plugin)
 	new HtmlWebPackPlugin({
 		hash: true,
 		title: "Test UI",
@@ -81,4 +82,3 @@ def type(page) and trigger(plugin)
 		template: "./src/$templateName.html",
 		filename: "./$templateName.html"
 	})
-end

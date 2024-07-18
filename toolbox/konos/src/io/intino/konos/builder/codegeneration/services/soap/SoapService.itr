@@ -1,4 +1,4 @@
-def type(server)
+rule type(server)
 	package $package+ValidPackage;
 
 	import io.intino.alexandria.http.AlexandriaSpark;
@@ -14,20 +14,15 @@ def type(server)
 			<<$operation...[$NL]>>
 		}
 	}
-end
 
-def type(secure)
+rule type(secure)
 	server.secure(new DefaultSecurityManager(new java.io.File("$file"), "$password"));
-end
 
-def type(operation)
+rule type(operation)
 	server.route($path+format).post(manager -> new $name+PascalCase~Operation(box, manager).execute());
-end
 
-def type(path) and trigger(format)
+rule type(path) and trigger(format)
 	"$name"<<$custom...[]>>
-end
 
-def trigger(custom)
+rule trigger(custom)
 	.replace("{$value}", box.configuration().get("$value"))
-end

@@ -1,4 +1,4 @@
-def type(display)
+rule type(display)
 	$import
 
 	export default class $name+firstUpperCase$proxy~Requester extends $parentType {
@@ -10,77 +10,59 @@ def type(display)
 			this.pushService.send({ op: "didMount", s: "$name+lowerCase", d: this.element.shortId(), o: this.element.props.owner(), c: this.element.props.context()}, this.element.ownerUnit());
 		};
 	}
-end
 
-def attribute(extensionOf) and trigger(import)
+rule attribute(extensionOf) and trigger(import)
 	import $parent+firstUpperCase~Requester from "./$parent+firstUpperCase~Requester"
-end
 
-def attribute(accessible) and trigger(import)
+rule attribute(accessible) and trigger(import)
 	import Requester from "alexandria-ui-elements/gen/displays/requesters/ProxyDisplayRequester";
-end
 
-def trigger(import)
+rule trigger(import)
 	import Requester from "./Requester";
-end
 
-def attribute(accessible) and trigger(proxy)
+rule attribute(accessible) and trigger(proxy)
 	Proxy
-end
 
-def trigger(proxy)
-end
+rule trigger(proxy)
 
-def attribute(extensionOf) and trigger(parentType)
+rule attribute(extensionOf) and trigger(parentType)
 	$parent+firstUpperCase~Requester
-end
 
-def trigger(parentType)
+rule trigger(parentType)
 	Requester
-end
 
-def type(parameter) and trigger(request)
+rule type(parameter) and trigger(request)
 	$name = function(value) {
 		if (this.addToHistory(value)) return;
 		$method({ app: this.element.context, op: "$name", s: "$display+lowercase", d: this.element.shortId(), o: this.element.props.owner(), c: this.element.props.context(), v: $parameter}, this.element.ownerUnit());
 	}
-end
 
-def trigger(request)
+rule trigger(request)
 	$name = (<<$parameterSignature>>) => {
 		if (this.addToHistory(<<$parameterSignature>>)) return;
 		$method({ app: this.element.context, op: "$name", s: "$display+lowercase", d: this.element.shortId(), o: this.element.props.owner(), c: this.element.props.context()<<, v: $parameter>>}, this.element.ownerUnit());
 	};
-end
 
-def type(object) and trigger(parameter)
+rule type(object) and trigger(parameter)
 	encodeURIComponent(JSON.stringify(value))
-end
 
-def type(list, file) and trigger(parameter)
+rule type(list, file) and trigger(parameter)
 	value
-end
 
-def type(list) and trigger(parameter)
+rule type(list) and trigger(parameter)
 	encodeURIComponent(JSON.stringify(value))
-end
 
-def type(file) and trigger(parameter)
+rule type(file) and trigger(parameter)
 	value
-end
 
-def trigger(parameter)
+rule trigger(parameter)
 	encodeURIComponent(value)
-end
 
-def attribute(upload) and trigger(method)
+rule attribute(upload) and trigger(method)
 	this.fileService.upload
-end
 
-def attribute(download) and trigger(method)
+rule attribute(download) and trigger(method)
 	this.fileService.download
-end
 
-def trigger(method)
+rule trigger(method)
 	this.pushService.send
-end

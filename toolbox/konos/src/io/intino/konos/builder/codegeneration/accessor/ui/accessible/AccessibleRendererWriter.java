@@ -20,7 +20,7 @@ import java.io.File;
 
 import static io.intino.itrules.template.Template.compose;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.displayFolder;
-import static io.intino.konos.builder.helpers.CodeGenerationHelper.displayNotifierFolder;
+import static io.intino.konos.builder.helpers.CodeGenerationHelper.displayNotifiersFolder;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 
 public class AccessibleRendererWriter extends UiRendererWriter {
@@ -42,12 +42,12 @@ public class AccessibleRendererWriter extends UiRendererWriter {
 	public boolean writeNotifier(PassiveView element, FrameBuilder builder) {
 		if (!element.i$(Display.Accessible.class)) return true;
 		if (!builder.is("accessible")) return true;
-		File notifierFile = javaFile(displayNotifierFolder(destination, target), nameOfPassiveViewFile(element, builder.toFrame(), "Notifier"));
+		File notifierFile = javaFile(displayNotifiersFolder(destination, target), nameOfPassiveViewFile(element, builder.toFrame(), "Notifier"));
 		if (!context.cache().isModified(element) && notifierFile.exists()) return true;
 		Frame frame = builder.toFrame();
 		String name = nameOfPassiveViewFile(element, frame, "Notifier");
 		if (!hasConcreteNotifier(element)) return false;
-		writeFrame(displayNotifierFolder(destination, target), element, name, new PassiveViewNotifierTemplate().render(frame, Formatters.all));
+		writeFrame(displayNotifiersFolder(destination, target), element, name, new PassiveViewNotifierTemplate().render(frame, Formatters.all));
 		return true;
 	}
 

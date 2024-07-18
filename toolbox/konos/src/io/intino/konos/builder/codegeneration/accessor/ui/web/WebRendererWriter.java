@@ -33,29 +33,29 @@ public class WebRendererWriter extends UiRendererWriter {
 
 	@Override
 	public boolean writeNotifier(PassiveView element, FrameBuilder builder) {
-		File notifierFile = javaFile(displayNotifierFolder(gen(), target), nameOfPassiveViewFile(element, builder.toFrame(), "Notifier"));
+		File notifierFile = javaFile(displayNotifiersFolder(gen(), target), nameOfPassiveViewFile(element, builder.toFrame(), "Notifier"));
 		if (!context.cache().isModified(element) && notifierFile.exists()) return true;
 		Frame frame = builder.toFrame();
 		String name = nameOfPassiveViewFile(element, frame, "Notifier");
 		if (!hasConcreteNotifier(element)) return false;
-		writeFrame(displayNotifierFolder(gen(), target), element, name, new PassiveViewNotifierTemplate().render(frame, Formatters.all));
+		writeFrame(displayNotifiersFolder(gen(), target), element, name, new PassiveViewNotifierTemplate().render(frame, Formatters.all));
 		return true;
 	}
 
 	@Override
 	public boolean writeRequester(PassiveView element, FrameBuilder builder) {
-		File requesterFile = javaFile(displayRequesterFolder(gen(), target), nameOfPassiveViewFile(element, builder.toFrame(), "Requester"));
+		File requesterFile = javaFile(displayRequestersFolder(gen(), target), nameOfPassiveViewFile(element, builder.toFrame(), "Requester"));
 		if (!context.cache().isModified(element) && requesterFile.exists()) return true;
 		Frame frame = builder.toFrame();
 		String name = nameOfPassiveViewFile(element, frame, "Requester");
 		if (!hasConcreteRequester(element)) return false;
-		writeFrame(displayRequesterFolder(gen(), target), element, name, new PassiveViewRequesterTemplate().render(frame, Formatters.all));
+		writeFrame(displayRequestersFolder(gen(), target), element, name, new PassiveViewRequesterTemplate().render(frame, Formatters.all));
 		return true;
 	}
 
 	@Override
 	public boolean writePushRequester(PassiveView element, FrameBuilder builder) {
-		File pushRequesterFile = javaFile(displayRequesterFolder(gen(), target), nameOfPassiveViewFile(element, builder.toFrame(), "PushRequester"));
+		File pushRequesterFile = javaFile(displayRequestersFolder(gen(), target), nameOfPassiveViewFile(element, builder.toFrame(), "PushRequester"));
 		if (!context.cache().isModified(element) && pushRequesterFile.exists()) return true;
 		Frame frame = builder.toFrame();
 		Template template = pushRequesterTemplate(element, builder);
@@ -63,7 +63,7 @@ public class WebRendererWriter extends UiRendererWriter {
 		if (accessible || template == null) return false;
 		String name = nameOfPassiveViewFile(element, frame, "PushRequester");
 		if (!hasConcreteRequester(element)) return false;
-		writeFrame(displayRequesterFolder(gen(), target), element, name, new Engine(template).addAll(Formatters.all).render(frame));
+		writeFrame(displayRequestersFolder(gen(), target), element, name, new Engine(template).addAll(Formatters.all).render(frame));
 		return true;
 	}
 

@@ -1,4 +1,4 @@
-def type(request)
+rule type(request)
 	package $package.requests;
 
 	import io.intino.alexandria.exceptions.*;
@@ -40,34 +40,26 @@ def type(request)
 			return action;
 		}
 	}
-end
 
-def not type(void) and trigger(call)
+rule not type(void) and trigger(call)
 	connector.sendMessage(responsePath, io.intino.alexandria.Json.toString(actionFor(<<io.intino.alexandria.Json.fromString(request, $parameter+type.class)>>).execute()));
-end
 
-def trigger(call)
+rule trigger(call)
 	actionFor(<<io.intino.alexandria.Json.fromString(request, $parameter+type.class)>>).execute();
-end
 
-def trigger(catch)
+rule trigger(catch)
 	catch (AlexandriaException e) {
 		connector.sendMessage(responsePath, e.getMessage());
 	}
-end
 
-def type(parameter) and trigger(assign)
+rule type(parameter) and trigger(assign)
 	action.$name+CamelCase = $name+CamelCase;
-end
 
-def type(parameter) and trigger(signature)
+rule type(parameter) and trigger(signature)
 	$type+FirstUpperCase $name+CamelCase
-end
 
-def type(parameter) and trigger(type)
+rule type(parameter) and trigger(type)
 	$type
-end
 
-def type(schemaImport)
+rule type(schemaImport)
 	import $package.schemas.*;
-end

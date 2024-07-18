@@ -1,14 +1,10 @@
-def type(manifest)
+rule type(manifest)
     package $package.mobile.android.displays
 
     import android.content.Context
     import $package.mobile.android.displays.*
-    import $package.mobile.android.displays.components.*
-    import $package.mobile.android.displays.templates.*
-    import $package.mobile.android.displays.rows.*
-    import $package.mobile.android.displays.items.*
-    import $package.mobile.displays.notifiers.*
-    import $package.mobile.displays.requesters.*
+    $display+import...[$NL]
+    import io.intino.alexandria.mobile.android.displays.PassiveView
     import io.intino.alexandria.mobile.displays.DisplayDefinition
 
     object $accessible~Displays {
@@ -22,24 +18,39 @@ def type(manifest)
         }
 
     }
-end
 
-def type(display, row)
+rule type(display, row) and trigger(import)
+    import $package.mobile.android.displays.rows.$name+firstUppercase
+
+rule type(display, row)
     "$name+firstUppercase" -> $name+firstUppercase~(context)
-end
 
-def type(display, mold)
+rule type(display, mold) and trigger(import)
+    import $package.mobile.android.displays.components.$name+firstUppercase
+
+rule type(display, mold)
     "$name+firstUppercase" -> $name+firstUppercase~(context)
-end
 
-def type(display, item)
+rule type(display, item) and trigger(import)
+    import $package.mobile.android.displays.items.$name+firstUppercase
+
+rule type(display, item)
     "$name+firstUppercase" -> $name+firstUppercase~(context)
-end
 
-def type(display, template)
+rule type(display, template) and trigger(import)
+    import $package.mobile.android.displays.templates.$name+firstUppercase
+
+rule type(display, template)
     "$name+firstUppercase" -> $name+firstUppercase~(context)
-end
 
-def type(display)
+rule type(component) and trigger(import)
+    import $package.mobile.android.displays.components.$name+firstUppercase
+    import $package.mobile.displays.notifiers.$name+firstUppercase~Notifier
+    import $package.mobile.displays.requesters.$name+firstUppercase~Requester
+
+rule type(display) and trigger(import)
+    import $package.mobile.displays.notifiers.$name+firstUppercase~Notifier
+    import $package.mobile.displays.requesters.$name+firstUppercase~Requester
+
+rule type(display)
     "$name+firstUppercase" -> $name+firstUppercase~<$name+firstUppercase~Requester, $name+firstUppercase~Notifier>(context)
-end

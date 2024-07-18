@@ -1,4 +1,4 @@
-def type(display, accessible)
+rule type(display, accessible)
 	package $package.ui.displays<<.$packageType~s>>;
 
 	import $package+validPackage.ui.displays.notifiers.$name+PascalCase~ProxyNotifier;
@@ -18,9 +18,8 @@ def type(display, accessible)
 		<<$parameter+method...[$NL$NL]>>
 		<<$event+method...[$NL$NL]>>
 	}
-end
 
-def type(display)
+rule type(display)
 	package $package.ui.displays<<.$packageType~s>>;
 
 	import io.intino.alexandria.core.Box;
@@ -67,137 +66,104 @@ def type(display)
 		<<$component+class...[$NL$NL]>>
 		<<$component+method...[$NL$NL]>>
 	}
-end
 
-def type(notifierImport, table)
+rule type(notifierImport, table)
 	import io.intino.alexandria.ui.displays.notifiers.TableNotifier;
-end
 
-def type(notifierImport, dynamictable)
+rule type(notifierImport, dynamictable)
 	import io.intino.alexandria.ui.displays.notifiers.DynamicTableNotifier;
-end
 
-def type(notifierImport, item)
+rule type(notifierImport, item)
 	import io.intino.alexandria.ui.displays.notifiers.ItemNotifier;
-end
 
-def type(notifierImport, row)
+rule type(notifierImport, row)
 	import io.intino.alexandria.ui.displays.notifiers.RowNotifier;
-end
 
-def type(notifierImport, template, accessible)
+rule type(notifierImport, template, accessible)
 	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
-end
 
-def type(notifierImport, template)
+rule type(notifierImport, template)
 	import io.intino.alexandria.ui.displays.notifiers.TemplateNotifier;
-end
 
-def type(notifierImport)
+rule type(notifierImport)
 	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
-end
 
-def type(parametrized, generic)
+rule type(parametrized, generic)
 	<DN extends $name+firstUpperCase~Notifier, $abstractBox+extension>
-end
 
-def type(parametrized, accessible)
+rule type(parametrized, accessible)
 	<DN extends $name+firstUpperCase~Notifier, $abstractBox+extension>
-end
 
-def type(parametrized)
+rule type(parametrized)
 	$abstractBox+extensionTagged
-end
 
-def type(displayExtends, generic)
+rule type(displayExtends, generic)
 	extends $parent<DN, $abstractBox+type>
-end
 
-def type(displayExtends, template, accessible)
+rule type(displayExtends, template, accessible)
 	extends io.intino.alexandria.ui.displays.components.Template<DN, $modelClass, $abstractBox+type>
-end
 
-def type(displayExtends, template)
+rule type(displayExtends, template)
 	extends io.intino.alexandria.ui.displays.components.Template<TemplateNotifier, $modelClass, $abstractBox+type>
-end
 
-def type(displayExtends, table)
+rule type(displayExtends, table)
 	extends io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet...[]<$abstractBox+type, $name+firstUpperCase~Row, $itemClass>
-end
 
-def type(displayExtends, dynamictable)
+rule type(displayExtends, dynamictable)
 	extends io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet...[]<$abstractBox+type, $name+firstUpperCase~Row, $itemClass>
-end
 
-def type(displayExtends, collection)
+rule type(displayExtends, collection)
 	extends io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet...[]<$abstractBox+type, $componentType, $itemClass>
-end
 
-def type(displayExtends, item)
+rule type(displayExtends, item)
 	extends io.intino.alexandria.ui.displays.components.Item<ItemNotifier, $itemClass, $abstractBox+type>
-end
 
-def type(displayExtends, row)
+rule type(displayExtends, row)
 	extends io.intino.alexandria.ui.displays.components.Row<RowNotifier, $itemClass, $abstractBox+type>
-end
 
-def type(displayExtends, dialog)
+rule type(displayExtends, dialog)
 	extends io.intino.alexandria.ui.displays.components.Dialog<$name+firstUpperCase~Notifier, $abstractBox+type>
-end
 
-def type(displayExtends)
+rule type(displayExtends)
 	extends io.intino.alexandria.ui.displays.$type+firstUpperCase<$name+firstUpperCase~Notifier, $abstractBox+type>
-end
 
-def type(templatesImport)
+rule type(templatesImport)
 	import $package+validPackage.ui.displays.templates.*;
-end
 
-def type(tablesImport)
+rule type(tablesImport)
 	import $package+validPackage.ui.displays.tables.*;
-end
 
-def type(listsImport)
+rule type(listsImport)
 	import $package+validPackage.ui.displays.lists.*;
-end
 
-def type(magazinesImport)
+rule type(magazinesImport)
 	import $package+validPackage.ui.displays.magazines.*;
-end
 
-def type(mapsImport)
+rule type(mapsImport)
 	import $package+validPackage.ui.displays.maps.*;
-end
 
-def type(dynamicTablesImport)
+rule type(dynamicTablesImport)
 	import $package+validPackage.ui.displays.dynamictables.*;
-end
 
-def type(blocksImport)
+rule type(blocksImport)
 	import $package+validPackage.ui.displays.blocks.*;
-end
 
-def type(itemsImport)
+rule type(itemsImport)
 	import $package+validPackage.ui.displays.items.*;
-end
 
-def type(rowsImport)
+rule type(rowsImport)
 	import $package+validPackage.ui.displays.rows.*;
-end
 
-def type(componentReferences, forRoot)
+rule type(componentReferences, forRoot)
 	<<$component+rootReferences...[$NL]>>
-end
 
-def type(componentReferences)
+rule type(componentReferences)
 	<<$component+references...[$NL]>>
-end
 
-def type(attribute)
+rule type(attribute)
 	public $clazz $name+firstLowerCase;
-end
 
-def type(methods, dynamicloaded)
+rule type(methods, dynamicloaded)
 	@Override
 	public io.intino.alexandria.ui.displays.components.DynamicLoaded.LoadTime loadTime() {
 		return io.intino.alexandria.ui.displays.components.DynamicLoaded.LoadTime.valueOf("$loadTime");
@@ -212,30 +178,24 @@ def type(methods, dynamicloaded)
 	public void hideLoading() {
 		notifier.refreshLoading(false);
 	}
-end
 
-def type(request) and trigger(accessible)
+rule type(request) and trigger(accessible)
 	public void $name(<<$parameter value>>) {
 		request("$name"<<, $parameter+parameterValue>>);
 	}
-end
 
-def trigger(parameterValue)
+rule trigger(parameterValue)
 	value
-end
 
-def type(parameter) and trigger(method)
+rule type(parameter) and trigger(method)
 	public void $value+firstLowerCase(String value) {
 		add("$value", value);
 	}
-end
 
-def type(parameter)
+rule type(parameter)
 	$value
-end
 
-def type(event) and trigger(method)
+rule type(event) and trigger(method)
 	public void on~$name+firstUpperCase(java.util.function.Consumer<Boolean> listener) {
 		onMessage("$name+firstLowerCase").then(listener);
 	}
-end

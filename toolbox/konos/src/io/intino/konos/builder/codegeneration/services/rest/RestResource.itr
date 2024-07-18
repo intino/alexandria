@@ -1,4 +1,4 @@
-def type(notification)
+rule type(notification)
 	package $package.rest.notifications;
 
 	import java.util.List;
@@ -60,10 +60,9 @@ def type(notification)
 	}
 
 
-end
 
 
-def type(resource)
+rule type(resource)
 	package $package.rest.resources;
 
 	import java.util.List;
@@ -113,123 +112,94 @@ def type(resource)
 			return context;
 		}
 	}
-end
 
-def type(word) and trigger(declaration)
+rule type(word) and trigger(declaration)
 	public enum $name+PascalCase {
 		$words...[, ];
 	}
-end
 
-def attribute(void) and trigger(methodCall)
-end
+rule attribute(void) and trigger(methodCall)
 
 
-def type(redirect) and trigger(methodCall)
+rule type(redirect) and trigger(methodCall)
 	redirect(
-end
 
-def type(response) and trigger(methodCall)
+rule type(response) and trigger(methodCall)
 	write(
-end
 
-def attribute(void) and trigger(ending)
-end
+rule attribute(void) and trigger(ending)
 
-def trigger(ending)
+rule trigger(ending)
 	)
-end
 
-def attribute(void) and trigger(write)
-end
+rule attribute(void) and trigger(write)
 
 
-def type(redirect) and trigger(method)
+rule type(redirect) and trigger(method)
 	private void redirect(String url) {
 		manager.redirect(url);
 	}
-end
 
-def type(response, multipart) and trigger(method)
+rule type(response, multipart) and trigger(method)
 	private void write($value object) {
 		manager.write(object.content());
 	}
-end
-def type(response, file) and trigger(method)
+rule type(response, file) and trigger(method)
 	private void write($value object) {
 		manager.write(object);
 	}
-end
 
-def type(response) and trigger(method)
+rule type(response) and trigger(method)
 	private void write($value object) {
 		manager.write(io.intino.alexandria.rest.ResponseAdapter.adapt(object)<<, "$format">>);
 	}
-end
 
-def type(parameter) and trigger(type)
+rule type(parameter) and trigger(type)
 	$parameterType
-end
 
-def type(parameter, defaultvalue) and attribute(in, body) and trigger(assign)
+rule type(parameter, defaultvalue) and attribute(in, body) and trigger(assign)
 	action.$name+CamelCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~OrDefault("$defaultValue"), $parameterType);
-end
 
-def type(parameter, defaultvalue) and trigger(assign)
+rule type(parameter, defaultvalue) and trigger(assign)
 	action.$name+CamelCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~OrDefault("$name", "$defaultValue"), $parameterType);
-end
 
-def type(parameter, file, list) and attribute(in, form) and trigger(assign)
+rule type(parameter, file, list) and attribute(in, form) and trigger(assign)
 	action.$name+CamelCase = manager.fromPartsAsResources();
-end
 
-def type(parameter, file) and attribute(in, form) and trigger(assign)
+rule type(parameter, file) and attribute(in, form) and trigger(assign)
 	action.$name+CamelCase = manager.from$in+firstUpperCase~AsResource("$name");
-end
 
-def type(parameter, required, file) and attribute(in, form) and trigger(assign)
+rule type(parameter, required, file) and attribute(in, form) and trigger(assign)
 	action.$name+CamelCase = manager.from$in+firstUpperCase~AsResourceOrElseThrow("$name", () -> new BadRequest("Parameter missed: $name"));
-end
 
-def type(parameter) and attribute(in, form) and trigger(assign)
+rule type(parameter) and attribute(in, form) and trigger(assign)
 	action.$name+CamelCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~AsString("$name"), $parameterType);
-end
 
-def type(parameter, required) and attribute(in, form) and trigger(assign)
+rule type(parameter, required) and attribute(in, form) and trigger(assign)
 	action.$name+CamelCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~AsStringOrElseThrow("$name", () -> new BadRequest("Parameter missed: $name")), $parameterType);
-end
 
-def type(parameter, file) and  attribute(in, body) and trigger(assign)
+rule type(parameter, file) and  attribute(in, body) and trigger(assign)
 	action.$name+CamelCase = new io.intino.alexandria.Resource("$name", manager.fromBodyAsBytes());
-end
 
-def type(parameter) and attribute(in, body) and trigger(assign)
+rule type(parameter) and attribute(in, body) and trigger(assign)
 	action.$name+CamelCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase(), $parameterType);
-end
 
-def type(parameter, required) and trigger(assign)
+rule type(parameter, required) and trigger(assign)
 	action.$name+CamelCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~OrElseThrow("$name", () -> new BadRequest("Parameter missed: $name")), $parameterType);
-end
 
-def type(parameter) and trigger(assign)
+rule type(parameter) and trigger(assign)
 	action.$name+CamelCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase("$name"), $parameterType);
-end
 
-def type(list) and trigger(parameterType)
+rule type(list) and trigger(parameterType)
 	new com.google.gson.reflect.TypeToken<java.util.List<$value>>(){}.getType()
-end
 
-def type(authenticationValidator, Custom) and trigger(put)
-end
+rule type(authenticationValidator, Custom) and trigger(put)
 
-def type(authenticationValidator) and trigger(put)
+rule type(authenticationValidator) and trigger(put)
 	context.put("Authorization", manager.fromHeader("Authorization") != null ? manager.fromHeader("Authorization").replace("$type ", "") : null);
-end
 
-def trigger(parameterType)
+rule trigger(parameterType)
 	$value.class
-end
 
-def type(schemaImport)
+rule type(schemaImport)
 	import $package.schemas.*;
-end

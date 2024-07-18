@@ -1,10 +1,8 @@
-def type(display, accessible)
-end
+rule type(display, accessible)
 
-def type(display, template)
-end
+rule type(display, template)
 
-def type(display, collection)
+rule type(display, collection)
 	import React from "react";
 	import { withStyles } from '@material-ui/core/styles';
 	import Abstract$name+firstUpperCase from "../../$packageTypeRelativeDirectory~gen/displays<</$packageType~s>>/Abstract$name+firstUpperCase";
@@ -31,9 +29,8 @@ def type(display, collection)
 
 	export default withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase));
 	DisplayFactory.register("$name+firstUpperCase", withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase)));
-end
 
-def type(display)
+rule type(display)
 	import React from "react";
 	import { withStyles } from '@material-ui/core/styles';
 	import Abstract$name+firstUpperCase from "../../$packageTypeRelativeDirectory~gen/displays<</$packageType~s>>/Abstract$name+firstUpperCase";
@@ -57,16 +54,12 @@ def type(display)
 
 	export default withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase));
 	DisplayFactory.register("$name+firstUpperCase", withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase)));
-end
 
-def type(notification)
+rule type(notification)
 	$name = (<<$parameter~value>>) => {
 	};
-end
 
-def trigger(parameterValue)
+rule trigger(parameterValue)
 	value
-end
 
-def trigger(parameter)
-end
+rule trigger(parameter)
