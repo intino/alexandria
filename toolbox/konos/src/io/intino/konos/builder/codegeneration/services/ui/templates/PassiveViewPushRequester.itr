@@ -62,7 +62,7 @@ rule type(parameter, DateTime) and trigger(parameter)
 rule type(parameter) and trigger(parameter)
 	io.intino.alexandria.Json.fromString(data, $value.class)
 
-def	trigger(parameter)
+rule trigger(parameter)
 	aaaaa
 
 rule type(schemaImport)
