@@ -9,8 +9,8 @@ import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRe
 import io.intino.konos.builder.codegeneration.ui.passiveview.PassiveViewRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.ElementHelper;
-import io.intino.konos.dsl.*;
 import io.intino.konos.dsl.ActionableComponents.Actionable;
+import io.intino.konos.dsl.*;
 import io.intino.konos.dsl.OtherComponents.Dialog;
 import io.intino.konos.dsl.OtherComponents.OwnerTemplateStamp;
 import io.intino.konos.dsl.OtherComponents.ProxyStamp;
@@ -106,6 +106,8 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 				element.i$(conceptOf(CatalogComponents.Table.class)) || element.i$(conceptOf(CatalogComponents.Map.class)) ||
 				element.i$(conceptOf(CatalogComponents.DynamicTable.class)))
 			result.add("collection");
+		if (element.i$(conceptOf(CatalogComponents.Magazine.class)))
+			result.add(CatalogComponents.Magazine.class.getSimpleName());
 		if (element.i$(conceptOf(CatalogComponents.Table.class)))
 			result.add(CatalogComponents.Table.class.getSimpleName());
 		if (element.i$(conceptOf(CatalogComponents.DynamicTable.class)))

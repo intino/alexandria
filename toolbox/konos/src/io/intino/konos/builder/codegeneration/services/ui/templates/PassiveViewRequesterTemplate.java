@@ -28,7 +28,8 @@ public class PassiveViewRequesterTemplate extends Template {
 		rules.add(rule().condition(all(allTypes("parameter", "Integer"), trigger("parameter"))).output(literal("Integer.parseInt(manager.fromQuery(\"v\"))")));
 		rules.add(rule().condition(all(allTypes("parameter", "Long"), trigger("parameter"))).output(literal("Long.parseLong(manager.fromQuery(\"v\"))")));
 		rules.add(rule().condition(all(allTypes("parameter", "DateTime"), trigger("parameter"))).output(literal("manager.fromQuery(\"v\") != null ? java.time.Instant.ofEpochMilli(Long.parseLong(manager.fromQuery(\"v\"))) : null")));
-		rules.add(rule().condition(all(allTypes("parameter"), trigger("parameter"))).output(literal("io.intino.alexandria.Json.fromString(manager.fromQuery(\"v\"), ")).output(placeholder("value")).output(literal(".class)\n\ndef\ttrigger(parameter)\naaaaa ")).output(placeholder("value")));
+		rules.add(rule().condition(all(allTypes("parameter"), trigger("parameter"))).output(literal("io.intino.alexandria.Json.fromString(manager.fromQuery(\"v\"), ")).output(placeholder("value")).output(literal(".class)")));
+		rules.add(rule().condition(trigger("parameter")).output(literal("aaaaa ")).output(placeholder("value")));
 		rules.add(rule().condition(allTypes("schemaImport")).output(literal("import ")).output(placeholder("package")).output(literal(".schemas.*;")));
 		return rules;
 	}
