@@ -25,24 +25,24 @@ const CollectionBehavior = (collection) => {
 
     window.addEventListener("resize", () => self.refreshDelayed());
 
-    self.renderCollection = (height, width) => {
+    self.renderCollection = (height, width, mode) => {
         const items = self.items();
         const navigable = collection.props.navigable;
 
         if (collection.state.loading) return self.renderLoading(height, width);
         if (items.length <= 0) return self.renderEmpty(height, width);
 
-        if (navigable == null) return self.renderInfiniteList(items, height, width);
+        if (navigable == null) return self.renderInfiniteList(items, height, width, mode);
         return (
             <div>
                 {navigable === "Top" ? self.renderPagination() : undefined}
-                {self.renderList(items, height - PaginationHeight, width, null, null)}
+                {self.renderList(items, height - PaginationHeight, width, mode, null, null)}
                 {navigable === "Bottom" ? self.renderPagination() : undefined}
             </div>
         );
     };
 
-    self.renderInfiniteList = (items, height, width) => {
+    self.renderInfiniteList = (items, height, width, mode) => {
         let itemHeight = self.collection.props.itemHeight;
         const hasMore = items.length < self.collection.state.itemCount;
         const scrollableTarget = self.collection.props.id + "_infinite";
@@ -55,7 +55,7 @@ const CollectionBehavior = (collection) => {
                 <InfiniteScroll dataLength={items.length} next={self.loadNextPage.bind(self)}
                         scrollThreshold={0.9} hasMore={hasMore} loader={self.renderLoadingMore()}
                         height={height} style={{height:height+"px",width:width+'px'}} scrollableTarget={scrollableTarget}>
-                    {items.map((i, index) => <div className="layout vertical flex" style={{minHeight:itemHeight,position:'relative'}}>{self.renderItem(items, { index: index, isScrolling: false, customClasses: "layout horizontal flex center item" })}</div>)}
+                    {self.renderItems(items, mode, itemHeight, "layout horizontal flex center item")}
                 </InfiniteScroll>
             </div>
         );
@@ -77,7 +77,7 @@ const CollectionBehavior = (collection) => {
         toolbar.style.display = hasMore && !scrollIsVisible ? "block" : "none";
     };
 
-    self.renderList = (items, height, width, onItemsRendered, ref) => {
+    self.renderList = (items, height, width, mode, onItemsRendered, ref) => {
         let itemHeight = self.collection.props.itemHeight;
         const itemCount = self.collection.props.navigable == null ? self.collection.state.itemCount : self.collection.state.pageSize;
         const hasMore = self.collection.props.navigable == null ? items.length < itemCount : false;
@@ -88,7 +88,7 @@ const CollectionBehavior = (collection) => {
                 <InfiniteScroll dataLength={items.length} next={self.loadNextPage.bind(self)}
                         scrollThreshold={0.9} hasMore={hasMore} loader={self.renderLoadingMore()}
                         height={height} style={{height:height+"px",width:width+'px'}} scrollableTarget={scrollableTarget}>
-                    {items.map((i, index) => <div className="layout vertical flex" style={{minHeight:itemHeight,position:'relative'}}>{self.renderItem(items, { index: index, isScrolling: false, customClasses: "" })}</div>)}
+                    {self.renderItems(items, mode, itemHeight, "")}
                 </InfiniteScroll>
             </div>
         );
@@ -166,7 +166,21 @@ const CollectionBehavior = (collection) => {
         return result;
     };
 
-    self.renderItem = (items, { index, isScrolling, style, customClasses }) => {
+    self.renderItems = (items, mode, itemHeight, customItemClasses) => {
+        const content = items.map((i, index) => self.renderItem(items, { index: index, isScrolling: false, customClasses: customItemClasses, itemHeight: itemHeight }));
+        if (mode != "Column") return content;
+        return (<div className="layout horizontal wrap">{content}</div>);
+    };
+
+    self.renderItem = (items, properties) => {
+        return (
+            <div className="layout vertical flex" style={{minHeight:properties.itemHeight,position:'relative'}}>
+                {self.renderItemContent(items, properties)}
+            </div>
+        );
+    };
+
+    self.renderItemContent = (items, { index, isScrolling, style, customClasses }) => {
         const item = items[index];
         const { classes } = self.collection.props;
         const width = self.width(index);
@@ -340,8 +354,8 @@ const CollectionBehavior = (collection) => {
     };
 
     return {
-        renderCollection: (height, width) => {
-            return self.renderCollection(height, width);
+        renderCollection: (height, width, mode) => {
+            return self.renderCollection(height, width, mode);
         },
         renderLoading: () => {
             return self.renderLoading();

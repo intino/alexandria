@@ -149,6 +149,7 @@ public class TextEditable<DN extends TextEditableNotifier, B extends Box> extend
 
     private boolean isNullValue(String value) {
         if (patternMatcher == null) return false;
+        if (value == null) return true;
         String result = value.replace(String.valueOf(patternMatcher.maskCharacter(pattern)), "");
         return result.isEmpty() || containsAll(pattern, result);
     }

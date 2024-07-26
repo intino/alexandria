@@ -26,6 +26,8 @@ Concept CatalogComponents
 					var integer:{%} width = -1%
 
 			sub Magazine
+				Facet Navigable extends Navigable
+					var word:{Top Bottom} position = Bottom
 			sub List
 				Facet Navigable extends Navigable
 					var word:{Top Bottom} position = Bottom
