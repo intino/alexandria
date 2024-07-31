@@ -8,8 +8,8 @@ import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({
 	value : {
-		background: "#f4f4f4",
-		border: "1px solid #ddd",
+		background: theme.isDark() ? "#404040" : "#f4f4f4",
+		border: theme.isDark() ? "1px solid #848484" : "1px solid #ddd",
 		padding: "5px 10px",
 		display: "block",
 		overflow: "auto"

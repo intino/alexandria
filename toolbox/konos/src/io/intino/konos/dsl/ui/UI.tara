@@ -7,7 +7,7 @@ Concept Translator
 		var string value
 
 Concept:{0..1} Theme
-	var word:{Normal Dark} type = Normal
+	var word:{Light Dark Auto} type = Light
 	var integer contrastThreshold = 3
 	var double tonalOffset = 0.2
 
@@ -23,6 +23,7 @@ Concept:{0..1} Theme
 
 Concept Format
 	var string content
+	var string darkContent = empty
 
 // deprecated
 //Facet DialogPage extends Page

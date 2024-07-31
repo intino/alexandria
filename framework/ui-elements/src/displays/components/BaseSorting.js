@@ -9,7 +9,8 @@ import { withSnackbar } from 'notistack';
 export const BaseSortingStyles = theme => ({
 	link : {
 		color: theme.palette.primary.main,
-		cursor: "pointer"
+		cursor: "pointer",
+		filter: theme.isDark() ? "brightness(2.50)" : "brightness(1)",
 	},
 });
 

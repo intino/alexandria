@@ -3,6 +3,7 @@ import PassiveView from "./PassiveView";
 import Typography from "@material-ui/core/Typography";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import CookieConsent, { Cookies } from "react-cookie-consent";
+import Theme from '../../gen/Theme';
 
 export const enrichDisplayProperties = (instance) => {
     instance.pl.context = () => { return instance.pl.o };
@@ -17,7 +18,8 @@ export default class Display extends PassiveView {
         super(props);
         this.onClearContainer = null;
         this.state = {
-            traceable: this.props.traceable
+            traceable: this.props.traceable,
+            appMode : this._loadAppMode(),
         }
     };
 
@@ -213,4 +215,15 @@ export default class Display extends PassiveView {
         const elements = window.document.querySelectorAll(".CookieConsent");
         for(let i=0; i<elements.length; i++) elements[i].style.display = "none";
     };
+
+    _loadAppMode = () => {
+        var mode = this.getCookie("intino.appmode");
+        if (mode != null) return mode;
+        if (!Theme.isAutoMode()) return Theme.defaultMode();
+        return window.matchMedia('(prefers-color-scheme: dark)') ? 'dark' : 'light';
+    };
+
+	_saveAppModeInCookies = (mode) => {
+        this.updateCookie(mode, "intino.appmode");
+	};
 }

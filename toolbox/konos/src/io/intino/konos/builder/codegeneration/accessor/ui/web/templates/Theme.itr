@@ -4,7 +4,13 @@ rule type(theme)
 	const Theme = (function () {
 		var theme = null;
 		var provider = {
-			create: () => {
+            defaultMode: () => {
+                $palette+defaultMode
+            },
+            isAutoMode: () => {
+                $palette+autoMode
+            },
+			create: (mode) => {
 				theme = createTheme({
 					palette : {
 						$palette
@@ -12,10 +18,25 @@ rule type(theme)
 					typography : {
 						$typography
 					},
+					darkFormats: {
+						$format+dark...[,$NL]
+					},
 					formats: {
 						$format...[,$NL]
 					}
 				});
+                theme.isLight = () => {
+                    return theme.palette.type == "light";
+                };
+                theme.isDark = () => {
+                    return theme.palette.type == "dark";
+                };
+                theme.onChangeMode = (listener) => {
+                    theme.changeModeListener = listener;
+                }
+                theme.setMode = (mode) => {
+                    theme.changeModeListener(mode);
+                }
 				return theme;
 			},
 			get: () => {
@@ -25,11 +46,29 @@ rule type(theme)
 		return provider;
 	})();
 
+    function property(name) {
+        var theme = Theme.get();
+        if (theme == null) return;
+        var parts = name.split(".");
+        var property = theme;
+        for (var i=0; i<parts.length; i++) property = property[parts[i]];
+        return property;
+    }
+
 	export default Theme;
 
+rule type(palette) and trigger(defaultMode)
+    return "$type+lowerCase";
+
+rule type(palette) and trigger(autoMode)
+    return "$type+lowerCase" == "auto";
+
+rule type(palette) and trigger(darkMode)
+    return "$type+lowerCase" == "dark";
+
 rule type(palette)
-	<<type : "$type+lowerCase",
-	>><<primary : { main: "$primary" },
+	type : mode,
+    <<primary : { main: "$primary" },
 	>><<secondary : { main: "$secondary" },
 	>><<error : { main: "$error" },
 	>>contrastThreshold : "$contrastThreshold",
@@ -44,5 +83,14 @@ rule type(typography)
 	fontSize : $fontSize,
 	useNextVariants: true
 
+rule type(format, emptyContent, dark) and trigger(dark)
+	$name: { $darkContent }
+
+rule type(format, dark) and trigger(dark)
+	$name: { $content, $darkContent }
+
+rule type(format) and trigger(dark)
+
 rule type(format)
 	$name: { $content }
+

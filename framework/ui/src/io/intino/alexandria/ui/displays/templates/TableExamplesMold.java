@@ -58,6 +58,7 @@ public class TableExamplesMold extends AbstractTableExamplesMold<AlexandriaUiBox
     }
 
     private void notifyPersonSelected(SelectionEvent e) {
+        if (e.selection().isEmpty()) return;
         Person person = (Person) e.selection().get(0);
         table2.notifyUser(person.firstName() + " was selected", UserMessage.Type.Info);
     }

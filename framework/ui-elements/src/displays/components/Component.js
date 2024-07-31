@@ -7,16 +7,15 @@ import ComponentBehavior from "./behaviors/ComponentBehavior";
 
 export default class Component extends AlexandriaDisplay {
 
-    state = {
-        loading: true,
-        visible: this.props.visible != null ? this.props.visible : true,
-        color: this.props.color != null ? this.props.color : null,
-        format: this.props.format,
-        ...this.state
-    };
-
     constructor(props) {
         super(props);
+        this.state = {
+            loading: true,
+            visible: this.props.visible != null ? this.props.visible : true,
+            color: this.props.color != null ? this.props.color : null,
+            format: this.props.format,
+            ...this.state
+        };
     };
 
     style() {
@@ -81,7 +80,7 @@ export default class Component extends AlexandriaDisplay {
         const theme = Theme.get();
         const result = {};
         formats.forEach(f => {
-            let style = theme.formats[f];
+            let style = theme.palette.type == "dark" && theme.darkFormats[f] != null ? theme.darkFormats[f] : theme.formats[f];
             if (style == null) return;
             for (let rule in style) result[rule] = style[rule];
         });

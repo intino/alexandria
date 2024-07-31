@@ -13,9 +13,6 @@ export const MagazineStyles = theme => ({
 	itemView : {
 		height: "100%",
 		padding: "0 10px",
-		'&:hover' : {
-			background: '#ddd'
-		},
 		'&:hover $selector' : {
 			display: 'block'
 		}

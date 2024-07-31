@@ -122,6 +122,10 @@ public class ElementHelper {
 			String context = actionable.asDownload().context() == ActionableComponents.Actionable.Download.Context.Selection ? "Selection" : "";
 			result = ActionableComponents.Actionable.Download.class.getSimpleName() + context;
 		}
+		if (actionable.isSetDarkMode())
+			result = ActionableComponents.Actionable.SetDarkMode.class.getSimpleName();
+		if (actionable.isSetLightMode())
+			result = ActionableComponents.Actionable.SetLightMode.class.getSimpleName();
 		return result;
 	}
 

@@ -19,9 +19,9 @@ const styles = theme => ({
 	search: {
 		position: 'relative',
 		borderRadius: theme.shape.borderRadius,
-		backgroundColor: fade(theme.palette.common.white, 0.75),
+		backgroundColor: theme.isDark() ? fade("#444", 0.75) : fade(theme.palette.common.white, 0.75),
 		'&:hover': {
-			backgroundColor: theme.palette.common.white,
+			backgroundColor: theme.isDark() ? "#444" : theme.palette.common.white,
 		},
 		marginLeft: 0,
 		width: '100%',

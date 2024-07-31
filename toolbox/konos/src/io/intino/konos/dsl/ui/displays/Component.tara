@@ -143,6 +143,8 @@ Concept ActionableComponents
 			sub SelectNextItem > var CatalogComponents.Collection collection
 			sub SignText > var string text = empty; var word:{CAdES XAdES} signFormat = XAdES
 			sub SignDocument > var string document = empty
+			sub SetDarkMode
+			sub SetLightMode
 			sub Export
 				var string[] options = empty
 				var instant from = empty

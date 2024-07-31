@@ -33,7 +33,7 @@ export const TableStyles = theme => ({
         borderBottom: "1px solid #ddd",
         height: "100%",
         '&:hover' : {
-            background: '#ddd'
+            background: theme.isDark() ? "#444" : "#ddd"
         },
         '&:hover $selector' : {
             display: 'block'

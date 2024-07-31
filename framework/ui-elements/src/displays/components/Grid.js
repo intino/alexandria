@@ -118,6 +118,7 @@ class Grid extends AbstractGrid {
             <DataGrid
                 ref={(g) => {this.grid = g;}}
                 columns={columns}
+                className="rdg-dark"
                 rowGetter={this.handleRowGetter.bind(this)}
                 rowsCount={this.state.rows.length}
                 emptyRowsView={this.emptyRowsView.bind(this)}

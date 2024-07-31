@@ -7,7 +7,7 @@ import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 export const CollectionStyles = theme => ({
 	scrolling: {
-		background: "#ddd",
+		background: theme.isDark() ? "#444" : "#ddd",
 		height: "50%",
 		borderRadius: "5px"
 	},

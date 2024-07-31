@@ -311,10 +311,11 @@ const CollectionBehavior = (collection) => {
     };
 
     self.getSelectedStyleRules = () => {
+        const theme = Theme.get();
         return {
             border: "1px solid #3f50b5",
             borderRadius: "5px",
-            background: "white"
+            background: theme.isDark() ? "transparent" : "white"
         };
     };
 
@@ -329,9 +330,10 @@ const CollectionBehavior = (collection) => {
 
     self.addSelectedStyleRules = (style) => {
         if (style == null) return;
+        const theme = Theme.get();
         style.border = "1px solid #3f50b5";
         style.borderRadius = "5px";
-        style.background = "white";
+        style.background = theme.isDark() ? "transparent" : "white";
         return style;
     };
 

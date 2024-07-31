@@ -1,14 +1,14 @@
 dsl Konos
 
 Theme theme1
-	type = Normal
+	type = Light
 	Primary("#3f51b5")
 	Secondary("#ff9100")
 	Error("#f44336")
 
 Format("color:'#B71C1C',textShadow:'2px 2px 2px #fff'") h1
 Format("color:'black',textShadow:'2px 2px 2px #fff'") h2
-Format("") h3
+Format("", darkContent="color:'white'") h3
 Format("") h4
 Format("") h5
 Format("lineHeight:'17pt'") h6
@@ -18,7 +18,7 @@ Format("") subtitle1
 Format("") subtitle2
 Format("color:'white'") white
 Format("fontSize:'50pt'") higgerFont
-Format("background:'white',borderRadius:'3px',height:'100%'") whiteBackground
+Format("background:'white',borderRadius:'3px',height:'100%'", darkContent="background:'#222'") whiteBackground
 Format("padding:'10px 20px'") air
 Format("marginTop:'10px'") airTop
 Format("marginBottom:'10px'") airBottom
@@ -30,10 +30,10 @@ Format("marginRight:'10px'") airRight
 Format("fontWeight:'bold'") bold
 Format("padding:'10px'") containerAirMedium
 Format("padding:'20px'") containerAirLarge
-Format("background:'#efefef',padding:'8px',minHeight:'200px'") filled
-Format("background:'#efefef',minHeight:'200px'") filledNoAir
-Format("background:'#efefef',minHeight:'400px'") filledNoAirLarge
-Format("background:'#efefef',minHeight:'670px'") filledNoAirExtraLarge
+Format("background:'#efefef',padding:'8px',minHeight:'200px'", darkContent="background:'black'") filled
+Format("background:'#efefef',minHeight:'200px'", darkContent="background:'black'") filledNoAir
+Format("background:'#efefef',minHeight:'400px'", darkContent="background:'black'") filledNoAirLarge
+Format("background:'#efefef',minHeight:'670px'", darkContent="background:'black'") filledNoAirExtraLarge
 Format("overflow:'auto',height:'200px'") autoHeight
 Format("overflow:'auto'") autoOverflow
 Format("height:'400px'") extraHeight

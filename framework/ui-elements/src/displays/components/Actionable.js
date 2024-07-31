@@ -19,17 +19,21 @@ export default class Actionable extends AbstractActionable {
 	static Styles = theme => ({
 		link : {
 			color: theme.palette.primary.main,
+			filter: theme.isDark() ? "brightness(2.50)" : "brightness(1)",
 			cursor: "pointer",
 		},
 		button : {
 			cursor: "pointer",
             whiteSpace: "nowrap",
+			filter: theme.isDark() ? "brightness(2.50)" : "brightness(1)",
 		},
 		iconButton : {
-			cursor: "pointer"
+			cursor: "pointer",
+			filter: theme.isDark() ? "brightness(2.50)" : "brightness(1)",
 		},
 		materialIconButton : {
-			cursor: "pointer"
+			cursor: "pointer",
+			filter: theme.isDark() ? "brightness(2.50)" : "brightness(1)",
 		},
 		readonly : {
 			color: theme.palette.grey.A700,

@@ -18,7 +18,7 @@ export const MapStyles = theme => ({
 		position: "absolute",
 		top: 0,
 		left: 0,
-		color: "white",
+		color: theme.isDark() ? "black" : "white",
 		fontSize: "13pt",
 		margin: "25% 20%",
 		background: "#ca991e",
