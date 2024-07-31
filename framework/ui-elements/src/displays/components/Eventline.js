@@ -223,8 +223,9 @@ class Eventline extends AbstractEventline {
         const blockClass = this.state.arrangement.toLowerCase() == "horizontal" ? classes.groupBlockHorizontal : classes.groupBlockVertical;
         const layout = this.state.arrangement.toLowerCase() == "vertical" ? "layout vertical flex" : "";
         const id = this.props.id + "_eventgroup_" + index;
+        const theme = Theme.get();
         const isSelected = this.state.selectedElement != null && this.state.selectedElement.id == id;
-        const style = isSelected ? { background: "#fffbd4", cursor: "pointer", paddingTop: arrangement == "horizontal" ? "5px" : "0" } : { cursor: "pointer", paddingTop: "0" };
+        const style = isSelected ? { background: theme.isDark() ? "#000b59" : "#fffbd4", cursor: "pointer", paddingTop: arrangement == "horizontal" ? "5px" : "0" } : { cursor: "pointer", paddingTop: "0" };
         const previousDate = index > 0 ? this.state.eventsGroups[index-1].date : null;
         this.toolbarInfo[index] = { date: group.date, longDate: group.longDate, page: group.page, id: id };
         return (

@@ -5,10 +5,12 @@ import AbstractHeader from "../../../gen/displays/components/AbstractHeader";
 import HeaderNotifier from "../../../gen/displays/notifiers/HeaderNotifier";
 import HeaderRequester from "../../../gen/displays/requesters/HeaderRequester";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
+import ColorUtil from "../../util/ColorUtil";
+import Theme from '../../../gen/Theme';
 
 const styles = theme => ({
 	color: {
-		color: "black"
+		color: theme.isDark() ? "white" : "black"
 	}
 });
 
@@ -36,8 +38,9 @@ class Header extends AbstractHeader {
 
 	style() {
 		var result = super.style();
+		const theme = Theme.get();
 		if (result == null) result = {};
-		if (this.props.color != null) result.backgroundColor = this.props.color;
+		if (this.props.color != null) result.backgroundColor = theme.isDark() ? ColorUtil.invertColor(this.props.color, true) : this.props.color;
 		if (this._widthDefined()) result.width = this.props.width;
 		if (this._heightDefined()) result.height = this.props.height;
 		return result;

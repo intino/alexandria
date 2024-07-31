@@ -14,7 +14,7 @@ export const ListStyles = theme => ({
 		height: "100%",
 		padding: "0 10px",
 		'&:hover' : {
-			background: '#ddd'
+			background: theme.isDark() ? "#444" : "#ddd"
 		},
 		'&:hover $selector' : {
 			display: 'block'

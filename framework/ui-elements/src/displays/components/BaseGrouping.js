@@ -14,7 +14,7 @@ export const BaseGroupingStyles = theme => ({
         padding: "0 7px"
     },
     count : {
-        color: theme.palette.grey.A700
+        color: theme.isDark() ? "white" : theme.palette.grey.A700
     },
     group : {
         paddingLeft : "0",

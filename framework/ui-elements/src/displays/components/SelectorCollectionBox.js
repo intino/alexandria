@@ -93,6 +93,7 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 		const items = this.items();
 		const value = this.selection(items);
 		const color = this.state.readonly ? theme.palette.grey.A700 : "inherit";
+        const isDark = Theme.get().isDark();
 
 	    return (
 			<div className={classes.container} style={this.style()}>
@@ -108,7 +109,27 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 						onInputChange={this.handleSearch.bind(this)}
 						onMenuOpen={this.handleOpen.bind(this)}
 						onMenuClose={this.handleClose.bind(this)}
-						styles={SelectorCollectionBoxViewStyles}/>
+						styles={SelectorCollectionBoxViewStyles}
+                        theme={(theme) => ({
+                            ...theme,
+                            colors: {
+                                ...theme.colors,
+                                text: isDark ? 'blue' : theme.colors.text,
+                                primary50: isDark ? "gray" : theme.colors.primary50,//after select dropdown option
+                                primary: isDark ? "#CAFFFA" : theme.colors.primary,//Border and Background dropdown color
+                                primary25: isDark ? "gray" : theme.colors.primary25,//Background hover dropdown color
+                                neutral0: isDark ? "#222" : theme.colors.neutral0,//Background color
+                                //neutral5: isDark ? "blue" : theme.colors.neutral0,//Background color
+                                neutral10: isDark ? "#777" : theme.colors.neutral0,//Background color
+                                neutral20: isDark ? "#CAFFCA" : theme.colors.neutral20,//Border before select
+                                neutral30: isDark ? "#82FFE7" : theme.colors.neutral30,//Hover border
+                                neutral40: isDark ? "#CAFFCA" : theme.colors.neutral40,//No options color
+                                neutral50: isDark ? "#F4FFFD" : theme.colors.neutral50,//Select color
+                                neutral60: isDark ? "#42FFDD" : theme.colors.neutral60,//arrow icon when click select
+                                neutral80: isDark ? "#F4FFFD" : theme.colors.neutral80,//Text color
+                            },
+                        })}
+						/>
     			{this.props.allowOther && !this.state.readonly && <div className="layout vertical end"><a className={classes.other} onClick={this.handleAllowOther.bind(this)}>{label != null ? this.translate("Add") + " " + this.translate(label).toLowerCase() : this.translate("Add other")}</a></div>}
 			</div>
         );

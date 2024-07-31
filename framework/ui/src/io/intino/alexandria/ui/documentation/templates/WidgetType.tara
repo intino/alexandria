@@ -6,13 +6,16 @@ use Theme
 
 Template widgetTypeTemplate
 	Header(color="white", format=air) as Absolute(height=100px)
-		Block(layout=Horizontal Center, spacing=DP24)
+		Block(layout=Horizontal Center Flexible, spacing=DP24)
 			Image(value="images/intino.png") as Absolute(80px, 80px)
 			Text(value="intino", format=h3)
-			Block(layout=Horizontal Center, format=headerToolbar, spacing=DP24) links
+			Block(layout=Horizontal Center Flexible, format=headerToolbar, spacing=DP24) links
 				//Link(title="home") as OpenPage(page=UiElements.home)
 				Link(title="home") as OpenSite(site="https://www.intino.io")
 				Link(title="widgets") as OpenPage(page=UiElements.widgets)
+			Block(layout=Horizontal EndJustified)
+				MaterialIconButton(title="set dark mode", icon="Brightness4") as SetDarkMode
+				MaterialIconButton(title="set light mode", icon="Brightness7") as SetLightMode
 
 	Block(format=containerAirLarge)
 		TemplateStamp(template=widgetMold) widget

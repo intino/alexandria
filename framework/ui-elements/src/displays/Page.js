@@ -9,6 +9,9 @@ export default class Page extends AbstractPage {
 		super(props);
 		this.notifier = new PageNotifier(this);
 		this.requester = new PageRequester(this);
+		this.state = {
+		    ...this.state,
+		};
 	};
 
 	render() {

@@ -115,6 +115,14 @@ Component copyToClipboard as ExtensionOf(actionable)
 	Request execute
 	Request copied as Bool
 
+Component setDarkMode as ExtensionOf(actionable)
+	Notification updateMode
+	Request execute
+
+Component setLightMode as ExtensionOf(actionable)
+	Notification updateMode
+	Request execute
+
 Component signAction as ExtensionOf(actionable)
 	Notification setup as Object(SignActionSetup)
 	Notification format as Text

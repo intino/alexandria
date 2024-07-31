@@ -40,7 +40,7 @@ public class ThemeRenderer extends UIRenderer {
 	private void renderFormats() {
 		Theme theme = service.graph().theme();
 		FrameBuilder builder = new FrameBuilder("theme");
-		builder.add("type", new FrameBuilder("type", theme != null ? theme.type().name() : Theme.Type.Normal.name()));
+		builder.add("type", new FrameBuilder("type", theme != null ? theme.type().name() : Theme.Type.Light.name()));
 		usedFormats.stream().filter(u -> !u.isEmpty()).forEach(f -> builder.add("format", formatFrameOf(f)));
 		Commons.write(new File(res(Target.AndroidResource) + File.separator + "values" + File.separator + "styles.xml").toPath(), new ThemeTemplate().render(builder.toFrame(), Formatters.all));
 	}

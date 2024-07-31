@@ -22,6 +22,8 @@ const $pageDisplay+firstUpperCase~PageDismissAction = ({ id }) => {
 export default class $pageDisplay+firstUpperCase~Page extends Page {
 	render() {
 		const { classes } = this.props;
+        theme = Theme.create(this.state.appMode);
+        theme.onChangeMode(mode => this.setState({appMode:mode}));
 		return (
 			<MuiThemeProvider theme={theme}>
 				<SnackbarProvider maxSnack={3} action={key => <$pageDisplay+firstUpperCase~PageDismissAction id={key}/>}>

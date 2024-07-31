@@ -179,3 +179,27 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 						=========
 						Link(title\="One time password") as Action Signed(signText\="Password required", mode\=OneTimePassword)
 						=========
+
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="Toggle app mode")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Link(title="Dark mode") operation19 as SetDarkMode
+				Link(title="Light mode") operation20 as SetLightMode
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Link(title\="Dark mode") as SetDarkMode
+						Link(title\="Light mode") as SetLightMode
+						=========
+
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="Toggle app mode icon")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				MaterialIconButton(icon="Brightness5", title="Dark mode") operation21 as SetDarkMode
+				MaterialIconButton(icon="Brightness7", title="Light mode") operation22 as SetLightMode
+			Block > Text as Code(language=Html)
+					value
+						=========
+						MaterialIconButton(icon\="Brightness5", title\="Dark mode") as SetDarkMode
+						MaterialIconButton(icon\="Brightness7", title\="Light mode") as SetLightMode
+						=========
