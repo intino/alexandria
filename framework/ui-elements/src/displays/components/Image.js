@@ -6,6 +6,7 @@ import {withStyles} from "@material-ui/core";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import BrowserUtil from "alexandria-ui-elements/src/util/BrowserUtil";
 import ImageGallery from 'react-image-gallery';
+import Theme from "app-elements/gen/Theme";
 
 const styles = theme => ({
 });
