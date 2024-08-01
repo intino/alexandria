@@ -61,6 +61,7 @@ Concept DataComponents
 		var string defaultValue = empty
 		var boolean allowFullscreen = false
 		var integer:{%} mobileReduceFactor = 0%
+		var boolean colorInvertedWithDarkMode = false
 		Facet Avatar
 			var string text
 		Facet Absolute extends Absolute

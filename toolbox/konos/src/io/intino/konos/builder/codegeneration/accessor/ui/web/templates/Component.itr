@@ -80,7 +80,7 @@ rule type(properties, selector) and trigger(specific)
 	<< multipleSelection={$multipleSelection}>><< readonly={$readonly}>><< focused={$focused}>><< placeholder="$placeholder">><< selected="$selected">><< layout="$layout">><< size="$size">><< maxMenuHeight={$maxMenuHeight}>><< allowOther="$allowOther">><< scrollButtons="$scrollButtons">><< view="$view">>
 
 rule type(properties, image) and trigger(specific)
-	<< width="$width">><< height="$height">><< mobileReduceFactor={$mobileReduceFactor}>><< allowFullscreen={$allowFullscreen}>>
+	<< width="$width">><< height="$height">><< mobileReduceFactor={$mobileReduceFactor}>><< allowFullscreen={$allowFullscreen}>><< colorInvertedWithDarkMode={$colorInvertedWithDarkMode}>>
 
 rule type(properties, file) and trigger(specific)
 	<< width="$width">><< height="$height">><< preview={$preview}>><< dropZone={$dropZone}>><< maxSize={$maxSize}>><< allowedTypes={[$allowedTypes]}>>

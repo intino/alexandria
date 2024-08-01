@@ -14,6 +14,7 @@ import io.intino.konos.dsl.Theme;
 import java.io.File;
 
 import static io.intino.konos.builder.codegeneration.Formatters.all;
+import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 
 public class ThemeRenderer extends UIRenderer {
 	private final Service.UI service;
@@ -40,12 +41,17 @@ public class ThemeRenderer extends UIRenderer {
 	private Frame palette(Theme theme) {
 		FrameBuilder result = new FrameBuilder("palette");
 		result.add("type", theme.type().name());
-		if (theme.primary() != null) result.add("primary", theme.primary().color());
-		if (theme.secondary() != null) result.add("secondary", theme.secondary().color());
-		if (theme.error() != null) result.add("error", theme.error().color());
+		if (theme.primary() != null) addProperty("primary", theme.primary().color(), theme.primary().darkColor(), result);
+		if (theme.secondary() != null) addProperty("secondary", theme.secondary().color(), theme.secondary().darkColor(), result);
+		if (theme.error() != null) addProperty("error", theme.error().color(), theme.error().darkColor(), result);
 		result.add("contrastThreshold", theme.contrastThreshold());
 		result.add("tonalOffset", theme.tonalOffset());
 		return result.toFrame();
+	}
+
+	private void addProperty(String name, String color, String darkColor, FrameBuilder result) {
+		result.add(name, color);
+		result.add("dark" + firstUpperCase(name), darkColor != null ? darkColor : color);
 	}
 
 	private Frame typography(Theme theme) {
