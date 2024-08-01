@@ -313,7 +313,7 @@ const CollectionBehavior = (collection) => {
     self.getSelectedStyleRules = () => {
         const theme = Theme.get();
         return {
-            border: "1px solid #3f50b5",
+            border: "1px solid " + theme.palette.secondary.main,
             borderRadius: "5px",
             background: theme.isDark() ? "transparent" : "white"
         };
@@ -331,7 +331,7 @@ const CollectionBehavior = (collection) => {
     self.addSelectedStyleRules = (style) => {
         if (style == null) return;
         const theme = Theme.get();
-        style.border = "1px solid #3f50b5";
+        style.border = "1px solid " + theme.palette.secondary.main;
         style.borderRadius = "5px";
         style.background = theme.isDark() ? "transparent" : "white";
         return style;

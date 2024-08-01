@@ -122,12 +122,12 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
                                 neutral0: isDark ? "#222" : theme.colors.neutral0,//Background color
                                 neutral5: isDark ? "#222" : theme.colors.neutral5,//Background color
                                 neutral10: isDark ? "#777" : theme.colors.neutral10,//Background color
-                                neutral20: isDark ? "#CAFFCA" : theme.colors.neutral20,//Border before select
-                                neutral30: isDark ? "#82FFE7" : theme.colors.neutral30,//Hover border
-                                neutral40: isDark ? "#CAFFCA" : theme.colors.neutral40,//No options color
+                                neutral20: isDark ? "#444" : theme.colors.neutral20,//Border before select
+                                neutral30: isDark ? "#777" : theme.colors.neutral30,//Hover border
+                                neutral40: isDark ? "white" : theme.colors.neutral40,//No options color
                                 neutral50: isDark ? "#F4FFFD" : theme.colors.neutral50,//Select color
-                                neutral60: isDark ? "#42FFDD" : theme.colors.neutral60,//arrow icon when click select
-                                neutral70: isDark ? "#42FFDD" : theme.colors.neutral60,//arrow icon when click select
+                                neutral60: isDark ? "white" : theme.colors.neutral60,//arrow icon when click select
+                                neutral70: isDark ? "white" : theme.colors.neutral60,//arrow icon when click select
                                 neutral80: isDark ? "#F4FFFD" : theme.colors.neutral80,//Text color
                                 neutral90: isDark ? "#F4FFFD" : theme.colors.neutral90,//Text color
                             },
