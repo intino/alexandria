@@ -6,7 +6,7 @@ import SelectorComboBoxNotifier from "../../../gen/displays/notifiers/SelectorCo
 import SelectorComboBoxRequester from "../../../gen/displays/requesters/SelectorComboBoxRequester";
 import Select, { components } from "react-select";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
-import Theme from '../../../gen/Theme';
+import Theme from 'app-elements/gen/Theme';
 
 export const SelectorComboBoxTextViewStyles = {
     control: (provided, state) => ({
@@ -35,12 +35,20 @@ export const SelectorComboBoxTextViewStyles = {
     }),
 };
 
-export const SelectorComboBoxStyles = {
-    singleValue: (provided, state) => ({
-        ...provided,
-        color: '#333333',
-    }),
-    menu: provided => ({ ...provided, zIndex: 9999 }),
+export function selectorComboBoxStyles(theme) {
+    return {
+        singleValue: (provided, state) => ({
+            ...provided,
+            color: theme.isDark() ? 'white' : '#333',
+        }),
+        menu: provided => ({ ...provided, zIndex: 9999 }),
+        option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+            return {
+              ...styles,
+              color: isDisabled ? '#ccc' : (isSelected ? (theme.isDark() ? "black" : "white") : (theme.isDark() ? "white" : "black"))
+            };
+        },
+    };
 };
 
 const styles = theme => ({
@@ -85,8 +93,8 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 		const label = this.props.label;
 		const value = this.selection(items);
 		const color = this.state.readonly ? theme.palette.grey.A700 : "inherit";
-		const styles = this.props.view === "TextView" ? { ...SelectorComboBoxStyles, ...SelectorComboBoxTextViewStyles } : { ...SelectorComboBoxStyles };
         const isDark = Theme.get().isDark();
+		const styles = this.props.view === "TextView" ? { ...selectorComboBoxStyles(Theme.get()), ...SelectorComboBoxTextViewStyles } : { ...selectorComboBoxStyles(Theme.get()) };
 
 		return (
 			<div className={classes.container} style={{...this.style()}}>
@@ -109,18 +117,21 @@ class SelectorComboBox extends AbstractSelectorComboBox {
                             colors: {
                                 ...theme.colors,
                                 text: isDark ? 'blue' : theme.colors.text,
-                                primary50: isDark ? "gray" : theme.colors.primary50,//after select dropdown option
-                                primary: isDark ? "#CAFFFA" : theme.colors.primary,//Border and Background dropdown color
+                                primary: isDark ? "gray" : theme.colors.primary,//Border and Background dropdown color
                                 primary25: isDark ? "gray" : theme.colors.primary25,//Background hover dropdown color
+                                primary50: isDark ? "gray" : theme.colors.primary50,//after select dropdown option
+                                primary75: isDark ? "gray" : theme.colors.primary75,//after select dropdown option
                                 neutral0: isDark ? "#222" : theme.colors.neutral0,//Background color
-                                //neutral5: isDark ? "blue" : theme.colors.neutral0,//Background color
-                                neutral10: isDark ? "#777" : theme.colors.neutral0,//Background color
+                                neutral5: isDark ? "#222" : theme.colors.neutral5,//Background color
+                                neutral10: isDark ? "#777" : theme.colors.neutral10,//Background color
                                 neutral20: isDark ? "#CAFFCA" : theme.colors.neutral20,//Border before select
                                 neutral30: isDark ? "#82FFE7" : theme.colors.neutral30,//Hover border
                                 neutral40: isDark ? "#CAFFCA" : theme.colors.neutral40,//No options color
                                 neutral50: isDark ? "#F4FFFD" : theme.colors.neutral50,//Select color
                                 neutral60: isDark ? "#42FFDD" : theme.colors.neutral60,//arrow icon when click select
+                                neutral70: isDark ? "#42FFDD" : theme.colors.neutral60,//arrow icon when click select
                                 neutral80: isDark ? "#F4FFFD" : theme.colors.neutral80,//Text color
+                                neutral90: isDark ? "#F4FFFD" : theme.colors.neutral90,//Text color
                             },
                         })}
 						/>

@@ -93,6 +93,7 @@ class Image extends AbstractImage {
 			result.height = height;
 			result.minHeight = height;
 		}
+		if (this.props.colorInvertedWithDarkMode && Theme.get().isDark()) result.filter = "invert(1)";
 		return result;
 	};
 

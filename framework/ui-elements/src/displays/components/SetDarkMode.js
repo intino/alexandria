@@ -5,7 +5,7 @@ import SetDarkModeNotifier from "../../../gen/displays/notifiers/SetDarkModeNoti
 import SetDarkModeRequester from "../../../gen/displays/requesters/SetDarkModeRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
-import Theme from '../../../gen/Theme';
+import Theme from 'app-elements/gen/Theme';
 import Actionable from "./Actionable";
 
 class SetDarkMode extends AbstractSetDarkMode {

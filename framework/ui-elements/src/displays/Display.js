@@ -3,7 +3,7 @@ import PassiveView from "./PassiveView";
 import Typography from "@material-ui/core/Typography";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import CookieConsent, { Cookies } from "react-cookie-consent";
-import Theme from '../../gen/Theme';
+import Theme from 'app-elements/gen/Theme';
 
 export const enrichDisplayProperties = (instance) => {
     instance.pl.context = () => { return instance.pl.o };

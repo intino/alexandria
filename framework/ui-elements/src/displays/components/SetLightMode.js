@@ -5,7 +5,7 @@ import SetLightModeNotifier from "../../../gen/displays/notifiers/SetLightModeNo
 import SetLightModeRequester from "../../../gen/displays/requesters/SetLightModeRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
-import Theme from '../../../gen/Theme';
+import Theme from 'app-elements/gen/Theme';
 import Actionable from "./Actionable";
 
 class SetLightMode extends AbstractSetLightMode {
