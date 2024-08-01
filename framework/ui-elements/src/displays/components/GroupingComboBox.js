@@ -9,7 +9,7 @@ import { BaseGroupingStyles } from "./BaseGrouping";
 import classNames from "classnames";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import NumberUtil from 'alexandria-ui-elements/src/util/NumberUtil';
-import Theme from '../../../gen/Theme';
+import Theme from 'app-elements/gen/Theme';
 
 const styles = theme => ({
     ...BaseGroupingStyles(theme),
@@ -71,18 +71,21 @@ class GroupingComboBox extends AbstractGroupingComboBox {
                             colors: {
                                 ...theme.colors,
                                 text: isDark ? 'blue' : theme.colors.text,
-                                primary50: isDark ? "gray" : theme.colors.primary50,//after select dropdown option
-                                primary: isDark ? "#CAFFFA" : theme.colors.primary,//Border and Background dropdown color
+                                primary: isDark ? "gray" : theme.colors.primary,//Border and Background dropdown color
                                 primary25: isDark ? "gray" : theme.colors.primary25,//Background hover dropdown color
+                                primary50: isDark ? "gray" : theme.colors.primary50,//after select dropdown option
+                                primary75: isDark ? "gray" : theme.colors.primary75,//after select dropdown option
                                 neutral0: isDark ? "#222" : theme.colors.neutral0,//Background color
-                                //neutral5: isDark ? "blue" : theme.colors.neutral0,//Background color
-                                neutral10: isDark ? "#777" : theme.colors.neutral0,//Background color
+                                neutral5: isDark ? "#222" : theme.colors.neutral5,//Background color
+                                neutral10: isDark ? "#777" : theme.colors.neutral10,//Background color
                                 neutral20: isDark ? "#CAFFCA" : theme.colors.neutral20,//Border before select
                                 neutral30: isDark ? "#82FFE7" : theme.colors.neutral30,//Hover border
                                 neutral40: isDark ? "#CAFFCA" : theme.colors.neutral40,//No options color
                                 neutral50: isDark ? "#F4FFFD" : theme.colors.neutral50,//Select color
                                 neutral60: isDark ? "#42FFDD" : theme.colors.neutral60,//arrow icon when click select
+                                neutral70: isDark ? "#42FFDD" : theme.colors.neutral60,//arrow icon when click select
                                 neutral80: isDark ? "#F4FFFD" : theme.colors.neutral80,//Text color
+                                neutral90: isDark ? "#F4FFFD" : theme.colors.neutral90,//Text color
                             },
                        })}
                 />

@@ -17,7 +17,7 @@ import Select from "react-select";
 import {RiseLoader} from "react-spinners";
 import Theme from "app-elements/gen/Theme";
 import classNames from "classnames";
-import { SelectorComboBoxStyles, SelectorComboBoxTextViewStyles } from "./SelectorComboBox";
+import { selectorComboBoxStyles, SelectorComboBoxTextViewStyles } from "./SelectorComboBox";
 
 const GridSelectorStyles = {
     valueContainer: (provided, state) => ({
@@ -174,7 +174,7 @@ class Grid extends AbstractGrid {
     renderGroupBySelector = () => {
         if (this.state.modes.length == 0) return (<React.Fragment/>);
         const { classes } = this.props;
-        const styles = { ...SelectorComboBoxStyles, ...SelectorComboBoxTextViewStyles, ...GridSelectorStyles };
+        const styles = { ...selectorComboBoxStyles(Theme.get()), ...SelectorComboBoxTextViewStyles, ...GridSelectorStyles };
         return (
             <Select className={classes.columnSelector} isClearable={true}
                 placeholder={this.translate("Group by")} options={this.selectorColumns()}
@@ -186,7 +186,7 @@ class Grid extends AbstractGrid {
         if (this.state.groupBy == null || this.state.groupByOptions.length == 0 || this.state.modes.length == 0) return (<React.Fragment/>);
         const acceptedType = this.selectorColumns()[this.findColumn(this.state.groupBy.name)].type;
         const modes = this.state.modes.filter(m => m.acceptedTypes.indexOf(acceptedType) != -1).map((mode, idx) => { return { value: mode.name, label: mode.name, index: idx }});
-        const styles = { ...SelectorComboBoxStyles, ...SelectorComboBoxTextViewStyles, ...GridSelectorStyles };
+        const styles = { ...selectorComboBoxStyles(Theme.get()), ...SelectorComboBoxTextViewStyles, ...GridSelectorStyles };
         const { classes } = this.props;
         return (
             <Select className={classes.columnSelector} isClearable={false}
@@ -199,7 +199,7 @@ class Grid extends AbstractGrid {
     renderGroupByOptions = () => {
         if (this.state.groupByMode == null) return (<React.Fragment/>);
         const options = this.state.groupByOptions.map((option, idx) => { return { value: option, label: option, index: idx }});
-        const styles = { ...SelectorComboBoxStyles, ...SelectorComboBoxTextViewStyles, ...GridSelectorStyles };
+        const styles = { ...selectorComboBoxStyles(Theme.get()), ...SelectorComboBoxTextViewStyles, ...GridSelectorStyles };
         const { classes } = this.props;
         return (
             <div>

@@ -5,7 +5,7 @@ import TextEditableCodeNotifier from "../../../gen/displays/notifiers/TextEditab
 import TextEditableCodeRequester from "../../../gen/displays/requesters/TextEditableCodeRequester";
 import CodeBehavior from "./behaviors/CodeBehavior";
 import Spinner from "../../../src/displays/components/Spinner";
-import { Theme } from "../../../gen/Theme";
+import { Theme } from "app-elements/gen/Theme";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import { withSnackbar } from 'notistack';
 import Delayer from '../../util/Delayer';

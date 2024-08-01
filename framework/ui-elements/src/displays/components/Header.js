@@ -6,7 +6,7 @@ import HeaderNotifier from "../../../gen/displays/notifiers/HeaderNotifier";
 import HeaderRequester from "../../../gen/displays/requesters/HeaderRequester";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import ColorUtil from "../../util/ColorUtil";
-import Theme from '../../../gen/Theme';
+import Theme from 'app-elements/gen/Theme';
 
 const styles = theme => ({
 	color: {
