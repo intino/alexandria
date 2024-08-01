@@ -11,6 +11,7 @@ rule type(theme)
                 $palette+autoMode
             },
 			create: (mode) => {
+                $palette+vars
 				theme = createTheme({
 					palette : {
 						$palette
@@ -66,11 +67,16 @@ rule type(palette) and trigger(autoMode)
 rule type(palette) and trigger(darkMode)
     return "$type+lowerCase" == "dark";
 
+rule type(palette) and trigger(vars)
+    const primary = mode == "dark" ? "$darkPrimary" : "$primary";
+    const secondary = mode == "dark" ? "$darkSecondary" : "$secondary";
+    const error = mode == "dark" ? "$darkError" : "$error";
+
 rule type(palette)
 	type : mode,
-    <<primary : { main: "$primary" },
-	>><<secondary : { main: "$secondary" },
-	>><<error : { main: "$error" },
+    <<primary : { main: primary },
+	>><<secondary : { main: secondary },
+	>><<error : { main: error },
 	>>contrastThreshold : "$contrastThreshold",
 	tonalOffset : "$tonalOffset",
 	grey : {

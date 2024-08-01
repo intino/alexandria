@@ -11,7 +11,10 @@ Concept:{0..1} Theme
 	var integer contrastThreshold = 3
 	var double tonalOffset = 0.2
 
-	Concept Property is abstract > var string color
+	Concept Property is abstract
+		var string color
+		var string darkColor = empty
+
 	Concept:{1..1} Primary extends Property
 	Concept:{1..1} Secondary extends Property
 	Concept:{1..1} Error extends Property
