@@ -169,8 +169,9 @@ const TimelineMagnitude = ({ magnitude, index, id, moveMagnitude, classes, openH
     };
     const renderStatus = (magnitude) => {
         const baseStyle = { position:'absolute',width:'16px',height:'16px',border:'3px solid black',borderRadius:'12px',left:'0',marginLeft:'-2px',marginTop:'40px' };
+        const visibility = magnitude.status == null ? "hidden" : "visible";
         const color = magnitude.status === "Normal" ? "#4D9A51" : (magnitude.status === "Warning" ? "#F68A1C" : "#D74545");
-        return (<div style={{...baseStyle,backgroundColor:color}}></div>);
+        return (<div style={{...baseStyle,backgroundColor:color,visibility:visibility}}></div>);
     };
     const renderCatalogValue = (magnitude) => {
         return (
