@@ -6,6 +6,7 @@ import SpinnerNotifier from "../../../gen/displays/notifiers/SpinnerNotifier";
 import SpinnerRequester from "../../../gen/displays/requesters/SpinnerRequester";
 import { BarLoader, CircleLoader, HashLoader, RingLoader, RiseLoader } from "react-spinners";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
+import Theme from 'app-elements/gen/Theme';
 
 const styles = theme => ({});
 
