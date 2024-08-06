@@ -69,7 +69,7 @@ export default class Actionable extends AbstractActionable {
 		);
 	};
 
-	renderActionable = () => {
+	renderActionable() {
 		if (!this.state.visible) return (<React.Fragment/>);
 		return (
 			<React.Fragment>

@@ -21,11 +21,11 @@ class SetLightMode extends AbstractSetLightMode {
 		};
 	};
 
-	render() {
+	renderActionable() {
 	    return (
 	        <React.Fragment>
 	            {this.renderCookieConsent()}
-	            {super.render()}
+	            {super.renderActionable()}
 	        </React.Fragment>
 	    );
 	};
@@ -33,7 +33,7 @@ class SetLightMode extends AbstractSetLightMode {
 	updateMode = () => {
 	    Theme.get().setMode("light");
 	    this._saveAppModeInCookies("light");
-	    this.setState({appMode: mode});
+	    this.setState({appMode: "light"});
 	};
 }
 

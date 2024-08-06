@@ -21,11 +21,11 @@ class SetDarkMode extends AbstractSetDarkMode {
 		};
 	};
 
-	render() {
+	renderActionable() {
 	    return (
 	        <React.Fragment>
 	            {this.renderCookieConsent()}
-	            {super.render()}
+	            {super.renderActionable()}
 	        </React.Fragment>
 	    );
 	};
@@ -33,7 +33,7 @@ class SetDarkMode extends AbstractSetDarkMode {
 	updateMode = () => {
 	    Theme.get().setMode("dark");
 	    this._saveAppModeInCookies("dark");
-	    this.setState({appMode: mode});
+	    this.setState({appMode: "dark"});
 	};
 
 }

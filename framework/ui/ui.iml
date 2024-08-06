@@ -109,6 +109,5 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:http:1.7.10" level="project" />
     <orderEntry type="library" name="Intino: io.intino.magritte:framework:5.2.1" level="project" />
     <orderEntry type="library" name="Intino: io.intino.tara:language:1.6.1" level="project" />
-    <orderEntry type="module" module-name="ui-elements" />
   </component>
 </module>
