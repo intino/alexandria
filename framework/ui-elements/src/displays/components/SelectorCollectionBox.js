@@ -12,15 +12,20 @@ import 'alexandria-ui-elements/res/styles/layout.css';
 import BrowserUtil from 'alexandria-ui-elements/src/util/BrowserUtil';
 import Theme from "app-elements/gen/Theme";
 
-const SelectorCollectionBoxViewStyles = {
-    singleValue: (provided, state) => ({
-        ...provided,
-        color: '#333333',
-    }),
-    menu: provided => ({
-        ...provided,
-        zIndex: 9999
-    }),
+function selectorCollectionBoxViewStyles(theme) {
+    return {
+        singleValue: (provided, state) => ({
+            ...provided,
+            color: theme.isDark() ? 'white' : '#333',
+        }),
+        menu: provided => ({ ...provided, zIndex: 9999 }),
+        option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+            return {
+              ...styles,
+              color: isDisabled ? '#ccc' : (isSelected ? (theme.isDark() ? "black" : "white") : (theme.isDark() ? "white" : "black"))
+            };
+        },
+    };
 };
 
 const styles = theme => ({
@@ -93,7 +98,7 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 		const items = this.items();
 		const value = this.selection(items);
 		const color = this.state.readonly ? theme.palette.grey.A700 : "inherit";
-        const isDark = Theme.get().isDark();
+        const isDark = theme.isDark();
 
 	    return (
 			<div className={classes.container} style={this.style()}>
@@ -109,7 +114,7 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 						onInputChange={this.handleSearch.bind(this)}
 						onMenuOpen={this.handleOpen.bind(this)}
 						onMenuClose={this.handleClose.bind(this)}
-						styles={SelectorCollectionBoxViewStyles}
+						styles={selectorCollectionBoxViewStyles(theme)}
                         theme={(theme) => ({
                             ...theme,
                             colors: {
