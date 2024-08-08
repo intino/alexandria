@@ -334,7 +334,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 				.name(definition.name())
 				.value(String.valueOf(value))
 				.formattedValue(!Double.isNaN(value) ? adapt(formatter.format(value)) : "-")
-				.status(magnitude.status().name())
+				.status(magnitude.status() != null ? magnitude.status().name() : null)
 				.min(magnitude.min() != null ? String.valueOf(magnitude.min()) : null)
 				.formattedMin(magnitude.min() != null ? adapt(formatter.format(magnitude.min())) : null)
 				.max(magnitude.max() != null ? String.valueOf(magnitude.max()) : null)
