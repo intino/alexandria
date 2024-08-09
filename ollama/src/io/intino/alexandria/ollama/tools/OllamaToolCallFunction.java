@@ -7,6 +7,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InaccessibleObjectException;
 import java.util.Map;
+import java.util.function.Function;
 
 public class OllamaToolCallFunction {
 
@@ -149,9 +150,9 @@ public class OllamaToolCallFunction {
 							case FLOAT -> parseFloat(rawValue);
 							case DOUBLE -> parseDouble(rawValue);
 							case CHAR -> parseChar(rawValue);
-							case STRING_COLLECTION, INT_COLLECTION,
-								 LONG_COLLECTION, FLOAT_COLLECTION,
-								 DOUBLE_COLLECTION, CHAR_COLLECTION -> {
+							case SHORT -> parseShort(rawValue);
+							case BYTE -> parseByte(rawValue);
+							default -> {
 								if(isArray) yield parseArray(field.getType(), rawValue);
 								yield parseCollection(field.getType(), rawValue);
 							}
@@ -171,25 +172,40 @@ public class OllamaToolCallFunction {
 				return Json.fromJson(rawValue instanceof CharSequence ? rawValue.toString() : Json.toJson(rawValue), type);
 			}
 
-			private static char parseChar(Object rawValue) {
+			private static Character parseChar(Object rawValue) {
 				String s = String.valueOf(rawValue);
 				return s.isEmpty() ? 0 : s.charAt(0);
 			}
 
-			private static double parseDouble(Object rawValue) {
-				return rawValue instanceof Number x ? x.doubleValue() : Float.parseFloat(String.valueOf(rawValue));
+			private static Double parseDouble(Object rawValue) {
+				return rawValue instanceof Number x ? x.doubleValue() : parseHandlingNull(rawValue, Double::parseDouble);
 			}
 
-			private static float parseFloat(Object rawValue) {
-				return rawValue instanceof Number x ? x.floatValue() : Float.parseFloat(String.valueOf(rawValue));
+			private static Float parseFloat(Object rawValue) {
+				return rawValue instanceof Number x ? x.floatValue() : parseHandlingNull(rawValue, Float::parseFloat);
 			}
 
-			private static long parseLong(Object rawValue) {
-				return rawValue instanceof Number x ? x.longValue() : Long.parseLong(String.valueOf(rawValue));
+			private static Long parseLong(Object rawValue) {
+				return rawValue instanceof Number x ? x.longValue() : parseHandlingNull(rawValue, Long::parseLong);
 			}
 
-			private static int parseInt(Object rawValue) {
-				return rawValue instanceof Number x ? x.intValue() : Integer.parseInt(String.valueOf(rawValue));
+			private static Integer parseInt(Object rawValue) {
+				return rawValue instanceof Number x ? x.intValue() : parseHandlingNull(rawValue, Integer::parseInt);
+			}
+
+			private static Short parseShort(Object rawValue) {
+				return rawValue instanceof Number x ? x.shortValue() : parseHandlingNull(rawValue, Short::parseShort);
+			}
+
+			private static Byte parseByte(Object rawValue) {
+				return rawValue instanceof Number x ? x.byteValue() : parseHandlingNull(rawValue, Byte::parseByte);
+			}
+
+			private static <T extends Number> T parseHandlingNull(Object rawValue, Function<String, T> parser) {
+				if(rawValue == null) return null;
+				String s = String.valueOf(rawValue).trim();
+				if(s.isEmpty() || s.equalsIgnoreCase("null") || s.equalsIgnoreCase("none")) return null;
+				return parser.apply(s);
 			}
 		}
 	}

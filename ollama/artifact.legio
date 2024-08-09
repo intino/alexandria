@@ -4,5 +4,5 @@ Artifact(groupId = "io.intino.alexandria", version = "1.0.0") ollama
 	Imports
 		Compile("io.intino.alexandria", "json", "1.2.3")
 		Test(groupId = "junit", artifactId = "junit", version = "4.13")
-	Package(mode = ModulesAndLibrariesLinkedByManifest)
-RunConfiguration local
+	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources=true, attachDoc=true)
+	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")

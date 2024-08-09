@@ -241,12 +241,16 @@ public class OllamaFunction {
 		FLOAT("float"),
 		DOUBLE("double"),
 		CHAR("char"),
+		SHORT("short"),
+		BYTE("byte"),
 		STRING_COLLECTION("[string]"),
 		INT_COLLECTION("[int]"),
 		LONG_COLLECTION("[long]"),
 		FLOAT_COLLECTION("[float]"),
 		DOUBLE_COLLECTION("[double]"),
-		CHAR_COLLECTION("[char]");
+		CHAR_COLLECTION("[char]"),
+		SHORT_COLLECTION("[short]"),
+		BYTE_COLLECTION("[byte]");
 
 		private final String label;
 		private final boolean isCollection;

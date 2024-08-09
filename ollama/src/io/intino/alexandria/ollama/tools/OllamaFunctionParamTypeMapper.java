@@ -33,6 +33,10 @@ public class OllamaFunctionParamTypeMapper {
 			return ParamType.DOUBLE;
 		} else if (type == char.class || type == Character.class) {
 			return ParamType.CHAR;
+		} else if (type == short.class || type == Short.class) {
+			return ParamType.SHORT;
+		} else if (type == byte.class || type == Byte.class) {
+			return ParamType.BYTE;
 		} else {
 			throw new IllegalArgumentException("Unsupported field type: " + type.getName());
 		}

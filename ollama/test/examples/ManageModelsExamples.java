@@ -58,7 +58,7 @@ public class ManageModelsExamples {
 		Ollama ollama = Ollama.newClient();
 
 		// You can specify the modelfile string directly
-//		ollama.create("my_assistant", """
+//		ollama.createModel("my_assistant", """
 //				FROM llama3
 //
 //				PARAMETER temperature 0.9
@@ -68,7 +68,7 @@ public class ManageModelsExamples {
 //				""");
 
 		// Or you can use a ModelFile object
-		ollama.newClient("my_assistant", new ModelFile()
+		ollama.createModel("my_assistant", new ModelFile()
 				.from("llama3")
 				.temperature(0.9)
 				.numCtx(4096)

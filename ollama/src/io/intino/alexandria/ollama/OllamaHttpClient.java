@@ -50,16 +50,6 @@ public class OllamaHttpClient implements Ollama {
 	}
 
 	@Override
-	public OllamaChatResponse chat(String model, String message) throws OllamaAPIException {
-		return chat(new OllamaChatRequest().model(model).addMessage(OllamaMessage.Role.user, message));
-	}
-
-	@Override
-	public OllamaChatResponse chat(String model, OllamaMessage... messages) throws OllamaAPIException {
-		return chat(new OllamaChatRequest().model(model).messages(messages));
-	}
-
-	@Override
 	public OllamaChatResponse chat(OllamaChatRequest chatRequest) throws OllamaAPIException {
 		OllamaChatResponse response = call(post("/api/chat", chatRequest.stream(false)), OllamaChatResponse.class);
 		if(chatRequest.tools() != null && response.message().hasToolCalls()) {
@@ -75,33 +65,13 @@ public class OllamaHttpClient implements Ollama {
 	}
 
 	@Override
-	public StreamResponse<OllamaChatResponse> chatStream(String model, String message) throws OllamaAPIException {
-		return chatStream(new OllamaChatRequest().model(model).addMessage(OllamaMessage.Role.user, message));
-	}
-
-	@Override
-	public StreamResponse<OllamaChatResponse> chatStream(String model, OllamaMessage... messages) throws OllamaAPIException {
-		return chatStream(new OllamaChatRequest().model(model).messages(messages));
-	}
-
-	@Override
 	public StreamResponse<OllamaChatResponse> chatStream(OllamaChatRequest chatRequest) throws OllamaAPIException {
 		return callStream(post("/api/chat", chatRequest.stream(true)), OllamaChatResponse.class);
 	}
 
 	@Override
-	public OllamaGenerateResponse generate(String model, String prompt) throws OllamaAPIException {
-		return generate(new OllamaGenerateRequest().model(model).prompt(prompt));
-	}
-
-	@Override
 	public OllamaGenerateResponse generate(OllamaGenerateRequest generateRequest) throws OllamaAPIException {
 		return call(post("/api/generate", generateRequest.stream(false)), OllamaGenerateResponse.class);
-	}
-
-	@Override
-	public StreamResponse<OllamaGenerateResponse> generateStream(String model, String prompt) throws OllamaAPIException {
-		return generateStream(new OllamaGenerateRequest().model(model).prompt(prompt));
 	}
 
 	@Override
@@ -120,22 +90,12 @@ public class OllamaHttpClient implements Ollama {
 	}
 
 	@Override
-	public OllamaCreateModelResponse newClient(String name, String modelFile) throws OllamaAPIException {
-		return newClient(new OllamaCreateModelRequest().name(name).modelfile(modelFile));
-	}
-
-	@Override
-	public OllamaCreateModelResponse newClient(String name, ModelFile modelFile) throws OllamaAPIException {
-		return newClient(new OllamaCreateModelRequest().name(name).modelfile(modelFile));
-	}
-
-	@Override
-	public OllamaCreateModelResponse newClient(OllamaCreateModelRequest createModelRequest) throws OllamaAPIException {
+	public OllamaCreateModelResponse createModel(OllamaCreateModelRequest createModelRequest) throws OllamaAPIException {
 		return call(post("/api/create", createModelRequest), OllamaCreateModelResponse.class);
 	}
 
 	@Override
-	public StreamResponse<OllamaCreateModelResponse> createStream(OllamaCreateModelRequest createModelRequest) throws OllamaAPIException {
+	public StreamResponse<OllamaCreateModelResponse> createModelStream(OllamaCreateModelRequest createModelRequest) throws OllamaAPIException {
 		return callStream(post("/api/create", createModelRequest), OllamaCreateModelResponse.class);
 	}
 
@@ -150,30 +110,8 @@ public class OllamaHttpClient implements Ollama {
 	}
 
 	@Override
-	public OllamaShowResponse show(String name, boolean verbose) throws OllamaAPIException {
-		return call(post("/api/show", new OllamaShowRequest().name(name).verbose(verbose)), OllamaShowResponse.class);
-	}
-
-	@Override
-	public boolean pullIfNotExists(String model) throws OllamaAPIException {
-		if(exists(model)) return false;
-		pull(model);
-		return true;
-	}
-
-	@Override
-	public OllamaPullResponse pull(String model) throws OllamaAPIException {
-		return call(post("/api/pull", new OllamaPullRequest().name(model).stream(false)), OllamaPullResponse.class);
-	}
-
-	@Override
 	public OllamaPullResponse pull(OllamaPullRequest pullRequest) throws OllamaAPIException {
 		return call(post("/api/pull", pullRequest.stream(false)), OllamaPullResponse.class);
-	}
-
-	@Override
-	public StreamResponse<OllamaPullResponse> pullStream(String model) throws OllamaAPIException {
-		return pullStream(new OllamaPullRequest().name(model));
 	}
 
 	@Override
@@ -202,22 +140,8 @@ public class OllamaHttpClient implements Ollama {
 	}
 
 	@Override
-	public boolean exists(String model) throws OllamaAPIException {
-		return list().modelNames().contains(model.replace(":latest", ""));
-	}
-
-	@Override
 	public void delete(String name) throws OllamaAPIException {
 		call(deleteRequest("/api/delete", Json.toJson(Map.of("name", name))));
-	}
-
-	@Override
-	public boolean deleteIfExists(String name) throws OllamaAPIException {
-		if(exists(name)) {
-			call(deleteRequest("/api/delete", Json.toJson(Map.of("name", name))));
-			return true;
-		}
-		return false;
 	}
 
 	@Override
@@ -359,19 +283,16 @@ public class OllamaHttpClient implements Ollama {
 		return this;
 	}
 
-	@Override
 	public Map<String, String> commonHeaders() {
 		return Collections.unmodifiableMap(commonHeaders);
 	}
 
-	@Override
 	public OllamaHttpClient setCommonHeaders(Map<String, String> headers) {
 		this.commonHeaders.clear();
 		this.commonHeaders.putAll(headers);
 		return this;
 	}
 
-	@Override
 	public String getCommonHeader(String name) {
 		return commonHeaders.get(name);
 	}
@@ -382,7 +303,6 @@ public class OllamaHttpClient implements Ollama {
 		return this;
 	}
 
-	@Override
 	public OllamaHttpClient removeCommonHeader(String name) {
 		commonHeaders.remove(name);
 		return this;
@@ -392,5 +312,4 @@ public class OllamaHttpClient implements Ollama {
 	public void close() {
 		httpClient.close();
 	}
-
 }

@@ -9,7 +9,7 @@ public class Ollama_ {
 
 		ollama.deleteIfExists("myassistant");
 
-		ollama.newClient("myassistant", new ModelFile()
+		ollama.createModel("myassistant", new ModelFile()
 				.from("llama3")
 				.temperature(0.21)
 				.numCtx(1024)

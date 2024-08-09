@@ -17,13 +17,16 @@ import java.util.concurrent.Callable;
 public class ChatWithToolsExamples {
 
 	/**
-	 * <p>You must use a LLM with tools (function calling) support, like llama3.1. If not, ollama will throw an error.
+	 * <p>You must use a LLM with tools (function calling) support, like llama3.1 or mistral-nemo. If not, ollama will throw an error.
 	 * Keep in mind that when one or multiple functions are specified, the LLM will tend to always respond with a function call,
 	 * even if a function call is optional and not mandatory.</p>
 	 *
 	 * <p>Tool calls are only supported in non-streaming mode. If you try to do so with chatStream, the LLM will try to
 	 * specify the tool calls in the message content, but it won't be parsed by the library as proper function calls.</p>
 	 * */
+
+	private static final String LLM = "llama3.1"; // llama3.1, mistral-nemo, firefunction-v2, mistral...
+
 	public static void main(String[] args) throws Exception {
 		chatWithTools();
 		chatWithToolsAndBinding();
@@ -33,23 +36,24 @@ public class ChatWithToolsExamples {
 	private static void chatWithTools() throws OllamaAPIException {
 		Ollama ollama = Ollama.newClient();
 
-		ollama.pullIfNotExists("llama3");
+		ollama.pullIfNotExists(LLM);
 
 		var response = ollama.chat(new OllamaChatRequest()
-				.model("llama3.1")
+				.model(LLM)
 				.temperature(0.01)
-				.addMessage(Role.user, "What was the weather in Las Palmas and in Madrid the day 07/08/2024 at night?")
+				.addMessage(Role.user, "What is the weather in Las Palmas and in Madrid right now?")
 				.withFunction(new OllamaFunction()
 						.name("get_weather")
 						.description("Get the weather of one or multiple cities at a certain datetime")
-						.parameter("cities", "[string]", "")
-						.parameter("datetime", "string", "")
+						.parameter("cities", "[string]", "The cities to query")
+						.parameter("datetime", "string", "The datetime in yyyy-MM-dd HH:mm format to query." +
+								" If not set, the current datetime will be used", false)
 				)
 		);
 
 		OllamaMessage message = response.message();
 		if(message.hasToolCalls()) {
-			System.out.println(Json.toJsonPretty((message.toolCalls())));
+			System.out.println(Json.toJsonPretty(message.toolCalls()));
 		} else {
 			System.out.println(message.content());
 		}
@@ -64,14 +68,14 @@ public class ChatWithToolsExamples {
 	private static void chatWithToolsAndBinding() throws Exception {
 		Ollama ollama = Ollama.newClient();
 
-		ollama.pullIfNotExists("llama3.1");
+		ollama.pullIfNotExists(LLM);
 
 		var response = ollama.chat(new OllamaChatRequest()
-				.model("llama3.1")
-				.temperature(0.01)
-				.addMessage(Role.user, "What was the weather in Las Palmas and in Madrid the day 07/08/2024 at night?")
-				// OllamaFunction.from(Class<?>) method parses the binding class and fill in all the ollama function arguments.
-				.withFunction(OllamaFunction.from(GetWeather.class))
+						.model(LLM)
+						.temperature(0.01)
+						.addMessage(Role.user, "What was the weather in Las Palmas and in Madrid the day 07/08/2024 at night?")
+						// OllamaFunction.from(Class<?>) method parses the binding class and fill in all the ollama function arguments.
+						.withFunction(OllamaFunction.from(GetWeather.class))
 				// If you specify the binding after creating the OllamaFunction, then it
 				// only sets the binding class, and the rest of arguments must be specified manually.
 				//.withFunction(new OllamaFunction().name("get_weather").description("").parameter("cities", ...).binding(GetWeather.class))
@@ -98,7 +102,7 @@ public class ChatWithToolsExamples {
 	private static void chatWithMultipleTools() throws Exception {
 		Ollama ollama = Ollama.newClient();
 
-		ollama.pullIfNotExists("llama3.1");
+		ollama.pullIfNotExists(LLM);
 
 		@OllamaFunction.Binding
 		class Sum implements Callable<Float> {
@@ -127,11 +131,11 @@ public class ChatWithToolsExamples {
 		float result = 34938.1415f * 824394930.4838f;
 
 		var response = ollama.chat(new OllamaChatRequest()
-						.model("llama3.1")
-						.temperature(0.01)
-						.addMessage(Role.user, "What is 34938.1415f * 824394930.4838f?")
-						.withFunction(OllamaFunction.from(Multiply.class))
-						.withFunction(OllamaFunction.from(Sum.class))
+				.model(LLM)
+				.temperature(0.01)
+				.addMessage(Role.user, "What is 34938.1415f * 824394930.4838f?")
+				.withFunction(OllamaFunction.from(Multiply.class))
+				.withFunction(OllamaFunction.from(Sum.class))
 		);
 
 		OllamaMessage message = response.message();

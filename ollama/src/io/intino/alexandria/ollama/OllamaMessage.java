@@ -98,6 +98,14 @@ public class OllamaMessage {
 		return toolCalls != null && !toolCalls.isEmpty();
 	}
 
+	public OllamaToolCall toolCall(int index) {
+		return toolCalls.get(index);
+	}
+
+	public int toolCallsCount() {
+		return toolCalls == null ? 0 : toolCalls.size();
+	}
+
 	public List<OllamaToolCall> toolCalls() {
 		return toolCalls;
 	}

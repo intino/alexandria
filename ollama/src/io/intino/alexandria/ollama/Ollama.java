@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public interface Ollama {
+public interface Ollama extends AutoCloseable {
 
 	static Ollama newClient() {
 		return new OllamaHttpClient();
@@ -29,23 +29,35 @@ public interface Ollama {
 		return new OllamaHttpClient(baseUrl, timeout);
 	}
 
-	OllamaChatResponse chat(String model, String message) throws OllamaAPIException;
+	default OllamaChatResponse chat(String model, String message) throws OllamaAPIException {
+		return chat(new OllamaChatRequest().model(model).addMessage(OllamaMessage.Role.user, message).stream(false));
+	}
 
-	OllamaChatResponse chat(String model, OllamaMessage... messages) throws OllamaAPIException;
+	default OllamaChatResponse chat(String model, OllamaMessage... messages) throws OllamaAPIException {
+		return chat(new OllamaChatRequest().model(model).messages(messages).stream(false));
+	}
 
 	OllamaChatResponse chat(OllamaChatRequest chatRequest) throws OllamaAPIException;
 
-	StreamResponse<OllamaChatResponse> chatStream(String model, String message) throws OllamaAPIException;
+	default StreamResponse<OllamaChatResponse> chatStream(String model, String message) throws OllamaAPIException {
+		return chatStream(new OllamaChatRequest().model(model).addMessage(OllamaMessage.Role.user, message).stream(true));
+	}
 
-	StreamResponse<OllamaChatResponse> chatStream(String model, OllamaMessage... messages) throws OllamaAPIException;
+	default StreamResponse<OllamaChatResponse> chatStream(String model, OllamaMessage... messages) throws OllamaAPIException {
+		return chatStream(new OllamaChatRequest().model(model).messages(messages).stream(true));
+	}
 
 	StreamResponse<OllamaChatResponse> chatStream(OllamaChatRequest chatRequest) throws OllamaAPIException;
 
-	OllamaGenerateResponse generate(String model, String prompt) throws OllamaAPIException;
+	default OllamaGenerateResponse generate(String model, String prompt) throws OllamaAPIException {
+		return generate(new OllamaGenerateRequest().model(model).prompt(prompt).stream(false));
+	}
 
 	OllamaGenerateResponse generate(OllamaGenerateRequest generateRequest) throws OllamaAPIException;
 
-	StreamResponse<OllamaGenerateResponse> generateStream(String model, String prompt) throws OllamaAPIException;
+	default StreamResponse<OllamaGenerateResponse> generateStream(String model, String prompt) throws OllamaAPIException {
+		return generateStream(new OllamaGenerateRequest().model(model).prompt(prompt).stream(true));
+	}
 
 	StreamResponse<OllamaGenerateResponse> generateStream(OllamaGenerateRequest generateRequest) throws OllamaAPIException;
 
@@ -53,27 +65,51 @@ public interface Ollama {
 
 	OllamaEmbedResponse.OfFloat embedFloats(OllamaEmbedRequest embedRequest) throws OllamaAPIException;
 
-	OllamaCreateModelResponse newClient(String name, String modelFile) throws OllamaAPIException;
+	default OllamaCreateModelResponse createModel(String name, String modelFile) throws OllamaAPIException {
+		return createModel(new OllamaCreateModelRequest().name(name).modelfile(modelFile).stream(false));
+	}
 
-	OllamaCreateModelResponse newClient(String name, ModelFile modelFile) throws OllamaAPIException;
+	default OllamaCreateModelResponse createModel(String name, ModelFile modelFile) throws OllamaAPIException {
+		return createModel(new OllamaCreateModelRequest().name(name).modelfile(modelFile).stream(false));
+	}
 
-	OllamaCreateModelResponse newClient(OllamaCreateModelRequest createModelRequest) throws OllamaAPIException;
+	OllamaCreateModelResponse createModel(OllamaCreateModelRequest createModelRequest) throws OllamaAPIException;
 
-	StreamResponse<OllamaCreateModelResponse> createStream(OllamaCreateModelRequest createModelRequest) throws OllamaAPIException;
+	default StreamResponse<OllamaCreateModelResponse> createModelStream(String name, String modelFile) throws OllamaAPIException {
+		return createModelStream(new OllamaCreateModelRequest().name(name).modelfile(modelFile).stream(true));
+	}
+
+	default StreamResponse<OllamaCreateModelResponse> createModelStream(String name, ModelFile modelFile) throws OllamaAPIException {
+		return createModelStream(new OllamaCreateModelRequest().name(name).modelfile(modelFile).stream(true));
+	}
+
+	StreamResponse<OllamaCreateModelResponse> createModelStream(OllamaCreateModelRequest createModelRequest) throws OllamaAPIException;
 
 	OllamaListResponse list() throws OllamaAPIException;
 
+	default OllamaShowResponse show(String name, boolean verbose) throws OllamaAPIException {
+		return show(new OllamaShowRequest().name(name).verbose(verbose));
+	}
+
 	OllamaShowResponse show(OllamaShowRequest showRequest) throws OllamaAPIException;
 
-	OllamaShowResponse show(String name, boolean verbose) throws OllamaAPIException;
+	default boolean pullIfNotExists(String model) throws OllamaAPIException {
+		if(!exists(model)) {
+			pull(model);
+			return true;
+		}
+		return false;
+	}
 
-	boolean pullIfNotExists(String model) throws OllamaAPIException;
-
-	OllamaPullResponse pull(String model) throws OllamaAPIException;
+	default OllamaPullResponse pull(String model) throws OllamaAPIException {
+		return pull(new OllamaPullRequest().name(model).stream(false));
+	}
 
 	OllamaPullResponse pull(OllamaPullRequest pullRequest) throws OllamaAPIException;
 
-	StreamResponse<OllamaPullResponse> pullStream(String model) throws OllamaAPIException;
+	default StreamResponse<OllamaPullResponse> pullStream(String model) throws OllamaAPIException {
+		return pullStream(new OllamaPullRequest().name(model).stream(true));
+	}
 
 	StreamResponse<OllamaPullResponse> pullStream(OllamaPullRequest pullRequest) throws OllamaAPIException;
 
@@ -85,11 +121,21 @@ public interface Ollama {
 
 	void copy(OllamaCopyRequest copyRequest) throws OllamaAPIException;
 
-	boolean exists(String model) throws OllamaAPIException;
+	default boolean exists(String model) throws OllamaAPIException {
+		if(model == null) return false;
+		model = model.replace(":latest", "");
+		return list().modelNames().contains(model);
+	}
 
 	void delete(String name) throws OllamaAPIException;
 
-	boolean deleteIfExists(String name) throws OllamaAPIException;
+	default boolean deleteIfExists(String name) throws OllamaAPIException {
+		if(exists(name)) {
+			delete(name);
+			return true;
+		}
+		return false;
+	}
 
 	boolean existsBlob(String digest) throws OllamaAPIException;
 
@@ -101,17 +147,9 @@ public interface Ollama {
 
 	Duration timeout();
 
-	OllamaHttpClient timeout(Duration timeout);
+	Ollama timeout(Duration timeout);
 
-	Map<String, String> commonHeaders();
-
-	OllamaHttpClient setCommonHeaders(Map<String, String> headers);
-
-	String getCommonHeader(String name);
-
-	OllamaHttpClient setCommonHeader(String name, String value);
-
-	OllamaHttpClient removeCommonHeader(String name);
+	Ollama setCommonHeader(String name, String value);
 
 	void close();
 
