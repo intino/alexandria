@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.6") jmx
+Artifact("io.intino.alexandria", "1.0.7") jmx
 	Imports
 		Compile("io.intino.alexandria", "logger", "2.1.0")
 		Test("junit", "junit", "4.12")
