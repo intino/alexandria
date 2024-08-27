@@ -7,3 +7,7 @@ Artifact(groupId = "io.intino.alexandria", version = "1.0.0-SNAPSHOT") ollama-ga
 		Compile("es.monentia.gal2", "gal2-models-accessor", "1.0.0-SNAPSHOT")
 		Test(groupId = "junit", artifactId = "junit", version = "4.13")
 	Package(mode = ModulesAndLibrariesLinkedByManifest)
+	Distribution
+		Artifactory("intino-maven")
+			Snapshot("https://artifactory.intino.io/artifactory/snapshot-libraries")
+			Release("https://artifactory.intino.io/artifactory/release-libraries")

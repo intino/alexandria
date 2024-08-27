@@ -33,11 +33,6 @@ rule type(jmx) and type(interface)
 	import java.time.*;
 
 	public interface $name+PascalCase~MBean {
-
-		@Description("Shows information about the available operations")
-		@Parameters({})
-		java.util.List<String> help();
-
 		$operation+signature...[$NL$NL]
 	}
 
@@ -60,25 +55,39 @@ rule type(jmx) and type(implementation)
 	package $package+ValidPackage.jmx;
 
 	import io.intino.alexandria.logger.Logger;
+	import javax.management.*;
 	import $package.$box+validName+FirstUpperCase~Box;
 	import java.util.*;
 	import java.time.*;
 
-	public class $name+CamelCase+validName+firstUpperCase implements $name+validName+firstUpperCase~MBean {
+	import static javax.management.MBeanOperationInfo.ACTION;
 
+	public class $name+CamelCase+validName+firstUpperCase extends StandardMBean implements $name+validName+firstUpperCase~MBean {
 		private final $box+validName+FirstUpperCase~Box box;
 
-		public java.util.List<String> help() {
-			List<String> operations = new ArrayList<>();
-			operations.addAll(java.util.Arrays.asList(new String[]{$operation+help...[, ]}));
-			return operations;
-		}
-
-		public $name+validName+firstUpperCase($box+validName+FirstUpperCase~Box box) {
+		public $name+validName+firstUpperCase($box+validName+FirstUpperCase~Box box) throws NotCompliantMBeanException {
+			super($name+validName+firstUpperCase~MBean.class);
 			this.box = box;
 		}
 
+		@Override
+		public MBeanInfo getMBeanInfo() {
+			return new MBeanInfo(this.getClass().getName(), "$name", null, null, new MBeanOperationInfo[]{$operation+call...[, ]}, null);
+		}
+
+		$operation+info...[$NL$NL]
 		$operation+implementation...[$NL$NL]
+	}
+
+rule type(operation) and trigger(call)
+	$name+CamelCase+validName+firstLowerCase~Info()
+
+rule type(operation) and trigger(info)
+	public MBeanOperationInfo $name+CamelCase+validName+firstLowerCase~Info() {
+		MBeanParameterInfo[] params = new MBeanParameterInfo[] {
+			<<$parameter+info...[,$NL]>>
+		};
+		return new MBeanOperationInfo("$name", "$description", params, "<<$returnType+return >>", ACTION);
 	}
 
 rule type(operation) and trigger(implementation)
@@ -94,9 +103,8 @@ rule type(operation) and trigger(implementation)
 		}
 	}
 
-rule type(operation) and trigger(help)
-	"$returnType $name+CamelCase+validName+firstLowerCase($parameter+withType...[, ])<<: $description>>"
-
+rule type(parameter) and trigger(info)
+	new MBeanParameterInfo("$name", "$type", "$description")
 
 rule type(parameter) and trigger(assign)
 	action.$name = $name;

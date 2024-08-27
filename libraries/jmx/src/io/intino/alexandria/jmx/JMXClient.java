@@ -184,11 +184,10 @@ public class JMXClient {
 		public Map<String, String> operations(ObjectName objectName) {
 			Map<String, String> map = new LinkedHashMap<>();
 			try {
-
 				for (MBeanOperationInfo info : mBeanInfo(objectName).getOperations()) {
 					final Descriptor descriptor = info.getDescriptor();
 					final String parameters = descriptor.getFieldValue(Parameters.class.getSimpleName()).toString();
-					final String description = descriptor.getFieldValue(Description.class.getSimpleName()).toString();
+					final String description = description(info);
 					map.put(info.getReturnType() + " " + info.getName() + "(" + (parameters != null ? parameters : parameters(info)) + ")", description == null ? "" : description);
 					return map;
 				}
@@ -200,15 +199,20 @@ public class JMXClient {
 
 		public Map<MBeanOperationInfo, String> operationInfos(ObjectName objectName) {
 			try {
-				final List<MBeanOperationInfo> operations = Arrays.asList(mBeanInfo(objectName).getOperations());
-				Map<MBeanOperationInfo, String> map = new LinkedHashMap<>();
-				for (MBeanOperationInfo operation : operations)
-					map.put(operation, operation.getDescriptor().getFieldValue(Description.class.getSimpleName()).toString());
-				return map;
+				return Arrays.stream(mBeanInfo(objectName).getOperations())
+						.collect(Collectors.toMap(operation -> operation,
+								this::description,
+								(a, b) -> b, LinkedHashMap::new));
 			} catch (RuntimeException | ReflectionException | IntrospectionException | IOException |
 					 InstanceNotFoundException ignored) {
 			}
 			return Collections.emptyMap();
+		}
+
+		private String description(MBeanOperationInfo info) {
+			return info.getDescription() != null && !info.getDescription().isEmpty() ?
+					info.getDescription() :
+					info.getDescriptor().getFieldValue(Description.class.getSimpleName()).toString();
 		}
 
 		public Object invokeOperation(ObjectName objectName, MBeanOperationInfo info, Object[] parameters) {
@@ -251,6 +255,6 @@ public class JMXClient {
 	}
 
 	private String parameters(MBeanOperationInfo info) {
-		return String.join(", ", Arrays.stream(info.getSignature()).map(mb -> mb.getType() + " " + mb.getName()).collect(Collectors.toList()));
+		return Arrays.stream(info.getSignature()).map(mb -> mb.getType() + " " + mb.getName()).collect(Collectors.joining(", "));
 	}
 }

@@ -21,6 +21,7 @@ public class SetLightMode<DN extends SetLightModeNotifier, B extends Box> extend
 		notifier.updateMode();
 		soul().displays(SetLightMode.class).forEach(d -> d.visible(false));
 		soul().displays(SetDarkMode.class).forEach(d -> d.visible(true));
+		if (executeListener == null) return;
 		executeListener.accept(new ExecuteEvent(this, "light"));
 	}
 
