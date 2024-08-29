@@ -87,7 +87,7 @@ rule type(operation) and trigger(info)
 		MBeanParameterInfo[] params = new MBeanParameterInfo[] {
 			<<$parameter+info...[,$NL]>>
 		};
-		return new MBeanOperationInfo("$name", "$description", params, "<<$returnType+return >>", ACTION);
+		return new MBeanOperationInfo("$name", "$description", params, "<<$returnType>>", ACTION);
 	}
 
 rule type(operation) and trigger(implementation)
