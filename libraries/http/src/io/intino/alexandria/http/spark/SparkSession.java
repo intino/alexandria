@@ -26,6 +26,11 @@ public class SparkSession<C extends Client> implements Session<C> {
 		return (List<C>) clientProvider.clients(id);
 	}
 
+	public int timezoneOffset() {
+		List<C> clients = clients();
+		return !clients.isEmpty() ? clients.get(0).timezoneOffset() : 0;
+	}
+
 	@Override
 	public C client(String id) {
 		return clientProvider.client(id);
