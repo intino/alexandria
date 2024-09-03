@@ -15,6 +15,7 @@ public class SparkClient implements Client {
 	private Session session;
 	private final Map<String, String> queryString;
 	private String language = null;
+	private Integer timezoneOffset = null;
 	private final List<String> messagesQueue = new ArrayList<>();
 	private Timer queueTimer;
 
@@ -56,6 +57,15 @@ public class SparkClient implements Client {
 	@Override
 	public void language(String language) {
 		this.language = language;
+	}
+
+	@Override
+	public int timezoneOffset() {
+		return this.timezoneOffset != null ? this.timezoneOffset : (queryString.containsKey("tzo") ? Integer.parseInt(queryString.get("tzo")) : 0);
+	}
+
+	public void timezoneOffset(int value) {
+		this.timezoneOffset = value;
 	}
 
 	@Override
