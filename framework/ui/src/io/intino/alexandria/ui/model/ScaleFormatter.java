@@ -26,7 +26,7 @@ public class ScaleFormatter {
 
 	private static String date(Instant date, int zoneOffset, String format, String language) {
 		if (date == null) return null;
-		date = date.plus(zoneOffset, ChronoUnit.HOURS);
+		date = date.plus(zoneOffset, ChronoUnit.SECONDS);
 		return formatDate(format, date, locale(language));
 	}
 

@@ -1,10 +1,10 @@
 package io.intino.alexandria.ui.services.push;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class Browser {
     private String baseUrl;
@@ -15,8 +15,7 @@ public class Browser {
     private String language;
     private String metadataLanguage;
     private String metadataIpAddress;
-    private int timezoneOffset = 0;
-    private Map<String, Object> preferences = new HashMap<>();
+    private final Map<String, Object> preferences = new HashMap<>();
     private Consumer<String> redirectManager = null;
     private Origin origin;
 
@@ -102,16 +101,8 @@ public class Browser {
         this.metadataIpAddress = ipAddress;
     }
 
-    public int timezoneOffset() {
-        return timezoneOffset;
-    }
-
-    public void timezoneOffset(int timezoneOffset) {
-        this.timezoneOffset = timezoneOffset;
-    }
-
     public List<Object> preferences() {
-        return preferences.values().stream().collect(Collectors.toList());
+        return new ArrayList<>(preferences.values());
     }
 
     public <T> T preference(String name) {

@@ -14,7 +14,7 @@ const PushService = (function () {
         if (isConnecting(this, name)) return;
         this.pendingConnections.push(name);
 
-        var socketUrl = url;
+        var socketUrl = url + (url.indexOf("?") != -1 ? "&" : "?") + "tzo=" + (new Date()).getTimezoneOffset();
         var socket = new WebSocket(socketUrl);
         socket.name = name;
         socket.ready = false;

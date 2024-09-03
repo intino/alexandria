@@ -42,11 +42,7 @@ public abstract class AlexandriaDisplay<DN extends DisplayNotifier, B extends Bo
     }
 
     public int timezoneOffset() {
-        return session().browser().timezoneOffset();
-    }
-
-    public void timezoneOffset(int value) {
-        session().browser().timezoneOffset(value/60);
+        return session().timezoneOffset();
     }
 
 }
