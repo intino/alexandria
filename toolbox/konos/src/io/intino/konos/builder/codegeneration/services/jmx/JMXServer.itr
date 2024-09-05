@@ -87,7 +87,7 @@ rule type(operation) and trigger(info)
 		MBeanParameterInfo[] params = new MBeanParameterInfo[] {
 			<<$parameter+info...[,$NL]>>
 		};
-		return new MBeanOperationInfo("$name", "$description", params, "<<$returnType>>", ACTION);
+		return new MBeanOperationInfo("$name", "$description", params, "<<$returnType+fulltype>>", ACTION);
 	}
 
 rule type(operation) and trigger(implementation)
@@ -104,7 +104,7 @@ rule type(operation) and trigger(implementation)
 	}
 
 rule type(parameter) and trigger(info)
-	new MBeanParameterInfo("$name", "$type", "$description")
+	new MBeanParameterInfo("$name", "$type+fulltype", "$description")
 
 rule type(parameter) and trigger(assign)
 	action.$name = $name;
@@ -122,3 +122,6 @@ rule type(returnType) and trigger(returnType)
 
 rule trigger(quoted)
 	"$value"
+
+rule attribute(this,String) or attribute(this,Double) or attribute(this,Integer) or attribute(this,Long) and trigger(fullType)
+	java.lang.$this
