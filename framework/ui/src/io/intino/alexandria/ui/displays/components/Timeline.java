@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 public class Timeline<DN extends TimelineNotifier, B extends Box> extends AbstractTimeline<B> {
@@ -39,7 +39,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	private Scale selectedScale = null;
 	private SelectListener selectListener;
 	private SelectListener selectScaleListener;
-	private boolean historyWithRelativeValues = false;
+	private boolean historyWithRelativeValues = true;
 
 	private static final int DefaultSummaryPointsCount = 24;
 
@@ -139,8 +139,8 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 							.name(source.name())
 							.stateLabel(stateLabel)
 							.historyLabel(historyLabel)
-							.scales(source.scales().stream().map(Enum::name).collect(Collectors.toList()))
-							.magnitudes(source.magnitudes().stream().map(this::schemaOf).collect(Collectors.toList()))
+							.scales(source.scales().stream().map(Enum::name).collect(toList()))
+							.magnitudes(source.magnitudes().stream().map(this::schemaOf).collect(toList()))
 		);
 	}
 
@@ -154,7 +154,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		Scale scale = selectedScale();
 		TimelineDatasource.Magnitude magnitude = source.magnitude(magnitudeName);
 		boolean hasRelativeValues = magnitude.definition().unit() != null && !magnitude.definition().unit().equals("%") && magnitude.max() != null;
-		this.historyWithRelativeValues = false;
+		this.historyWithRelativeValues = true;
 		notifier.showHistoryDialog(new TimelineHistory().from(source.from(scale)).to(source.to(scale)).hasRelativeValues(hasRelativeValues));
 	}
 
@@ -165,7 +165,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		Map<Instant, Double> values = serie.values();
 		Map<Instant, List<TimelineDatasource.Annotation>> annotations = serie.annotations();
 		Formatter formatter = magnitude.definition().formatter();
-		notifier.refreshHistory(fillWithZeros(values, fetch.end(), scale).entrySet().stream().map(e -> historyEntryOf(magnitude, e, formatter, annotations)).collect(Collectors.toList()));
+		notifier.refreshHistory(fillWithZeros(values, fetch.end(), scale).entrySet().stream().map(e -> historyEntryOf(magnitude, e, formatter, annotations)).collect(toList()));
 	}
 
 	private TimelineHistoryEntry historyEntryOf(TimelineDatasource.Magnitude magnitude, Map.Entry<Instant, Double> entry, Formatter formatter, Map<Instant, List<TimelineDatasource.Annotation>> annotations) {
@@ -173,7 +173,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		Double percentage = historyWithRelativeValues ? percentage(magnitude, entry.getValue()) : null;
 		result.date(entry.getKey());
 		result.value(Double.isNaN(entry.getValue()) ? null : String.valueOf(historyWithRelativeValues ? percentage(magnitude, entry.getValue()) : entry.getValue()));
-		result.formattedValue(formatter.format(percentage != null ? percentage : entry.getValue()));
+		result.formattedValue(adapt(formatter.format(percentage != null ? percentage : entry.getValue())));
 		result.annotation(annotations.containsKey(entry.getKey()) ? annotationOf(date(normalize(entry.getKey()), selectedScale()), annotations.get(entry.getKey())) : null);
 		return result;
 	}
@@ -203,28 +203,28 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		Scale scale = selectedScale();
 		Instant current = selectedInstant(scale);
 		TimelineDatasource.Serie serie = magnitude.serie(scale, current);
-		List<Double> values = loadValues(serie);
+		List<Double> values = loadValues(magnitude, serie);
 		Formatter formatter = magnitude.definition().formatter();
 		result.name(serie.name());
 		result.categories(categoriesOf(serie, current, scale));
 		result.values(replaceNaNs(values));
 		result.annotations(annotationsOf(serie, current, scale));
-		result.formattedValues(values.stream().map(formatter::format).collect(Collectors.toList()));
+		result.formattedValues(values.stream().map(formatter::format).collect(toList()));
 		return result;
 	}
 
 	private List<Double> replaceNaNs(List<Double> values) {
-		return values.stream().map(v -> Double.isNaN(v) ? null : v).collect(Collectors.toList());
+		return values.stream().map(v -> Double.isNaN(v) ? null : v).collect(toList());
 	}
 
 	private List<String> categoriesOf(TimelineDatasource.Serie serie, Instant to, Scale scale) {
-		return loadCategories(serie, to, scale).stream().map(d -> date(d, scale)).collect(Collectors.toList());
+		return loadCategories(serie, to, scale).stream().map(d -> date(d, scale)).collect(toList());
 	}
 
 	private List<TimelineAnnotation> annotationsOf(TimelineDatasource.Serie serie, Instant to, Scale scale) {
 		List<Instant> instantList = loadCategories(serie, to, scale);
 		Map<Instant, List<TimelineDatasource.Annotation>> annotationList = serie.annotations().entrySet().stream().collect(toMap(e -> normalize(e.getKey()), Map.Entry::getValue, (a, b) -> a, LinkedHashMap::new));
-		return instantList.stream().map(i -> annotationOf(date(i, scale), annotationList.getOrDefault(normalize(i), Collections.emptyList()))).collect(Collectors.toList());
+		return instantList.stream().map(i -> annotationOf(date(i, scale), annotationList.getOrDefault(normalize(i), Collections.emptyList()))).collect(toList());
 	}
 
 	private Instant normalize(Instant instant) {
@@ -238,7 +238,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	}
 
 	private List<String> annotationEntriesOf(List<TimelineDatasource.Annotation> annotationList) {
-		return annotationList.stream().map(TimelineDatasource.Annotation::label).collect(Collectors.toList());
+		return annotationList.stream().map(TimelineDatasource.Annotation::label).collect(toList());
 	}
 
 	private List<Instant> loadCategories(TimelineDatasource.Serie serie, Instant to, Scale scale) {
@@ -246,8 +246,9 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		return reverse(fill(reverse(result).subList(0, Math.min(result.size(), summaryPointsCount)), to, scale));
 	}
 
-	private List<Double> loadValues(TimelineDatasource.Serie serie) {
-		List<Double> values = new ArrayList<>(serie.values().values());
+	private List<Double> loadValues(TimelineDatasource.Magnitude magnitude, TimelineDatasource.Serie serie) {
+		boolean renderPercentages = magnitude.percentage() != null;
+		List<Double> values = serie.values().values().stream().map(v -> renderPercentages ? percentage(magnitude, v) : v).collect(toList());
 		return reverse(fillWithZeros(reverse(values).subList(0, Math.min(values.size(), summaryPointsCount))));
 	}
 
@@ -336,7 +337,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	}
 
 	private void refreshMagnitudes() {
-		notifier.refreshMagnitudes(source.magnitudes().stream().map(this::schemaOf).collect(Collectors.toList()));
+		notifier.refreshMagnitudes(source.magnitudes().stream().map(this::schemaOf).collect(toList()));
 	}
 
 	private TimelineMagnitude schemaOf(MagnitudeDefinition definition) {

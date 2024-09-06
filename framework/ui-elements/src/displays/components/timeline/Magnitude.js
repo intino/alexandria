@@ -108,7 +108,7 @@ const TimelineMagnitude = ({ magnitude, index, id, moveMagnitude, classes, openH
         const serie = magnitude.serie;
         const height = 80;
         const width = 150;
-        const unit = magnitude.unit;
+        const unit = magnitude.percentage != null ? "%" : magnitude.unit;
         const data = valuesWithAnnotations(serie);
         return {
             chart: { type: 'spline', height: height, width: width, backgroundColor: 'transparent' },
