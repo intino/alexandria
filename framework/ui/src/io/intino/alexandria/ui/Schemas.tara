@@ -321,6 +321,7 @@ Schema GridCellInfo
 Schema TimelineHistory
 	Attribute from as DateTime
 	Attribute to as DateTime
+	Attribute hasRelativeValues as Bool
 
 Schema TimelineHistoryEntry
 	Attribute date as DateTime

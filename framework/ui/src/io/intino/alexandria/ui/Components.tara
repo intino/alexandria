@@ -211,6 +211,7 @@ Component timeline
 	Notification refreshMagnitudes as Object(TimelineMagnitude) List
 	Notification showHistoryDialog as Object(TimelineHistory)
 	Request openHistory as Text
+	Request historyWithRelativeValues as Bool
 	Request fetch as Object(TimelineHistoryFetch)
 	Request magnitudesVisibility as Object(TimelineMagnitudeVisibility) List
 	Request magnitudesSorting as Object(TimelineMagnitudeSorting) List

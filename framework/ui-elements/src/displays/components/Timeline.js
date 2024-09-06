@@ -52,7 +52,7 @@ class Timeline extends AbstractTimeline {
 		    ...this.state,
 		    inside : false,
 		    openConfiguration : false,
-		    history : { visible: true, from: null, to: null, data: [] },
+		    history : { visible: true, from: null, to: null, data: [], relativeValues: { visible: false, active: false } },
 		    magnitude : null,
 		    scales: [],
 		    magnitudes: [],
@@ -88,7 +88,7 @@ class Timeline extends AbstractTimeline {
     };
 
     showHistoryDialog = (history) => {
-        this.setState({history: { visible:true, from: history.from, to: history.to, data: [] }});
+        this.setState({history: { visible:true, from: history.from, to: history.to, data: [], relativeValues: { visible: history.hasRelativeValues, active: false } }});
     };
 
     render() {
@@ -189,7 +189,14 @@ class Timeline extends AbstractTimeline {
 
     renderHistory = (history, magnitude) => {
         return (
-            <HighchartsReact highcharts={Highcharts} constructorType={'stockChart'} options={this.historyOptions(history, magnitude)} />
+            <div>
+                {this.state.history.relativeValues.visible &&
+                    <div className="layout horizontal end-justified">
+                        <FormControlLabel control={<Checkbox checked={this.state.history.relativeValues.active} onChange={this.handleToggleRelativeValues.bind(this)} name="toggleRelativeValues" color="primary"/>} label={this.translate("Relative values")}/>
+                    </div>
+                }
+                <HighchartsReact highcharts={Highcharts} constructorType={'stockChart'} options={this.historyOptions(history, magnitude)} />
+            </div>
         );
     };
 
@@ -300,7 +307,7 @@ class Timeline extends AbstractTimeline {
     };
 
     openHistory = (magnitude) => {
-        this.setState({magnitude: magnitude, history: { visible: true, from: null, to: null, data: [] } });
+        this.setState({magnitude: magnitude, history: { visible: true, from: null, to: null, data: [], showRelativeValues: false } });
         this.requester.openHistory(magnitude.name);
     };
 
@@ -355,14 +362,12 @@ class Timeline extends AbstractTimeline {
 	};
 
 	historyHeight = () => {
-	    if (this.containerHeight != null) return this.containerHeight;
 	    const result = this.historyContainer.current != null ? this.historyContainer.current.offsetHeight : "400";
 	    if (this.historyContainer.current != null) this.containerHeight = result;
-	    return result;
+	    return result - 40;
 	};
 
 	historyWidth = () => {
-	    if (this.containerWidth != null) return this.containerWidth;
 	    const result = this.historyContainer.current != null ? this.historyContainer.current.offsetWidth : "600";
 	    if (this.historyContainer.current != null) this.containerWidth = result;
 	    return result;
@@ -440,6 +445,13 @@ class Timeline extends AbstractTimeline {
         for (var i=0; i<magnitudes.length; i++) list.push({ name: magnitudes[i].name, position: i });
         this.requester.magnitudesSorting(list);
         return magnitudesSorting;
+    };
+
+    handleToggleRelativeValues = () => {
+        const history = this.state.history;
+        history.relativeValues.active = !history.relativeValues.active;
+        this.requester.historyWithRelativeValues(history.relativeValues.active);
+        this.setState({history});
     };
 
 }

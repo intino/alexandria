@@ -167,14 +167,15 @@ const CollectionBehavior = (collection) => {
     };
 
     self.renderItems = (items, mode, itemHeight, customItemClasses) => {
-        const content = items.map((i, index) => self.renderItem(items, { index: index, isScrolling: false, customClasses: customItemClasses, itemHeight: itemHeight }));
+        const content = items.map((i, index) => self.renderItem(items, mode, { index: index, isScrolling: false, customClasses: customItemClasses, itemHeight: itemHeight }));
         if (mode != "Column") return content;
         return (<div className="layout horizontal wrap">{content}</div>);
     };
 
-    self.renderItem = (items, properties) => {
+    self.renderItem = (items, mode, properties) => {
+        const classes = "layout vertical" + (mode != "Column" ? " flex" : "");
         return (
-            <div className="layout vertical flex" style={{minHeight:properties.itemHeight,position:'relative'}}>
+            <div className={classes} style={{minHeight:properties.itemHeight,position:'relative'}}>
                 {self.renderItemContent(items, properties)}
             </div>
         );
