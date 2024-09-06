@@ -88,7 +88,7 @@ class Timeline extends AbstractTimeline {
     };
 
     showHistoryDialog = (history) => {
-        this.setState({history: { visible:true, from: history.from, to: history.to, data: [], relativeValues: { visible: history.hasRelativeValues, active: false } }});
+        this.setState({history: { visible:true, from: history.from, to: history.to, data: [], relativeValues: { visible: history.hasRelativeValues, active: this.state.history.relativeValues.active } }});
     };
 
     render() {
@@ -203,7 +203,7 @@ class Timeline extends AbstractTimeline {
     historyOptions = (history, magnitude) => {
         const height = this.historyHeight();
         const width = this.historyWidth();
-        const unit = magnitude.unit;
+        const unit = this.state.history.relativeValues.active ? "%" : magnitude.unit;
         const data = history.data;
         const annotations = history.annotations;
         const fetch = this.fetch.bind(this, magnitude, this.translate.bind(this));
@@ -307,7 +307,7 @@ class Timeline extends AbstractTimeline {
     };
 
     openHistory = (magnitude) => {
-        this.setState({magnitude: magnitude, history: { visible: true, from: null, to: null, data: [], showRelativeValues: false } });
+        this.setState({magnitude: magnitude, history: { visible: true, from: null, to: null, data: [], relativeValues: { active: false} } });
         this.requester.openHistory(magnitude.name);
     };
 
@@ -317,12 +317,14 @@ class Timeline extends AbstractTimeline {
 	};
 
 	minValue = (history, magnitude) => {
+	    if (this.state.history.relativeValues.active) return 0;
 	    const unit = magnitude.unit;
 	    if (unit == "ºC") return -50;
 	    return magnitude.min != null ? magnitude.min : 0;
 	};
 
 	maxValue = (history, magnitude) => {
+	    if (this.state.history.relativeValues.active) return 100;
 	    return magnitude.max != null ? magnitude.max : null;
 	};
 
@@ -364,7 +366,7 @@ class Timeline extends AbstractTimeline {
 	historyHeight = () => {
 	    const result = this.historyContainer.current != null ? this.historyContainer.current.offsetHeight : "400";
 	    if (this.historyContainer.current != null) this.containerHeight = result;
-	    return result - 40;
+	    return result - (this.state.history.relativeValues.visible ? 40 : 0);
 	};
 
 	historyWidth = () => {
