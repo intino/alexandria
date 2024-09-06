@@ -29,8 +29,8 @@ const styles = theme => ({
     catalogValue : { fontSize: '25pt' },
     summaryValue : { fontSize: '16pt' },
     unit : { marginTop: '1px', fontSize: '14pt', color: theme.palette.grey.A700 },
-    infoUnit : { color: '#555', marginRight: '5px', marginLeft: '1px', fontSize: '8pt' },
-    infoValue : { color:'#555', fontSize:'9pt' },
+    infoUnit : { color: '#555', marginRight: '5px', fontSize: '8pt' },
+    infoValue : { color:'#555', fontSize:'9pt', marginLeft: '2px' },
     catalogUnit : { fontSize: '12pt' },
     summaryUnit : { fontSize: '9pt', marginTop: '-1px' },
     catalogTrend : { position: 'absolute', left: '0', top:'0px', marginLeft: '-2px', marginTop: '15px', width:'30px', height:'30px' },
@@ -52,7 +52,7 @@ class Timeline extends AbstractTimeline {
 		    ...this.state,
 		    inside : false,
 		    openConfiguration : false,
-		    history : { visible: true, from: null, to: null, data: [], relativeValues: { visible: false, active: false } },
+		    history : { visible: true, from: null, to: null, data: [], relativeValues: { visible: false, active: true } },
 		    magnitude : null,
 		    scales: [],
 		    magnitudes: [],
@@ -192,7 +192,7 @@ class Timeline extends AbstractTimeline {
             <div>
                 {this.state.history.relativeValues.visible &&
                     <div className="layout horizontal end-justified">
-                        <FormControlLabel control={<Checkbox checked={this.state.history.relativeValues.active} onChange={this.handleToggleRelativeValues.bind(this)} name="toggleRelativeValues" color="primary"/>} label={this.translate("Relative values")}/>
+                        <FormControlLabel control={<Checkbox checked={!this.state.history.relativeValues.active} onChange={this.handleToggleAbsoluteValues.bind(this)} name="toggleAbsoluteValues" color="primary"/>} label={this.translate("Absolute values")}/>
                     </div>
                 }
                 <HighchartsReact highcharts={Highcharts} constructorType={'stockChart'} options={this.historyOptions(history, magnitude)} />
@@ -307,7 +307,7 @@ class Timeline extends AbstractTimeline {
     };
 
     openHistory = (magnitude) => {
-        this.setState({magnitude: magnitude, history: { visible: true, from: null, to: null, data: [], relativeValues: { active: false} } });
+        this.setState({magnitude: magnitude, history: { visible: true, from: null, to: null, data: [], relativeValues: { active: true } } });
         this.requester.openHistory(magnitude.name);
     };
 
@@ -449,7 +449,7 @@ class Timeline extends AbstractTimeline {
         return magnitudesSorting;
     };
 
-    handleToggleRelativeValues = () => {
+    handleToggleAbsoluteValues = () => {
         const history = this.state.history;
         history.relativeValues.active = !history.relativeValues.active;
         this.requester.historyWithRelativeValues(history.relativeValues.active);
