@@ -39,6 +39,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 	private Scale selectedScale = null;
 	private SelectListener selectListener;
 	private SelectListener selectScaleListener;
+	private boolean historyWithRelativeValues = false;
 
 	private static final int DefaultSummaryPointsCount = 24;
 
@@ -143,9 +144,18 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		);
 	}
 
+	public void historyWithRelativeValues(Boolean value) {
+		Scale scale = selectedScale();
+		this.historyWithRelativeValues = value;
+		notifier.showHistoryDialog(new TimelineHistory().from(source.from(scale)).to(source.to(scale)).hasRelativeValues(true));
+	}
+
 	public void openHistory(String magnitudeName) {
 		Scale scale = selectedScale();
-		notifier.showHistoryDialog(new TimelineHistory().from(source.from(scale)).to(source.to(scale)));
+		TimelineDatasource.Magnitude magnitude = source.magnitude(magnitudeName);
+		boolean hasRelativeValues = magnitude.definition().unit() != null && !magnitude.definition().unit().equals("%") && magnitude.max() != null;
+		this.historyWithRelativeValues = false;
+		notifier.showHistoryDialog(new TimelineHistory().from(source.from(scale)).to(source.to(scale)).hasRelativeValues(hasRelativeValues));
 	}
 
 	public void fetch(TimelineHistoryFetch fetch) {
@@ -155,16 +165,23 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		Map<Instant, Double> values = serie.values();
 		Map<Instant, List<TimelineDatasource.Annotation>> annotations = serie.annotations();
 		Formatter formatter = magnitude.definition().formatter();
-		notifier.refreshHistory(fillWithZeros(values, fetch.end(), scale).entrySet().stream().map(e -> historyEntryOf(e, formatter, annotations)).collect(Collectors.toList()));
+		notifier.refreshHistory(fillWithZeros(values, fetch.end(), scale).entrySet().stream().map(e -> historyEntryOf(magnitude, e, formatter, annotations)).collect(Collectors.toList()));
 	}
 
-	private TimelineHistoryEntry historyEntryOf(Map.Entry<Instant, Double> entry, Formatter formatter, Map<Instant, List<TimelineDatasource.Annotation>> annotations) {
+	private TimelineHistoryEntry historyEntryOf(TimelineDatasource.Magnitude magnitude, Map.Entry<Instant, Double> entry, Formatter formatter, Map<Instant, List<TimelineDatasource.Annotation>> annotations) {
 		TimelineHistoryEntry result = new TimelineHistoryEntry();
+		Double percentage = historyWithRelativeValues ? percentage(magnitude, entry.getValue()) : null;
 		result.date(entry.getKey());
-		result.value(Double.isNaN(entry.getValue()) ? null : String.valueOf(entry.getValue()));
-		result.formattedValue(formatter.format(entry.getValue()));
+		result.value(Double.isNaN(entry.getValue()) ? null : String.valueOf(historyWithRelativeValues ? percentage(magnitude, entry.getValue()) : entry.getValue()));
+		result.formattedValue(formatter.format(percentage != null ? percentage : entry.getValue()));
 		result.annotation(annotations.containsKey(entry.getKey()) ? annotationOf(date(normalize(entry.getKey()), selectedScale()), annotations.get(entry.getKey())) : null);
 		return result;
+	}
+
+	private Double percentage(TimelineDatasource.Magnitude magnitude, Double value) {
+		Double max = magnitude.max();
+		if (max == null) return null;
+		return value * 100 / max;
 	}
 
 	private TimelineSummary summaryOf(TimelineDatasource.Magnitude magnitude) {

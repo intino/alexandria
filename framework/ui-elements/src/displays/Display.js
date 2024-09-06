@@ -217,13 +217,13 @@ export default class Display extends PassiveView {
     };
 
     _loadAppMode = () => {
-        var mode = this.getCookie("intino.appmode");
+        var mode = this.getCookie(encodeURI(Application.configuration.baseUrl + "/appmode"));
         if (mode != null) return mode;
         if (!Theme.isAutoMode()) return Theme.defaultMode();
         return window.matchMedia('(prefers-color-scheme: dark)') ? 'dark' : 'light';
     };
 
 	_saveAppModeInCookies = (mode) => {
-        this.updateCookie(mode, "intino.appmode");
+        this.updateCookie(mode, encodeURI(Application.configuration.baseUrl + "/appmode"));
 	};
 }
