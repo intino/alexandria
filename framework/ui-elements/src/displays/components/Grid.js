@@ -43,6 +43,16 @@ const styles = theme => ({
         cursor: 'pointer',
         display: 'inline-block',
     },
+    toolbarAction : {
+        marginRight: "10px",
+        cursor: "pointer",
+        display: "inline-block",
+        color: theme.palette.primary.main,
+    },
+    toolbarActionDisabled : {
+        cursor: "default",
+        color: theme.palette.grey.primary
+    },
 });
 
 class Grid extends AbstractGrid {
@@ -139,7 +149,7 @@ class Grid extends AbstractGrid {
                 toolbar={
                     <ToolsPanel.AdvancedToolbar>
                         <div className="layout horizontal flex center">
-                            {columns.length > 1 && <div><a className={classes.columnsAction} onClick={this.handleOpenColumnsDialog.bind(this)} disabled={selectorColumnsDisabled}>{this.translate("Show columns...")}</a></div>}
+                            {this.selectorColumns().length > 1 && <div><a className={classes.columnsAction} onClick={this.handleOpenColumnsDialog.bind(this)} disabled={selectorColumnsDisabled}>{this.translate("Show columns...")}</a></div>}
                             {this.renderGroupBySelector()}
                             {this.renderGroupByModes()}
                             {this.renderGroupByOptions()}
@@ -216,19 +226,40 @@ class Grid extends AbstractGrid {
 
     renderColumnsDialog = () => {
         const { classes } = this.props;
+        const allSelected = this.isAllColumnsSelected();
+        const noneSelected = this.isAllColumnsUnselected();
         return (
             <Dialog open={this.state.openColumnsDialog} onClose={this.handleCloseColumnsDialog.bind(this)}>
                 <DialogTitle id="alert-dialog-title">{this.translate("Show columns")}</DialogTitle>
-                <DialogContent>
-                  <DialogContentText id="alert-dialog-description">
-                    {this.renderColumnsCheckboxes()}
-                  </DialogContentText>
+                <DialogContent style={{minWidth:"300px"}}>
+                    <div className="layout horizontal end-justified">
+                        <a className={classNames(classes.toolbarAction, allSelected ? classes.toolbarActionDisabled : "")} onClick={this.handleSelectAllColumns.bind(this)} disabled={allSelected}>{this.translate("All")}</a>
+                        <a className={classNames(classes.toolbarAction, noneSelected ? classes.toolbarActionDisabled : "")} onClick={this.handleUnselectAllColumns.bind(this)} disabled={noneSelected}>{this.translate("None")}</a>
+                        <a className={classes.toolbarAction} onClick={this.handleInvertColumnsSelection.bind(this)} disabled={false}>{this.translate("Invert")}</a>
+                    </div>
+                    <DialogContentText id="alert-dialog-description">{this.renderColumnsCheckboxes()}</DialogContentText>
                 </DialogContent>
                 <DialogActions>
                   <Button onClick={this.handleCloseColumnsDialog.bind(this)} color="primary" autoFocus>{this.translate("Close")}</Button>
                 </DialogActions>
             </Dialog>
         );
+    };
+
+    isAllColumnsSelected = () => {
+        const columns = this.selectorColumns();
+        for (var i=0; i<columns.length; i++) {
+            if (!this.state.visibleColumns[columns[i].index]) return false;
+        }
+        return true;
+    };
+
+    isAllColumnsUnselected = () => {
+        const columns = this.selectorColumns();
+        for (var i=0; i<columns.length; i++) {
+            if (this.state.visibleColumns[columns[i].index]) return false;
+        }
+        return true;
     };
 
     renderColumnsCheckboxes = () => {
@@ -244,6 +275,30 @@ class Grid extends AbstractGrid {
 
     isColumnVisible = (index) => {
         return this.state.visibleColumns[index] == null || this.state.visibleColumns[index] === true;
+    };
+
+    handleSelectAllColumns = () => {
+        const columns = this.selectorColumns();
+        const visibleColumns = this.state.visibleColumns;
+        for (var i=0; i<columns.length; i++) visibleColumns[columns[i].index] = true;
+        this.saveState("visibleColumns", this._visibleColumns(visibleColumns));
+        this.requester.updateVisibleColumns(this._visibleColumns(visibleColumns));
+    };
+
+    handleUnselectAllColumns = () => {
+        const columns = this.selectorColumns();
+        const visibleColumns = this.state.visibleColumns;
+        for (var i=0; i<columns.length; i++) visibleColumns[columns[i].index] = false;
+        this.saveState("visibleColumns", this._visibleColumns(visibleColumns));
+        this.requester.updateVisibleColumns(this._visibleColumns(visibleColumns));
+    };
+
+    handleInvertColumnsSelection = () => {
+        const columns = this.selectorColumns();
+        const visibleColumns = this.state.visibleColumns;
+        for (var i=0; i<columns.length; i++) visibleColumns[columns[i].index] = !visibleColumns[columns[i].index];
+        this.saveState("visibleColumns", this._visibleColumns(visibleColumns));
+        this.requester.updateVisibleColumns(this._visibleColumns(visibleColumns));
     };
 
     handleToggleColumn = (index) => {
