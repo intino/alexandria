@@ -4,8 +4,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
 
 import java.lang.reflect.Type;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -35,22 +33,14 @@ public class ResponseAdapter {
 		builder.registerTypeAdapter(Instant.class, (JsonDeserializer<Instant>) (json, type1, jsonDeserializationContext) -> Instant.ofEpochMilli(json.getAsJsonPrimitive().getAsLong())).
 				registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (json, type1, jsonDeserializationContext) -> new Date(json.getAsJsonPrimitive().getAsLong()));
 		customAdapters.forEach(builder::registerTypeAdapter);
-		return object == null || object.isEmpty() ? null : builder.create().fromJson(decode(object), type);
+		return object == null || object.isEmpty() ? null : builder.create().fromJson(object, type);
 	}
 
 	public static <T> T adapt(String object, Type type) {
 		final GsonBuilder builder = new GsonBuilder();
 		builder.registerTypeAdapter(Instant.class, (JsonDeserializer<Instant>) (json, type1, jsonDeserializationContext) -> Instant.ofEpochMilli(json.getAsJsonPrimitive().getAsLong())).
 				registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (json, type1, jsonDeserializationContext) -> new Date(json.getAsJsonPrimitive().getAsLong()));
-		return object == null || object.isEmpty() ? null : builder.create().fromJson(decode(object), type);
-	}
-
-	private static String decode(String object) {
-		try {
-			return URLDecoder.decode(object, StandardCharsets.UTF_8);
-		} catch (IllegalArgumentException ex) {
-			return object;
-		}
+		return object == null || object.isEmpty() ? null : builder.create().fromJson(object, type);
 	}
 
 	@SuppressWarnings("unchecked")
