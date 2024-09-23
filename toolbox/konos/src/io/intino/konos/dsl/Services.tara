@@ -157,6 +157,7 @@ Concept:Named Service
     		var string name
     		var string service
     		var string url = empty
+    		var string socketPath = empty
     	var string url = empty
     	var string port
     	var string title

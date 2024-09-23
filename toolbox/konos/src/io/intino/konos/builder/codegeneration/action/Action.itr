@@ -279,10 +279,10 @@ rule type(editor) and trigger(component)
 	component.display(new $display+PascalCase(box));
 
 rule type(usedUnit, standard)
-	new io.intino.alexandria.ui.spark.pages.Unit("$name","$url")
+	new io.intino.alexandria.ui.spark.pages.Unit("$name","$url"<<,"$socketPath">>)
 
 rule type(usedUnit, custom)
-	new io.intino.alexandria.ui.spark.pages.Unit("$name",box.configuration().get("$url"))
+	new io.intino.alexandria.ui.spark.pages.Unit("$name",box.configuration().get("$url")<<,"$socketPath">>)
 
 rule type(contextProperty, spark)
 	public io.intino.alexandria.http.spark.SparkContext context;

@@ -21,7 +21,7 @@ public class Browser {
 
     public enum Origin { Mobile, Web }
 
-    private static final String PushPath = "/_alexandria/push?id=%s&currentSession=%s&language=%s";
+    public static final String PushPath = "/_alexandria/push";
 
     public String baseUrl() {
         return baseUrl;
@@ -72,8 +72,12 @@ public class Browser {
     }
 
     public String pushUrl(String sessionId, String clientId, String language, String url) {
+        return pushUrl(sessionId, clientId, language, url, PushPath);
+    }
+
+    public String pushUrl(String sessionId, String clientId, String language, String url, String path) {
         String result = url.replace("https", "wss").replace("http", "ws");
-        result += String.format(PushPath, clientId, sessionId, language);
+        result += String.format(path + "?id=%s&currentSession=%s&language=%s", clientId, sessionId, language);
         return result;
     }
 
