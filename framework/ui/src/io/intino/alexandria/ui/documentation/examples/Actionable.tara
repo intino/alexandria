@@ -28,7 +28,7 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="IconButton")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
-				IconButton(title="operation", icon="/icons/operation.png") operation3 as Action
+				IconButton(title="operation", icon="/icons/operation.png", titlePosition=Bottom) operation3 as Action
 			Block > Text as Code(language=Html)
 					value
 						=========
