@@ -125,6 +125,7 @@ public class PageRenderer extends ActionRenderer {
 		result.add(isCustomParameter(use.url()) ? "custom" : "standard");
 		result.add("name", use.name().toLowerCase());
 		result.add("url", isCustomParameter(use.url()) ? customParameterValue(use.url()) : use.url());
+		if (use.socketPath() != null) result.add("socketPath", use.socketPath());
 		return result.toFrame();
 	}
 

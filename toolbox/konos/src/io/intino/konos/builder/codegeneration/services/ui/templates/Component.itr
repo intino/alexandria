@@ -590,7 +590,7 @@ rule type(properties) and trigger(common)
 	<<_color("$color");>>
 
 rule type(properties, proxyStamp) and trigger(specific)
-	_proxy(new $proxyPackage.$proxyDisplay+firstUpperCase(new io.intino.alexandria.ui.spark.pages.Unit("$proxyUseName", $proxyUseUrl)));
+	_proxy(new $proxyPackage.$proxyDisplay+firstUpperCase(new io.intino.alexandria.ui.spark.pages.Unit("$proxyUseName", $proxyUseUrl<<,"$proxyUseSocketPath">>)));
 	<<$parameter...[$NL]>>
 
 rule type(properties, selector) and trigger(specific)
