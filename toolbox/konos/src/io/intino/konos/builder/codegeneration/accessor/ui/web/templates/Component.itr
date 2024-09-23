@@ -44,7 +44,7 @@ rule type(facet)
 rule type(method)
 
 rule type(properties, actionable) and trigger(common)
-	<< title="$title">><< name="$name">><< target="$target">><< mode="$actionableMode">><< icon="$icon">><< affirmed="$affirmed">><< traceable={$traceable}>><< signed={{mode:"$signMode",text:"$signText",reason:"$reasonText"}}>><< readonly={$readonly}>><< size="$size">><< format="$format...[ ]">><< highlighted="$highlighted">><< visible={$visible}>><< style="$style">><< color="$color">>
+	<< title="$title">><< name="$name">><< target="$target">><< mode="$actionableMode">><< icon="$icon">><< titlePosition="$titlePosition">><< affirmed="$affirmed">><< traceable={$traceable}>><< signed={{mode:"$signMode",text:"$signText",reason:"$reasonText"}}>><< readonly={$readonly}>><< size="$size">><< format="$format...[ ]">><< highlighted="$highlighted">><< visible={$visible}>><< style="$style">><< color="$color">>
 
 rule type(properties, abstractslider) and trigger(common)
 	<< label="$label">><< format="$format...[ ]">><< color="$color">><< traceable={$traceable}>><< arrangement="$arrangement">><< animation={{interval:$interval,loop:$loop}}>><< readonly={$readonly}>><< visible={$visible}>><< style="$style">><< position="$position">>
@@ -74,7 +74,7 @@ rule type(properties, basestamp) and trigger(specific)
 	<< spacing="$spacing">>
 
 rule type(properties, materialicon) and trigger(specific)
-	<< icon="$icon">>
+	<< icon="$icon">><< titlePosition="$titlePosition">>
 
 rule type(properties, selector) and trigger(specific)
 	<< multipleSelection={$multipleSelection}>><< readonly={$readonly}>><< focused={$focused}>><< placeholder="$placeholder">><< selected="$selected">><< layout="$layout">><< size="$size">><< maxMenuHeight={$maxMenuHeight}>><< allowOther="$allowOther">><< scrollButtons="$scrollButtons">><< view="$view">>
@@ -140,7 +140,7 @@ rule type(properties, toggle) and trigger(specific)
 	<< state="$state">>
 
 rule type(properties, splitbutton) and trigger(specific)
-	<< options={["$option...[","]"]}>><< defaultOption="$default">><< icon="$icon">>
+	<< options={["$option...[","]"]}>><< defaultOption="$default">><< icon="$icon">><< titlePosition="$titlePosition">>
 
 rule type(properties, export) and trigger(specific)
 	<< from={$from}>><< to={$to}>><< min={$min}>><< max={$max}>><< range={{min:$rangeMin,max:$rangeMax}}>><< options={["$option...[","]"]}>>

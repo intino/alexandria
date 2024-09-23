@@ -117,28 +117,52 @@ export default class Actionable extends AbstractActionable {
 	renderIconButton = (ref) => {
 		const {classes} = this.props;
 		const style = this._readonly() ? { opacity: "0.3", ...this.style() } : this.style();
+		const applyStyles = this.props.titlePosition == null || this.props.titlePosition == "None";
 		const button = (
             <IconButton id={this.triggerId()} color="primary" disabled={this._readonly()} ref={ref != null ? ref : undefined}
                             onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
-                            style={style} className={classes.iconButton} size={this._size()}>
+                            style={applyStyles ? style : null} className={classes.iconButton} size={this._size()}>
                 {this.renderContent()}
             </IconButton>
         );
-		return button;
+		return this.renderWithText(button, style);
 	};
 
 	renderMaterialIconButton = (ref) => {
 		const {classes} = this.props;
 		const style = this.style();
 		if (this.state.color != null) style.color = this.state.color;
+		const applyStyles = this.props.titlePosition == null || this.props.titlePosition == "None";
 		const button = (
             <IconButton id={this.triggerId()} color="primary" disabled={this._readonly()} ref={ref != null ? ref : undefined}
                             onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
-                            className={classes.materialIconButton} style={style} size={this._size()}>
+                            className={classes.materialIconButton} style={applyStyles ? style : null} size={this._size()}>
                 {this.renderContent()}
             </IconButton>
 		);
-		return button;
+		return this.renderWithText(button, style);
+	};
+
+	renderWithText = (button, style) => {
+        if (this.props.titlePosition == "None") return button;
+		const {classes} = this.props;
+		const className = this._readonly() ? classes.readonly : classes.link;
+        const position = this.props.titlePosition;
+        const isVertical = position == "Top" || position == "Bottom";
+        const link = (
+            <a id={this.triggerId()}
+             onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
+             disabled={this._readonly()}>
+             <Typography variant={this.variant("body1")} className={className}>{this._title()}</Typography>
+            </a>
+        );
+        return (
+            <div style={style} className={"layout center-center " + (isVertical ? "vertical" : "horizontal")}>
+                {(position == "Left" || position == "Top") && link}
+                {button}
+                {(position == "Right" || position == "Bottom") && link}
+            </div>
+        );
 	};
 
 	renderAvatarIconButton = () => {

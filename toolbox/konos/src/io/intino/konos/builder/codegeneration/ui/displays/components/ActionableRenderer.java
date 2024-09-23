@@ -4,6 +4,7 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.dsl.ActionableComponents;
+import io.intino.konos.dsl.ActionableComponents.IconButton.TitlePosition;
 
 import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
 
@@ -39,10 +40,30 @@ public class ActionableRenderer extends ComponentRenderer<ActionableComponents.A
 				properties.add("signChecker", "oneTimePassword");
 			if (signed.reasonText() != null) properties.add("reasonText", signed.reasonText());
 		}
-		if (element.i$(conceptOf(ActionableComponents.MaterialIconButton.class)))
-			properties.add("icon", element.a$(ActionableComponents.MaterialIconButton.class).icon());
-		else if (element.i$(conceptOf(ActionableComponents.MaterialIconToggle.class)))
-			properties.add("icon", element.a$(ActionableComponents.MaterialIconToggle.class).icon());
+		if (element.i$(conceptOf(ActionableComponents.MaterialIconButton.class))) {
+			ActionableComponents.MaterialIconButton materialIconButton = element.a$(ActionableComponents.MaterialIconButton.class);
+			properties.add("icon", materialIconButton.icon());
+			if (materialIconButton.titlePosition() != ActionableComponents.MaterialIconButton.TitlePosition.None) properties.add("titlePosition", materialIconButton.titlePosition().name());
+		}
+		else if (element.i$(conceptOf(ActionableComponents.IconToggle.class)) && element.a$(ActionableComponents.IconToggle.class).titlePosition() != ActionableComponents.IconToggle.TitlePosition.None) {
+			properties.add("titlePosition", element.a$(ActionableComponents.IconToggle.class).titlePosition().name());
+		}
+		else if (element.i$(conceptOf(ActionableComponents.IconButton.class)) && element.a$(ActionableComponents.IconButton.class).titlePosition() != TitlePosition.None) {
+			properties.add("titlePosition", element.a$(ActionableComponents.IconButton.class).titlePosition().name());
+		}
+		else if (element.i$(conceptOf(ActionableComponents.MaterialIconToggle.class))) {
+			ActionableComponents.MaterialIconToggle materialIconToggle = element.a$(ActionableComponents.MaterialIconToggle.class);
+			properties.add("icon", materialIconToggle.icon());
+			if (materialIconToggle.titlePosition() != ActionableComponents.MaterialIconToggle.TitlePosition.None) properties.add("titlePosition", materialIconToggle.titlePosition().name());
+		}
+		else if (element.i$(conceptOf(ActionableComponents.AbstractSplitButton.class))) {
+			if (element.i$(conceptOf(ActionableComponents.IconSplitButton.class)) && element.a$(ActionableComponents.IconSplitButton.class).titlePosition() != ActionableComponents.IconSplitButton.TitlePosition.None) {
+				properties.add("titlePosition", element.a$(ActionableComponents.IconSplitButton.class).titlePosition().name());
+			}
+			else if (element.i$(conceptOf(ActionableComponents.MaterialIconSplitButton.class)) && element.a$(ActionableComponents.MaterialIconSplitButton.class).titlePosition() != ActionableComponents.MaterialIconSplitButton.TitlePosition.None) {
+				properties.add("titlePosition", element.a$(ActionableComponents.MaterialIconSplitButton.class).titlePosition().name());
+			}
+		}
 		return properties;
 	}
 
