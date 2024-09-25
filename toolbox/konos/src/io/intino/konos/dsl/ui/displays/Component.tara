@@ -87,6 +87,11 @@ Concept ActionableComponents
 		var word:{Blank Self Parent Top} target = Self
 		var word:{Small Medium Large} size = Medium
 
+		Concept:{0..1} Shortcut
+			var word[]:{Alt Control Shift} metaKeys = empty
+			var string key
+			var boolean visible = false
+
 		sub Link
 		sub AbstractButton
 			var word:{None Outline Fill} highlight = None
@@ -97,15 +102,19 @@ Concept ActionableComponents
 				sub SplitButton
 				sub IconSplitButton
 					var string icon
+					var string darkIcon = empty
 					var word:{None Left Right Top Bottom} titlePosition = None
 				sub MaterialIconSplitButton
 					var string icon
+					var string darkIcon = empty
 					var word:{None Left Right Top Bottom} titlePosition = None
 			sub IconButton
 				var string icon
+				var string darkIcon = empty
 				var word:{None Left Right Top Bottom} titlePosition = None
 			sub MaterialIconButton
 				var string icon
+				var string darkIcon = empty
 				var word:{None Left Right Top Bottom} titlePosition = None
 			sub AvatarIconButton
 				var word:{None Left Right Top Bottom} titlePosition = None
@@ -117,9 +126,11 @@ Concept ActionableComponents
 			sub Toggle
 			sub IconToggle
 				var string icon
+				var string darkIcon = empty
 				var word:{None Left Right Top Bottom} titlePosition = None
 			sub MaterialIconToggle
 				var string icon
+				var string darkIcon = empty
 				var word:{None Left Right Top Bottom} titlePosition = None
 
 		Facet Readonly

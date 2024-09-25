@@ -35,6 +35,16 @@ export default class Actionable extends AbstractActionable {
 			color: theme.palette.grey.A700,
 			cursor: "default"
 		},
+		shortcut : {
+		    color: theme.palette.grey.primary,
+		    padding: '2px 4px',
+		    marginRight: '2px',
+		    fontSize: '7pt',
+		    marginLeft: '10px',
+		},
+		shortcutPart : {
+		    margin: '0 1px'
+		}
 	});
 
 	constructor(props) {
@@ -42,6 +52,7 @@ export default class Actionable extends AbstractActionable {
 		this.state = {
 			...this.state,
 			icon : this.props.icon,
+			darkIcon : this.props.darkIcon,
 			title: this.props.title,
 			readonly: this.props.readonly,
 			openAffirm : false,
@@ -60,6 +71,10 @@ export default class Actionable extends AbstractActionable {
 		}
 	};
 
+	componentDidMount() {
+        this.registerShortcut();
+    };
+
 	render = () => {
 		if (!this.state.visible) return (<React.Fragment/>);
 		return (
@@ -71,15 +86,35 @@ export default class Actionable extends AbstractActionable {
 
 	renderActionable() {
 		if (!this.state.visible) return (<React.Fragment/>);
-		return (
-			<React.Fragment>
+		const hasShortcut = this.props.shortcut != null;
+		return hasShortcut ? this.renderActionableWithShortcut() : this.renderActionableWithoutShortcut();
+	};
+
+	renderActionableWithoutShortcut = () => {
+	    return (
+	        <React.Fragment>
                 {this.renderTraceConsent()}
-				{this.renderAffirmed()}
-				{this.renderSignConfiguration()}
-				{this.renderSign()}
-				{this.renderTrigger()}
-			</React.Fragment>
-		);
+                {this.renderAffirmed()}
+                {this.renderSignConfiguration()}
+                {this.renderSign()}
+                {this.renderTrigger()}
+	        </React.Fragment>
+	    );
+	};
+
+	renderActionableWithShortcut = () => {
+        return (
+            <div className="layout horizontal center flex" style={{width:'100%'}}>
+                <div className="layout vertical start">
+                    {this.renderTraceConsent()}
+                    {this.renderAffirmed()}
+                    {this.renderSignConfiguration()}
+                    {this.renderSign()}
+                    {this.renderTrigger()}
+                </div>
+                <div className="layout horizontal flex end-justified">{this.renderShortcut()}</div>
+            </div>
+        );
 	};
 
 	renderTrigger = () => {
@@ -89,6 +124,22 @@ export default class Actionable extends AbstractActionable {
 		else if (mode === "materialiconbutton") return this.renderMaterialIconButton();
 		else if (mode === "avatariconbutton") return this.renderAvatarIconButton();
 		return this.renderLink();
+	};
+
+	renderShortcut = () => {
+	    const { classes } = this.props;
+	    const shortcut = this.props.shortcut;
+	    if (shortcut == null || !shortcut.visible) return (<React.Fragment/>);
+	    return (
+    	    <div>
+                <div className={classes.shortcut} style={this.style()}>
+                    {shortcut.shiftKey && <span className={classes.shortcutPart}>Shift +</span>}
+                    {shortcut.ctrlKey && <span className={classes.shortcutPart}>Ctrl +</span>}
+                    {shortcut.altKey && <span className={classes.shortcutPart}>Alt +</span>}
+                    {<span className={classes.shortcutPart}>{shortcut.key}</span>}
+                </div>
+	        </div>
+        );
 	};
 
 	renderLink = () => {
@@ -157,7 +208,7 @@ export default class Actionable extends AbstractActionable {
             </a>
         );
         return (
-            <div style={style} className={"layout center-center " + (isVertical ? "vertical" : "horizontal")}>
+            <div className={"layout center-center " + (isVertical ? "vertical" : "horizontal")}>
                 {(position == "Left" || position == "Top") && link}
                 {button}
                 {(position == "Right" || position == "Bottom") && link}
@@ -258,6 +309,21 @@ export default class Actionable extends AbstractActionable {
             </div>
         );
 	};
+
+	registerShortcut = () => {
+	    const shortcut = this.props.shortcut;
+	    if (shortcut == null) return;
+	    document.addEventListener("keyup", () => {
+            var e = e || window.event; // for IE to cover IEs window event-object
+            if ((!shortcut.ctrlKey || (e.ctrlKey && shortcut.ctrlKey)) &&
+                (!shortcut.shiftKey || (e.shiftKey && shortcut.shiftKey)) &&
+                (!shortcut.altKey || (e.altKey && shortcut.altKey)) &&
+                (e.which == shortcut.key.charCodeAt(0))) {
+                this.execute();
+                return false;
+            }
+        });
+	}
 
 	_fieldKeycode = (pos) => {
 	    return this.props.id + "_keycodefield_" + pos + "_" + (this.state.openSignConfig ? 1 : 0);
@@ -521,6 +587,10 @@ export default class Actionable extends AbstractActionable {
 		this.setState({ icon: value });
 	};
 
+	refreshDarkIcon = (value) => {
+		this.setState({ darkIcon: value });
+	};
+
 	refreshAffirmed = (value) => {
 		this.setState({ affirmed: value });
 	};
@@ -551,6 +621,11 @@ export default class Actionable extends AbstractActionable {
 	};
 
 	_icon = () => {
+	    const isDark = Theme.get().isDark();
+	    if (isDark) {
+	        if (this.state.darkIcon != null) return this.state.darkIcon;
+	        if (this.props.darkIcon != null) return this.props.darkIcon;
+	    }
 		return this.state.icon != null ? this.state.icon : this.props.icon;
 	};
 

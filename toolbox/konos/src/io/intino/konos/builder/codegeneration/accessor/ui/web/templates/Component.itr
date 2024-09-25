@@ -44,7 +44,7 @@ rule type(facet)
 rule type(method)
 
 rule type(properties, actionable) and trigger(common)
-	<< title="$title">><< name="$name">><< target="$target">><< mode="$actionableMode">><< icon="$icon">><< titlePosition="$titlePosition">><< affirmed="$affirmed">><< traceable={$traceable}>><< signed={{mode:"$signMode",text:"$signText",reason:"$reasonText"}}>><< readonly={$readonly}>><< size="$size">><< format="$format...[ ]">><< highlighted="$highlighted">><< visible={$visible}>><< style="$style">><< color="$color">>
+	<< title="$title">><< name="$name">><< target="$target">><< mode="$actionableMode">><< icon="$icon">><< titlePosition="$titlePosition">><< affirmed="$affirmed">><< traceable={$traceable}>><< signed={{mode:"$signMode",text:"$signText",reason:"$reasonText"}}>><< readonly={$readonly}>><< size="$size">><< format="$format...[ ]">><< highlighted="$highlighted">><< visible={$visible}>><< style="$style">><< color="$color">><< shortcut={$shortcut}>>
 
 rule type(properties, abstractslider) and trigger(common)
 	<< label="$label">><< format="$format...[ ]">><< color="$color">><< traceable={$traceable}>><< arrangement="$arrangement">><< animation={{interval:$interval,loop:$loop}}>><< readonly={$readonly}>><< visible={$visible}>><< style="$style">><< position="$position">>
@@ -210,3 +210,6 @@ rule type(actionableMode)
 
 rule type(histogram)
 	{alwaysVisible:$alwaysVisible,type:"$type"}
+
+rule type(shortcut)
+	{key:"$key",altKey:$altKey,ctrlKey:$ctrlKey,shiftKey:$shiftKey,visible:$visible}
