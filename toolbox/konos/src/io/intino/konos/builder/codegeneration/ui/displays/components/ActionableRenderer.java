@@ -30,6 +30,7 @@ public class ActionableRenderer extends ComponentRenderer<ActionableComponents.A
 		properties.add("actionableMode", modeFrame());
 		properties.add("size", element.size().name());
 		addHighlight(properties);
+		addShortcut(properties);
 		if (element.isReadonly() || isSelectionContext()) properties.add("readonly", "true");
 		if (element.isAffirmed()) properties.add("affirmed", element.asAffirmed().affirmText());
 		if (element.isSigned()) {
@@ -67,6 +68,21 @@ public class ActionableRenderer extends ComponentRenderer<ActionableComponents.A
 		return properties;
 	}
 
+	private void addShortcut(FrameBuilder properties) {
+		if (element.shortcut() == null) return;
+		properties.add("shortcut", shortcutFrame(element.shortcut()));
+	}
+
+	private FrameBuilder shortcutFrame(ActionableComponents.Actionable.Shortcut shortcut) {
+		FrameBuilder result = new FrameBuilder("shortcut");
+		result.add("key", shortcut.key());
+		result.add("altKey", shortcut.metaKeys().contains(ActionableComponents.Actionable.Shortcut.MetaKeys.Alt));
+		result.add("ctrlKey", shortcut.metaKeys().contains(ActionableComponents.Actionable.Shortcut.MetaKeys.Control));
+		result.add("shiftKey", shortcut.metaKeys().contains(ActionableComponents.Actionable.Shortcut.MetaKeys.Shift));
+		result.add("visible", shortcut.visible());
+		return result;
+	}
+
 	private void addHighlight(FrameBuilder properties) {
 		if (!element.i$(conceptOf(ActionableComponents.AbstractButton.class))) return;
 		ActionableComponents.AbstractButton button = element.a$(ActionableComponents.AbstractButton.class);
@@ -82,23 +98,47 @@ public class ActionableRenderer extends ComponentRenderer<ActionableComponents.A
 	private FrameBuilder modeFrame() {
 		FrameBuilder result = new FrameBuilder("actionableMode", mode());
 		result.add("mode", mode());
-		if (element.i$(conceptOf(ActionableComponents.IconButton.class)))
-			result.add("icon", element.a$(ActionableComponents.IconButton.class).icon());
-		else if (element.i$(conceptOf(ActionableComponents.MaterialIconButton.class)))
-			result.add("icon", element.a$(ActionableComponents.MaterialIconButton.class).icon());
-		else if (element.i$(conceptOf(ActionableComponents.IconToggle.class)))
-			result.add("icon", element.a$(ActionableComponents.IconToggle.class).icon());
-		else if (element.i$(conceptOf(ActionableComponents.MaterialIconToggle.class)))
-			result.add("icon", element.a$(ActionableComponents.MaterialIconToggle.class).icon());
+		if (element.i$(conceptOf(ActionableComponents.IconButton.class))) addIcons(element.a$(ActionableComponents.IconButton.class), result);
+		else if (element.i$(conceptOf(ActionableComponents.MaterialIconButton.class))) addIcons(element.a$(ActionableComponents.MaterialIconButton.class), result);
+		else if (element.i$(conceptOf(ActionableComponents.IconToggle.class))) addIcons(element.a$(ActionableComponents.IconToggle.class), result);
+		else if (element.i$(conceptOf(ActionableComponents.MaterialIconToggle.class))) addIcons(element.a$(ActionableComponents.MaterialIconToggle.class), result);
 		else if (element.i$(conceptOf(ActionableComponents.AbstractSplitButton.class))) {
 			result.add("option", element.a$(ActionableComponents.AbstractSplitButton.class).options().toArray());
 			result.add("default", element.a$(ActionableComponents.AbstractSplitButton.class).defaultOption());
-			if (element.i$(conceptOf(ActionableComponents.IconSplitButton.class)))
-				result.add("icon", element.a$(ActionableComponents.IconSplitButton.class).icon());
-			else if (element.i$(conceptOf(ActionableComponents.MaterialIconSplitButton.class)))
-				result.add("icon", element.a$(ActionableComponents.MaterialIconSplitButton.class).icon());
+			if (element.i$(conceptOf(ActionableComponents.IconSplitButton.class))) addIcons(element.a$(ActionableComponents.IconSplitButton.class), result);
+			else if (element.i$(conceptOf(ActionableComponents.MaterialIconSplitButton.class))) addIcons(element.a$(ActionableComponents.MaterialIconSplitButton.class), result);
 		}
 		return result;
+	}
+
+	private void addIcons(ActionableComponents.MaterialIconSplitButton actionable, FrameBuilder result) {
+		result.add("icon", actionable.icon());
+		if (actionable.darkIcon() != null) result.add("darkIcon", actionable.darkIcon());
+	}
+
+	private void addIcons(ActionableComponents.IconSplitButton actionable, FrameBuilder result) {
+		result.add("icon", actionable.icon());
+		if (actionable.darkIcon() != null) result.add("darkIcon", actionable.darkIcon());
+	}
+
+	private void addIcons(ActionableComponents.MaterialIconToggle actionable, FrameBuilder result) {
+		result.add("icon", actionable.icon());
+		if (actionable.darkIcon() != null) result.add("darkIcon", actionable.darkIcon());
+	}
+
+	private void addIcons(ActionableComponents.IconToggle actionable, FrameBuilder result) {
+		result.add("icon", actionable.icon());
+		if (actionable.darkIcon() != null) result.add("darkIcon", actionable.darkIcon());
+	}
+
+	private void addIcons(ActionableComponents.MaterialIconButton actionable, FrameBuilder result) {
+		result.add("icon", actionable.icon());
+		if (actionable.darkIcon() != null) result.add("darkIcon", actionable.darkIcon());
+	}
+
+	private void addIcons(ActionableComponents.IconButton actionable, FrameBuilder result) {
+		result.add("icon", actionable.icon());
+		if (actionable.darkIcon() != null) result.add("darkIcon", actionable.darkIcon());
 	}
 
 	private String mode() {

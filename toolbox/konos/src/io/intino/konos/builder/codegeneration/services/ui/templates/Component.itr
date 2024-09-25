@@ -871,23 +871,29 @@ rule type(actionableMode, iconsplitbutton)
 	<<_options(java.util.Arrays.asList("$option...[","]"));>>
 	<<_option("$default");>>
 	<<_icon("$icon");>>
+	<<_darkIcon("$darkIcon");>>
 
 rule type(actionableMode, materialiconsplitbutton)
 	<<_options(java.util.Arrays.asList("$option...[","]"));>>
 	<<_option("$default");>>
 	<<_icon("$icon");>>
+	<<_darkIcon("$darkIcon");>>
 
 rule type(actionableMode, iconbutton)
 	_icon("$icon");
+	<<_darkIcon("$darkIcon");>>
 
 rule type(actionableMode, icontoggle)
 	_icon("$icon");
+	<<_darkIcon("$darkIcon");>>
 
 rule type(actionableMode, materialiconbutton)
 	_icon("$icon");
+	<<_darkIcon("$darkIcon");>>
 
 rule type(actionableMode, materialicontoggle)
 	_icon("$icon");
+	<<_darkIcon("$darkIcon");>>
 
 rule type(badge)
 	<<_value($value);>>

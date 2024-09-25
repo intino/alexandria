@@ -8,7 +8,7 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Link")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
-				Link(title="operation") operation1 as Action
+				Link(title="operation") operation1 as Action > Shortcut(key="a", metaKeys=Shift, visible=true)
 			Block > Text as Code(language=Html)
 					value
 						=========
