@@ -37,6 +37,7 @@
   ],
   "dependencies": {
     "io.intino.alexandria:core-framework": "2.2.0",
+    "io.intino.alexandria:primitives": "1.1.2",
     "io.intino.alexandria:logger4j": "1.0.1",
     "io.intino.alexandria:scheduler-framework": "1.2.0",
     "io.intino.alexandria:http": "1.7.7",
