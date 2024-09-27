@@ -200,6 +200,7 @@ export default class Actionable extends AbstractActionable {
 		const className = this._readonly() ? classes.readonly : classes.link;
         const position = this.props.titlePosition;
         const isVertical = position == "Top" || position == "Bottom";
+		const applyStyles = this.props.titlePosition != null && this.props.titlePosition != "None";
         const link = (
             <a id={this.triggerId()}
              onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
@@ -208,7 +209,7 @@ export default class Actionable extends AbstractActionable {
             </a>
         );
         return (
-            <div className={"layout center-center " + (isVertical ? "vertical" : "horizontal")}>
+            <div className={"layout center-center " + (isVertical ? "vertical" : "horizontal")} style={style}>
                 {(position == "Left" || position == "Top") && link}
                 {button}
                 {(position == "Right" || position == "Bottom") && link}
@@ -255,7 +256,7 @@ export default class Actionable extends AbstractActionable {
 		const openAffirm = this.state.openAffirm != null ? this.state.openAffirm : false;
 		return (
 		    <Dialog onClose={this.handleAffirmClose} open={openAffirm}>
-				<DialogTitle onClose={this.handleAffirmClose}>{this.translate("Affirm")}</DialogTitle>
+				<DialogTitle onClose={this.handleAffirmClose}>{this.translate("Confirm")}</DialogTitle>
 				<DialogContent><DialogContentText>{this.translate(this.state.affirmed)}</DialogContentText></DialogContent>
 				<DialogActions>
 					<Button onClick={this.handleAffirmClose} color="primary" style={{marginRight:'10px'}}>{this.translate("Cancel")}</Button>
