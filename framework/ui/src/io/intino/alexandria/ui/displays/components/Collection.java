@@ -95,7 +95,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         if (behavior == null) return;
         behavior.reload();
         notifyRefreshItemCount();
-        selection(Collections.emptyList());
+        selection(new ArrayList<>());
     }
 
     public void reloadWithSelection() {
