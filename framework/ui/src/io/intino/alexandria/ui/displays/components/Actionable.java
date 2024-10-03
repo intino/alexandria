@@ -288,6 +288,7 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
     }
 
     private boolean isResourceDarkIcon() {
+        if (this.darkIcon == null) return false;
         return (mode == Mode.IconButton || mode == Mode.IconToggle || mode == Mode.IconSplitButton) && icon != null && Actionable.class.getResource(this.darkIcon) != null;
     }
 

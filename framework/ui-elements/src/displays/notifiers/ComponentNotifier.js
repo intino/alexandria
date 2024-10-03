@@ -15,6 +15,7 @@ export default class ComponentNotifier extends Notifier {
 		this.when("refreshColor").toSelf().execute((parameters) => this.element.refreshColor(parameters.v));
 		this.when("refreshFormat").toSelf().execute((parameters) => this.element.refreshFormat(parameters.v));
 		this.when("userMessage").toSelf().execute((parameters) => this.element.userMessage(parameters.v));
+		this.when("hideUserMessage").toSelf().execute((parameters) => this.element.hideUserMessage(parameters.v));
 		this.pushLinked = true;
 	};
 

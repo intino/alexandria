@@ -4,8 +4,6 @@ import io.intino.alexandria.http.pushservice.MessageCarrier;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.UserMessage;
 
-import java.util.Set;
-
 public class ComponentNotifier extends DisplayNotifier {
 
 	public ComponentNotifier(Display display, MessageCarrier carrier) {
@@ -18,6 +16,10 @@ public class ComponentNotifier extends DisplayNotifier {
 
 	public void userMessage(UserMessage value) {
 		putToDisplay("userMessage", "v", value);
+	}
+
+	public void hideUserMessage() {
+		putToDisplay("hideUserMessage");
 	}
 
 	public void refreshVisibility(boolean value) {

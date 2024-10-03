@@ -46,7 +46,16 @@ public abstract class Component<DN extends ComponentNotifier, B extends Box> ext
 	}
 
 	public void notifyUser(String message, UserMessage.Type messageType) {
-		notifier.userMessage(new UserMessage().message(message).type(messageType));
+		int duration = messageType == UserMessage.Type.Loading ? -1 : (messageType == UserMessage.Type.Error ? 5000 : 2500);
+		notifyUser(message, messageType, duration);
+	}
+
+	public void notifyUser(String message, UserMessage.Type messageType, int autoHideDuration) {
+		notifier.userMessage(new UserMessage().message(message).type(messageType).autoHideDuration(autoHideDuration));
+	}
+
+	public void hideUserNotification() {
+		notifier.hideUserMessage();
 	}
 
 	public boolean isVisible() {
