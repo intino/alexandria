@@ -21,6 +21,7 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
     private Listener selectOtherListener;
     private String searchCondition;
     private Datasource source;
+    private boolean reloading = false;
 
     public SelectorCollectionBox(B box) {
         super(box);
@@ -68,8 +69,8 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
         this.collection = (Collection) collection;
         collection().ifPresent(c -> collection.onSelect((event) -> {
             updateSelection(event);
-            if (multipleSelection()) ((Collection) collection).reloadWithSelection();
-            else notifier.close();
+            ((Collection) collection).reloadWithSelection();
+            if (!reloading && !multipleSelection()) notifier.close();
         }));
     }
 
@@ -107,8 +108,10 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
 
     public void opened() {
         collection().ifPresent(c -> {
+            reloading = true;
             if (source != null) c.source(source);
             else c.reload();
+            reloading = false;
         });
     }
 
@@ -143,7 +146,7 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
     }
 
     private void updateSelection(SelectionEvent event) {
-        Object selected = event.selection().size() > 0 ? event.selection().get(0) : null;
+        Object selected = !event.selection().isEmpty() ? event.selection().get(0) : null;
         if (multipleSelection()) {
             if (selected == null) return;
             boolean found = selection.stream().anyMatch(i -> valueOf(selected).equals(valueOf(i)));
