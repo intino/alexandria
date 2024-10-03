@@ -110,7 +110,7 @@ public abstract class SelectorCollectionBox<DN extends SelectorCollectionBoxNoti
         collection().ifPresent(c -> {
             reloading = true;
             if (source != null) c.source(source);
-            else c.reload();
+            else c.reloadWithSelection();
             reloading = false;
         });
     }
