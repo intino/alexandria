@@ -29,7 +29,11 @@ export default class Component extends AlexandriaDisplay {
     };
 
     userMessage = (info) => {
-        this.showMessage(info.message, info.type);
+        this.showMessage(info.message, info.type, info.autoHideDuration);
+    };
+
+    hideUserMessage = (info) => {
+        this.hideMessage();
     };
 
     renderDynamicLoaded(components) {

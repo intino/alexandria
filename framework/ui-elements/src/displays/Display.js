@@ -128,19 +128,24 @@ export default class Display extends PassiveView {
     };
 
     showError = (error) => {
-        this.showMessage(error, 'error');
+        this.showMessage(error, 'error', 5000);
     };
 
-    showMessage = (message, type) => {
+    showMessage = (message, type, autoHideDuration) => {
         const loading = type.toLowerCase() === "loading";
+        const persist = loading || autoHideDuration == -1;
         const messageType = loading ? "info" : type.toLowerCase();
-        const options = { variant: messageType, persist: loading, autoHideDuration: type.toLowerCase() == 'error' ? 5000 : 2500, anchorOrigin: { vertical: 'top', horizontal: 'center' }};
+        const options = { variant: messageType, persist: persist, autoHideDuration: autoHideDuration, anchorOrigin: { vertical: 'top', horizontal: 'center' }};
         if (this.snack != null) this.props.closeSnackbar(this.snack);
         if (this.messageTimeout != null) window.clearTimeout(this.messageTimeout);
         this.messageTimeout = window.setTimeout(() => {
             const snack = this.props.enqueueSnackbar(message, options);
             if (loading) this.snack = snack;
         }, 100);
+    };
+
+    hideMessage = () => {
+        this.props.closeSnackbar();
     };
 
     componentWillUnmount() {
