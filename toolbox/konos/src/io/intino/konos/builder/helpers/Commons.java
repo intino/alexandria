@@ -42,8 +42,8 @@ public class Commons {
 	}
 
 	public static Frame fileFrame(String directory, String packageName, String archetypeQn) throws KonosException {
-		if (archetypeQn == null) throw new KonosException("Archetype not found. Please define it in artifact");
 		if (directory.startsWith(".archetype")) {
+			if (archetypeQn == null) throw new KonosException("Archetype not found. Please define it in artifact");
 			String boxPackage = archetypeQn.replace(".Archetype", "");
 			String archetypePath = Commons.archetypePath(directory);
 			return new FrameBuilder("archetype").add("package", boxPackage).add("path", archetypePath).toFrame();
