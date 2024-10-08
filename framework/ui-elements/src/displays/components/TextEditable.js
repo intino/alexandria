@@ -33,13 +33,19 @@ class TextEditable extends AbstractTextEditable {
 	};
 
 	handleChange(e) {
-		this.setState({ value: TextBehavior.mode(e.target.value, this.props) });
-		Delayer.execute(this, () => this.requester.notifyChange(this.state.value), 500);
+	    const value = TextBehavior.mode(e.target.value, this.props);
+		this.setState({ value: value });
+		if (this.timeout != null) window.clearTimeout(this.timeout);
+		this.timeout = window.setTimeout(() => this.requester.notifyChange(value), 500);
 	};
 
 	handleKeypress(e) {
 		this.requester.notifyKeyPress({ keyCode: e.key, value: TextBehavior.mode(e.target.value, this.props) });
 		this.setState({ value: e.target.value });
+	};
+
+	handleFocus(e) {
+		this.requester.notifyFocus();
 	};
 
 	handleBlur(e) {
@@ -49,17 +55,18 @@ class TextEditable extends AbstractTextEditable {
 
 	render() {
 		if (!this.state.visible) return (<React.Fragment/>);
-	    if (!this.state.readonly && this.state.pattern != null) return this.renderWithMask();
-	    return this.renderField({value: this.state.value, onChange: this.handleChange.bind(this), maxLength: this.props.maxLength != null ? this.props.maxLength : undefined});
+		const onFocus = this.handleFocus.bind(this);
+		const onBlur = this.handleBlur.bind(this);
+	    if (!this.state.readonly && this.state.pattern != null) return this.renderWithMask({onFocus: onFocus, onBlur: onBlur});
+	    return this.renderField({value: this.state.value, onFocus: onFocus, onBlur: onBlur, onChange: this.handleChange.bind(this), maxLength: this.props.maxLength != null ? this.props.maxLength : undefined});
 	};
 
-	renderWithMask = () => {
+	renderWithMask = (props) => {
 	    const formatChars = this._formatChars();
 	    return (
-	        <InputMask mask={this.state.pattern.value} formatChars={formatChars}
+	        <InputMask {...props} mask={this.state.pattern.value} formatChars={formatChars}
 	                   value={this.state.value} onChange={this.handleChange.bind(this)} /*disabled={this.state.readonly}*/
-	                   alwaysShowMask={true} maskChar={this.state.pattern.maskCharacter}
-	                   onBlur={this.handleBlur.bind(this)}>
+	                   alwaysShowMask={true} maskChar={this.state.pattern.maskCharacter}>
                 {() => this.renderField()}
             </InputMask>
         );
