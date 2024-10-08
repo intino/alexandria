@@ -35,7 +35,8 @@ class TextEditable extends AbstractTextEditable {
 	handleChange(e) {
 	    const value = TextBehavior.mode(e.target.value, this.props);
 		this.setState({ value: value });
-		window.setTimeout(() => this.requester.notifyChange(value), 500);
+		if (this.timeout != null) window.clearTimeout(this.timeout);
+		this.timeout = window.setTimeout(() => this.requester.notifyChange(value), 500);
 	};
 
 	handleKeypress(e) {
