@@ -20,6 +20,8 @@ public class TextEditable<DN extends TextEditableNotifier, B extends Box> extend
     private String pattern = null;
     private TextPatternMatcher patternMatcher;
     private ChangeListener changeListener = null;
+    private Listener focusListener = null;
+    private Listener blurListener = null;
     private KeyPressListener keyPressListener = null;
     private KeyPressListener enterPressListener = null;
     private ReadonlyListener readonlyListener = null;
@@ -71,6 +73,16 @@ public class TextEditable<DN extends TextEditableNotifier, B extends Box> extend
         return this;
     }
 
+    public TextEditable<DN, B> onFocus(Listener listener) {
+        this.focusListener = listener;
+        return this;
+    }
+
+    public TextEditable<DN, B> onBlur(Listener listener) {
+        this.blurListener = listener;
+        return this;
+    }
+
     public TextEditable<DN, B> onKeyPress(KeyPressListener listener) {
         this.keyPressListener = listener;
         return this;
@@ -104,7 +116,12 @@ public class TextEditable<DN extends TextEditableNotifier, B extends Box> extend
         return !isNullValue(value) ? adapt(value) : null;
     }
 
+    public void notifyFocus() {
+        if (focusListener != null) focusListener.accept(new Event(this));
+    }
+
     public void notifyBlur(String value) {
+        if (blurListener != null) blurListener.accept(new Event(this));
         if (patternMatcher == null) return;
         if (invalid(value)) notifier.refresh(value());
         else if (!value.equals(value())) notifyChange(value);

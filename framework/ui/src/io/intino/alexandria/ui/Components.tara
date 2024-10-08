@@ -93,7 +93,7 @@ Component selectorComboBox as ExtensionOf(baseSelector)
 	Notification refreshSelection as Text List
 	Notification refreshMultipleSelection as Bool
 	Request updateSelection as Text List
-	Request refresh
+	Request opened
 
 Component selectorToggleBox as ExtensionOf(baseSelector)
 	Notification refreshSelection as Text List
