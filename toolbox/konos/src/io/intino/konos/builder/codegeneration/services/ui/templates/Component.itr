@@ -658,6 +658,7 @@ rule type(properties, openpage) and trigger(specific)
 rule type(properties, openlayer) and trigger(specific)
 	<<_path("$path");>>
 	<<_transition(io.intino.alexandria.ui.displays.components.OpenLayer.Transition.valueOf("$transition"));>>
+	<<_showHeader($showHeader);>>
 
 rule type(properties, openpopover) and trigger(specific)
 	<< _triggerEvent(io.intino.alexandria.ui.displays.components.OpenPopover.TriggerEvent.$triggerEvent);>>

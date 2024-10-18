@@ -21,6 +21,7 @@ rule type(dispatcher, gen)
 		public void dispatch(Soul soul, String address) {
 			address = address.replaceFirst(soul.session().browser().basePath(), "");
 			List<String> params = paramsOf(address);
+    		address = addressWithoutQueryString(address);
 			<<$resource+call...[$NL]>>
 		}
 
@@ -32,6 +33,7 @@ rule type(dispatcher, gen)
 		}
 
 		private String patternOf(String address) {
+    		String addressPart = addressWithoutQueryString(address);
 			<<$resource+pattern...[$NL]>>
 			return null;
 		}
@@ -51,13 +53,18 @@ rule type(dispatcher, gen)
 		}
 
 		private List<String> addQueryStringParams(String address, List<String> result) {
-			if (address.indexOf("?") == -1) return result;
-			String[] parameters = address.split("\\\\?")[1].split("&");
-			for (int i = 0; i < parameters.length; i++) {
-				result.add(parameters[i].split("=")[1]);
-			}
-			return result;
+            if (address.indexOf("?") == -1) return result;
+            String[] parameters = address.split("\\\\?")[1].split("&");
+            for (int i = 0; i < parameters.length; i++) {
+                String[] split = parameters[i].split("=");
+                result.add(split.length > 1 ? split[1] : "");
+            }
+            return result;
 		}
+
+        private String addressWithoutQueryString(String address) {
+            return address.indexOf("?") != -1 ? address.substring(0, address.indexOf("?")) : address;
+        }
 
 	}
 
@@ -95,10 +102,10 @@ rule type(resource) and trigger(patternRegister)
 	patterns.put("$name", "$pattern");
 
 rule type(resource, main) and trigger(pattern)
-	if (address.matches(patterns.get("$name"))) return patterns.get("$name");
+	if (addressPart.matches(patterns.get("$name"))) return patterns.get("$name");
 
 rule type(resource) and trigger(pattern)
-	else if (address.matches(patterns.get("$name"))) return patterns.get("$name");
+	else if (addressPart.matches(patterns.get("$name"))) return patterns.get("$name");
 
 rule type(param, optional) and trigger(call)
 	params.size() > $index ? params.get($index) : null

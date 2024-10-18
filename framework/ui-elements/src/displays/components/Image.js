@@ -35,6 +35,7 @@ class Image extends AbstractImage {
 	};
 
 	render() {
+		if (!this.state.visible) return (<React.Fragment/>);
 		if (this.state.value == null) return (<React.Fragment/>);
 		return (
 			<React.Fragment>
