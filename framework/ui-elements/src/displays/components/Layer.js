@@ -19,8 +19,11 @@ const styles = theme => ({
     header : {
         padding: "2px 15px",
     },
-    content : {
+    contentWithHeader : {
         marginTop: "61px",
+    },
+    content : {
+        padding: "0 !important",
     },
     link : {
         cursor: "pointer",
@@ -74,13 +77,14 @@ class Layer extends AbstractLayer {
 					   disableEscapeKeyDown={false}
 					   TransitionComponent={this._transition()}
                        aria-labelledby={this.props.id + "_draggable"}>
-				{this.renderTitle()}
+				{this.renderHeader()}
 				{this.renderContent()}
 			</MuiDialog>
 		);
 	};
 
-	renderTitle = () => {
+	renderHeader = () => {
+	    if (!this._showHeader()) return (<React.Fragment/>);
 		const { classes } = this.props;
 		const style = this.props.color != null ? { backgroundColor: this.props.color } : undefined;
 		const showHome = this.state.toolbar.home.visible;
@@ -126,8 +130,9 @@ class Layer extends AbstractLayer {
 
 	renderContent = () => {
 		const { classes } = this.props;
+		const classList = this._showHeader() ? classes.contentWithHeader : classes.content;
 		return (
-		    <DialogContent className={classes.content} style={this.style()}>
+		    <DialogContent className={classList} style={this.style()}>
                 {this.renderInstances(null, null, {height:'100%',...this.style()})}
             </DialogContent>
         );
@@ -174,6 +179,10 @@ class Layer extends AbstractLayer {
         else if (this.props.transition === "Fade") return Layer.FadeTransition;
         else if (this.props.transition === "Zoom") return Layer.ZoomTransition;
         return Layer.SlideTransition;
+    };
+
+    _showHeader = () => {
+        return this.props.showHeader != null && this.props.showHeader === "true";
     };
 }
 

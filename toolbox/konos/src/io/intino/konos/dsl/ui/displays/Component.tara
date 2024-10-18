@@ -153,7 +153,7 @@ Concept ActionableComponents
 			sub CloseBlock > var Block.Conditional block
 			sub OpenDialog > var OtherComponents.AbstractDialog dialog
 			sub CopyToClipboard > var string text = empty
-			sub OpenLayer > var word:{Slide Grow Zoom Fade} transition = Slide
+			sub OpenLayer > var word:{Slide Grow Zoom Fade} transition = Slide; var boolean showHeader = true;
 			sub CloseLayer
 			sub CloseDialog > var OtherComponents.AbstractDialog dialog
 			sub OpenPopover > var Block.Popover popover; var word:{MouseClick MouseOver} triggerEvent = MouseClick
