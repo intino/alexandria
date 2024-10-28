@@ -145,11 +145,12 @@ export default class Actionable extends AbstractActionable {
 	renderLink = () => {
 		const {classes} = this.props;
 		const className = this._readonly() ? classes.readonly : classes.link;
+		const color = this.props.color != null ? this.props.color : undefined;
 		return (
 		    <a id={this.triggerId()}
 		        onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
 		        disabled={this._readonly()}>
-				<Typography style={this.style()} variant={this.variant("body1")} className={className}>{this._title()}</Typography>
+				<Typography style={{...this.style(),color:color}} variant={this.variant("body1")} className={className}>{this._title()}</Typography>
 			</a>
 		);
 	};
@@ -184,10 +185,11 @@ export default class Actionable extends AbstractActionable {
 		const style = this.style();
 		if (this.state.color != null) style.color = this.state.color;
 		const applyStyles = this.props.titlePosition == null || this.props.titlePosition == "None";
+		const colorStyle = this.props.color != null ? { color: this.props.color } : undefined;
 		const button = (
             <IconButton id={this.triggerId()} color="primary" disabled={this._readonly()} ref={ref != null ? ref : undefined}
                             onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
-                            className={classes.materialIconButton} style={applyStyles ? style : null} size={this._size()}>
+                            className={classes.materialIconButton} style={applyStyles ? { style, ...colorStyle} : colorStyle} size={this._size()}>
                 {this.renderContent()}
             </IconButton>
 		);
@@ -201,11 +203,12 @@ export default class Actionable extends AbstractActionable {
         const position = this.props.titlePosition;
         const isVertical = position == "Top" || position == "Bottom";
 		const applyStyles = this.props.titlePosition != null && this.props.titlePosition != "None";
+		const colorStyle = this.props.color != null ? { color: this.props.color } : undefined;
         const link = (
             <a id={this.triggerId()}
              onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
              disabled={this._readonly()}>
-             <Typography variant={this.variant("body1")} className={className}>{this._title()}</Typography>
+             <Typography variant={this.variant("body1")} className={className} style={colorStyle}>{this._title()}</Typography>
             </a>
         );
         return (
