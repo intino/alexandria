@@ -56,6 +56,7 @@ Component baseFile
 Component file as ExtensionOf(baseFile)
 Component fileEditable as ExtensionOf(baseFile)
 	Notification refreshReadonly as Bool
+	Notification refreshAllowedTypes as Text List
 	Notification refreshFocused as Bool
 	Request notifyUploading
 	Request notifyChange as File

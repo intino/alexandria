@@ -28,10 +28,11 @@ export default class FileEditable extends AbstractFile {
 		this.inputRef = React.createRef();
 		this.state = {
 		    ...this.state,
-            value : null,
-            filename : null,
-            readonly : this.props.readonly,
-            editable : false,
+            value: null,
+            filename: null,
+            readonly: this.props.readonly,
+            editable: false,
+            allowedTypes: this.props.allowedTypes
         };
 	};
 
@@ -91,11 +92,11 @@ export default class FileEditable extends AbstractFile {
 	            dropzoneParagraphClass="fileeditable-dropzone-paragraph"
                 filesLimit={1}
                 maxFileSize={this.props.maxSize != null ? this.props.maxSize : 300000000}
-                showPreviews={true}
+                showPreviews={false}
+                showPreviewsInDropzone={true}
                 useChipsForPreview
                 previewGridProps={{container: { spacing: 1, direction: 'row' }}}
                 previewText={this.translate("Selected file")}
-                showPreviewsInDropzone={false}
                 showAlerts={false}
                 showFilenames={true}
 	            onDelete={(file) => { this.saveFile(null, null) }}
@@ -141,9 +142,10 @@ export default class FileEditable extends AbstractFile {
     };
 
 	_allowedTypes = () => {
-	    if (this.props.allowedTypes == null) return undefined;
+	    if (this.state.allowedTypes == null || this.state.allowedTypes.length == 0) return undefined;
 	    let result = [];
 	    if (this._containsType("Image")) result.push("image/*");
+	    if (this._containsType("Audio")) result.push("audio/*");
 	    if (this._containsType("Video")) result.push("video/*");
 	    if (this._containsType("Application")) result.push("application/*");
 	    if (this._containsType("Text")) result.push("text/*");
@@ -158,8 +160,8 @@ export default class FileEditable extends AbstractFile {
 	};
 
 	_containsType = (type) => {
-	    for (let i=0; i<this.props.allowedTypes.length; i++) {
-	        if (this.props.allowedTypes[i] == type) return true;
+	    for (let i=0; i<this.state.allowedTypes.length; i++) {
+	        if (this.state.allowedTypes[i] == type) return true;
 	    }
 	    return false;
 	}
@@ -170,6 +172,10 @@ export default class FileEditable extends AbstractFile {
 
 	refreshReadonly = (readonly) => {
 		this.setState({ readonly });
+	};
+
+	refreshAllowedTypes = (allowedTypes) => {
+		this.setState({ allowedTypes });
 	};
 
 	refreshFocused = (focused) => {
