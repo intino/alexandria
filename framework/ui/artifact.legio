@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "5.2.26") ui-framework
+Artifact("io.intino.alexandria", "5.2.27") ui-framework
 	Dsl("Konos", "12.2.15") > Builder > generationPackage = "alexandria"
 	Code("io.intino")
 
@@ -17,7 +17,7 @@ Artifact("io.intino.alexandria", "5.2.26") ui-framework
 		Compile("com.auth0", "java-jwt", "4.4.0") // Json Web token (Metabase)
 		Compile("org.locationtech.jts", "jts-core", "1.19.0")
 
-		Provided("io.intino.icod", "core", "1.0.0")
+		Provided("io.intino.icod", "core", "1.0.0")t
 		Provided("io.intino.alexandria", "driver-shiny", "1.1.0")
 		Provided("io.intino.alexandria", "driver-r", "1.1.0")
 		Provided("io.intino.alexandria", "driver", "1.0.3")
