@@ -189,7 +189,7 @@ export default class Actionable extends AbstractActionable {
 		const button = (
             <IconButton id={this.triggerId()} color="primary" disabled={this._readonly()} ref={ref != null ? ref : undefined}
                             onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
-                            className={classes.materialIconButton} style={applyStyles ? { style, ...colorStyle} : colorStyle} size={this._size()}>
+                            className={classes.materialIconButton} style={applyStyles ? { ...style, ...colorStyle} : colorStyle} size={this._size()}>
                 {this.renderContent()}
             </IconButton>
 		);
@@ -197,7 +197,7 @@ export default class Actionable extends AbstractActionable {
 	};
 
 	renderWithText = (button, style) => {
-        if (this.props.titlePosition == "None") return button;
+        if (this.props.titlePosition == null || this.props.titlePosition == "None") return button;
 		const {classes} = this.props;
 		const className = this._readonly() ? classes.readonly : classes.link;
         const position = this.props.titlePosition;
