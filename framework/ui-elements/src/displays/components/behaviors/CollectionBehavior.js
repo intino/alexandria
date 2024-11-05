@@ -167,6 +167,7 @@ const CollectionBehavior = (collection) => {
     };
 
     self.renderItems = (items, mode, itemHeight, customItemClasses) => {
+        self.lastSection = null;
         const content = items.map((i, index) => self.renderItem(items, mode, { index: index, isScrolling: false, customClasses: customItemClasses, itemHeight: itemHeight }));
         if (mode != "Column") return content;
         return (<div className="layout horizontal wrap">{content}</div>);
@@ -176,16 +177,19 @@ const CollectionBehavior = (collection) => {
         const classes = "layout vertical" + (mode != "Column" ? " flex" : "");
         return (
             <div className={classes} style={{minHeight:properties.itemHeight,position:'relative'}}>
-                {self.renderItemContent(items, properties)}
+                {self.renderItemContent(items, mode, properties)}
             </div>
         );
     };
 
-    self.renderItemContent = (items, { index, isScrolling, style, customClasses }) => {
+    self.renderItemContent = (items, mode, { index, isScrolling, style, customClasses }) => {
         const item = items[index];
+        const section = self.lastSection == item.pl.section ? null : item.pl.section;
         const { classes } = self.collection.props;
         const width = self.width(index);
         var view = null;
+
+        if (section != null) self.lastSection = section;
 
         if (item != null) view = isScrolling ? self.scrollingView(width, classes) : self.itemView(item, classes, index);
         else view = isScrolling ? self.scrollingView(width, classes) : (<div style={style} key={index} className={classNames(classes.itemView, "layout horizontal center")}>&nbsp;</div>);
@@ -197,11 +201,15 @@ const CollectionBehavior = (collection) => {
         const classNamesValue = classNames(classes.itemView, customClasses, selectable && multiple ? classes.selectable : undefined, selecting ? classes.selecting : undefined);
         const finalStyle = selectable && !multiple && self.isItemSelected(item) ? { ...style, ...self.getSelectedStyleRules() } : style;
         return (
-            <div id={self.elementId(id)} style={finalStyle} key={index} onClick={selectable && !multiple ? self.handleSelect.bind(self, id) : undefined} className={classNamesValue}>
-                {/*{multiple ? <Checkbox checked={self.isItemSelected(item)} className={classes.selector} onChange={self.handleSelect.bind(self, id)} /> : undefined}*/}
-                {multiple ? <CollectionBehaviorCheckbox checked={self.isItemSelected(item)} classes={classes} onCheck={self.handleSelect.bind(self, id)} /> : undefined}
-                {view}
-            </div>
+            <React.Fragment>
+                {section != null && <Typography variant="h6" style={{marginTop:'10px',marginBottom:'10px'}}>{section}</Typography>}
+                {(item.pl.section != null && section == null && mode == "Column") && <Typography variant="h6" style={{marginTop:'10px',marginBottom:'10px'}}>&nbsp;</Typography>}
+                <div id={self.elementId(id)} style={finalStyle} key={index} onClick={selectable && !multiple ? self.handleSelect.bind(self, id) : undefined} className={classNamesValue}>
+                    {/*{multiple ? <Checkbox checked={self.isItemSelected(item)} className={classes.selector} onChange={self.handleSelect.bind(self, id)} /> : undefined}*/}
+                    {multiple ? <CollectionBehaviorCheckbox checked={self.isItemSelected(item)} classes={classes} onCheck={self.handleSelect.bind(self, id)} /> : undefined}
+                    {view}
+                </div>
+            </React.Fragment>
         );
     };
 

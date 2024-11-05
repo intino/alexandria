@@ -5,7 +5,7 @@ import io.intino.alexandria.schemas.*;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.collection.Collection;
 import io.intino.alexandria.ui.displays.components.collection.behaviors.GridCollectionBehavior;
-import io.intino.alexandria.ui.displays.events.AddItemEvent;
+import io.intino.alexandria.ui.displays.events.AddCollectionItemEvent;
 import io.intino.alexandria.ui.displays.events.collection.CellClickEvent;
 import io.intino.alexandria.ui.displays.events.collection.CellClickListener;
 import io.intino.alexandria.ui.displays.events.collection.SortColumnEvent;
@@ -38,7 +38,7 @@ public class Grid<DN extends GridNotifier, B extends Box, Item> extends Abstract
     }
 
     @Override
-    protected AddItemEvent itemEvent(Display c, int index) {
+    protected AddCollectionItemEvent itemEvent(Display c, int index) {
         return null;
     }
 

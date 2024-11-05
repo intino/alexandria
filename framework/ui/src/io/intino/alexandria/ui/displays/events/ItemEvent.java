@@ -3,12 +3,12 @@ package io.intino.alexandria.ui.displays.events;
 import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.Display;
 
-public class ItemEvent extends Event {
-	private final Component component;
+public class ItemEvent<C extends Component> extends Event {
+	private final C component;
 	private final Object item;
 	private final int index;
 
-	public ItemEvent(Display sender, Component component, Object item, int index) {
+	public ItemEvent(Display<?, ?> sender, C component, Object item, int index) {
 		super(sender);
 		this.component = component;
 		this.item = item;
@@ -23,8 +23,8 @@ public class ItemEvent extends Event {
 		return index;
 	}
 
-	public <C extends Component> C component() {
-		return (C) component;
+	public <T extends C> T component() {
+		return (T) component;
 	}
 
 }

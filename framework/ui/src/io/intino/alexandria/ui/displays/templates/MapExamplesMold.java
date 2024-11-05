@@ -1,7 +1,7 @@
 package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.ui.AlexandriaUiBox;
-import io.intino.alexandria.ui.displays.events.AddItemEvent;
+import io.intino.alexandria.ui.displays.events.AddCollectionItemEvent;
 import io.intino.alexandria.ui.displays.items.Map1Mold;
 import io.intino.alexandria.ui.displays.items.Map2Mold;
 import io.intino.alexandria.ui.displays.items.Map3Mold;
@@ -35,7 +35,7 @@ public class MapExamplesMold extends AbstractMapExamplesMold<AlexandriaUiBox> {
         map.onAddItem(this::onAddItem);
     }
 
-    private void onAddItem(AddItemEvent event) {
+    private void onAddItem(AddCollectionItemEvent event) {
         if (event.component() instanceof Map1Mold) ((Map1Mold)event.component()).stamp.item(event.item());
         else if (event.component() instanceof Map2Mold) ((Map2Mold)event.component()).stamp.item(event.item());
         else if (event.component() instanceof Map3Mold) ((Map3Mold)event.component()).stamp.item(event.item());
