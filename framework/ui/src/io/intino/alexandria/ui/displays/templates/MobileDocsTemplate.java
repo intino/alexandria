@@ -2,7 +2,7 @@ package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.schemas.Widget;
 import io.intino.alexandria.ui.AlexandriaUiBox;
-import io.intino.alexandria.ui.displays.events.AddItemEvent;
+import io.intino.alexandria.ui.displays.events.AddCollectionItemEvent;
 import io.intino.alexandria.ui.displays.events.SelectionEvent;
 import io.intino.alexandria.ui.displays.items.WidgetListMold;
 import io.intino.alexandria.ui.documentation.DisplayHelper;
@@ -54,7 +54,7 @@ public class MobileDocsTemplate extends AbstractMobileDocsTemplate<AlexandriaUiB
 		return Labels.getOrDefault(translate(option), option);
 	}
 
-	private void refresh(AddItemEvent event) {
+	private void refresh(AddCollectionItemEvent event) {
 		Widget widget = event.item();
 		WidgetListMold display = event.component();
 		display.widgetListItem.onSelect(e -> open(widget));

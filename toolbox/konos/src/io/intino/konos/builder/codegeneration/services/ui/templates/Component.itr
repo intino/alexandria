@@ -945,6 +945,7 @@ rule type(item) and trigger(addMethod)
 		$name+firstUpperCase result = new $name+firstUpperCase(<<($concreteBox+firstUpperCase~Box)>>box());
 		result.id(java.util.UUID.randomUUID().toString());
 		<<result.item($itemVariable);>>
+		<<result.section(source().section($itemVariable));>>
 		return result;
 	}
 

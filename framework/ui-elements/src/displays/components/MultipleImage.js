@@ -12,7 +12,14 @@ import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/css/image-gallery.css';
 import 'alexandria-ui-elements/res/styles/components/multipleimage/styles.css';
 
-const styles = theme => ({});
+const styles = theme => ({
+    borderRed : {
+        border: "1px solid red"
+    },
+    borderBlue : {
+        border: "1px solid blue"
+    }
+});
 
 class MultipleImage extends AbstractMultipleImage {
 
@@ -22,6 +29,7 @@ class MultipleImage extends AbstractMultipleImage {
 		this.requester = new MultipleImageRequester(this);
 		this.selectedIndex = 0;
 		this.inputFiles = React.createRef();
+		this.container = React.createRef();
 		this.state = {
 		    ...this.state,
 		    readonly: false,
@@ -40,13 +48,15 @@ class MultipleImage extends AbstractMultipleImage {
 		const height = layout === "horizontal" ? '100%' : 'auto';
 		const items = this._items();
 		return (
-		    <div style={{height:height,...this.style()}}>
+		    <div style={{height:height,...this.style()}} ref={this.container}>
                 { ComponentBehavior.labelBlock(this.props, "body1", { fontSize:"10pt",color:"#0000008a",marginBottom: "5px" }) }
-                <div className={"layout flex " + (wrap ? "wrap " : "") + layout} style={{height:height,marginBottom:'0',position:'relative'}}>
+                <div className={"layout flex " + (wrap ? "wrap " : "") + layout} style={{height:"100%",marginBottom:'0',position:'relative'}}>
                     { multiple.editable && this._renderAdd() }
                     { multiple.editable && this._renderRemove() }
                     { items.length > 0 &&
                         <ImageGallery items={items}
+                                      showPlayButton={false}
+                                      showFullscreenButton={this.props.allowFullscreen != undefined && this.props.allowFullscreen}
                                       showThumbnails={false}
                                       showBullets={true}
                                       onSlide={this.handleSlide.bind(this)} />
@@ -121,8 +131,11 @@ class MultipleImage extends AbstractMultipleImage {
 
 	_items = () => {
 	    const result = [];
+	    const { classes } = this.props;
+	    let height = this.container.current != null ? this.container.current.offsetHeight : "100%";
+	    if (height == 0) height = "100%";
 	    for (let i=0; i<this.state.images.length; i++) {
-	        result.push({original: this.state.images[i], thumbnail: this.state.images[i]});
+	        result.push({original: this.state.images[i], thumbnail: this.state.images[i], originalHeight: height});
 	    }
 	    return result;
 	};

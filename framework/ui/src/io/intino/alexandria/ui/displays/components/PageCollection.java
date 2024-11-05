@@ -5,7 +5,7 @@ import io.intino.alexandria.schemas.CollectionMoreItems;
 import io.intino.alexandria.schemas.PageCollectionSetup;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.collection.behaviors.PageCollectionBehavior;
-import io.intino.alexandria.ui.displays.events.AddItemEvent;
+import io.intino.alexandria.ui.displays.events.AddCollectionItemEvent;
 import io.intino.alexandria.ui.displays.notifiers.PageCollectionNotifier;
 import io.intino.alexandria.ui.model.datasource.PageDatasource;
 
@@ -65,7 +65,7 @@ public abstract class PageCollection<DN extends PageCollectionNotifier, B extend
         return this;
     }
 
-    protected abstract AddItemEvent itemEvent(Display c, int index);
+    protected abstract AddCollectionItemEvent itemEvent(Display c, int index);
 
     @Override
     void setup() {

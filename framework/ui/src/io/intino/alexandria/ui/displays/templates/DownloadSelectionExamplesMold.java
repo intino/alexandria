@@ -2,7 +2,7 @@ package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.UserMessage;
-import io.intino.alexandria.ui.displays.events.AddItemEvent;
+import io.intino.alexandria.ui.displays.events.AddCollectionItemEvent;
 import io.intino.alexandria.ui.displays.items.DownloadSelectionMold;
 import io.intino.alexandria.ui.documentation.Person;
 import io.intino.alexandria.ui.documentation.model.Datasources;
@@ -49,7 +49,7 @@ public class DownloadSelectionExamplesMold extends AbstractDownloadSelectionExam
         list.onAddItem(this::onAddItem);
     }
 
-    private void onAddItem(AddItemEvent event) {
+    private void onAddItem(AddCollectionItemEvent event) {
         if (event.component() instanceof DownloadSelectionMold) ((DownloadSelectionMold) event.component()).firstName.value(((Person) event.item()).firstName());
     }
 

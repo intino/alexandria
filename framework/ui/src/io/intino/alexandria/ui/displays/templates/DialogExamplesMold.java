@@ -2,7 +2,7 @@ package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.UiFrameworkBox;
 import io.intino.alexandria.ui.displays.UserMessage;
-import io.intino.alexandria.ui.displays.events.AddItemEvent;
+import io.intino.alexandria.ui.displays.events.AddCollectionItemEvent;
 import io.intino.alexandria.ui.displays.items.Dialog4ListMold;
 import io.intino.alexandria.ui.documentation.Person;
 import io.intino.alexandria.ui.documentation.model.Datasources;
@@ -53,7 +53,7 @@ public class DialogExamplesMold extends AbstractDialogExamplesMold<UiFrameworkBo
         list1.onAddItem(this::onAddItem);
     }
 
-    private void onAddItem(AddItemEvent event) {
+    private void onAddItem(AddCollectionItemEvent event) {
         if (event.component() instanceof Dialog4ListMold) ((Dialog4ListMold) event.component()).firstName.value(((Person) event.item()).firstName());
     }
 }

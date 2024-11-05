@@ -2,7 +2,7 @@ package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.UserMessage;
-import io.intino.alexandria.ui.displays.events.AddItemEvent;
+import io.intino.alexandria.ui.displays.events.AddCollectionItemEvent;
 import io.intino.alexandria.ui.displays.items.List1Mold;
 import io.intino.alexandria.ui.displays.items.List3Mold;
 import io.intino.alexandria.ui.displays.items.List4Mold;
@@ -42,7 +42,7 @@ public class ListExamplesMold extends AbstractListExamplesMold<AlexandriaUiBox> 
         list.onAddItem(this::onAddItem);
     }
 
-    private void onAddItem(AddItemEvent event) {
+    private void onAddItem(AddCollectionItemEvent event) {
         if (event.component() instanceof List1Mold) ((List1Mold)event.component()).stamp.item(event.item());
         else if (event.component() instanceof List3Mold) ((List3Mold) event.component()).firstName.value(((Person) event.item()).firstName());
         else if (event.component() instanceof List4Mold) ((List4Mold) event.component()).firstName.value(((Person) event.item()).firstName());

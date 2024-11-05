@@ -1,7 +1,7 @@
 package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.ui.AlexandriaUiBox;
-import io.intino.alexandria.ui.displays.events.AddItemEvent;
+import io.intino.alexandria.ui.displays.events.AddCollectionItemEvent;
 import io.intino.alexandria.ui.displays.items.Sorting1Mold;
 import io.intino.alexandria.ui.displays.items.Sorting2Mold;
 import io.intino.alexandria.ui.documentation.Person;
@@ -30,7 +30,7 @@ public class SortingExamplesMold extends AbstractSortingExamplesMold<AlexandriaU
 		list2.reload();
 	}
 
-	private void onAddItem(AddItemEvent event) {
+	private void onAddItem(AddCollectionItemEvent event) {
         if (event.component() instanceof Sorting1Mold) {
             Sorting1Mold component = event.component();
             Person person = event.item();

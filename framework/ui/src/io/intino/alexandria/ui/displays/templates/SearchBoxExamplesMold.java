@@ -1,7 +1,7 @@
 package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.ui.AlexandriaUiBox;
-import io.intino.alexandria.ui.displays.events.AddItemEvent;
+import io.intino.alexandria.ui.displays.events.AddCollectionItemEvent;
 import io.intino.alexandria.ui.displays.items.SearchBox1Mold;
 import io.intino.alexandria.ui.documentation.Person;
 import io.intino.alexandria.ui.documentation.model.Datasources;
@@ -25,7 +25,7 @@ public class SearchBoxExamplesMold extends AbstractSearchBoxExamplesMold<Alexand
         list1.reload();
     }
 
-    private void onAddItem(AddItemEvent event) {
+    private void onAddItem(AddCollectionItemEvent event) {
         if (event.component() instanceof SearchBox1Mold) {
             SearchBox1Mold component = event.component();
             Person person = event.item();

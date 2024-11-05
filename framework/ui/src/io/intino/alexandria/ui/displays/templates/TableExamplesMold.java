@@ -2,7 +2,7 @@ package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.UserMessage;
-import io.intino.alexandria.ui.displays.events.AddItemEvent;
+import io.intino.alexandria.ui.displays.events.AddCollectionItemEvent;
 import io.intino.alexandria.ui.displays.events.SelectionEvent;
 import io.intino.alexandria.ui.displays.rows.Table1Row;
 import io.intino.alexandria.ui.displays.rows.Table2Row;
@@ -36,7 +36,7 @@ public class TableExamplesMold extends AbstractTableExamplesMold<AlexandriaUiBox
         table2.reload();
     }
 
-    private void onAddItem(AddItemEvent event) {
+    private void onAddItem(AddCollectionItemEvent event) {
         Person person = event.item();
 
         if (event.component() instanceof Table1Row) {

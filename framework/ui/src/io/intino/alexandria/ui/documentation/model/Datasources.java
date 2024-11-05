@@ -74,7 +74,7 @@ public class Datasources {
 	}
 
 	public static DynamicTableDatasource<Person> dynamicTablePersonDatasource() {
-		return new DynamicTableDatasource<Person>() {
+		return new DynamicTableDatasource<>() {
 			@Override
 			public String name() {
 				return "persons";
@@ -88,7 +88,7 @@ public class Datasources {
 
 			@Override
 			public List<Person> items(int start, int count, Section section, String row, String condition, List<Filter> filters, List<String> sortings) {
-				return personPopulation().subList(start, start+count);
+				return personPopulation().subList(start, start + count);
 			}
 
 			@Override

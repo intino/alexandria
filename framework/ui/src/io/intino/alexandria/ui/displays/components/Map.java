@@ -9,7 +9,7 @@ import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.collection.Collection;
 import io.intino.alexandria.ui.displays.components.collection.behaviors.CollectionBehavior;
 import io.intino.alexandria.ui.displays.components.collection.behaviors.MapCollectionBehavior;
-import io.intino.alexandria.ui.displays.events.AddItemEvent;
+import io.intino.alexandria.ui.displays.events.AddCollectionItemEvent;
 import io.intino.alexandria.ui.displays.notifiers.MapNotifier;
 import io.intino.alexandria.ui.model.Datasource;
 import io.intino.alexandria.ui.model.PlaceMark;
@@ -100,8 +100,8 @@ public abstract class Map<B extends Box, ItemComponent extends io.intino.alexand
     }
 
     @Override
-    protected AddItemEvent itemEvent(Display display, int index) {
-        return new AddItemEvent(this, (ItemComponent)display, ((ItemComponent)display).item(), index);
+    protected AddCollectionItemEvent itemEvent(Display display, int index) {
+        return new AddCollectionItemEvent(this, (ItemComponent)display, ((ItemComponent)display).item(), index);
     }
 
     @Override
