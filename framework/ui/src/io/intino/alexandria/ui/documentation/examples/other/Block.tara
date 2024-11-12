@@ -127,8 +127,8 @@ Template(layout=Vertical, spacing=DP8) blockExamplesMold
 					Block(layout=Horizontal EndJustified) as Absolute(height=45px) > MaterialIconButton(title="close", icon="ChevronLeft") as CloseDrawer(drawer=drawerBlock6)
 					Divider
 					Selector as ListBox
-						Block(layout=Horizontal, spacing=DP16) > MaterialIcon(icon="Build"); Text(value="option 1") as Option
-						Block(layout=Horizontal, spacing=DP16) > MaterialIcon(icon="Face"); Text(value="option 2") as Option
+						Block(layout=Horizontal, spacing=DP16) > MaterialIcon(icon="Build", title="Build option"); Text(value="option 1") as Option
+						Block(layout=Horizontal, spacing=DP16) > MaterialIcon(icon="Face", title="Face option"); Text(value="option 2") as Option
 				Block(layout=Vertical Flexible, format=autoHeight)
 					Block(layout=Horizontal StartJustified, color="white") > MaterialIconButton(title = "open drawer", icon="Menu") as OpenDrawer(drawer = drawerBlock6)
 					Text(format=containerAirMedium, value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris tellus lacus, tristique vitae lectus id, tristique cursus est. Mauris dui dolor, lacinia non accumsan sed, lacinia et eros. Ut eget ornare nunc. Vestibulum at porta tellus, in fringilla tellus. Nam ultricies porta nisi, ut sagittis est lacinia ac. Nunc aliquet, lacus a malesuada pretium, arcu lectus egestas purus, vel euismod nisl ante eget augue. Proin tristique, arcu vitae vehicula cursus, odio nulla congue erat, at porttitor magna dui id quam. In hac habitasse platea dictumst. Etiam id lorem cursus, ultricies felis ut, pretium ante. Aliquam sit amet tellus tellus. Maecenas eget faucibus enim. Pellentesque rutrum augue id pulvinar pharetra. Proin purus ex, tincidunt et posuere vel, dignissim a neque. Aenean quis imperdiet lectus. Pellentesque bibendum ante tincidunt feugiat pharetra. Fusce sollicitudin, magna in mollis vulputate, nunc nunc accumsan lectus, a blandit erat felis a lectus.")
