@@ -24,7 +24,7 @@ class MaterialIcon extends AbstractMaterialIcon {
 	render() {
 		return (
 			<Suspense fallback={<div style={{width: "24px", ...this.style()}}/>}>
-				{this.renderLayer(<div style={{color:this._color(),...this.style()}}><MaterialIconMui style={this.style()} aria-label={this._title()} icon={this._icon()}/></div>)}
+				{this.renderLayer(<div style={{color:this._color(),...this.style()}} title={this._title()}><MaterialIconMui style={this.style()} title={this._title()} aria-label={this._title()} icon={this._icon()}/></div>)}
 			</Suspense>
 		);
 	}

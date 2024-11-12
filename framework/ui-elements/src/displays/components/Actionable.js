@@ -250,7 +250,7 @@ export default class Actionable extends AbstractActionable {
 	renderContent = () => {
 		const mode = this.props.mode.toLowerCase();
 		if (mode === "button" || mode === "toggle") return (<div>{this._title()}</div>);
-		else if (mode === "iconbutton" || mode === "icontoggle" || mode === "iconsplitbutton") return (<img title={this._title()} src={this._icon()} style={this._addDimensions({})}/>);
+		else if (mode === "iconbutton" || mode === "icontoggle" || mode === "iconsplitbutton") return (<img title={this._title()} src={this._icon()} style={{...this._addFilter(),...this._addDimensions({})}}/>);
 		else if (mode === "materialiconbutton" || mode === "materialicontoggle" || mode === "materialiconsplitbutton") return (<ActionableMui titleAccess={this._title()} icon={this._icon()} style={this._addDimensions({})}/>);
 	};
 
@@ -640,6 +640,11 @@ export default class Actionable extends AbstractActionable {
 
 	_readonly = () => {
 		return this.state.readonly != null ? this.state.readonly : false;
+	};
+
+	_addFilter = (props) => {
+	    const theme = Theme.get();
+	    return theme.isDark() ? { filter: "invert(1)" } : {};
 	};
 
 	_addDimensions = (props) => {

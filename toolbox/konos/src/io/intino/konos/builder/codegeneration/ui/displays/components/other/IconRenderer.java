@@ -24,6 +24,8 @@ public class IconRenderer extends ComponentRenderer<BaseIcon> {
 			properties.add("icon", content);
 		}
 
+		if (element.title() != null && !element.title().isEmpty()) properties.add("title", element.title());
+
 		return properties;
 	}
 
