@@ -11,6 +11,7 @@ export default class BaseIcon extends AbstractBaseIcon {
 		this.requester = new BaseIconRequester(this);
 		this.state = {
 			...this.state,
+			title: this.props.title,
 			icon: this.props.icon
 		}
 	};
@@ -19,6 +20,10 @@ export default class BaseIcon extends AbstractBaseIcon {
 		if (!this.state.visible) return (<React.Fragment/>);
 		if (this._icon() == null) return (<div></div>);
 		return iconLayer;
+	};
+
+	refreshTitle = (title) => {
+		this.setState({title});
 	};
 
 	refreshIcon = (icon) => {
