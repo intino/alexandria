@@ -83,7 +83,7 @@ rule type(properties, image) and trigger(specific)
 	<< width="$width">><< height="$height">><< mobileReduceFactor={$mobileReduceFactor}>><< allowFullscreen={$allowFullscreen}>><< colorInvertedWithDarkMode={$colorInvertedWithDarkMode}>>
 
 rule type(properties, file) and trigger(specific)
-	<< width="$width">><< height="$height">><< preview={$preview}>><< dropZone={$dropZone}>><< maxSize={$maxSize}>><< allowedTypes={[$allowedTypes]}>>
+	<< width="$width">><< height="$height">><< preview={$preview}>><< dropZone={$dropZone}>><< pasteZone={$pasteZone}>><< maxSize={$maxSize}>><< allowedTypes={[$allowedTypes]}>>
 
 rule type(properties, chart) and trigger(specific)
 	<< width="$width">><< height="$height">>

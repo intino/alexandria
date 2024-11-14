@@ -21,6 +21,7 @@ public class FileRenderer extends SizedRenderer<File> {
 			result.add("value", resourceMethodFrame("value", element.value()));
 		if (element.isEditable() && element.asEditable().showPreview()) result.add("preview", true);
 		if (element.isEditable() && element.asEditable().showDropZone()) result.add("dropZone", true);
+		if (element.isEditable() && element.asEditable().showPasteZone()) result.add("pasteZone", true);
 		addValidation(result);
 		return result;
 	}
