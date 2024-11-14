@@ -49,6 +49,7 @@ Concept DataComponents
 		Facet Editable extends Editable
 			var boolean showPreview = false
 			var boolean showDropZone = false
+			var boolean showPasteZone = false
 			Concept:{0..1} Validation
 				var double:{kbytes} maxSize = 50000000 kbytes
 				var word[]:{Image Video Application Text Xml Html Pdf Excel} allowedTypes = Image Video Application Text

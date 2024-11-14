@@ -12,14 +12,20 @@ import { IconButton } from "@material-ui/core";
 import { CloudDownload, Cancel } from "@material-ui/icons";
 import 'alexandria-ui-elements/res/styles/components/fileeditable/styles.css';
 import 'alexandria-ui-elements/res/styles/layout.css';
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
 	dropzoneText: {
 		background: "red",
 	},
+	pasteInput: {
+	    border: "1px dashed #0000001f",
+	    marginTop: "5px",
+	    padding: "10px"
+	}
 });
 
-export default class FileEditable extends AbstractFile {
+class FileEditable extends AbstractFile {
 
 	constructor(props) {
 		super(props);
@@ -67,6 +73,7 @@ export default class FileEditable extends AbstractFile {
                 {label != null && label !== "" ? <div style={{color:color,fontSize:"10pt",color:"#0000008a",marginBottom:"5px"}}>{this.translate(label)}</div> : undefined }
 				{this._renderPreview()}
 				{this._renderComponent()}
+				{this._renderPasteZone()}
 			</Block>
 		);
 	};
@@ -81,15 +88,22 @@ export default class FileEditable extends AbstractFile {
 	    return this._renderInput();
 	};
 
+	handlePaste = (e) => {
+        const clipboardData = e.clipboardData || window.clipboardData;
+        const file = clipboardData.files.length > 0 ? clipboardData.files[0] : null;
+        if (file == null) return;
+        this.saveFile(file, file.name);
+	};
+
 	_renderDropZone = () => {
 		const { classes } = this.props;
 	    return (
-	        <DropzoneArea
-	            acceptedFiles={this._allowedTypes()}
-	            dropzoneText={this.translate("Drag and drop a file here or click")}
-	            fileObjects={this.state.files}
-	            dropzoneClass="fileeditable-dropzone"
-	            dropzoneParagraphClass="fileeditable-dropzone-paragraph"
+            <DropzoneArea
+                acceptedFiles={this._allowedTypes()}
+                dropzoneText={this.translate("Drag and drop a file here or click")}
+                fileObjects={this.state.files}
+                dropzoneClass="fileeditable-dropzone"
+                dropzoneParagraphClass="fileeditable-dropzone-paragraph"
                 filesLimit={1}
                 maxFileSize={this.props.maxSize != null ? this.props.maxSize : 300000000}
                 showPreviews={false}
@@ -99,9 +113,20 @@ export default class FileEditable extends AbstractFile {
                 previewText={this.translate("Selected file")}
                 showAlerts={false}
                 showFilenames={true}
-	            onDelete={(file) => { this.saveFile(null, null) }}
-	            onChange={(files) => { for (var i=0; i<files.length;i++) this.saveFile(files[i], files[i].name); }}
+                onDelete={(file) => { this.saveFile(null, null) }}
+                onChange={(files) => { for (var i=0; i<files.length;i++) this.saveFile(files[i], files[i].name); }}
             />
+        );
+	};
+
+	_renderPasteZone = () => {
+	    if (!this.props.pasteZone) return (<React.Fragment/>);
+		const { classes } = this.props;
+        return (
+            <input className={classes.pasteInput}
+                   placeholder={this.translate("Paste files here from clipboard")}
+                   disabled={this.state.readonly ? true : undefined}
+                   onPaste={this.handlePaste.bind(this)} value="" ></input>
         );
 	};
 
@@ -187,4 +212,5 @@ export default class FileEditable extends AbstractFile {
 	};
 }
 
-DisplayFactory.register("FileEditable", FileEditable);
+export default withStyles(styles, { withTheme: true })(FileEditable);
+DisplayFactory.register("FileEditable", withStyles(styles, { withTheme: true })(FileEditable));
