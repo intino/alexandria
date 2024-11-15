@@ -145,7 +145,7 @@ export default class Actionable extends AbstractActionable {
 	renderLink = () => {
 		const {classes} = this.props;
 		const className = this._readonly() ? classes.readonly : classes.link;
-		const color = this.props.color != null ? this.props.color : undefined;
+		const color = this.state.color != null ? this.state.color : (this.props.color != null ? this.props.color : undefined);
 		return (
 		    <a id={this.triggerId()}
 		        onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}

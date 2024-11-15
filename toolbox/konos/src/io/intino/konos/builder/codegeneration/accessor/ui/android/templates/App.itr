@@ -143,8 +143,8 @@ rule type(gradle, androidLibrary)
         implementation(libs.http)
         implementation(libs.android.maps)
         implementation(libs.material.icons)
-        implementation(files("./libs/alexandria-5.1.25-release.aar"))
-        implementation(files("./libs/alexandria-shared-5.1.25-release.aar"))
+        <<implementation(files("./libs/alexandria-$alexandriaLibVersion~-release.aar"))>>
+        <<implementation(files("./libs/alexandria-shared-$alexandriaLibVersion~-release.aar"))>>
     }
 
 rule type(gradle, shared)

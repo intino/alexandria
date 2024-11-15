@@ -4,8 +4,14 @@
 }
 
 .fileeditable-dropzone-paragraph {
-    font-size: 14pt !important;
+    font-size: 10pt !important;
     padding: 0 20px;
+    color: #757575 !important;
+}
+
+.MuiDropzoneArea-icon {
+    height: 32px !important;
+    width: 32px !important;
 }
 
 .MuiGrid-spacing-xs-1 {

@@ -73,7 +73,6 @@ class FileEditable extends AbstractFile {
                 {label != null && label !== "" ? <div style={{color:color,fontSize:"10pt",color:"#0000008a",marginBottom:"5px"}}>{this.translate(label)}</div> : undefined }
 				{this._renderPreview()}
 				{this._renderComponent()}
-				{this._renderPasteZone()}
 			</Block>
 		);
 	};
@@ -84,8 +83,11 @@ class FileEditable extends AbstractFile {
 	};
 
 	_renderComponent = () => {
-	    if (this.props.dropZone && !this.state.readonly) return this._renderDropZone();
-	    return this._renderInput();
+	    const result = [];
+	    if (this.props.dropZone && !this.state.readonly) result.push(this._renderDropZone());
+	    else if (!this.props.pasteZone) result.push(this._renderInput());
+	    if (this.props.pasteZone && !this.state.readonly) result.push(this._renderPasteZone());
+	    return result;
 	};
 
 	handlePaste = (e) => {
