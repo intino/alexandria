@@ -9,7 +9,7 @@ rule type(theme)
         $format...[$NL]
     </resources>
 
-rule type(type, Normal)
+rule type(type, Light)
     Theme.Material3.Light
 
 rule type(type, Dark)

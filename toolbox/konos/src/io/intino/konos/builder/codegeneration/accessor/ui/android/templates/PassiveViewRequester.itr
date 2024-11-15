@@ -74,7 +74,8 @@ rule attribute(download) and trigger(method)
 	return Application.fileService()!!.download
 
 rule trigger(method)
-	Application.pushService(element.activity())!!.s
+	Application.pushService(element.activity())!!.send
+
 rule attribute(download) and trigger(returnType)
 	io.intino.alexandria.mobile.UiFile
 
