@@ -1,0 +1,47 @@
+dsl Konos
+
+use Theme
+
+Template(layout=Vertical, spacing=DP8) chatExamplesMold
+
+	Block(layout=Horizontal Wrap, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filledNoAir extraHeight, layout=Horizontal CenterCenter)
+				Chat(label="Chat 1", emptyMessage = "Chat example. Start writing messages") chat1
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Chat(label\="Chat 1",emptyMessage\="Chat example. Write messages to see behavior")
+						=========
+
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="Floating view")
+			Block(spacing=DP8, format=filledNoAir extraHeight, layout=Horizontal End EndJustified)
+				Chat(label="Chat 2", emptyMessage="Chat example. Start writing messages", view=Floating) chat2 as Absolute(width=500px, height=300px)
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Chat(label\="Chat 2",emptyMessage\="Chat example. Write messages to see behavior",view\=Floating)
+						=========
+
+	Block(layout=Horizontal Wrap, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="No facets with incoming/outgoing images")
+			Block(spacing=DP8, format=filledNoAir extraHeight, layout=Horizontal CenterCenter)
+				Chat(label="Chat 3", emptyMessage="Chat example. Start writing messages", incomingImage="icons/chat-incoming.png", outgoingImage="icons/chat-outgoing.png") chat3
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Chat(label\="Chat 3",emptyMessage\="Chat example. Start writing messages", incomingImage\="icons/chat-incoming.png", outgoingImage\="icons/chat-outgoing.png")
+						=========
+
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="No facets with loading images")
+			Block(spacing=DP8, format=filledNoAir extraHeight, layout=Horizontal CenterCenter)
+				Chat(label="Chat 4", emptyMessage="Chat example. Start writing messages", incomingImage="icons/chat-incoming.png", outgoingImage="icons/chat-outgoing.png", loadingImage="icons/chat-loading.png") chat4
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Chat(label\="Chat 4",emptyMessage\="Chat example. Start writing messages", incomingImage\="icons/chat-incoming.png", outgoingImage\="icons/chat-outgoing.png", loadingImage\="icons/chat-loading.png")
+						=========

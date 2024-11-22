@@ -87,6 +87,7 @@ public class ComponentRendererFactory {
 		map.put(conceptOf(Actionable.Action.class), config -> new ActionRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
 		map.put(conceptOf(Actionable.class), config -> new ActionableRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
 		map.put(conceptOf(Kpi.class), config -> new KpiRenderer(config.context(), config.component().a$(Kpi.class), config.provider()));
+		map.put(conceptOf(Chat.class), config -> new ChatRenderer(config.context(), config.component().a$(Chat.class), config.provider()));
 	}
 
 	@SuppressWarnings({"unchecked"})

@@ -61,6 +61,21 @@ Component header
 Component tabs
 Component tab
 
+Component chat
+	Notification refresh as Object(ChatInfo)
+	Notification refreshTitle as Text
+	Notification addPreviousMessages as Object(ChatMessage) List
+	Notification addMessages as Object(ChatMessage) List
+	Notification addMessagePart as Text
+	Notification messagesStartReached
+	Notification open
+	Notification hideLoading
+
+	Request sendMessage as Text
+	Request sendAttachment as Text
+	Request uploadAttachment as File
+	Request previousMessages
+
 Component baseIcon
 	Notification refreshIcon as Text
 	Notification refreshTitle as Text

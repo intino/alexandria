@@ -71,6 +71,7 @@ public class DocsTemplate extends AbstractDocsTemplate<AlexandriaUiBox> {
         body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Reel));
         body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.DocumentEditor));
         body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Kpi));
+        body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Chat));
     }
 
     //    @Override
