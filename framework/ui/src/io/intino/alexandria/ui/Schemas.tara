@@ -495,3 +495,21 @@ Schema DateNavigatorInfo
 Schema KpiColors
 	Attribute text as Text
 	Attribute background as Text
+
+Schema ChatInfo
+	Attribute label as Text
+	Attribute messages as Object(ChatMessage) List
+	Attribute incomingImage as Text
+	Attribute outgoingImage as Text
+	Attribute loadingImage as Text
+
+Schema ChatMessage
+	Attribute date as DateTime
+	Attribute content as Text
+	Attribute direction as Word("Incoming" "Outgoing")
+	Attribute attachments as Object(Attachment) List
+
+Schema Attachment
+	Attribute url as Text
+	Attribute filename as Text
+	Attribute mimeType as Text

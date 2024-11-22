@@ -604,6 +604,12 @@ rule type(properties, grouping) and trigger(specific)
 rule type(properties, kpi) and trigger(specific)
 	<<_value($value);>>
 
+rule type(properties, chat) and trigger(specific)
+	<<_emptyMessage("$emptyMessage");>>
+	<<$loadingImage+resourceMethod>>
+	<<$incomingImage+resourceMethod>>
+	<<$outgoingImage+resourceMethod>>
+
 rule type(properties, sorting) and trigger(specific)
 	<<_path("$path");>>
 

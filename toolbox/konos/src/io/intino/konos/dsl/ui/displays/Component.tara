@@ -177,6 +177,16 @@ Concept ActionableComponents
 				var word:{CurrentObject Selection} context = CurrentObject
 
 Concept:{0..1} VisualizationComponents
+	Concept Chat extends Component
+		var string label = empty
+		var string emptyMessage = empty
+		var word:{ Embedded Floating } view = Embedded
+		var string loadingImage = empty
+		var string incomingImage = empty
+		var string outgoingImage = empty
+		Facet Absolute extends Absolute
+		Facet Relative extends Relative
+
 	Concept Kpi extends Component
 		var word:{Square Circle} mode = Circle
 		var string label = empty

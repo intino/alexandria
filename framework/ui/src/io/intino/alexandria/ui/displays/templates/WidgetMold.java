@@ -140,6 +140,8 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
         if (documentEditorExamples.isVisible()) documentEditorExamples.documentEditorExamplesMold.refresh();
         kpiExamples.visible(widget instanceof KpiWidget);
         if (kpiExamples.isVisible()) kpiExamples.kpiExamplesMold.refresh();
+        chatExamples.visible(widget instanceof ChatWidget);
+        if (chatExamples.isVisible()) chatExamples.chatExamplesMold.refresh();
     }
 
     private void updateInfo() {
