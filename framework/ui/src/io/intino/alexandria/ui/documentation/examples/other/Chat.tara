@@ -39,9 +39,9 @@ Template(layout=Vertical, spacing=DP8) chatExamplesMold
 		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets with loading images")
 			Block(spacing=DP8, format=filledNoAir extraHeight, layout=Horizontal CenterCenter)
-				Chat(label="Chat 4", emptyMessage="Chat example. Start writing messages", incomingImage="icons/chat-incoming.png", outgoingImage="icons/chat-outgoing.png", loadingImage="icons/chat-loading.png") chat4
+				Chat(label="Chat 4", emptyMessage="Chat example. Start writing messages", incomingImage="icons/chat-incoming.png", outgoingImage="icons/chat-outgoing.png", loadingImage="icons/chat-loading.png", messageFlow=Continuous) chat4
 			Block > Text as Code(language=Html)
 					value
 						=========
-						Chat(label\="Chat 4",emptyMessage\="Chat example. Start writing messages", incomingImage\="icons/chat-incoming.png", outgoingImage\="icons/chat-outgoing.png", loadingImage\="icons/chat-loading.png")
+						Chat(label\="Chat 4",emptyMessage\="Chat example. Start writing messages", incomingImage\="icons/chat-incoming.png", outgoingImage\="icons/chat-outgoing.png", loadingImage\="icons/chat-loading.png", messageFlow\=InTurn)
 						=========

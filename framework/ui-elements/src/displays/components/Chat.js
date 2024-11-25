@@ -16,6 +16,7 @@ import SaveAltIcon from '@material-ui/icons/SaveAlt';
 import {emojify} from 'react-emojione';
 import 'alexandria-ui-elements/res/styles/layout.css';
 import 'alexandria-ui-elements/res/styles/components/chat/styles.css';
+import { BeatLoader } from "react-spinners";
 import { marked } from "marked";
 import { DropzoneArea } from 'material-ui-dropzone';
 
@@ -31,6 +32,9 @@ const styles = theme => ({
         width: "100%",
         height: "calc(100% - 97px)",
         background: theme.isLight() ? "white" : "#303030",
+    },
+    messagesContainerNoHeader : {
+        height: "calc(100% - 47px)",
     },
     startReached : {
         padding: "10px",
@@ -152,10 +156,11 @@ class Chat extends AbstractChat {
 	renderContent = () => {
 	    const { classes } = this.props;
 	    window.setTimeout(e => this.setupContainer(), 100);
+	    const containerClassName = this.isHeaderVisible() ? classes.messagesContainer : classnames(classes.messagesContainer, classes.messagesContainerNoHeader);
 	    return (
 	        <div className={classnames("layout vertical flex intino-chat", classes.container)}>
 	            {this.renderHeader()}
-                <div ref={this.messagesContainer} className={classes.messagesContainer} onScroll={this.handleScroll.bind(this)}>
+                <div ref={this.messagesContainer} className={containerClassName} onScroll={this.handleScroll.bind(this)}>
                     {(this.state.startReached && this.state.messages.length > 0) && <div className={classnames("layout vertical center-center", classes.startReached)}>{this.translate("No more previous messages")}</div>}
                     {this.state.messages.map((m, index) => this.renderMessage(m, index))}
                 </div>
@@ -166,7 +171,13 @@ class Chat extends AbstractChat {
 
 	renderHeader = () => {
 	    const { classes } = this.props;
+	    if (!this.isHeaderVisible()) return (<React.Fragment/>);
 	    return (<div className={classes.header}>{this.state.label}</div>);
+	};
+
+	isHeaderVisible = () => {
+	    if (this.props.view == "Floating") return true;
+	    return this.state.label != null && this.state.label != "";
 	};
 
 	renderMessage = (message, index) => {
@@ -202,7 +213,7 @@ class Chat extends AbstractChat {
 	    const { classes } = this.props;
 		const language = window.Application.configuration.language;
 	    const images = this.state.images;
-	    const showLoading = this.loadingDefined() && this.state.loading && index == this.state.messages.length-1;
+	    const showLoading = this.loadingDefined() && this.processing() && index == this.state.messages.length-1;
 	    return (
 	        <div className={classnames("layout horizontal center", blockClazz)}>
                 {showLoading && <img src={images.loading} style={{height:"24px",width:"24px",margin:"0 5px"}}/> }
@@ -223,13 +234,19 @@ class Chat extends AbstractChat {
 	    return this.state.images.loading != null;
 	};
 
+	processing = () => {
+	    const messages = this.state.messages;
+	    if (this.props.messageFlow == "Continuous") return false;
+	    return this.state.loading || (messages.length > 0 && messages[messages.length-1].active);
+    };
+
 	loadingDefined = () => {
 	    return this.state.images.loading != null;
 	};
 
 	renderMessageContent = (message, index) => {
 	    this.refreshEvents();
-	    if (message.content == null || message.content === "") return (<React.Fragment/>);
+	    if (message.content == null || message.content === "") return (<BeatLoader size={8} />);
 	    return (<InnerHTML id={this.props.id + "-" + index + "-html"} html={emojify(this.parse(message.content), { output: 'unicode' })} allowRerender={true}/>);
 	};
 
@@ -263,9 +280,9 @@ class Chat extends AbstractChat {
 	    return (
 	        <React.Fragment>
                 <div className={classnames(classes.toolbar, "layout horizontal center")}>
-                    <IconButton style={{marginRight:'5px'}} size="small" aria-label={this.translate("Add")} color="inherit" onClick={this.handleOpenAttachmentDialog.bind(this)}><Add fontSize="small"/></IconButton>
-                    <TextField onKeyUp={this.handleMessageKeyUp.bind(this)} onChange={this.handleMessageChange.bind(this)} autoFocus={true} value={this.state.message} format={this.variant("body1")} placeholder={this.translate("Write a message...")} type="text" className={classes.input} multiline={false} InputProps={{ disableUnderline: true }}></TextField>
-                    <IconButton size="small" aria-label={this.translate("Send")} color="inherit" onClick={this.handleSendMessage.bind(this)}><Send fontSize="small"/></IconButton>
+                    <IconButton disabled={this.processing()} style={{marginRight:'5px'}} size="small" aria-label={this.translate("Add")} color="inherit" onClick={this.handleOpenAttachmentDialog.bind(this)}><Add fontSize="small"/></IconButton>
+                    <TextField onKeyUp={this.handleMessageKeyUp.bind(this)} onChange={this.handleMessageChange.bind(this)} autoFocus={true} value={this.state.message} format={this.variant("body1")} placeholder={this.translate("Write a message...")} type="text" className={classes.input} multiline={false} InputProps={{ readOnly: this.processing(), disableUnderline: true }}></TextField>
+                    <IconButton disabled={this.processing()} size="small" aria-label={this.translate("Send")} color="inherit" onClick={this.handleSendMessage.bind(this)}><Send fontSize="small"/></IconButton>
                 </div>
                 {this.renderAttachmentDialog()}
             </React.Fragment>
@@ -308,7 +325,7 @@ class Chat extends AbstractChat {
                 </DialogContent>
                 <DialogActions>
                   <Button onClick={this.handleCloseAttachmentDialog.bind(this)} color="primary">{this.translate("Cancel")}</Button>
-                  <Button onClick={this.handleSendAttachment.bind(this)} color="primary" variant="contained">{this.translate("Add")}</Button>
+                  <Button disabled={this.processing()} onClick={this.handleSendAttachment.bind(this)} color="primary" variant="contained">{this.translate("Add")}</Button>
                 </DialogActions>
             </Dialog>
         );
@@ -349,8 +366,8 @@ class Chat extends AbstractChat {
 	};
 
 	handleSendAttachment = () => {
-	    this.requester.sendAttachment(this.state.attachment.description != null ? this.state.attachment.description : "");
 	    this.setState({ addAttachmentDialogOpened: false, loading: true });
+	    this.requester.sendAttachment(this.state.attachment.description != null ? this.state.attachment.description : "");
 	};
 
 	handleSendMessage = () => {
@@ -358,7 +375,7 @@ class Chat extends AbstractChat {
 	};
 
 	refresh = (info) => {
-	    this.setState({label: info.label, messages: info.messages, scroll: -1, images: { incoming: info.incomingImage, outgoing: info.outgoingImage, loading: info.loadingImage }});
+	    this.setState({label: info.label, messages: info.messages, scroll: -1, loading: false, images: { incoming: info.incomingImage, outgoing: info.outgoingImage, loading: info.loadingImage }});
 	};
 
 	open = () => {
@@ -392,8 +409,11 @@ class Chat extends AbstractChat {
 	    this.setState({messages: messages,loading:true});
 	};
 
-	hideLoading = () => {
-	    this.setState({loading: false});
+	closeMessage = () => {
+	    var messages = this.state.messages;
+	    if (messages.length <= 0) return;
+	    messages[messages.length-1].active = false;
+	    this.setState({messages: messages, loading: false});
 	};
 
 	setupContainer = () => {
@@ -403,7 +423,7 @@ class Chat extends AbstractChat {
             container.scrollTop = this.state.scroll == -1 ? container.scrollHeight : 0;
 	        return;
 	    }
-        container.style.height = container.parentNode.getBoundingClientRect().height + "px";
+        container.style.height = container.parentNode.getBoundingClientRect().height-50 + "px";
         container.scrollTop = this.state.scroll == -1 ? container.scrollHeight : 0;
 	};
 
@@ -553,8 +573,8 @@ class Chat extends AbstractChat {
 
     sendMessage = (message) => {
         if (message == null || message == "") return;
-        this.requester.sendMessage(this.state.message);
         this.setState({message: "", loading: true});
+        this.requester.sendMessage(message);
     };
 
     width = () => {

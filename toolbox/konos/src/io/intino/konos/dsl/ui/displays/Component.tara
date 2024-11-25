@@ -181,6 +181,7 @@ Concept:{0..1} VisualizationComponents
 		var string label = empty
 		var string emptyMessage = empty
 		var word:{ Embedded Floating } view = Embedded
+		var word:{Continuous InTurn} messageFlow = Continuous
 		var string loadingImage = empty
 		var string incomingImage = empty
 		var string outgoingImage = empty

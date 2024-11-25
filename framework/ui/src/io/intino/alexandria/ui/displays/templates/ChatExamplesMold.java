@@ -7,7 +7,7 @@ import io.intino.alexandria.ui.displays.components.Chat;
 import io.intino.alexandria.ui.model.chat.ChatDatasource;
 import io.intino.alexandria.ui.model.chat.Message;
 import io.intino.alexandria.ui.model.chat.MessageReader;
-import io.intino.alexandria.ui.model.chat.readers.BucketMessageReader;
+import io.intino.alexandria.ui.model.chat.buckets.BucketMessageReader;
 
 import java.io.File;
 import java.io.IOException;
@@ -83,19 +83,20 @@ public class ChatExamplesMold extends AbstractChatExamplesMold<UiFrameworkBox> {
 			}
 
 			private void sendAll(String message, ResponseReceiver receiver) {
-				receiver.add("Message received: " + message).end();
+				receiver.create("Message received: " + message).end();
 			}
 
 			private void sendDelayed(String message, ResponseReceiver receiver) {
-				schedule(e -> {
-					receiver.add("Message");
-					schedule(e1 -> {
-						receiver.add(" received");
-						schedule(e2 -> {
-							receiver.add(": ");
-							schedule(e3 -> {
-								receiver.add("**" + message + "**");
-								schedule(e4 -> receiver.end());
+				ResponseReceiver.MessageBuffer buffer = receiver.create("");
+				schedule(e1 -> {
+					buffer.add("Message");
+					schedule(e2 -> {
+						buffer.add(" received");
+						schedule(e3 -> {
+							buffer.add(": ");
+							schedule(e4 -> {
+								buffer.add("**" + message + "**");
+								schedule(e5 -> buffer.end());
 							});
 						});
 					});
@@ -109,7 +110,7 @@ public class ChatExamplesMold extends AbstractChatExamplesMold<UiFrameworkBox> {
 					public void run() {
 						consumer.accept(true);
 					}
-				}, 500);
+				}, 700);
 			}
 
 		};

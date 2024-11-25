@@ -58,13 +58,12 @@ public class Chat<DN extends ChatNotifier, B extends Box> extends AbstractChat<B
 
 	public void sendMessage(String content) {
 		add(Message.with(content, Message.Direction.Outgoing));
-		add(Message.with("", Message.Direction.Incoming));
 		source.send(content, responseReceiver());
 	}
 
 	public void sendAttachment(String content) {
 		add(Message.with(content, Message.Direction.Outgoing, List.of(attachment.name())));
-		add(Message.with("", Message.Direction.Incoming));
+		add(Message.with("", Message.Direction.Incoming).active(true));
 		source.send(content, List.of(attachment), responseReceiver());
 	}
 
@@ -140,6 +139,7 @@ public class Chat<DN extends ChatNotifier, B extends Box> extends AbstractChat<B
 	private ChatMessage schemaOf(Message message) {
 		return new ChatMessage().date(message.ts())
 								.content(message.content())
+								.active(message.active())
 								.direction(ChatMessage.Direction.valueOf(message.direction().name()))
 								.attachments(attachments(message));
 	}
@@ -158,22 +158,22 @@ public class Chat<DN extends ChatNotifier, B extends Box> extends AbstractChat<B
 	private ChatDatasource.ResponseReceiver responseReceiver() {
 		return new ChatDatasource.ResponseReceiver() {
 			@Override
-			public ChatDatasource.ResponseReceiver create(String content) {
-				notifier.hideLoading();
-				Chat.this.add(Message.with(content, Message.Direction.Incoming));
-				return this;
-			}
+			public MessageBuffer create(String content) {
+				notifier.closeMessage();
+				Chat.this.add(Message.with(content, Message.Direction.Incoming).active(true));
+				return new MessageBuffer() {
+					@Override
+					public MessageBuffer add(String content) {
+						notifier.addMessagePart(content);
+						return this;
+					}
 
-			@Override
-			public ChatDatasource.ResponseReceiver add(String content) {
-				notifier.addMessagePart(content);
-				return this;
-			}
-
-			@Override
-			public ChatDatasource.ResponseReceiver end() {
-				notifier.hideLoading();
-				return this;
+					@Override
+					public MessageBuffer end() {
+						notifier.closeMessage();
+						return this;
+					}
+				};
 			}
 		};
 	}

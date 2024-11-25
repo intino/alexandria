@@ -1,4 +1,4 @@
-package io.intino.alexandria.ui.model.chat.readers;
+package io.intino.alexandria.ui.model.chat.buckets;
 
 import io.intino.alexandria.Json;
 import io.intino.alexandria.Timetag;

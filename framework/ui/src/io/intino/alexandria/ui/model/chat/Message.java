@@ -8,6 +8,7 @@ public class Message {
 	private Instant ts;
 	private Direction direction;
 	private String content;
+	private boolean active = false;
 	private List<String> attachments = new ArrayList<>();
 
 	public static Message with(String content, Direction direction) {
@@ -44,6 +45,15 @@ public class Message {
 
 	public Message content(String content) {
 		this.content = content;
+		return this;
+	}
+
+	public boolean active() {
+		return active;
+	}
+
+	public Message active(boolean active) {
+		this.active = active;
 		return this;
 	}
 
