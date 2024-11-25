@@ -28,6 +28,7 @@ export default class Block extends AbstractBlock {
 	};
 
 	render() {
+	    if (!this.state.visible) return (<React.Fragment/>);
 	    const content = this.renderContent();
 	    if (!this.state.autoSize) return content;
 	    return (
