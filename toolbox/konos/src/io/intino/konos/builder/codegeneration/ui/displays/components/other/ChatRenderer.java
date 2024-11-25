@@ -17,6 +17,7 @@ public class ChatRenderer extends SizedRenderer<VisualizationComponents.Chat> {
 		FrameBuilder properties = super.properties();
 		properties.add("label", element.label());
 		properties.add("view", element.view().name());
+		properties.add("messageFlow", element.messageFlow().name());
 		if (element.emptyMessage() != null) properties.add("emptyMessage", element.emptyMessage());
 		if (element.loadingImage() != null) properties.add("loadingImage", resourceMethodFrame("loadingImage", element.loadingImage()));
 		if (element.incomingImage() != null) properties.add("incomingImage", resourceMethodFrame("incomingImage", element.incomingImage()));

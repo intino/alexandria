@@ -68,7 +68,7 @@ rule type(properties, kpi) and trigger(specific)
 	<< mode="$mode">><< unit="$unit">><< textColor="$textColor">><< backgroundColor="$backgroundColor">><< highlightedColor="$highlightedColor">><< value="$value">><< size="$size">><< textPosition="$textPosition">>
 
 rule type(properties, chat) and trigger(specific)
-	<< view="$view">><< width="$width">><< height="$height">>
+	<< view="$view">><< width="$width">><< height="$height">><< messageFlow="$messageFlow">>
 
 rule type(properties, template) and trigger(specific)
 	<< layout="$layout...[ ]">><< width="$width">><< height="$height">><< spacing="$spacing">>

@@ -79,6 +79,8 @@
     <orderEntry type="library" name="Intino: io.intino:builder-interface:2.1.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.magritte:builder:7.0.6" level="project" />
     <orderEntry type="library" name="Intino: io.intino.tara:builder:1.2.4" level="project" />
-    <orderEntry type="library" name="Intino: tara.dsl:konos:12.3.3" level="project" />
+    <orderEntry type="library" name="Intino: tara.dsl:konos:12.3.4" level="project" />
+    <orderEntry type="library" name="Intino: org.slf4j:slf4j-api:1.7.12" level="project" />
+    <orderEntry type="library" name="Intino: org.slf4j:slf4j-simple:1.7.12" level="project" />
   </component>
 </module>

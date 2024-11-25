@@ -506,6 +506,7 @@ Schema ChatInfo
 Schema ChatMessage
 	Attribute date as DateTime
 	Attribute content as Text
+	Attribute active as Bool
 	Attribute direction as Word("Incoming" "Outgoing")
 	Attribute attachments as Object(Attachment) List
 

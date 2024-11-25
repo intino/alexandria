@@ -18,8 +18,11 @@ public interface ChatDatasource {
 	URL attachmentUrl(Message message, String name);
 
 	interface ResponseReceiver {
-		ResponseReceiver create(String content);
-		ResponseReceiver add(String content);
-		ResponseReceiver end();
+		MessageBuffer create(String content);
+
+		interface MessageBuffer {
+			MessageBuffer add(String content);
+			MessageBuffer end();
+		}
 	}
 }

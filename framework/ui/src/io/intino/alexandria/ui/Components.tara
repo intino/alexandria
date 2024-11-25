@@ -69,7 +69,7 @@ Component chat
 	Notification addMessagePart as Text
 	Notification messagesStartReached
 	Notification open
-	Notification hideLoading
+	Notification closeMessage
 
 	Request sendMessage as Text
 	Request sendAttachment as Text
