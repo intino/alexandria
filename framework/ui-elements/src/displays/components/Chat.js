@@ -416,22 +416,22 @@ class Chat extends AbstractChat {
 	    this.setState({messages: messages, loading: false});
 	};
 
-	setupContainer = () => {
+	setupContainer = (resize) => {
 	    if (this.messagesContainer.current == null) return;
 	    var container = this.messagesContainer.current;
-	    if (container.offsetHeight > 20) {
-            container.scrollTop = this.state.scroll == -1 ? container.scrollHeight : 0;
-	        return;
-	    }
-        container.style.height = container.parentNode.getBoundingClientRect().height-50 + "px";
-        container.scrollTop = this.state.scroll == -1 ? container.scrollHeight : 0;
+	    const height = container.parentNode.getBoundingClientRect().height-52;
+        if (height > 0 && (container.style.height == 0 || resize)) container.style.height = height + "px";
+	    if (container.offsetHeight > 20) container.scrollTop = this.state.scroll == -1 ? container.scrollHeight : 0;
+        else container.scrollTop = this.state.scroll == -1 ? container.scrollHeight : 0;
 	};
 
 	resize = () => {
-	    if (this.messagesContainer.current == null) return;
+	    if (this.resizeTimer != null) window.clearTimeout(this.resizeTimer);
 	    var container = this.messagesContainer.current;
-	    container.style.height = 0;
-	    this.setupContainer();
+	    this.resizeTimer = window.setTimeout(() => {
+    	    container.style.height = "100px";
+	        this.setupContainer(true)
+        }, 50);
 	};
 
 	handleScroll = (e) => {

@@ -18,6 +18,8 @@ Component blockSplitter
 	Notification show as Integer
 	Request back
 
+Component blockResizable
+
 Component blockParallax
 	Notification refresh as Text
 
