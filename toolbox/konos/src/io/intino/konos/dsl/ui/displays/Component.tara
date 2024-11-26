@@ -46,6 +46,7 @@ Concept Block extends Component
 		var string background
 	Facet Conditional
 		var Component.Option selected = empty
+	Facet Resizable
 	Facet Animated extends Animated
 
 	Facet Multiple extends Multiple

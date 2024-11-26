@@ -28,13 +28,14 @@ export default class Block extends AbstractBlock {
 	};
 
 	render() {
+	    if (!this.state.visible) return (<React.Fragment/>);
 	    const content = this.renderContent();
 	    if (!this.state.autoSize) return content;
 	    return (
 	        <div style={{position:'relative',height:'100%'}}>
 	            <AutoSizer>
 	                {({ height, width }) => (
-	                    <div style={{height:height+"px",width:width+"px",overflow:'auto'}}>{content}</div>
+	                    <div style={{height:height+"px",width:(width-1)+"px",overflow:'auto'}}>{content}</div>
                     )}
                 </AutoSizer>
 	        </div>

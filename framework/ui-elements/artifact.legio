@@ -45,6 +45,7 @@ Artifact("io.intino.alexandria", "5.3.7") ui-framework-elements
 		WebComponent("dangerously-set-html-content", "^1.0.9")
 		WebComponent("react-emojione", "^1.2.2")
 		WebComponent("marked", "^4.0.0")
+		WebComponent("react-resizable-panels", "^2.1.7")
 
 		Resolution("react", "^16.13.1")
 		Resolution("react-dom", "^16.13.1")
