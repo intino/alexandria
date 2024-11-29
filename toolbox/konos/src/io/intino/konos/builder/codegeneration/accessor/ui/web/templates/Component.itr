@@ -56,7 +56,7 @@ rule type(properties, dashboard) and trigger(common)
 	<< width="$width">><< height="$height">><< style="$style">>
 
 rule type(properties) and trigger(common)
-	<< name="$name">><< label="$label">><< format="$format...[ ]">><< color="$color">><< visible={$visible}>><< traceable={$traceable}>><< multiple={{instances:"$instances",arrangement:"$multipleArrangement",noItemsMessage:"$multipleNoItemsMessage",spacing:$multipleSpacing,editable:$multipleEditable,wrap:$multipleWrapItems,collapsed:$multipleCollapsed,count:{min:$multipleMin,max:$multipleMax}}}>><< style="$style">>
+	<< name="$name">><< label="$label">><< format="$format...[ ]">><< color="$color">><< darkColor="$darkColor">><< visible={$visible}>><< traceable={$traceable}>><< multiple={{instances:"$instances",arrangement:"$multipleArrangement",noItemsMessage:"$multipleNoItemsMessage",spacing:$multipleSpacing,editable:$multipleEditable,wrap:$multipleWrapItems,collapsed:$multipleCollapsed,count:{min:$multipleMin,max:$multipleMax}}}>><< style="$style">>
 
 rule type(properties, openpopover) and trigger(specific)
 	<< triggerEvent="$triggerEvent">>

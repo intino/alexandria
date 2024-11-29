@@ -9,6 +9,7 @@ import Block from "./Block";
 import BlockBehavior from "./behaviors/BlockBehavior";
 import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels";
 import 'alexandria-ui-elements/res/styles/components/blockresizable/styles.css';
+import Theme from "app-elements/gen/Theme";
 
 const styles = theme => ({});
 
@@ -69,7 +70,11 @@ class BlockResizable extends AbstractBlockResizable {
 	};
 
 	_color = () => {
-	    return this.props.color != null ? this.props.color : "#aaa";
+		const theme = Theme.get();
+	    const defaultColor = theme.isDark() ? "black" : "#aaa";
+	    if (this.props.color == null) return defaultColor;
+	    if (theme.isDark()) return this.props.darkColor != null ? this.props.darkColor : defaultColor;
+	    else return this.props.color != null ? this.props.color : defaultColor;
 	};
 
 	_direction = () => {

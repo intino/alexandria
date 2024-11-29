@@ -134,6 +134,10 @@ Component signAction as ExtensionOf(actionable)
 	Request success as Object(SignActionSignatureSuccess)
 	Request failure as Object(SignActionSignatureFailure)
 
+Component authenticate as ExtensionOf(actionable)
+	Notification sign
+	Request execute
+
 Component signText as ExtensionOf(signAction)
 	Request execute
 

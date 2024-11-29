@@ -64,8 +64,12 @@ public abstract class SignAction<DN extends SignActionNotifier, B extends Box> e
 	@Override
 	public void init() {
 		super.init();
-		server = new AutoFirmaServer((AlexandriaUiBox)box(), session()).listen();
-		refresh();
+		try {
+			server = new AutoFirmaServer((AlexandriaUiBox) box(), session()).listen();
+			refresh();
+		}
+		catch (Throwable ignored) {
+		}
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.Attachment;
 import io.intino.alexandria.schemas.ChatInfo;
 import io.intino.alexandria.schemas.ChatMessage;
+import io.intino.alexandria.schemas.ChatSendMessageInfo;
 import io.intino.alexandria.ui.displays.notifiers.ChatNotifier;
 import io.intino.alexandria.ui.model.chat.ChatDatasource;
 import io.intino.alexandria.ui.model.chat.Message;
@@ -56,9 +57,9 @@ public class Chat<DN extends ChatNotifier, B extends Box> extends AbstractChat<B
 		notifier.addMessages(List.of(schemaOf(message)));
 	}
 
-	public void sendMessage(String content) {
-		add(Message.with(content, Message.Direction.Outgoing));
-		source.send(content, responseReceiver());
+	public void sendMessage(ChatSendMessageInfo info) {
+		add(Message.with(info.displayMessage() != null ? info.displayMessage() : info.message(), Message.Direction.Outgoing));
+		source.send(info.message(), responseReceiver());
 	}
 
 	public void sendAttachment(String content) {
