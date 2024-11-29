@@ -150,6 +150,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	public FrameBuilder properties() {
 		FrameBuilder result = new FrameBuilder().add("properties").add(typeOf(element));
 		if (element.color() != null && !element.color().isEmpty()) result.add("color", element.color());
+		if (element.darkColor() != null && !element.darkColor().isEmpty()) result.add("darkColor", element.darkColor());
 		if (element.isOption()) result.add("name", element.asOption().name$());
 		if (element.i$(conceptOf(Component.Labeled.class)))
 			result.add("label", element.a$(Component.Labeled.class).label());

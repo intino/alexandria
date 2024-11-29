@@ -69,6 +69,7 @@ public class ComponentRendererFactory {
 		map.put(conceptOf(Actionable.OpenPage.class), config -> new OpenPageRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
 		map.put(conceptOf(Actionable.OpenSite.class), config -> new OpenSiteRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
 		map.put(conceptOf(Actionable.SignText.class), config -> new SignTextRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
+		map.put(conceptOf(Actionable.Authenticate.class), config -> new AuthenticateRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
 		map.put(conceptOf(Actionable.SignDocument.class), config -> new SignDocumentRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
 		map.put(conceptOf(Actionable.OpenDrawer.class), config -> new OpenDrawerRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
 		map.put(conceptOf(Actionable.OpenLayer.class), config -> new OpenLayerRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));

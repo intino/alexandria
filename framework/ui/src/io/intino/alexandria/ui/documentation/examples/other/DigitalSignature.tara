@@ -36,3 +36,14 @@ Template(layout=Vertical, spacing=DP8) digitalSignatureExamplesMold
 						=========
 						Link(title\="Sign documents") as SignDocument
 						=========
+
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="Authenticate")
+			Block(format=filledNoAir, layout=Vertical CenterCenter)
+				Block as Relative(width=90%)
+					Block(layout=Horizontal StartJustified, format=airTop) > Button(title = "Authenticate", size=Small, highlight=Fill) authenticate as Authenticate
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Button(title\="Authenticate") as Authenticate
+						=========

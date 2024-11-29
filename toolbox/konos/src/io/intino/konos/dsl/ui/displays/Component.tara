@@ -10,6 +10,7 @@ use UI
 
 Concept Component extends Display
 	var string color = empty
+	var string darkColor = empty
 	var Format[] format = empty
 	var boolean visible = true
 	Facet Option
@@ -160,6 +161,7 @@ Concept ActionableComponents
 			sub OpenPopover > var Block.Popover popover; var word:{MouseClick MouseOver} triggerEvent = MouseClick
 			sub SelectPreviousItem > var CatalogComponents.Collection collection
 			sub SelectNextItem > var CatalogComponents.Collection collection
+			sub Authenticate
 			sub SignText > var string text = empty; var word:{CAdES XAdES} signFormat = XAdES
 			sub SignDocument > var string document = empty
 			sub SetDarkMode

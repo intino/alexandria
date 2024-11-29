@@ -112,6 +112,7 @@ public class ElementHelper {
 		if (actionable.isCopyToClipboard())
 			result = ActionableComponents.Actionable.CopyToClipboard.class.getSimpleName();
 		if (actionable.isSignText()) result = ActionableComponents.Actionable.SignText.class.getSimpleName();
+		if (actionable.isAuthenticate()) result = ActionableComponents.Actionable.Authenticate.class.getSimpleName();
 		if (actionable.isSignDocument()) result = ActionableComponents.Actionable.SignDocument.class.getSimpleName();
 		if (actionable.isSelectPreviousItem())
 			result = ActionableComponents.Actionable.SelectPreviousItem.class.getSimpleName();

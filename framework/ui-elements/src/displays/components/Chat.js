@@ -215,9 +215,9 @@ class Chat extends AbstractChat {
 	    const images = this.state.images;
 	    const showLoading = this.loadingDefined() && this.processing() && index == this.state.messages.length-1;
 	    return (
-	        <div className={classnames("layout horizontal center", blockClazz)}>
-                {showLoading && <img src={images.loading} style={{height:"24px",width:"24px",margin:"0 5px"}}/> }
-                {(!showLoading && message.direction == "Incoming" && images.incoming != null) && <img src={images.incoming} style={{height:"24px",width:"24px",margin:"0 5px"}}/> }
+	        <div className={classnames("layout horizontal start", blockClazz)}>
+                {showLoading && <img src={images.loading} style={{height:"24px",width:"24px",margin:"5px"}}/> }
+                {(!showLoading && message.direction == "Incoming" && images.incoming != null) && <img src={images.incoming} style={{height:"24px",width:"24px",margin:"5px"}}/> }
 	            <div className={classnames("layout horizontal end", clazz)}>
 	                <div>
 	                    <div className={classes.content}>{this.renderMessageContent(message, index)}</div>
@@ -251,7 +251,8 @@ class Chat extends AbstractChat {
 	};
 
 	parse = (content) => {
-        return marked.parse(content);
+	    const hasHtml = new RegExp("<\\/?[a-z][^>]*>").test(content);
+	    return hasHtml ? content : marked.parse(content);
 	};
 
 	renderMessageAttachments = (message, index) => {
@@ -383,7 +384,8 @@ class Chat extends AbstractChat {
 	};
 
 	refreshEvents = () => {
-        window.sendMessage = this.sendMessage.bind(this);
+	    var widget = this;
+        window.sendMessage = (message, label) => { widget.sendMessage(message, label) };
     };
 
 	messagesStartReached = () => {
@@ -571,10 +573,10 @@ class Chat extends AbstractChat {
         this.sendMessage(e.target.value);
     };
 
-    sendMessage = (message) => {
+    sendMessage = (message, displayMessage) => {
         if (message == null || message == "") return;
         this.setState({message: "", loading: true});
-        this.requester.sendMessage(message);
+        this.requester.sendMessage({message: message, displayMessage: displayMessage});
     };
 
     width = () => {

@@ -52,6 +52,7 @@ public class OpenPopover<DN extends OpenPopoverNotifier, B extends Box> extends 
 
 	public void execute() {
 		if (this.popover == null) return;
+		notifier.refreshTriggerId(triggerId);
 		this.popover.interactionsEnabled(triggerEvent == TriggerEvent.MouseClick);
 		this.popover.open(triggerId);
 		if (openListener != null) openListener.accept(new Event(this));

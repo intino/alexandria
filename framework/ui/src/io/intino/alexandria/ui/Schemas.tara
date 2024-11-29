@@ -510,6 +510,10 @@ Schema ChatMessage
 	Attribute direction as Word("Incoming" "Outgoing")
 	Attribute attachments as Object(Attachment) List
 
+Schema ChatSendMessageInfo
+	Attribute message as Text
+	Attribute displayMessage as Text
+
 Schema Attachment
 	Attribute url as Text
 	Attribute filename as Text
