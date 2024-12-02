@@ -17,6 +17,7 @@ class Location extends AbstractLocation {
 	};
 
 	render() {
+	    if (!this.state.visible) return (<React.Fragment/>);
 		return this.renderLayer();
 	}
 

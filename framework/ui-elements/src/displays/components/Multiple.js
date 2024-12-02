@@ -74,7 +74,7 @@ export default class Multiple extends AbstractMultiple {
 	        <Accordion expanded={expandedItem === id} onChange={this.handleSelect.bind(this, id)}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
                     <div className="layout horizontal center flex">
-                        <div style={{minWidth:"33%"}}><Typography variant="h6">{instance.pl.label}</Typography></div>
+                        <div style={{minWidth:"33%"}}><Typography style={{fontWeight:"bold"}}>{instance.pl.label}</Typography></div>
                         {instance.pl.description != null && instance.pl.description != "" && <Typography style={{color:theme.palette.text.secondary}}>{instance.pl.description}</Typography>}
                     </div>
                 </AccordionSummary>
