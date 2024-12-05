@@ -11,6 +11,8 @@ use UI
 Concept Component extends Display
 	var string color = empty
 	var string darkColor = empty
+	var string backgroundColor = empty
+	var string backgroundDarkColor = empty
 	var Format[] format = empty
 	var boolean visible = true
 	Facet Option

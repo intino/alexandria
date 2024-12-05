@@ -146,11 +146,12 @@ export default class Actionable extends AbstractActionable {
 		const {classes} = this.props;
 		const className = this._readonly() ? classes.readonly : classes.link;
 		const color = this.state.color != null ? this.state.color : (this.props.color != null ? this.props.color : undefined);
+		const backgroundColor = this.state.backgroundColor != null ? this.state.backgroundColor : (this.props.backgroundColor != null ? this.props.backgroundColor : undefined);
 		return (
 		    <a id={this.triggerId()}
 		        onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
 		        disabled={this._readonly()}>
-				<Typography style={{...this.style(),color:color}} variant={this.variant("body1")} className={className}>{this._title()}</Typography>
+				<Typography style={{...this.style(),color:color,backgroundColor:backgroundColor}} variant={this.variant("body1")} className={className}>{this._title()}</Typography>
 			</a>
 		);
 	};
