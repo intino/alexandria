@@ -30,6 +30,12 @@ public abstract class Component<DN extends ComponentNotifier, B extends Box> ext
 		return this;
 	}
 
+	public Component<DN, B> backgroundColor(String color) {
+		this._color(color);
+		notifier.refreshBackgroundColor(color);
+		return this;
+	}
+
 	public Component<DN, B> formats(Set<String> formats) {
 		notifier.refreshFormat(String.join(" ", formats));
 		return this;

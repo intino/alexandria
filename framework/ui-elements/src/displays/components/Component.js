@@ -13,6 +13,7 @@ export default class Component extends AlexandriaDisplay {
             loading: true,
             visible: this.props.visible != null ? this.props.visible : true,
             color: this.props.color != null ? this.props.color : null,
+            backgroundColor: this.props.backgroundColor != null ? this.props.backgroundColor : null,
             format: this.props.format,
             ...this.state
         };
@@ -60,6 +61,18 @@ export default class Component extends AlexandriaDisplay {
 
     refreshColor = (color) => {
         this.setState({ color: color });
+    };
+
+    refreshDarkColor = (color) => {
+        this.setState({ darkColor: color });
+    };
+
+    refreshBackgroundColor = (color) => {
+        this.setState({ backgroundColor: color });
+    };
+
+    refreshDarkBackgroundColor = (color) => {
+        this.setState({ darkBackgroundColor: color });
     };
 
     refreshFormat = (format) => {

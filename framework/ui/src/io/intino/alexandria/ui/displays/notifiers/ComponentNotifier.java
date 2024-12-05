@@ -30,6 +30,10 @@ public class ComponentNotifier extends DisplayNotifier {
 		putToDisplay("refreshColor", "v", color);
 	}
 
+	public void refreshBackgroundColor(String color) {
+		putToDisplay("refreshBackgroundColor", "v", color);
+	}
+
 	public void refreshFormat(String format) {
 		putToDisplay("refreshFormat", "v", format);
 	}
