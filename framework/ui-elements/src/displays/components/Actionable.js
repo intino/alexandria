@@ -151,7 +151,7 @@ export default class Actionable extends AbstractActionable {
 		    <a id={this.triggerId()}
 		        onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
 		        disabled={this._readonly()}>
-				<Typography style={{...this.style(),color:color,backgroundColor:backgroundColor}} variant={this.variant("body1")} className={className}>{this._title()}</Typography>
+				<Typography style={{color:color,backgroundColor:backgroundColor,...this.style()}} variant={this.variant("body1")} className={className}>{this._title()}</Typography>
 			</a>
 		);
 	};
