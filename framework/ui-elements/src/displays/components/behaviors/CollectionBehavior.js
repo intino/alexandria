@@ -184,7 +184,7 @@ const CollectionBehavior = (collection) => {
     self.sections = (items) => {
         const sections = {};
         for (var i=0; i<items.length; i++) {
-            const section = items[i].pl.section != null ? items[i].pl.section : "__default";
+            const section = items[i] != null && items[i].pl.section != null ? items[i].pl.section : "__default";
             if (sections[section] == null) sections[section] = [];
             sections[section].push(items[i]);
         }
@@ -306,7 +306,17 @@ const CollectionBehavior = (collection) => {
     };
 
     self.items = () => {
-        return self.collection.instances("rows");
+        const navigable = collection.props.navigable;
+        return navigable != null ? self.nonNullItems() : self.collection.instances("rows");
+    };
+
+    self.nonNullItems = () => {
+        const items = self.collection.instances("rows");
+        const result = [];
+        for (var i=0; i<items.length; i++) {
+            if (items[i] != null) result.push(items[i]);
+        }
+        return result;
     };
 
     self.refreshDelayed = () => {

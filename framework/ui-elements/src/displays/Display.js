@@ -4,6 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import CookieConsent, { Cookies } from "react-cookie-consent";
 import Theme from 'app-elements/gen/Theme';
+import history from "alexandria-ui-elements/src/util/History";
 
 export const enrichDisplayProperties = (instance) => {
     instance.pl.context = () => { return instance.pl.o };
@@ -77,6 +78,11 @@ export default class Display extends PassiveView {
         let url = params.url;
         if (url == null || url === "" || url === "null" || url === undefined) window.location.reload();
         else window.location.href = url;
+    };
+
+    dispatch = (params) => {
+		history.push(params.path);
+		return true;
     };
 
     addressed = (params) => {

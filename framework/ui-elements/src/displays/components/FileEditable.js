@@ -126,7 +126,7 @@ class FileEditable extends AbstractFile {
 		const { classes } = this.props;
         return (
             <input className={classes.pasteInput}
-                   placeholder={this.translate("Paste files here from clipboard")}
+                   placeholder={this.translate("Paste content here from clipboard")}
                    disabled={this.state.readonly ? true : undefined}
                    onPaste={this.handlePaste.bind(this)} value="" ></input>
         );
