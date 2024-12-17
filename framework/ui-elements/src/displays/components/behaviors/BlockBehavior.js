@@ -23,6 +23,11 @@ const BlockBehavior = (function () {
         return "hidden-" + hidden.toLowerCase();
     }
 
+    function hoverContainerClass(block) {
+        const hoverContainer = block.props.isHoverContainer;
+        return hoverContainer != null ? "hovercontainer" : "";
+    }
+
     function directionOf(animation) {
         let direction = animation.direction.toLowerCase();
         if (direction === "top") return "up";
@@ -33,6 +38,7 @@ const BlockBehavior = (function () {
     return {
         classNames : (block) => {
             let result = layoutClasses(block);
+            result += result !== "" ? " " + hoverContainerClass(block) : "";
             result += result !== "" ? " " + hiddenClass(block) : "";
             return result.trim();
         },
