@@ -28,7 +28,7 @@ Concept Component extends Display
 Concept Block extends Component
 	var word[]:Layout layout = Vertical
 	var word:Spacing spacing = None
-	var word:{Never Always IfMobile IfNotMobile} hidden = Never
+	var word:{Never Always IfMobile IfNotMobile IfNotHover} hidden = Never
 	has Component
 
 	Facet Drawer
@@ -45,6 +45,7 @@ Concept Block extends Component
 		var integer max = -1
 		var boolean showZero = false
 		var word:{Normal Dot} mode = Normal
+	Facet HoverContainer
 	Facet Parallax
 		var string background
 	Facet Conditional

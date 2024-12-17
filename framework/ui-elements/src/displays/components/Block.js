@@ -9,7 +9,7 @@ import ComponentBehavior from "./behaviors/ComponentBehavior";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import BrowserUtil from "../../util/BrowserUtil";
 import 'alexandria-ui-elements/res/styles/layout.css';
-import 'alexandria-ui-elements/res/styles/mobile.css';
+import 'alexandria-ui-elements/res/styles/hidden.css';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
 export default class Block extends AbstractBlock {

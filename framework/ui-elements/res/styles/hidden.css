@@ -2,6 +2,14 @@
     display: none !important;
 }
 
+.hovercontainer .hidden-ifnothover {
+    display: none !important;
+}
+
+.hovercontainer:hover .hidden-ifnothover {
+    display: block !important;
+}
+
 @media screen and (min-width: 980px), all and (min-width: 980px) and (orientation: portrait) {
     .hidden-ifnotmobile {
         display: none !important;

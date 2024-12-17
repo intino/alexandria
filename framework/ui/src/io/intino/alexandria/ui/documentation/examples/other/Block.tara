@@ -279,3 +279,16 @@ Template(layout=Vertical, spacing=DP8) blockExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;Block(format\=fullHeight minTableHeight)<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="Block 2")
 						=========
+
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="Hover container facet")
+			Block(format=filledNoAir, layout=Vertical) as HoverContainer
+				Block(layout=Vertical Flexible, format=minTableHeight)
+					Block(hidden=IfNotHover) > Link(title="Visible link when over") as Action
+			Block > Text block13Code as Code(language=Html)
+					value
+						=========
+						Block as HoverContainer<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Block(hidden\=IfNotHover)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Link(title\="Visible link when over") as Action<br/>
+						=========

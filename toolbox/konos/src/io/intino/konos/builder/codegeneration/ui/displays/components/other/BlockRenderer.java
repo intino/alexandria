@@ -34,6 +34,7 @@ public class BlockRenderer extends SizedRenderer<Block> {
 		addPopover(result);
 		addTransition(result);
 		addSplitter(result);
+		if (element.isHoverContainer()) result.add("isHoverContainer", element.isHoverContainer());
 		if (element.isConditional()) result.add("conditional", "");
 		if (element.isAutoSize()) result.add("autoSize", true);
 		if (element.hidden() != null && element.hidden() != Block.Hidden.Never)
