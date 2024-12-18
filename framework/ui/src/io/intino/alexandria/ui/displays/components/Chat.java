@@ -14,7 +14,6 @@ import io.intino.alexandria.ui.model.chat.MessageReader;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -128,7 +127,6 @@ public class Chat<DN extends ChatNotifier, B extends Box> extends AbstractChat<B
 			if (accepts(next, condition)) result.add(next);
 			if (result.size() == PageSize) break;
 		}
-		Collections.reverse(result);
 		return result;
 	}
 
