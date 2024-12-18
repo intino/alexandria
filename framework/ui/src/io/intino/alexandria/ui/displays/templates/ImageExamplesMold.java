@@ -17,7 +17,7 @@ public class ImageExamplesMold extends AbstractImageExamplesMold<AlexandriaUiBox
     @Override
     public void init() {
         super.init();
-        image3.onChange(event -> {
+		image3.onChange(event -> {
             try {
                 Resource value = event.value();
                 File file = value != null ? toFile("/tmp/updated-test-image.png", value) : null;

@@ -127,6 +127,7 @@ class Chat extends AbstractChat {
     componentDidMount() {
         super.componentDidMount();
         window.addEventListener('resize', this.resize.bind(this));
+        this.resize();
     };
 
 	render() {
@@ -160,7 +161,7 @@ class Chat extends AbstractChat {
 	    return (
 	        <div className={classnames("layout vertical flex intino-chat", classes.container)}>
 	            {this.renderHeader()}
-                <div ref={this.messagesContainer} className={containerClassName} onScroll={this.handleScroll.bind(this)}>
+                <div ref={this.messagesContainer} className={containerClassName} onScroll={this.handleScroll.bind(this)} style={{height:'1px'}}>
                     {(this.state.startReached && this.state.messages.length > 0) && <div className={classnames("layout vertical center-center", classes.startReached)}>{this.translate("No more previous messages")}</div>}
                     {this.state.messages.map((m, index) => this.renderMessage(m, index))}
                 </div>
@@ -429,11 +430,13 @@ class Chat extends AbstractChat {
 
 	resize = () => {
 	    if (this.resizeTimer != null) window.clearTimeout(this.resizeTimer);
+	    this.resizeTimer = window.setTimeout(() => this.doResize(), 50);
+	};
+
+	doResize = () => {
 	    var container = this.messagesContainer.current;
-	    this.resizeTimer = window.setTimeout(() => {
-    	    container.style.height = "100px";
-	        this.setupContainer(true)
-        }, 50);
+        container.style.height = "100px";
+        this.setupContainer(true)
 	};
 
 	handleScroll = (e) => {
