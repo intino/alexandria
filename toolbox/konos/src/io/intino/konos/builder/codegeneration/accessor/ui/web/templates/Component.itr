@@ -71,7 +71,7 @@ rule type(properties, chat) and trigger(specific)
 	<< view="$view">><< width="$width">><< height="$height">><< messageFlow="$messageFlow">>
 
 rule type(properties, template) and trigger(specific)
-	<< layout="$layout...[ ]">><< width="$width">><< height="$height">><< spacing="$spacing">>
+	<< layout="$layout...[ ]">><< width="$width">><< height={this.fixHeight != null $? this.fixHeight("$height") : "$height"}>><< spacing="$spacing">>
 
 rule type(properties, basestamp) and trigger(specific)
 	<< spacing="$spacing">>
