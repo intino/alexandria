@@ -74,6 +74,7 @@ const FileService = {
 
         function isFile(value) {
             if (value instanceof FileList) return true;
+            if (value instanceof Blob) return true;
             return value != null && value.name != null && value.size != null && value.type != null;
         }
 
