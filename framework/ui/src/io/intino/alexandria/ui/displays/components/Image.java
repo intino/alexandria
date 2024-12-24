@@ -28,7 +28,7 @@ public class Image<DN extends ImageNotifier, B extends Box> extends AbstractImag
 
 	private boolean isFile(URL value) {
 		try {
-			return new java.io.File(value.toURI()).isFile();
+			return value.toString().startsWith("jar:") || new java.io.File(value.toURI()).isFile();
 		} catch (Throwable ignored) {
 			return false;
 		}
