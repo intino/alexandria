@@ -96,6 +96,7 @@ Concept OtherComponents
 
 	Concept BaseIcon extends Component
 		var string icon
+		var string darkIcon = empty
 		var string title = empty
 		Facet Multiple extends Multiple
 		sub Icon

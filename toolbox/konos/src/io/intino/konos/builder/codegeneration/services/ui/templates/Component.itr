@@ -618,9 +618,11 @@ rule type(properties, searchbox) and trigger(specific)
 
 rule type(properties, materialicon) and trigger(specific)
 	<<_icon("$icon");>>
+	<<_darkIcon("$darkIcon");>>
 
 rule type(properties, icon) and trigger(specific)
 	<<$icon+resourceMethod>>
+	<<$darkIcon+resourceMethod>>
 
 rule type(properties, microsite) and trigger(specific)
 	<<$site+resourceMethod>>

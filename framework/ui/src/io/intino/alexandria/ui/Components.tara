@@ -80,6 +80,7 @@ Component chat
 
 Component baseIcon
 	Notification refreshIcon as Text
+	Notification refreshDarkIcon as Text
 	Notification refreshTitle as Text
 Component icon as ExtensionOf(baseIcon)
 Component materialIcon as ExtensionOf(baseIcon)

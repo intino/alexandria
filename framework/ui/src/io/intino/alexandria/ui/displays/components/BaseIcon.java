@@ -6,6 +6,7 @@ import io.intino.alexandria.ui.displays.notifiers.BaseIconNotifier;
 public class BaseIcon<DN extends BaseIconNotifier, B extends Box> extends AbstractBaseIcon<DN, B> {
     private String title;
     protected String icon;
+    protected String darkIcon;
 
     public BaseIcon(B box) {
         super(box);
@@ -15,6 +16,7 @@ public class BaseIcon<DN extends BaseIconNotifier, B extends Box> extends Abstra
     public void didMount() {
         super.didMount();
         refreshIcon();
+        refreshDarkIcon();
     }
 
     public String title() {
@@ -43,7 +45,22 @@ public class BaseIcon<DN extends BaseIconNotifier, B extends Box> extends Abstra
         return this;
     }
 
+    protected BaseIcon<DN, B> _darkIcon(String icon) {
+        this.darkIcon = icon;
+        return this;
+    }
+
+    protected BaseIcon<DN, B> darkIcon(String icon) {
+        _darkIcon(icon);
+        refreshDarkIcon();
+        return this;
+    }
+
     protected void refreshIcon() {
         notifier.refreshIcon(icon);
+    }
+
+    protected void refreshDarkIcon() {
+        notifier.refreshDarkIcon(darkIcon);
     }
 }
