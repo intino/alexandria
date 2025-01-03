@@ -77,7 +77,7 @@ rule type(properties, basestamp) and trigger(specific)
 	<< spacing="$spacing">>
 
 rule type(properties, materialicon) and trigger(specific)
-	<< title="$title">><< icon="$icon">><< titlePosition="$titlePosition">>
+	<< title="$title">><< icon="$icon">><< darkIcon="$darkIcon">><< titlePosition="$titlePosition">>
 
 rule type(properties, selector) and trigger(specific)
 	<< multipleSelection={$multipleSelection}>><< readonly={$readonly}>><< focused={$focused}>><< placeholder="$placeholder">><< selected="$selected">><< layout="$layout">><< size="$size">><< maxMenuHeight={$maxMenuHeight}>><< allowOther="$allowOther">><< scrollButtons="$scrollButtons">><< view="$view">>

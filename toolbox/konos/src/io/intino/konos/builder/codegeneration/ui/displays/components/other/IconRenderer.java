@@ -24,6 +24,11 @@ public class IconRenderer extends ComponentRenderer<BaseIcon> {
 			properties.add("icon", content);
 		}
 
+		if (element.darkIcon() != null && !element.darkIcon().isEmpty()) {
+			Object content = element.i$(conceptOf(Icon.class)) ? resourceMethodFrame("darkIcon", element.darkIcon()) : element.darkIcon();
+			properties.add("darkIcon", content);
+		}
+
 		if (element.title() != null && !element.title().isEmpty()) properties.add("title", element.title());
 
 		return properties;
