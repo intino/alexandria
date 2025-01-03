@@ -10,7 +10,7 @@ rule type(display, accessible)
 
 	public class $name+PascalCase~Proxy extends ProxyDisplay<$name+PascalCase~ProxyNotifier> {
 
-		public $name+firstUpperCase~Proxy(io.intino.alexandria.ui.spark.pages.Unit unit) {
+		public $name+firstUpperCase~Proxy(io.intino.alexandria.ui.server.pages.Unit unit) {
 			super("$name+firstUpperCase", unit, "/$name+CamelCase+lowercase~proxy");
 		}
 

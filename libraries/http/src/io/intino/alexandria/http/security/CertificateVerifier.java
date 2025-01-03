@@ -6,7 +6,6 @@ import org.bouncycastle.asn1.cms.ContentInfo;
 import org.bouncycastle.asn1.cms.SignedData;
 import org.bouncycastle.cms.CMSProcessable;
 import org.bouncycastle.cms.CMSSignedData;
-import spark.utils.IOUtils;
 
 import java.io.*;
 import java.security.*;
@@ -132,7 +131,9 @@ public class CertificateVerifier {
 	}
 
 	private static byte[] storeBytes(File storeFile) throws IOException {
-		return IOUtils.toByteArray(new FileInputStream(storeFile));
+		try (InputStream result = new FileInputStream(storeFile)) {
+			 return result.readAllBytes();
+		}
 	}
 
 }

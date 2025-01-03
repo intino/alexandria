@@ -66,6 +66,7 @@ public class AppRenderer extends UIRenderer {
 		builder.add("outDirectory", normalize(context.configuration().outDirectory().getParentFile().getAbsolutePath()));
 		builder.add("exclude", alexandriaFrame("exclude"));
 		builder.add("alias", alexandriaFrame("alias"));
+		builder.add("module", context.module());
 		builder.add("serviceName", context.serviceDirectory() != null ? context.serviceDirectory().getName() : "");
 		if (isAlexandria(project())) builder.add("alexandriaProject", "true");
 		resourcesWithTemplate().forEach(r -> builder.add("page", new FrameBuilder("page").add("templateName", r.asPage().template().name$()).toFrame()));

@@ -25,6 +25,6 @@ public class RESTNotificationActionRenderer extends ActionRenderer {
 
 	@Override
 	protected ContextType contextType() {
-		return ContextType.Spark;
+		return ContextType.Server;
 	}
 }

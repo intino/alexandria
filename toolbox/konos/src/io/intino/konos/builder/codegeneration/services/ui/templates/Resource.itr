@@ -15,10 +15,10 @@ rule type(resource, accessibleDisplay)
 	import java.util.function.Consumer;
 	import java.util.function.Function;
 
-	public class $name+firstUpperCase~ProxyResource extends io.intino.alexandria.ui.spark.resources.ProxyResource {
+	public class $name+firstUpperCase~ProxyResource extends io.intino.alexandria.ui.server.resources.ProxyResource {
 		private final $box+PascalCase~Box box;
 
-		public $name+firstUpperCase~ProxyResource($box+PascalCase~Box box, io.intino.alexandria.ui.spark.UISparkManager manager, DisplayNotifierProvider notifierProvider) {
+		public $name+firstUpperCase~ProxyResource($box+PascalCase~Box box, io.intino.alexandria.ui.server.AlexandriaUiManager manager, DisplayNotifierProvider notifierProvider) {
 			super(manager, notifierProvider);
 			this.box = box;
 		}
@@ -73,7 +73,7 @@ rule type(resource, accessibleDisplay)
 					});
 				}
 			};
-			client.soul(soul);
+			((UIClient)client).soul(soul);
 			client.cookies(manager.cookies());
 			page.soul = soul;
 			page.execute();
@@ -123,10 +123,10 @@ rule type(resource, static)
 	import java.util.function.Consumer;
 	import java.util.function.Function;
 
-	public class $name+firstUpperCase~Resource extends io.intino.alexandria.ui.spark.resources.<<$editor>>Resource {
+	public class $name+firstUpperCase~Resource extends io.intino.alexandria.ui.server.resources.<<$editor>>Resource {
 		private final $box+PascalCase~Box box;
 
-		public $name+firstUpperCase~Resource($box+PascalCase~Box box, io.intino.alexandria.ui.spark.UISparkManager manager, DisplayNotifierProvider notifierProvider) {
+		public $name+firstUpperCase~Resource($box+PascalCase~Box box, io.intino.alexandria.ui.server.AlexandriaUiManager manager, DisplayNotifierProvider notifierProvider) {
 			super(manager, notifierProvider);
 			this.box = box;
 		}
@@ -183,10 +183,10 @@ rule type(resource, asset)
 	import java.util.function.Consumer;
 	import java.util.function.Function;
 
-	public class $name+firstUpperCase~Resource extends io.intino.alexandria.ui.spark.resources.<<$editor>>Resource {
+	public class $name+firstUpperCase~Resource extends io.intino.alexandria.ui.server.resources.<<$editor>>Resource {
 		private final $box+PascalCase~Box box;
 
-		public $name+firstUpperCase~Resource($box+PascalCase~Box box, io.intino.alexandria.ui.spark.UISparkManager manager, DisplayNotifierProvider notifierProvider) {
+		public $name+firstUpperCase~Resource($box+PascalCase~Box box, io.intino.alexandria.ui.server.AlexandriaUiManager manager, DisplayNotifierProvider notifierProvider) {
 			super(manager, notifierProvider);
 			this.box = box;
 		}
@@ -238,17 +238,18 @@ rule type(resource)
 	import $package+validPackage.ui.pages.$name+firstUpperCase~Page;
 	import io.intino.alexandria.exceptions.AlexandriaException;
 	import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
-	import io.intino.alexandria.ui.spark.pages.UiPage;
+	import io.intino.alexandria.ui.server.pages.UiPage;
+	import io.intino.alexandria.ui.services.push.UIClient;
 
 	import java.util.Base64;
 	import java.util.UUID;
 	import java.util.function.Consumer;
 	import java.util.function.Function;
 
-	public class $name+firstUpperCase~Resource extends io.intino.alexandria.ui.spark.resources.<<$editor>>Resource {
+	public class $name+firstUpperCase~Resource extends io.intino.alexandria.ui.server.resources.<<$editor>>Resource {
 		private final $box+PascalCase~Box box;
 
-		public $name+firstUpperCase~Resource($box+PascalCase~Box box, io.intino.alexandria.ui.spark.UISparkManager manager, DisplayNotifierProvider notifierProvider) {
+		public $name+firstUpperCase~Resource($box+PascalCase~Box box, io.intino.alexandria.ui.server.AlexandriaUiManager manager, DisplayNotifierProvider notifierProvider) {
 			super(manager, notifierProvider);
 			this.box = box;
 		}
@@ -304,7 +305,7 @@ rule type(resource)
 					display.inject(soul);
 					display.inject(() -> soul);
 				});
-				client.soul(soul);
+				((UIClient)client).soul(soul);
 				client.cookies(manager.cookies());
 
 				box.registerSoul(clientId, soul);

@@ -1,11 +1,11 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.7.11") http
+Artifact("io.intino.alexandria", "2.0.0") http
 	Imports
 		Compile("io.intino.alexandria", "exceptions", "2.1.1")
 		Compile("io.intino.alexandria", "primitives", "1.1.2")
 		Compile("io.intino.alexandria", "logger", "2.1.0")
-		Compile("com.sparkjava", "spark-core", "2.9.4")
+		Compile("io.javalin", "javalin", "6.4.0")
 		Compile("commons-codec", "commons-codec", "1.16.0")
 		Compile("org.bouncycastle", "bcmail-jdk15", "1.46")
 		Compile("org.bouncycastle", "bcprov-jdk15", "1.46")

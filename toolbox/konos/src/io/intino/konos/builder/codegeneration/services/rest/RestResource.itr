@@ -10,18 +10,18 @@ rule type(notification)
 	import io.intino.alexandria.http.pushservice.Client;
 	import io.intino.alexandria.http.pushservice.Session;
 	import io.intino.alexandria.http.pushservice.MessageCarrier;
-	import io.intino.alexandria.http.spark.SparkManager;
-	import io.intino.alexandria.http.spark.SparkNotifier;
-	import io.intino.alexandria.http.spark.SparkPushService;
+	import io.intino.alexandria.http.server.AlexandriaHttpManager;
+	import io.intino.alexandria.http.server.AlexandriaHttpNotifier;
+	import io.intino.alexandria.http.pushservice.PushService;
 
 	$schemaImport
 
 	public class $name+PascalCase~Notification implements Resource {
 
 		private $box+FirstUpperCase~Box box;
-		private SparkManager<?> manager;
+		private AlexandriaHttpManager<?> manager;
 
-		public $name+PascalCase~Notification($box+FirstUpperCase~Box box, SparkManager manager) {
+		public $name+PascalCase~Notification($box+FirstUpperCase~Box box, AlexandriaHttpManager manager) {
 			this.box = box;
 			this.manager = manager;
 		}
@@ -47,12 +47,12 @@ rule type(notification)
 
 		<<$returnType+method>>
 
-		private SparkNotifier notifier(Session session, Client client) {
-			return new SparkNotifier(new MessageCarrier(manager.pushService(), session, client));
+		private AlexandriaHttpNotifier notifier(Session session, Client client) {
+			return new AlexandriaHttpNotifier(new MessageCarrier(manager.pushService(), session, client));
 		}
 
-		private io.intino.alexandria.http.spark.SparkContext context() {
-			io.intino.alexandria.http.spark.SparkContext context = new io.intino.alexandria.http.spark.SparkContext(manager);
+		private io.intino.alexandria.http.server.AlexandriaHttpContext context() {
+			io.intino.alexandria.http.server.AlexandriaHttpContext context = new io.intino.alexandria.http.server.AlexandriaHttpContext(manager);
 			<<$authenticationValidator+put>>
 			context.put("ip", manager.ip());
 			return context;
@@ -72,8 +72,8 @@ rule type(resource)
 	import $package.*;
 	import io.intino.alexandria.core.Box;
 	import io.intino.alexandria.rest.*;
-	import io.intino.alexandria.http.spark.SparkManager;
-	import io.intino.alexandria.http.spark.SparkPushService;
+	import io.intino.alexandria.http.server.AlexandriaHttpManager;
+	import io.intino.alexandria.http.pushservice.PushService;
 
 	$schemaImport
 
@@ -81,9 +81,9 @@ rule type(resource)
 		<<$word+declaration...[$NL]>>
 
 		private $box+FirstUpperCase~Box box;
-		private SparkManager<SparkPushService> manager;
+		private AlexandriaHttpManager<PushService<?,?>> manager;
 
-		public $operation+firstUpperCase$name+PascalCase~Resource($box+FirstUpperCase~Box box, SparkManager manager) {
+		public $operation+firstUpperCase$name+PascalCase~Resource($box+FirstUpperCase~Box box, AlexandriaHttpManager manager) {
 			this.box = box;
 			this.manager = manager;
 		}
@@ -105,8 +105,8 @@ rule type(resource)
 
 		<<$returnType+method>>
 
-		private io.intino.alexandria.http.spark.SparkContext context() {
-			io.intino.alexandria.http.spark.SparkContext context = new io.intino.alexandria.http.spark.SparkContext(manager);
+		private io.intino.alexandria.http.server.AlexandriaHttpContext context() {
+			io.intino.alexandria.http.server.AlexandriaHttpContext context = new io.intino.alexandria.http.server.AlexandriaHttpContext(manager);
 			$authenticationValidator+put
 			context.put("ip", manager.ip());
 			return context;

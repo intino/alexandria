@@ -3,16 +3,16 @@ rule type(cli, service)
 
     import io.intino.alexandria.cli.CliManager;
     import io.intino.alexandria.cli.schemas.BotTalk;
-    import io.intino.alexandria.http.AlexandriaSpark;
+    import io.intino.alexandria.http.AlexandriaHttpServer;
     import $package+ValidPackage.$box+FirstUpperCase~Box;
 
     public class $name+pascalCase~Service {
 
         private static $name+pascalCase~ServiceAuthenticator authenticator;
 
-        public static void setup(AlexandriaSpark spark, $box+FirstUpperCase~Box box, $name+pascalCase cli) {
+        public static void setup(AlexandriaHttpServer server, $box+FirstUpperCase~Box box, $name+pascalCase cli) {
         	authenticator = new $name+pascalCase~ServiceAuthenticator(box);
-            spark.route("/cli/$name+camelCaseToKebabCase+lowerCase")
+            server.route("/cli/$name+camelCaseToKebabCase+lowerCase")
                     .before(manager -> { if (manager.fromHeader("Authorization") == null || !authenticator.isAuthenticated(manager.fromHeader("Authorization").replace("Bearer ", ""))) throw new io.intino.alexandria.exceptions.Unauthorized("Credential not found");})
                     .post(manager -> manager.write(io.intino.alexandria.rest.ResponseAdapter.adapt(new CliManager(cli, io.intino.alexandria.rest.RequestAdapter.adapt(manager.fromBody(), BotTalk.class)).execute(manager.fromHeader("Authorization").replace("Bearer ", "")))));
         }

@@ -15,11 +15,11 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class PushService extends io.intino.alexandria.http.spark.PushService<UISession, UIClient> {
-	private Map<String, DisplayPushRequester> requesterMap = new HashMap<>();
+public class PushService extends io.intino.alexandria.http.pushservice.PushService<UISession, UIClient<?>> {
+	private final Map<String, DisplayPushRequester> requesterMap = new HashMap<>();
 	private static final Map<String, Consumer<Long>> linkedListeners = new HashMap<>();
-	private static List<BiConsumer<UIClient, UISession>> linkToThreadListeners = new ArrayList<>();
-	private static List<Consumer<Long>> unlinkFromThreadListeners = new ArrayList<>();
+	private static final List<BiConsumer<UIClient<?>, UISession>> linkToThreadListeners = new ArrayList<>();
+	private static final List<Consumer<Long>> unlinkFromThreadListeners = new ArrayList<>();
 
 	@Override
 	public UISession createSession(String id) {
@@ -27,8 +27,8 @@ public class PushService extends io.intino.alexandria.http.spark.PushService<UIS
 	}
 
 	@Override
-	public UIClient createClient(org.eclipse.jetty.websocket.api.Session session) {
-		return new UIClient(session);
+	public UIClient<?> createClient(org.eclipse.jetty.websocket.api.Session session) {
+		return new UIClient<>(session);
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class PushService extends io.intino.alexandria.http.spark.PushService<UIS
 		linkToThreadListeners.forEach(l -> l.accept(client, sessionManager.session(client.sessionId())));
 	}
 
-	public void onLinkToThread(BiConsumer<UIClient, UISession> listener) {
+	public void onLinkToThread(BiConsumer<UIClient<?>, UISession> listener) {
 		linkToThreadListeners.add(listener);
 	}
 

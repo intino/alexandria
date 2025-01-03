@@ -19,7 +19,7 @@ public class DisplayTemplate extends Template {
 		rules.add(rule().condition(allTypes("templatesImport")).output(literal("import ")).output(placeholder("package", "validPackage")).output(literal(".ui.displays.templates.*;")));
 		rules.add(rule().condition(allTypes("blocksImport")).output(literal("import ")).output(placeholder("package", "validPackage")).output(literal(".ui.displays.blocks.*;")));
 		rules.add(rule().condition(allTypes("itemsImport")).output(literal("import ")).output(placeholder("package", "validPackage")).output(literal(".ui.displays.items.*;")));
-		rules.add(rule().condition(allTypes("request", "asset")).output(literal("public io.intino.alexandria.ui.spark.UIFile ")).output(placeholder("name")).output(literal("(")).output(expression().output(placeholder("parameter")).output(literal(" value"))).output(literal(") {\n\treturn null;\n}")));
+		rules.add(rule().condition(allTypes("request", "asset")).output(literal("public io.intino.alexandria.ui.server.UIFile ")).output(placeholder("name")).output(literal("(")).output(expression().output(placeholder("parameter")).output(literal(" value"))).output(literal(") {\n\treturn null;\n}")));
 		rules.add(rule().condition(allTypes("request")).output(literal("public void ")).output(placeholder("name")).output(literal("(")).output(expression().output(placeholder("parameter")).output(literal(" value"))).output(literal(") {\n\n}")));
 		rules.add(rule().condition(trigger("setter")).output(literal("public void ")).output(placeholder("value", "firstLowerCase")).output(literal("(String value) {\n\n}")));
 		rules.add(rule().condition(all(all(any(allTypes("dateTime"), allTypes("date")), allTypes("list")), trigger("parameter"))).output(placeholder("value")));

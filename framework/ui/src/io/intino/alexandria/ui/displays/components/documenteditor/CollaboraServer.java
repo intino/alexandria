@@ -2,7 +2,7 @@ package io.intino.alexandria.ui.displays.components.documenteditor;
 
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.DisplayRouteManager;
-import io.intino.alexandria.ui.spark.UISparkManager;
+import io.intino.alexandria.ui.server.AlexandriaUiManager;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -60,7 +60,7 @@ public class CollaboraServer {
 	private static final String InfoTemplate = "{\"BaseFileName\":\"%s\",\"OwnerId\":\"me\",\"Size\":%d,\"UserId\":\"%s\",\"Version\":\"1\"," +
 											   "\"UserCanWrite\":%b,\"ReadOnly\":%b,\"SupportsLocks\":false,\"SupportsUpdate\":%b," +
 										  	   "\"UserCanNotWriteRelative\":true,\"UserFriendlyName\":\"%s\"}";
-	private void get(UISparkManager manager) {
+	private void get(AlexandriaUiManager manager) {
 		if (!canAccess(manager)) return;
 		String accessToken = manager.fromQuery("access_token");
 		if (!DocumentManagers.containsKey(accessToken)) return;
@@ -74,7 +74,7 @@ public class CollaboraServer {
 		return value != null ? value.replace("\"", "\\\"") : value;
 	}
 
-	private void load(UISparkManager manager) {
+	private void load(AlexandriaUiManager manager) {
 		if (!canAccess(manager)) return;
 		String accessToken = manager.fromQuery("access_token");
 		if (!DocumentManagers.containsKey(accessToken)) return;
@@ -83,7 +83,7 @@ public class CollaboraServer {
 		manager.write(content, documentId);
 	}
 
-	private void save(UISparkManager manager) {
+	private void save(AlexandriaUiManager manager) {
 		if (!canAccess(manager)) return;
 		String accessToken = manager.fromQuery("access_token");
 		if (!DocumentManagers.containsKey(accessToken)) return;
@@ -93,7 +93,7 @@ public class CollaboraServer {
 		manager.write("OK");
 	}
 
-	private boolean canAccess(UISparkManager manager) {
+	private boolean canAccess(AlexandriaUiManager manager) {
 		String token = manager.fromQuery("access_token");
 		if (!DocumentManagers.containsKey(token)) return false;
 		return AccessTokens.contains(token);

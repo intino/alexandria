@@ -37,7 +37,7 @@ rule type(webpack)
 			$page+gen...[,$NL]
 		},
 		output: {
-			path: "$outDirectory/$serviceName/www/$serviceName",
+			path: "$outDirectory/$module/www/$serviceName",
 			publicPath: '$$basePath/$serviceName/',
 			filename: "[name].js"
 		},

@@ -3,15 +3,15 @@ package io.intino.alexandria.ui.displays.components.sign;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.DisplayRouteManager;
+import io.intino.alexandria.ui.server.AlexandriaUiManager;
 import io.intino.alexandria.ui.services.push.UISession;
-import io.intino.alexandria.ui.spark.UISparkManager;
 import io.intino.icod.core.DefaultConfiguration;
 import io.intino.icod.core.ServerDocumentManager;
 import io.intino.icod.services.DownloadService;
 import io.intino.icod.services.RetrieveService;
 import io.intino.icod.services.StorageService;
+import io.intino.icod.services.spark.AlexandriaOutputMessage;
 import io.intino.icod.services.spark.RequestInputMessage;
-import io.intino.icod.services.spark.SparkOutputMessage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -97,28 +97,28 @@ public class AutoFirmaServer {
 		return ready;
 	}
 
-	private void download(UISparkManager manager) {
-		new DownloadService().download(new RequestInputMessage(manager.request()), new SparkOutputMessage(manager.response()));
+	private void download(AlexandriaUiManager manager) {
+		new DownloadService().download(new RequestInputMessage(manager.request()), new AlexandriaOutputMessage(manager.response()));
 	}
 
-	private void store(UISparkManager manager) {
-		new StorageService().store(new RequestInputMessage(manager.request()), new SparkOutputMessage(manager.response()));
+	private void store(AlexandriaUiManager manager) {
+		new StorageService().store(new RequestInputMessage(manager.request()), new AlexandriaOutputMessage(manager.response()));
 	}
 
-	private void retrieve(UISparkManager manager) {
-		new RetrieveService().retrieve(new RequestInputMessage(manager.request()), new SparkOutputMessage(manager.response()));
+	private void retrieve(AlexandriaUiManager manager) {
+		new RetrieveService().retrieve(new RequestInputMessage(manager.request()), new AlexandriaOutputMessage(manager.response()));
 	}
 
-	private void document(UISparkManager manager) {
+	private void document(AlexandriaUiManager manager) {
 		ServerDocumentManager documentManager = new ServerDocumentManager(new DefaultConfiguration());
 		manager.write(documentManager.getRepositoryDocument(manager.fromQuery("id") + ".pdf"));
 	}
 
-	private void batchPreSigner(UISparkManager manager) {
+	private void batchPreSigner(AlexandriaUiManager manager) {
 		// TODO
 	}
 
-	private void batchPostSigner(UISparkManager manager) {
+	private void batchPostSigner(AlexandriaUiManager manager) {
 		// TODO
 	}
 

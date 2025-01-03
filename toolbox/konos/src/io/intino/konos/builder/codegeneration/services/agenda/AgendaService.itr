@@ -3,7 +3,7 @@ rule type(service)
 
 	import $package+validPackage.$box+PascalCase~Box;
 	import $package+validPackage.agenda.*;
-	import io.intino.alexandria.http.AlexandriaSpark;
+	import io.intino.alexandria.http.AlexandriaHttpServer;
 	import io.intino.alexandria.logger.Logger;
 	import io.intino.alexandria.scheduler.AlexandriaScheduler;
 	import org.apache.commons.io.FileUtils;
@@ -45,7 +45,7 @@ rule type(service)
 
 		$future+execute...[$NL$NL]
 
-		public AlexandriaSpark<?> setup(AlexandriaSpark<?> server, AlexandriaScheduler scheduler) {
+		public AlexandriaSpark<?> setup(AlexandriaHttpServer<?> server, AlexandriaScheduler scheduler) {
 			loadFutures();
 			startTimers(scheduler);
 			startService(server);
@@ -70,7 +70,7 @@ rule type(service)
 			}
 		}
 
-		private void startService(AlexandriaSpark<?> server) {
+		private void startService(AlexandriaHttpServer<?> server) {
 			$future+route...[$NL]
 		}
 

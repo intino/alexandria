@@ -7,7 +7,7 @@ import io.intino.alexandria.ui.displays.items.DownloadSelectionMold;
 import io.intino.alexandria.ui.documentation.Person;
 import io.intino.alexandria.ui.documentation.model.Datasources;
 import io.intino.alexandria.ui.model.datasource.PageDatasource;
-import io.intino.alexandria.ui.spark.UIFile;
+import io.intino.alexandria.ui.server.UIFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

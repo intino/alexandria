@@ -5,7 +5,7 @@ import io.intino.alexandria.schemas.ExportParams;
 import io.intino.alexandria.ui.displays.events.actionable.ExportEvent;
 import io.intino.alexandria.ui.displays.events.actionable.ExportListener;
 import io.intino.alexandria.ui.displays.notifiers.ExportNotifier;
-import io.intino.alexandria.ui.spark.UIFile;
+import io.intino.alexandria.ui.server.UIFile;
 
 import java.time.Instant;
 import java.util.List;

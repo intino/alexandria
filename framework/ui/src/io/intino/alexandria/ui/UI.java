@@ -6,7 +6,7 @@ import io.intino.alexandria.ui.displays.DisplayRouteDispatcher;
 import io.intino.alexandria.ui.displays.DisplayRouteManager;
 import io.intino.alexandria.ui.displays.notifiers.DisplayNotifier;
 import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
-import io.intino.alexandria.ui.spark.UISparkManager;
+import io.intino.alexandria.ui.server.AlexandriaUiManager;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -29,15 +29,15 @@ public abstract class UI {
         };
     }
 
-    protected static DisplayRouteManager routeManager(UISpark spark, DisplayRouteDispatcher routeDispatcher) {
+    protected static DisplayRouteManager routeManager(AlexandriaUiServer spark, DisplayRouteDispatcher routeDispatcher) {
         return new DisplayRouteManager() {
             @Override
-            public void get(String path, Consumer<UISparkManager> consumer) {
+            public void get(String path, Consumer<AlexandriaUiManager> consumer) {
                 spark.route(path).get(consumer::accept);
             }
 
             @Override
-            public void post(String path, Consumer<UISparkManager> consumer) {
+            public void post(String path, Consumer<AlexandriaUiManager> consumer) {
                 spark.route(path).post(consumer::accept);
             }
 

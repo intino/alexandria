@@ -1,15 +1,15 @@
 rule type(server)
 	package $package+ValidPackage;
 
-	import io.intino.alexandria.http.AlexandriaSpark;
+	import io.intino.alexandria.http.AlexandriaHttpServer;
 	import $package+ValidPackage.soap.operations.*;
 	import io.intino.alexandria.core.Box;
 	import io.intino.alexandria.http.security.DefaultSecurityManager;
-	import io.intino.alexandria.http.spark.SparkPushService;
+	import io.intino.alexandria.http.pushservice.PushService;
 
 	public class $name+pascalCase~Service {
 
-		public static void setup(AlexandriaSpark server, $box+FirstUpperCase~Box box) {
+		public static void setup(AlexandriaHttpServer server, $box+FirstUpperCase~Box box) {
 			<<$secure>>
 			<<$operation...[$NL]>>
 		}

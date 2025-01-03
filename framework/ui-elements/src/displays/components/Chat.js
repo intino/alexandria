@@ -142,6 +142,7 @@ class Chat extends AbstractChat {
 	};
 
 	renderDefaultLayer = () => {
+	    window.setTimeout(() => this.resize(), 50);
         return this.renderContent();
 	};
 
@@ -335,6 +336,7 @@ class Chat extends AbstractChat {
 
 	renderChatLayer = () => {
 	    const { classes } = this.props;
+	    if (this.state.chatLayerOpened) window.setTimeout(() => this.resize(), 100);
 	    return (
 	        <Popover open={this.state.chatLayerOpened}
 					 anchorEl={this.assistantTrigger.current}
@@ -435,6 +437,7 @@ class Chat extends AbstractChat {
 
 	doResize = () => {
 	    var container = this.messagesContainer.current;
+	    if (container == null) return;
         container.style.height = "100px";
         this.setupContainer(true)
 	};

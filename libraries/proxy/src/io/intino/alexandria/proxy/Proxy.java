@@ -1,12 +1,12 @@
 package io.intino.alexandria.proxy;
 
+import io.intino.alexandria.http.server.AlexandriaHttpRequest;
+import io.intino.alexandria.http.server.AlexandriaHttpResponse;
+import jakarta.servlet.ServletOutputStream;
 import org.apache.http.Header;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import spark.Request;
-import spark.Response;
 
-import javax.servlet.ServletOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -14,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -33,7 +34,7 @@ public class Proxy {
 		return this;
 	}
 
-	public void get(Request request, Response response) throws Network.NetworkException, URISyntaxException {
+	public void get(AlexandriaHttpRequest request, AlexandriaHttpResponse response) throws Network.NetworkException, URISyntaxException {
 		Network network = new Network();
 
 		String query = request.queryString();
@@ -42,7 +43,7 @@ public class Proxy {
 		String uri = pathOf(request);
 		String url = remoteUrl + uri + query;
 
-		network.setAdditionalHeaders(new ArrayList<>(validHeaders(request.headers()).map(h -> headerOf(h, request.headers(h))).collect(Collectors.toList())));
+		network.setAdditionalHeaders(new ArrayList<>(validHeaders(request.headers()).map(h -> headerOf(h, request.header(h))).collect(Collectors.toList())));
 		byte[] content = network.sendGetString(url);
 		fixHeaders(network, response);
 
@@ -50,7 +51,7 @@ public class Proxy {
 		writeResponse(response, content);
 	}
 
-	private byte[] adaptText(Network network, Request request, URL remoteUrl, String uri, byte[] content) {
+	private byte[] adaptText(Network network, AlexandriaHttpRequest request, URL remoteUrl, String uri, byte[] content) {
 		if (!isText(network)) return content;
 
 		String textContent = new String(content, StandardCharsets.UTF_8);
@@ -97,7 +98,7 @@ public class Proxy {
 		return contentType != null && (contentType.contains("text/javascript") || contentType.contains("application/javascript"));
 	}
 
-	public void post(Request request, Response response) throws Network.NetworkException {
+	public void post(AlexandriaHttpRequest request, AlexandriaHttpResponse response) throws Network.NetworkException {
 		Network network = new Network();
 
 		String query = request.queryString();
@@ -107,12 +108,12 @@ public class Proxy {
 
 		StringBuilder params = new StringBuilder();
 		for (String key : request.queryParams()) {
-			String value = request.queryParams(key);
+			String value = request.queryParam(key);
 			params.append("&").append(key).append("=").append(adaptParameter(key, value));
 		}
 		if (params.length() > 0) params = new StringBuilder(params.substring(1));
 
-		network.setAdditionalHeaders(new ArrayList<>(validHeaders(request.headers()).map(h -> headerOf(h, request.headers(h))).collect(Collectors.toList())));
+		network.setAdditionalHeaders(new ArrayList<>(validHeaders(request.headers()).map(h -> headerOf(h, request.header(h))).collect(Collectors.toList())));
 		byte[] content = network.sendPostString(url, params.toString());
 
 		fixHeaders(network, response);
@@ -122,15 +123,15 @@ public class Proxy {
 	}
 
 	private static final Set<String> ValidHeaders = Set.of("X-Requested-With", "Accept", "Accept-Encoding", "Accept-Language", "Cache-Control", "Connections", "User-Agent");
-	private Stream<String> validHeaders(Set<String> headers) {
-		return headers.stream().filter(ValidHeaders::contains);
+	private Stream<String> validHeaders(Map<String, String> headers) {
+		return headers.keySet().stream().filter(ValidHeaders::contains);
 	}
 
 	private NameValuePair headerOf(String header, String value) {
 		return new BasicNameValuePair(header, value);
 	}
 
-	private void fixHeaders(Network network, Response response) {
+	private void fixHeaders(Network network, AlexandriaHttpResponse response) {
 		response.removeCookie("JSESSIONID");
 		Header[] headers = network.getLastHeaders();
 		if (headers == null) return;
@@ -153,7 +154,7 @@ public class Proxy {
 		return null;
 	}
 
-	private String pathOf(Request request) {
+	private String pathOf(AlexandriaHttpRequest request) {
 		String uri = format(request.uri());
 		String path = removeAddressPath(request, localUrl.getPath());
 		uri = uri.replace(path, "");
@@ -166,7 +167,7 @@ public class Proxy {
 		return uri.startsWith("//") ? uri.substring(1) : uri;
 	}
 
-	private String removeAddressPath(Request request, String path) {
+	private String removeAddressPath(AlexandriaHttpRequest request, String path) {
 		String header = request.raw().getHeader("X-Forwarded-Path");
 		if (header == null) return path;
 		return path.replace(header, "");
@@ -182,7 +183,7 @@ public class Proxy {
 		return adapter.adaptContent(content);
 	}
 
-	private void writeResponse(Response response, byte[] content) throws Network.NetworkException {
+	private void writeResponse(AlexandriaHttpResponse response, byte[] content) throws Network.NetworkException {
 		try {
 			ServletOutputStream stream = response.raw().getOutputStream();
 			response.raw().setContentLength(content.length);

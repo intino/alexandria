@@ -26,14 +26,14 @@ rule type(action, notification) and not type(ui)
 	import $package+validPackage.$box+PascalCase~Box;
 	import io.intino.alexandria.exceptions.*;
 	import io.intino.alexandria.http.pushservice.Client;
-	import io.intino.alexandria.http.spark.SparkNotifier;
+	import io.intino.alexandria.http.server.AlexandriaHttpNotifier;
 
 	public class $name+PascalCase~Action {
 		public $box+PascalCase~Box box;
 		$contextProperty
 		<<$parameter+type...[$NL]>>
 
-		public void onOpen(Client client, SparkNotifier notifier) {
+		public void onOpen(Client client, AlexandriaHttpNotifier notifier) {
 			//register listener
 		}
 
@@ -89,7 +89,7 @@ rule type(ui, accessibleDisplay)
 	import $package+validPackage.ui.displays<<.$packageType~s>>.$display+PascalCase;
 	import io.intino.alexandria.ui.Soul;
 
-	public class $name+PascalCase~ProxyPage extends io.intino.alexandria.ui.spark.pages.ProxyPage {
+	public class $name+PascalCase~ProxyPage extends io.intino.alexandria.ui.server.pages.ProxyPage {
 		public $box+PascalCase~Box box;
 		<<$parameter+type...[$NL]>>
 		public Soul soul;
@@ -112,7 +112,7 @@ rule type(ui, mobile, action, gen)
     import java.util.Collections;
     import java.util.List;
 
-    public abstract class Abstract$name+PascalCase~MobilePage extends io.intino.alexandria.ui.spark.pages.MobilePage {
+    public abstract class Abstract$name+PascalCase~MobilePage extends io.intino.alexandria.ui.server.pages.MobilePage {
 		public $box+PascalCase~Box box;
 
         public String redirectUrl() { return null; }
@@ -144,7 +144,7 @@ rule type(ui, action, gen, asset)
 
 	import $package+validPackage.$box+PascalCase~Box;
 
-	public abstract class Abstract$name+PascalCase~Page extends io.intino.alexandria.ui.spark.pages.Page {
+	public abstract class Abstract$name+PascalCase~Page extends io.intino.alexandria.ui.server.pages.Page {
 		public $box+PascalCase~Box box;
 	}
 
@@ -155,7 +155,7 @@ rule type(ui, action, gen)
 	import io.intino.alexandria.exceptions.*;
 	import java.util.*;
 
-	public abstract class Abstract$name+PascalCase~Page extends io.intino.alexandria.ui.spark.pages.WebPage {
+	public abstract class Abstract$name+PascalCase~Page extends io.intino.alexandria.ui.server.pages.WebPage {
 		public $box+PascalCase~Box box;
 
 		public Abstract$name+PascalCase~Page() { super("$uiService+camelCaseToKebabCase+lowerCase"); }
@@ -279,13 +279,13 @@ rule type(editor) and trigger(component)
 	component.display(new $display+PascalCase(box));
 
 rule type(usedUnit, standard)
-	new io.intino.alexandria.ui.spark.pages.Unit("$name","$url"<<,"$socketPath">>)
+	new io.intino.alexandria.ui.server.pages.Unit("$name","$url"<<,"$socketPath">>)
 
 rule type(usedUnit, custom)
-	new io.intino.alexandria.ui.spark.pages.Unit("$name",box.configuration().get("$url")<<,"$socketPath">>)
+	new io.intino.alexandria.ui.server.pages.Unit("$name",box.configuration().get("$url")<<,"$socketPath">>)
 
-rule type(contextProperty, spark)
-	public io.intino.alexandria.http.spark.SparkContext context;
+rule type(contextProperty, server)
+	public io.intino.alexandria.http.server.AlexandriaHttpContext context;
 
 rule type(contextProperty)
 	public io.intino.alexandria.Context context = new io.intino.alexandria.Context();
