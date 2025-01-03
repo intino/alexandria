@@ -10,8 +10,8 @@ import io.intino.icod.core.ServerDocumentManager;
 import io.intino.icod.services.DownloadService;
 import io.intino.icod.services.RetrieveService;
 import io.intino.icod.services.StorageService;
-import io.intino.icod.services.spark.AlexandriaOutputMessage;
-import io.intino.icod.services.spark.RequestInputMessage;
+import io.intino.icod.services.context.AlexandriaOutputMessage;
+import io.intino.icod.services.context.RequestInputMessage;
 
 import java.io.IOException;
 import java.io.InputStream;
