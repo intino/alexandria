@@ -45,7 +45,7 @@ rule type(service)
 
 		$future+execute...[$NL$NL]
 
-		public AlexandriaSpark<?> setup(AlexandriaHttpServer<?> server, AlexandriaScheduler scheduler) {
+		public AlexandriaHttpServer<?> setup(AlexandriaHttpServer<?> server, AlexandriaScheduler scheduler) {
 			loadFutures();
 			startTimers(scheduler);
 			startService(server);
