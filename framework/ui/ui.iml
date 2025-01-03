@@ -104,7 +104,7 @@
     <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-xml:11.0.24" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-servlet:11.0.24" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-core-server:11.0.24" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Intino: io.intino.icod:core:2.0.0" level="project" />
     <orderEntry type="module" module-name="ui-elements" />
+    <orderEntry type="library" scope="PROVIDED" name="Intino: io.intino.icod:core:2.0.1" level="project" />
   </component>
 </module>

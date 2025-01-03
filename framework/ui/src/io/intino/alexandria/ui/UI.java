@@ -29,16 +29,16 @@ public abstract class UI {
         };
     }
 
-    protected static DisplayRouteManager routeManager(AlexandriaUiServer spark, DisplayRouteDispatcher routeDispatcher) {
+    protected static DisplayRouteManager routeManager(AlexandriaUiServer server, DisplayRouteDispatcher routeDispatcher) {
         return new DisplayRouteManager() {
             @Override
             public void get(String path, Consumer<AlexandriaUiManager> consumer) {
-                spark.route(path).get(consumer::accept);
+                server.route(path).get(consumer::accept);
             }
 
             @Override
             public void post(String path, Consumer<AlexandriaUiManager> consumer) {
-                spark.route(path).post(consumer::accept);
+                server.route(path).post(consumer::accept);
             }
 
             @Override
