@@ -47,17 +47,21 @@ public class JavalinHttpRequest implements AlexandriaHttpRequest {
 
 	@Override
 	public List<String> queryParams() {
-		return new ArrayList<>(context.queryParamMap().keySet());
+		List<String> result = new ArrayList<>(context.queryParamMap().keySet());
+		result.addAll(context.formParamMap().keySet());
+		return result;
 	}
 
 	@Override
 	public List<String> queryParams(String key) {
-		return context.queryParams(key);
+		List<String> result = context.queryParams(key);
+		return !result.isEmpty() ? result : context.formParams(key);
 	}
 
 	@Override
 	public String queryParam(String key) {
-		return context.queryParam(key);
+		String result = context.queryParam(key);
+		return result != null ? result : context.formParam(key);
 	}
 
 	@Override
