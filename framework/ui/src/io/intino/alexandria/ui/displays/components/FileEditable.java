@@ -6,7 +6,7 @@ import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.ui.displays.components.editable.Editable;
 import io.intino.alexandria.ui.displays.events.*;
 import io.intino.alexandria.ui.displays.notifiers.FileEditableNotifier;
-import io.intino.alexandria.ui.spark.UIFile;
+import io.intino.alexandria.ui.server.UIFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

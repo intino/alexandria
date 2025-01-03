@@ -1,5 +1,6 @@
 package org.eclipse.jetty.server.session;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -26,7 +27,7 @@ public class TestSessionDataStore extends AbstractSessionDataStore {
 	}
 
 	@Override
-	public boolean exists(String id) throws Exception {
+	public boolean doExists(String id) throws Exception {
 		return _map.containsKey(id);
 	}
 
@@ -41,6 +42,26 @@ public class TestSessionDataStore extends AbstractSessionDataStore {
 	}
 
 	@Override
+	public Set<String> doCheckExpired(Set<String> set, long date) {
+		HashSet<String> result = new HashSet<>();
+
+		for (SessionData d : _map.values()) {
+			if (d.getExpiry() > 0 && d.getExpiry() <= date)
+				result.add(d.getId());
+		}
+		return result;
+	}
+
+	@Override
+	public Set<String> doGetExpired(long date) {
+		return doCheckExpired(Collections.emptySet(), date);
+	}
+
+	@Override
+	public void doCleanOrphans(long l) {
+	}
+
+	@Override
 	public boolean delete(String id) throws Exception {
 		return (_map.remove(id) != null);
 	}
@@ -51,15 +72,4 @@ public class TestSessionDataStore extends AbstractSessionDataStore {
 		_numSaves.addAndGet(1);
 	}
 
-	@Override
-	public Set<String> doGetExpired(Set<String> candidates) {
-		HashSet<String> set = new HashSet<>();
-		long now = System.currentTimeMillis();
-
-		for (SessionData d : _map.values()) {
-			if (d.getExpiry() > 0 && d.getExpiry() <= now)
-				set.add(d.getId());
-		}
-		return set;
-	}
 }

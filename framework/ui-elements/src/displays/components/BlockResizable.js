@@ -25,6 +25,7 @@ class BlockResizable extends AbstractBlockResizable {
 	};
 
 	render() {
+	    if (!this.state.visible) return (<React.Fragment/>);
 		return (
 			<Block
 				layout={this.props.layout}

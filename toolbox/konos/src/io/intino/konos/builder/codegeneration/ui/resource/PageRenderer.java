@@ -117,7 +117,7 @@ public class PageRenderer extends ActionRenderer {
 
 	@Override
 	protected ContextType contextType() {
-		return ContextType.Spark;
+		return ContextType.Server;
 	}
 
 	private Frame usedUnitFrame(Service.UI.Use use) {

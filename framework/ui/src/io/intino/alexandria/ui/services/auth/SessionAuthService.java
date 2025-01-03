@@ -1,15 +1,15 @@
 package io.intino.alexandria.ui.services.auth;
 
+import io.intino.alexandria.ui.server.AlexandriaUiManager;
 import io.intino.alexandria.ui.services.AuthService;
 import io.intino.alexandria.ui.services.auth.exceptions.*;
-import io.intino.alexandria.ui.spark.UISparkManager;
 
 import java.net.URL;
 
 public class SessionAuthService implements AuthService {
-	protected UISparkManager manager;
+	protected AlexandriaUiManager manager;
 
-	public void inject(UISparkManager manager) {
+	public void inject(AlexandriaUiManager manager) {
 		this.manager = manager;
 	}
 

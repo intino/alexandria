@@ -1,5 +1,6 @@
 dsl Konos
 
+use Chat
 use DateNavigator
 use Kpi
 use DocumentEditor

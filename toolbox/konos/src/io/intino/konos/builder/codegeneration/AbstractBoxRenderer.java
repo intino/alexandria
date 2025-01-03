@@ -153,7 +153,7 @@ public class AbstractBoxRenderer extends Renderer {
 		rest(builder);
 		cli(builder);
 		if (!graph.soapServiceList().isEmpty() || !graph.restServiceList().isEmpty() || !graph.uiServiceList().isEmpty())
-			builder.add("spark", "stop");
+			builder.add("server", "stop");
 	}
 
 	private void rest(FrameBuilder frame) {

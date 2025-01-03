@@ -1,7 +1,6 @@
 package io.intino.alexandria.ui.displays;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import io.intino.alexandria.Json;
 import io.intino.alexandria.core.Box;
@@ -9,9 +8,9 @@ import io.intino.alexandria.restaccessor.core.RestAccessor;
 import io.intino.alexandria.restaccessor.exceptions.RestfulFailure;
 import io.intino.alexandria.schemas.ProxyDisplayInfo;
 import io.intino.alexandria.ui.displays.notifiers.ProxyDisplayNotifier;
+import io.intino.alexandria.ui.server.pages.Unit;
 import io.intino.alexandria.ui.services.push.UIClient;
 import io.intino.alexandria.ui.services.push.UISession;
-import io.intino.alexandria.ui.spark.pages.Unit;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -29,10 +28,9 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
     private String clientId;
     private String token;
     private boolean ready = false;
-    private static final JsonParser Parser = new JsonParser();
-    private Set<PendingRequest> pendingRequestList = new LinkedHashSet<>();
+    private final Set<PendingRequest> pendingRequestList = new LinkedHashSet<>();
     private Map<String, String> parameters = new HashMap<>();
-    private Map<String, Consumer<Boolean>> messageListeners = new HashMap<>();
+    private final Map<String, Consumer<Boolean>> messageListeners = new HashMap<>();
 
     public ProxyDisplay(String type, Unit unit, String path) {
         super(null);
@@ -139,7 +137,7 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
     private JsonElement serializeParameter(Object value) {
         String result = Json.toString(value);
         try {
-            return Parser.parse(result);
+            return Json.fromString(result, JsonElement.class);
         } catch (Exception var4) {
             return new JsonPrimitive(result);
         }

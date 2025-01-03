@@ -6,18 +6,18 @@ rule type(operation)
 	import io.intino.alexandria.exceptions.*;
 	import $package.*;
 	import io.intino.alexandria.core.Box;
-	import io.intino.alexandria.http.spark.SparkManager;
-	import io.intino.alexandria.http.spark.SparkPushService;
+	import io.intino.alexandria.http.server.AlexandriaHttpManager;
+	import io.intino.alexandria.http.pushservice.PushService;
 
 	$schemaImport
 
 	public class $name+PascalCase~Operation {
 
 		private $box+FirstUpperCase~Box box;
-		private SparkManager<SparkPushService> manager;
+		private AlexandriaHttpManager<PushService<?,?>> manager;
 		<<$authenticationValidator+field>>
 
-		public $name+PascalCase~Operation($box+FirstUpperCase~Box box, SparkManager manager) {
+		public $name+PascalCase~Operation($box+FirstUpperCase~Box box, AlexandriaHttpManager manager) {
 			this.box = box;
 			this.manager = manager;
 			$authenticationValidator+assign
@@ -36,8 +36,8 @@ rule type(operation)
 
 		<<$returnType+method>>
 
-		private io.intino.alexandria.http.spark.SparkContext context() {
-			io.intino.alexandria.http.spark.SparkContext context = new io.intino.alexandria.http.spark.SparkContext(manager);
+		private io.intino.alexandria.http.server.AlexandriaHttpContext context() {
+			io.intino.alexandria.http.server.AlexandriaHttpContext context = new io.intino.alexandria.http.server.AlexandriaHttpContext(manager);
 			$authenticationValidator+put
 			context.put("ip", manager.ip());
 			return context;

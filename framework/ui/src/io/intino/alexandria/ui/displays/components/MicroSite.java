@@ -3,7 +3,7 @@ package io.intino.alexandria.ui.displays.components;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.ui.displays.notifiers.MicroSiteNotifier;
-import io.intino.alexandria.ui.spark.UIFile;
+import io.intino.alexandria.ui.server.UIFile;
 import io.intino.alexandria.zip.Zip;
 
 import java.io.File;

@@ -28,7 +28,7 @@ public class DownloadSelection<DN extends DownloadSelectionNotifier, B extends B
         this.option = option;
     }
 
-    public io.intino.alexandria.ui.spark.UIFile execute() {
+    public io.intino.alexandria.ui.server.UIFile execute() {
         if (this.executeListener == null) return defaultFile();
         return this.executeListener.accept(new DownloadSelectionEvent(this, selection(), option));
     }

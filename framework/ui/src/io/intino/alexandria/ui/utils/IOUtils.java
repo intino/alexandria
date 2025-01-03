@@ -740,8 +740,8 @@ public class IOUtils {
     }
 
     public static String readAllLines(URL file) {
-        try {
-            return spark.utils.IOUtils.toString(file.openStream());
+        try (InputStream stream = file.openStream()) {
+            return new String(stream.readAllBytes());
         } catch (IOException e) {
             Logger.error(e);
             return null;

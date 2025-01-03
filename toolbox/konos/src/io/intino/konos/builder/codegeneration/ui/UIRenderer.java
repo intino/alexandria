@@ -116,6 +116,10 @@ public abstract class UIRenderer extends Renderer {
 		return components;
 	}
 
+	protected boolean isAlexandriaProject() {
+		return context.project().equals("alexandria");
+	}
+
 	protected boolean hasConcreteNotifier(PassiveView element) {
 		if (element.i$(conceptOf(Display.Accessible.class))) return true;
 		return !element.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class)) &&

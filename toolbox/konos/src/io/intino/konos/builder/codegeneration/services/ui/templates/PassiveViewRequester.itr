@@ -5,11 +5,11 @@ rule type(display, accessible)
 	import $package+validPackage.ui.displays.<<$packageType~s.>>$name+FirstUpperCase~Proxy;
 	import io.intino.alexandria.exceptions.AlexandriaException;
 	import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
-	import io.intino.alexandria.ui.spark.UISparkManager;
+	import io.intino.alexandria.ui.server.AlexandriaUiManager;
 
 	public class $name+FirstUpperCase~ProxyRequester extends io.intino.alexandria.ui.displays.requesters.DisplayProxyRequester {
 
-		public $name+FirstUpperCase~ProxyRequester(UISparkManager manager, DisplayNotifierProvider notifierProvider) {
+		public $name+FirstUpperCase~ProxyRequester(AlexandriaUiManager manager, DisplayNotifierProvider notifierProvider) {
 			super(manager, notifierProvider);
 		}
 
@@ -38,11 +38,11 @@ rule type(display)
 
 	import io.intino.alexandria.exceptions.AlexandriaException;
 	import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
-	import io.intino.alexandria.ui.spark.UISparkManager;
+	import io.intino.alexandria.ui.server.AlexandriaUiManager;
 
 	public class $name+firstUpperCase~Requester extends $parentType {
 
-		public $name+firstUpperCase~Requester(UISparkManager manager, DisplayNotifierProvider notifierProvider) {
+		public $name+firstUpperCase~Requester(AlexandriaUiManager manager, DisplayNotifierProvider notifierProvider) {
 			super(manager, notifierProvider);
 		}
 
@@ -69,7 +69,7 @@ rule attribute(this, Display) and trigger(class)
 
 rule type(request, asset) and trigger(request)
 	if (operation.equals("$name")) {
-		io.intino.alexandria.ui.spark.UIFile file = display.$name($parameter);
+		io.intino.alexandria.ui.server.UIFile file = display.$name($parameter);
 		if (file == null) return;
 		manager.write(file.content(), file.label(), file.embedded());
 		return;
