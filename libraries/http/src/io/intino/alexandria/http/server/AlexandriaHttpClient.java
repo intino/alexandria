@@ -118,7 +118,7 @@ public class AlexandriaHttpClient implements Client {
 	}
 
 	private void runQueueManager() {
-		queueTimer = new Timer("spark queue timer");
+		queueTimer = new Timer("alexandria http queue timer");
 		queueTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
