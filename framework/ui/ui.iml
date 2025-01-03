@@ -80,7 +80,6 @@
     <orderEntry type="library" name="Intino: org.glassfish.grizzly:grizzly-framework:4.0.2" level="project" />
     <orderEntry type="library" name="Intino: org.glassfish.grizzly:grizzly-http-server:4.0.2" level="project" />
     <orderEntry type="library" name="Intino: org.glassfish.grizzly:grizzly-http:4.0.2" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:http:2.0.0" level="project" />
     <orderEntry type="library" name="Intino: io.javalin:javalin:6.4.0" level="project" />
     <orderEntry type="library" name="Intino: org.slf4j:slf4j-api:2.0.16" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-server:11.0.24" level="project" />
@@ -98,13 +97,14 @@
     <orderEntry type="library" name="Intino: org.jetbrains.kotlin:kotlin-stdlib:1.9.25" level="project" />
     <orderEntry type="library" name="Intino: org.jetbrains:annotations:13.0" level="project" />
     <orderEntry type="library" name="Intino: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.25" level="project" />
-    <orderEntry type="library" name="Intino: log4j:log4j:1.2.14" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Intino: io.intino.alexandria:proxy:2.0.0" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-webapp:11.0.24" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty:jetty-xml:11.0.24" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-servlet:11.0.24" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-core-server:11.0.24" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:http:2.0.1" level="project" />
+    <orderEntry type="library" name="Intino: log4j:log4j:1.2.17" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Intino: io.intino.icod:core:2.0.2" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Intino: io.intino.alexandria:proxy:2.0.1" level="project" />
     <orderEntry type="module" module-name="ui-elements" />
-    <orderEntry type="library" scope="PROVIDED" name="Intino: io.intino.icod:core:2.0.1" level="project" />
   </component>
 </module>
