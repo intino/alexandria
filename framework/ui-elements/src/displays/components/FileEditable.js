@@ -9,7 +9,7 @@ import ComponentBehavior from "./behaviors/ComponentBehavior";
 import Theme from "app-elements/gen/Theme";
 import { DropzoneArea } from 'material-ui-dropzone';
 import { IconButton } from "@material-ui/core";
-import { CloudDownload, Cancel } from "@material-ui/icons";
+import { Add, Cancel } from "@material-ui/icons";
 import 'alexandria-ui-elements/res/styles/components/fileeditable/styles.css';
 import 'alexandria-ui-elements/res/styles/layout.css';
 import { withStyles } from '@material-ui/core/styles';
@@ -101,6 +101,7 @@ class FileEditable extends AbstractFile {
 		const { classes } = this.props;
 	    return (
             <DropzoneArea
+                Icon={Add}
                 acceptedFiles={this._allowedTypes()}
                 dropzoneText={this.translate("Drag and drop a file here or click")}
                 fileObjects={this.state.files}
@@ -147,7 +148,7 @@ class FileEditable extends AbstractFile {
 	    return (
 	        <div className="layout horizontal center" style={{padding:'0 5px',border:'1px solid #ddd',marginBottom:'4px'}}>
 	            <div className="layout vertical flex" style={{marginRight:'10px'}}>{this.filename()}</div>
-	            <IconButton title={this.translate("Download")} size="small" color="primary" disabled={empty} onClick={this.handleDownload.bind(this)}><CloudDownload/></IconButton>
+	            <IconButton title={this.translate("Download")} size="small" color="primary" disabled={empty} onClick={this.handleDownload.bind(this)}><Add/></IconButton>
 	            <IconButton title={this.translate("Remove")} size="small" color="primary" disabled={readonly} onClick={this.handleClear.bind(this)}><Cancel/></IconButton>
             </div>
         );
