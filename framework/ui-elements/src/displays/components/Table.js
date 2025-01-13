@@ -27,7 +27,8 @@ export const TableStyles = theme => ({
         width: "100%"
     },
     withScroller : {
-        width: "calc(100% - 15px)"
+        //width: "calc(100% - 15px)"
+        width: "100%"
     },
     itemView : {
         borderBottom: "1px solid #ddd",
