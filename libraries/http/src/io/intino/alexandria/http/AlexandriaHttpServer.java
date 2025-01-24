@@ -18,19 +18,25 @@ public class AlexandriaHttpServer<R extends AlexandriaHttpRouter<?>> {
 	private AlexandriaSecurityManager securityManager = new NullSecurityManager();
 	protected final String webDirectory;
 	protected PushService<?, ?> pushService;
-	protected static final String WebDirectory = "/www";
 	protected Javalin service;
 	protected int port;
 	private boolean started = false;
+
+	protected static final String WebDirectory = "/www";
+	protected static final long MaxResourceSize = 100 * 1024 * 1024; // 100MB
 
 	public AlexandriaHttpServer(int port) {
 		this(port, WebDirectory);
 	}
 
 	public AlexandriaHttpServer(int port, String webDirectory) {
+		this(port, webDirectory, MaxResourceSize);
+	}
+
+	public AlexandriaHttpServer(int port, String webDirectory, long maxResourceSize) {
 		this.port = port;
 		this.webDirectory = webDirectory;
-		this.service = create(webDirectory);
+		this.service = create(webDirectory, maxResourceSize);
 		service.exception(Exception.class, (exception, context) -> Logger.error(exception));
 	}
 
@@ -82,12 +88,12 @@ public class AlexandriaHttpServer<R extends AlexandriaHttpRouter<?>> {
 		void call(SM manager) throws AlexandriaException;
 	}
 
-	private static Javalin create(String webDirectory) {
+	private static Javalin create(String webDirectory, long maxResourceSize) {
 		Javalin result = Javalin.create(config -> {
 			config.staticFiles.add("/", Location.CLASSPATH);
 			if (webDirectory != null) config.staticFiles.add(webDirectory);
 			config.jetty.modifyServer(server -> {
-				server.setAttribute("org.eclipse.jetty.server.Request.maxFormContentSize", 100 * 1024 * 1024); // bytes
+				server.setAttribute("org.eclipse.jetty.server.Request.maxFormContentSize", maxResourceSize);
 			});
 		});
 		result.exception(Exception.class, (exception, context) -> Logger.error(exception));
