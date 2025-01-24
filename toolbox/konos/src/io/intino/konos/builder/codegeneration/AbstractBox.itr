@@ -205,9 +205,9 @@ rule trigger(uiBox)
 rule type(service, ui) and trigger(setupMethod)
     protected void beforeSetup$name+firstUpperCase~Ui(io.intino.alexandria.ui.AlexandriaUiServer server) {}
 	public void setup$name+firstUpperCase~Ui() {
-		<<if($parameter == null || $parameter.isEmpty())>> return;
+		<<if($port == null || $port.isEmpty())>> return;
 		this.authService = <<this.authService($authentication)?null>>;
-		<<io.intino.alexandria.http.AlexandriaHttpServerBuilder.setup(Integer.parseInt($parameter), "www/")>>;
+		<<io.intino.alexandria.http.AlexandriaHttpServerBuilder.setup(Integer.parseInt($port), "www/", Long.parseLong($maxResourceSize))>>;
 		io.intino.alexandria.http.AlexandriaHttpServerBuilder.setUI(true);
 		io.intino.alexandria.http.AlexandriaHttpServerBuilder.addParameters(this.authService);
 		this.pushService = new io.intino.alexandria.ui.services.push.PushService();
@@ -220,12 +220,12 @@ rule type(service, ui) and trigger(setupMethod)
 
 rule type(service, cli) and trigger(setupMethod)
 	public void setupCli() {
-		<<if($parameter == null || $parameter.isEmpty())>> return;
-		<<io.intino.alexandria.http.AlexandriaHttpServerBuilder.setup(Integer.parseInt($parameter), "www/")>>;
+		<<if($port == null || $port.isEmpty())>> return;
+		<<io.intino.alexandria.http.AlexandriaHttpServerBuilder.setup(Integer.parseInt($port), "www/", Long.parseLong($maxResourceSize))>>;
 	}
 
 rule type(service, soap) and trigger(setup)
-	<<if($parameter != null && !$parameter.isEmpty()) >>io.intino.alexandria.http.AlexandriaHttpServerBuilder.setup(Integer.parseInt($parameter), "www/");
+	<<if($port != null && !$port.isEmpty()) >>io.intino.alexandria.http.AlexandriaHttpServerBuilder.setup(Integer.parseInt($port), "www/", Long.parseLong($maxResourceSize));
 
 rule type(terminal) and trigger(setup)
 	this.terminal = new $qn(connector);
@@ -243,11 +243,11 @@ rule type(service, slack) and trigger(slack)
 	Logger.info("Slack service $name: started!");
 
 rule type(service, rest) and trigger(rest)
-	<<if($parameter == null || $parameter.isEmpty()) return;>>
-	io.intino.alexandria.http.AlexandriaHttpServerBuilder.setup(Integer.parseInt($parameter), "www/");
+	<<if($port == null || $port.isEmpty()) return;>>
+	io.intino.alexandria.http.AlexandriaHttpServerBuilder.setup(Integer.parseInt($port), "www/", Long.parseLong($maxResourceSize));
 	<<$name+PascalCase~Service.setup(io.intino.alexandria.http.AlexandriaHttpServerBuilder.instance(), ($configuration+PascalCase~Box) this);>>
 	<<io.intino.alexandria.http.AlexandriaHttpServerBuilder.instance().start();>>
-	Logger.info("Rest service $name: started at port " + $parameter + "!");
+	Logger.info("Rest service $name: started at port " + $port + "!");
 
 rule type(service, soap) and trigger(soap)
 	<<$name+PascalCase~Service.setup(io.intino.alexandria.http.AlexandriaHttpServerBuilder.instance(), ($configuration+PascalCase~Box) this);>>
@@ -259,7 +259,7 @@ rule type(service, ui) and trigger(ui)
 	<<this.initTranslatorService()>>;
 	io.intino.alexandria.ui.AlexandriaUiServer server$name+firstUpperCase~Instance = (io.intino.alexandria.ui.AlexandriaUiServer) io.intino.alexandria.http.AlexandriaHttpServerBuilder.instance();
 	server$name+firstUpperCase~Instance.start();
-	Logger.info("UI $name: started at port " + $parameter + "!");
+	Logger.info("UI $name: started at port " + $port + "!");
 
 rule trigger(use)
 	<<$this.initDisplays(server, pushService);>>
@@ -459,6 +459,9 @@ rule type(conf, file) and trigger(parameter)
 rule type(conf) and trigger(parameter)
 	configuration().get("$value")
 
+rule type(parameter, custom)
+	configuration().get("$value+customParameter")
+
 rule type(custom) and trigger(parameter)
 	configuration().get("$value+customParameter")
 
@@ -475,6 +478,9 @@ rule type(int) and trigger(parameter)
 	$value
 
 rule trigger(parameter)
+	"$value"
+
+rule type(parameter)
 	"$value"
 
 rule trigger(authentication)

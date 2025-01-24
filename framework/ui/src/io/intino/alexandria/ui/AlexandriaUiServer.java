@@ -8,11 +8,11 @@ public class AlexandriaUiServer extends AlexandriaHttpServer<UIRouter> {
 	private AuthService authService;
 
 	public AlexandriaUiServer(int port, AuthService authService) {
-		this(port, WebDirectory, authService);
+		this(port, WebDirectory, MaxResourceSize, authService);
 	}
 
-	public AlexandriaUiServer(int port, String webDirectory, AuthService authService) {
-		super(port, webDirectory);
+	public AlexandriaUiServer(int port, String webDirectory, long maxResourceSize, AuthService authService) {
+		super(port, webDirectory, maxResourceSize);
 		this.authService = authService;
 	}
 

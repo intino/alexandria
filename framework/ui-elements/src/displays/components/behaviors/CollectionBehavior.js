@@ -175,7 +175,7 @@ const CollectionBehavior = (collection) => {
                 index[0]++;
                 return self.renderItem(items, mode, { index: index[0], isScrolling: false, customClasses: customItemClasses, itemHeight: itemHeight });
             });
-            if (section != "__default") result.push(<div><Typography variant="h6" style={{marginTop:'10px',marginBottom:'10px'}}>{section}</Typography></div>);
+            if (section != "__default") result.push(<div><Typography variant="h6" style={{marginLeft:'10px', marginTop:'10px',marginBottom:'10px'}}>{section}</Typography></div>);
             result.push(mode != "Column" ? content : <div className="layout horizontal wrap">{content}</div>);
         }
         return result;

@@ -164,7 +164,9 @@ public class AbstractBoxRenderer extends Renderer {
 					new FrameBuilder("service", "rest")
 							.add("name", service.name$())
 							.add("configuration", boxName())
-							.add("parameter", parameter(service.port())).toFrame());
+							.add("port", parameter(service.port(), "port"))
+							.add("maxResourceSize", parameter(String.valueOf(service.maxResourceSize()*1024*1024), "maxResourceSize"))
+							.toFrame());
 	}
 
 	private void cli(FrameBuilder frame) {
@@ -174,7 +176,9 @@ public class AbstractBoxRenderer extends Renderer {
 					new FrameBuilder("service", "cli")
 							.add("name", service.name$())
 							.add("configuration", boxName())
-							.add("parameter", parameter(service.port())).toFrame());
+							.add("port", parameter(service.port(), "port"))
+							.add("maxResourceSize", parameter(String.valueOf(service.maxResourceSize()*1024*1024), "maxResourceSize"))
+							.toFrame());
 	}
 
 	private void soap(FrameBuilder frame) {
@@ -183,7 +187,9 @@ public class AbstractBoxRenderer extends Renderer {
 					new FrameBuilder("service", "soap")
 							.add("name", service.name$())
 							.add("configuration", boxName())
-							.add("parameter", parameter(service.port())).toFrame());
+							.add("port", parameter(service.port(), "port"))
+							.add("maxResourceSize", parameter(String.valueOf(service.maxResourceSize()*1024*1024), "maxResourceSize"))
+							.toFrame());
 	}
 
 	private void messaging(FrameBuilder frame) {
@@ -228,8 +234,12 @@ public class AbstractBoxRenderer extends Renderer {
 	}
 
 	private Frame ui(Service.UI service, String name) {
-		final FrameBuilder builder = new FrameBuilder("service", "ui").add("name", service.name$()).add("configuration", name)
-				.add("parameter", parameter(service.port()).toFrame()).add("package", packageName());
+		final FrameBuilder builder = new FrameBuilder("service", "ui")
+				.add("name", service.name$())
+				.add("configuration", name)
+				.add("port", parameter(service.port(), "port"))
+				.add("maxResourceSize", parameter(String.valueOf(service.maxResourceSize()*1024*1024), "maxResourceSize"))
+				.add("package", packageName());
 		if (service.authentication() != null)
 			builder.add("authentication", parameter(service.authentication().by()).toFrame());
 		if (service.edition() != null)
