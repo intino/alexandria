@@ -103,8 +103,8 @@
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-core-server:11.0.24" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Intino: io.intino.icod:core:2.0.2" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Intino: io.intino.alexandria:proxy:2.0.1" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:http:2.1.0" level="project" />
     <orderEntry type="library" name="Intino: log4j:log4j:1.2.17" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:http:2.1.1" level="project" />
     <orderEntry type="module" module-name="ui-elements" />
   </component>
 </module>
