@@ -43,6 +43,21 @@ public class Chat<DN extends ChatNotifier, B extends Box> extends AbstractChat<B
 		return this;
 	}
 
+	public Chat<DN, B> incomingImage(URL image) {
+		_incomingImage(image);
+		return this;
+	}
+
+	public Chat<DN, B> outgoingImage(URL image) {
+		_outgoingImage(image);
+		return this;
+	}
+
+	public Chat<DN, B> loadingImage(URL image) {
+		_loadingImage(image);
+		return this;
+	}
+
 	public Chat<DN, B> emptyMessage(String message) {
 		_emptyMessage(message);
 		return this;
