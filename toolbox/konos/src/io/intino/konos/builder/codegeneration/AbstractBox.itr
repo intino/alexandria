@@ -459,17 +459,17 @@ rule type(conf, file) and trigger(parameter)
 rule type(conf) and trigger(parameter)
 	configuration().get("$value")
 
+rule type(parameter, custom) and trigger(authentication)
+	url(configuration().get("$value+customParameter"))
+
+rule type(parameter, custom) and trigger(edition)
+	url(configuration().get("$value+customParameter"))
+
 rule type(parameter, custom)
 	configuration().get("$value+customParameter")
 
 rule type(custom) and trigger(parameter)
 	configuration().get("$value+customParameter")
-
-rule type(custom) and trigger(authentication)
-	url(configuration().get("$value+customParameter"))
-
-rule type(custom) and trigger(edition)
-	url(configuration().get("$value+customParameter"))
 
 rule type(file) and trigger(parameter)
 	$value

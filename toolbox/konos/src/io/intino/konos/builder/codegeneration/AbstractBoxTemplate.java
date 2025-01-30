@@ -70,10 +70,10 @@ public class AbstractBoxTemplate extends Template {
 		rules.add(rule().condition(all(allTypes("conf"), trigger("additionalparameter"))).output(literal("configuration().get(\"")).output(placeholder("value")).output(literal("\")")));
 		rules.add(rule().condition(all(allTypes("conf", "file"), trigger("parameter"))).output(literal("configuration().get(\"")).output(placeholder("value")).output(literal("\") == null ? null : new java.io.File(configuration().get(\"")).output(placeholder("value")).output(literal("\"))")));
 		rules.add(rule().condition(all(allTypes("conf"), trigger("parameter"))).output(literal("configuration().get(\"")).output(placeholder("value")).output(literal("\")")));
+		rules.add(rule().condition(all(allTypes("parameter", "custom"), trigger("authentication"))).output(literal("url(configuration().get(\"")).output(placeholder("value", "customParameter")).output(literal("\"))")));
+		rules.add(rule().condition(all(allTypes("parameter", "custom"), trigger("edition"))).output(literal("url(configuration().get(\"")).output(placeholder("value", "customParameter")).output(literal("\"))")));
 		rules.add(rule().condition(allTypes("parameter", "custom")).output(literal("configuration().get(\"")).output(placeholder("value", "customParameter")).output(literal("\")")));
 		rules.add(rule().condition(all(allTypes("custom"), trigger("parameter"))).output(literal("configuration().get(\"")).output(placeholder("value", "customParameter")).output(literal("\")")));
-		rules.add(rule().condition(all(allTypes("custom"), trigger("authentication"))).output(literal("url(configuration().get(\"")).output(placeholder("value", "customParameter")).output(literal("\"))")));
-		rules.add(rule().condition(all(allTypes("custom"), trigger("edition"))).output(literal("url(configuration().get(\"")).output(placeholder("value", "customParameter")).output(literal("\"))")));
 		rules.add(rule().condition(all(allTypes("file"), trigger("parameter"))).output(placeholder("value")));
 		rules.add(rule().condition(all(allTypes("int"), trigger("parameter"))).output(placeholder("value")));
 		rules.add(rule().condition(trigger("parameter")).output(literal("\"")).output(placeholder("value")).output(literal("\"")));
