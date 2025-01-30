@@ -35,6 +35,7 @@ class AlexandriaHttpWriter {
 	}
 
 	void writeHeader(String name, String value) {
+		if (value == null) return;
 		response.header(name, value);
 	}
 
