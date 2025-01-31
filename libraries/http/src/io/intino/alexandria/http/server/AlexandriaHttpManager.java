@@ -14,6 +14,8 @@ import jakarta.servlet.http.Part;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 
 public class AlexandriaHttpManager<P extends PushService<? extends Session<?>, ? extends Client>> {
 	private static final String XForwardedProto = "X-Forwarded-Proto";
+	private static final String XForwardedHost = "X-Forwarded-Host";
 	private static final String XForwardedPath = "X-Forwarded-Path";
 	private static final String XForwardedPort = "X-Forwarded-Port";
 	protected final P pushService;
@@ -214,20 +217,11 @@ public class AlexandriaHttpManager<P extends PushService<? extends Session<?>, ?
 	}
 
 	public String domain() {
-		try {
-			URL url = new URL(request.raw().getRequestURL().toString());
-			String result = url.getHost();
-			int port = getHeaderPort();
-			if (port == -1) port = url.getPort();
-			if (port != 80 && port != -1) result += ":" + port;
-			return result;
-		} catch (MalformedURLException e) {
-			return null;
-		}
+		return buildDomainUrl();
 	}
 
 	public String baseUrl() {
-		String result = generateBaseUrl();
+		String result = buildBaseUrl();
 
 		result = addHeaderProtocol(result);
 		result = addHeaderPath(result);
@@ -297,17 +291,31 @@ public class AlexandriaHttpManager<P extends PushService<? extends Session<?>, ?
 		return sessionCookieName;
 	}
 
-	private String generateBaseUrl() {
-
+	private String buildBaseUrl() {
 		try {
-			URL url = new URL(request.raw().getRequestURL().toString());
-			String baseUrl = url.getProtocol() + "://" + url.getHost();
+			URL requestUrl = new URL(request.raw().getRequestURL().toString());
+			String forwardedHost = request.raw().getHeader(XForwardedHost);
+			String forwardedProtocol = request.raw().getHeader(XForwardedProto);
+			boolean forwardedUriDefined = forwardedProtocol != null && forwardedHost != null;
+			return (forwardedUriDefined ? forwardedProtocol : requestUrl.getProtocol()) + "://" + buildDomainUrl();
+		} catch (MalformedURLException e) {
+			return null;
+		}
+	}
+
+	private String buildDomainUrl() {
+		try {
+			URL requestUrl = new URL(request.raw().getRequestURL().toString());
+			String forwardedHost = request.raw().getHeader(XForwardedHost);
+			String forwardedProtocol = request.raw().getHeader(XForwardedProto);
+			boolean forwardedUriDefined = forwardedProtocol != null && forwardedHost != null;
+			String domain = forwardedUriDefined ? forwardedHost : requestUrl.getHost();
 
 			int port = getHeaderPort();
-			if (port == -1) port = url.getPort();
-			if (port != 80 && port != -1) baseUrl += ":" + port;
+			if (port == -1) port = requestUrl.getPort();
+			if (port != 80 && port != -1) domain += ":" + port;
 
-			return baseUrl;
+			return domain;
 		} catch (MalformedURLException e) {
 			return null;
 		}
@@ -337,7 +345,7 @@ public class AlexandriaHttpManager<P extends PushService<? extends Session<?>, ?
 		if (forwardedPort == null || forwardedPort.isEmpty())
 			return -1;
 
-		return Integer.valueOf(forwardedPort);
+		return Integer.parseInt(forwardedPort);
 	}
 
 	public void redirect(String location) {
@@ -345,6 +353,15 @@ public class AlexandriaHttpManager<P extends PushService<? extends Session<?>, ?
 			response.raw().sendRedirect(location);
 		} catch (IOException e) {
 			Logger.error(e);
+		}
+	}
+
+	private URL url(String value) {
+		try {
+			return new URI(value).toURL();
+		} catch (MalformedURLException | URISyntaxException e) {
+			Logger.error(e);
+			return null;
 		}
 	}
 
