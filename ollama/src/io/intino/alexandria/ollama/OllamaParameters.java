@@ -7,6 +7,19 @@ import java.util.Map;
 
 public interface OllamaParameters<Self extends OllamaParameters<Self>> {
 
+	default Integer numGpu() {
+		return parameter("num_gpu");
+	}
+
+	/**
+	 * Indicates to llama.cpp how many GPUs are available. A value of 0 will disable the use of GPU for the request, and a value
+	 * greater than 1 can be use to force llama.cpp to allocate more VRAM. This is useful if ollama is offloading less layers to the
+	 * GPU than possible, but can generate OOM CUDA errors.
+	 * */
+	default Self numGpu(Integer numGpu) {
+		return parameter("num_gpu", numGpu);
+	}
+
 	default Integer mirostat() {
 		return parameter("mirostat");
 	}
