@@ -95,7 +95,7 @@ public abstract class Resource implements io.intino.alexandria.http.Resource {
 	protected synchronized String authenticate(UISession session, String baseUrl) {
 		String authId = UUID.randomUUID().toString();
 		Space space = space();
-		space.setBaseUrl(baseUrl);
+		if (space != null) space.setBaseUrl(baseUrl);
 		saveAuthenticationId(session, authId);
 		Authentication authentication = createAuthentication(session, authId);
 		return authenticate(authentication);
