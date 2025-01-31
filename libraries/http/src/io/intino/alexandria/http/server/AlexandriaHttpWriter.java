@@ -35,8 +35,7 @@ class AlexandriaHttpWriter {
 	}
 
 	void writeHeader(String name, String value) {
-		if (value == null) return;
-		response.header(name, value);
+		response.header(name, value != null ? value : "");
 	}
 
 	private void writeResponse(String message, String contentType) {
