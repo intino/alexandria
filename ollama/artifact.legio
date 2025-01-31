@@ -1,8 +1,13 @@
 dsl Legio
 
-Artifact(groupId = "io.intino.alexandria", version = "1.0.0") ollama
+Artifact(groupId = "io.intino.alexandria", version = "1.0.1") ollama
 	Imports
 		Compile("io.intino.alexandria", "json", "1.2.3")
+		Compile("io.qdrant", "client", "1.11.0")
+		Compile("io.grpc", "grpc-stub", "1.65.1")
+		Compile("io.grpc", "grpc-protobuf", "1.65.1")
+		Compile("io.grpc", "grpc-netty-shaded", "1.65.1")
+		Compile("org.slf4j", "slf4j-api", "2.0.14")
 		Test(groupId = "junit", artifactId = "junit", version = "4.13")
 	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources=true, attachDoc=true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
