@@ -151,6 +151,7 @@ export default class Display extends PassiveView {
     };
 
     hideMessage = () => {
+        if (this.messageTimeout != null) window.clearTimeout(this.messageTimeout);
         this.props.closeSnackbar();
     };
 
