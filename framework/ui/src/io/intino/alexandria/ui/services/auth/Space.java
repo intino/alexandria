@@ -1,17 +1,20 @@
 package io.intino.alexandria.ui.services.auth;
 
+import io.intino.alexandria.logger.Logger;
+
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 
 public class Space {
-    private final URL authServiceUrl;
+    private final URL url;
     private String baseUrl;
     private String name = "space";
     private String title = "";
     private String secret = "1234";
 
-    public Space(URL authServiceUrl) {
-        this.authServiceUrl = authServiceUrl;
+    public Space(URL url) {
+        this.url = url;
     }
 
     public Space setBaseUrl(String url) {
@@ -47,11 +50,7 @@ public class Space {
     }
 
     public URL url() {
-        try {
-            return new URL(this.baseUrl);
-        } catch (MalformedURLException e) {
-            return null;
-        }
+        return url != null ? url : urlOf(baseUrl);
     }
 
     public URL logo() {
@@ -60,21 +59,18 @@ public class Space {
 
     public URL authCallbackUrl() {
         try {
-            return new URL(home().toString() + "/authenticate-callback");
+            return new URL(url().toString() + "/authenticate-callback");
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            Logger.error(e);
             return null;
         }
     }
 
-    public URL authServiceUrl() {
-        return authServiceUrl;
-    }
-
-    public URL home() {
+    private URL urlOf(String baseUrl) {
         try {
-            return new URL(baseUrl);
+            return URI.create(baseUrl).toURL();
         } catch (MalformedURLException e) {
+            Logger.error(e);
             return null;
         }
     }
