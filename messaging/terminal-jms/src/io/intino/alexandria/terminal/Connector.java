@@ -1,8 +1,8 @@
 package io.intino.alexandria.terminal;
 
 import io.intino.alexandria.event.Event;
+import jakarta.jms.Message;
 
-import javax.jms.Message;
 import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.TimeUnit;

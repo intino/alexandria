@@ -68,7 +68,8 @@ public class AgendaServiceRenderer extends Renderer {
 	}
 
 	private Frame[] framesOf(List<Parameter> parameters) {
-		return IntStream.range(0, parameters.size()).mapToObj(i -> frameOf(parameters.get(i), i)).toArray(Frame[]::new);
+		return IntStream.range(0, parameters.size())
+				.mapToObj(i -> frameOf(parameters.get(i), i)).toArray(Frame[]::new);
 	}
 
 	private Frame frameOf(Parameter param, int index) {
@@ -76,6 +77,7 @@ public class AgendaServiceRenderer extends Renderer {
 		final FrameBuilder builder = new FrameBuilder("parameter", param.asType().type())
 				.add("index", index)
 				.add("name", param.name$());
+		builder.add(param.asType().type());
 		if (param.isWord()) builder.add("type", "java.lang.String");
 		else builder.add("type", innerPackage + param.asType().type());
 		if (param.i$(Data.List.class)) builder.add("list");
