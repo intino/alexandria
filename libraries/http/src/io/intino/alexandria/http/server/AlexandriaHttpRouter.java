@@ -22,6 +22,6 @@ public interface AlexandriaHttpRouter<SM extends AlexandriaHttpManager<?>> {
 	void whenValidate(Function<AlexandriaHttpManager<?>, Boolean> validator);
 
 	interface ManagerProvider<SM extends AlexandriaHttpManager<?>> {
-		SM get(AlexandriaHttpRequest request, AlexandriaHttpResponse response);
+		SM get(AlexandriaHttpRequest request, AlexandriaHttpResponse response, AlexandriaHttpResourceProvider fileProvider);
 	}
 }

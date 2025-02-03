@@ -18,7 +18,7 @@ public class UIRouter implements AlexandriaHttpRouter<AlexandriaUiManager> {
 		this.router = router;
 		if (isUserHomePath(path)) hasUserHome = true;
 		this.authService = authService;
-		managerProvider((request, response) -> new AlexandriaUiManager((io.intino.alexandria.ui.services.push.PushService) pushService(), request, response, authService, hasUserHome));
+		managerProvider((request, response, resourceProvider) -> new AlexandriaUiManager((io.intino.alexandria.ui.services.push.PushService) pushService(), request, response, resourceProvider, authService, hasUserHome));
 	}
 
 	private boolean isUserHomePath(String path) {

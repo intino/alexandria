@@ -108,7 +108,7 @@ class FileEditable extends AbstractFile {
                 dropzoneClass="fileeditable-dropzone"
                 dropzoneParagraphClass="fileeditable-dropzone-paragraph"
                 filesLimit={1}
-                maxFileSize={this.props.maxSize != null ? this.props.maxSize : 300000000}
+                maxFileSize={this.props.maxSize != null ? this.props.maxSize : 20971520000}
                 showPreviews={false}
                 showPreviewsInDropzone={true}
                 useChipsForPreview
