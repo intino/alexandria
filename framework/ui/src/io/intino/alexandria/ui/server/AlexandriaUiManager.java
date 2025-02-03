@@ -2,6 +2,7 @@ package io.intino.alexandria.ui.server;
 
 import io.intino.alexandria.http.server.AlexandriaHttpManager;
 import io.intino.alexandria.http.server.AlexandriaHttpRequest;
+import io.intino.alexandria.http.server.AlexandriaHttpResourceProvider;
 import io.intino.alexandria.http.server.AlexandriaHttpResponse;
 import io.intino.alexandria.ui.services.AuthService;
 import io.intino.alexandria.ui.services.push.PushService;
@@ -17,8 +18,8 @@ public class AlexandriaUiManager extends AlexandriaHttpManager<PushService> {
 
 	public static final String KonosUserHomePath = "/konos/user";
 
-	public AlexandriaUiManager(PushService pushService, AlexandriaHttpRequest request, AlexandriaHttpResponse response, AuthService authService, boolean hasUserHome) {
-		super(pushService, request, response);
+	public AlexandriaUiManager(PushService pushService, AlexandriaHttpRequest request, AlexandriaHttpResponse response, AlexandriaHttpResourceProvider resourceProvider, AuthService authService, boolean hasUserHome) {
+		super(pushService, request, response, resourceProvider);
 		this.authService = authService;
 		this.hasUserHome = hasUserHome;
 	}
