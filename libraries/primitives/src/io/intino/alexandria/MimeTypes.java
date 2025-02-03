@@ -100,6 +100,8 @@ public class MimeTypes {
 		contentTypes.put(".3gp", "video/3gpp");
 		contentTypes.put(".3g2", "video/3gpp2");
 		contentTypes.put(".7z", "application/x-7z-compressed");
+		contentTypes.put(".mp4", "video/mp4");
+		contentTypes.put(".mp3", "audio/mpeg");
 		registerExtensions();
 	}
 
