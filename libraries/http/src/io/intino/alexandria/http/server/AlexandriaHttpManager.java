@@ -5,9 +5,12 @@ import io.intino.alexandria.http.pushservice.Client;
 import io.intino.alexandria.http.pushservice.PushService;
 import io.intino.alexandria.http.pushservice.Session;
 import io.intino.alexandria.logger.Logger;
+import jakarta.servlet.MultipartConfigElement;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -15,6 +18,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -35,6 +39,7 @@ public class AlexandriaHttpManager<P extends PushService<? extends Session<?>, ?
 		this.request = request;
 		this.response = response;
 		this.resourceProvider = resourceProvider;
+		setUpMultipartConfiguration();
 		setUpSessionCookiePath();
 	}
 
@@ -238,6 +243,11 @@ public class AlexandriaHttpManager<P extends PushService<? extends Session<?>, ?
 
 	private boolean textContentType(Resource resource) {
 		return "application/json".equals(resource.metadata().contentType()) || "text/plain".equals(resource.metadata().contentType());
+	}
+
+	private void setUpMultipartConfiguration() {
+		//MultipartConfigElement multipartConfigElement = new MultipartConfigElement(System.getProperty("java.io.tmpdir"));
+		//request.raw().setAttribute("org.eclipse.jetty.multipartConfig", multipartConfigElement);
 	}
 
 	private void setUpSessionCookiePath() {
