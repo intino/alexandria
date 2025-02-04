@@ -3,3 +3,6 @@ dsl Legio
 Project("describes here your project") alexandria
 	Repository("intino-maven")
 		Release("https://artifactory.intino.io/artifactory/releases")
+
+	Repository("siani-maven") > Release("https://artifactory.siani.es/artifactory/releases")
+	Repository("bedatadriven") bedatadrivenPublic > Release("https://nexus.bedatadriven.com/content/groups/public/")
