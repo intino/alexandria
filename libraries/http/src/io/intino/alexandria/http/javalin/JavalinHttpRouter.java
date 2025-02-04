@@ -1,23 +1,24 @@
 package io.intino.alexandria.http.javalin;
 
+import io.intino.alexandria.Resource;
 import io.intino.alexandria.exceptions.AlexandriaException;
 import io.intino.alexandria.http.AlexandriaHttpServer.ResourceCaller;
 import io.intino.alexandria.http.pushservice.PushService;
 import io.intino.alexandria.http.pushservice.PushServiceHandler;
-import io.intino.alexandria.http.server.AlexandriaHttpManager;
-import io.intino.alexandria.http.server.AlexandriaHttpRequest;
-import io.intino.alexandria.http.server.AlexandriaHttpResponse;
-import io.intino.alexandria.http.server.AlexandriaHttpRouter;
+import io.intino.alexandria.http.server.*;
 import io.intino.alexandria.logger.Logger;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import io.javalin.http.UploadedFile;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class JavalinHttpRouter<SM extends AlexandriaHttpManager<?>> implements AlexandriaHttpRouter<SM> {
 	private final String path;
@@ -116,12 +117,12 @@ public class JavalinHttpRouter<SM extends AlexandriaHttpManager<?>> implements A
 		this.validator = validator;
 	}
 
-	private SM defaultManager(AlexandriaHttpRequest request, AlexandriaHttpResponse response) {
-		return (SM) new AlexandriaHttpManager<>(pushService, request, response);
+	private SM defaultManager(AlexandriaHttpRequest request, AlexandriaHttpResponse response, AlexandriaHttpResourceProvider resourceProvider) {
+		return (SM) new AlexandriaHttpManager<>(pushService, request, response, resourceProvider);
 	}
 
 	private SM manager(Context context) {
-		return managerProvider.get(request(context), response(context));
+		return managerProvider.get(request(context), response(context), resourceProvider(context));
 	}
 
 	private boolean validRequest(AlexandriaHttpManager<?> manager) {
@@ -167,6 +168,21 @@ public class JavalinHttpRouter<SM extends AlexandriaHttpManager<?>> implements A
 
 	private AlexandriaHttpResponse response(Context context) {
 		return new JavalinHttpResponse(context);
+	}
+
+	private AlexandriaHttpResourceProvider resourceProvider(Context context) {
+		return new AlexandriaHttpResourceProvider() {
+			@Override
+			public List<Resource> resources() {
+				return context.uploadedFiles().stream().map(f -> new Resource(f.filename(), f.contentType(), f.content())).collect(Collectors.toList());
+			}
+
+			@Override
+			public Resource resource(String name) {
+				UploadedFile file = context.uploadedFile(name);
+				return file != null ? new Resource(file.filename(), file.contentType(), file.content()) : null;
+			}
+		};
 	}
 
 	private static String adapt(String path) {

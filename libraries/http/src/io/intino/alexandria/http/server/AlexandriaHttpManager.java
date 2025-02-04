@@ -5,12 +5,9 @@ import io.intino.alexandria.http.pushservice.Client;
 import io.intino.alexandria.http.pushservice.PushService;
 import io.intino.alexandria.http.pushservice.Session;
 import io.intino.alexandria.logger.Logger;
-import jakarta.servlet.MultipartConfigElement;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.Part;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -18,7 +15,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -32,12 +28,13 @@ public class AlexandriaHttpManager<P extends PushService<? extends Session<?>, ?
 	protected final P pushService;
 	protected final AlexandriaHttpRequest request;
 	protected final AlexandriaHttpResponse response;
+	private final AlexandriaHttpResourceProvider resourceProvider;
 
-	public AlexandriaHttpManager(P pushService, AlexandriaHttpRequest request, AlexandriaHttpResponse response) {
+	public AlexandriaHttpManager(P pushService, AlexandriaHttpRequest request, AlexandriaHttpResponse response, AlexandriaHttpResourceProvider resourceProvider) {
 		this.pushService = pushService;
 		this.request = request;
 		this.response = response;
-		setUpMultipartConfiguration();
+		this.resourceProvider = resourceProvider;
 		setUpSessionCookiePath();
 	}
 
@@ -153,57 +150,42 @@ public class AlexandriaHttpManager<P extends PushService<? extends Session<?>, ?
 	}
 
 	public String fromFormAsString(String name) {
-		return fromPartAsString(name);
+		return fromPartAsString(resourceProvider.resource(name));
 	}
 
 	public String fromFormOrDefault(String name, String defaultValue) {
-		String content = fromPartAsString(name);
+		String content = fromPartAsString(resourceProvider.resource(name));
 		return content != null ? content : defaultValue;
 	}
 
 	public <X extends Throwable> String fromFormAsStringOrElseThrow(String name, Supplier<? extends X> exceptionSupplier) throws X {
-		String resource = fromPartAsString(name);
+		String resource = fromPartAsString(resourceProvider.resource(name));
 		if (resource == null) throw exceptionSupplier.get();
 		return resource;
 	}
 
 	public List<Resource> fromPartsAsResources() {
-		try {
-			return request.raw().getParts().stream()
-					.filter(p -> !textContentType(p))
-					.map(p -> fromPartAsResource(p.getName()))
-					.collect(Collectors.toList());
-		} catch (ServletException | IOException e) {
-			return Collections.emptyList();
-		}
+		return resourceProvider.resources().stream()
+				.filter(p -> !textContentType(p))
+				.collect(Collectors.toList());
 	}
 
 	public List<String> fromPartsAsStrings() {
-		try {
-			return request.raw().getParts().stream()
-					.filter(this::textContentType)
-					.map(p -> fromPartAsString(p.getName()))
-					.collect(Collectors.toList());
-		} catch (ServletException | IOException e) {
-			return Collections.emptyList();
-		}
+		return resourceProvider.resources().stream()
+				.filter(this::textContentType)
+				.map(this::fromPartAsString)
+				.collect(Collectors.toList());
 	}
 
 
 	private Resource fromPartAsResource(String name) {
-		try {
-			Part part = request.raw().getPart(name);
-			return part != null ? new Resource(part.getSubmittedFileName() == null ? part.getName() : part.getSubmittedFileName(), part.getInputStream()).metadata().contentType(part.getContentType()) : null;
-		} catch (ServletException | IOException e) {
-			return null;
-		}
+		return resourceProvider.resource(name);
 	}
 
-	private String fromPartAsString(String name) {
+	private String fromPartAsString(Resource resource) {
 		try {
-			Part part = request.raw().getPart(name);
-			return part != null ? new String(part.getInputStream().readAllBytes(), StandardCharsets.UTF_8) : null;
-		} catch (ServletException | IOException e) {
+			return resource != null ? new String(resource.bytes(), StandardCharsets.UTF_8) : null;
+		} catch (IOException e) {
 			return null;
 		}
 	}
@@ -254,13 +236,8 @@ public class AlexandriaHttpManager<P extends PushService<? extends Session<?>, ?
 		return raw.getRemoteAddr();
 	}
 
-	private boolean textContentType(Part p) {
-		return "application/json".equals(p.getContentType()) || "text/plain".equals(p.getContentType());
-	}
-
-	private void setUpMultipartConfiguration() {
-		MultipartConfigElement multipartConfigElement = new MultipartConfigElement(System.getProperty("java.io.tmpdir"));
-		request.raw().setAttribute("org.eclipse.jetty.multipartConfig", multipartConfigElement);
+	private boolean textContentType(Resource resource) {
+		return "application/json".equals(resource.metadata().contentType()) || "text/plain".equals(resource.metadata().contentType());
 	}
 
 	private void setUpSessionCookiePath() {

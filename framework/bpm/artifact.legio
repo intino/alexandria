@@ -9,6 +9,3 @@ Artifact("io.intino.alexandria", "3.1.4") bpm-framework
 
 	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
-
-Repository("intino-maven")
-	Release("https://artifactory.intino.io/artifactory/releases")

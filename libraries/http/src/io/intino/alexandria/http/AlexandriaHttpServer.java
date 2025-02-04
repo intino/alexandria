@@ -92,9 +92,6 @@ public class AlexandriaHttpServer<R extends AlexandriaHttpRouter<?>> {
 		Javalin result = Javalin.create(config -> {
 			config.staticFiles.add("/", Location.CLASSPATH);
 			if (webDirectory != null) config.staticFiles.add(webDirectory);
-			config.jetty.modifyServer(server -> {
-				server.setAttribute("org.eclipse.jetty.server.Request.maxFormContentSize", maxResourceSize);
-			});
 		});
 		result.exception(Exception.class, (exception, context) -> Logger.error(exception));
 		return result;
