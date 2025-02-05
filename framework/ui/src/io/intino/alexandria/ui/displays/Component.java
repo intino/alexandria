@@ -41,6 +41,11 @@ public abstract class Component<DN extends ComponentNotifier, B extends Box> ext
 		return this;
 	}
 
+	public Component<DN, B> cssSelectors(Set<String> selectors) {
+		notifier.refreshCssSelectors(new ArrayList<>(selectors));
+		return this;
+	}
+
 	public Component<DN, B> onShow(ShowListener listener) {
 		this.showListeners.add(listener);
 		return this;

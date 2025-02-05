@@ -39,8 +39,8 @@ class Image extends AbstractImage {
 		if (this.state.value == null) return (<React.Fragment/>);
 		return (
 			<React.Fragment>
-			    {this.props.allowFullscreen && <ImageGallery items={[this._galleryItems()]} showThumbnails={false} showBullets={false} showPlayButton={false} /> }
-                {!this.props.allowFullscreen && <img style={this.style()} title={this.props.label} src={this.state.value}/> }
+			    {this.props.allowFullscreen && <ImageGallery class={this.cssRuleSelectors()} items={[this._galleryItems()]} showThumbnails={false} showBullets={false} showPlayButton={false} /> }
+                {!this.props.allowFullscreen && <img class={this.cssRuleSelectors()} style={this.style()} title={this.props.label} src={this.state.value}/> }
 			</React.Fragment>
 		);
 	};

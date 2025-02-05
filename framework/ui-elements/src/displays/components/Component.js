@@ -15,6 +15,7 @@ export default class Component extends AlexandriaDisplay {
             color: this.props.color != null ? this.props.color : null,
             backgroundColor: this.props.backgroundColor != null ? this.props.backgroundColor : null,
             format: this.props.format,
+            cssSelectors: this.props.cssSelectors != null ? this.props.cssSelectors.split(",") : [],
             ...this.state
         };
     };
@@ -79,6 +80,10 @@ export default class Component extends AlexandriaDisplay {
         this.setState({ format: format });
     };
 
+    refreshCssSelectors = (value) => {
+        this.setState({ cssSelectors: value });
+    };
+
     hiddenClass = () => {
         const hidden = this.props.hidden;
         if (hidden == null || hidden === "Never") return "";
@@ -102,6 +107,10 @@ export default class Component extends AlexandriaDisplay {
             for (let rule in style) result[rule] = style[rule];
         });
         return result;
+    };
+
+    cssRuleSelectors = () => {
+        return this.state.cssSelectors.join(" ");
     };
 
     applyStyles = (styles, to) => {

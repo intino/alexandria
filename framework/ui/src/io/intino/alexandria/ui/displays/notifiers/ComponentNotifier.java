@@ -4,6 +4,8 @@ import io.intino.alexandria.http.pushservice.MessageCarrier;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.UserMessage;
 
+import java.util.List;
+
 public class ComponentNotifier extends DisplayNotifier {
 
 	public ComponentNotifier(Display display, MessageCarrier carrier) {
@@ -36,6 +38,10 @@ public class ComponentNotifier extends DisplayNotifier {
 
 	public void refreshFormat(String format) {
 		putToDisplay("refreshFormat", "v", format);
+	}
+
+	public void refreshCssSelectors(List<String> selectors) {
+		putToDisplay("refreshCssSelectors", "v", selectors);
 	}
 
 }
