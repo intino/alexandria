@@ -12,8 +12,5 @@ Artifact("io.intino.alexandria", "1.2.3") pdf-builder
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 
-Repository("intino-maven")
-	Release("https://artifactory.intino.io/artifactory/releases")
-
 Repository("groupdocs-artifacts-repository")
 	Release("https://repository.groupdocs.com/repo/")
