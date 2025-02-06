@@ -31,7 +31,7 @@ export class EmbeddedList extends AbstractList {
 	};
 
 	render() {
-		return (<div ref={this.container} className="flex" style={{width:"100%"}}><AutoSizer>{({ height, width }) => (this.behavior.renderCollection(height, width))}</AutoSizer></div>);
+		return (<div ref={this.container} className="flex" style={{width:"100%",position:'relative'}}><AutoSizer>{({ height, width }) => (this.behavior.renderCollection(height, width))}</AutoSizer></div>);
 	};
 
 }

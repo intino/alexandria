@@ -71,7 +71,7 @@ export class EmbeddedTable extends AbstractTable {
         const headerClass = height <= minHeight ? classes.withScroller : classes.withoutScroller;
 
         return (
-            <div ref={this.container} style={{height:"100%",width:"100%"}} className="layout vertical flex">
+            <div ref={this.container} style={{height:"100%",width:"100%",position:'relative'}} className="layout vertical flex">
                 { ComponentBehavior.labelBlock(this.props) }
                 <div ref={this.header} className={classNames(classes.headerView, headerClass, "layout horizontal center", selectable && multiple ? classes.selectable : {})} style={{position:"relative"}}>
                     <div className={classNames(classes.selectAll, selectable ? classes.selectable : {})}><Checkbox className={classes.selector} onChange={this.handleCheck.bind(this)} /></div>

@@ -770,7 +770,7 @@ export class EmbeddedDynamicTable extends AbstractDynamicTable {
                             <div className={classNames(classes.selectAll, selectable ? classes.selectable : {})}><Checkbox className={classes.selector} onChange={this.handleCheck.bind(this)} /></div>
                             {this.props.children}
                         </div>
-                        <div className="layout flex" style={{width:"100%",height:"calc(100% - " + headerHeight + "px)"}}><AutoSizer>{({ height, width }) => (this.behavior.renderCollection(height, width))}</AutoSizer></div>
+                        <div className="layout flex" style={{width:"100%",height:"calc(100% - " + headerHeight + "px)",position:'relative'}}><AutoSizer>{({ height, width }) => (this.behavior.renderCollection(height, width))}</AutoSizer></div>
                     </div>
                 </DialogContent>
             </Dialog>
