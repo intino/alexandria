@@ -11,7 +11,7 @@ import java.time.Duration;
 import java.util.Formatter;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -65,23 +65,7 @@ public interface Ollama extends AutoCloseable {
 
 	OllamaEmbedResponse.OfFloat embedFloats(OllamaEmbedRequest embedRequest) throws OllamaAPIException;
 
-	default OllamaCreateModelResponse createModel(String name, String modelFile) throws OllamaAPIException {
-		return createModel(new OllamaCreateModelRequest().name(name).modelfile(modelFile).stream(false));
-	}
-
-	default OllamaCreateModelResponse createModel(String name, ModelFile modelFile) throws OllamaAPIException {
-		return createModel(new OllamaCreateModelRequest().name(name).modelfile(modelFile).stream(false));
-	}
-
 	OllamaCreateModelResponse createModel(OllamaCreateModelRequest createModelRequest) throws OllamaAPIException;
-
-	default StreamResponse<OllamaCreateModelResponse> createModelStream(String name, String modelFile) throws OllamaAPIException {
-		return createModelStream(new OllamaCreateModelRequest().name(name).modelfile(modelFile).stream(true));
-	}
-
-	default StreamResponse<OllamaCreateModelResponse> createModelStream(String name, ModelFile modelFile) throws OllamaAPIException {
-		return createModelStream(new OllamaCreateModelRequest().name(name).modelfile(modelFile).stream(true));
-	}
 
 	StreamResponse<OllamaCreateModelResponse> createModelStream(OllamaCreateModelRequest createModelRequest) throws OllamaAPIException;
 
@@ -161,6 +145,26 @@ public interface Ollama extends AutoCloseable {
 		public StreamResponse(InputStream inputStream, Class<T> responseType) {
 			this.reader = new BufferedReader(new InputStreamReader(inputStream));
 			this.iterator = reader.lines().filter(l -> !l.isBlank()).map(l -> Json.fromJson(l, responseType)).iterator();
+		}
+
+		public String processAllParts() {
+			return processAllParts(part -> {});
+		}
+
+		public String processAllParts(Consumer<T> consumer) {
+			StringBuilder sb = new StringBuilder();
+			while(hasNext()) {
+				T part = next();
+				consumer.accept(part);
+				sb.append(textOf(part));
+			}
+			return sb.toString();
+		}
+
+		private String textOf(T part) {
+			if(part instanceof OllamaGenerateResponse g) return g.text();
+			if(part instanceof OllamaChatResponse c) return c.text();
+			return "";
 		}
 
 		public Stream<T> stream() {
