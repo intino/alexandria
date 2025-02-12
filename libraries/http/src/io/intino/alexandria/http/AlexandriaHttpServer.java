@@ -104,7 +104,7 @@ public class AlexandriaHttpServer<R extends AlexandriaHttpRouter<?>> {
 			config.pvt.resourceHandler = new ResourceHandler() {
 				@Override
 				public boolean canHandle(Context context) {
-					return defaultHandler.canHandle(context);
+					return defaultHandler != null && defaultHandler.canHandle(context);
 				}
 
 				@Override
@@ -115,22 +115,15 @@ public class AlexandriaHttpServer<R extends AlexandriaHttpRouter<?>> {
 						context.result(inputStream);
 						return true;
 					}
-					return defaultHandler.handle(context);
+					return defaultHandler != null && defaultHandler.handle(context);
 				}
 
 				@Override
 				public boolean addStaticFileConfig(StaticFileConfig config) {
-					return defaultHandler.addStaticFileConfig(config);
+					return defaultHandler != null && defaultHandler.addStaticFileConfig(config);
 				}
 			};
 		});
-/*		result.before(ctx -> {
-			String filePath = ctx.path();
-			InputStream inputStream = AlexandriaHttpServer.class.getClassLoader().getResourceAsStream(webDirectory + filePath);
-			if (inputStream != null) {
-				ctx.result(inputStream);
-			}
-		});*/
 		result.exception(Exception.class, (exception, context) -> Logger.error(exception));
 		return result;
 	}
