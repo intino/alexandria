@@ -1,25 +1,28 @@
 package io.intino.alexandria.ollama;
 
-import java.io.IOException;
+import io.intino.alexandria.Json;
+import io.intino.alexandria.ollama.requests.OllamaCreateModelRequest;
 
 public class Ollama_ {
 
-	public static void main(String[] args) throws OllamaAPIException, IOException {
-		Ollama ollama = Ollama.newClient();
+    public static void main(String[] args) throws OllamaAPIException {
+        Ollama ollama = Ollama.newClient();
 
-		ollama.deleteIfExists("myassistant");
+        ollama.deleteIfExists("myassistant");
 
-		ollama.createModel("myassistant", new ModelFile()
-				.from("llama3")
+		OllamaCreateModelRequest request = new OllamaCreateModelRequest()
+				.model("myassistant")
+				.from("qwen2.5:7b-instruct-q4_K_M")
 				.temperature(0.21)
 				.numCtx(1024)
-				.system("You are a helpful assistant, and your name is Atri. You always include emojis in your responses.")
-		);
+				.system("You are a helpful assistant, and your name is Atri. You always include emojis in your responses.");
 
-		var response = ollama.generateStream("myassistant", "hello, what is a Deque in Java?");
+		System.out.println(Json.toJsonPretty(request));
 
-		for(var part : response) {
-			System.out.print(part.text());
-		}
-	}
+		ollama.createModel(request);
+
+        var response = ollama.generateStream("myassistant", "hello, what is a Deque in Java?");
+
+        String fullText = response.processAllParts(p -> System.out.print(p.text()));
+    }
 }

@@ -91,12 +91,12 @@ public class OllamaHttpClient implements Ollama {
 
 	@Override
 	public OllamaCreateModelResponse createModel(OllamaCreateModelRequest createModelRequest) throws OllamaAPIException {
-		return call(post("/api/create", createModelRequest), OllamaCreateModelResponse.class);
+		return call(post("/api/create", createModelRequest.stream(false)), OllamaCreateModelResponse.class);
 	}
 
 	@Override
 	public StreamResponse<OllamaCreateModelResponse> createModelStream(OllamaCreateModelRequest createModelRequest) throws OllamaAPIException {
-		return callStream(post("/api/create", createModelRequest), OllamaCreateModelResponse.class);
+		return callStream(post("/api/create", createModelRequest.stream(true)), OllamaCreateModelResponse.class);
 	}
 
 	@Override

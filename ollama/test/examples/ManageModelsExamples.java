@@ -1,8 +1,8 @@
 package examples;
 
-import io.intino.alexandria.ollama.ModelFile;
 import io.intino.alexandria.ollama.Ollama;
 import io.intino.alexandria.ollama.OllamaAPIException;
+import io.intino.alexandria.ollama.requests.OllamaCreateModelRequest;
 import io.intino.alexandria.ollama.responses.OllamaListResponse;
 import io.intino.alexandria.ollama.responses.OllamaPsResponse;
 import io.intino.alexandria.ollama.responses.OllamaShowResponse;
@@ -57,22 +57,12 @@ public class ManageModelsExamples {
 	private static void createModel() throws OllamaAPIException {
 		Ollama ollama = Ollama.newClient();
 
-		// You can specify the modelfile string directly
-//		ollama.createModel("my_assistant", """
-//				FROM llama3
-//
-//				PARAMETER temperature 0.9
-//				PARAMETER num_ctx 4096
-//
-//				SYSTEM "You are Atri, a helpful assistant. You always respond with emojis."
-//				""");
-
-		// Or you can use a ModelFile object
-		ollama.createModel("my_assistant", new ModelFile()
+		ollama.createModel(new OllamaCreateModelRequest()
+				.model("my_assistant")
 				.from("llama3")
 				.temperature(0.9)
 				.numCtx(4096)
-				.adapters("/server/path/to/lora")
+				.adapters(Map.of("/server/path/to/lora", "sha256"))
 				.system("You are Atri, a helpful assistant. You always respond with emojis.")
 		);
 
