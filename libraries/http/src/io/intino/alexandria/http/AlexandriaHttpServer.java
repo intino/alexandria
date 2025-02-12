@@ -9,9 +9,17 @@ import io.intino.alexandria.http.server.AlexandriaHttpManager;
 import io.intino.alexandria.http.server.AlexandriaHttpRouter;
 import io.intino.alexandria.logger.Logger;
 import io.javalin.Javalin;
+import io.javalin.config.StaticFilesConfig;
+import io.javalin.http.Context;
 import io.javalin.http.ExceptionHandler;
 import io.javalin.http.staticfiles.Location;
+import io.javalin.http.staticfiles.ResourceHandler;
+import io.javalin.http.staticfiles.StaticFileConfig;
 
+import java.io.File;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.function.Consumer;
 
 public class AlexandriaHttpServer<R extends AlexandriaHttpRouter<?>> {
@@ -90,11 +98,50 @@ public class AlexandriaHttpServer<R extends AlexandriaHttpRouter<?>> {
 
 	private static Javalin create(String webDirectory, long maxResourceSize) {
 		Javalin result = Javalin.create(config -> {
-			config.staticFiles.add("/", Location.CLASSPATH);
-			if (webDirectory != null) config.staticFiles.add(webDirectory);
+			if (isInClasspath(webDirectory)) config.staticFiles.add(webDirectory, Location.CLASSPATH);
+			else config.staticFiles.add(webDirectory, Location.EXTERNAL);
+			ResourceHandler defaultHandler = config.pvt.resourceHandler;
+			config.pvt.resourceHandler = new ResourceHandler() {
+				@Override
+				public boolean canHandle(Context context) {
+					return defaultHandler.canHandle(context);
+				}
+
+				@Override
+				public boolean handle(Context context) {
+					String filePath = context.path();
+					InputStream inputStream = AlexandriaHttpServer.class.getClassLoader().getResourceAsStream(webDirectory + filePath);
+					if (inputStream != null) {
+						context.result(inputStream);
+						return true;
+					}
+					return defaultHandler.handle(context);
+				}
+
+				@Override
+				public boolean addStaticFileConfig(StaticFileConfig config) {
+					return defaultHandler.addStaticFileConfig(config);
+				}
+			};
 		});
+/*		result.before(ctx -> {
+			String filePath = ctx.path();
+			InputStream inputStream = AlexandriaHttpServer.class.getClassLoader().getResourceAsStream(webDirectory + filePath);
+			if (inputStream != null) {
+				ctx.result(inputStream);
+			}
+		});*/
 		result.exception(Exception.class, (exception, context) -> Logger.error(exception));
 		return result;
+	}
+
+	private static void addDevEnvironment(StaticFilesConfig staticFiles) {
+		try {
+			File file = new File(AlexandriaHttpServer.class.getClassLoader().getResource("").toURI().toURL().getFile(), "..");
+			if (!file.exists()) return;
+			staticFiles.add(file.getAbsolutePath(), Location.EXTERNAL);
+		} catch (MalformedURLException | URISyntaxException ignored) {
+		}
 	}
 
 	private static boolean isInClasspath(String path) {
