@@ -5,6 +5,7 @@ import StepperNotifier from "../../../gen/displays/notifiers/StepperNotifier";
 import StepperRequester from "../../../gen/displays/requesters/StepperRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import MuiStepper from "@material-ui/core/Stepper";
+import Step from "./Step";
 import MuiButton from "@material-ui/core/Button";
 import { withSnackbar } from 'notistack';
 
@@ -98,12 +99,14 @@ class Stepper extends AbstractStepper {
 		const { orientation } = this.props;
 		const children = this._visibleChildren();
 		return (
-			<MuiStepper orientation={orientation}>{
-				React.Children.map(children,
-					(child, i) => React.cloneElement(child, { index: i })
-				)
-			}</MuiStepper>
+			<MuiStepper orientation={orientation}>
+			    {React.Children.map(children, (child, i) => this._renderStep(child, i))}
+			</MuiStepper>
 		);
+	};
+
+	_renderStep = (step, index) => {
+	    return index == this.state.active ? React.cloneElement(step, { index: index }) : (<Step index={index}></Step>);
 	};
 
 	_visibleChildren() {

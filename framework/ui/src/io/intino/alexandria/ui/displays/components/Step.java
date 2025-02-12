@@ -53,6 +53,10 @@ public class Step<DN extends StepNotifier, B extends Box> extends AbstractStep<B
         return this;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
     @Override
     public void init() {
         super.init();

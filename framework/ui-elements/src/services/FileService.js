@@ -5,7 +5,7 @@ const FileService = {
 
         return {
             upload: (message, successCallback, failureCallback) => {
-                var request = buildRequest(message);
+                var request = buildRequest(message, message.v == null ? true : isFile(message.v));
 
                 var options = {
                     method: "POST",
@@ -35,7 +35,7 @@ const FileService = {
             },
 
             download: (message) => {
-                var url = buildUrl(message) + '?' + $.param(buildRequest(message));
+                var url = buildUrl(message) + '?' + $.param(buildRequest(message, isFile(message.v)));
                 var a = document.createElement('A');
                 a.href = url;
                 a.download = url;
@@ -49,8 +49,8 @@ const FileService = {
             return configuration.appUrl(message.app) + "/" + message.s.toLowerCase() + (message.d != null ? "/" + (message.o + ":" + message.c + ":" + message.d) : "");
         }
 
-        function buildRequest(message) {
-            var multipart = isFile(message.v);
+        function buildRequest(message, multipart) {
+            var multipart = multipart;
             var request = emptyRequest(multipart);
             addParameter(request, "op", message.op);
             addParameter(request, "clientId", configuration.clientId);
