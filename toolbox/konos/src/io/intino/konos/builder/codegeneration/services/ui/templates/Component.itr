@@ -473,6 +473,9 @@ rule type(binding, grouping)
 rule type(binding, datenavigator)
 	if ($name != null) $name.bindTo($component...[,]);
 
+rule type(binding, wizardnavigator)
+	if ($name != null) $name.bindTo($component);
+
 rule type(binding, groupingToolbar)
 	if ($name != null) $name.bindTo($grouping...[,]);
 

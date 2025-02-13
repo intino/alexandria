@@ -4,10 +4,10 @@ import io.intino.alexandria.ui.documentation.model.BaseWidget;
 
 import java.util.Arrays;
 
-public class StepperWidget extends BaseWidget {
+public class WizardWidget extends BaseWidget {
 
-	public StepperWidget() {
-		super("This widget renders a stepper.");
+	public WizardWidget() {
+		super("This widget renders a wizard.");
 		facets(Arrays.asList("MaterialIcon"));
 	}
 

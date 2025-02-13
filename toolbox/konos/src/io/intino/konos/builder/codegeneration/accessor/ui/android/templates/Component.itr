@@ -204,8 +204,8 @@ rule type(properties, slider) and trigger(specific)
 rule type(properties, grouping) and trigger(specific)
 	<< alexandria:grouping_page_size="$pageSize">><< alexandria:grouping_placeholder="$placeholder">>
 
-rule type(properties, stepper) and trigger(specific)
-   << alexandria:stepper_orientation="$orientation+lowercase">><< alexandria:stepper_position="$position+lowercase">>
+rule type(properties, wizard) and trigger(specific)
+   << alexandria:wizard_orientation="$orientation+lowercase">><< alexandria:wizard_position="$position+lowercase">><< alexandria:wizard_confirm_message="$confirmMessage">>
 
 rule type(properties, frame) and trigger(specific)
    << alexandria:frame_width="$width">><< alexandria:frame_height="$height">><< alexandria:frame_url="$url">>

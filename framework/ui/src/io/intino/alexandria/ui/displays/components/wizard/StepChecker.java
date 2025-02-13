@@ -1,4 +1,4 @@
-package io.intino.alexandria.ui.displays.components.stepper;
+package io.intino.alexandria.ui.displays.components.wizard;
 
 import io.intino.alexandria.ui.displays.components.Step;
 

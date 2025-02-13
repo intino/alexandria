@@ -308,10 +308,21 @@ Component user
 	Request logout
 	Request refreshChildren
 
-Component stepper
-    Notification refresh as Object(StepperInfo)
-    Request next
+Component wizard
+    Notification refresh as Object(WizardInfo)
+    Notification showConfirmDialog
     Request back
+    Request next
+	Request finishConfirmed
+	Request finish
+
+Component wizardNavigator
+	Notification refresh as Object(WizardNavigatorInfo)
+
+	Request back
+	Request select as Integer
+	Request next
+	Request finish
 
 Component step
     Notification refresh as Object(StepInfo)

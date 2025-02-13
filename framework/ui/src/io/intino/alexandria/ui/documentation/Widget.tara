@@ -1,5 +1,6 @@
 dsl Konos
 
+use Wizard
 use Chat
 use DateNavigator
 use Kpi
@@ -16,7 +17,6 @@ use Multiple
 use MicroSite
 use DynamicTable
 use Frame
-use Stepper
 use Selector
 use Location
 use User
@@ -86,7 +86,7 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block userExamples as Conditional > TemplateStamp(template=userExamplesMold) userExamplesMold
 			Block locationExamples as Conditional > TemplateStamp(template=locationExamplesMold) locationExamplesMold
 			Block selectorExamples as Conditional > TemplateStamp(template=selectorExamplesMold) selectorExamplesMold
-			Block stepperExamples as Conditional > TemplateStamp(template=stepperExamplesMold) stepperExamplesMold
+			Block wizardExamples as Conditional > TemplateStamp(template=wizardExamplesMold) wizardExamplesMold
 			Block frameExamples as Conditional > TemplateStamp(template=frameExamplesMold) frameExamplesMold
 			Block microSiteExamples as Conditional > TemplateStamp(template=microSiteExamplesMold) microSiteExamplesMold
 			Block htmlViewerExamples as Conditional > TemplateStamp(template=htmlViewerExamplesMold) htmlViewerExamplesMold

@@ -166,8 +166,8 @@ rule type(properties, rangeslider) and trigger(specific)
 rule type(properties, grouping) and trigger(specific)
 	<< pageSize={$pageSize}>><< placeholder="$placeholder">>
 
-rule type(properties, stepper) and trigger(specific)
-   << orientation="$orientation+lowercase">><< position="$position+lowercase">>
+rule type(properties, wizard) and trigger(specific)
+   << orientation="$orientation+lowercase">><< position="$position+lowercase">><< confirmMessage="$confirmMessage">>
 
 rule type(properties, frame) and trigger(specific)
    << width="$width">><< height="$height">><< url="$url">>

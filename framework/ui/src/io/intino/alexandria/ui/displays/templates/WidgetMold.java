@@ -120,8 +120,8 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
         if (locationExamples.isVisible()) locationExamples.locationExamplesMold.refresh();
         selectorExamples.visible(widget instanceof SelectorWidget);
         if (selectorExamples.isVisible()) selectorExamples.selectorExamplesMold.refresh();
-        stepperExamples.visible(widget instanceof StepperWidget);
-        if (stepperExamples.isVisible()) stepperExamples.stepperExamplesMold.refresh();
+        wizardExamples.visible(widget instanceof WizardWidget);
+        if (wizardExamples.isVisible()) wizardExamples.wizardExamplesMold.refresh();
         frameExamples.visible(widget instanceof FrameWidget);
         if (frameExamples.isVisible()) frameExamples.frameExamplesMold.refresh();
         microSiteExamples.visible(widget instanceof MicroSiteWidget);

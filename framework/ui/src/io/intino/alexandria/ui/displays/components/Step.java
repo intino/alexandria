@@ -3,7 +3,7 @@ package io.intino.alexandria.ui.displays.components;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.StepInfo;
 import io.intino.alexandria.ui.displays.Display;
-import io.intino.alexandria.ui.displays.components.stepper.StepChecker;
+import io.intino.alexandria.ui.displays.components.wizard.StepChecker;
 import io.intino.alexandria.ui.displays.notifiers.StepNotifier;
 
 public class Step<DN extends StepNotifier, B extends Box> extends AbstractStep<B> {

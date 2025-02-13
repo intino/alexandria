@@ -200,11 +200,21 @@ Schema Highlight
 	Attribute textColor as Text
 	Attribute backgroundColor as Text
 
-Schema StepperInfo
+Schema WizardInfo
     Attribute active as Integer
     Attribute allowNext as Bool
     Attribute allowBack as Bool
+    Attribute allowFinish as Bool
     Attribute visibleList as Bool List
+    Attribute confirmMessage as Text
+
+Schema WizardNavigatorInfo
+    Attribute active as Integer
+    Attribute stepsCount as Integer
+    Attribute allowNext as Bool
+    Attribute allowBack as Bool
+    Attribute allowFinish as Bool
+    Attribute finished as Bool
 
 Schema StepInfo
     Attribute icon as Text

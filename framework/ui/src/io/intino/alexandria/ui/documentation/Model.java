@@ -22,7 +22,7 @@ public class Model {
 		Chart, Block, List, Table, DynamicTable, Grid, Task, OpenPage, OpenBlock, Export,
 		Download, DownloadSelection,
 		Grouping, GroupingToolbar, Sorting, SearchBox, Map, Slider, Selector,
-		Dashboard, AppDirectory, DigitalSignature, Dialog, Layer, Divider, User, Stepper,
+		Dashboard, AppDirectory, DigitalSignature, Dialog, Layer, Divider, User, Wizard,
 		Frame, MicroSite, HtmlViewer, Timeline, Eventline, Reel, DateNavigator, DocumentEditor, Kpi, Chat;
 
 		public static WidgetType from(String type) {
@@ -72,7 +72,7 @@ public class Model {
 		map.put(WidgetType.Layer, new LayerWidget());
 		map.put(WidgetType.Divider, new DividerWidget());
 		map.put(WidgetType.User, new UserWidget());
-		map.put(WidgetType.Stepper, new StepperWidget());
+		map.put(WidgetType.Wizard, new WizardWidget());
 		map.put(WidgetType.Frame, new FrameWidget());
 		map.put(WidgetType.MicroSite, new MicroSiteWidget());
 		map.put(WidgetType.HtmlViewer, new HtmlViewerWidget());

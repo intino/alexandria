@@ -34,7 +34,7 @@ def.file
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/Displays.tara#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/Divider.tara#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/Frame.tara#true
-/Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/Stepper.tara#true
+/Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/Wizard.tara#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/collection/Sorting.tara#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/Actionable.tara#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/Chart.tara#true
