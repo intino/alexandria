@@ -8,6 +8,7 @@ import io.intino.alexandria.ui.documentation.model.ActionableWidget;
 import io.intino.alexandria.ui.documentation.model.actionable.DownloadSelectionWidget;
 import io.intino.alexandria.ui.documentation.model.actionable.DownloadWidget;
 import io.intino.alexandria.ui.documentation.model.actionable.ExportWidget;
+import io.intino.alexandria.ui.documentation.model.actionable.UploadWidget;
 import io.intino.alexandria.ui.documentation.model.collection.*;
 import io.intino.alexandria.ui.documentation.model.data.*;
 import io.intino.alexandria.ui.documentation.model.other.*;
@@ -96,7 +97,9 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
         if (downloadExamples.isVisible()) downloadExamples.downloadExamplesMold.refresh();
         downloadSelectionExamples.visible(widget instanceof DownloadSelectionWidget);
         if (downloadSelectionExamples.isVisible()) downloadSelectionExamples.downloadSelectionExamplesMold.refresh();
-        actionableExamples.visible(widget instanceof ActionableWidget && !(widget instanceof ExportWidget) && !(widget instanceof DownloadWidget) && !(widget instanceof DownloadSelectionWidget));
+        uploadExamples.visible(widget instanceof UploadWidget);
+        if (uploadExamples.isVisible()) uploadExamples.uploadExamplesMold.refresh();
+        actionableExamples.visible(widget instanceof ActionableWidget && !(widget instanceof ExportWidget) && !(widget instanceof DownloadWidget) && !(widget instanceof UploadWidget) && !(widget instanceof DownloadSelectionWidget));
         if (actionableExamples.isVisible()) actionableExamples.actionableExamplesMold.refresh();
         groupingExamples.visible(widget instanceof GroupingWidget);
         if (groupingExamples.isVisible()) groupingExamples.groupingExamplesMold.refresh();

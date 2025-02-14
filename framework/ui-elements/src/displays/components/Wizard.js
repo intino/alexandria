@@ -124,7 +124,7 @@ class Wizard extends AbstractWizard {
 	    if (this.props.style === "NoToolbar" || this.props.style === "ContentOnly") return (<React.Fragment/>);
 		const count = React.Children.count(this._visibleChildren());
 		return (
-		    <div class="layout horizontal">
+		    <div className="layout horizontal">
 			    <MuiButton onClick={() => this.requester.back()} disabled={!this.state.allowBack}>{this.translate("Back")}</MuiButton>
 			    <MuiButton onClick={() => this.requester.next()} style={{display:this.state.active != count-1 ? "block" : "none"}} disabled={!this.state.allowNext}>{this.translate("Next")}</MuiButton>
 			    <MuiButton onClick={() => this.handleFinish()} style={{display:this.state.allowFinish ? "block" : "none"}}>{this.translate("Finish")}</MuiButton>

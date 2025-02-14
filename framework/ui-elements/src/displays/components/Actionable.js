@@ -162,7 +162,7 @@ export default class Actionable extends AbstractActionable {
 		    <Button id={this.triggerId()} style={this.style()} size={this._size()} color="primary" variant={this._highlightVariant()}
 						onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
 						disabled={this._readonly()} className={classes.button}>
-				{this.renderContent()}
+				{this.renderWithWrappedContent()}
 			</Button>
 		);
 	};
@@ -175,7 +175,7 @@ export default class Actionable extends AbstractActionable {
             <IconButton id={this.triggerId()} color="primary" disabled={this._readonly()} ref={ref != null ? ref : undefined}
                             onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
                             style={applyStyles ? style : null} className={classes.iconButton} size={this._size()}>
-                {this.renderContent()}
+                {this.renderWithWrappedContent()}
             </IconButton>
         );
 		return this.renderWithText(button, style);
@@ -191,7 +191,7 @@ export default class Actionable extends AbstractActionable {
             <IconButton id={this.triggerId()} color="primary" disabled={this._readonly()} ref={ref != null ? ref : undefined}
                             onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
                             className={classes.materialIconButton} style={applyStyles ? { ...style, ...colorStyle} : colorStyle} size={this._size()}>
-                {this.renderContent()}
+                {this.renderWithWrappedContent()}
             </IconButton>
 		);
 		return this.renderWithText(button, style);
@@ -248,11 +248,19 @@ export default class Actionable extends AbstractActionable {
 		return button;
 	};
 
+	renderWithWrappedContent = () => {
+	    return this.withWrapper(this.renderContent());
+	};
+
 	renderContent = () => {
 		const mode = this.props.mode.toLowerCase();
 		if (mode === "button" || mode === "toggle") return (<div>{this._title()}</div>);
 		else if (mode === "iconbutton" || mode === "icontoggle" || mode === "iconsplitbutton") return (<img title={this._title()} src={this._icon()} style={{...this._addFilter(),...this._addDimensions({})}}/>);
 		else if (mode === "materialiconbutton" || mode === "materialicontoggle" || mode === "materialiconsplitbutton") return (<ActionableMui titleAccess={this._title()} icon={this._icon()} style={this._addDimensions({})}/>);
+	};
+
+	withWrapper = (content) => {
+	    return content;
 	};
 
 	renderAffirmed = () => {

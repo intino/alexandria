@@ -58,6 +58,13 @@ Component download as ExtensionOf(actionable)
 
 // in CatalogComponents exists downloadCollection component also
 
+Component upload as ExtensionOf(actionable)
+	Notification openDialog
+
+	Request notifyUploading as Integer
+	Request add as File
+	Request execute
+
 Component openPage as ExtensionOf(actionable)
 	Notification open as Text
 	Request execute

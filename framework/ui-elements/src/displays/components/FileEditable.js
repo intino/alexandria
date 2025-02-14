@@ -174,7 +174,10 @@ class FileEditable extends AbstractFile {
 	    let result = [];
 	    if (this._containsType("Image")) result.push("image/*");
 	    if (this._containsType("Audio")) result.push("audio/*");
-	    if (this._containsType("Video")) result.push("video/*");
+	    if (this._containsType("Video")) {
+	        result.push("video/*");
+	        result.push("video/mkv");
+	    }
 	    if (this._containsType("Application")) result.push("application/*");
 	    if (this._containsType("Text")) result.push("text/*");
 	    if (this._containsType("Xml")) result.push(".xml");

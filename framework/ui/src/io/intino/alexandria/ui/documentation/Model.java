@@ -20,7 +20,7 @@ public class Model {
 	public enum WidgetType {
 		Text, Number, Image, File, Date, Location, Multiple,
 		Chart, Block, List, Table, DynamicTable, Grid, Task, OpenPage, OpenBlock, Export,
-		Download, DownloadSelection,
+		Download, DownloadSelection, Upload,
 		Grouping, GroupingToolbar, Sorting, SearchBox, Map, Slider, Selector,
 		Dashboard, AppDirectory, DigitalSignature, Dialog, Layer, Divider, User, Wizard,
 		Frame, MicroSite, HtmlViewer, Timeline, Eventline, Reel, DateNavigator, DocumentEditor, Kpi, Chat;
@@ -62,6 +62,7 @@ public class Model {
 		map.put(WidgetType.OpenPage, new OpenPageWidget());
 		map.put(WidgetType.OpenBlock, new OpenBlockWidget());
 		map.put(WidgetType.Export, new ExportWidget());
+		map.put(WidgetType.Upload, new UploadWidget());
 		map.put(WidgetType.Download, new DownloadWidget());
 		map.put(WidgetType.DownloadSelection, new DownloadSelectionWidget());
 		map.put(WidgetType.Grouping, new GroupingWidget());

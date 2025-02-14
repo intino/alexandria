@@ -106,7 +106,7 @@ public class MobileDocsTemplate extends AbstractMobileDocsTemplate<AlexandriaUiB
 		private static final Map<String, List<Model.WidgetType>> Widgets = new HashMap<>() {{
 			put("dataOption", List.of(Model.WidgetType.Text, Model.WidgetType.Number, Model.WidgetType.Image, Model.WidgetType.File, Model.WidgetType.Date, Model.WidgetType.Location, Model.WidgetType.Multiple, Model.WidgetType.DigitalSignature));
 			put("catalogOption", List.of(Model.WidgetType.List, Model.WidgetType.Table, Model.WidgetType.DynamicTable, Model.WidgetType.Grid, Model.WidgetType.Map, Model.WidgetType.Grouping, Model.WidgetType.GroupingToolbar, Model.WidgetType.Sorting, Model.WidgetType.SearchBox));
-			put("operationOption", List.of(Model.WidgetType.OpenPage, Model.WidgetType.Export, Model.WidgetType.Download, Model.WidgetType.DownloadSelection));
+			put("operationOption", List.of(Model.WidgetType.OpenPage, Model.WidgetType.Export, Model.WidgetType.Download, Model.WidgetType.DownloadSelection, Model.WidgetType.Upload));
 			put("otherOption", List.of(Model.WidgetType.Block, Model.WidgetType.Chart, Model.WidgetType.Dashboard, Model.WidgetType.AppDirectory, Model.WidgetType.Slider, Model.WidgetType.Dialog, Model.WidgetType.Layer, Model.WidgetType.Divider, Model.WidgetType.User, Model.WidgetType.Selector, Model.WidgetType.Wizard, Model.WidgetType.Frame, Model.WidgetType.MicroSite, Model.WidgetType.HtmlViewer, Model.WidgetType.DateNavigator, Model.WidgetType.Timeline, Model.WidgetType.Eventline, Model.WidgetType.Reel, Model.WidgetType.DocumentEditor, Model.WidgetType.Kpi, Model.WidgetType.Chat));
 		}};
 		private List<Widget> load(String condition, List<Filter> filters) {

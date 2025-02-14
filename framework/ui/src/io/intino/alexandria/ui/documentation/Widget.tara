@@ -1,5 +1,6 @@
 dsl Konos
 
+use Upload
 use Wizard
 use Chat
 use DateNavigator
@@ -70,6 +71,7 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block mapExamples as Conditional > TemplateStamp(template=mapExamplesMold) mapExamplesMold
 			Block downloadExamples as Conditional > TemplateStamp(template=downloadExamplesMold) downloadExamplesMold
 			Block downloadSelectionExamples as Conditional > TemplateStamp(template=downloadSelectionExamplesMold) downloadSelectionExamplesMold
+			Block uploadExamples as Conditional > TemplateStamp(template=uploadExamplesMold) uploadExamplesMold
 			Block exportExamples as Conditional > TemplateStamp(template=exportExamplesMold) exportExamplesMold
 			Block actionableExamples as Conditional > TemplateStamp(template=actionableExamplesMold) actionableExamplesMold
 			Block groupingExamples as Conditional > TemplateStamp(template=groupingExamplesMold) groupingExamplesMold

@@ -148,6 +148,9 @@ rule type(properties, splitbutton) and trigger(specific)
 rule type(properties, export) and trigger(specific)
 	<< from={$from}>><< to={$to}>><< min={$min}>><< max={$max}>><< range={{min:$rangeMin,max:$rangeMax}}>><< options={["$option...[","]"]}>>
 
+rule type(properties, upload) and trigger(specific)
+	<< multipleSelection={$multipleSelection}>>
+
 rule type(properties, download) and trigger(specific)
 	<< options={["$option...[","]"]}>>
 
