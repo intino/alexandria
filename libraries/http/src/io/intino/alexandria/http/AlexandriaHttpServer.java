@@ -110,7 +110,7 @@ public class AlexandriaHttpServer<R extends AlexandriaHttpRouter<?>> {
 				@Override
 				public boolean handle(Context context) {
 					String filePath = context.path();
-					InputStream inputStream = AlexandriaHttpServer.class.getClassLoader().getResourceAsStream(webDirectory + filePath);
+					InputStream inputStream = AlexandriaHttpServer.class.getClassLoader().getResourceAsStream((webDirectory.endsWith("/") ? webDirectory.substring(0, webDirectory.length()-1) : webDirectory) + filePath);
 					if (inputStream != null) {
 						context.result(inputStream);
 						return true;
