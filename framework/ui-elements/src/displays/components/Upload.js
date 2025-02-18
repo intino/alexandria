@@ -5,12 +5,18 @@ import UploadNotifier from "../../../gen/displays/notifiers/UploadNotifier";
 import UploadRequester from "../../../gen/displays/requesters/UploadRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
+import classNames from "classnames";
 
 const styles = theme => ({
     label : {
         padding: '0',
         margin: '0',
         cursor: 'pointer',
+        color: theme.palette.primary.main
+    },
+    disabled : {
+        color: 'grey',
+        cursor: 'default',
     }
 });
 
@@ -27,8 +33,8 @@ class Upload extends AbstractUpload {
         const { classes } = this.props;
         return (
 	        <React.Fragment>
-	            <input type="file" id={this.props.id + "_input"} onChange={this.handleChange.bind(this)} multiple={this.allowMultiple()} hidden/>
-                <label className={classes.label} id={this.props.id + "_inputLabel"} disabled={this.state.readonly ? true : undefined} for={this.props.id + "_input"}>{content}</label>
+	            <input type="file" id={this.props.id + "_input"} onChange={this.handleChange.bind(this)} multiple={this.allowMultiple()} hidden disabled={this.state.readonly ? true : undefined}/>
+                <label className={classNames(classes.label, this.state.readonly ? classes.disabled : undefined)} id={this.props.id + "_inputLabel"} disabled={this.state.readonly ? true : undefined} for={this.props.id + "_input"}>{content}</label>
             </React.Fragment>
         );
     };

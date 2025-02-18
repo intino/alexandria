@@ -8,7 +8,7 @@ Template(layout=Vertical, spacing=DP8) uploadExamplesMold
 		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
-				Button(title="upload...") upload1 as Upload
+				Link(title="upload...") upload1 as Upload
 			Block > Text as Code(language=Html)
 					value
 						=========
