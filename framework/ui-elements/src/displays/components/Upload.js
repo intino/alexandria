@@ -46,6 +46,7 @@ class Upload extends AbstractUpload {
 	openDialog = () => {
         const element = document.getElementById(this.props.id + "_input");
         if (element == null) return;
+        element.value = null;
         element.focus();
 	};
 
