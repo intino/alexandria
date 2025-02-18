@@ -100,7 +100,7 @@ rule not type(file) and type(parameter, form) and trigger(parameter)
 	entityPart("$name", $name+CamelCase)
 
 rule type(file) and type(parameter) and trigger(parameter)
-	entityPart($name+CamelCase)
+	entityPart(new io.intino.alexandria.Resource("$name+CamelCase", $name))
 
 rule trigger(enumParameter)
 	public enum $class+PascalCase {
@@ -180,6 +180,9 @@ rule type(authentication) and type(bearer) and trigger(field)
 
 rule type(authentication, withCertificate) and trigger(field)
 	private final URL certificate;
+
+rule type(parameter, file) and trigger(signature)
+	io.intino.alexandria.Resource.InputStreamProvider $name+CamelCase
 
 rule type(parameter) and trigger(signature)
 	$parameterType $name+CamelCase

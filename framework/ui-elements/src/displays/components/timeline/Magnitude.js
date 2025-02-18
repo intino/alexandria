@@ -108,7 +108,7 @@ const TimelineMagnitude = ({ magnitude, index, id, moveMagnitude, classes, openH
         const serie = magnitude.serie;
         const height = 80;
         const width = 150;
-        const unit = magnitude.unit;
+        const unit = magnitude.percentage != null ? "%" : magnitude.unit;
         const data = valuesWithAnnotations(serie);
         return {
             chart: { type: 'spline', height: height, width: width, backgroundColor: 'transparent' },
@@ -161,7 +161,7 @@ const TimelineMagnitude = ({ magnitude, index, id, moveMagnitude, classes, openH
         return (
             <React.Fragment>
                 {magnitude.min != null && <div className="layout horizontal center"><Typography className={classes.infoValue}>({magnitude.formattedMin}</Typography><Typography className={classes.infoUnit}>{magnitude.unit}</Typography></div>}
-                {magnitude.min == null && <div className="layout horizontal center"><Typography className={classes.infoValue}>(-</Typography><Typography style={{color:'#777'}} className={classes.valueInfo}></Typography></div>}
+                {magnitude.min == null && <div className="layout horizontal center"><Typography className={classes.infoValue} style={{marginRight:'4px'}}>(-</Typography></div>}
                 {magnitude.max != null && <div className="layout horizontal center"><Typography className={classes.infoValue}>{translate("to")} {magnitude.formattedMax}</Typography><Typography className={classes.infoUnit}>{magnitude.unit})</Typography></div>}
                 {magnitude.max == null && <div className="layout horizontal center"><Typography className={classes.infoValue}>{translate("to")} -)</Typography></div>}
             </React.Fragment>

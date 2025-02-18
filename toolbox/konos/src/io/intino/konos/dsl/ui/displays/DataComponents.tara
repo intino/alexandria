@@ -49,6 +49,7 @@ Concept DataComponents
 		Facet Editable extends Editable
 			var boolean showPreview = false
 			var boolean showDropZone = false
+			var boolean showPasteZone = false
 			Concept:{0..1} Validation
 				var double:{kbytes} maxSize = 50000000 kbytes
 				var word[]:{Image Video Application Text Xml Html Pdf Excel} allowedTypes = Image Video Application Text
@@ -115,7 +116,7 @@ Concept DataComponents
 	Concept Location extends Component
 		var string icon = empty
 		var string value = empty
-		var word[]:{ None All Zoom MapType Scale StreetView Rotate Fullscreen } controls = All
+		var word[]:{ None All Zoom MapType Scale StreetView Rotate Fullscreen Search } controls = All
 
 		Concept:{0..1} Center
 			var double latitude

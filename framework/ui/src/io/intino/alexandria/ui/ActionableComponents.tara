@@ -8,6 +8,7 @@ Component actionable
 	Notification refresh as Object(ActionableInfo)
 	Notification refreshReadonly as Bool
 	Notification refreshIcon as Text
+	Notification refreshDarkIcon as Text
 	Notification refreshSignInfo as Object(ActionableSignInfo)
 	Notification refreshAffirmed as Text
 	Notification refreshAffirmedRequired as Bool
@@ -56,6 +57,13 @@ Component download as ExtensionOf(actionable)
 	Request(Asset) execute
 
 // in CatalogComponents exists downloadCollection component also
+
+Component upload as ExtensionOf(actionable)
+	Notification openDialog
+
+	Request notifyUploading as Integer
+	Request add as File
+	Request execute
 
 Component openPage as ExtensionOf(actionable)
 	Notification open as Text
@@ -132,6 +140,10 @@ Component signAction as ExtensionOf(actionable)
 	Request signing
 	Request success as Object(SignActionSignatureSuccess)
 	Request failure as Object(SignActionSignatureFailure)
+
+Component authenticate as ExtensionOf(actionable)
+	Notification sign
+	Request execute
 
 Component signText as ExtensionOf(signAction)
 	Request execute

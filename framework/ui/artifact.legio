@@ -1,14 +1,14 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "5.2.8") ui-framework
-	Dsl("Konos", "12.2.8") > Builder > generationPackage = "alexandria"
+Artifact("io.intino.alexandria", "6.2.4") ui-framework
+	Dsl("Konos", "13.2.0") > Builder > generationPackage = "alexandria"
 	Code("io.intino")
 
 	Imports
-		Compile("io.intino.alexandria", "core-framework", "2.2.0")
-		Compile("io.intino.alexandria", "http", "1.7.10")
+		Compile("io.intino.alexandria", "core-framework", "2.2.2")
+		Compile("io.intino.alexandria", "http", "2.1.6")
 		Compile("io.intino.alexandria", "json", "1.2.3")
-		Compile("io.intino.alexandria", "rest-accessor", "3.1.6")
+		Compile("io.intino.alexandria", "rest-accessor", "3.1.8")
 		Compile("io.intino.alexandria", "logger4j", "1.0.1")
 		Compile("io.intino.alexandria", "zip", "1.0.5")
 		Compile("io.intino.alexandria", "totp", "1.0.2")
@@ -17,11 +17,11 @@ Artifact("io.intino.alexandria", "5.2.8") ui-framework
 		Compile("com.auth0", "java-jwt", "4.4.0") // Json Web token (Metabase)
 		Compile("org.locationtech.jts", "jts-core", "1.19.0")
 
-		Provided("io.intino.icod", "core", "1.0.0")
+		Provided("io.intino.icod", "core", "2.0.2")
 		Provided("io.intino.alexandria", "driver-shiny", "1.1.0")
 		Provided("io.intino.alexandria", "driver-r", "1.1.0")
 		Provided("io.intino.alexandria", "driver", "1.0.3")
-		Provided("io.intino.alexandria", "proxy", "1.2.0")
+		Provided("io.intino.alexandria", "proxy", "2.1.5")
 
 		Web("io.intino.alexandria", "ui-framework-elements") as ArtifactVersionFollower
 		Web("io.intino.alexandria", "ui-mobile", "4.28.18")

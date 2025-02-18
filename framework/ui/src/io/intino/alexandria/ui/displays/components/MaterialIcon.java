@@ -26,6 +26,14 @@ public class MaterialIcon<DN extends MaterialIconNotifier, B extends Box> extend
         return (MaterialIcon<DN, B>) super.icon(icon);
     }
 
+    protected MaterialIcon<DN, B> _darkIcon(String materialIcon) {
+        return (MaterialIcon<DN, B>) super._darkIcon(materialIcon);
+    }
+
+    public MaterialIcon<DN, B> darkIcon(String icon) {
+        return (MaterialIcon<DN, B>) super.darkIcon(icon);
+    }
+
     @Override
     public void init() {
         super.init();
@@ -34,11 +42,16 @@ public class MaterialIcon<DN extends MaterialIconNotifier, B extends Box> extend
 
     @Override
     protected void refreshIcon() {
-        notifier.refreshIcon(iconReference());
+        notifier.refreshIcon(iconReference(icon));
+    }
+
+    @Override
+    protected void refreshDarkIcon() {
+        notifier.refreshDarkIcon(iconReference(darkIcon));
     }
 
     private static final String PngMaterialIcon = "/icons/mobile/%s.png";
-    private String iconReference() {
+    private String iconReference(String icon) {
         if (session().browser().isMobile()) {
             URL iconResource = Actionable.class.getResource(String.format(PngMaterialIcon, icon));
             return iconResource != null ? Asset.toResource(baseAssetUrl(), iconResource).setLabel(String.format(PngMaterialIcon, icon)).toUrl().toString() : icon;

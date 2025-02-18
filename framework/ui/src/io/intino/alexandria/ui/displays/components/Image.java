@@ -21,8 +21,16 @@ public class Image<DN extends ImageNotifier, B extends Box> extends AbstractImag
 	@Override
 	String serializedValue() {
 		String result = null;
-		if (value() != null) result = Asset.toResource(baseAssetUrl(), value()).toUrl().toString();
+		if (value() != null) result = isFile(value()) ? Asset.toResource(baseAssetUrl(), value()).toUrl().toString() : value().toString();
 		else if (defaultValue != null) result = Asset.toResource(baseAssetUrl(), defaultValue).toUrl().toString();
 		return result;
+	}
+
+	private boolean isFile(URL value) {
+		try {
+			return value.toString().startsWith("jar:") || new java.io.File(value.toURI()).isFile();
+		} catch (Throwable ignored) {
+			return false;
+		}
 	}
 }

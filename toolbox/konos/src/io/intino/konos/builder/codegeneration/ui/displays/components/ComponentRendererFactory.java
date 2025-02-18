@@ -53,8 +53,9 @@ public class ComponentRendererFactory {
 		map.put(conceptOf(OtherComponents.Frame.class), config -> new FrameRenderer(config.context(), config.component().a$(OtherComponents.Frame.class), config.provider()));
 		map.put(conceptOf(OtherComponents.MicroSite.class), config -> new MicroSiteRenderer(config.context(), config.component().a$(OtherComponents.MicroSite.class), config.provider()));
 		map.put(conceptOf(OtherComponents.HtmlViewer.class), config -> new HtmlViewerRenderer(config.context(), config.component().a$(OtherComponents.HtmlViewer.class), config.provider()));
-		map.put(conceptOf(Stepper.class), config -> new StepperRenderer(config.context(), config.component().a$(Stepper.class), config.provider()));
-		map.put(conceptOf(Stepper.Step.class), config -> new StepRenderer(config.context(), config.component().a$(Stepper.Step.class), config.provider()));
+		map.put(conceptOf(Wizard.class), config -> new WizardRenderer(config.context(), config.component().a$(Wizard.class), config.provider()));
+		map.put(conceptOf(Wizard.Step.class), config -> new StepRenderer(config.context(), config.component().a$(Wizard.Step.class), config.provider()));
+		map.put(conceptOf(WizardNavigator.class),config -> new WizardNavigatorRenderer(config.context(), config.component().a$(WizardNavigator.class), config.provider()));
 		map.put(conceptOf(Template.class), config -> new TemplateRenderer(config.context(), config.component().a$(Template.class), config.provider()));
 		map.put(conceptOf(Header.class), config -> new HeaderRenderer(config.context(), config.component().a$(Header.class), config.provider()));
 		map.put(conceptOf(CatalogComponents.Grouping.class), config -> new GroupingRenderer(config.context(), config.component().a$(CatalogComponents.Grouping.class), config.provider()));
@@ -69,6 +70,7 @@ public class ComponentRendererFactory {
 		map.put(conceptOf(Actionable.OpenPage.class), config -> new OpenPageRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
 		map.put(conceptOf(Actionable.OpenSite.class), config -> new OpenSiteRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
 		map.put(conceptOf(Actionable.SignText.class), config -> new SignTextRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
+		map.put(conceptOf(Actionable.Authenticate.class), config -> new AuthenticateRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
 		map.put(conceptOf(Actionable.SignDocument.class), config -> new SignDocumentRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
 		map.put(conceptOf(Actionable.OpenDrawer.class), config -> new OpenDrawerRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
 		map.put(conceptOf(Actionable.OpenLayer.class), config -> new OpenLayerRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
@@ -77,6 +79,7 @@ public class ComponentRendererFactory {
 		map.put(conceptOf(Actionable.OpenBlock.class), config -> new OpenBlockRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
 		map.put(conceptOf(Actionable.CloseBlock.class), config -> new CloseBlockRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
 		map.put(conceptOf(Actionable.Download.class), config -> new DownloadRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
+		map.put(conceptOf(Actionable.Upload.class), config -> new UploadRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
 		map.put(conceptOf(Actionable.Export.class), config -> new ExportRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
 		map.put(conceptOf(Actionable.OpenDialog.class), config -> new OpenDialogRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
 		map.put(conceptOf(Actionable.OpenPopover.class), config -> new OpenPopoverRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
@@ -87,6 +90,7 @@ public class ComponentRendererFactory {
 		map.put(conceptOf(Actionable.Action.class), config -> new ActionRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
 		map.put(conceptOf(Actionable.class), config -> new ActionableRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
 		map.put(conceptOf(Kpi.class), config -> new KpiRenderer(config.context(), config.component().a$(Kpi.class), config.provider()));
+		map.put(conceptOf(Chat.class), config -> new ChatRenderer(config.context(), config.component().a$(Chat.class), config.provider()));
 	}
 
 	@SuppressWarnings({"unchecked"})

@@ -21,9 +21,9 @@ class Step extends AbstractStep {
 		this.state = {
 		    ...this.state,
             icon: undefined,
-            isActive: false,
-            isDisabled: false,
-            isCompleted: false
+            isActive: this.props.isActive != null ? this.props.isActive : false,
+            isDisabled: this.props.isDisabled != null ? this.props.isDisabled : false,
+            isCompleted: this.props.isCompleted != null ? this.props.isCompleted : false
 		};
 	};
 

@@ -5,7 +5,7 @@ import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.events.actionable.DownloadEvent;
 import io.intino.alexandria.ui.displays.events.actionable.DownloadListener;
 import io.intino.alexandria.ui.displays.notifiers.DownloadNotifier;
-import io.intino.alexandria.ui.spark.UIFile;
+import io.intino.alexandria.ui.server.UIFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

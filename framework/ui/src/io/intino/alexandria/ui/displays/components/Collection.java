@@ -7,7 +7,11 @@ import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.collection.CollectionItemDisplay;
 import io.intino.alexandria.ui.displays.components.collection.behaviors.CollectionBehavior;
 import io.intino.alexandria.ui.displays.events.*;
-import io.intino.alexandria.ui.displays.events.collection.*;
+import io.intino.alexandria.ui.displays.events.collection.RefreshCountEvent;
+import io.intino.alexandria.ui.displays.events.collection.RefreshCountListener;
+import io.intino.alexandria.ui.displays.events.collection.RefreshEvent;
+import io.intino.alexandria.ui.displays.events.collection.RefreshListener;
+import io.intino.alexandria.ui.displays.events.editable.AddCollectionItemListener;
 import io.intino.alexandria.ui.displays.notifiers.CollectionNotifier;
 import io.intino.alexandria.ui.model.Datasource;
 import io.intino.alexandria.ui.model.datasource.Filter;
@@ -24,7 +28,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     private CollectionBehavior behavior;
     private Datasource source;
     private java.util.List<SelectionListener> selectionListeners = new ArrayList<>();
-    private AddItemListener addItemListener;
+    private AddCollectionItemListener addItemListener;
     private List<RefreshListener> refreshListeners = new ArrayList<>();
     private List<RefreshCountListener> refreshItemCountListeners = new ArrayList<>();
     private List<LoadingListener> loadingListeners = new ArrayList<>();
@@ -57,7 +61,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         return (CB) behavior;
     }
 
-    public void onAddItem(AddItemListener listener) {
+    public void onAddItem(AddCollectionItemListener listener) {
         this.addItemListener = listener;
     }
 
@@ -95,7 +99,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         if (behavior == null) return;
         behavior.reload();
         notifyRefreshItemCount();
-        selection(Collections.emptyList());
+        selection(new ArrayList<>());
     }
 
     public void reloadWithSelection() {
@@ -319,7 +323,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         this.selectionListeners.remove(listener);
     }
 
-    protected abstract AddItemEvent itemEvent(Display c, int index);
+    protected abstract AddCollectionItemEvent itemEvent(Display c, int index);
 
     protected void refreshSelection(List<Integer> selectedIndexList) {
         if (selectedIndexList.isEmpty()) return;
@@ -332,7 +336,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         }, 500);
     }
 
-    Optional<AddItemListener> addItemListener() {
+    Optional<AddCollectionItemListener> addItemListener() {
         return Optional.ofNullable(addItemListener);
     }
 

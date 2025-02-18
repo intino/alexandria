@@ -7,6 +7,8 @@ public interface Client {
 
 	String language();
 
+	int timezoneOffset();
+
 	void language(String language);
 
 	boolean send(String message);

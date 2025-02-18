@@ -19,6 +19,7 @@ Format("") subtitle2
 Format("color:'white'") white
 Format("fontSize:'50pt'") higgerFont
 Format("background:'white',borderRadius:'3px',height:'100%'", darkContent="background:'#222'") whiteBackground
+Format("background:'red'") redBackground
 Format("padding:'10px 20px'") air
 Format("marginTop:'10px'") airTop
 Format("marginBottom:'10px'") airBottom
@@ -36,6 +37,8 @@ Format("background:'#efefef',minHeight:'400px'", darkContent="background:'black'
 Format("background:'#efefef',minHeight:'670px'", darkContent="background:'black'") filledNoAirExtraLarge
 Format("overflow:'auto',height:'200px'") autoHeight
 Format("overflow:'auto'") autoOverflow
+Format("height:'100%'") fullHeight
+Format("width:'50%'") middleWidth
 Format("height:'400px'") extraHeight
 Format("height:'900px'") verticalExtraHeight
 Format("marginTop:'10px'") headerToolbar

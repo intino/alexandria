@@ -3,6 +3,7 @@ package io.intino.alexandria.ui.displays.templates;
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.UiFrameworkBox;
 import io.intino.alexandria.logger.Logger;
+import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.components.SignDocument;
 import io.intino.alexandria.ui.displays.events.SignErrorEvent;
 import io.intino.alexandria.ui.displays.events.SignEvent;
@@ -44,6 +45,7 @@ public class DigitalSignatureExamplesMold extends AbstractDigitalSignatureExampl
         signDocuments.onSign(this::refreshSignatures);
         signDocuments.onError(this::refreshBatchError);
         signDocuments.documentProvider(batchProvider());
+        authenticate.onExecute(e -> notifyUser("Authenticated", UserMessage.Type.Info));
     }
 
     private void refreshSignature(SignEvent e) {

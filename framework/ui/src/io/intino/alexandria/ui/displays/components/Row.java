@@ -1,11 +1,10 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.ui.displays.Component;
-import io.intino.alexandria.ui.displays.components.collection.CollectionItemDisplay;
+import io.intino.alexandria.ui.displays.components.collection.CollectionItemComponent;
 import io.intino.alexandria.ui.displays.notifiers.RowNotifier;
 
-public class Row<DN extends RowNotifier, Type, B extends Box> extends Component<DN, B> implements CollectionItemDisplay<Type> {
+public class Row<DN extends RowNotifier, Type, B extends Box> extends CollectionItemComponent<DN, Type, B> {
     private Type item;
 
     public Row(B box) {
@@ -22,7 +21,7 @@ public class Row<DN extends RowNotifier, Type, B extends Box> extends Component<
         item(item);
     }
 
-    public Row item(Type item) {
+    public Row<DN, Type, B> item(Type item) {
         this.item = item;
         return this;
     }

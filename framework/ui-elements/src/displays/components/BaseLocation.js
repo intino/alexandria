@@ -51,6 +51,7 @@ export default class BaseLocation extends AbstractBaseLocation {
 	};
 
 	renderSearch = () => {
+	    if (!this.allowSearch()) return (<React.Fragment/>);
 	    return (<SearchDialog map={this.getMap.bind(this)} classes={this.props.classes} mapOptions={this.mapOptions()}/>);
 	};
 
@@ -115,5 +116,10 @@ export default class BaseLocation extends AbstractBaseLocation {
             rotateControl: controls.indexOf("rotate") != -1 || all,
             fullscreenControl: controls.indexOf("fullscreen") != -1 || all
         };
+    };
+
+    allowSearch = () => {
+        const controls = this.props.controls != null ? this.props.controls : "";
+        return controls.indexOf("all") != -1 || controls.indexOf("search") != -1;
     };
 }

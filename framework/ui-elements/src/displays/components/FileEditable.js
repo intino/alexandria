@@ -9,17 +9,23 @@ import ComponentBehavior from "./behaviors/ComponentBehavior";
 import Theme from "app-elements/gen/Theme";
 import { DropzoneArea } from 'material-ui-dropzone';
 import { IconButton } from "@material-ui/core";
-import { CloudDownload, Cancel } from "@material-ui/icons";
+import { Add, Cancel } from "@material-ui/icons";
 import 'alexandria-ui-elements/res/styles/components/fileeditable/styles.css';
 import 'alexandria-ui-elements/res/styles/layout.css';
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
 	dropzoneText: {
 		background: "red",
 	},
+	pasteInput: {
+	    border: "1px dashed #0000001f",
+	    marginTop: "5px",
+	    padding: "10px"
+	}
 });
 
-export default class FileEditable extends AbstractFile {
+class FileEditable extends AbstractFile {
 
 	constructor(props) {
 		super(props);
@@ -28,10 +34,11 @@ export default class FileEditable extends AbstractFile {
 		this.inputRef = React.createRef();
 		this.state = {
 		    ...this.state,
-            value : null,
-            filename : null,
-            readonly : this.props.readonly,
-            editable : false,
+            value: null,
+            filename: null,
+            readonly: this.props.readonly,
+            editable: false,
+            allowedTypes: this.props.allowedTypes
         };
 	};
 
@@ -76,31 +83,53 @@ export default class FileEditable extends AbstractFile {
 	};
 
 	_renderComponent = () => {
-	    if (this.props.dropZone && !this.state.readonly) return this._renderDropZone();
-	    return this._renderInput();
+	    const result = [];
+	    if (this.props.dropZone && !this.state.readonly) result.push(this._renderDropZone());
+	    else if (!this.props.pasteZone) result.push(this._renderInput());
+	    if (this.props.pasteZone && !this.state.readonly) result.push(this._renderPasteZone());
+	    return result;
+	};
+
+	handlePaste = (e) => {
+        const clipboardData = e.clipboardData || window.clipboardData;
+        const file = clipboardData.files.length > 0 ? clipboardData.files[0] : null;
+        if (file == null) return;
+        this.saveFile(file, file.name);
 	};
 
 	_renderDropZone = () => {
 		const { classes } = this.props;
 	    return (
-	        <DropzoneArea
-	            acceptedFiles={this._allowedTypes()}
-	            dropzoneText={this.translate("Drag and drop a file here or click")}
-	            fileObjects={this.state.files}
-	            dropzoneClass="fileeditable-dropzone"
-	            dropzoneParagraphClass="fileeditable-dropzone-paragraph"
+            <DropzoneArea
+                Icon={Add}
+                acceptedFiles={this._allowedTypes()}
+                dropzoneText={this.translate("Drag and drop a file here or click")}
+                fileObjects={this.state.files}
+                dropzoneClass="fileeditable-dropzone"
+                dropzoneParagraphClass="fileeditable-dropzone-paragraph"
                 filesLimit={1}
-                maxFileSize={this.props.maxSize != null ? this.props.maxSize : 300000000}
-                showPreviews={true}
+                maxFileSize={this.props.maxSize != null ? this.props.maxSize : 20971520000}
+                showPreviews={false}
+                showPreviewsInDropzone={true}
                 useChipsForPreview
                 previewGridProps={{container: { spacing: 1, direction: 'row' }}}
                 previewText={this.translate("Selected file")}
-                showPreviewsInDropzone={false}
                 showAlerts={false}
                 showFilenames={true}
-	            onDelete={(file) => { this.saveFile(null, null) }}
-	            onChange={(files) => { for (var i=0; i<files.length;i++) this.saveFile(files[i], files[i].name); }}
+                onDelete={(file) => { this.saveFile(null, null) }}
+                onChange={(files) => { for (var i=0; i<files.length;i++) this.saveFile(files[i], files[i].name); }}
             />
+        );
+	};
+
+	_renderPasteZone = () => {
+	    if (!this.props.pasteZone) return (<React.Fragment/>);
+		const { classes } = this.props;
+        return (
+            <input className={classes.pasteInput}
+                   placeholder={this.translate("Paste content here from clipboard")}
+                   disabled={this.state.readonly ? true : undefined}
+                   onPaste={this.handlePaste.bind(this)} value="" ></input>
         );
 	};
 
@@ -119,7 +148,7 @@ export default class FileEditable extends AbstractFile {
 	    return (
 	        <div className="layout horizontal center" style={{padding:'0 5px',border:'1px solid #ddd',marginBottom:'4px'}}>
 	            <div className="layout vertical flex" style={{marginRight:'10px'}}>{this.filename()}</div>
-	            <IconButton title={this.translate("Download")} size="small" color="primary" disabled={empty} onClick={this.handleDownload.bind(this)}><CloudDownload/></IconButton>
+	            <IconButton title={this.translate("Download")} size="small" color="primary" disabled={empty} onClick={this.handleDownload.bind(this)}><Add/></IconButton>
 	            <IconButton title={this.translate("Remove")} size="small" color="primary" disabled={readonly} onClick={this.handleClear.bind(this)}><Cancel/></IconButton>
             </div>
         );
@@ -141,10 +170,14 @@ export default class FileEditable extends AbstractFile {
     };
 
 	_allowedTypes = () => {
-	    if (this.props.allowedTypes == null) return undefined;
+	    if (this.state.allowedTypes == null || this.state.allowedTypes.length == 0) return undefined;
 	    let result = [];
 	    if (this._containsType("Image")) result.push("image/*");
-	    if (this._containsType("Video")) result.push("video/*");
+	    if (this._containsType("Audio")) result.push("audio/*");
+	    if (this._containsType("Video")) {
+	        result.push("video/*");
+	        result.push("video/mkv");
+	    }
 	    if (this._containsType("Application")) result.push("application/*");
 	    if (this._containsType("Text")) result.push("text/*");
 	    if (this._containsType("Xml")) result.push(".xml");
@@ -158,8 +191,8 @@ export default class FileEditable extends AbstractFile {
 	};
 
 	_containsType = (type) => {
-	    for (let i=0; i<this.props.allowedTypes.length; i++) {
-	        if (this.props.allowedTypes[i] == type) return true;
+	    for (let i=0; i<this.state.allowedTypes.length; i++) {
+	        if (this.state.allowedTypes[i] == type) return true;
 	    }
 	    return false;
 	}
@@ -172,6 +205,10 @@ export default class FileEditable extends AbstractFile {
 		this.setState({ readonly });
 	};
 
+	refreshAllowedTypes = (allowedTypes) => {
+		this.setState({ allowedTypes });
+	};
+
 	refreshFocused = (focused) => {
         if (this.inputRef == null || this.inputRef.current == null) return;
 	    window.setTimeout(() => {
@@ -181,4 +218,5 @@ export default class FileEditable extends AbstractFile {
 	};
 }
 
-DisplayFactory.register("FileEditable", FileEditable);
+export default withStyles(styles, { withTheme: true })(FileEditable);
+DisplayFactory.register("FileEditable", withStyles(styles, { withTheme: true })(FileEditable));

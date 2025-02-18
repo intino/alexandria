@@ -20,10 +20,10 @@ public class Model {
 	public enum WidgetType {
 		Text, Number, Image, File, Date, Location, Multiple,
 		Chart, Block, List, Table, DynamicTable, Grid, Task, OpenPage, OpenBlock, Export,
-		Download, DownloadSelection,
+		Download, DownloadSelection, Upload,
 		Grouping, GroupingToolbar, Sorting, SearchBox, Map, Slider, Selector,
-		Dashboard, AppDirectory, DigitalSignature, Dialog, Layer, Divider, User, Stepper,
-		Frame, MicroSite, HtmlViewer, Timeline, Eventline, Reel, DateNavigator, DocumentEditor, Kpi;
+		Dashboard, AppDirectory, DigitalSignature, Dialog, Layer, Divider, User, Wizard,
+		Frame, MicroSite, HtmlViewer, Timeline, Eventline, Reel, DateNavigator, DocumentEditor, Kpi, Chat;
 
 		public static WidgetType from(String type) {
 			WidgetType[] values = values();
@@ -62,6 +62,7 @@ public class Model {
 		map.put(WidgetType.OpenPage, new OpenPageWidget());
 		map.put(WidgetType.OpenBlock, new OpenBlockWidget());
 		map.put(WidgetType.Export, new ExportWidget());
+		map.put(WidgetType.Upload, new UploadWidget());
 		map.put(WidgetType.Download, new DownloadWidget());
 		map.put(WidgetType.DownloadSelection, new DownloadSelectionWidget());
 		map.put(WidgetType.Grouping, new GroupingWidget());
@@ -72,7 +73,7 @@ public class Model {
 		map.put(WidgetType.Layer, new LayerWidget());
 		map.put(WidgetType.Divider, new DividerWidget());
 		map.put(WidgetType.User, new UserWidget());
-		map.put(WidgetType.Stepper, new StepperWidget());
+		map.put(WidgetType.Wizard, new WizardWidget());
 		map.put(WidgetType.Frame, new FrameWidget());
 		map.put(WidgetType.MicroSite, new MicroSiteWidget());
 		map.put(WidgetType.HtmlViewer, new HtmlViewerWidget());
@@ -82,6 +83,7 @@ public class Model {
 		map.put(WidgetType.Reel, new ReelWidget());
 		map.put(WidgetType.DocumentEditor, new DocumentEditorWidget());
 		map.put(WidgetType.Kpi, new KpiWidget());
+		map.put(WidgetType.Chat, new ChatWidget());
 	}
 
 	public static Widget widget(WidgetType type) {

@@ -7,9 +7,8 @@ import BlockRequester from "../../../gen/displays/requesters/BlockRequester";
 import BlockBehavior from "./behaviors/BlockBehavior";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
-import BrowserUtil from "../../util/BrowserUtil";
 import 'alexandria-ui-elements/res/styles/layout.css';
-import 'alexandria-ui-elements/res/styles/mobile.css';
+import 'alexandria-ui-elements/res/styles/hidden.css';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
 export default class Block extends AbstractBlock {
@@ -34,7 +33,7 @@ export default class Block extends AbstractBlock {
 	        <div style={{position:'relative',height:'100%'}}>
 	            <AutoSizer>
 	                {({ height, width }) => (
-	                    <div style={{height:height+"px",width:width+"px",overflow:'auto'}}>{content}</div>
+	                    <div style={{height:height+"px",width:(width-1)+"px",overflow:'auto'}}>{content}</div>
                     )}
                 </AutoSizer>
 	        </div>
@@ -110,7 +109,6 @@ export default class Block extends AbstractBlock {
 		if (this.props.margin != null) result.margin = this.props.margin;
 		if (this._widthDefined() && result.width == null) result.width = this.props.width;
 		if (this._heightDefined() && result.height == null) result.height = this.props.height;
-		if (result.height === "100.0%" && BrowserUtil.isFirefox() && this._is("vertical")) result.height = "100vh";
 		return result;
 	};
 

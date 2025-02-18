@@ -10,6 +10,10 @@ use UI
 
 Concept Component extends Display
 	var string color = empty
+	var string darkColor = empty
+	var string backgroundColor = empty
+	var string backgroundDarkColor = empty
+	var string[] cssSelectors = empty
 	var Format[] format = empty
 	var boolean visible = true
 	Facet Option
@@ -25,7 +29,7 @@ Concept Component extends Display
 Concept Block extends Component
 	var word[]:Layout layout = Vertical
 	var word:Spacing spacing = None
-	var word:{Never Always IfMobile IfNotMobile} hidden = Never
+	var word:{Never Always IfMobile IfNotMobile IfNotHover} hidden = Never
 	has Component
 
 	Facet Drawer
@@ -42,10 +46,12 @@ Concept Block extends Component
 		var integer max = -1
 		var boolean showZero = false
 		var word:{Normal Dot} mode = Normal
+	Facet HoverContainer
 	Facet Parallax
 		var string background
 	Facet Conditional
 		var Component.Option selected = empty
+	Facet Resizable
 	Facet Animated extends Animated
 
 	Facet Multiple extends Multiple
@@ -87,6 +93,11 @@ Concept ActionableComponents
 		var word:{Blank Self Parent Top} target = Self
 		var word:{Small Medium Large} size = Medium
 
+		Concept:{0..1} Shortcut
+			var word[]:{Alt Control Shift} metaKeys = empty
+			var string key
+			var boolean visible = false
+
 		sub Link
 		sub AbstractButton
 			var word:{None Outline Fill} highlight = None
@@ -97,13 +108,22 @@ Concept ActionableComponents
 				sub SplitButton
 				sub IconSplitButton
 					var string icon
+					var string darkIcon = empty
+					var word:{None Left Right Top Bottom} titlePosition = None
 				sub MaterialIconSplitButton
 					var string icon
+					var string darkIcon = empty
+					var word:{None Left Right Top Bottom} titlePosition = None
 			sub IconButton
 				var string icon
+				var string darkIcon = empty
+				var word:{None Left Right Top Bottom} titlePosition = None
 			sub MaterialIconButton
 				var string icon
+				var string darkIcon = empty
+				var word:{None Left Right Top Bottom} titlePosition = None
 			sub AvatarIconButton
+				var word:{None Left Right Top Bottom} titlePosition = None
 		sub Switch
 			var word:{On Off} state = Off
 		sub AbstractToggle
@@ -112,8 +132,12 @@ Concept ActionableComponents
 			sub Toggle
 			sub IconToggle
 				var string icon
+				var string darkIcon = empty
+				var word:{None Left Right Top Bottom} titlePosition = None
 			sub MaterialIconToggle
 				var string icon
+				var string darkIcon = empty
+				var word:{None Left Right Top Bottom} titlePosition = None
 
 		Facet Readonly
 		Facet Addressable extends Addressable
@@ -135,14 +159,16 @@ Concept ActionableComponents
 			sub CloseBlock > var Block.Conditional block
 			sub OpenDialog > var OtherComponents.AbstractDialog dialog
 			sub CopyToClipboard > var string text = empty
-			sub OpenLayer > var word:{Slide Grow Zoom Fade} transition = Slide
+			sub OpenLayer > var word:{Slide Grow Zoom Fade} transition = Slide; var boolean showHeader = true;
 			sub CloseLayer
 			sub CloseDialog > var OtherComponents.AbstractDialog dialog
 			sub OpenPopover > var Block.Popover popover; var word:{MouseClick MouseOver} triggerEvent = MouseClick
 			sub SelectPreviousItem > var CatalogComponents.Collection collection
 			sub SelectNextItem > var CatalogComponents.Collection collection
+			sub Authenticate
 			sub SignText > var string text = empty; var word:{CAdES XAdES} signFormat = XAdES
 			sub SignDocument > var string document = empty
+			sub Upload > var boolean multipleSelection = false
 			sub SetDarkMode
 			sub SetLightMode
 			sub Export
@@ -159,6 +185,17 @@ Concept ActionableComponents
 				var word:{CurrentObject Selection} context = CurrentObject
 
 Concept:{0..1} VisualizationComponents
+	Concept Chat extends Component
+		var string label = empty
+		var string emptyMessage = empty
+		var word:{ Embedded Floating } view = Embedded
+		var word:{Continuous InTurn} messageFlow = Continuous
+		var string loadingImage = empty
+		var string incomingImage = empty
+		var string outgoingImage = empty
+		Facet Absolute extends Absolute
+		Facet Relative extends Relative
+
 	Concept Kpi extends Component
 		var word:{Square Circle} mode = Circle
 		var string label = empty
@@ -230,14 +267,19 @@ Concept:{0..1} VisualizationComponents
 		var word:{Bar Circle Hash Ring Rise} mode = Rise
 		var integer:{px} size = 0px
 
-	Concept Stepper extends Component
+	Concept Wizard extends Component
 		var word:{Horizontal Vertical} orientation = Horizontal
 		var word:{Top Bottom Left Right} position = Bottom
-		var word:{Full NoToolbar} style = Full
+		var word:{Full NoToolbar ContentOnly} style = Full
+		var string confirmMessage = empty
 		Concept Step extends Component
 			has Component
 			Facet MaterialIcon
 				var string icon
+
+	Concept WizardNavigator extends Component
+		var Wizard wizard
+		var Wizard.Step selected = empty
 
 	Concept AbstractSlider extends Component
 		var word:{Vertical Horizontal} arrangement = Horizontal

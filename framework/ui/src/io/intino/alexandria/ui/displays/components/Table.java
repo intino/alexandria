@@ -4,7 +4,7 @@ import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.collection.Collection;
 import io.intino.alexandria.ui.displays.components.collection.behaviors.PageCollectionBehavior;
-import io.intino.alexandria.ui.displays.events.AddItemEvent;
+import io.intino.alexandria.ui.displays.events.AddCollectionItemEvent;
 import io.intino.alexandria.ui.displays.notifiers.TableNotifier;
 import io.intino.alexandria.ui.model.Datasource;
 import io.intino.alexandria.ui.model.datasource.PageDatasource;
@@ -23,8 +23,8 @@ public abstract class Table<B extends Box, ItemComponent extends Row, Item> exte
 	}
 
 	@Override
-	protected AddItemEvent itemEvent(Display display, int index) {
-		return new AddItemEvent(this, (ItemComponent)display, ((ItemComponent)display).item(), index);
+	protected AddCollectionItemEvent itemEvent(Display display, int index) {
+		return new AddCollectionItemEvent(this, (ItemComponent)display, ((ItemComponent)display).item(), index);
 	}
 
 	@Override

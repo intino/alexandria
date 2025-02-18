@@ -2,14 +2,14 @@ package io.intino.alexandria.ui.displays.components.dashboard;
 
 import io.intino.alexandria.drivers.Driver;
 import io.intino.alexandria.drivers.Program;
+import io.intino.alexandria.http.server.AlexandriaHttpRequest;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.proxy.Network;
 import io.intino.alexandria.proxy.Proxy;
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.displays.DisplayRouteManager;
+import io.intino.alexandria.ui.server.AlexandriaUiManager;
 import io.intino.alexandria.ui.services.push.UISession;
-import io.intino.alexandria.ui.spark.UISparkManager;
-import spark.Request;
 
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
@@ -77,10 +77,10 @@ public class DashboardManager {
 		return String.format(DashboardPath, dashboard);
 	}
 
-	private void proxyGet(UISparkManager manager) {
+	private void proxyGet(AlexandriaUiManager manager) {
 		try {
 			if (!validRequest(manager.request())) return;
-			Proxy proxy = proxy(manager.request().session().id());
+			Proxy proxy = proxy(manager.request().sessionId());
 			if (proxy == null) return;
 			proxy.get(manager.request(), manager.response());
 		} catch (Throwable ex) {
@@ -93,10 +93,10 @@ public class DashboardManager {
 		}
 	}
 
-	private void proxyPost(UISparkManager manager) {
+	private void proxyPost(AlexandriaUiManager manager) {
 		try {
 			if (!validRequest(manager.request())) return;
-			Proxy proxy = proxy(manager.request().session().id());
+			Proxy proxy = proxy(manager.request().sessionId());
 			if (proxy == null) return;
 			proxy.post(manager.request(), manager.response());
 		} catch (Network.NetworkException e) {
@@ -104,8 +104,8 @@ public class DashboardManager {
 		}
 	}
 
-	private boolean validRequest(Request request) {
-		String sessionId = request.session().id();
+	private boolean validRequest(AlexandriaHttpRequest request) {
+		String sessionId = request.sessionId();
 		return proxy(sessionId) != null;
 	}
 

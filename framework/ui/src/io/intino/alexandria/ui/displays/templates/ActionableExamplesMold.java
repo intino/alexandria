@@ -1,7 +1,9 @@
 package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.ui.AlexandriaUiBox;
+import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.components.actionable.SignInfoProvider;
+import io.intino.alexandria.ui.utils.DelayerUtil;
 
 public class ActionableExamplesMold extends AbstractActionableExamplesMold<AlexandriaUiBox> {
     private String reason;
@@ -13,7 +15,10 @@ public class ActionableExamplesMold extends AbstractActionableExamplesMold<Alexa
     @Override
     public void init() {
         super.init();
-        operation1.onExecute((event) -> operation1.notifyUser("User clicked operation"));
+        operation1.onExecute((event) -> {
+            operation1.notifyUser("User clicked operation", UserMessage.Type.Info, -1);
+            DelayerUtil.execute(this, e -> operation1.hideUserNotification(), 1000);
+        });
         operation2.onExecute((event) -> operation2.notifyUser("User clicked operation"));
         operation3.onExecute((event) -> operation3.notifyUser("User clicked operation"));
         operation4.onExecute((event) -> operation4.notifyUser("User clicked operation"));

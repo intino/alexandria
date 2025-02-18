@@ -13,7 +13,9 @@ export default class Component extends AlexandriaDisplay {
             loading: true,
             visible: this.props.visible != null ? this.props.visible : true,
             color: this.props.color != null ? this.props.color : null,
+            backgroundColor: this.props.backgroundColor != null ? this.props.backgroundColor : null,
             format: this.props.format,
+            cssSelectors: this.props.cssSelectors != null ? this.props.cssSelectors.split(",") : [],
             ...this.state
         };
     };
@@ -29,7 +31,11 @@ export default class Component extends AlexandriaDisplay {
     };
 
     userMessage = (info) => {
-        this.showMessage(info.message, info.type);
+        this.showMessage(info.message, info.type, info.autoHideDuration);
+    };
+
+    hideUserMessage = (info) => {
+        this.hideMessage();
     };
 
     renderDynamicLoaded(components) {
@@ -58,8 +64,24 @@ export default class Component extends AlexandriaDisplay {
         this.setState({ color: color });
     };
 
+    refreshDarkColor = (color) => {
+        this.setState({ darkColor: color });
+    };
+
+    refreshBackgroundColor = (color) => {
+        this.setState({ backgroundColor: color });
+    };
+
+    refreshDarkBackgroundColor = (color) => {
+        this.setState({ darkBackgroundColor: color });
+    };
+
     refreshFormat = (format) => {
         this.setState({ format: format });
+    };
+
+    refreshCssSelectors = (value) => {
+        this.setState({ cssSelectors: value });
     };
 
     hiddenClass = () => {
@@ -85,6 +107,10 @@ export default class Component extends AlexandriaDisplay {
             for (let rule in style) result[rule] = style[rule];
         });
         return result;
+    };
+
+    cssRuleSelectors = () => {
+        return this.state.cssSelectors.join(" ");
     };
 
     applyStyles = (styles, to) => {

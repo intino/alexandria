@@ -109,9 +109,11 @@ public class ElementHelper {
 		if (actionable.isCloseLayer()) result = ActionableComponents.Actionable.CloseLayer.class.getSimpleName();
 		if (actionable.isOpenPopover()) result = ActionableComponents.Actionable.OpenPopover.class.getSimpleName();
 		if (actionable.isCloseDialog()) result = ActionableComponents.Actionable.CloseDialog.class.getSimpleName();
+		if (actionable.isUpload()) result = ActionableComponents.Actionable.Upload.class.getSimpleName();
 		if (actionable.isCopyToClipboard())
 			result = ActionableComponents.Actionable.CopyToClipboard.class.getSimpleName();
 		if (actionable.isSignText()) result = ActionableComponents.Actionable.SignText.class.getSimpleName();
+		if (actionable.isAuthenticate()) result = ActionableComponents.Actionable.Authenticate.class.getSimpleName();
 		if (actionable.isSignDocument()) result = ActionableComponents.Actionable.SignDocument.class.getSimpleName();
 		if (actionable.isSelectPreviousItem())
 			result = ActionableComponents.Actionable.SelectPreviousItem.class.getSimpleName();

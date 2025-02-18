@@ -4,13 +4,13 @@ import io.intino.alexandria.exceptions.AlexandriaException;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.Actionable;
 import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
+import io.intino.alexandria.ui.server.AlexandriaUiManager;
+import io.intino.alexandria.ui.server.resources.Resource;
 import io.intino.alexandria.ui.services.push.UIClient;
-import io.intino.alexandria.ui.spark.UISparkManager;
-import io.intino.alexandria.ui.spark.resources.Resource;
 
 public abstract class DisplayRequester extends Resource {
 
-	public DisplayRequester(UISparkManager manager, DisplayNotifierProvider notifierProvider) {
+	public DisplayRequester(AlexandriaUiManager manager, DisplayNotifierProvider notifierProvider) {
 		super(manager, notifierProvider);
 	}
 

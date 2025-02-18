@@ -15,6 +15,7 @@ public class OpenLayer<DN extends OpenLayerNotifier, B extends Box> extends Abst
 	private String path;
 	private String address;
 	private Transition transition = Transition.Slide;
+	private boolean showHeader = true;
 
 	public OpenLayer(B box) {
 		super(box);
@@ -54,12 +55,17 @@ public class OpenLayer<DN extends OpenLayerNotifier, B extends Box> extends Abst
 		return this;
 	}
 
+	protected OpenLayer<DN, B> _showHeader(boolean value) {
+		this.showHeader = value;
+		return this;
+	}
+
 	protected void address(String value) {
 		this._address(value);
 	}
 
 	public void openLayer() {
-		this.layer = registerLayer();
+		this.layer = registerLayer(showHeader);
 		this.layer.open();
 		if (openListener != null) openListener.accept(new OpenLayerEvent(this, layer));
 		openAddress();
@@ -72,15 +78,16 @@ public class OpenLayer<DN extends OpenLayerNotifier, B extends Box> extends Abst
 		return address != null && !address.contains(":");
 	}
 
-	private Layer<?, ?> registerLayer() {
+	private Layer<?, ?> registerLayer(boolean showHeader) {
 		clear();
-		layer = add(createLayer());
+		layer = add(createLayer(showHeader));
 		return layer;
 	}
 
-	private Layer<?, ?> createLayer() {
+	private Layer<?, ?> createLayer(boolean showHeader) {
 		Layer<?, ?> result = new Layer<>(box()).id(UUID.randomUUID().toString());
 		PropertyList properties = result.properties();
+		properties.put("showHeader", String.valueOf(showHeader));
 		properties.put("transition", transition.name());
 		if (color() != null) properties.put("color", color());
 		result.bindTo(this);

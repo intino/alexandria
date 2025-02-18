@@ -2,12 +2,11 @@ package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.UiFrameworkBox;
 import io.intino.alexandria.ui.displays.UserMessage;
-import io.intino.alexandria.ui.displays.events.AddItemEvent;
+import io.intino.alexandria.ui.displays.events.AddCollectionItemEvent;
 import io.intino.alexandria.ui.displays.items.Selector8ListMold;
 import io.intino.alexandria.ui.documentation.Person;
 import io.intino.alexandria.ui.documentation.model.Datasources;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,7 +52,7 @@ public class SelectorExamplesMold extends AbstractSelectorExamplesMold<UiFramewo
         selector1.notifyUser("Selection: " + selection.stream().map(Person::firstName).collect(Collectors.joining(", ")), UserMessage.Type.Info);
     }
 
-    private void onAddItem(AddItemEvent event) {
+    private void onAddItem(AddCollectionItemEvent event) {
         Selector8ListMold component = event.component();
         Person person = event.item();
         component.firstName.value(person.firstName());

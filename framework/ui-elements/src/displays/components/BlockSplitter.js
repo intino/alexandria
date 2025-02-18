@@ -9,7 +9,7 @@ import { withSnackbar } from 'notistack';
 import Block from "./Block";
 import BlockBehavior from "./behaviors/BlockBehavior";
 import BrowserUtil from "../../util/BrowserUtil";
-import 'alexandria-ui-elements/res/styles/mobile.css';
+import 'alexandria-ui-elements/res/styles/hidden.css';
 
 const styles = theme => ({});
 

@@ -1,4 +1,5 @@
 import React from "react";
+import makeStyles from '@material-ui/core/styles/makeStyles'
 import { Button, IconButton, Tooltip, Typography } from '@material-ui/core';
 import { Clear } from '@material-ui/icons';
 import AbstractMultiple from "../../../gen/displays/components/AbstractMultiple";
@@ -14,6 +15,7 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Theme from "app-elements/gen/Theme";
 import Spinner from "./Spinner"
+import 'alexandria-ui-elements/res/styles/components/multiple/styles.css';
 
 export default class Multiple extends AbstractMultiple {
 
@@ -71,8 +73,10 @@ export default class Multiple extends AbstractMultiple {
 	    return (
 	        <Accordion expanded={expandedItem === id} onChange={this.handleSelect.bind(this, id)}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
-                    <Typography style={{fontSize:theme.typography.pxToRem(15),flexBasis:'33.33%',flexShrink:0}}>{instance.pl.label}</Typography>
-                    <Typography style={{fontSize:theme.typography.pxToRem(15),color:theme.palette.text.secondary}}>{instance.pl.description}</Typography>
+                    <div className="layout horizontal center flex">
+                        <div style={{minWidth:"33%"}}><Typography style={{fontWeight:"bold"}}>{instance.pl.label}</Typography></div>
+                        {instance.pl.description != null && instance.pl.description != "" && <Typography style={{color:theme.palette.text.secondary}}>{instance.pl.description}</Typography>}
+                    </div>
                 </AccordionSummary>
                 <AccordionDetails>
                     <div className={"layout flex"}>

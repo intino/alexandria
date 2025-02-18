@@ -178,7 +178,7 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 	};
 
 	handleOpen = () => {
-		this.requester.refresh();
+		this.requester.opened();
 	};
 
 	selectMessage = () => {

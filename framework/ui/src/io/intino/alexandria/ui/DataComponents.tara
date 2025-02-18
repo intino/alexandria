@@ -45,6 +45,7 @@ Component textEditable as ExtensionOf(baseText)
 	Notification refreshPattern as Object(TextEditablePattern)
 	Request notifyChange as Text
 	Request notifyKeyPress as Object(KeyPressEventData)
+	Request notifyFocus
 	Request notifyBlur as Text
 Component textEditableCode as ExtensionOf(baseText)
 	Notification refreshReadonly as Bool
@@ -55,6 +56,7 @@ Component baseFile
 Component file as ExtensionOf(baseFile)
 Component fileEditable as ExtensionOf(baseFile)
 	Notification refreshReadonly as Bool
+	Notification refreshAllowedTypes as Text List
 	Notification refreshFocused as Bool
 	Request notifyUploading
 	Request notifyChange as File

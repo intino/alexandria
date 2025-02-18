@@ -30,8 +30,19 @@ public abstract class Component<DN extends ComponentNotifier, B extends Box> ext
 		return this;
 	}
 
+	public Component<DN, B> backgroundColor(String color) {
+		this._color(color);
+		notifier.refreshBackgroundColor(color);
+		return this;
+	}
+
 	public Component<DN, B> formats(Set<String> formats) {
 		notifier.refreshFormat(String.join(" ", formats));
+		return this;
+	}
+
+	public Component<DN, B> cssSelectors(Set<String> selectors) {
+		notifier.refreshCssSelectors(new ArrayList<>(selectors));
 		return this;
 	}
 
@@ -46,7 +57,16 @@ public abstract class Component<DN extends ComponentNotifier, B extends Box> ext
 	}
 
 	public void notifyUser(String message, UserMessage.Type messageType) {
-		notifier.userMessage(new UserMessage().message(message).type(messageType));
+		int duration = messageType == UserMessage.Type.Loading ? -1 : (messageType == UserMessage.Type.Error ? 5000 : 2500);
+		notifyUser(message, messageType, duration);
+	}
+
+	public void notifyUser(String message, UserMessage.Type messageType, int autoHideDuration) {
+		notifier.userMessage(new UserMessage().message(message).type(messageType).autoHideDuration(autoHideDuration));
+	}
+
+	public void hideUserNotification() {
+		notifier.hideUserMessage();
 	}
 
 	public boolean isVisible() {

@@ -35,6 +35,16 @@ export default class Actionable extends AbstractActionable {
 			color: theme.palette.grey.A700,
 			cursor: "default"
 		},
+		shortcut : {
+		    color: theme.palette.grey.primary,
+		    padding: '2px 4px',
+		    marginRight: '2px',
+		    fontSize: '7pt',
+		    marginLeft: '10px',
+		},
+		shortcutPart : {
+		    margin: '0 1px'
+		}
 	});
 
 	constructor(props) {
@@ -42,6 +52,7 @@ export default class Actionable extends AbstractActionable {
 		this.state = {
 			...this.state,
 			icon : this.props.icon,
+			darkIcon : this.props.darkIcon,
 			title: this.props.title,
 			readonly: this.props.readonly,
 			openAffirm : false,
@@ -60,6 +71,10 @@ export default class Actionable extends AbstractActionable {
 		}
 	};
 
+	componentDidMount() {
+        this.registerShortcut();
+    };
+
 	render = () => {
 		if (!this.state.visible) return (<React.Fragment/>);
 		return (
@@ -71,15 +86,35 @@ export default class Actionable extends AbstractActionable {
 
 	renderActionable() {
 		if (!this.state.visible) return (<React.Fragment/>);
-		return (
-			<React.Fragment>
+		const hasShortcut = this.props.shortcut != null;
+		return hasShortcut ? this.renderActionableWithShortcut() : this.renderActionableWithoutShortcut();
+	};
+
+	renderActionableWithoutShortcut = () => {
+	    return (
+	        <React.Fragment>
                 {this.renderTraceConsent()}
-				{this.renderAffirmed()}
-				{this.renderSignConfiguration()}
-				{this.renderSign()}
-				{this.renderTrigger()}
-			</React.Fragment>
-		);
+                {this.renderAffirmed()}
+                {this.renderSignConfiguration()}
+                {this.renderSign()}
+                {this.renderTrigger()}
+	        </React.Fragment>
+	    );
+	};
+
+	renderActionableWithShortcut = () => {
+        return (
+            <div className="layout horizontal center flex" style={{width:'100%'}}>
+                <div className="layout vertical start">
+                    {this.renderTraceConsent()}
+                    {this.renderAffirmed()}
+                    {this.renderSignConfiguration()}
+                    {this.renderSign()}
+                    {this.renderTrigger()}
+                </div>
+                <div className="layout horizontal flex end-justified">{this.renderShortcut()}</div>
+            </div>
+        );
 	};
 
 	renderTrigger = () => {
@@ -91,14 +126,32 @@ export default class Actionable extends AbstractActionable {
 		return this.renderLink();
 	};
 
+	renderShortcut = () => {
+	    const { classes } = this.props;
+	    const shortcut = this.props.shortcut;
+	    if (shortcut == null || !shortcut.visible) return (<React.Fragment/>);
+	    return (
+    	    <div>
+                <div className={classes.shortcut} style={this.style()}>
+                    {shortcut.shiftKey && <span className={classes.shortcutPart}>Shift +</span>}
+                    {shortcut.ctrlKey && <span className={classes.shortcutPart}>Ctrl +</span>}
+                    {shortcut.altKey && <span className={classes.shortcutPart}>Alt +</span>}
+                    {<span className={classes.shortcutPart}>{shortcut.key}</span>}
+                </div>
+	        </div>
+        );
+	};
+
 	renderLink = () => {
 		const {classes} = this.props;
 		const className = this._readonly() ? classes.readonly : classes.link;
+		const color = this.state.color != null ? this.state.color : (this.props.color != null ? this.props.color : undefined);
+		const backgroundColor = this.state.backgroundColor != null ? this.state.backgroundColor : (this.props.backgroundColor != null ? this.props.backgroundColor : undefined);
 		return (
 		    <a id={this.triggerId()}
 		        onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
 		        disabled={this._readonly()}>
-				<Typography style={this.style()} variant={this.variant("body1")} className={className}>{this._title()}</Typography>
+				<Typography style={{color:color,backgroundColor:backgroundColor,...this.style()}} variant={this.variant("body1")} className={className}>{this.withWrapper(this._title())}</Typography>
 			</a>
 		);
 	};
@@ -109,7 +162,7 @@ export default class Actionable extends AbstractActionable {
 		    <Button id={this.triggerId()} style={this.style()} size={this._size()} color="primary" variant={this._highlightVariant()}
 						onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
 						disabled={this._readonly()} className={classes.button}>
-				{this.renderContent()}
+				{this.renderWithWrappedContent()}
 			</Button>
 		);
 	};
@@ -117,28 +170,55 @@ export default class Actionable extends AbstractActionable {
 	renderIconButton = (ref) => {
 		const {classes} = this.props;
 		const style = this._readonly() ? { opacity: "0.3", ...this.style() } : this.style();
+		const applyStyles = this.props.titlePosition == null || this.props.titlePosition == "None";
 		const button = (
             <IconButton id={this.triggerId()} color="primary" disabled={this._readonly()} ref={ref != null ? ref : undefined}
                             onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
-                            style={style} className={classes.iconButton} size={this._size()}>
-                {this.renderContent()}
+                            style={applyStyles ? style : null} className={classes.iconButton} size={this._size()}>
+                {this.renderWithWrappedContent()}
             </IconButton>
         );
-		return button;
+		return this.renderWithText(button, style);
 	};
 
 	renderMaterialIconButton = (ref) => {
 		const {classes} = this.props;
 		const style = this.style();
 		if (this.state.color != null) style.color = this.state.color;
+		const applyStyles = this.props.titlePosition == null || this.props.titlePosition == "None";
+		const colorStyle = this.props.color != null ? { color: this.props.color } : undefined;
 		const button = (
             <IconButton id={this.triggerId()} color="primary" disabled={this._readonly()} ref={ref != null ? ref : undefined}
                             onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
-                            className={classes.materialIconButton} style={style} size={this._size()}>
-                {this.renderContent()}
+                            className={classes.materialIconButton} style={applyStyles ? { ...style, ...colorStyle} : colorStyle} size={this._size()}>
+                {this.renderWithWrappedContent()}
             </IconButton>
 		);
-		return button;
+		return this.renderWithText(button, style);
+	};
+
+	renderWithText = (button, style) => {
+        if (this.props.titlePosition == null || this.props.titlePosition == "None") return button;
+		const {classes} = this.props;
+		const className = this._readonly() ? classes.readonly : classes.link;
+        const position = this.props.titlePosition;
+        const isVertical = position == "Top" || position == "Bottom";
+		const applyStyles = this.props.titlePosition != null && this.props.titlePosition != "None";
+		const colorStyle = this.props.color != null ? { color: this.props.color } : undefined;
+        const link = (
+            <a id={this.triggerId()}
+             onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
+             disabled={this._readonly()}>
+             <Typography variant={this.variant("body1")} className={className} style={colorStyle}>{this._title()}</Typography>
+            </a>
+        );
+        return (
+            <div className={"layout center-center " + (isVertical ? "vertical" : "horizontal")} style={style}>
+                {(position == "Left" || position == "Top") && link}
+                {button}
+                {(position == "Right" || position == "Bottom") && link}
+            </div>
+        );
 	};
 
 	renderAvatarIconButton = () => {
@@ -168,11 +248,19 @@ export default class Actionable extends AbstractActionable {
 		return button;
 	};
 
+	renderWithWrappedContent = () => {
+	    return this.withWrapper(this.renderContent());
+	};
+
 	renderContent = () => {
 		const mode = this.props.mode.toLowerCase();
 		if (mode === "button" || mode === "toggle") return (<div>{this._title()}</div>);
-		else if (mode === "iconbutton" || mode === "icontoggle" || mode === "iconsplitbutton") return (<img title={this._title()} src={this._icon()} style={this._addDimensions({})}/>);
+		else if (mode === "iconbutton" || mode === "icontoggle" || mode === "iconsplitbutton") return (<img title={this._title()} src={this._icon()} style={{...this._addFilter(),...this._addDimensions({})}}/>);
 		else if (mode === "materialiconbutton" || mode === "materialicontoggle" || mode === "materialiconsplitbutton") return (<ActionableMui titleAccess={this._title()} icon={this._icon()} style={this._addDimensions({})}/>);
+	};
+
+	withWrapper = (content) => {
+	    return content;
 	};
 
 	renderAffirmed = () => {
@@ -180,7 +268,7 @@ export default class Actionable extends AbstractActionable {
 		const openAffirm = this.state.openAffirm != null ? this.state.openAffirm : false;
 		return (
 		    <Dialog onClose={this.handleAffirmClose} open={openAffirm}>
-				<DialogTitle onClose={this.handleAffirmClose}>{this.translate("Affirm")}</DialogTitle>
+				<DialogTitle onClose={this.handleAffirmClose}>{this.translate("Confirm")}</DialogTitle>
 				<DialogContent><DialogContentText>{this.translate(this.state.affirmed)}</DialogContentText></DialogContent>
 				<DialogActions>
 					<Button onClick={this.handleAffirmClose} color="primary" style={{marginRight:'10px'}}>{this.translate("Cancel")}</Button>
@@ -234,6 +322,21 @@ export default class Actionable extends AbstractActionable {
             </div>
         );
 	};
+
+	registerShortcut = () => {
+	    const shortcut = this.props.shortcut;
+	    if (shortcut == null) return;
+	    document.addEventListener("keyup", () => {
+            var e = e || window.event; // for IE to cover IEs window event-object
+            if ((!shortcut.ctrlKey || (e.ctrlKey && shortcut.ctrlKey)) &&
+                (!shortcut.shiftKey || (e.shiftKey && shortcut.shiftKey)) &&
+                (!shortcut.altKey || (e.altKey && shortcut.altKey)) &&
+                (e.which == shortcut.key.charCodeAt(0))) {
+                this.execute();
+                return false;
+            }
+        });
+	}
 
 	_fieldKeycode = (pos) => {
 	    return this.props.id + "_keycodefield_" + pos + "_" + (this.state.openSignConfig ? 1 : 0);
@@ -497,6 +600,10 @@ export default class Actionable extends AbstractActionable {
 		this.setState({ icon: value });
 	};
 
+	refreshDarkIcon = (value) => {
+		this.setState({ darkIcon: value });
+	};
+
 	refreshAffirmed = (value) => {
 		this.setState({ affirmed: value });
 	};
@@ -527,6 +634,11 @@ export default class Actionable extends AbstractActionable {
 	};
 
 	_icon = () => {
+	    const isDark = Theme.get().isDark();
+	    if (isDark) {
+	        if (this.state.darkIcon != null) return this.state.darkIcon;
+	        if (this.props.darkIcon != null) return this.props.darkIcon;
+	    }
 		return this.state.icon != null ? this.state.icon : this.props.icon;
 	};
 
@@ -537,6 +649,11 @@ export default class Actionable extends AbstractActionable {
 
 	_readonly = () => {
 		return this.state.readonly != null ? this.state.readonly : false;
+	};
+
+	_addFilter = (props) => {
+	    const theme = Theme.get();
+	    return theme.isDark() ? { filter: "invert(1)" } : {};
 	};
 
 	_addDimensions = (props) => {

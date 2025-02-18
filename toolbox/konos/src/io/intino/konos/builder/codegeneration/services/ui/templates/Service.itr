@@ -1,12 +1,12 @@
 rule type(ui, accessibleAccessor)
 	package $package+validPackage.ui;
 
-	import io.intino.alexandria.ui.UISpark;
+	import io.intino.alexandria.ui.AlexandriaUiServer;
 	import io.intino.alexandria.ui.services.push.PushService;
 
 	public class $name+PascalCase~Service extends io.intino.alexandria.ui.UI {
 
-		public static void initDisplays(UISpark spark, PushService pushService) {
+		public static void initDisplays(AlexandriaUiServer server, PushService pushService) {
 		}
 
 	}
@@ -20,36 +20,36 @@ rule type(ui)
 	<<import $package+validPackage.$box+PascalCase~Box;>>
 	<<import $package+validPackage.$box+PascalCase~Configuration;>>
 
-	import io.intino.alexandria.ui.UISpark;
+	import io.intino.alexandria.ui.AlexandriaUiServer;
 	import io.intino.alexandria.ui.displays.notifiers.DisplayNotifier;
 	import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
 	import io.intino.alexandria.ui.displays.DisplayRouteDispatcher;
 	import io.intino.alexandria.ui.resources.AssetResourceLoader;
 	import io.intino.alexandria.ui.services.push.PushService;
-	import io.intino.alexandria.ui.spark.resources.AfterDisplayRequest;
-	import io.intino.alexandria.ui.spark.resources.AssetResource;
-	import io.intino.alexandria.ui.spark.resources.AuthenticateCallbackResource;
-	import io.intino.alexandria.ui.spark.resources.BeforeDisplayRequest;
+	import io.intino.alexandria.ui.server.resources.AfterDisplayRequest;
+	import io.intino.alexandria.ui.server.resources.AssetResource;
+	import io.intino.alexandria.ui.server.resources.AuthenticateCallbackResource;
+	import io.intino.alexandria.ui.server.resources.BeforeDisplayRequest;
 
 	import java.net.MalformedURLException;
 	import java.net.URL;
 
 	public class $name+PascalCase~Service extends io.intino.alexandria.ui.UI {
 
-		public static void init(UISpark spark, $box+PascalCase~Box box, PushService pushService, DisplayRouteDispatcher routeDispatcher) {
+		public static void init(AlexandriaUiServer server, $box+PascalCase~Box box, PushService pushService, DisplayRouteDispatcher routeDispatcher) {
 			$box+PascalCase~Configuration configuration = ($box+PascalCase~Configuration) box.configuration();
-			box.routeManager(routeManager(spark, routeDispatcher));
-			spark.route("/_alexandria/push").push(pushService);
-			spark.route("/authenticate-callback").get(manager -> new AuthenticateCallbackResource(manager, notifierProvider()).execute());
-			spark.route("/authenticate-callback/").get(manager -> new AuthenticateCallbackResource(manager, notifierProvider()).execute());
-			spark.route("/asset/:name").get(manager -> new AssetResource(name -> new AssetResourceLoader(box).load(name), manager, notifierProvider()).execute());
+			box.routeManager(routeManager(server, routeDispatcher));
+            server.route("/_alexandria/push").register(pushService);
+            server.route("/authenticate-callback").get(manager -> new AuthenticateCallbackResource(manager, notifierProvider()).execute());
+            server.route("/authenticate-callback/").get(manager -> new AuthenticateCallbackResource(manager, notifierProvider()).execute());
+            server.route("/asset/:name").get(manager -> new AssetResource(name -> new AssetResourceLoader(box).load(name), manager, notifierProvider()).execute());
 			<<$userHome>>
 			<<$resource+path...[$NL]>>
 			<<$display+path...[$NL]>>
-			initDisplays(spark, pushService);
+			initDisplays(server, pushService);
 		}
 
-		public static void initDisplays(UISpark spark, PushService pushService) {
+		public static void initDisplays(AlexandriaUiServer server, PushService pushService) {
 			$display+init...[$NL]
 			registerNotifiers();
 		}
@@ -65,19 +65,19 @@ rule type(resource) and trigger(path)
 	$path...[$NL]
 
 rule trigger(userHome)
-	spark.route("/alexandria/user").get(manager -> new $this+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
+	server.route("/alexandria/user").get(manager -> new $this+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
 
 rule type(display, accessible) and trigger(path)
-	spark.route("/$name+lowercase~proxy/:displayId/personify").post(manager -> new $name+firstUpperCase~ProxyResource(box, manager, notifierProvider()).execute());
+	server.route("/$name+lowercase~proxy/:displayId/personify").post(manager -> new $name+firstUpperCase~ProxyResource(box, manager, notifierProvider()).execute());
 
 rule type(display) and trigger(path)
 
 rule type(path, editor)
-	spark.route("$value"<<$custom...[]>>).get(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
-	spark.route("$value"<<$custom...[]>>).post(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
+	server.route("$value"<<$custom...[]>>).get(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
+	server.route("$value"<<$custom...[]>>).post(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
 
 rule type(path)
-	spark.route("$value"<<$custom...[]>>).get(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
+	server.route("$value"<<$custom...[]>>).get(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
 
 rule type(display, proxy) and trigger(notifier)
 	register($name+firstUpperCase~ProxyNotifier.class).forDisplay($package+validPackage.ui.displays.<<$type~s.>>$name+firstUpperCase~Proxy.class);
@@ -94,19 +94,19 @@ rule trigger(custom)
 	.replace("{$this}", configuration.get("$this"))
 
 rule type(display, proxy) and trigger(proxy)
-	spark.route("/$name+lowercase~proxy/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());
-	spark.route("/$name+lowercase~proxy/:displayId").post(manager -> new $name+firstUpperCase~ProxyRequester(manager, notifierProvider()).execute());
-	spark.route("/$name+lowercase~proxy/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
+	server.route("/$name+lowercase~proxy/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());
+	server.route("/$name+lowercase~proxy/:displayId").post(manager -> new $name+firstUpperCase~ProxyRequester(manager, notifierProvider()).execute());
+	server.route("/$name+lowercase~proxy/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
 
 rule type(display) and trigger(init)
-	init$name+firstUpperCase(spark, pushService);
+	init$name+firstUpperCase(server, pushService);
 
 rule type(display) and trigger(method)
-	private static void init$name+firstUpperCase(UISpark spark, PushService pushService) {
-		spark.route("/$name+lowercase/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());
-		spark.route("/$name+lowercase/:displayId").post(manager -> new $requesterType~Requester(manager, notifierProvider()).execute());
+	private static void init$name+firstUpperCase(AlexandriaUiServer server, PushService pushService) {
+		server.route("/$name+lowercase/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());
+		server.route("/$name+lowercase/:displayId").post(manager -> new $requesterType~Requester(manager, notifierProvider()).execute());
 		<<$asset>>
-		spark.route("/$name+lowercase/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
+		server.route("/$name+lowercase/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
 		pushService.register("$name+lowercase", new $requesterType~PushRequester());
 		$display+proxy
 	}
@@ -114,7 +114,7 @@ rule type(display) and trigger(method)
 rule type(display)
 
 rule trigger(asset)
-	spark.route("/$this+lowercase/:displayId").get(manager -> new $this+firstUppercase~Requester(manager, notifierProvider()).execute());
+	server.route("/$this+lowercase/:displayId").get(manager -> new $this+firstUppercase~Requester(manager, notifierProvider()).execute());
 
 rule trigger(quoted)
 	"$this"

@@ -16,6 +16,7 @@ Concept:Named Service
 		var string title = ""
 		var string subtitle = ""
 		var string basePath = "/api"
+		var long:{MB} maxResourceSize = 100MB
 		var string logo = empty
 		var string favicon = empty
 		var string backgroundColor = empty
@@ -83,6 +84,7 @@ Concept:Named Service
 		var string host
 		var string port
 		var string basePath = ""
+		var long:{MB} maxResourceSize = 100MB
 		Concept:Named:{1..*} Operation
 			var string path
 			var string description = empty
@@ -124,6 +126,7 @@ Concept:Named Service
 
 	Facet CLI
 		var string port
+		var long:{MB} maxResourceSize = 100MB
 
 		Concept:Named State
 			Facet Initial
@@ -157,8 +160,10 @@ Concept:Named Service
     		var string name
     		var string service
     		var string url = empty
+    		var string socketPath = empty
     	var string url = empty
     	var string port
+    	var long:{MB} maxResourceSize = 100MB
     	var string title
     	var string favicon // TODO. Llamarlo launch -> un zip con la configuración de lanzamiento de la app
     	var string googleApiKey = empty

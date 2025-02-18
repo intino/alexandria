@@ -23,7 +23,7 @@ rule type(sentinels)
 
 		}
 
-		public static void init(AlexandriaScheduler scheduler, java.io.File home<<$hasWebhook io.intino.alexandria.http.AlexandriaSpark webServer>>, $box+FirstUpperCase~Box box) {
+		public static void init(AlexandriaScheduler scheduler, java.io.File home<<$hasWebhook io.intino.alexandria.http.AlexandriaHttpServer webServer>>, $box+FirstUpperCase~Box box) {
 			JobDetail job;
 			try {
 				$sentinel+init...[$NL]
@@ -66,7 +66,7 @@ rule type(sentinel) and type(webhook) and trigger(init)
 	webServer.route($path+format).get(manager -> $name+CamelCase~Action(manager).execute());
 
 rule type(sentinel) and type(webhook) and trigger(actionCall)
-	private static $name+PascalCase~Action $name+CamelCase~Action(io.intino.alexandria.http.spark.SparkManager manager) {
+	private static $name+PascalCase~Action $name+CamelCase~Action(io.intino.alexandria.http.server.AlexandriaHttpManager manager) {
 		$name+PascalCase~Action action = new $name+PascalCase~Action();
 		$parameter+assign...[$NL]
 		return action;

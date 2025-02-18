@@ -1,11 +1,11 @@
 package io.intino.alexandria.ui.services.push;
 
-import io.intino.alexandria.http.spark.SparkClient;
+import io.intino.alexandria.http.server.AlexandriaHttpClient;
 import io.intino.alexandria.ui.Soul;
 
 import java.util.Map;
 
-public class UIClient<S extends Soul> extends SparkClient {
+public class UIClient<S extends Soul> extends AlexandriaHttpClient {
     private S soul;
     private Map<String, String> cookies;
 

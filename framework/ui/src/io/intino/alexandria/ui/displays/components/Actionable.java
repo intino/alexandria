@@ -14,7 +14,7 @@ import io.intino.alexandria.ui.displays.components.actionable.SignInfoProvider;
 import io.intino.alexandria.ui.displays.events.*;
 import io.intino.alexandria.ui.displays.notifiers.ActionableNotifier;
 import io.intino.alexandria.ui.resources.Asset;
-import io.intino.alexandria.ui.spark.UIFile;
+import io.intino.alexandria.ui.server.UIFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -24,6 +24,7 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
     private String title;
     private boolean readonly = false;
     private String icon;
+    private String darkIcon;
     private Mode mode;
     private SignChecker signChecker;
     private SignMode signMode;
@@ -46,6 +47,7 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
     public void didMount() {
         super.didMount();
         refreshIconIfRequired();
+        refreshDarkIconIfRequired();
         refreshSignInfo();
     }
 
@@ -62,6 +64,12 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
     public Actionable<DN, B> icon(String icon) {
         _icon(icon);
         refreshIcon();
+        return this;
+    }
+
+    public Actionable<DN, B> darkIcon(String icon) {
+        _icon(icon);
+        refreshDarkIcon();
         return this;
     }
 
@@ -150,6 +158,7 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
     public void init() {
         super.init();
         refreshIconIfRequired();
+        refreshDarkIconIfRequired();
         refreshSignInfo();
     }
 
@@ -175,6 +184,11 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
 
     protected Actionable<DN, B> _icon(String icon) {
         this.icon = icon;
+        return this;
+    }
+
+    protected Actionable<DN, B> _darkIcon(String icon) {
+        this.darkIcon = icon;
         return this;
     }
 
@@ -237,26 +251,53 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
         if (isMaterialIcon() && session().browser().isMobile()) refreshIcon();
     }
 
+    private void refreshDarkIconIfRequired() {
+        if (isResourceDarkIcon()) refreshDarkIcon();
+        if (isMaterialDarkIcon() && session().browser().isMobile()) refreshDarkIcon();
+    }
+
     private void refreshIcon() {
         notifier.refreshIcon(icon());
     }
 
-    private static final String PngMaterialIcon = "/icons/mobile/%s.png";
+    private void refreshDarkIcon() {
+        notifier.refreshDarkIcon(darkIcon());
+    }
+
     private String icon() {
-        if (isResourceIcon()) return Asset.toResource(baseAssetUrl(), Actionable.class.getResource(this.icon)).toUrl().toString();
+        return iconOf(this.icon);
+    }
+
+    private String darkIcon() {
+        return iconOf(this.darkIcon);
+    }
+
+    private static final String PngMaterialIcon = "/icons/mobile/%s.png";
+    private String iconOf(String darkIcon) {
+        if (isResourceIcon())
+            return Asset.toResource(baseAssetUrl(), Actionable.class.getResource(darkIcon)).toUrl().toString();
         if (isMaterialIcon() && session().browser().isMobile()) {
-            URL iconResource = Actionable.class.getResource(String.format(PngMaterialIcon, this.icon));
-            return iconResource != null ? Asset.toResource(baseAssetUrl(), iconResource).setLabel(String.format(PngMaterialIcon, this.icon)).toUrl().toString() : this.icon;
+            URL iconResource = Actionable.class.getResource(String.format(PngMaterialIcon, darkIcon));
+            return iconResource != null ? Asset.toResource(baseAssetUrl(), iconResource).setLabel(String.format(PngMaterialIcon, darkIcon)).toUrl().toString() : darkIcon;
         }
-        return this.icon;
+        return darkIcon;
     }
 
     private boolean isResourceIcon() {
         return (mode == Mode.IconButton || mode == Mode.IconToggle || mode == Mode.IconSplitButton) && icon != null && Actionable.class.getResource(this.icon) != null;
     }
 
+    private boolean isResourceDarkIcon() {
+        if (this.darkIcon == null) return false;
+        return (mode == Mode.IconButton || mode == Mode.IconToggle || mode == Mode.IconSplitButton) && icon != null && Actionable.class.getResource(this.darkIcon) != null;
+    }
+
     private boolean isMaterialIcon() {
         return (mode == Mode.MaterialIconButton || mode == Mode.MaterialIconToggle || mode == Mode.MaterialIconSplitButton) && icon != null;
+    }
+
+    private boolean isMaterialDarkIcon() {
+        return (mode == Mode.MaterialIconButton || mode == Mode.MaterialIconToggle || mode == Mode.MaterialIconSplitButton) && darkIcon != null;
     }
 
     private boolean signCanSetup() {

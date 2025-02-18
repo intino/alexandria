@@ -24,7 +24,7 @@ import static io.intino.konos.builder.helpers.Commons.javaFile;
 public abstract class ActionRenderer extends Renderer {
 	private final String[] types;
 
-	public enum ContextType {Default, Spark}
+	public enum ContextType {Default, Server}
 
 	public ActionRenderer(CompilationContext context, String... types) {
 		super(context);
@@ -103,7 +103,7 @@ public abstract class ActionRenderer extends Renderer {
 
 	protected FrameBuilder contextPropertyFrame() {
 		FrameBuilder result = new FrameBuilder("contextProperty");
-		if (contextType() == ContextType.Spark) result.add("spark");
+		if (contextType() == ContextType.Server) result.add("server");
 		return result;
 	}
 

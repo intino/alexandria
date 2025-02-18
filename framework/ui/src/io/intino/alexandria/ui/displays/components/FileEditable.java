@@ -6,7 +6,7 @@ import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.ui.displays.components.editable.Editable;
 import io.intino.alexandria.ui.displays.events.*;
 import io.intino.alexandria.ui.displays.notifiers.FileEditableNotifier;
-import io.intino.alexandria.ui.spark.UIFile;
+import io.intino.alexandria.ui.server.UIFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -15,9 +15,11 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class FileEditable<DN extends FileEditableNotifier, B extends Box> extends AbstractFileEditable<DN, B> implements Editable<DN, B> {
 	private boolean readonly;
+	private java.util.List allowedTypes;
 	protected Listener uploadingListener = null;
 	protected ChangeListener changeListener = null;
 	private ReadonlyListener readonlyListener = null;
@@ -59,6 +61,13 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 	public FileEditable<DN, B> readonly(boolean readonly) {
 		_readonly(readonly);
 		notifyReadonly(readonly);
+		return this;
+	}
+
+	public enum Type { Image, Audio, Video, Application, Text, Xml, Html, Pdf, Excel }
+	public FileEditable<DN, B> allowedTypes(java.util.List<Type> types) {
+		_allowedTypes(types);
+		notifyAllowedTypes(types);
 		return this;
 	}
 
@@ -119,6 +128,11 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 		return this;
 	}
 
+	protected FileEditable<DN, B> _allowedTypes(java.util.List<Type> allowedTypes) {
+		this.allowedTypes = allowedTypes;
+		return this;
+	}
+
 	private void createPreview() {
 		preview = new File<>(box()).id(UUID.randomUUID().toString());
 		add(preview, DefaultInstanceContainer);
@@ -132,6 +146,10 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 	private void notifyReadonly(boolean value) {
 		if (readonlyListener != null) readonlyListener.accept(new ReadonlyEvent(this, value));
 		notifier.refreshReadonly(value);
+	}
+
+	private void notifyAllowedTypes(java.util.List<Type> types) {
+		notifier.refreshAllowedTypes(types.stream().map(Enum::name).collect(Collectors.toList()));
 	}
 
 }

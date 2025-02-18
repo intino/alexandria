@@ -14,7 +14,7 @@ rule type(box)
 
 	<<$messagehub+import>>
 	<<$terminal+import>>
-	<<import io.intino.alexandria.http.AlexandriaSpark;$hasREST>>
+	<<import io.intino.alexandria.http.AlexandriaHttpServer;$hasREST>>
 	<<import io.intino.alexandria.ui.services.push.PushService$hasUI+hideUi>>
 	<<import io.intino.alexandria.ui.Soul$hasUi+hideUi>>
 
@@ -81,7 +81,7 @@ rule type(box)
 
 		@Override
 		public void stopServices() {
-			<<$spark...[$NL]>>
+			<<$server...[$NL]>>
 			<<$service+stop...[$NL]>>
 			<<$connector+stop>>
 		}
@@ -203,29 +203,29 @@ rule trigger(uiBox)
 	io.intino.alexandria.ui.AlexandriaUiBox
 
 rule type(service, ui) and trigger(setupMethod)
-    protected void beforeSetup$name+firstUpperCase~Ui(io.intino.alexandria.ui.UISpark sparkInstance) {}
+    protected void beforeSetup$name+firstUpperCase~Ui(io.intino.alexandria.ui.AlexandriaUiServer server) {}
 	public void setup$name+firstUpperCase~Ui() {
-		<<if($parameter == null || $parameter.isEmpty())>> return;
+		<<if($port == null || $port.isEmpty())>> return;
 		this.authService = <<this.authService($authentication)?null>>;
-		<<io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/")>>;
-		io.intino.alexandria.http.AlexandriaSparkBuilder.setUI(true);
-		io.intino.alexandria.http.AlexandriaSparkBuilder.addParameters(this.authService);
+		<<io.intino.alexandria.http.AlexandriaHttpServerBuilder.setup(Integer.parseInt($port), "www/", Long.parseLong($maxResourceSize))>>;
+		io.intino.alexandria.http.AlexandriaHttpServerBuilder.setUI(true);
+		io.intino.alexandria.http.AlexandriaHttpServerBuilder.addParameters(this.authService);
 		this.pushService = new io.intino.alexandria.ui.services.push.PushService();
-		io.intino.alexandria.ui.UISpark sparkInstance = (io.intino.alexandria.ui.UISpark) io.intino.alexandria.http.AlexandriaSparkBuilder.instance();
-		beforeSetup$name+firstUpperCase~Ui(sparkInstance);
-		$package+validPackage.ui.$name+PascalCase~Service.init(sparkInstance, ($configuration+PascalCase~Box) this, pushService, new $package+validPackage.ui.displays.RouteDispatcher());
+		io.intino.alexandria.ui.AlexandriaUiServer server = (io.intino.alexandria.ui.AlexandriaUiServer) io.intino.alexandria.http.AlexandriaHttpServerBuilder.instance();
+		beforeSetup$name+firstUpperCase~Ui(server);
+		$package+validPackage.ui.$name+PascalCase~Service.init(server, ($configuration+PascalCase~Box) this, pushService, new $package+validPackage.ui.displays.RouteDispatcher());
 		$use...[$NL]
-		io.intino.alexandria.ui.UiElementsService.initDisplays(sparkInstance, pushService);
+		io.intino.alexandria.ui.UiElementsService.initDisplays(server, pushService);
 	}
 
 rule type(service, cli) and trigger(setupMethod)
 	public void setupCli() {
-		<<if($parameter == null || $parameter.isEmpty())>> return;
-		<<io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/")>>;
+		<<if($port == null || $port.isEmpty())>> return;
+		<<io.intino.alexandria.http.AlexandriaHttpServerBuilder.setup(Integer.parseInt($port), "www/", Long.parseLong($maxResourceSize))>>;
 	}
 
 rule type(service, soap) and trigger(setup)
-	<<if($parameter != null && !$parameter.isEmpty()) >>io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/");
+	<<if($port != null && !$port.isEmpty()) >>io.intino.alexandria.http.AlexandriaHttpServerBuilder.setup(Integer.parseInt($port), "www/", Long.parseLong($maxResourceSize));
 
 rule type(terminal) and trigger(setup)
 	this.terminal = new $qn(connector);
@@ -243,26 +243,26 @@ rule type(service, slack) and trigger(slack)
 	Logger.info("Slack service $name: started!");
 
 rule type(service, rest) and trigger(rest)
-	<<if($parameter == null || $parameter.isEmpty()) return;>>
-	io.intino.alexandria.http.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/");
-	<<$name+PascalCase~Service.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), ($configuration+PascalCase~Box) this);>>
-	<<io.intino.alexandria.http.AlexandriaSparkBuilder.instance().start();>>
-	Logger.info("Rest service $name: started at port " + $parameter + "!");
+	<<if($port == null || $port.isEmpty()) return;>>
+	io.intino.alexandria.http.AlexandriaHttpServerBuilder.setup(Integer.parseInt($port), "www/", Long.parseLong($maxResourceSize));
+	<<$name+PascalCase~Service.setup(io.intino.alexandria.http.AlexandriaHttpServerBuilder.instance(), ($configuration+PascalCase~Box) this);>>
+	<<io.intino.alexandria.http.AlexandriaHttpServerBuilder.instance().start();>>
+	Logger.info("Rest service $name: started at port " + $port + "!");
 
 rule type(service, soap) and trigger(soap)
-	<<$name+PascalCase~Service.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), ($configuration+PascalCase~Box) this);>>
-	<<io.intino.alexandria.http.AlexandriaSparkBuilder.instance().start();
+	<<$name+PascalCase~Service.setup(io.intino.alexandria.http.AlexandriaHttpServerBuilder.instance(), ($configuration+PascalCase~Box) this);>>
+	<<io.intino.alexandria.http.AlexandriaHttpServerBuilder.instance().start();
 	Logger.info("Soap service $name: started!");>>
 
 rule type(service, ui) and trigger(ui)
 	setup$name+firstUpperCase~Ui();
 	<<this.initTranslatorService()>>;
-	io.intino.alexandria.ui.UISpark spark$name+firstUpperCase~Instance = (io.intino.alexandria.ui.UISpark) io.intino.alexandria.http.AlexandriaSparkBuilder.instance();
-	spark$name+firstUpperCase~Instance.start();
-	Logger.info("UI $name: started at port " + $parameter + "!");
+	io.intino.alexandria.ui.AlexandriaUiServer server$name+firstUpperCase~Instance = (io.intino.alexandria.ui.AlexandriaUiServer) io.intino.alexandria.http.AlexandriaHttpServerBuilder.instance();
+	server$name+firstUpperCase~Instance.start();
+	Logger.info("UI $name: started at port " + $port + "!");
 
 rule trigger(use)
-	<<$this.initDisplays(sparkInstance, pushService);>>
+	<<$this.initDisplays(server, pushService);>>
 
 rule type(service, messaging) and trigger(messaging)
 	this.$name+CamelCase = new $name+PascalCase~Service(this.connector, ($configuration+PascalCase~Box) this);
@@ -271,19 +271,19 @@ rule type(service, messaging) and trigger(messaging)
 rule type(service, agenda) and trigger(agenda)
 	if (this.agenda != null) return;
 	this.agenda = new $name+PascalCase~Service(($configuration+PascalCase~Box) this);
-	this.agenda.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), scheduler);
-	io.intino.alexandria.http.AlexandriaSparkBuilder.instance().start();
+	this.agenda.setup(io.intino.alexandria.http.AlexandriaHttpServerBuilder.instance(), scheduler);
+	io.intino.alexandria.http.AlexandriaHttpServerBuilder.instance().start();
 	Logger.info("Agenda service: started!");
 
 rule type(service, cli) and trigger(cli)
     setupCli();
     $name+PascalCase~Service $name+CamelCase~Service = new $name+PascalCase~Service();
-    $name+CamelCase~Service.setup(io.intino.alexandria.http.AlexandriaSparkBuilder.instance(), ($configuration+PascalCase~Box) this, new $name+PascalCase(($configuration+PascalCase~Box)this));
-    io.intino.alexandria.http.AlexandriaSparkBuilder.instance().start();
+    $name+CamelCase~Service.setup(io.intino.alexandria.http.AlexandriaHttpServerBuilder.instance(), ($configuration+PascalCase~Box) this, new $name+PascalCase(($configuration+PascalCase~Box)this));
+    io.intino.alexandria.http.AlexandriaHttpServerBuilder.instance().start();
     Logger.info("$name+firstUpperCase service: started!");
 
 rule type(sentinel) and trigger(init)
-	Sentinels.init(this.scheduler, this.configuration.home() <<$hasWebhook io.intino.alexandria.http.AlexandriaSparkBuilder.instance()>>, ($configuration+PascalCase~Box) this);
+	Sentinels.init(this.scheduler, this.configuration.home() <<$hasWebhook io.intino.alexandria.http.AlexandriaHttpServerBuilder.instance()>>, ($configuration+PascalCase~Box) this);
 
 rule type(workflow) and trigger(init)
 	this.workflow = new $package.bpm.Workflow(($box+PascalCase~Box)this<<, $parameter>>);
@@ -380,8 +380,8 @@ rule type(service, slack) and trigger(getter)
 
 rule type(service) and trigger(getter)
 
-rule trigger(spark)
-	io.intino.alexandria.http.AlexandriaSparkBuilder.instance().stop();
+rule trigger(server)
+	io.intino.alexandria.http.AlexandriaHttpServerBuilder.instance().stop();
 
 rule type(connector) and trigger(stop)
 	if (connector instanceof io.intino.alexandria.terminal.JmsConnector) ((io.intino.alexandria.terminal.JmsConnector) connector).stop();
@@ -459,14 +459,17 @@ rule type(conf, file) and trigger(parameter)
 rule type(conf) and trigger(parameter)
 	configuration().get("$value")
 
-rule type(custom) and trigger(parameter)
+rule type(parameter, custom) and trigger(authentication)
+	url(configuration().get("$value+customParameter"))
+
+rule type(parameter, custom) and trigger(edition)
+	url(configuration().get("$value+customParameter"))
+
+rule type(parameter, custom)
 	configuration().get("$value+customParameter")
 
-rule type(custom) and trigger(authentication)
-	url(configuration().get("$value+customParameter"))
-
-rule type(custom) and trigger(edition)
-	url(configuration().get("$value+customParameter"))
+rule type(custom) and trigger(parameter)
+	configuration().get("$value+customParameter")
 
 rule type(file) and trigger(parameter)
 	$value
@@ -475,6 +478,9 @@ rule type(int) and trigger(parameter)
 	$value
 
 rule trigger(parameter)
+	"$value"
+
+rule type(parameter)
 	"$value"
 
 rule trigger(authentication)

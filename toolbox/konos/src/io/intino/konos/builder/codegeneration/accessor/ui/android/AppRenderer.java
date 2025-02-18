@@ -42,6 +42,8 @@ public class AppRenderer extends UIRenderer {
 		result.add("gradle");
 		result.add("project", context.project());
 		result.add("version", context.configuration().version());
+		boolean isUiFramework = context.boxName().equalsIgnoreCase("UiFramework");
+		if (!isUiFramework) result.add("alexandriaLibsVersion", context.configuration().version());
 		resources().stream().filter(Service.UI.Resource::isPage).forEach(r -> result.add("resource", resourceFrame(r)));
 		return result;
 	}

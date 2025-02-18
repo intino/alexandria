@@ -7,7 +7,7 @@ import BlockBehavior from "./behaviors/BlockBehavior";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import BrowserUtil from "../../util/BrowserUtil";
 import 'alexandria-ui-elements/res/styles/layout.css';
-import 'alexandria-ui-elements/res/styles/mobile.css';
+import 'alexandria-ui-elements/res/styles/hidden.css';
 
 export default class BlockConditional extends AbstractBlockConditional {
 

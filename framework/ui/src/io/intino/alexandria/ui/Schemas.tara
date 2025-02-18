@@ -200,11 +200,21 @@ Schema Highlight
 	Attribute textColor as Text
 	Attribute backgroundColor as Text
 
-Schema StepperInfo
+Schema WizardInfo
     Attribute active as Integer
     Attribute allowNext as Bool
     Attribute allowBack as Bool
+    Attribute allowFinish as Bool
     Attribute visibleList as Bool List
+    Attribute confirmMessage as Text
+
+Schema WizardNavigatorInfo
+    Attribute active as Integer
+    Attribute stepsCount as Integer
+    Attribute allowNext as Bool
+    Attribute allowBack as Bool
+    Attribute allowFinish as Bool
+    Attribute finished as Bool
 
 Schema StepInfo
     Attribute icon as Text
@@ -321,6 +331,7 @@ Schema GridCellInfo
 Schema TimelineHistory
 	Attribute from as DateTime
 	Attribute to as DateTime
+	Attribute hasRelativeValues as Bool
 
 Schema TimelineHistoryEntry
 	Attribute date as DateTime
@@ -494,3 +505,26 @@ Schema DateNavigatorInfo
 Schema KpiColors
 	Attribute text as Text
 	Attribute background as Text
+
+Schema ChatInfo
+	Attribute label as Text
+	Attribute messages as Object(ChatMessage) List
+	Attribute incomingImage as Text
+	Attribute outgoingImage as Text
+	Attribute loadingImage as Text
+
+Schema ChatMessage
+	Attribute date as DateTime
+	Attribute content as Text
+	Attribute active as Bool
+	Attribute direction as Word("Incoming" "Outgoing")
+	Attribute attachments as Object(Attachment) List
+
+Schema ChatSendMessageInfo
+	Attribute message as Text
+	Attribute displayMessage as Text
+
+Schema Attachment
+	Attribute url as Text
+	Attribute filename as Text
+	Attribute mimeType as Text

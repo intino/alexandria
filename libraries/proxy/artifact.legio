@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.2.0") proxy
+Artifact("io.intino.alexandria", "2.1.5") proxy
 
 	Imports
 		Compile("io.intino.alexandria", "logger", "2.0.0")
@@ -9,7 +9,7 @@ Artifact("io.intino.alexandria", "1.2.0") proxy
 		Compile("org.apache.httpcomponents", "fluent-hc", "4.5.7")
 		Compile("commons-io", "commons-io", "2.4")
 
-		Provided("com.sparkjava", "spark-core", "2.9.4")
+		Provided("io.intino.alexandria", "http", "2.1.6")
 
 		Test("junit", "junit", "4.12")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources=true)
@@ -17,6 +17,3 @@ Artifact("io.intino.alexandria", "1.2.0") proxy
 		Artifactory("intino-maven")
 			Release("https://artifactory.intino.io/artifactory/release-libraries")
 			Snapshot("https://artifactory.intino.io/artifactory/snapshots")
-
-Repository("intino-maven")
-	Release("https://artifactory.intino.io/artifactory/releases")

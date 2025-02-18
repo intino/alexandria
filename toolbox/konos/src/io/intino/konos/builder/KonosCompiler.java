@@ -79,7 +79,10 @@ public class KonosCompiler {
 
 	private Map<String, String> requiredDependencies(KonosGraph graph, CompilationContext context) {
 		Map<String, String> dependencies = Manifest.load().dependencies;
-		if (graph.jmxServiceList().isEmpty()) remove(dependencies, "jmx");
+		if (graph.jmxServiceList().isEmpty()) {
+			remove(dependencies, "jmx");
+			remove(dependencies, "primitives");
+		}
 		if (graph.messagingServiceList().isEmpty()) remove(dependencies, ":jms");
 		if (graph.sentinelList().isEmpty()) remove(dependencies, "scheduler");
 		if (graph.messagingServiceList().isEmpty() || context.dataHubManifest() != null)

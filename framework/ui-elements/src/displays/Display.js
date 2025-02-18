@@ -4,6 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import CookieConsent, { Cookies } from "react-cookie-consent";
 import Theme from 'app-elements/gen/Theme';
+import history from "alexandria-ui-elements/src/util/History";
 
 export const enrichDisplayProperties = (instance) => {
     instance.pl.context = () => { return instance.pl.o };
@@ -79,6 +80,11 @@ export default class Display extends PassiveView {
         else window.location.href = url;
     };
 
+    dispatch = (params) => {
+		history.push(params.path);
+		return true;
+    };
+
     addressed = (params) => {
         this.address = params.address != null ? Application.configuration.basePath + params.address : null;
     };
@@ -128,19 +134,25 @@ export default class Display extends PassiveView {
     };
 
     showError = (error) => {
-        this.showMessage(error, 'error');
+        this.showMessage(error, 'error', 5000);
     };
 
-    showMessage = (message, type) => {
+    showMessage = (message, type, autoHideDuration) => {
         const loading = type.toLowerCase() === "loading";
+        const persist = loading || autoHideDuration == -1;
         const messageType = loading ? "info" : type.toLowerCase();
-        const options = { variant: messageType, persist: loading, autoHideDuration: type.toLowerCase() == 'error' ? 5000 : 2500, anchorOrigin: { vertical: 'top', horizontal: 'center' }};
+        const options = { variant: messageType, persist: persist, autoHideDuration: autoHideDuration, anchorOrigin: { vertical: 'top', horizontal: 'center' }};
         if (this.snack != null) this.props.closeSnackbar(this.snack);
         if (this.messageTimeout != null) window.clearTimeout(this.messageTimeout);
         this.messageTimeout = window.setTimeout(() => {
             const snack = this.props.enqueueSnackbar(message, options);
             if (loading) this.snack = snack;
         }, 100);
+    };
+
+    hideMessage = () => {
+        if (this.messageTimeout != null) window.clearTimeout(this.messageTimeout);
+        this.props.closeSnackbar();
     };
 
     componentWillUnmount() {
@@ -217,13 +229,13 @@ export default class Display extends PassiveView {
     };
 
     _loadAppMode = () => {
-        var mode = this.getCookie("intino.appmode");
+        var mode = this.getCookie(encodeURI(Application.configuration.baseUrl + "/appmode"));
         if (mode != null) return mode;
         if (!Theme.isAutoMode()) return Theme.defaultMode();
         return window.matchMedia('(prefers-color-scheme: dark)') ? 'dark' : 'light';
     };
 
 	_saveAppModeInCookies = (mode) => {
-        this.updateCookie(mode, "intino.appmode");
+        this.updateCookie(mode, encodeURI(Application.configuration.baseUrl + "/appmode"));
 	};
 }

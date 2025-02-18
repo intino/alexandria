@@ -2,7 +2,7 @@ package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.schemas.Widget;
 import io.intino.alexandria.ui.AlexandriaUiBox;
-import io.intino.alexandria.ui.displays.events.AddItemEvent;
+import io.intino.alexandria.ui.displays.events.AddCollectionItemEvent;
 import io.intino.alexandria.ui.displays.events.SelectionEvent;
 import io.intino.alexandria.ui.displays.items.WidgetListMold;
 import io.intino.alexandria.ui.documentation.DisplayHelper;
@@ -54,7 +54,7 @@ public class MobileDocsTemplate extends AbstractMobileDocsTemplate<AlexandriaUiB
 		return Labels.getOrDefault(translate(option), option);
 	}
 
-	private void refresh(AddItemEvent event) {
+	private void refresh(AddCollectionItemEvent event) {
 		Widget widget = event.item();
 		WidgetListMold display = event.component();
 		display.widgetListItem.onSelect(e -> open(widget));
@@ -106,8 +106,8 @@ public class MobileDocsTemplate extends AbstractMobileDocsTemplate<AlexandriaUiB
 		private static final Map<String, List<Model.WidgetType>> Widgets = new HashMap<>() {{
 			put("dataOption", List.of(Model.WidgetType.Text, Model.WidgetType.Number, Model.WidgetType.Image, Model.WidgetType.File, Model.WidgetType.Date, Model.WidgetType.Location, Model.WidgetType.Multiple, Model.WidgetType.DigitalSignature));
 			put("catalogOption", List.of(Model.WidgetType.List, Model.WidgetType.Table, Model.WidgetType.DynamicTable, Model.WidgetType.Grid, Model.WidgetType.Map, Model.WidgetType.Grouping, Model.WidgetType.GroupingToolbar, Model.WidgetType.Sorting, Model.WidgetType.SearchBox));
-			put("operationOption", List.of(Model.WidgetType.OpenPage, Model.WidgetType.Export, Model.WidgetType.Download, Model.WidgetType.DownloadSelection));
-			put("otherOption", List.of(Model.WidgetType.Block, Model.WidgetType.Chart, Model.WidgetType.Dashboard, Model.WidgetType.AppDirectory, Model.WidgetType.Slider, Model.WidgetType.Dialog, Model.WidgetType.Layer, Model.WidgetType.Divider, Model.WidgetType.User, Model.WidgetType.Selector, Model.WidgetType.Stepper, Model.WidgetType.Frame, Model.WidgetType.MicroSite, Model.WidgetType.HtmlViewer, Model.WidgetType.DateNavigator, Model.WidgetType.Timeline, Model.WidgetType.Eventline, Model.WidgetType.Reel, Model.WidgetType.DocumentEditor, Model.WidgetType.Kpi));
+			put("operationOption", List.of(Model.WidgetType.OpenPage, Model.WidgetType.Export, Model.WidgetType.Download, Model.WidgetType.DownloadSelection, Model.WidgetType.Upload));
+			put("otherOption", List.of(Model.WidgetType.Block, Model.WidgetType.Chart, Model.WidgetType.Dashboard, Model.WidgetType.AppDirectory, Model.WidgetType.Slider, Model.WidgetType.Dialog, Model.WidgetType.Layer, Model.WidgetType.Divider, Model.WidgetType.User, Model.WidgetType.Selector, Model.WidgetType.Wizard, Model.WidgetType.Frame, Model.WidgetType.MicroSite, Model.WidgetType.HtmlViewer, Model.WidgetType.DateNavigator, Model.WidgetType.Timeline, Model.WidgetType.Eventline, Model.WidgetType.Reel, Model.WidgetType.DocumentEditor, Model.WidgetType.Kpi, Model.WidgetType.Chat));
 		}};
 		private List<Widget> load(String condition, List<Filter> filters) {
 			return Widgets.getOrDefault(group, Collections.emptyList()).stream().map(Model::widget).collect(Collectors.toList());

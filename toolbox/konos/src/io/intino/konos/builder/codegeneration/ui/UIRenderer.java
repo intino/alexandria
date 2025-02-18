@@ -84,10 +84,10 @@ public abstract class UIRenderer extends Renderer {
 			components.addAll(passiveView.a$(io.intino.konos.dsl.Template.class).componentList());
 		if (passiveView.i$(conceptOf(OtherComponents.Snackbar.class)))
 			components.addAll(passiveView.a$(OtherComponents.Snackbar.class).componentList());
-		if (passiveView.i$(conceptOf(VisualizationComponents.Stepper.class)))
-			components.addAll(passiveView.a$(VisualizationComponents.Stepper.class).stepList());
-		if (passiveView.i$(conceptOf(VisualizationComponents.Stepper.Step.class)))
-			components.addAll(passiveView.a$(VisualizationComponents.Stepper.Step.class).componentList());
+		if (passiveView.i$(conceptOf(VisualizationComponents.Wizard.class)))
+			components.addAll(passiveView.a$(VisualizationComponents.Wizard.class).stepList());
+		if (passiveView.i$(conceptOf(VisualizationComponents.Wizard.Step.class)))
+			components.addAll(passiveView.a$(VisualizationComponents.Wizard.Step.class).componentList());
 		if (passiveView.i$(conceptOf(VisualizationComponents.Header.class)))
 			components.addAll(passiveView.a$(VisualizationComponents.Header.class).componentList());
 		if (passiveView.i$(conceptOf(OtherComponents.Selector.class))) {
@@ -114,6 +114,10 @@ public abstract class UIRenderer extends Renderer {
 		if (passiveView.i$(conceptOf(OtherComponents.CollectionDialog.class)))
 			components.add(passiveView.a$(OtherComponents.CollectionDialog.class).collection());
 		return components;
+	}
+
+	protected boolean isAlexandriaProject() {
+		return context.project().equals("alexandria");
 	}
 
 	protected boolean hasConcreteNotifier(PassiveView element) {

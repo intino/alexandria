@@ -52,7 +52,7 @@ class Timeline extends AbstractTimeline {
 		    ...this.state,
 		    inside : false,
 		    openConfiguration : false,
-		    history : { visible: true, from: null, to: null, data: [] },
+		    history : { visible: true, from: null, to: null, data: [], relativeValues: { visible: false, active: true } },
 		    magnitude : null,
 		    scales: [],
 		    magnitudes: [],
@@ -88,7 +88,7 @@ class Timeline extends AbstractTimeline {
     };
 
     showHistoryDialog = (history) => {
-        this.setState({history: { visible:true, from: history.from, to: history.to, data: [] }});
+        this.setState({history: { visible:true, from: history.from, to: history.to, data: [], relativeValues: { visible: history.hasRelativeValues, active: this.state.history.relativeValues.active } }});
     };
 
     render() {
@@ -189,14 +189,21 @@ class Timeline extends AbstractTimeline {
 
     renderHistory = (history, magnitude) => {
         return (
-            <HighchartsReact highcharts={Highcharts} constructorType={'stockChart'} options={this.historyOptions(history, magnitude)} />
+            <div>
+                {this.state.history.relativeValues.visible &&
+                    <div className="layout horizontal end-justified">
+                        <FormControlLabel control={<Checkbox checked={!this.state.history.relativeValues.active} onChange={this.handleToggleAbsoluteValues.bind(this)} name="toggleAbsoluteValues" color="primary"/>} label={this.translate("Absolute values")}/>
+                    </div>
+                }
+                <HighchartsReact highcharts={Highcharts} constructorType={'stockChart'} options={this.historyOptions(history, magnitude)} />
+            </div>
         );
     };
 
     historyOptions = (history, magnitude) => {
         const height = this.historyHeight();
         const width = this.historyWidth();
-        const unit = magnitude.unit;
+        const unit = this.state.history.relativeValues.active ? "%" : magnitude.unit;
         const data = history.data;
         const annotations = history.annotations;
         const fetch = this.fetch.bind(this, magnitude, this.translate.bind(this));
@@ -300,7 +307,7 @@ class Timeline extends AbstractTimeline {
     };
 
     openHistory = (magnitude) => {
-        this.setState({magnitude: magnitude, history: { visible: true, from: null, to: null, data: [] } });
+        this.setState({magnitude: magnitude, history: { visible: true, from: null, to: null, data: [], relativeValues: { active: true } } });
         this.requester.openHistory(magnitude.name);
     };
 
@@ -310,12 +317,14 @@ class Timeline extends AbstractTimeline {
 	};
 
 	minValue = (history, magnitude) => {
+	    if (this.state.history.relativeValues.active) return 0;
 	    const unit = magnitude.unit;
 	    if (unit == "ºC") return -50;
 	    return magnitude.min != null ? magnitude.min : 0;
 	};
 
 	maxValue = (history, magnitude) => {
+	    if (this.state.history.relativeValues.active) return 100;
 	    return magnitude.max != null ? magnitude.max : null;
 	};
 
@@ -355,14 +364,12 @@ class Timeline extends AbstractTimeline {
 	};
 
 	historyHeight = () => {
-	    if (this.containerHeight != null) return this.containerHeight;
 	    const result = this.historyContainer.current != null ? this.historyContainer.current.offsetHeight : "400";
 	    if (this.historyContainer.current != null) this.containerHeight = result;
-	    return result;
+	    return result - (this.state.history.relativeValues.visible ? 40 : 0);
 	};
 
 	historyWidth = () => {
-	    if (this.containerWidth != null) return this.containerWidth;
 	    const result = this.historyContainer.current != null ? this.historyContainer.current.offsetWidth : "600";
 	    if (this.historyContainer.current != null) this.containerWidth = result;
 	    return result;
@@ -440,6 +447,13 @@ class Timeline extends AbstractTimeline {
         for (var i=0; i<magnitudes.length; i++) list.push({ name: magnitudes[i].name, position: i });
         this.requester.magnitudesSorting(list);
         return magnitudesSorting;
+    };
+
+    handleToggleAbsoluteValues = () => {
+        const history = this.state.history;
+        history.relativeValues.active = !history.relativeValues.active;
+        this.requester.historyWithRelativeValues(history.relativeValues.active);
+        this.setState({history});
     };
 
 }

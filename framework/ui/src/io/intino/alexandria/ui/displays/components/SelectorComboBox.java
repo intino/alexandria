@@ -3,6 +3,8 @@ package io.intino.alexandria.ui.displays.components;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.selector.SelectorOption;
+import io.intino.alexandria.ui.displays.events.Event;
+import io.intino.alexandria.ui.displays.events.Listener;
 import io.intino.alexandria.ui.displays.notifiers.SelectorComboBoxNotifier;
 
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ import java.util.List;
 
 public class SelectorComboBox<DN extends SelectorComboBoxNotifier, B extends Box> extends AbstractSelectorComboBox<DN, B> {
 	private java.util.List<String> selection = new ArrayList<>();
+	private Listener openedListener;
 
 	public SelectorComboBox(B box) {
         super(box);
@@ -20,6 +23,11 @@ public class SelectorComboBox<DN extends SelectorComboBoxNotifier, B extends Box
 	public void didMount() {
 		super.didMount();
 		selection(selection);
+	}
+
+	public SelectorComboBox<DN, B> onOpened(Listener listener) {
+		this.openedListener = listener;
+		return this;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -37,6 +45,11 @@ public class SelectorComboBox<DN extends SelectorComboBoxNotifier, B extends Box
 	@Override
 	public void reset() {
 		select();
+	}
+
+	public void opened() {
+		if (openedListener != null) openedListener.accept(new Event(this));
+		refresh();
 	}
 
 	@Override

@@ -3,6 +3,7 @@ import AbstractBaseIcon from "../../../gen/displays/components/AbstractBaseIcon"
 import BaseIconNotifier from "../../../gen/displays/notifiers/BaseIconNotifier";
 import BaseIconRequester from "../../../gen/displays/requesters/BaseIconRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
+import Theme from "app-elements/gen/Theme";
 
 export default class BaseIcon extends AbstractBaseIcon {
 	constructor(props) {
@@ -11,7 +12,9 @@ export default class BaseIcon extends AbstractBaseIcon {
 		this.requester = new BaseIconRequester(this);
 		this.state = {
 			...this.state,
-			icon: this.props.icon
+			title: this.props.title,
+			icon: this.props.icon,
+			darkIcon: this.props.darkIcon
 		}
 	};
 
@@ -21,11 +24,22 @@ export default class BaseIcon extends AbstractBaseIcon {
 		return iconLayer;
 	};
 
+	refreshTitle = (title) => {
+		this.setState({title});
+	};
+
 	refreshIcon = (icon) => {
 		this.setState({icon});
 	};
 
+	refreshDarkIcon = (darkIcon) => {
+		this.setState({darkIcon});
+	};
+
 	_icon = () => {
+	    const theme = Theme.get();
+	    if (theme.isDark() && this.state.darkIcon != null) return this.state.darkIcon;
+	    if (theme.isDark() && this.props.darkIcon != null) return this.props.darkIcon;
 		return this.state.icon != null ? this.state.icon : this.props.icon;
 	};
 

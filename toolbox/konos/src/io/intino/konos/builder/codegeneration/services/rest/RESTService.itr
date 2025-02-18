@@ -1,7 +1,7 @@
 rule type(server)
 	package $package+ValidPackage;
 
-	import io.intino.alexandria.http.AlexandriaSpark;
+	import io.intino.alexandria.http.AlexandriaHttpServer;
 	import $package+ValidPackage.rest.resources.*;
 	import io.intino.alexandria.core.Box;
 
@@ -9,7 +9,7 @@ rule type(server)
 
 		<<$authenticator+field>>
 
-		public static AlexandriaSpark setup(AlexandriaSpark server, $box+FirstUpperCase~Box box) {
+		public static AlexandriaHttpServer setup(AlexandriaHttpServer server, $box+FirstUpperCase~Box box) {
 			<<$authenticator+assign>>
 			<<$authenticationWithCertificate>>
 			<<$hasNotifications>>
@@ -51,4 +51,4 @@ rule trigger(custom)
 	.replace("{$value}", box.configuration().get("$value"))
 
 rule trigger(hasNotifications)
-	if (!io.intino.alexandria.http.AlexandriaSparkBuilder.isUI()) server.route("/_alexandria/push").push(new io.intino.alexandria.http.spark.SparkPushService());
+	if (!io.intino.alexandria.http.AlexandriaHttpServerBuilder.isUI()) server.route("/_alexandria/push").push(new io.intino.alexandria.http.pushservice.PushService());

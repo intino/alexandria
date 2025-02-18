@@ -34,7 +34,7 @@ rule type(itemsImport)
 	import $package+validPackage.ui.displays.items.*;
 
 rule type(request, asset)
-	public io.intino.alexandria.ui.spark.UIFile $name(<<$parameter value>>) {
+	public io.intino.alexandria.ui.server.UIFile $name(<<$parameter value>>) {
 		return null;
 	}
 

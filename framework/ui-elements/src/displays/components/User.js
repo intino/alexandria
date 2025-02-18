@@ -59,7 +59,7 @@ class User extends AbstractUser {
 
         return (
             <div className="layout horizontal">
-                <a ref={this.trigger} onClick={this.handleOpenDialog.bind(this)} title={info.fullName} className={!photoWithFullname || hasChildren ? classes.trigger : undefined}><img className={classes.photo} src={info.photo} title={info.fullName}/></a>
+                <a ref={this.trigger} onClick={this.handleOpenDialog.bind(this)} title={info.fullName} className={!photoWithFullname || hasChildren ? classes.trigger : undefined}><img style={this.style()} className={classes.photo} src={info.photo} title={info.fullName}/></a>
                 {photoWithFullname &&
                 <div style={{marginLeft:"10px",marginTop:"5px"}}>
                     <div className="layout vertical center-justified hidden-ifmobile">

@@ -167,20 +167,40 @@ const CollectionBehavior = (collection) => {
     };
 
     self.renderItems = (items, mode, itemHeight, customItemClasses) => {
-        const content = items.map((i, index) => self.renderItem(items, { index: index, isScrolling: false, customClasses: customItemClasses, itemHeight: itemHeight }));
-        if (mode != "Column") return content;
-        return (<div className="layout horizontal wrap">{content}</div>);
+        const sections = self.sections(items);
+        const index = [-1];
+        const result = [];
+        for (var section in sections) {
+            const content = sections[section].map((i, idx) => {
+                index[0]++;
+                return self.renderItem(items, mode, { index: index[0], isScrolling: false, customClasses: customItemClasses, itemHeight: itemHeight });
+            });
+            if (section != "__default") result.push(<div><Typography variant="h6" style={{marginLeft:'10px', marginTop:'10px',marginBottom:'10px'}}>{section}</Typography></div>);
+            result.push(mode != "Column" ? content : <div className="layout horizontal wrap">{content}</div>);
+        }
+        return result;
     };
 
-    self.renderItem = (items, properties) => {
+    self.sections = (items) => {
+        const sections = {};
+        for (var i=0; i<items.length; i++) {
+            const section = items[i] != null && items[i].pl.section != null ? items[i].pl.section : "__default";
+            if (sections[section] == null) sections[section] = [];
+            sections[section].push(items[i]);
+        }
+        return sections;
+    };
+
+    self.renderItem = (items, mode, properties) => {
+        const classes = "layout vertical" + (mode != "Column" ? " flex" : "");
         return (
-            <div className="layout vertical flex" style={{minHeight:properties.itemHeight,position:'relative'}}>
-                {self.renderItemContent(items, properties)}
+            <div className={classes} style={{minHeight:properties.itemHeight,position:'relative'}}>
+                {self.renderItemContent(items, mode, properties)}
             </div>
         );
     };
 
-    self.renderItemContent = (items, { index, isScrolling, style, customClasses }) => {
+    self.renderItemContent = (items, mode, { index, isScrolling, style, customClasses }) => {
         const item = items[index];
         const { classes } = self.collection.props;
         const width = self.width(index);
@@ -196,11 +216,13 @@ const CollectionBehavior = (collection) => {
         const classNamesValue = classNames(classes.itemView, customClasses, selectable && multiple ? classes.selectable : undefined, selecting ? classes.selecting : undefined);
         const finalStyle = selectable && !multiple && self.isItemSelected(item) ? { ...style, ...self.getSelectedStyleRules() } : style;
         return (
-            <div id={self.elementId(id)} style={finalStyle} key={index} onClick={selectable && !multiple ? self.handleSelect.bind(self, id) : undefined} className={classNamesValue}>
-                {/*{multiple ? <Checkbox checked={self.isItemSelected(item)} className={classes.selector} onChange={self.handleSelect.bind(self, id)} /> : undefined}*/}
-                {multiple ? <CollectionBehaviorCheckbox checked={self.isItemSelected(item)} classes={classes} onCheck={self.handleSelect.bind(self, id)} /> : undefined}
-                {view}
-            </div>
+            <React.Fragment>
+                <div id={self.elementId(id)} style={finalStyle} key={index} onClick={selectable && !multiple ? self.handleSelect.bind(self, id) : undefined} className={classNamesValue}>
+                    {/*{multiple ? <Checkbox checked={self.isItemSelected(item)} className={classes.selector} onChange={self.handleSelect.bind(self, id)} /> : undefined}*/}
+                    {multiple ? <CollectionBehaviorCheckbox checked={self.isItemSelected(item)} classes={classes} onCheck={self.handleSelect.bind(self, id)} /> : undefined}
+                    {view}
+                </div>
+            </React.Fragment>
         );
     };
 
@@ -284,7 +306,17 @@ const CollectionBehavior = (collection) => {
     };
 
     self.items = () => {
-        return self.collection.instances("rows");
+        const navigable = collection.props.navigable;
+        return navigable != null ? self.nonNullItems() : self.collection.instances("rows");
+    };
+
+    self.nonNullItems = () => {
+        const items = self.collection.instances("rows");
+        const result = [];
+        for (var i=0; i<items.length; i++) {
+            if (items[i] != null) result.push(items[i]);
+        }
+        return result;
     };
 
     self.refreshDelayed = () => {

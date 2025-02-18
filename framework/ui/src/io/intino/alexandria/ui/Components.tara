@@ -18,6 +18,8 @@ Component blockSplitter
 	Notification show as Integer
 	Request back
 
+Component blockResizable
+
 Component blockParallax
 	Notification refresh as Text
 
@@ -61,8 +63,25 @@ Component header
 Component tabs
 Component tab
 
+Component chat
+	Notification refresh as Object(ChatInfo)
+	Notification refreshTitle as Text
+	Notification addPreviousMessages as Object(ChatMessage) List
+	Notification addMessages as Object(ChatMessage) List
+	Notification addMessagePart as Text
+	Notification messagesStartReached
+	Notification open
+	Notification closeMessage
+
+	Request sendMessage as Object(ChatSendMessageInfo)
+	Request sendAttachment as Text
+	Request uploadAttachment as File
+	Request previousMessages
+
 Component baseIcon
 	Notification refreshIcon as Text
+	Notification refreshDarkIcon as Text
+	Notification refreshTitle as Text
 Component icon as ExtensionOf(baseIcon)
 Component materialIcon as ExtensionOf(baseIcon)
 
@@ -93,7 +112,7 @@ Component selectorComboBox as ExtensionOf(baseSelector)
 	Notification refreshSelection as Text List
 	Notification refreshMultipleSelection as Bool
 	Request updateSelection as Text List
-	Request refresh
+	Request opened
 
 Component selectorToggleBox as ExtensionOf(baseSelector)
 	Notification refreshSelection as Text List
@@ -211,6 +230,7 @@ Component timeline
 	Notification refreshMagnitudes as Object(TimelineMagnitude) List
 	Notification showHistoryDialog as Object(TimelineHistory)
 	Request openHistory as Text
+	Request historyWithRelativeValues as Bool
 	Request fetch as Object(TimelineHistoryFetch)
 	Request magnitudesVisibility as Object(TimelineMagnitudeVisibility) List
 	Request magnitudesSorting as Object(TimelineMagnitudeSorting) List
@@ -288,10 +308,21 @@ Component user
 	Request logout
 	Request refreshChildren
 
-Component stepper
-    Notification refresh as Object(StepperInfo)
-    Request next
+Component wizard
+    Notification refresh as Object(WizardInfo)
+    Notification showConfirmDialog
     Request back
+    Request next
+	Request finishConfirmed
+	Request finish
+
+Component wizardNavigator
+	Notification refresh as Object(WizardNavigatorInfo)
+
+	Request back
+	Request select as Integer
+	Request next
+	Request finish
 
 Component step
     Notification refresh as Object(StepInfo)
