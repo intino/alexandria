@@ -113,6 +113,7 @@ public class AlexandriaHttpServer<R extends AlexandriaHttpRouter<?>> {
 					InputStream inputStream = AlexandriaHttpServer.class.getClassLoader().getResourceAsStream((webDirectory.endsWith("/") ? webDirectory.substring(0, webDirectory.length()-1) : webDirectory) + filePath);
 					if (inputStream != null) {
 						context.result(inputStream);
+						context.contentType(MimeTypes.getFromFilename(filePath));
 						return true;
 					}
 					return defaultHandler != null && defaultHandler.handle(context);
