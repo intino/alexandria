@@ -168,7 +168,9 @@ Concept ActionableComponents
 			sub Authenticate
 			sub SignText > var string text = empty; var word:{CAdES XAdES} signFormat = XAdES
 			sub SignDocument > var string document = empty
-			sub Upload > var boolean multipleSelection = false
+			sub Upload
+				var boolean multipleSelection = false
+				var word[]:{Image Video Application Text Xml Html Pdf Excel} allowedTypes = empty
 			sub SetDarkMode
 			sub SetLightMode
 			sub Export

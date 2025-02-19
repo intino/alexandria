@@ -6,6 +6,8 @@ import io.intino.konos.builder.codegeneration.ui.displays.components.ActionableR
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.dsl.ActionableComponents;
 
+import java.util.stream.Collectors;
+
 public class UploadRenderer extends ActionableRenderer {
 
 	public UploadRenderer(CompilationContext context, ActionableComponents.Actionable component, RendererWriter provider) {
@@ -17,6 +19,7 @@ public class UploadRenderer extends ActionableRenderer {
 		FrameBuilder result = super.properties();
 		ActionableComponents.Actionable.Upload upload = element.asUpload();
 		if (upload.multipleSelection()) result.add("multipleSelection", upload.multipleSelection());
+		result.add("allowedTypes", "\"" + upload.allowedTypes().stream().map(Enum::name).collect(Collectors.joining("\",\"")) + "\"");
 		return result;
 	}
 

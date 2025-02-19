@@ -60,6 +60,7 @@ Component download as ExtensionOf(actionable)
 
 Component upload as ExtensionOf(actionable)
 	Notification openDialog
+	Notification refreshAllowedTypes as Text List
 
 	Request notifyUploading as Integer
 	Request add as File
