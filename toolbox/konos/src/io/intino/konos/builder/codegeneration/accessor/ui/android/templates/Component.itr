@@ -190,7 +190,7 @@ rule type(properties, export) and trigger(specific)
 	<< alexandria:export_from="$from">><< alexandria:export_to="$to">><< alexandria:export_min="$min">><< alexandria:export_max="$max">><< alexandria:export_range="{'min':$rangeMin,'max':$rangeMax}">><< alexandria:export_options="['$option...[',']']">>
 
 rule type(properties, upload) and trigger(specific)
-	<< alexandria:download_multiple_selection="$multipleSelection">>
+	<< alexandria:download_multiple_selection="$multipleSelection">><< alexandria:upload_allowed_types="[$allowedTypes]">>
 
 rule type(properties, download) and trigger(specific)
 	<< alexandria:download_options="['$option...[',']']">>

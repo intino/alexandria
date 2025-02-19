@@ -149,7 +149,7 @@ rule type(properties, export) and trigger(specific)
 	<< from={$from}>><< to={$to}>><< min={$min}>><< max={$max}>><< range={{min:$rangeMin,max:$rangeMax}}>><< options={["$option...[","]"]}>>
 
 rule type(properties, upload) and trigger(specific)
-	<< multipleSelection={$multipleSelection}>>
+	<< multipleSelection={$multipleSelection}>><< allowedTypes={[$allowedTypes]}>>
 
 rule type(properties, download) and trigger(specific)
 	<< options={["$option...[","]"]}>>

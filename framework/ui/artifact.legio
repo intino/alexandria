@@ -1,7 +1,7 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "6.2.5") ui-framework
-	Dsl("Konos", "13.2.1") > Builder > generationPackage = "alexandria"
+Artifact("io.intino.alexandria", "6.2.6") ui-framework
+	Dsl("Konos", "13.2.2") > Builder > generationPackage = "alexandria"
 	Code("io.intino")
 
 	Imports
