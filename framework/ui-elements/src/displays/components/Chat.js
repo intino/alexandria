@@ -133,6 +133,7 @@ class Chat extends AbstractChat {
 	render() {
 	    this.lastDay = null;
 	    if (!this.state.visible) return (<React.Fragment/>);
+	    this.refreshEvents();
 	    return (
 	        <React.Fragment>
 	            {this.props.view == "Floating" && this.renderFloatingLayer() }
@@ -592,6 +593,14 @@ class Chat extends AbstractChat {
     height = () => {
 		return this._heightDefined() ? this.props.height : "500px";
     };
+
+	refreshEvents = () => {
+	    window.executeChatOperation = this.executeChatOperation.bind(this);
+	};
+
+	executeChatOperation = (operation) => {
+	    this.requester.executeOperation(operation);
+	};
 
 }
 

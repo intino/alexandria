@@ -73,6 +73,7 @@ Component chat
 	Notification open
 	Notification closeMessage
 
+	Request executeOperation as Text
 	Request sendMessage as Object(ChatSendMessageInfo)
 	Request sendAttachment as Text
 	Request uploadAttachment as File
