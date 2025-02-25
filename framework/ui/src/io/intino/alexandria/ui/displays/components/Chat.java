@@ -7,6 +7,8 @@ import io.intino.alexandria.schemas.Attachment;
 import io.intino.alexandria.schemas.ChatInfo;
 import io.intino.alexandria.schemas.ChatMessage;
 import io.intino.alexandria.schemas.ChatSendMessageInfo;
+import io.intino.alexandria.ui.displays.events.actionable.ExecuteEvent;
+import io.intino.alexandria.ui.displays.events.actionable.ExecuteListener;
 import io.intino.alexandria.ui.displays.notifiers.ChatNotifier;
 import io.intino.alexandria.ui.model.chat.ChatDatasource;
 import io.intino.alexandria.ui.model.chat.Message;
@@ -28,6 +30,7 @@ public class Chat<DN extends ChatNotifier, B extends Box> extends AbstractChat<B
 	private URL outgoingImage;
 	private URL loadingImage;
 	private String emptyMessage;
+	private ExecuteListener executeOperationListener;
 
 	public Chat(B box) {
 		super(box);
@@ -63,6 +66,10 @@ public class Chat<DN extends ChatNotifier, B extends Box> extends AbstractChat<B
 		return this;
 	}
 
+	public void onExecuteOperation(ExecuteListener listener) {
+		this.executeOperationListener = listener;
+	}
+
 	public void uploadAttachment(Resource value) {
 		this.attachment = value;
 	}
@@ -86,6 +93,11 @@ public class Chat<DN extends ChatNotifier, B extends Box> extends AbstractChat<B
 		List<ChatMessage> messages = messages();
 		if (messages.size() < PageSize) notifier.messagesStartReached();
 		notifier.addPreviousMessages(messages);
+	}
+
+	public void executeOperation(String operation) {
+		if (executeOperationListener == null) return;
+		executeOperationListener.accept(new ExecuteEvent(this, operation));
 	}
 
 	@Override
