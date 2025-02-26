@@ -380,10 +380,15 @@ Schema TimelineSummary
 	Attribute average as Object(TimelineSummaryValue)
 	Attribute min as Object(TimelineSummaryValue)
 	Attribute max as Object(TimelineSummaryValue)
+	Attribute attributes as Object(TimelineSummaryAttribute) List
 
 Schema TimelineSummaryValue
 	Attribute value as Text
 	Attribute date as DateTime
+
+Schema TimelineSummaryAttribute
+	Attribute name as Text
+	Attribute value as Object(TimelineSummaryValue)
 
 Schema TimelineSerie
 	Attribute name as Text

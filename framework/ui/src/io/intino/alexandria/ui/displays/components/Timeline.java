@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -191,7 +192,16 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		TimelineDatasource.Summary summary = magnitude.summary(date, scale);
 		return new TimelineSummary().average(summaryValueOf(summary.average(), date, formatter))
 									.max(summaryValueOf(summary.max(), summary.maxDate(), formatter))
-									.min(summaryValueOf(summary.min(), summary.minDate(), formatter));
+									.min(summaryValueOf(summary.min(), summary.minDate(), formatter))
+									.attributes(summaryAttributes(summary.attributes(), formatter));
+	}
+
+	private List<TimelineSummaryAttribute> summaryAttributes(List<TimelineDatasource.Summary.Attribute> attributes, Formatter formatter) {
+		return attributes.stream().map(a -> summaryAttribute(a, formatter)).collect(Collectors.toList());
+	}
+
+	private TimelineSummaryAttribute summaryAttribute(TimelineDatasource.Summary.Attribute attribute, Formatter formatter) {
+		return new TimelineSummaryAttribute().name(attribute.name()).value(summaryValueOf(attribute.value(), attribute.date(), formatter));
 	}
 
 	private TimelineSummaryValue summaryValueOf(double value, Instant date, Formatter formatter) {
@@ -202,7 +212,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		TimelineSerie result = new TimelineSerie();
 		Scale scale = selectedScale();
 		Instant current = selectedInstant(scale);
-		TimelineDatasource.Serie serie = magnitude.serie(scale, current);
+		TimelineDatasource.Serie serie = magnitude.serie(scale, current, summaryPointsCount);
 		List<Double> values = loadValues(magnitude, serie);
 		Formatter formatter = magnitude.definition().formatter();
 		result.name(serie.name());
