@@ -36,7 +36,7 @@ public interface TimelineDatasource {
 
 		Summary summary(Instant date, Scale scale);
 
-		Serie serie(Scale scale, Instant end);
+		Serie serie(Scale scale, Instant end, int pointsCount);
 		Serie serie(Scale scale, Instant start, Instant end);
 
 		String customHtmlView(Scale scale);
@@ -49,6 +49,13 @@ public interface TimelineDatasource {
 		Instant maxDate();
 		double min();
 		Instant minDate();
+		List<Attribute> attributes();
+
+		interface Attribute {
+			String name();
+			double value();
+			Instant date();
+		}
 	}
 
 	interface Serie {

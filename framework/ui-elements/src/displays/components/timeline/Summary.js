@@ -28,6 +28,12 @@ const TimelineSummary = ({ summary, evolution, width, unit, translate }) => {
     const min = () => {
         return formattedValue(summary.min.value, summary.min.date);
     };
+    const attributes = () => {
+        const attributes = summary.attributes;
+        const result = [];
+        for (var i=0; i<attributes.length; i++) result.push({name: attributes[i].name, value: formattedValue(attributes[i].value.value, attributes[i].value.date)});
+        return result;
+    };
     const formattedValue = (value, date) => {
         const language = window.Application.configuration.language;
         const formattedValue = isNaN(value) ? "-" : value;
@@ -56,6 +62,11 @@ const TimelineSummary = ({ summary, evolution, width, unit, translate }) => {
             </div>
         );
     };
+    const renderAttributes = (attributes) => {
+        const result = [];
+        for (var i=0; i<attributes.length; i++) result.push(renderIndicator(translate(attributes[i].name), attributes[i].value));
+        return result;
+    };
     const beforeColor = summary.canBefore ? theme.palette.primary.main : theme.palette.grey.A900;
     const nextColor = summary.canNext ? theme.palette.primary.main : theme.palette.grey.A900;
     return (
@@ -66,6 +77,7 @@ const TimelineSummary = ({ summary, evolution, width, unit, translate }) => {
                     {renderIndicator(translate("Average"), average())}
                     {renderIndicator("Max", max())}
                     {renderIndicator("Min", min())}
+                    {renderAttributes(attributes())}
                 </div>
             </div>
         </div>

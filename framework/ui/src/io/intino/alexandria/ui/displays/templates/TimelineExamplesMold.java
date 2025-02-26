@@ -100,6 +100,26 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 					public Instant minDate() {
 						return Instant.now();
 					}
+
+					@Override
+					public List<Attribute> attributes() {
+						return List.of(new Attribute() {
+							@Override
+							public String name() {
+								return "Atributo";
+							}
+
+							@Override
+							public double value() {
+								return 100;
+							}
+
+							@Override
+							public Instant date() {
+								return Instant.now();
+							}
+						});
+					}
 				};
 			}
 
@@ -134,7 +154,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			}
 
 			@Override
-			public TimelineDatasource.Serie serie(Scale scale, Instant instant) {
+			public TimelineDatasource.Serie serie(Scale scale, Instant instant, int pointsCount) {
 				LocalDateTime date = LocalDateTime.ofInstant(instant, UTC);
 				return new TimelineDatasource.Serie() {
 					@Override
@@ -179,7 +199,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 
 			@Override
 			public TimelineDatasource.Serie serie(Scale scale, Instant start, Instant end) {
-				return serie(scale, end);
+				return serie(scale, end, 24);
 			}
 
 			@Override
@@ -225,6 +245,11 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 					public Instant minDate() {
 						return Instant.now();
 					}
+
+					@Override
+					public List<Attribute> attributes() {
+						return List.of();
+					}
 				};
 			}
 
@@ -259,7 +284,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 			}
 
 			@Override
-			public TimelineDatasource.Serie serie(Scale scale, Instant date) {
+			public TimelineDatasource.Serie serie(Scale scale, Instant date, int pointsCount) {
 				return new TimelineDatasource.Serie() {
 					@Override
 					public String name() {

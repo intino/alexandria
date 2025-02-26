@@ -57,7 +57,7 @@ class SelectorListBox extends AbstractSelectorListBox {
 		const className = child.props.className;
 		const theme = Theme.get();
 		if (className != null && className.indexOf("divider") !== -1) return (<Divider/>);
-		if (className != null && className.indexOf("sub-header") !== -1) return (<ListSubheader component="div" style={{margin:'0',padding:'0',height:'30px',lineHeight:'30px'}}>{child.props.name}</ListSubheader>);
+		if (className != null && className.indexOf("sub-header") !== -1) return (<ListSubheader component="div" style={{margin:'0',padding:'0',height:'30px',lineHeight:'30px',background:theme.isDark()?'black':'white'}}>{child.props.name}</ListSubheader>);
 		const selected = this.isInSelection(child.props.name);
 		const style = selected ? { background: theme.palette.primary.main, color: theme.isDark() ? 'black' : 'white' } : {};
 		style.display = hidden ? "none" : "block";
