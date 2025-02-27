@@ -77,14 +77,14 @@ public class ZitWriter implements AutoCloseable {
 	}
 
 	private boolean areClose(Instant instant, Instant nextTs) {
-		if (nextTs == null) return false;
+		if (nextTs == null || period == null) return false;
 		Duration between = Duration.between(instant, nextTs);
 		return Math.abs(between.getSeconds()) < (period.duration() / 2);
 	}
 
 	public void put(double[] data) {
 		writeLine(toString(data));
-		this.nextTs = period.next(nextTs);
+		this.nextTs = period != null ? period.next(nextTs) : nextTs;
 	}
 
 	private void writeLine(String line) {

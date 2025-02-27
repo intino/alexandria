@@ -166,19 +166,19 @@ rule type(parameter, defaultvalue) and trigger(assign)
 rule type(parameter, file, list) and attribute(in, form) and trigger(assign)
 	action.$name+CamelCase = manager.fromPartsAsResources();
 
-rule type(parameter, file) and attribute(in, form) and trigger(assign)
-	action.$name+CamelCase = manager.from$in+firstUpperCase~AsResource("$name");
-
 rule type(parameter, required, file) and attribute(in, form) and trigger(assign)
 	action.$name+CamelCase = manager.from$in+firstUpperCase~AsResourceOrElseThrow("$name", () -> new BadRequest("Parameter missed: $name"));
 
-rule type(parameter) and attribute(in, form) and trigger(assign)
-	action.$name+CamelCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~AsString("$name"), $parameterType);
+rule type(parameter, file) and attribute(in, form) and trigger(assign)
+	action.$name+CamelCase = manager.from$in+firstUpperCase~AsResource("$name");
 
 rule type(parameter, required) and attribute(in, form) and trigger(assign)
 	action.$name+CamelCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~AsStringOrElseThrow("$name", () -> new BadRequest("Parameter missed: $name")), $parameterType);
 
-rule type(parameter, file) and  attribute(in, body) and trigger(assign)
+rule type(parameter) and attribute(in, form) and trigger(assign)
+	action.$name+CamelCase = io.intino.alexandria.rest.RequestAdapter.adapt(manager.from$in+firstUpperCase~AsString("$name"), $parameterType);
+
+rule type(parameter, file) and attribute(in, body) and trigger(assign)
 	action.$name+CamelCase = new io.intino.alexandria.Resource("$name", manager.fromBodyAsBytes());
 
 rule type(parameter) and attribute(in, body) and trigger(assign)

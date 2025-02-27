@@ -36,9 +36,9 @@ public class FileSessionSealer implements SessionSealer {
 	}
 
 	private boolean check(String tank, TankFilter tankFilter) {
-		return     tankFilter.accepts(datalake.messageStore().tank(tank))
-				|| tankFilter.accepts(datalake.measurementStore().tank(tank))
-				|| tankFilter.accepts(datalake.resourceStore().tank(tank));
+		return tankFilter.accepts(datalake.messageStore().tank(tank))
+			   || tankFilter.accepts(datalake.measurementStore().tank(tank))
+			   || tankFilter.accepts(datalake.resourceStore().tank(tank));
 	}
 
 	private static File tempFolder(File stageFolder) {
