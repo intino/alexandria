@@ -18,6 +18,7 @@ public class Timetag_ {
 		assertTrue(timetag.isBetween("202203", "202203"));
 	}
 
+
 	@Test
 	public void datetime() {
 		LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS);

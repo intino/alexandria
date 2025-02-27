@@ -150,16 +150,17 @@ public class AlexandriaHttpManager<P extends PushService<? extends Session<?>, ?
 	}
 
 	public String fromFormAsString(String name) {
-		return fromPartAsString(resourceProvider.resource(name));
+		String value = fromPartAsString(resourceProvider.resource(name));
+		return value != null ? value : fromQuery(name);
 	}
 
 	public String fromFormOrDefault(String name, String defaultValue) {
-		String content = fromPartAsString(resourceProvider.resource(name));
+		String content = fromFormAsString(name);
 		return content != null ? content : defaultValue;
 	}
 
 	public <X extends Throwable> String fromFormAsStringOrElseThrow(String name, Supplier<? extends X> exceptionSupplier) throws X {
-		String resource = fromPartAsString(resourceProvider.resource(name));
+		String resource = fromFormAsString(name);
 		if (resource == null) throw exceptionSupplier.get();
 		return resource;
 	}
