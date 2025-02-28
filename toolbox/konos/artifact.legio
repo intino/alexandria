@@ -1,8 +1,8 @@
 dsl Legio
 
-Artifact("io.intino", "13.2.2") konos
+Artifact("io.intino", "13.2.3") konos
 	Dsl("Proteo", "1.0.4")
-		Builder("io.intino.magritte", "builder", "7.0.6", "dsl")
+		Builder("io.intino.magritte", "builder", "7.0.7", "dsl")
 		OutputDsl
 			Builder("io.intino", "konos") as ArtifactVersionFollower
 			Runtime(empty, empty, empty)
@@ -21,7 +21,7 @@ Artifact("io.intino", "13.2.2") konos
 		Compile("javax.xml.bind", "jaxb-api", "2.3.1")
 		Compile("org.hashids", "hashids", "1.0.3")
 		Test("junit", "junit", "4.13.2")
-	Package(mode = ModulesAndLibrariesLinkedByManifest,attachSources = true) as Runnable(mainClass = "io.intino.konos.KonoscRunner")
+	Package(mode = ModulesAndLibrariesExtracted,attachSources = true) as Runnable(mainClass = "io.intino.konos.KonoscRunner")
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 
 RunConfiguration local
