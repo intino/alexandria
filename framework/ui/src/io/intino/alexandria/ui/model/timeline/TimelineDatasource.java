@@ -34,7 +34,7 @@ public interface TimelineDatasource {
 		Double max();
 		Double percentage();
 
-		Summary summary(Instant date, Scale scale);
+		Summary summary(Scale scale, Instant date);
 
 		Serie serie(Scale scale, Instant end, int pointsCount);
 		Serie serie(Scale scale, Instant start, Instant end);

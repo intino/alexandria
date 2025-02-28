@@ -105,5 +105,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Intino: io.intino.alexandria:proxy:2.1.5" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Intino: org.apache.httpcomponents:fluent-hc:4.5.7" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:http:2.1.7" level="project" />
+    <orderEntry type="module" module-name="ui-elements" />
   </component>
 </module>
