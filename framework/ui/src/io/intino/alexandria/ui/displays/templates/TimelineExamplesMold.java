@@ -145,7 +145,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 
 			@Override
 			public Double max() {
-				return null;
+				return 100.0;
 			}
 
 			@Override
