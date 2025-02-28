@@ -174,6 +174,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		TimelineHistoryEntry result = new TimelineHistoryEntry();
 		Double percentage = historyWithRelativeValues ? percentage(magnitude, entry.getValue()) : null;
 		result.date(entry.getKey());
+		result.formattedDate(ScaleFormatter.label(entry.getKey(), timezoneOffset(), selectedScale, language()));
 		result.value(Double.isNaN(entry.getValue()) ? null : String.valueOf(historyWithRelativeValues ? percentage(magnitude, entry.getValue()) : entry.getValue()));
 		result.formattedValue(adapt(formatter.format(percentage != null ? percentage : entry.getValue())));
 		result.annotation(annotations.containsKey(entry.getKey()) ? annotationOf(date(normalize(entry.getKey()), selectedScale()), annotations.get(entry.getKey())) : null);

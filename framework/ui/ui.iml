@@ -105,5 +105,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Intino: dnie:MITyCLibTSA:1.1.7" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Intino: dnie:MITyCLibXADES:1.1.7" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Intino: dnie:xmlsec:1.4.2-ADSI" level="project" />
+    <orderEntry type="module" module-name="ui-elements" />
   </component>
 </module>

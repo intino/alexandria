@@ -335,6 +335,7 @@ Schema TimelineHistory
 
 Schema TimelineHistoryEntry
 	Attribute date as DateTime
+	Attribute formattedDate as Text
 	Attribute value as Text
 	Attribute formattedValue as Text
 	Attribute annotation as Object(TimelineAnnotation)
