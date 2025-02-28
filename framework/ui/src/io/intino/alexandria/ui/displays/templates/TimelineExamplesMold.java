@@ -38,7 +38,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 
 			@Override
 			public List<MagnitudeDefinition> magnitudes() {
-				return List.of(measurementOf("m1", "%", "Medida 1"), measurementOf("m2", "€", "Medida 2"));
+				return List.of(measurementOf("m1", "", "Medida 1"), measurementOf("m2", "€", "Medida 2"));
 			}
 
 			@Override
@@ -145,7 +145,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 
 			@Override
 			public Double max() {
-				return 100.0;
+				return 1232.0;
 			}
 
 			@Override

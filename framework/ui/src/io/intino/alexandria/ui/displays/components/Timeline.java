@@ -155,7 +155,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		Scale scale = selectedScale();
 		TimelineDatasource.Magnitude magnitude = source.magnitude(magnitudeName);
 		boolean hasRelativeValues = magnitude.definition().unit() != null && !magnitude.definition().unit().equals("%") && magnitude.max() != null;
-		this.historyWithRelativeValues = true;
+		this.historyWithRelativeValues = magnitude.definition().unit() != null && magnitude.definition().unit().equals("%");
 		notifier.showHistoryDialog(new TimelineHistory().from(source.from(scale)).to(source.to(scale)).hasRelativeValues(hasRelativeValues));
 	}
 
