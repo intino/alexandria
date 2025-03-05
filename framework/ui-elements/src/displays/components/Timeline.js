@@ -229,7 +229,7 @@ class Timeline extends AbstractTimeline {
                         }
                     }
                     const annotationText = annotation != null ? "<div style='color:" + annotation.color + "'>" + annotation.text + "</div><br/>" : "";
-                    return annotationText + '<b>' + data[index][2] + (unit != null ? " " + unit : "") + '</b><br/>' + formatDate(this.x);
+                    return annotationText + '<b>' + data[index][2] + (unit != null ? " " + unit : "") + '</b><br/>' + data[index][4];
                 },
                 shared: true
             },
@@ -307,7 +307,7 @@ class Timeline extends AbstractTimeline {
     };
 
     openHistory = (magnitude) => {
-        this.setState({magnitude: magnitude, history: { visible: true, from: null, to: null, data: [], relativeValues: { active: true } } });
+        this.setState({magnitude: magnitude, history: { visible: true, from: null, to: null, data: [], relativeValues: { active: magnitude.unit == "%" } } });
         this.requester.openHistory(magnitude.name);
     };
 
@@ -340,7 +340,7 @@ class Timeline extends AbstractTimeline {
 	    for (let i=0; i<dataObjects.length; i++) {
 	        const entry = dataObjects[i];
 	        if (history.from > entry.date) history.from = entry.date;
-	        history.data.push([entry.date, entry.value != null ? parseFloat(entry.value) : null, entry.formattedValue, entry.annotation]);
+	        history.data.push([entry.date, entry.value != null ? parseFloat(entry.value) : null, entry.formattedValue, entry.annotation, entry.formattedDate]);
         }
 	};
 

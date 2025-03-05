@@ -38,7 +38,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 
 			@Override
 			public List<MagnitudeDefinition> magnitudes() {
-				return List.of(measurementOf("m1", "%", "Medida 1"), measurementOf("m2", "€", "Medida 2"));
+				return List.of(measurementOf("m1", "", "Medida 1"), measurementOf("m2", "€", "Medida 2"));
 			}
 
 			@Override
@@ -69,7 +69,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 		return new TimelineDatasource.Magnitude() {
 
 			@Override
-			public TimelineDatasource.Summary summary(Instant date, Scale scale) {
+			public TimelineDatasource.Summary summary(Scale scale, Instant date) {
 				return new TimelineDatasource.Summary() {
 					@Override
 					public double average() {
@@ -145,7 +145,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 
 			@Override
 			public Double max() {
-				return null;
+				return 1232.0;
 			}
 
 			@Override
@@ -214,7 +214,7 @@ public class TimelineExamplesMold extends AbstractTimelineExamplesMold<UiFramewo
 		return new TimelineDatasource.Magnitude() {
 
 			@Override
-			public TimelineDatasource.Summary summary(Instant date, Scale scale) {
+			public TimelineDatasource.Summary summary(Scale scale, Instant date) {
 				return new TimelineDatasource.Summary() {
 					@Override
 					public double average() {

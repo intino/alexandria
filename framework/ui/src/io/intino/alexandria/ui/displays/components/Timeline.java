@@ -155,11 +155,12 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		Scale scale = selectedScale();
 		TimelineDatasource.Magnitude magnitude = source.magnitude(magnitudeName);
 		boolean hasRelativeValues = magnitude.definition().unit() != null && !magnitude.definition().unit().equals("%") && magnitude.max() != null;
-		this.historyWithRelativeValues = true;
+		this.historyWithRelativeValues = magnitude.definition().unit() != null && magnitude.definition().unit().equals("%");
 		notifier.showHistoryDialog(new TimelineHistory().from(source.from(scale)).to(source.to(scale)).hasRelativeValues(hasRelativeValues));
 	}
 
 	public void fetch(TimelineHistoryFetch fetch) {
+		if (fetch.start() == null || fetch.end() == null) return;
 		TimelineDatasource.Magnitude magnitude = source.magnitude(fetch.magnitude());
 		Scale scale = selectedScale();
 		TimelineDatasource.Serie serie = magnitude.serie(scale, fetch.start(), fetch.end());
@@ -173,6 +174,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		TimelineHistoryEntry result = new TimelineHistoryEntry();
 		Double percentage = historyWithRelativeValues ? percentage(magnitude, entry.getValue()) : null;
 		result.date(entry.getKey());
+		result.formattedDate(ScaleFormatter.label(entry.getKey(), timezoneOffset(), selectedScale, language()));
 		result.value(Double.isNaN(entry.getValue()) ? null : String.valueOf(historyWithRelativeValues ? percentage(magnitude, entry.getValue()) : entry.getValue()));
 		result.formattedValue(adapt(formatter.format(percentage != null ? percentage : entry.getValue())));
 		result.annotation(annotations.containsKey(entry.getKey()) ? annotationOf(date(normalize(entry.getKey()), selectedScale()), annotations.get(entry.getKey())) : null);
@@ -189,7 +191,7 @@ public class Timeline<DN extends TimelineNotifier, B extends Box> extends Abstra
 		Scale scale = selectedScale();
 		Formatter formatter = magnitude.definition().formatter();
 		Instant date = selectedInstant(scale);
-		TimelineDatasource.Summary summary = magnitude.summary(date, scale);
+		TimelineDatasource.Summary summary = magnitude.summary(scale, date);
 		return new TimelineSummary().average(summaryValueOf(summary.average(), date, formatter))
 									.max(summaryValueOf(summary.max(), summary.maxDate(), formatter))
 									.min(summaryValueOf(summary.min(), summary.minDate(), formatter))
