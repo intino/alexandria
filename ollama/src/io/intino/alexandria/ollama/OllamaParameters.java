@@ -164,7 +164,7 @@ public interface OllamaParameters<Self extends OllamaParameters<Self>> {
 		return parameter("top_p", topP);
 	}
 
-	default Integer minP() {
+	default Double minP() {
 		return parameter("min_p");
 	}
 	/**
@@ -173,7 +173,7 @@ public interface OllamaParameters<Self extends OllamaParameters<Self>> {
 	 * relative to the probability of the most likely token. For example, with p=0.05 and the most likely token having
 	 * a probability of 0.9, logits with a value less than 0.045 are filtered out. (Default: 0.0)
 	 */
-	default Self minP(Integer minP) {
+	default Self minP(Double minP) {
 		return parameter("min_p", minP);
 	}
 
