@@ -152,13 +152,10 @@ public class JavalinHttpRouter<SM extends AlexandriaHttpManager<?>> implements A
 		try {
 			caller.call((SM) manager);
 		} catch (AlexandriaException e) {
-			manager.response().status(Integer.parseInt(e.code()));
-			manager.body(e.toString());
-			throw new RuntimeException("Error " + Integer.parseInt(e.code()) + " processing request: " + e);
+			manager.response().error(500, e.toString());
 		} catch (Throwable e) {
 			Logger.error(e);
-			manager.response().status(500);
-			throw new RuntimeException("Error 500 processing request");
+			manager.response().error(500, e.toString());
 		}
 	}
 
