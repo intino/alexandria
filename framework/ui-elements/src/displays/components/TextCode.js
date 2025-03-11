@@ -5,6 +5,7 @@ import TextCodeNotifier from "../../../gen/displays/notifiers/TextCodeNotifier";
 import TextCodeRequester from "../../../gen/displays/requesters/TextCodeRequester";
 import CodeBehavior from "./behaviors/CodeBehavior";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
+import { marked } from "marked";
 
 const styles = theme => ({
 	value : {
@@ -37,10 +38,15 @@ class TextCode extends AbstractTextCode {
 		return (
 			<React.Fragment>
 				<code style={this.style()} className={classes.value}
-					  dangerouslySetInnerHTML={{__html: value}}></code>
+					  dangerouslySetInnerHTML={{__html: this.format(value)}}></code>
 			</React.Fragment>
 		);
 	};
+
+	format = (value) => {
+	    if (this.props.language !== "Markdown") return value;
+	    return marked.parse(value);
+	}
 
 	refresh = (value) => {
 		this.setState({"value": value});
