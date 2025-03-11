@@ -60,7 +60,7 @@ Template(layout=Vertical, spacing=DP8) textExamplesMold
 		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Code facet")
 			Block(spacing=DP8, format=filled)
-				Text(format=body1 widgetDemo) textCode1 as Code(language=Html)
+				Text(format=body1 widgetDemo) textCode1 as Code(language=Markdown)
 					value
 						=========
 						Text(value\="lorem") text1
