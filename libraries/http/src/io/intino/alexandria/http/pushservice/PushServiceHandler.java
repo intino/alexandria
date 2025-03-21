@@ -1,6 +1,5 @@
 package io.intino.alexandria.http.pushservice;
 
-import io.intino.alexandria.http.PushListener;
 import io.intino.alexandria.http.server.AlexandriaHttpClient;
 import io.intino.alexandria.logger.Logger;
 import io.javalin.websocket.WsConfig;
@@ -13,7 +12,7 @@ import java.time.Duration;
 import java.util.*;
 
 @WebSocket(maxTextMessageSize = 5 * 1024 * 1024)
-public class PushServiceHandler implements PushListener {
+public class PushServiceHandler {
 	private final PushService pushService;
 	private final Map<String, List<AlexandriaHttpClient>> clientsMap = new HashMap<>();
 	private final Map<String, Timer> closeTimersMap = new HashMap<>();
