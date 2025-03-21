@@ -101,10 +101,10 @@
     <orderEntry type="library" scope="PROVIDED" name="Intino: dnie:MITyCLibXADES:1.1.7" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Intino: dnie:xmlsec:1.4.2-ADSI" level="project" />
     <orderEntry type="module" module-name="ui-elements" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:http:2.1.9" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:exceptions:2.1.2" level="project" />
     <orderEntry type="library" name="Intino: commons-codec:commons-codec:1.18.0" level="project" />
     <orderEntry type="library" name="Intino: org.apache.httpcomponents:httpmime:4.5.14" level="project" />
     <orderEntry type="library" name="Intino: log4j:log4j:1.2.14" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:http:2.1.10" level="project" />
   </component>
 </module>
