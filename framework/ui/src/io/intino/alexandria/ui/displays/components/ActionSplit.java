@@ -23,6 +23,12 @@ public class ActionSplit<DN extends ActionSplitNotifier, B extends Box> extends 
 		return this.option;
 	}
 
+	public ActionSplit<DN, B> option(String option) {
+		_option(option);
+		notifier.refreshOption(option);
+		return this;
+	}
+
 	public ActionSplit<DN, B> execute(String option) {
 		_option(option);
 		notifyExecute();

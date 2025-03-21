@@ -246,6 +246,7 @@ public class MimeTypes {
 		mimeTypes.put("jpe", "image/jpeg");
 		mimeTypes.put("jpg", "image/jpeg");
 		mimeTypes.put("js", "application/x-javascript");
+		mimeTypes.put("map", "application/json");
 		mimeTypes.put("kar", "audio/midi");
 		mimeTypes.put("key", "application/pgp-keys");
 		mimeTypes.put("kil", "application/x-killustrator");

@@ -102,7 +102,7 @@ rule type(resource) and trigger(patternRegister)
 	patterns.put("$name", "$pattern");
 
 rule type(resource, main) and trigger(pattern)
-	if (addressPart.matches(patterns.get("$name"))) return patterns.get("$name");
+	if (addressPart.equals("/") || addressPart.matches(patterns.get("$name"))) return patterns.get("$name");
 
 rule type(resource) and trigger(pattern)
 	else if (addressPart.matches(patterns.get("$name"))) return patterns.get("$name");
