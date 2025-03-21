@@ -35,10 +35,10 @@ class ActionSplit extends AbstractActionSplit {
 		else if (mode === "iconsplitbutton") trigger = this.renderIconButton(this.anchorRef);
 		else if (mode === "materialiconsplitbutton") trigger = this.renderMaterialIconButton(this.anchorRef);
 		return (
-		    <React.Fragment>
+		    <div>
 		        {trigger}
                 {this.renderDialog()}
-            </React.Fragment>
+            </div>
 		);
 	};
 
@@ -46,7 +46,7 @@ class ActionSplit extends AbstractActionSplit {
 	    return (
             <ButtonGroup variant={this._highlightVariant()} style={this.style()} size={this._size()}
                          color="primary" ref={this.anchorRef} aria-label={this.props.label}>
-              <Button onClick={this.handleClick.bind(this)}><div style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{this.state.options[this.state.selectedIndex]}</div></Button>
+              <Button onClick={this.handleClick.bind(this)} style={{width:'100%'}}><div style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{this.state.options[this.state.selectedIndex]}</div></Button>
               <Button color="primary" size="small" aria-controls={this.state.open ? 'split-button-menu' : undefined}
                       aria-expanded={this.state.open ? 'true' : undefined} aria-label="select merge strategy" aria-haspopup="menu"
                       onClick={this.handleToggle.bind(this)}>
@@ -62,7 +62,7 @@ class ActionSplit extends AbstractActionSplit {
 
 	renderDialog = () => {
 	    return (
-            <Popper open={this.state.open} anchorEl={this.anchorRef.current} role={undefined} transition disablePortal style={{zIndex:1,marginRight:'20px'}}>
+            <Popper open={this.state.open} anchorEl={this.anchorRef.current} role={undefined} transition disablePortal style={{zIndex:1,marginRight:'20px',...this.style()}}>
               {({ TransitionProps, placement }) => (
                 <Grow {...TransitionProps} style={{transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'}}>
                   <Paper>

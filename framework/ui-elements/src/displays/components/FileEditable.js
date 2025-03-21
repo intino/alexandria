@@ -166,7 +166,7 @@ class FileEditable extends AbstractFile {
 
 	_renderInputField = () => {
 	    return (<input ref={this.inputRef} type="file" disabled={this.state.readonly ? true : undefined}
-	                   onChange={this.handleChange.bind(this)} value="" ></input>);
+	                   onChange={this.handleChange.bind(this)} value="" accept={this._allowedTypes().toString()}></input>);
     };
 
 	_allowedTypes = () => {
@@ -183,6 +183,11 @@ class FileEditable extends AbstractFile {
 	    if (this._containsType("Xml")) result.push(".xml");
 	    if (this._containsType("Html")) result.push("text/html");
 	    if (this._containsType("Pdf")) result.push("application/pdf");
+	    if (this._containsType("Jar")) result.push("application/java-archive");
+	    if (this._containsType("Zip")) {
+	        result.push("application/zip");
+	        result.push("application/octet-stream");
+	    }
 	    if (this._containsType("Excel")) {
 	        result.push("application/vnd.ms-excel");
 	        result.push("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
