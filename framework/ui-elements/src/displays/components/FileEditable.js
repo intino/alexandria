@@ -165,8 +165,9 @@ class FileEditable extends AbstractFile {
 	};
 
 	_renderInputField = () => {
+	    const allowedTypes = this._allowedTypes();
 	    return (<input ref={this.inputRef} type="file" disabled={this.state.readonly ? true : undefined}
-	                   onChange={this.handleChange.bind(this)} value="" accept={this._allowedTypes().toString()}></input>);
+	                   onChange={this.handleChange.bind(this)} value="" accept={allowedTypes != null ? allowedTypes.toString() : undefined}></input>);
     };
 
 	_allowedTypes = () => {
