@@ -20,7 +20,8 @@ class BlockResizable extends AbstractBlockResizable {
 		this.notifier = new BlockResizableNotifier(this);
 		this.requester = new BlockResizableRequester(this);
 		this.state = {
-		    ...this.state
+		    ...this.state,
+		    childrenVisibility: {},
 		}
 	};
 
@@ -47,12 +48,25 @@ class BlockResizable extends AbstractBlockResizable {
 	};
 
 	renderChild = (child, index) => {
+	    if (!this._isVisible(child)) return (<React.Fragment/>);
 	    return (
             <React.Fragment>
+                {index > 0 && <PanelResizeHandle className="ResizeHandle" style={{background:this._color()}}/>}
                 <Panel defaultSize={this._size(child)} minSize={20}>{this.renderChildElement(child)}</Panel>
-                {index < this.props.children.length-1 && <PanelResizeHandle className="ResizeHandle" style={{background:this._color()}}/>}
             </React.Fragment>
         );
+	};
+
+	_isVisible = (child) => {
+	    const id = this._id(child);
+	    if (this.state.childrenVisibility[id] != null) return this.state.childrenVisibility[id];
+	    return child.props.visible !== false;
+	};
+
+	_id = (child) => {
+	    if (child.props.id.indexOf(".") == -1) return child.props.id;
+	    const parts = child.props.id.split(".");
+	    return parts[parts.length-1];
 	};
 
 	renderChildElement = (child) => {
@@ -60,9 +74,15 @@ class BlockResizable extends AbstractBlockResizable {
 	    const result = parseInt(child.props.width.replace("%", "").replace("px", ""));
         let props = {};
         if (this._isHorizontalDirection()) props.width = "auto";
-        else props.height = "auto";
+        else props.height = "100%";
         return React.cloneElement(child, { ...child.props, ...props } );
 	};
+
+	refreshChildVisibility = (info) => {
+	    const childrenVisibility = this.state.childrenVisibility;
+	    childrenVisibility[info.child] = info.visible;
+	    this.setState({childrenVisibility});
+	}
 
 	_size = (child) => {
 	    const size = this._isHorizontalDirection() ? child.props.width : child.props.height;

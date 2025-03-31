@@ -534,3 +534,7 @@ Schema Attachment
 	Attribute url as Text
 	Attribute filename as Text
 	Attribute mimeType as Text
+
+Schema BlockResizableVisibility
+	Attribute child as Text
+	Attribute visible as Bool

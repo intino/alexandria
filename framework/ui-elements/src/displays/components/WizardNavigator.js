@@ -33,9 +33,9 @@ class WizardNavigator extends AbstractWizardNavigator {
 	    const active = this.state.active;
 	    const count = this.state.stepsCount;
 		return (
-		    <div class="layout horizontal center flex">
+		    <div className="layout horizontal center flex">
                 <MuiButton onClick={() => this.requester.back()} disabled={!this.state.allowBack}>{this.translate("Back")}</MuiButton>
-			    <div class="layout horizontal center-center flex">{this._renderSteps()}</div>
+			    <div className="layout horizontal center-center flex">{this._renderSteps()}</div>
 			    <MuiButton onClick={() => this.requester.next()} style={{display:active != count-1 ? "block" : "none"}} disabled={!this.state.allowNext}>{this.translate("Next")}</MuiButton>
 			    <MuiButton onClick={() => this.handleFinish()} style={{display:this.state.allowFinish ? "block" : "none"}}>{this.translate("Finish")}</MuiButton>
 		    </div>

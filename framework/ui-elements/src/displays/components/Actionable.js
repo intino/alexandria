@@ -326,17 +326,24 @@ export default class Actionable extends AbstractActionable {
 	registerShortcut = () => {
 	    const shortcut = this.props.shortcut;
 	    if (shortcut == null) return;
-	    document.addEventListener("keyup", () => {
-            var e = e || window.event; // for IE to cover IEs window event-object
-            if ((!shortcut.ctrlKey || (e.ctrlKey && shortcut.ctrlKey)) &&
-                (!shortcut.shiftKey || (e.shiftKey && shortcut.shiftKey)) &&
-                (!shortcut.altKey || (e.altKey && shortcut.altKey)) &&
-                (e.which == shortcut.key.charCodeAt(0))) {
+        const widget = this;
+        widget.pressed = [];
+        document.addEventListener("keydown", (event) => {
+            widget.pressed[event.key.toLowerCase()] = true;
+
+            if ((!shortcut.ctrlKey || ((widget.pressed["control"] || widget.pressed["meta"]) && shortcut.ctrlKey)) &&
+                (!shortcut.shiftKey || (widget.pressed["shift"] === true && shortcut.shiftKey)) &&
+                (!shortcut.altKey || (widget.pressed["alt"] && shortcut.altKey)) &&
+                (event.key.toLowerCase() === shortcut.key.toLowerCase())) {
+                delete widget.pressed[event.key.toLowerCase()];
                 this.execute();
                 return false;
             }
         });
-	}
+        document.addEventListener("keyup", (event) => {
+            delete widget.pressed[event.key.toLowerCase()];
+        });
+	};
 
 	_fieldKeycode = (pos) => {
 	    return this.props.id + "_keycodefield_" + pos + "_" + (this.state.openSignConfig ? 1 : 0);

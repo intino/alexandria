@@ -40,8 +40,8 @@ class Image extends AbstractImage {
 		const source = this.state.value + (this.state.value.indexOf("?") != -1 ? "&" : "?") + "r=" + Math.random();
 		return (
 			<React.Fragment>
-			    {this.props.allowFullscreen && <ImageGallery class={this.cssRuleSelectors()} items={[this._galleryItems()]} showThumbnails={false} showBullets={false} showPlayButton={false} /> }
-                {!this.props.allowFullscreen && <img class={this.cssRuleSelectors()} style={this.style()} title={this.props.label} src={source}/> }
+			    {this.props.allowFullscreen && <ImageGallery className={this.cssRuleSelectors()} items={[this._galleryItems()]} showThumbnails={false} showBullets={false} showPlayButton={false} /> }
+                {!this.props.allowFullscreen && <img className={this.cssRuleSelectors()} style={this.style()} title={this.props.label} src={source}/> }
 			</React.Fragment>
 		);
 	};
