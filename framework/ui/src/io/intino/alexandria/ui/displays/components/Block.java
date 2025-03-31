@@ -20,4 +20,10 @@ public class Block<DN extends BlockNotifier, B extends Box> extends AbstractBloc
     public void layout(String layout) {
         notifier.refreshLayout(layout);
     }
+
+    @Override
+    protected void updateVisibility(boolean value) {
+        if (parent() != null && parent() instanceof BlockResizable) ((BlockResizable<?, ?>)parent()).refreshVisibility(id(), value);
+        super.updateVisibility(value);
+    }
 }

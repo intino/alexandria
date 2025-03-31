@@ -19,6 +19,7 @@ Component blockSplitter
 	Request back
 
 Component blockResizable
+	Notification refreshChildVisibility as Object(BlockResizableVisibility)
 
 Component blockParallax
 	Notification refresh as Text
