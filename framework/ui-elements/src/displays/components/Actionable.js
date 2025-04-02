@@ -336,7 +336,7 @@ export default class Actionable extends AbstractActionable {
                 (!shortcut.altKey || (widget.pressed["alt"] && shortcut.altKey)) &&
                 (event.key.toLowerCase() === shortcut.key.toLowerCase())) {
                 delete widget.pressed[event.key.toLowerCase()];
-                this.execute();
+                widget.execute();
                 return false;
             }
         });

@@ -193,6 +193,9 @@ class FileEditable extends AbstractFile {
 	        result.push("application/vnd.ms-excel");
 	        result.push("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 	    }
+	    for (var i=0; i<this.state.allowedTypes.length; i++) {
+	        if (this.state.allowedTypes[i].substr(0, 1) === ".") result.push(this.state.allowedTypes[i]);
+	    }
 	    return result;
 	};
 
