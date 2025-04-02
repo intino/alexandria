@@ -14,12 +14,13 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class FileEditable<DN extends FileEditableNotifier, B extends Box> extends AbstractFileEditable<DN, B> implements Editable<DN, B> {
 	private boolean readonly;
-	private java.util.List allowedTypes;
+	private java.util.List<String> allowedTypes;
 	protected Listener uploadingListener = null;
 	protected ChangeListener changeListener = null;
 	private ReadonlyListener readonlyListener = null;
@@ -64,9 +65,15 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 		return this;
 	}
 
-	public enum Type { Image, Audio, Video, Application, Text, Xml, Html, Pdf, Excel }
+	public enum Type { Image, Audio, Video, Application, Text, Xml, Html, Pdf, Excel, Zip, Jar }
 	public FileEditable<DN, B> allowedTypes(java.util.List<Type> types) {
 		_allowedTypes(types);
+		notifyAllowedTypes(types.stream().map(Enum::name).collect(Collectors.toList()));
+		return this;
+	}
+
+	public FileEditable<DN, B> allowedTypesByName(java.util.List<String> types) {
+		_allowedTypesByName(types);
 		notifyAllowedTypes(types);
 		return this;
 	}
@@ -129,6 +136,11 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 	}
 
 	protected FileEditable<DN, B> _allowedTypes(java.util.List<Type> allowedTypes) {
+		_allowedTypesByName(allowedTypes.stream().map(Enum::name).collect(Collectors.toList()));
+		return this;
+	}
+
+	protected FileEditable<DN, B> _allowedTypesByName(java.util.List<String> allowedTypes) {
 		this.allowedTypes = allowedTypes;
 		return this;
 	}
@@ -148,8 +160,8 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 		notifier.refreshReadonly(value);
 	}
 
-	private void notifyAllowedTypes(java.util.List<Type> types) {
-		notifier.refreshAllowedTypes(types.stream().map(Enum::name).collect(Collectors.toList()));
+	private void notifyAllowedTypes(java.util.List<String> types) {
+		notifier.refreshAllowedTypes(new ArrayList<>(types));
 	}
 
 }
