@@ -29,7 +29,7 @@ class KonosCompilerRunner {
 		this.verbose = verbose;
 	}
 
-	void run(File argsFile) {
+	void run(File argsFile) throws Exception {
 		final CompilerConfiguration config = new CompilerConfiguration();
 		final Map<File, Boolean> sources = new LinkedHashMap<>();
 		CompilationInfoExtractor.getInfoFromArgsFile(argsFile, config, sources);
@@ -48,6 +48,7 @@ class KonosCompilerRunner {
 			processActions(postCompileActionMessages);
 		out.println();
 		out.print(BUILD_END);
+		if (messages.stream().anyMatch(CompilerMessage::exception)) throw new Exception("Finished with exception");
 	}
 
 	private List<OutputItem> compile(CompilerConfiguration config, Map<File, Boolean> sources, List<CompilerMessage> messages, List<PostCompileActionMessage> postCompileActionMessages) {
