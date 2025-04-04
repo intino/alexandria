@@ -51,7 +51,7 @@ public class DisplayListRenderer extends UIRenderer {
 			FrameBuilder.clearCache();
 			return true;
 		} catch (Throwable e) {
-			throw new KonosException(e.getMessage());
+			throw new KonosException(e.getClass().getSimpleName() + ":" + e.getMessage(), e);
 		}
 	}
 }

@@ -141,7 +141,7 @@ public class KonosCompiler {
 	}
 
 	private void addErrorMessage(KonosException exception) {
-		collector.add(new CompilerMessage(CompilerMessage.ERROR, exception.getMessage(), "null", -1, -1));
+		collector.add(new CompilerMessage(CompilerMessage.ERROR, exception.getMessage()));
 	}
 
 	private void addRebuildNeededMessage(KonosException exception) {
