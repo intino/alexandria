@@ -477,14 +477,14 @@ rule type(file) and trigger(parameter)
 rule type(int) and trigger(parameter)
 	$value
 
+rule trigger(authentication)
+	url("$value")
+
 rule trigger(parameter)
 	"$value"
 
 rule type(parameter)
 	"$value"
-
-rule trigger(authentication)
-	url("$value")
 
 rule trigger(edition)
 	url("$value")
