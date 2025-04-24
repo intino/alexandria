@@ -76,9 +76,9 @@ public class AbstractBoxTemplate extends Template {
 		rules.add(rule().condition(all(allTypes("custom"), trigger("parameter"))).output(literal("configuration().get(\"")).output(placeholder("value", "customParameter")).output(literal("\")")));
 		rules.add(rule().condition(all(allTypes("file"), trigger("parameter"))).output(placeholder("value")));
 		rules.add(rule().condition(all(allTypes("int"), trigger("parameter"))).output(placeholder("value")));
+		rules.add(rule().condition(trigger("authentication")).output(literal("url(\"")).output(placeholder("value")).output(literal("\")")));
 		rules.add(rule().condition(trigger("parameter")).output(literal("\"")).output(placeholder("value")).output(literal("\"")));
 		rules.add(rule().condition(allTypes("parameter")).output(literal("\"")).output(placeholder("value")).output(literal("\"")));
-		rules.add(rule().condition(trigger("authentication")).output(literal("url(\"")).output(placeholder("value")).output(literal("\")")));
 		rules.add(rule().condition(trigger("edition")).output(literal("url(\"")).output(placeholder("value")).output(literal("\")")));
 		rules.add(rule().condition(trigger("parentinit")));
 		rules.add(rule().condition(trigger("hide")));
