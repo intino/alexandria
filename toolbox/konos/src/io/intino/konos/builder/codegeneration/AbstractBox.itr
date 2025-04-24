@@ -28,7 +28,6 @@ rule type(box)
 		<<protected Map<String, Soul> uiSouls = new java.util.HashMap<>()$hasUi+hideUi>>
 		<<private java.util.List<io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>()$hasUi+hideUi>>
 		<<private io.intino.alexandria.ui.services.AuthService authService$hasUi+hideUi>>
-		<<private PushService pushService$hasUi+hideUi>>
 
 		public AbstractBox(String[] args) {
 			this(new $name+PascalCase~Configuration(args));
@@ -102,8 +101,6 @@ rule type(box)
 			initWorkflow();
 			initCli();
 		}
-
-		<<$hasUi+pushService>>
 
 		<<$hasUi+registerSoul>>
 
@@ -210,7 +207,7 @@ rule type(service, ui) and trigger(setupMethod)
 		<<io.intino.alexandria.http.AlexandriaHttpServerBuilder.setup(Integer.parseInt($port), "www/", Long.parseLong($maxResourceSize))>>;
 		io.intino.alexandria.http.AlexandriaHttpServerBuilder.setUI(true);
 		io.intino.alexandria.http.AlexandriaHttpServerBuilder.addParameters(this.authService);
-		this.pushService = new io.intino.alexandria.ui.services.push.PushService();
+		this.pushService = owner != null && owner instanceof io.intino.alexandria.ui.AlexandriaUiBox ? ((io.intino.alexandria.ui.AlexandriaUiBox)owner).pushService() : new io.intino.alexandria.ui.services.push.PushService();
 		io.intino.alexandria.ui.AlexandriaUiServer server = (io.intino.alexandria.ui.AlexandriaUiServer) io.intino.alexandria.http.AlexandriaHttpServerBuilder.instance();
 		beforeSetup$name+firstUpperCase~Ui(server);
 		$package+validPackage.ui.$name+PascalCase~Service.init(server, ($configuration+PascalCase~Box) this, pushService, new $package+validPackage.ui.displays.RouteDispatcher());
@@ -411,11 +408,6 @@ rule trigger(translatorServiceInitialization)
 
 rule trigger(useDictionaries)
 	translatorService.addAll($this);
-
-rule trigger(pushService)
-	public PushService pushService() {
-		return pushService;
-	}
 
 rule trigger(registerSoul)
 	public java.util.List<Soul> souls() {

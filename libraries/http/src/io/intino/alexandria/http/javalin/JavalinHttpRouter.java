@@ -171,13 +171,13 @@ public class JavalinHttpRouter<SM extends AlexandriaHttpManager<?>> implements A
 		return new AlexandriaHttpResourceProvider() {
 			@Override
 			public List<Resource> resources() {
-				return context.uploadedFiles().stream().map(f -> new Resource(f.filename(), f.content())).collect(Collectors.toList());
+				return context.uploadedFiles().stream().map(f -> new Resource(f.filename(), f.content()).metadata().contentType(f.contentType())).collect(Collectors.toList());
 			}
 
 			@Override
 			public Resource resource(String name) {
 				UploadedFile file = context.uploadedFile(name);
-				return file != null ? new Resource(file.filename(), file.content()) : null;
+				return file != null ? new Resource(file.filename(), file.content()).metadata().contentType(file.contentType()) : null;
 			}
 		};
 	}

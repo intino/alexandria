@@ -3,10 +3,12 @@ package io.intino.alexandria.ui;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.DisplayRouteManager;
 import io.intino.alexandria.ui.services.TranslatorService;
+import io.intino.alexandria.ui.services.push.PushService;
 
 public abstract class AlexandriaUiBox extends Box {
 	private DisplayRouteManager router;
 	protected TranslatorService translatorService;
+	protected PushService pushService;
 
 	public DisplayRouteManager routeManager() {
 		return this.router;
@@ -21,6 +23,15 @@ public abstract class AlexandriaUiBox extends Box {
 
 	public TranslatorService translatorService() {
 		return translatorService;
+	}
+
+	public PushService pushService() {
+		return pushService;
+	}
+
+	protected AlexandriaUiBox pushService(PushService pushService) {
+		this.pushService = pushService;
+		return this;
 	}
 
 	public interface SoulsClosed {

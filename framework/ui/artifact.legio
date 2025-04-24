@@ -1,12 +1,12 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "6.3.10") ui-framework
-	Dsl("Konos", "13.2.5") > Builder > generationPackage = "alexandria"
+Artifact("io.intino.alexandria", "6.4.0") ui-framework
+	Dsl("Konos", "13.3.0") > Builder > generationPackage = "alexandria"
 	Code("io.intino")
 
 	Imports
 		Compile("io.intino.alexandria", "core-framework", "2.2.2")
-		Compile("io.intino.alexandria", "http", "2.1.10")
+		Compile("io.intino.alexandria", "http", "2.1.11")
 		Compile("io.intino.alexandria", "json", "1.2.3")
 		Compile("io.intino.alexandria", "rest-accessor", "3.1.8")
 		Compile("io.intino.alexandria", "logger4j", "1.0.1")
