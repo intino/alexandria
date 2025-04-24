@@ -6,9 +6,9 @@ import io.intino.alexandria.datalake.Datalake;
 import io.intino.alexandria.event.EventStream;
 import io.intino.alexandria.event.resource.ResourceEvent;
 import io.intino.alexandria.terminal.remotedatalake.DatalakeAccessor;
+import jakarta.jms.BytesMessage;
+import jakarta.jms.Message;
 
-import javax.jms.BytesMessage;
-import javax.jms.Message;
 import java.util.List;
 
 import static io.intino.alexandria.terminal.remotedatalake.DatalakeAccessor.reflowSchema;

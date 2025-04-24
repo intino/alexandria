@@ -11,6 +11,6 @@ authors:
     given-names: José Juan
     orcid: https://orcid.org/0000-0001-8818-2993
 
-title: intino/alexandria: konos-model-10.1.2
+title: "Alexandria. A framework to create application services based in DSL Konos"
 version: builder/10.1.2
 date-released: 2023-03-27
