@@ -9,6 +9,7 @@ const NumberUtil = (function () {
             let language = window.Application.configuration.language;
             if (language === "mx") language = "en"; // Mexican not defined, used compatible language
             if (language === "pt") language = "pt-pt";
+            if (Numeral.locales[language] == null) language = "es";
             Numeral.locale(language);
             return Numeral(number).format(format);
         }
