@@ -7,12 +7,12 @@ import io.intino.alexandria.event.message.MessageEvent;
 import io.intino.alexandria.event.resource.ResourceEvent;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.MessageReader;
+import jakarta.jms.BytesMessage;
+import jakarta.jms.JMSException;
+import jakarta.jms.TextMessage;
 import org.apache.activemq.command.ActiveMQBytesMessage;
 import org.apache.activemq.command.ActiveMQTextMessage;
 
-import javax.jms.BytesMessage;
-import javax.jms.JMSException;
-import javax.jms.TextMessage;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
@@ -25,12 +25,12 @@ import static io.intino.alexandria.event.Event.Format.Resource;
 import static io.intino.alexandria.jms.MessageReader.textFrom;
 
 class MessageTranslator {
-	public static javax.jms.Message serialize(Event event) throws IOException, JMSException {
+	public static jakarta.jms.Message serialize(Event event) throws IOException, JMSException {
 		if (event instanceof ResourceEvent) return serializeAsResource((ResourceEvent) event);
 		return serialize(event.ts().toString(), event.type(), event.ss(), event.toString());
 	}
 
-	private static javax.jms.Message serialize(String ts, String type, String ss, String payload) throws JMSException {
+	private static jakarta.jms.Message serialize(String ts, String type, String ss, String payload) throws JMSException {
 		TextMessage textMessage = new ActiveMQTextMessage();
 		if (ts != null) textMessage.setStringProperty("ts", ts);
 		if (ss != null && !ss.isEmpty()) textMessage.setStringProperty("ss", ss);
@@ -40,7 +40,7 @@ class MessageTranslator {
 		return textMessage;
 	}
 
-	public static javax.jms.Message serialize(List<Event> events) throws IOException, JMSException {
+	public static jakarta.jms.Message serialize(List<Event> events) throws IOException, JMSException {
 		String ss = events.stream().map(Event::ss).distinct().collect(Collectors.joining(";"));
 		String ts = events.stream().map(Event::ts).map(Objects::toString).collect(Collectors.joining(";"));
 		String types = events.stream().map(Event::type).distinct().collect(Collectors.joining(";"));
@@ -49,7 +49,7 @@ class MessageTranslator {
 	}
 
 
-	static Stream<Event> deserialize(javax.jms.Message message) {
+	static Stream<Event> deserialize(jakarta.jms.Message message) {
 		try {
 			String format = message.getStringProperty("format");
 			if (format != null && format.equals(Resource.name())) return Stream.of(deserializeAsResource(message));
@@ -60,7 +60,7 @@ class MessageTranslator {
 		}
 	}
 
-	private static javax.jms.Message serializeAsResource(ResourceEvent event) throws JMSException, IOException {
+	private static jakarta.jms.Message serializeAsResource(ResourceEvent event) throws JMSException, IOException {
 		BytesMessage message = new ActiveMQBytesMessage();
 		if (event.ts() != null) message.setLongProperty("ts", event.ts().toEpochMilli());
 		if (event.ss() != null && !event.ss().isEmpty()) message.setStringProperty("ss", event.ss());
@@ -75,7 +75,7 @@ class MessageTranslator {
 	}
 
 
-	public static ResourceEvent deserializeAsResource(javax.jms.Message message) throws JMSException, IOException {
+	public static ResourceEvent deserializeAsResource(jakarta.jms.Message message) throws JMSException, IOException {
 		if (!(message instanceof BytesMessage)) return null;
 		BytesMessage m = (BytesMessage) message;
 		String resourceName = m.getStringProperty("resource.name");

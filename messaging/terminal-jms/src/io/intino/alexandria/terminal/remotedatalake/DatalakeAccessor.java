@@ -6,8 +6,8 @@ import io.intino.alexandria.jms.JmsProducer;
 import io.intino.alexandria.jms.QueueProducer;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.terminal.JmsConnector;
+import jakarta.jms.*;
 
-import javax.jms.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -24,11 +24,11 @@ public class DatalakeAccessor {
 		session = connector.session();
 	}
 
-	public javax.jms.MessageConsumer queryWithConsumer(String query) {
+	public MessageConsumer queryWithConsumer(String query) {
 		Session session = connector.session();
 		try {
 			TemporaryQueue temporaryQueue = session.createTemporaryQueue();
-			javax.jms.MessageConsumer consumer = session.createConsumer(temporaryQueue);
+			MessageConsumer consumer = session.createConsumer(temporaryQueue);
 			sendRequest(query, temporaryQueue);
 			return consumer;
 		} catch (JMSException e) {
@@ -42,7 +42,7 @@ public class DatalakeAccessor {
 		Session session = connector.session();
 		try {
 			TemporaryQueue temporaryQueue = session.createTemporaryQueue();
-			javax.jms.MessageConsumer consumer = session.createConsumer(temporaryQueue);
+			MessageConsumer consumer = session.createConsumer(temporaryQueue);
 			final Object monitor = new Object();
 			consumer.setMessageListener(m -> {
 				response.set(m);

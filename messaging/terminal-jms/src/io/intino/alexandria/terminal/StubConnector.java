@@ -4,12 +4,12 @@ import io.intino.alexandria.event.Event;
 import io.intino.alexandria.jms.ConnectionConfig;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.terminal.remotedatalake.DatalakeAccessor;
+import jakarta.jms.JMSException;
+import jakarta.jms.Message;
+import jakarta.jms.MessageNotWriteableException;
+import jakarta.jms.TextMessage;
 import org.apache.activemq.command.ActiveMQTextMessage;
 
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageNotWriteableException;
-import javax.jms.TextMessage;
 import java.io.File;
 import java.time.Instant;
 import java.util.*;
@@ -140,12 +140,12 @@ public class StubConnector implements Connector {
 	}
 
 	@Override
-	public javax.jms.Message requestResponse(String path, javax.jms.Message message) {
+	public jakarta.jms.Message requestResponse(String path, jakarta.jms.Message message) {
 		return null;
 	}
 
 	@Override
-	public javax.jms.Message requestResponse(String path, javax.jms.Message message, long timeout, TimeUnit timeUnit) {
+	public jakarta.jms.Message requestResponse(String path, jakarta.jms.Message message, long timeout, TimeUnit timeUnit) {
 		return path.equals(DatalakeAccessor.PATH) && isDatalakeRequest(message) ? datalakeArgument() : null;
 	}
 
@@ -190,7 +190,7 @@ public class StubConnector implements Connector {
 	}
 
 	@Override
-	public void requestResponse(String path, javax.jms.Message message, String responsePath) {
+	public void requestResponse(String path, jakarta.jms.Message message, String responsePath) {
 	}
 
 	@Override
