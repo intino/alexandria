@@ -98,7 +98,7 @@ rule type(properties, abstractdialog) and trigger(specific)
 	<< title="$title">><< modal={$modal}>><< fullscreen={$fullscreen}>><< width="$width">><< height="$height">><< animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}>>
 
 rule type(properties, block) and trigger(specific)
-	<< layout="$layout...[ ]">><< width="$width">><< height="$height">><< spacing="$spacing">><< $paper>><< $badge>><< $drawer>><< $popover>><< animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}>><< hidden="$hidden">><< isHoverContainer="$isHoverContainer">><< splitMobileLabel="$splitMobileLabel">><< autoSize={$autoSize}>>
+	<< layout="$layout...[ ]">><< width="$width">><< height="$height">><< spacing="$spacing">><< $paper>><< $badge>><< $drawer>><< $popover>><< animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}>><< hidden="$hidden">><< isHoverContainer="$isHoverContainer">><< splitMobileLabel="$splitMobileLabel">><< autoSize={$autoSize}>><< minSize={$minSize}>>
 
 rule type(properties, date) and trigger(specific)
 	<< pattern="$pattern">><< mode="$mode">><< value={new Date($value)}>><< timePicker={$timePicker}>><< mask="$mask">><< embedded={$embedded}>><< allowEmpty={$allowEmpty}>><< views={["$view...[","]"]}>><< shrink={$shrink}>>

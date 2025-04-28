@@ -52,6 +52,7 @@ Concept Block extends Component
 	Facet Conditional
 		var Component.Option selected = empty
 	Facet Resizable
+		var double:{%} minSize = 20%
 	Facet Animated extends Animated
 
 	Facet Multiple extends Multiple

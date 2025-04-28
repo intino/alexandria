@@ -37,6 +37,7 @@ public class BlockRenderer extends SizedRenderer<Block> {
 		if (element.isHoverContainer()) result.add("isHoverContainer", element.isHoverContainer());
 		if (element.isConditional()) result.add("conditional", "");
 		if (element.isAutoSize()) result.add("autoSize", true);
+		if (element.isResizable()) result.add("minSize", element.asResizable().minSize());
 		if (element.hidden() != null && element.hidden() != Block.Hidden.Never)
 			result.add("hidden", element.hidden().name());
 		return result;
