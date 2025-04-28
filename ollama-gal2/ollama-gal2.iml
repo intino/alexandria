@@ -38,5 +38,6 @@
     <orderEntry type="library" name="Intino: org.glassfish.grizzly:grizzly-http-server:4.0.2" level="project" />
     <orderEntry type="library" name="Intino: org.glassfish.grizzly:grizzly-http:4.0.2" level="project" />
     <orderEntry type="library" name="Intino: es.monentia.gal2:gal2-models-accessor:1.0.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:rest-accessor:3.1.7" level="project" />
   </component>
 </module>
