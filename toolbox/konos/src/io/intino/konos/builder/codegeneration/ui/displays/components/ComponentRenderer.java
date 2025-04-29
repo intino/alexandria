@@ -143,7 +143,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (!frameBuilder.contains("ancestors")) frameBuilder.add("ancestors", ancestors);
 		if (!frameBuilder.contains("ancestorsNotMe"))
 			frameBuilder.add("ancestorsNotMe", ancestors.length > 0 ? Arrays.copyOfRange(ancestors, 1, ancestors.length) : new String[0]);
-		frameBuilder.add("value", uiRenderer.buildFrame().add("addType", typeOf(component)));
+		frameBuilder.add("value", uiRenderer.buildFrame().add("addType", typeOf(component)).toFrame());
 		return frameBuilder;
 	}
 
