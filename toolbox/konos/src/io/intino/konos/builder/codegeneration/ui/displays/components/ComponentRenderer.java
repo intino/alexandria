@@ -135,6 +135,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	protected FrameBuilder childFrame(Component component, Display virtualParent) {
 		UIRenderer uiRenderer = componentRenderer(component, virtualParent);
+		FrameBuilder otherFrameBuilder = uiRenderer.buildFrame().add("addType", typeOf(component));
 		FrameBuilder frameBuilder = uiRenderer.buildFrame();
 		String[] ancestors = ancestors(component);
 		Component parent = component.core$().ownerAs(Component.class);
@@ -143,7 +144,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (!frameBuilder.contains("ancestors")) frameBuilder.add("ancestors", ancestors);
 		if (!frameBuilder.contains("ancestorsNotMe"))
 			frameBuilder.add("ancestorsNotMe", ancestors.length > 0 ? Arrays.copyOfRange(ancestors, 1, ancestors.length) : new String[0]);
-		frameBuilder.add("value", uiRenderer.buildFrame().add("addType", typeOf(component)).toFrame());
+		frameBuilder.add("value", otherFrameBuilder);
 		return frameBuilder;
 	}
 
