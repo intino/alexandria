@@ -538,3 +538,7 @@ Schema Attachment
 Schema BlockResizableVisibility
 	Attribute child as Text
 	Attribute visible as Bool
+
+Schema HtmlViewerOperation
+	Attribute name as Text
+	Attribute params as Text List

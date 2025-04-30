@@ -14,7 +14,7 @@ const ActionableMui = React.lazy(() => {
 });
 
 export default class Actionable extends AbstractActionable {
-    static Delay = 350;
+    static Delay = 0;
 
 	static Styles = theme => ({
 		link : {

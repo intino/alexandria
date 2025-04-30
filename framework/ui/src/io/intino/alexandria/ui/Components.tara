@@ -207,6 +207,10 @@ Component microSite
 
 Component htmlViewer
 	Notification refresh as Text
+	Notification refreshOperations as Text List
+	Notification print as Text
+
+	Request execute as Object(HtmlViewerOperation)
 
 Component documentEditor
 
