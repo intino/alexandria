@@ -542,3 +542,7 @@ Schema BlockResizableVisibility
 Schema HtmlViewerOperation
 	Attribute name as Text
 	Attribute params as Text List
+
+Schema SelectorTabsOptionVisibility
+	Attribute index as Integer
+	Attribute visible as Bool

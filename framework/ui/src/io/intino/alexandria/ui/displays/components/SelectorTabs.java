@@ -1,15 +1,16 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.schemas.SelectorTabsOptionVisibility;
 import io.intino.alexandria.ui.displays.components.selector.SelectorOption;
 import io.intino.alexandria.ui.displays.notifiers.SelectorTabsNotifier;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.*;
 
 public class SelectorTabs<DN extends SelectorTabsNotifier, B extends Box> extends AbstractSelectorTabs<DN, B> {
 	private int selected = -1;
-	private Set<Integer> hiddenOptions = new HashSet<>();
 
     public SelectorTabs(B box) {
         super(box);
@@ -55,15 +56,13 @@ public class SelectorTabs<DN extends SelectorTabsNotifier, B extends Box> extend
 	}
 
 	public void showOption(String option) {
-		int position = position(option);
-		hiddenOptions.remove(position);
-		notifier.refreshOptionsVisibility(new ArrayList<>(hiddenOptions));
+		hiddenOptions.remove(option);
+		notifier.refreshOptionsVisibility(optionsVisibility());
 	}
 
 	public void hideOption(String option) {
-		int position = position(option);
-		hiddenOptions.add(position);
-		notifier.refreshOptionsVisibility(new ArrayList<>(hiddenOptions));
+		hiddenOptions.add(option);
+		notifier.refreshOptionsVisibility(optionsVisibility());
 	}
 
 	public void show(String option) {
@@ -80,6 +79,13 @@ public class SelectorTabs<DN extends SelectorTabsNotifier, B extends Box> extend
 	public void reset() {
 		selected = -1;
 		notifier.refreshSelected(null);
+	}
+
+	private List<SelectorTabsOptionVisibility> optionsVisibility() {
+		List<SelectorTabsOptionVisibility> result = new ArrayList<>();
+		List<SelectorOption> options = options();
+		for (int i=0; i<options.size(); i++) result.add(new SelectorTabsOptionVisibility().index(i).visible(!hiddenOptions.contains(options.get(i).name())));
+		return result;
 	}
 
 }

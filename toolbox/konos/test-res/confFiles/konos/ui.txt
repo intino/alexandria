@@ -11,6 +11,7 @@ def.file
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/data/File.tara#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/Components.tara#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/actionable/DownloadSelection.tara#true
+/Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/Wizard.tara#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/Theme.tara#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/Kpi.tara#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/I18n.tara#true
@@ -34,12 +35,12 @@ def.file
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/Displays.tara#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/Divider.tara#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/Frame.tara#true
-/Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/Wizard.tara#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/collection/Sorting.tara#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/Actionable.tara#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/Chart.tara#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/templates/WidgetType.tara#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/CatalogComponents.tara#true
+/Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/Chat.tara#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/DateNavigator.tara#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/collection/SearchBox.tara#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/data/Text.tara#true
@@ -52,9 +53,9 @@ def.file
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/collection/Grouping.tara#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/Layer.tara#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/MicroSite.tara#true
+/Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/actionable/Upload.tara#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/User.tara#true
 /Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/data/Location.tara#true
-/Users/mcaballero/Proyectos/alexandria/framework/ui/src/io/intino/alexandria/ui/documentation/examples/other/Chat.tara#true
 
 project
 alexandria
@@ -88,13 +89,13 @@ io.intino.alexandria
 artifactId
 ui-framework
 version
-5.1.28
+6.4.3
 compilation.mode
 Build
 dsl
-Konos:12.2.6
+Konos:13.3.1
 language
-Konos:12.2.6
+Konos:13.3.1
 level
 Model
 generation.package
@@ -102,4 +103,4 @@ io.intino.alexandria
 module.parameters
 home;port
 current.dependencies
-io.intino.alexandria:core-framework:2.2.0,io.intino.alexandria:http:1.7.10,io.intino.alexandria:json:1.2.3,io.intino.alexandria:rest-accessor:3.1.4,io.intino.alexandria:logger4j:1.0.1,io.intino.alexandria:zip:1.0.5,io.intino.alexandria:totp:1.0.2
+io.intino.alexandria:core-framework:2.2.2,io.intino.alexandria:http:2.1.11,io.intino.alexandria:json:1.2.3,io.intino.alexandria:rest-accessor:3.1.8,io.intino.alexandria:logger4j:1.0.1,io.intino.alexandria:zip:1.0.5,io.intino.alexandria:totp:1.0.2

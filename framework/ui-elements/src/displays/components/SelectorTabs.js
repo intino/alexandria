@@ -19,14 +19,14 @@ class SelectorTabs extends AbstractSelectorTabs {
 		this.state = {
 		    ...this.state,
             selected: -1,
-            hiddenOptions: []
+            optionsVisibility: []
         };
 	};
 
 	render() {
 	    if (!this.state.visible) return (<React.Fragment/>);
 	    const selected = this.state.selected !== -1 ? this.state.selected : 0;
-	    const children = this.children();
+	    const children = this._visibleOptions();
 	    const scrollButtons = this.props.scrollButtons != undefined ? this.props.scrollButtons.toLowerCase() : "off";
 	    const variant = scrollButtons !== "off" ? "scrollable" : undefined;
         return (
@@ -40,7 +40,7 @@ class SelectorTabs extends AbstractSelectorTabs {
     renderTab = (tab, i) => {
 	    const className = tab.props.className;
         if (className != null && className.indexOf("divider") !== -1) return (<Divider/>);
-        return this._isVisible(i) ? (<Tab label={tab} index={i} style={this.styleOf(tab)}/>) : null;
+        return (<Tab label={tab} index={i} style={this.styleOf(tab)}/>);
     };
 
     refreshSelected = (tab) => {
@@ -48,44 +48,49 @@ class SelectorTabs extends AbstractSelectorTabs {
         this.setState({ selected: realTab });
 	};
 
-    refreshOptionsVisibility = (options) => {
-        this.setState({ hiddenOptions: options });
+    refreshOptionsVisibility = (optionsVisibility) => {
+        const visibility = [];
+        for (var i=0; i<optionsVisibility.length; i++) visibility[optionsVisibility[i].index] = optionsVisibility[i].visible;
+        this.setState({ optionsVisibility: visibility });
 	};
 
 	_countInvisible = (pos) => {
-	    const hiddenOptions = this.state.hiddenOptions;
+	    const optionsVisibility = this.state.optionsVisibility.length > 0 ? this.state.optionsVisibility : this._defaultOptionsVisibility();
 	    let result = 0;
-	    for (var i=0; i<hiddenOptions.length; i++) {
-	        if (hiddenOptions[i] <= pos) result++;
-	        else break;
+	    for (var i=0; i<optionsVisibility.length; i++) {
+	        if (i <= pos && optionsVisibility[i] === false) result++;
+	    }
+	    return result;
+	};
+
+	_defaultOptionsVisibility = () => {
+	    const children = this.children();
+	    const result = [];
+	    for (var i=0; i<children.length; i++) {
+	        const name = children[i].props.name;
+	        result[i] = this.props.hiddenOptions == null || this.props.hiddenOptions.indexOf(name) == -1;
 	    }
 	    return result;
 	};
 
 	_visibleOptions = () => {
-	    const hiddenOptions = this.state.hiddenOptions;
 	    const children = this.children();
 	    const result = [];
 	    for (var i=0; i<children.length; i++) {
-	        if (!this._isVisible(i)) continue;
-	        result.push(i);
+	        if (!this._isVisible(children[i], i)) continue;
+	        result.push(children[i]);
 	    }
 	    return result;
 	}
 
-	_isVisible = (pos) => {
-	    const hiddenOptions = this.state.hiddenOptions;
-	    for (var i=0; i<hiddenOptions.length; i++) {
-	        if (hiddenOptions[i] == pos) return false;
-	    }
-	    return true;
+	_isVisible = (tab, pos) => {
+	    const optionsVisibility = this.state.optionsVisibility;
+	    return optionsVisibility.length > 0 ? optionsVisibility[pos] : (tab != null && tab.props != null && (tab.props.visible == null || tab.props.visible !== false));
 	}
 
 	handleChange = (e, value) => {
-	    const children = this.children();
-	    const options = this._visibleOptions();
-	    const index = options[value];
-	    let selected = children[index] != null ? children[index].props.name : null;
+	    const children = this._visibleOptions();
+	    let selected = children[value] != null ? children[value].props.name : null;
 	    if (selected == null && !(children instanceof Array) && children.props != null) selected = children.props.name;
 	    if (selected != null) this.requester.selectByName(selected);
 	    else this.requester.select(value);

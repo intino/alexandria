@@ -4,7 +4,11 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.dsl.CatalogComponents;
+import io.intino.konos.dsl.Component;
 import io.intino.konos.dsl.OtherComponents.Selector;
+import io.intino.magritte.framework.Layer;
+
+import java.util.List;
 
 public class SelectorRenderer extends ComponentRenderer<Selector> {
 
@@ -40,6 +44,8 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 	private void addTabsProperties(FrameBuilder builder) {
 		if (!element.isTabs()) return;
 		Selector.Tabs.ScrollButtons scrollButtons = element.asTabs().scrollButtons();
+		List<String> hiddenOptions = element.asTabs().componentList().stream().filter(Component::isOption).filter(o -> !o.visible()).map(Layer::name$).toList();
+		if (!hiddenOptions.isEmpty()) hiddenOptions.forEach(o -> builder.add("hiddenOption", o));
 		if (scrollButtons == Selector.Tabs.ScrollButtons.Off) return;
 		builder.add("scrollButtons", scrollButtons);
 	}

@@ -13,9 +13,8 @@ import io.intino.alexandria.ui.displays.events.SelectionListener;
 import io.intino.alexandria.ui.displays.notifiers.BaseSelectorNotifier;
 import io.intino.alexandria.ui.displays.notifiers.TextNotifier;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Box> extends AbstractBaseSelector<DN, B> implements io.intino.alexandria.ui.displays.components.selector.Selector, Addressable {
@@ -27,6 +26,7 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
     private ReadonlyListener readonlyListener = null;
     private List<String> options = new ArrayList<>();
     private List<Component> components = new ArrayList<>();
+    protected Set<String> hiddenOptions = new HashSet<>();
 
     public BaseSelector(B box) {
         super(box);
@@ -151,6 +151,10 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
         return multipleSelection;
     }
 
+    public Set<String> hiddenOptions() {
+        return this.hiddenOptions;
+    }
+
     protected List<Component> components() {
         return this.components;
     }
@@ -194,6 +198,11 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
     protected BaseSelector<DN, B> _path(String path) {
         this.path = path;
         this._address(path);
+        return this;
+    }
+
+    protected BaseSelector<DN, B> _hiddenOptions(String... options) {
+        this.hiddenOptions = new HashSet<>(List.of(options));
         return this;
     }
 

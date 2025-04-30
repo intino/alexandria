@@ -128,7 +128,7 @@ Component selectorListBox as ExtensionOf(baseSelector)
 
 Component selectorTabs as ExtensionOf(baseSelector)
 	Notification refreshSelected as Integer
-	Notification refreshOptionsVisibility as Integer List
+	Notification refreshOptionsVisibility as Object(SelectorTabsOptionVisibility) List
 	Request select as Integer
 	Request selectByName as Text
 

@@ -600,6 +600,7 @@ rule type(properties, selector) and trigger(specific)
 	<<_multipleSelection($multipleSelection);>>
 	<<_readonly($readonly);>>
 	<<_path("$path");>>
+	<<_hiddenOptions("$hiddenOption...[","]");>>
 
 rule type(properties, grouping) and trigger(specific)
 	<<_path("$path");>>

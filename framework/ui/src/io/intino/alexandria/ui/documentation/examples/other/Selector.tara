@@ -21,6 +21,8 @@ Template(layout=Vertical, spacing=DP8) selectorExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 1") tabOption1 as Option<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 2") tabOption2 as Option<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") tabOption3 as Option
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 4") tabOption4 as Option
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 5") tabOption5 as Option
 						=========
 
 		Block as Relative(width=48%, height=100%)

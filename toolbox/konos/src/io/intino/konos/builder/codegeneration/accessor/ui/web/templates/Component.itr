@@ -80,7 +80,7 @@ rule type(properties, materialicon) and trigger(specific)
 	<< title="$title">><< icon="$icon">><< darkIcon="$darkIcon">><< titlePosition="$titlePosition">>
 
 rule type(properties, selector) and trigger(specific)
-	<< multipleSelection={$multipleSelection}>><< readonly={$readonly}>><< focused={$focused}>><< placeholder="$placeholder">><< selected="$selected">><< layout="$layout">><< size="$size">><< maxMenuHeight={$maxMenuHeight}>><< allowOther="$allowOther">><< scrollButtons="$scrollButtons">><< view="$view">>
+	<< multipleSelection={$multipleSelection}>><< readonly={$readonly}>><< focused={$focused}>><< placeholder="$placeholder">><< selected="$selected">><< layout="$layout">><< size="$size">><< maxMenuHeight={$maxMenuHeight}>><< allowOther="$allowOther">><< scrollButtons="$scrollButtons">><< hiddenOptions={["$hiddenOption...[","]"]}>><< view="$view">>
 
 rule type(properties, image) and trigger(specific)
 	<< width="$width">><< height="$height">><< mobileReduceFactor={$mobileReduceFactor}>><< allowFullscreen={$allowFullscreen}>><< colorInvertedWithDarkMode={$colorInvertedWithDarkMode}>>
