@@ -16,5 +16,6 @@
     <orderEntry type="library" name="Intino: com.google.zxing:core:3.2.1" level="project" />
     <orderEntry type="library" name="Intino: com.beust:jcommander:1.48" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger:2.1.0" level="project" />
+    <orderEntry type="library" name="Intino: commons-codec:commons-codec:1.10" level="project" />
   </component>
 </module>
