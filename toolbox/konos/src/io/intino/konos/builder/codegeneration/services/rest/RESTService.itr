@@ -51,4 +51,4 @@ rule trigger(custom)
 	.replace("{$value}", box.configuration().get("$value"))
 
 rule trigger(hasNotifications)
-	if (!io.intino.alexandria.http.AlexandriaHttpServerBuilder.isUI()) server.route("/_alexandria/push").push(new io.intino.alexandria.http.pushservice.PushService());
+	if (!io.intino.alexandria.http.AlexandriaHttpServerBuilder.isUI()) server.route("/_alexandria/push").push(new io.intino.alexandria.http.pushservice.AlexandriaPushService());
