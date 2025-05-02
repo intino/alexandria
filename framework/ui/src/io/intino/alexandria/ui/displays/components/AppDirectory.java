@@ -44,7 +44,7 @@ public class AppDirectory<DN extends AppDirectoryNotifier, B extends Box> extend
         return this;
     }
 
-    protected AppDirectory<DN, B> source(java.util.List<Application> applicationList) {
+    public AppDirectory<DN, B> source(java.util.List<Application> applicationList) {
         _source(applicationList);
         refresh();
         return this;
@@ -111,11 +111,15 @@ public class AppDirectory<DN extends AppDirectoryNotifier, B extends Box> extend
     }
 
     private AppDirectoryApplication schemaOf(Application application) {
-        return new AppDirectoryApplication().name(application.label()).url(application.url).selected(application.isSelected());
+        return new AppDirectoryApplication().name(application.label(language())).url(application.url).selected(isSelected(application));
+    }
+
+    private Boolean isSelected(Application application) {
+        return selectedApplication != null && selectedApplication.equalsIgnoreCase(application.name);
     }
 
     private List<Application> applicationsOf(List<String> lines, String separator) {
-        return lines.stream().map(l -> applicationOf(l, separator)).sorted(Comparator.comparing(Application::label)).collect(Collectors.toList());
+        return lines.stream().map(l -> applicationOf(l, separator)).sorted(Comparator.comparing(a -> a.label(language()))).collect(Collectors.toList());
     }
 
     @SuppressWarnings("unchecked")
@@ -126,7 +130,7 @@ public class AppDirectory<DN extends AppDirectoryNotifier, B extends Box> extend
         return result;
     }
 
-    public class Application {
+    public static class Application {
         public String name;
         public String url;
         public java.util.Map<String, String> translations = new HashMap<>();
@@ -136,8 +140,8 @@ public class AppDirectory<DN extends AppDirectoryNotifier, B extends Box> extend
             this.url = url;
         }
 
-        public String label() {
-            return translation(language());
+        public String label(String language) {
+            return translation(language);
         }
 
         public Application translation(String language, String translation) {
@@ -147,10 +151,6 @@ public class AppDirectory<DN extends AppDirectoryNotifier, B extends Box> extend
 
         protected String translation(String language) {
             return translations.getOrDefault(language, name);
-        }
-
-        protected boolean isSelected() {
-            return selectedApplication != null && selectedApplication.equalsIgnoreCase(name);
         }
     }
 }
