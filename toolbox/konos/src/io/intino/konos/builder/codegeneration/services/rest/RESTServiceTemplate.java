@@ -24,7 +24,7 @@ public class RESTServiceTemplate extends Template {
 		rules.add(rule().condition(all(allTypes("custom"), trigger("authenticate"))).output(literal(".before(manager -> { if (!authenticator.isAuthenticated(manager.request().queryParams().stream().collect(java.util.stream.Collectors.toMap(p -> p, p -> manager.request().queryParams(p))))) throw new io.intino.alexandria.exceptions.Unauthorized(\"Credential not found\");})")));
 		rules.add(rule().condition(all(allTypes("path"), trigger("format"))).output(literal("\"")).output(placeholder("name")).output(literal("\"")).output(expression().output(placeholder("custom").multiple(""))));
 		rules.add(rule().condition(trigger("custom")).output(literal(".replace(\"{")).output(placeholder("value")).output(literal("}\", box.configuration().get(\"")).output(placeholder("value")).output(literal("\"))")));
-		rules.add(rule().condition(trigger("hasnotifications")).output(literal("if (!io.intino.alexandria.http.AlexandriaHttpServerBuilder.isUI()) server.route(\"/_alexandria/push\").push(new io.intino.alexandria.http.pushservice.PushService());")));
+		rules.add(rule().condition(trigger("hasnotifications")).output(literal("if (!io.intino.alexandria.http.AlexandriaHttpServerBuilder.isUI()) server.route(\"/_alexandria/push\").push(new io.intino.alexandria.http.pushservice.AlexandriaPushService());")));
 		return rules;
 	}
 
