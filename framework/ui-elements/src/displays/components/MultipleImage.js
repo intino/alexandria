@@ -50,7 +50,7 @@ class MultipleImage extends AbstractMultipleImage {
 		return (
 		    <div style={{height:height,...this.style()}} ref={this.container}>
                 { ComponentBehavior.labelBlock(this.props, "body1", { fontSize:"10pt",color:"#0000008a",marginBottom: "5px" }) }
-                <div className={"layout flex " + (wrap ? "wrap " : "") + layout} style={{height:"100%",marginBottom:'0',position:'relative'}}>
+                <div className={"layout flex " + (wrap ? "wrap " : "") + layout} style={{height:height,marginBottom:'0',position:'relative'}}>
                     { multiple.editable && this._renderAdd() }
                     { multiple.editable && this._renderRemove() }
                     { items.length > 0 &&
