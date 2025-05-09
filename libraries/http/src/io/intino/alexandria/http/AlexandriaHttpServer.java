@@ -163,6 +163,7 @@ public class AlexandriaHttpServer<R extends AlexandriaHttpRouter<?>> {
 	private static InputStream localFileStream(String webDirectory, String filePath) {
 		try {
 			File file = new File(webDirectory, filePath);
+			if (!file.exists()) file = new File(webDirectory, filePath.replace("/_alexandria-displays", ""));
 			return file.exists() ? file.toURI().toURL().openStream() : null;
 		} catch (IOException e) {
 			Logger.error(e);
