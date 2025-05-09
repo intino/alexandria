@@ -6,12 +6,16 @@ import io.intino.alexandria.ui.displays.notifiers.LibraryTemplateStampNotifier;
 
 import java.util.HashMap;
 
-public class LibraryTemplateStamp<DN extends LibraryTemplateStampNotifier, B extends Box> extends AbstractLibraryTemplateStamp<B> {
+public abstract class LibraryTemplateStamp<DN extends LibraryTemplateStampNotifier, B extends Box> extends AbstractLibraryTemplateStamp<B> {
 	private String template;
 	private final java.util.Map<String, String> parameters = new HashMap<>();
 
 	public LibraryTemplateStamp(B box) {
 		super(box);
+	}
+
+	public String template() {
+		return template;
 	}
 
 	public LibraryTemplateStamp<DN, B> template(String value) {
@@ -28,11 +32,23 @@ public class LibraryTemplateStamp<DN extends LibraryTemplateStampNotifier, B ext
 		return this;
 	}
 
+	public boolean existsTemplate(String name) {
+		return name != null;
+	}
+
+	public boolean existsTemplate() {
+		return existsTemplate(template);
+	}
+
 	@Override
 	public void refresh() {
 		super.refresh();
 		if (template == null) {
 			notifyUser(translate("Template type must be defined"), UserMessage.Type.Error);
+			return;
+		}
+		if (!existsTemplate()) {
+			notifyUser(translate("Template not found in library"), UserMessage.Type.Error);
 			return;
 		}
 		notifier.refresh(url());

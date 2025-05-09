@@ -47,10 +47,10 @@ public class AlexandriaLibraryLoader extends ClassLoader {
 		}
 	}
 
-	private static final String ProxyClass = "%s.ui.displays.templates.%sProxy";
-	public Class<?> proxyClass(String name) {
+	private static final String TemplateClass = "%s.ui.resources.%sResource";
+	public Class<?> libraryTemplateEntryPointClass(String name) {
 		try {
-			return loadClass(String.format(ProxyClass, archetype.rootPackage(), name));
+			return loadClass(String.format(TemplateClass, archetype.rootPackage(), firstUpperCase(name)));
 		} catch (ClassNotFoundException e) {
 			Logger.error(e);
 			return null;
@@ -84,6 +84,7 @@ public class AlexandriaLibraryLoader extends ClassLoader {
 			if (isLayoutsClass(name)) AlexandriaLibraryLoader.Classes.put(name, resultClass);
 
 			return resultClass;
+		} catch (ClassNotFoundException ignored) {
 		} catch (FileNotFoundException e) {
 			Logger.error(e);
 		} finally {
@@ -140,4 +141,9 @@ public class AlexandriaLibraryLoader extends ClassLoader {
 	private File basePath() {
 		return archetype.directory();
 	}
+
+	public static String firstUpperCase(String value) {
+		return value.substring(0, 1).toUpperCase() + value.substring(1);
+	}
+
 }

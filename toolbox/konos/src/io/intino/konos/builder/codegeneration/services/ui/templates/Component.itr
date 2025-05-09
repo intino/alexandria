@@ -232,6 +232,11 @@ rule type(component, child, librarytemplatestamp, single) and trigger(class)
 			super(box);
 		}
 
+        @Override
+        public boolean existsTemplate(String name) {
+            return super.existsTemplate(name) && box().existsLibraryTemplate(name);
+        }
+
 	}
 
 rule type(component, child, basestamp, single) and trigger(class)

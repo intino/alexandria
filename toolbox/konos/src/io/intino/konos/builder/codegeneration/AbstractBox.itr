@@ -32,6 +32,7 @@ rule type(box)
 		<<protected Map<String, Soul> uiSouls = new java.util.HashMap<>()$hasUi+hideUi>>
 		<<private java.util.List<io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>()$hasUi+hideUi>>
 		<<private io.intino.alexandria.ui.services.AuthService authService$hasUi+hideUi>>
+		<<private java.util.List<AlexandriaLibraryLoader> libraryLoaders = new java.util.ArrayList<>();$hasUI+hideUi>>
 
 		public AbstractBox(String[] args) {
 			this(new $name+PascalCase~Configuration(args));
@@ -108,6 +109,8 @@ rule type(box)
 		}
 
 		<<$hasUi+registerSoul>>
+
+		<<$hasUi+existsLibrary>>
 
 		<<$service+method...[$NL]>>
 
@@ -427,6 +430,7 @@ rule type(importLibrary) and trigger(method)
 	    new AlexandriaLibraryInstaller(archetype).install(new java.io.File($libraryFile));
 	    new AlexandriaLibraryUiInitializer(this, loader).initialize(server, pushService);
 	    server.add(loader.webDirectory().getAbsolutePath());
+	    libraryLoaders.add(loader);
 	}
 
 rule type(importLibrary)
@@ -461,6 +465,10 @@ rule trigger(registerSoul)
 		soulsClosedListeners.forEach(l -> l.accept());
 	}
 
+rule trigger(existsLibrary)
+	public boolean existsLibraryTemplate(String name) {
+		return libraryLoaders.stream().anyMatch(l -> l.libraryTemplateEntryPointClass(name) != null);
+	}
 
 rule type(conf, file) and trigger(additionalParameter)
 	configuration().get("$value") == null ? null : new java.io.File(configuration().get("$value"))
