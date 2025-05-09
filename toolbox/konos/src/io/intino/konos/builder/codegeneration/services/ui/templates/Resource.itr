@@ -1,6 +1,109 @@
-rule type(resource, accessibleDisplay)
+rule type(resource, exposedDisplay, entryPoint)
 	package $package+validPackage.ui.resources;
 
+    import io.intino.alexandria.AbstractBox;
+    import io.intino.alexandria.exceptions.AlexandriaException;
+    import io.intino.alexandria.exceptions.Unauthorized;
+    import io.intino.alexandria.ui.AlexandriaUiBox;
+    import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
+    import io.intino.alexandria.ui.server.pages.UiPage;
+    import io.intino.alexandria.ui.services.auth.exceptions.CouldNotObtainInfo;
+    import io.intino.alexandria.ui.services.push.UIClient;
+
+	import $package+validPackage.ui.pages.$name+firstUpperCase~Page;
+
+    import java.util.UUID;
+    import java.util.function.Consumer;
+    import java.util.function.Function;
+
+    public class $name+firstUpperCase~Resource extends io.intino.alexandria.ui.server.resources.Resource {
+        private final AlexandriaUiBox box;
+
+        public $name+firstUpperCase~Resource(AlexandriaUiBox box, io.intino.alexandria.ui.server.AlexandriaUiManager manager, DisplayNotifierProvider notifierProvider) {
+            super(manager, notifierProvider);
+            this.box = box;
+        }
+
+        @Override
+        public void execute() throws AlexandriaException {
+            super.execute();
+            fillDeviceParameter();
+            $render
+        }
+
+        private void render() {
+            String clientId = UUID.randomUUID().toString();
+            UiPage page = new $name+firstUpperCase~Page();
+            page.session = manager.session(manager.fromQuery("session"));
+            page.session.browser().onRedirect(location -> manager.redirect(location));
+            page.session.browser().requestUrl(manager.requestUrl());
+            page.session.whenLogin(new Function<String, String>() {
+                @Override
+                public String apply(String baseUrl) {
+                    return $name+firstUpperCase~Resource.this.authenticate(page.session, baseUrl);
+                }
+            });
+            page.session.whenLogout(b -> logout(page.session));
+            (($name+firstUpperCase~Page)page).box = box;
+            page.clientId = clientId;
+            page.webDirectories = manager.webDirectories();
+            page.device = parameterValue("device");
+            page.token = parameterValue("token");
+			$parameter...[$NL]
+
+            if (!page.hasPermissions()) {
+                manager.redirect(page.redirectUrl());
+                return;
+            }
+
+            manager.pushService().onOpen(client -> {
+                if (!client.id().equals(page.clientId))
+                    return false;
+
+                if (client.soul() != null && box.routeManager().routeDispatcher() instanceof $package+validPackage.ui.displays.RouteDispatcher) {
+                    (($package+validPackage.ui.displays.RouteDispatcher)box.routeManager().routeDispatcher()).dispatchHome(client.soul());
+                    return false;
+                }
+
+                io.intino.alexandria.ui.Soul soul = page.prepareSoul(client);
+                soul.onRedirect((location) -> manager.redirect(location));
+                soul.addRegisterDisplayListener(display -> {
+                    display.inject(notifier(page.session, client, display));
+                    display.inject(page.session);
+                    display.inject(soul);
+                    display.inject(() -> soul);
+                });
+                ((UIClient)client).soul(soul);
+                client.cookies(manager.cookies());
+
+                box.registerSoul(clientId, soul);
+                soul.register(new io.intino.alexandria.ui.displays.DisplayRouter(box).id("__router__"));
+                if (box.routeManager().routeDispatcher() instanceof $package+validPackage.ui.displays.RouteDispatcher) (($package+validPackage.ui.displays.RouteDispatcher)box.routeManager().routeDispatcher()).dispatchHome(soul);
+
+                return true;
+            });
+
+            manager.pushService().onClose(clientId).execute(new Consumer<UIClient>() {
+                @Override
+                public void accept(UIClient client) {
+                    client.soul().destroy();
+                    box.unRegisterSoul(client.id());
+                    manager.unRegister(client);
+                }
+            });
+
+            manager.write(page.execute());
+        }
+
+    }
+
+rule type(resource, exposedDisplay)
+	package $package+validPackage.ui.resources;
+
+    import io.intino.alexandria.AbstractBox;
+    import io.intino.alexandria.exceptions.AlexandriaException;
+    import io.intino.alexandria.exceptions.Unauthorized;
+    import io.intino.alexandria.ui.AlexandriaUiBox;
 	import $package+validPackage.$box+PascalCase~Box;
 	import $package+validPackage.ui.pages.$name+firstUpperCase~ProxyPage;
 	import io.intino.alexandria.Json;
@@ -16,9 +119,9 @@ rule type(resource, accessibleDisplay)
 	import java.util.function.Function;
 
 	public class $name+firstUpperCase~ProxyResource extends io.intino.alexandria.ui.server.resources.ProxyResource {
-		private final $box+PascalCase~Box box;
+		private final AlexandriaUiBox box;
 
-		public $name+firstUpperCase~ProxyResource($box+PascalCase~Box box, io.intino.alexandria.ui.server.AlexandriaUiManager manager, DisplayNotifierProvider notifierProvider) {
+		public $name+firstUpperCase~ProxyResource(AlexandriaUiBox box, io.intino.alexandria.ui.server.AlexandriaUiManager manager, DisplayNotifierProvider notifierProvider) {
 			super(manager, notifierProvider);
 			this.box = box;
 		}
@@ -46,6 +149,7 @@ rule type(resource, accessibleDisplay)
 			page.session.whenLogout(b -> logout(page.session));
 			page.box = box;
 			page.clientId = client.id();
+			page.webDirectories = manager.webDirectories();
 			page.googleApiKey = "";
 			page.device = parameterValue("device");
 			$parameter...[$NL]
@@ -84,7 +188,7 @@ rule type(resource, accessibleDisplay)
 			manager.pushService().onClose(page.clientId).execute(new Consumer<UIClient>() {
 				@Override
 				public void accept(io.intino.alexandria.ui.services.push.UIClient client) {
-					box.soul(client.id()).ifPresent(s -> s.destroy());
+					((AbstractBox)box).soul(client.id()).ifPresent(s -> s.destroy());
 					box.unRegisterSoul(client.id());
 					manager.unRegister(client);
 				}
@@ -99,7 +203,7 @@ rule type(render, confidential)
 		if (!isLogged(accessToken()))
 			throw new Unauthorized("user is not logged");
 
-		authenticate(session(), accessToken());
+		authenticate(manager.session(manager.fromQuery("session")), accessToken());
 		render();
 	} catch (CouldNotObtainInfo couldNotObtainInfo) {
 		throw new Unauthorized("user is not logged");
@@ -155,6 +259,7 @@ rule type(resource, static)
 			page.session.whenLogout(b -> logout(page.session));
 			page.box = box;
 			page.clientId = clientId;
+			page.webDirectories = manager.webDirectories();
 			<<page.googleApiKey = $googleApiKey+format;>>
 			page.device = parameterValue("device");
 			page.token = parameterValue("token");<<
@@ -215,6 +320,7 @@ rule type(resource, asset)
 			page.session.whenLogout(b -> logout(page.session));
 			page.box = box;
 			page.clientId = clientId;
+			page.webDirectories = manager.webDirectories();
 			<<page.googleApiKey = $googleApiKey+format;>>
 			page.device = parameterValue("device");
 			page.token = parameterValue("token");<<
@@ -278,6 +384,7 @@ rule type(resource)
 			page.session.whenLogout(b -> logout(page.session));
             $page+box
 			page.clientId = clientId;
+			page.webDirectories = manager.webDirectories();
 			<<page.googleApiKey = $googleApiKey+format;>>
 			page.device = parameterValue("device");
 			page.token = parameterValue("token");<<
@@ -292,7 +399,7 @@ rule type(resource)
 				if (!client.id().equals(page.clientId))
 					return false;
 
-				if (client.soul() != null) {
+				if (client.soul() != null && box.routeManager().routeDispatcher() instanceof $package+validPackage.ui.displays.RouteDispatcher) {
 					(($package+validPackage.ui.displays.RouteDispatcher)box.routeManager().routeDispatcher()).dispatch$name+firstUpperCase(client.soul()<<, $parameter+dispatch...[, ]>>);
 					return false;
 				}
@@ -310,7 +417,8 @@ rule type(resource)
 
 				box.registerSoul(clientId, soul);
 				soul.register(new io.intino.alexandria.ui.displays.DisplayRouter(box).id("__router__"));
-				(($package+validPackage.ui.displays.RouteDispatcher)box.routeManager().routeDispatcher()).dispatch$name+firstUpperCase(soul<<, $parameter+dispatch...[, ]>>);
+				if (box.routeManager().routeDispatcher() instanceof $package+validPackage.ui.displays.RouteDispatcher)
+				    (($package+validPackage.ui.displays.RouteDispatcher)box.routeManager().routeDispatcher()).dispatch$name+firstUpperCase(soul<<, $parameter+dispatch...[, ]>>);
 
 				return true;
 			});

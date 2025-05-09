@@ -22,7 +22,7 @@ rule attribute(extensionOf) and trigger(import)
 rule attribute(component) and trigger(import)
 	import Notifier from "alexandria-ui-elements/src/displays/notifiers/ComponentNotifier";
 
-rule attribute(accessible) and trigger(import)
+rule attribute(exposed) and trigger(import)
 	import Notifier from "alexandria-ui-elements/gen/displays/notifiers/ProxyDisplayNotifier";
 
 rule attribute(baseType) and trigger(import)
@@ -31,7 +31,7 @@ rule attribute(baseType) and trigger(import)
 rule trigger(import)
 	import Notifier from "./Notifier";
 
-rule attribute(accessible) and trigger(proxy)
+rule attribute(exposed) and trigger(proxy)
 	Proxy
 
 rule trigger(proxy)

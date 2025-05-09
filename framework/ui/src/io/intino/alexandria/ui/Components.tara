@@ -194,9 +194,11 @@ Component temporalSlider as ExtensionOf(baseSlider)
 
 Component templateStamp
 Component templateStampEditable
+Component externalTemplateStamp
+Component libraryTemplateStamp
+	Notification refresh as Text
 Component displayStamp
 	Notification refreshDisplay as Text
-Component proxyStamp
 
 Component microSite
 	Notification renderPage as Text

@@ -121,7 +121,7 @@ public abstract class UIRenderer extends Renderer {
 	}
 
 	protected boolean hasConcreteNotifier(PassiveView element) {
-		if (element.i$(conceptOf(Display.Accessible.class))) return true;
+		if (element.i$(conceptOf(Display.Exposed.class))) return true;
 		return !element.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class)) &&
 				!element.i$(conceptOf(CatalogComponents.Table.class)) &&
 				!element.i$(conceptOf(CatalogComponents.DynamicTable.class)) &&
@@ -130,7 +130,7 @@ public abstract class UIRenderer extends Renderer {
 	}
 
 	protected boolean hasConcreteRequester(PassiveView element) {
-		if (element.i$(conceptOf(Display.Accessible.class))) return true;
+		if (element.i$(conceptOf(Display.Exposed.class))) return true;
 		return !element.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class)) &&
 				!element.i$(conceptOf(CatalogComponents.Table.class)) &&
 				!element.i$(conceptOf(CatalogComponents.DynamicTable.class)) &&
@@ -168,7 +168,7 @@ public abstract class UIRenderer extends Renderer {
 		return firstUpperCase(nameOf(display));
 	}
 
-	protected FrameBuilder notifierImportFrame(Display element, boolean accessible) {
+	protected FrameBuilder notifierImportFrame(Display element, boolean exposed) {
 		FrameBuilder result = buildBaseFrame().add("notifierImport");
 		result.add("name", element.name$());
 		if (element.i$(conceptOf(io.intino.konos.dsl.Template.class))) result.add("template");
@@ -176,7 +176,7 @@ public abstract class UIRenderer extends Renderer {
 		if (element.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class))) result.add("item");
 		if (element.i$(conceptOf(CatalogComponents.Table.class))) result.add("table");
 		if (element.i$(conceptOf(CatalogComponents.DynamicTable.class))) result.add("dynamictable");
-		if (!accessible && element.isAccessible()) result.add("accessible");
+		if (!exposed && element.isExposed()) result.add("exposed");
 		return result;
 	}
 

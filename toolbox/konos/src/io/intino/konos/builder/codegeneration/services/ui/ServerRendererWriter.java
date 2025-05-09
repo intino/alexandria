@@ -61,7 +61,7 @@ public class ServerRendererWriter extends UiRendererWriter {
 		if (!context.cache().isModified(element) && pushRequesterFile.exists()) return true;
 		Frame frame = builder.toFrame();
 		var template = new PassiveViewPushRequesterTemplate();
-		if (isAccessible(frame)) return false;
+		if (isExposed(frame)) return false;
 		String name = nameOfPassiveViewFile(element, frame, "PushRequester");
 		if (!hasConcreteRequester(element)) return false;
 		writeFrame(displayRequestersFolder(gen(), target), element, name, template.render(frame, all));
@@ -70,7 +70,7 @@ public class ServerRendererWriter extends UiRendererWriter {
 	}
 
 	private void writeSrc(Layer element, String type, FrameBuilder builder) {
-		final String newDisplay = displayFilename(element.name$(), builder.is("accessible") ? "Proxy" : "");
+		final String newDisplay = displayFilename(element.name$(), builder.is("exposed") ? "Proxy" : "");
 		var template = srcTemplate(element, builder);
 		if (template == null) return;
 		File sourceFile = displayFile(src(), newDisplay, type, target);
@@ -80,12 +80,12 @@ public class ServerRendererWriter extends UiRendererWriter {
 
 	private void writeGen(Layer element, String type, FrameBuilder builder) {
 		var template = genTemplate(element);
-		final String newDisplay = displayName(element, isAccessible(builder));
+		final String newDisplay = displayName(element, isExposed(builder));
 		writeFrame(displayFolder(gen(), type, target), element, newDisplay, new Engine(template).addAll(all).render(builder.add("gen").toFrame()));
 	}
 
 	private DisplayTemplate srcTemplate(Layer layer, FrameBuilder builder) {
-		if (builder.is("accessible")) return null;
+		if (builder.is("exposed")) return null;
 		if (!ElementHelper.isRoot(layer)) return null;
 		return new DisplayTemplate();
 	}

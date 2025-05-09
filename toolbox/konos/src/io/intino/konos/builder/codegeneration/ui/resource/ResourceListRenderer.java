@@ -13,19 +13,19 @@ import java.util.stream.Collectors;
 
 public class ResourceListRenderer extends UIRenderer {
 	protected final List<Service.UI.Resource> resourceList;
-	protected final List<Display.Accessible> accessibleDisplays;
+	protected final List<Display.Exposed> exposedDisplays;
 	private final Target target;
 
 	public ResourceListRenderer(CompilationContext compilationContext, KonosGraph graph, Target target) {
 		super(compilationContext);
 		this.target = target;
 		this.resourceList = graph.core$().find(Service.UI.Resource.class);
-		this.accessibleDisplays = graph.displayList(Display::isAccessible).map(Display::asAccessible).collect(Collectors.toList());
+		this.exposedDisplays = graph.displayList(Display::isExposed).map(Display::asExposed).collect(Collectors.toList());
 	}
 
 	@Override
 	public void render() throws KonosException {
 		for (Service.UI.Resource r : resourceList) new ResourceRenderer(context, r, target).execute();
-		for (Display.Accessible d : accessibleDisplays) new AccessibleDisplayRenderer(context, d, target).execute();
+		for (Display.Exposed d : exposedDisplays) new ExposedDisplayRenderer(context, d, target).execute();
 	}
 }

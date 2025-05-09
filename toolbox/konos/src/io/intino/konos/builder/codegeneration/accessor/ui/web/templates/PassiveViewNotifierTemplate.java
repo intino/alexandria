@@ -16,10 +16,10 @@ public class PassiveViewNotifierTemplate extends Template {
 		rules.add(rule().condition(allTypes("display")).output(placeholder("import")).output(literal("\n\nexport default class ")).output(placeholder("name", "firstUpperCase")).output(placeholder("proxy")).output(literal("Notifier extends ")).output(placeholder("parentType")).output(literal(" {\n\tconstructor(element) {\n\t\tsuper(element);\n\t\tthis.setup();\n\t};\n\n\tsetup() {\n\t\tif (this.element == null || this.pushLinked) return;\n\t\tsuper.setup();\n\t\t")).output(expression().output(placeholder("notification").multiple("\n"))).output(literal("\n\t\t")).output(expression().output(placeholder("event").multiple("\n"))).output(literal("\n\t\tthis.pushLinked = true;\n\t};\n}")));
 		rules.add(rule().condition(all(attribute("extensionof"), trigger("import"))).output(literal("import ")).output(placeholder("parent", "firstUpperCase")).output(literal("Notifier from \"./")).output(placeholder("parent", "firstUpperCase")).output(literal("Notifier\"")));
 		rules.add(rule().condition(all(attribute("component"), trigger("import"))).output(literal("import Notifier from \"alexandria-ui-elements/src/displays/notifiers/ComponentNotifier\";")));
-		rules.add(rule().condition(all(attribute("accessible"), trigger("import"))).output(literal("import Notifier from \"alexandria-ui-elements/gen/displays/notifiers/ProxyDisplayNotifier\";")));
+		rules.add(rule().condition(all(attribute("exposed"), trigger("import"))).output(literal("import Notifier from \"alexandria-ui-elements/gen/displays/notifiers/ProxyDisplayNotifier\";")));
 		rules.add(rule().condition(all(attribute("basetype"), trigger("import"))).output(literal("import Notifier from \"alexandria-ui-elements/gen/displays/notifiers/")).output(placeholder("type", "firstUpperCase")).output(literal("Notifier\";")));
 		rules.add(rule().condition(trigger("import")).output(literal("import Notifier from \"./Notifier\";")));
-		rules.add(rule().condition(all(attribute("accessible"), trigger("proxy"))).output(literal("Proxy")));
+		rules.add(rule().condition(all(attribute("exposed"), trigger("proxy"))).output(literal("Proxy")));
 		rules.add(rule().condition(trigger("proxy")));
 		rules.add(rule().condition(all(attribute("extensionof"), trigger("parenttype"))).output(placeholder("parent", "firstUpperCase")).output(literal("Notifier")));
 		rules.add(rule().condition(trigger("parenttype")).output(literal("Notifier")));

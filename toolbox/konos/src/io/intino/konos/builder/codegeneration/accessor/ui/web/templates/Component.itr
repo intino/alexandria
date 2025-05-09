@@ -29,8 +29,11 @@ rule type(extends, multiple)
 rule type(extends, displaystamp)
 	Ui$type+firstUpperCase$facet...[]
 
-rule type(extends, proxystamp)
-	UiProxyStamp
+rule type(extends, externaltemplatestamp)
+	UiExternalTemplateStamp
+
+rule type(extends, librarytemplatestamp)
+	UiLibraryTemplateStamp
 
 rule type(extends, basestamp)
 	Displays$type+firstUpperCase

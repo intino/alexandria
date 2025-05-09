@@ -161,6 +161,10 @@ Concept:Named Service
     		var string service
     		var string url = empty
     		var string socketPath = empty
+    	Concept Import
+    		var string package
+    		var string name
+    		var string libraryFile
     	var string url = empty
     	var string port
     	var long:{MB} maxResourceSize = 100MB

@@ -1,4 +1,4 @@
-rule type(display, accessible)
+rule type(display, exposed)
 	import React from "react";
 	<<$alexandriaBlockImport>>
 	<<$alexandriaTemplateStampImport>>
@@ -33,7 +33,7 @@ rule type(display, noAbstract)
 	<<$alexandriaComponentImport...[$NL]>>
 	<<$projectComponentImport...[$NL]>>
 	<<$parent+import>>
-	$accessibleNotifierImport
+	$exposedNotifierImport
 	import $name+firstUpperCase~Requester from "alexandria-ui-elements/gen/displays/requesters/$requester~Requester";
 	import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 	import { withSnackbar } from 'notistack';
@@ -67,10 +67,10 @@ rule type(display, noAbstract)
 	export default withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase));
 	DisplayFactory.register("$name+firstUpperCase", withStyles(styles, { withTheme: true })(withSnackbar($name+firstUpperCase)));
 
-rule type(accessibleNotifierImport, accessible)
+rule type(exposedNotifierImport, exposed)
 	import $name+firstUpperCase~Notifier from "$serviceName/gen/displays/notifiers/$name+firstUpperCase~Notifier";
 
-rule type(accessibleNotifierImport)
+rule type(exposedNotifierImport)
 	import $name+firstUpperCase~Notifier from "alexandria-ui-elements/gen/displays/notifiers/$notifier~Notifier";
 
 rule type(notifyProxyMethod)
@@ -142,7 +142,7 @@ rule type(display)
 rule type(displayRegistration) and trigger(import)
 	import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 
-rule type(displayRegistration, accessible) and trigger(declaration)
+rule type(displayRegistration, exposed) and trigger(declaration)
 	DisplayFactory.register("$name+PascalCase~Proxy", $name+PascalCase~Proxy);
 
 rule type(displayRegistration) and trigger(declaration)
@@ -157,7 +157,7 @@ rule type(alexandriaImport, embedded)
 rule type(alexandriaComponentImport)
 	import Ui$type+firstUpperCase$facet...[] from "alexandria-ui-elements/<<$componentTarget>>/displays/<<$componentDirectory/>>$type+firstUpperCase$facet...[]";
 
-rule type(projectComponentImport, ownertemplatestamp)
+rule type(projectComponentImport, inherittemplatestamp)
 	import Displays$name+firstUpperCase from "$ownerModuleName/gen/displays/templates/$name+firstUpperCase";
 
 rule type(projectComponentImport)
@@ -204,7 +204,7 @@ rule type(renderTagAttributes)
 rule attribute(parent) and trigger(import)
 	import Displays$parent+firstUpperCase from "../../../src/displays/$parentDirectory/$parent+firstUpperCase";
 
-rule attribute(accessible) and trigger(import)
+rule attribute(exposed) and trigger(import)
 	import Ui$value+firstUpperCase from "alexandria-ui-elements/src/displays/ProxyDisplay";
 
 rule attribute(baseDisplay) and trigger(import)

@@ -59,7 +59,7 @@ public class AndroidRendererWriter extends UiRendererWriter {
 	private void writeSrc(Layer element, String type, FrameBuilder builder) {
 		Template template = srcTemplate(element, builder);
 		if (template == null) return;
-		final String newDisplay = displayFilename(element.name$(), isAccessible(builder) ? "Proxy" : "");
+		final String newDisplay = displayFilename(element.name$(), isExposed(builder) ? "Proxy" : "");
 		File file = displayFile(src(), newDisplay, type, target);
 		if (!element.i$(io.intino.konos.dsl.Template.class) && file.exists()) return;
 		writeFrame(displayFolder(src(), type, target), element, newDisplay, new Engine(template).addAll(Formatters.all).render(builder.toFrame()));
@@ -68,7 +68,7 @@ public class AndroidRendererWriter extends UiRendererWriter {
 	private void writeGen(Layer element, String type, FrameBuilder builder) {
 		Template template = genTemplate(element);
 		if (template == null) return;
-		final String newDisplay = displayFilename(element.name$(), isAccessible(builder) ? "Proxy" : "");
+		final String newDisplay = displayFilename(element.name$(), isExposed(builder) ? "Proxy" : "");
 		File file = displayFile(gen(), newDisplay, type, target);
 		if (file.exists()) return;
 		writeFrame(displayFolder(gen(), type, target), element, newDisplay, new Engine(template).addAll(Formatters.all).render(builder.toFrame()));
@@ -78,7 +78,7 @@ public class AndroidRendererWriter extends UiRendererWriter {
 		builder.add("res");
 		Template template = resTemplate(element);
 		if (template == null) return;
-		final String newDisplay = displayFilename(element.name$(), isAccessible(builder) ? "Proxy" : "");
+		final String newDisplay = displayFilename(element.name$(), isExposed(builder) ? "Proxy" : "");
 		File file = displayFile(res(), newDisplay, type, Target.AndroidResource);
 		if (hasAbstractClass(element) && file.exists()) return;
 		writeFrame(displayFolder(res(), type, Target.AndroidResource), element, newDisplay, new Engine(template).addAll(Formatters.all).render(builder.toFrame()), Target.AndroidResource);
@@ -89,12 +89,12 @@ public class AndroidRendererWriter extends UiRendererWriter {
 		builder.add("interface");
 		Template template = srcTemplate(element, builder);
 		if (template == null) return;
-		final String newDisplay = displayFilename(element.name$(), isAccessible(builder) ? "Proxy" : "");
+		final String newDisplay = displayFilename(element.name$(), isExposed(builder) ? "Proxy" : "");
 		writeFrame(displayFolder(src(Target.MobileShared), type, Target.MobileShared), element, newDisplay, new Engine(template).addAll(Formatters.all).render(builder.toFrame()), Target.MobileShared);
 	}
 
 	public Template srcTemplate(Layer layer, FrameBuilder builder) {
-		if (isAccessible(builder) || !ElementHelper.isRoot(layer)) return null;
+		if (isExposed(builder) || !ElementHelper.isRoot(layer)) return null;
 		return Template.compose(new ComponentTemplate(), new DisplaySkeletonTemplate());
 	}
 

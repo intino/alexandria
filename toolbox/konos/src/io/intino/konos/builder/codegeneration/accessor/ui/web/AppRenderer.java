@@ -9,6 +9,7 @@ import io.intino.konos.builder.codegeneration.services.ui.Target;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.dsl.Display;
 import io.intino.konos.dsl.Service;
 
 import java.io.File;
@@ -45,6 +46,12 @@ public class AppRenderer extends UIRenderer {
 			addPatterns(r.asPage().template(), builder);
 			Commons.write(new File(gen(Target.Accessor) + File.separator + "apps" + File.separator + firstUpperCase(r.asPage().template().name$()) + ".js").toPath(), new AppTemplate().render(builder.toFrame(), all));
 		});
+		exposedDisplays().forEach(d -> {
+			FrameBuilder builder = new FrameBuilder("app");
+			builder.add("page", new FrameBuilder("page").add("templateName", d.name$()).toFrame());
+			builder.add("serviceName", context.serviceDirectory() != null ? context.serviceDirectory().getName() : "");
+			Commons.write(new File(gen(Target.Accessor) + File.separator + "apps" + File.separator + firstUpperCase(d.name$()) + ".js").toPath(), new AppTemplate().render(builder.toFrame(), all));
+		});
 	}
 
 	private void addPatterns(io.intino.konos.dsl.Template template, FrameBuilder builder) {
@@ -70,6 +77,7 @@ public class AppRenderer extends UIRenderer {
 		builder.add("serviceName", context.serviceDirectory() != null ? context.serviceDirectory().getName() : "");
 		if (isAlexandria(project())) builder.add("alexandriaProject", "true");
 		resourcesWithTemplate().forEach(r -> builder.add("page", new FrameBuilder("page").add("templateName", r.asPage().template().name$()).toFrame()));
+		exposedDisplays().forEach(d -> builder.add("exposedDisplay", new FrameBuilder("exposedDisplay").add("name", d.name$()).toFrame()));
 		Commons.write(new File(root(Target.Accessor), "webpack.config.js").toPath(), template.render(builder.toFrame(), all));
 	}
 
@@ -92,5 +100,9 @@ public class AppRenderer extends UIRenderer {
 	public List<Service.UI.Resource> resourcesWithTemplate() {
 		Map<io.intino.konos.dsl.Template, List<Service.UI.Resource>> result = service.resourceList().stream().filter(Service.UI.Resource::isPage).collect(Collectors.groupingBy(r -> r.asPage().template()));
 		return result.values().stream().map(r -> r.get(0)).collect(toList());
+	}
+
+	public List<Display.Exposed> exposedDisplays() {
+		return service.graph().displayList(Display::isExposed).map(Display::asExposed).collect(Collectors.toList());
 	}
 }

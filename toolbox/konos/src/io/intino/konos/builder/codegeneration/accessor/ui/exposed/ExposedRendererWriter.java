@@ -1,4 +1,4 @@
-package io.intino.konos.builder.codegeneration.accessor.ui.accessible;
+package io.intino.konos.builder.codegeneration.accessor.ui.exposed;
 
 import io.intino.itrules.Engine;
 import io.intino.itrules.Frame;
@@ -23,25 +23,25 @@ import static io.intino.konos.builder.helpers.CodeGenerationHelper.displayFolder
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.displayNotifiersFolder;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 
-public class AccessibleRendererWriter extends UiRendererWriter {
+public class ExposedRendererWriter extends UiRendererWriter {
 	private final File destination;
 
-	public AccessibleRendererWriter(CompilationContext context, File destination) {
-		super(context, Target.AccessibleAccessor);
+	public ExposedRendererWriter(CompilationContext context, File destination) {
+		super(context, Target.ExposedAccessor);
 		this.destination = destination;
 	}
 
 	public boolean write(Layer element, String type, FrameBuilder builder) {
-		if (!element.i$(Display.Accessible.class)) return true;
-		if (!builder.is("accessible")) return true;
+		if (!element.i$(Display.Exposed.class)) return true;
+		if (!builder.is("exposed")) return true;
 		writeDisplay(element, type, builder);
 		return true;
 	}
 
 	@Override
 	public boolean writeNotifier(PassiveView element, FrameBuilder builder) {
-		if (!element.i$(Display.Accessible.class)) return true;
-		if (!builder.is("accessible")) return true;
+		if (!element.i$(Display.Exposed.class)) return true;
+		if (!builder.is("exposed")) return true;
 		File notifierFile = javaFile(displayNotifiersFolder(destination, target), nameOfPassiveViewFile(element, builder.toFrame(), "Notifier"));
 		if (!context.cache().isModified(element) && notifierFile.exists()) return true;
 		Frame frame = builder.toFrame();
@@ -70,7 +70,7 @@ public class AccessibleRendererWriter extends UiRendererWriter {
 	private void writeDisplay(Layer element, String type, FrameBuilder builder) {
 		Template template = template(element, builder);
 		if (template == null) return;
-		final String newDisplay = displayName(element, isAccessible(builder));
+		final String newDisplay = displayName(element, isExposed(builder));
 		writeFrame(displayFolder(destination, type, target), element, newDisplay, new Engine(template).addAll(Formatters.all).render(builder.add("gen").toFrame()));
 	}
 

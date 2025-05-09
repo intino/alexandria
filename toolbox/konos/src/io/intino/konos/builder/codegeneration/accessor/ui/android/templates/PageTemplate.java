@@ -20,7 +20,7 @@ public class PageTemplate extends Template {
 		rules.add(rule().condition(all(attribute("hasabstract"), trigger("origin"))).output(literal("../../src")));
 		rules.add(rule().condition(all(attribute("decorated"), trigger("origin"))).output(literal("../../gen")));
 		rules.add(rule().condition(trigger("origin")).output(literal("..")));
-		rules.add(rule().condition(allTypes("accessibleImport")).output(literal("import ")).output(placeholder("service", "firstUpperCase")).output(literal("AccessibleDisplays from '")).output(placeholder("elements")).output(literal("/gen/AccessibleDisplays';")));
+		rules.add(rule().condition(allTypes("exposedImport")).output(literal("import ")).output(placeholder("service", "firstUpperCase")).output(literal("ExposedDisplays from '")).output(placeholder("elements")).output(literal("/gen/ExposedDisplays';")));
 		return rules;
 	}
 

@@ -28,7 +28,7 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 	@Override
 	public void execute() throws KonosException {
 		File displayFile = CodeGenerationHelper.fileOf(displayFolder(gen(writer.target()), typeOf(element), writer.target()), displayName(false), writer.target());
-		if (writer.target() != Target.Accessor && writer.target() != Target.AccessibleAccessor && writer.target() != Target.Android && isRendered(element) && displayFile.exists())
+		if (writer.target() != Target.Accessor && writer.target() != Target.ExposedAccessor && writer.target() != Target.Android && isRendered(element) && displayFile.exists())
 			return;
 		super.execute();
 	}
@@ -47,9 +47,9 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 		writer.write(element, typeOf(element), builder);
 	}
 
-	private String displayName(boolean accessible) {
-		final String suffix = accessible ? "Proxy" : "";
-		final String abstractValue = accessible ? "" : (ElementHelper.isRoot(element) && hasAbstractClass(element, writer.target()) ? "Abstract" : "");
+	private String displayName(boolean exposed) {
+		final String suffix = exposed ? "Proxy" : "";
+		final String abstractValue = exposed ? "" : (ElementHelper.isRoot(element) && hasAbstractClass(element, writer.target()) ? "Abstract" : "");
 		return displayFilename(snakeCaseToCamelCase(abstractValue + firstUpperCase(element.name$())), suffix);
 	}
 

@@ -64,7 +64,7 @@ public class CodeGenerationHelper {
 
 	public static String displayPath(File folder, String type, Target target) {
 		if (target == Target.AndroidResource) return File.separator + "layout";
-		return type.equalsIgnoreCase("display") || type.equalsIgnoreCase("AccessibleDisplay") ? format(Displays, target) : String.format(DisplaysType, uiSubPath(target), type).toLowerCase();
+		return type.equalsIgnoreCase("display") || type.equalsIgnoreCase("ExposedDisplay") ? format(Displays, target) : String.format(DisplaysType, uiSubPath(target), type).toLowerCase();
 	}
 
 	public static File displaysFolder(File folder, String type, Target target) {
@@ -104,11 +104,11 @@ public class CodeGenerationHelper {
 	}
 
 	public static String uiSubPath(Target target) {
-		return target == Target.Service || target == Target.AccessibleAccessor ? UI + "/" : "";
+		return target == Target.Service || target == Target.ExposedAccessor ? UI + "/" : "";
 	}
 
 	public static File fileOf(File file, String name, Target target) {
-		if (target == Target.Service || target == Target.AccessibleAccessor) return javaFile(file, name);
+		if (target == Target.Service || target == Target.ExposedAccessor) return javaFile(file, name);
 		if (target == Target.Android || target == Target.MobileShared) return kotlinFile(file, name);
 		if (target == Target.AndroidResource) return xmlFile(file, name);
 		return javascriptFile(file, name);

@@ -109,7 +109,7 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 		if (collection == null) return;
 		FrameBuilder binding = buildBaseFrame().add("binding").add("collectionbox");
 		if (collectionBox.source() != null) binding.add("add");
-		if (!belongsToAccessible(element)) binding.add("concreteBox", boxName());
+		if (!isExposed(element)) binding.add("concreteBox", boxName());
 		binding.add("name", nameOf(element));
 		binding.add("collection", nameOf(collection));
 		builder.add("binding", binding);

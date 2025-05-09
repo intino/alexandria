@@ -49,7 +49,8 @@ public class ComponentRendererFactory {
 		map.put(conceptOf(OtherComponents.AbstractDialog.class), config -> new DialogRenderer(config.context(), config.component().a$(OtherComponents.AbstractDialog.class), config.provider()));
 		map.put(conceptOf(OtherComponents.BaseIcon.class), config -> new IconRenderer(config.context(), config.component().a$(OtherComponents.BaseIcon.class), config.provider()));
 		map.put(conceptOf(OtherComponents.User.class), config -> new UserRenderer(config.context(), config.component().a$(OtherComponents.User.class), config.provider()));
-		map.put(conceptOf(OtherComponents.ProxyStamp.class), config -> new ProxyStampRenderer(config.context(), config.component().a$(OtherComponents.ProxyStamp.class), config.provider()));
+		map.put(conceptOf(OtherComponents.ExternalTemplateStamp.class), config -> new ExternalTemplateStampRenderer(config.context(), config.component().a$(OtherComponents.ExternalTemplateStamp.class), config.provider()));
+		map.put(conceptOf(OtherComponents.LibraryTemplateStamp.class), config -> new LibraryTemplateStampRenderer(config.context(), config.component().a$(OtherComponents.LibraryTemplateStamp.class), config.provider()));
 		map.put(conceptOf(OtherComponents.Frame.class), config -> new FrameRenderer(config.context(), config.component().a$(OtherComponents.Frame.class), config.provider()));
 		map.put(conceptOf(OtherComponents.MicroSite.class), config -> new MicroSiteRenderer(config.context(), config.component().a$(OtherComponents.MicroSite.class), config.provider()));
 		map.put(conceptOf(OtherComponents.HtmlViewer.class), config -> new HtmlViewerRenderer(config.context(), config.component().a$(OtherComponents.HtmlViewer.class), config.provider()));

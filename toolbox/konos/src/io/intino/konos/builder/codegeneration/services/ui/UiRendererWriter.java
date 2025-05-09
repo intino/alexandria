@@ -63,9 +63,9 @@ public abstract class UiRendererWriter implements RendererWriter {
 		return context.res(target);
 	}
 
-	protected String displayName(Layer element, boolean accessible) {
-		final String suffix = accessible ? "Proxy" : "";
-		final String abstractValue = accessible ? "" : (ElementHelper.isRoot(element) && hasAbstractClass(element) ? "Abstract" : "");
+	protected String displayName(Layer element, boolean exposed) {
+		final String suffix = exposed ? "Proxy" : "";
+		final String abstractValue = exposed ? "" : (ElementHelper.isRoot(element) && hasAbstractClass(element) ? "Abstract" : "");
 		return displayFilename(snakeCaseToCamelCase(abstractValue + firstUpperCase(element.name$())), suffix);
 	}
 
@@ -90,23 +90,23 @@ public abstract class UiRendererWriter implements RendererWriter {
 	}
 
 	protected String nameOfPassiveViewFile(PassiveView element, Frame frame, String suffix) {
-		return nameOfPassiveViewFile(element, isAccessible(frame), suffix);
+		return nameOfPassiveViewFile(element, isExposed(frame), suffix);
 	}
 
-	protected String nameOfPassiveViewFile(PassiveView element, boolean accessible, String suffix) {
-		return snakeCaseToCamelCase(element.name$() + (accessible ? "Proxy" : "") + suffix);
+	protected String nameOfPassiveViewFile(PassiveView element, boolean exposed, String suffix) {
+		return snakeCaseToCamelCase(element.name$() + (exposed ? "Proxy" : "") + suffix);
 	}
 
-	protected boolean isAccessible(FrameBuilder builder) {
-		return builder.is("accessible");
+	protected boolean isExposed(FrameBuilder builder) {
+		return builder.is("exposed");
 	}
 
-	protected boolean isAccessible(Frame frame) {
-		return frame.is("accessible");
+	protected boolean isExposed(Frame frame) {
+		return frame.is("exposed");
 	}
 
 	protected boolean hasConcreteNotifier(PassiveView element) {
-		if (element.i$(conceptOf(Display.Accessible.class))) return true;
+		if (element.i$(conceptOf(Display.Exposed.class))) return true;
 		return !element.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class)) &&
 				!element.i$(conceptOf(CatalogComponents.Table.class)) &&
 				!element.i$(conceptOf(CatalogComponents.DynamicTable.class)) &&
@@ -115,7 +115,7 @@ public abstract class UiRendererWriter implements RendererWriter {
 	}
 
 	protected boolean hasConcreteRequester(PassiveView element) {
-		if (element.i$(conceptOf(Display.Accessible.class))) return true;
+		if (element.i$(conceptOf(Display.Exposed.class))) return true;
 		return !element.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class)) &&
 				!element.i$(conceptOf(CatalogComponents.Table.class)) &&
 				!element.i$(conceptOf(CatalogComponents.DynamicTable.class)) &&

@@ -11,10 +11,7 @@ import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.ElementHelper;
 import io.intino.konos.dsl.ActionableComponents.Actionable;
 import io.intino.konos.dsl.*;
-import io.intino.konos.dsl.OtherComponents.Dialog;
-import io.intino.konos.dsl.OtherComponents.OwnerTemplateStamp;
-import io.intino.konos.dsl.OtherComponents.ProxyStamp;
-import io.intino.konos.dsl.OtherComponents.TemplateStamp;
+import io.intino.konos.dsl.OtherComponents.*;
 import io.intino.konos.dsl.rules.Layout;
 import io.intino.magritte.framework.Layer;
 
@@ -27,7 +24,7 @@ import static io.intino.konos.builder.helpers.CodeGenerationHelper.isScrollable;
 import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
 import static io.intino.konos.dsl.CatalogComponents.Collection;
 import static io.intino.konos.dsl.Component.DynamicLoaded;
-import static io.intino.konos.dsl.OtherComponents.Selector;
+import static io.intino.konos.dsl.OtherComponents.*;
 
 public abstract class BaseDisplayRenderer<D extends Display> extends PassiveViewRenderer<D> {
 	private static final ComponentRendererFactory factory = new ComponentRendererFactory();
@@ -45,7 +42,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		FrameBuilder result = buildFrame();
 		createPassiveViewFiles(result);
 		write(result);
-		if (element.isAccessible()) writeDisplaysFor(element.asAccessible(), buildFrame(true));
+		if (element.isExposed()) writeDisplaysFor(element.asExposed(), buildFrame(true));
 	}
 
 	@Override
@@ -53,21 +50,21 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		return buildFrame(false);
 	}
 
-	public FrameBuilder buildFrame(boolean accessible) {
-		FrameBuilder result = super.buildFrame(accessible);
+	public FrameBuilder buildFrame(boolean exposed) {
+		FrameBuilder result = super.buildFrame(exposed);
 		result.add("display");
 		result.add(typeOf(element));
-		if (accessible) result.add("accessible");
+		if (exposed) result.add("exposed");
 		if (!hasAbstractClass(element, writer.target())) result.add("noAbstract");
 		if (isScrollable(element, writer.target())) result.add("scrollable");
-		addParametrized(result, accessible);
-		addExtends(result, accessible);
-		addImports(result, accessible);
+		addParametrized(result, exposed);
+		addExtends(result, exposed);
+		addImports(result, exposed);
 		addImplements(result);
 		addMethods(result);
 		addRenderTagFrames(result);
 		addDecoratedFrames(result);
-		addAccessibleFrames(result, accessible);
+		addExposedFrames(result, exposed);
 		result.add("notifier", notifierName(element));
 		result.add("requester", requesterName(element));
 		result.add("componentType", element.components().stream().map(this::typeOf).distinct().map(type -> new FrameBuilder().add("componentType", type).toFrame()).toArray(Frame[]::new));
@@ -75,8 +72,8 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (element.parentDisplay() != null) addParent(element, result);
 		if (!element.graph().schemaList().isEmpty())
 			result.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName()));
-		if (element.isAccessible())
-			result.add("parameter", element.asAccessible().parameters().stream().map(p -> new FrameBuilder("parameter", "accessible").add("value", p).toFrame()).toArray(Frame[]::new));
+		if (element.isExposed())
+			result.add("parameter", element.asExposed().parameters().stream().map(p -> new FrameBuilder("parameter", "exposed").add("value", p).toFrame()).toArray(Frame[]::new));
 		return result;
 	}
 
@@ -88,17 +85,17 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		return result;
 	}
 
-	private void addParametrized(FrameBuilder frame, boolean accessible) {
+	private void addParametrized(FrameBuilder frame, boolean exposed) {
 		FrameBuilder result = new FrameBuilder("parametrized");
 		result.add("name", element.name$());
 		result.add("notifier", element.i$(conceptOf(Template.class)) ? "Template" : element.name$());
 		addGeneric(element, result);
-		if (!accessible && element.isAccessible()) result.add("accessible");
+		if (!exposed && element.isExposed()) result.add("exposed");
 		addDecoratedFrames(result);
 		frame.add("parametrized", result.toFrame());
 	}
 
-	private void addExtends(FrameBuilder frame, boolean accessible) {
+	private void addExtends(FrameBuilder frame, boolean exposed) {
 		FrameBuilder result = buildBaseFrame().add("displayExtends");
 		if (element.i$(conceptOf(Dialog.class))) result.add(Dialog.class.getSimpleName());
 		if (element.i$(conceptOf(Template.class))) result.add(Template.class.getSimpleName());
@@ -115,7 +112,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (element.i$(conceptOf(CatalogComponents.Moldable.Mold.Item.class)))
 			result.add(CatalogComponents.Moldable.Mold.Item.class.getSimpleName());
 		if (element.i$(conceptOf(HelperComponents.Row.class))) result.add(HelperComponents.Row.class.getSimpleName());
-		if (!accessible && element.isAccessible()) result.add("accessible");
+		if (!exposed && element.isExposed()) result.add("exposed");
 		addGeneric(element, result);
 		result.add("type", typeOf(element));
 		addDecoratedFrames(result);
@@ -141,7 +138,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		frame.add("displayExtends", result);
 	}
 
-	private void addImports(FrameBuilder frame, boolean accessible) {
+	private void addImports(FrameBuilder frame, boolean exposed) {
 		KonosGraph graph = element.graph();
 		if (graph.templateList().size() > 0) frame.add("templatesImport", buildBaseFrame().add("templatesImport"));
 		if (graph.blockList().size() > 0) frame.add("blocksImport", buildBaseFrame().add("blocksImport"));
@@ -159,16 +156,16 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 			frame.add("mapsImport", buildBaseFrame().add("mapsImport"));
 		if (graph.dynamicTablesDisplays(context.graphName()).size() > 0)
 			frame.add("dynamicTablesImport", buildBaseFrame().add("dynamicTablesImport"));
-		frame.add("notifierImport", notifierImportFrame(element, accessible));
-		if (!ElementHelper.isRoot(componentOf(element)) || (element.isAccessible() && accessible))
-			frame.add("displayRegistration", displayRegistrationFrame(accessible));
+		frame.add("notifierImport", notifierImportFrame(element, exposed));
+		if (!ElementHelper.isRoot(componentOf(element)) || (element.isExposed() && exposed))
+			frame.add("displayRegistration", displayRegistrationFrame(exposed));
 		frame.add("requesterDirectory", typeOf(element).equalsIgnoreCase("Display") || typeOf(element).equalsIgnoreCase("Display") ? "." : "..");
 		frame.add("notifierDirectory", typeOf(element).equalsIgnoreCase("Display") ? "." : "..");
 	}
 
-	private FrameBuilder displayRegistrationFrame(boolean accessible) {
+	private FrameBuilder displayRegistrationFrame(boolean exposed) {
 		FrameBuilder result = buildBaseFrame().add("displayRegistration");
-		if (element.isAccessible() && accessible) result.add("accessible");
+		if (element.isExposed() && exposed) result.add("exposed");
 		return result.add("name", nameOf(element));
 	}
 
@@ -210,13 +207,13 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (element.i$(conceptOf(DataComponents.Text.Multiple.class))) return "java.lang.String";
 		if (element.i$(conceptOf(DataComponents.File.Multiple.class))) return "io.intino.alexandria.ui.File";
 		if (element.i$(conceptOf(DataComponents.Image.Multiple.class))) return "io.intino.alexandria.ui.File";
-		if (element.i$(conceptOf(OtherComponents.Icon.Multiple.class))) return "java.net.URL";
+		if (element.i$(conceptOf(Icon.Multiple.class))) return "java.net.URL";
 		if (element.i$(conceptOf(DataComponents.Number.Multiple.class))) return "java.lang.Double";
 		if (element.i$(conceptOf(DataComponents.Date.Multiple.class)))
 			return writer.target() == Target.Android ? "kotlinx.datetime.Instant" : "java.time.Instant";
-		if (element.i$(conceptOf(OtherComponents.BaseStamp.Multiple.class))) {
+		if (element.i$(conceptOf(BaseStamp.Multiple.class))) {
 			String modelClass = null;
-			if (element.i$(conceptOf(OwnerTemplateStamp.class))) modelClass = "java.lang.Void";
+			if (element.i$(conceptOf(InheritTemplateStamp.class))) modelClass = "java.lang.Void";
 			else if (element.i$(conceptOf(TemplateStamp.class)))
 				modelClass = element.a$(TemplateStamp.class).template() != null ? element.a$(TemplateStamp.class).template().modelClass() : null;
 			return modelClass != null ? modelClass : "java.lang.Void";
@@ -229,7 +226,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		String prefix = "io.intino.alexandria." + targetPackageName() + ".displays.components.";
 		String name = multipleComponentName(element);
 		if (name == null) return null;
-		return element.i$(conceptOf(OtherComponents.BaseStamp.Multiple.class)) || element.i$(conceptOf(Block.Multiple.class)) ? name : prefix + name;
+		return element.i$(conceptOf(BaseStamp.Multiple.class)) || element.i$(conceptOf(Block.Multiple.class)) ? name : prefix + name;
 	}
 
 	protected String multipleComponentName(Layer element) {
@@ -237,13 +234,13 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (element.i$(conceptOf(DataComponents.Text.Multiple.class))) return "Text" + editable;
 		if (element.i$(conceptOf(DataComponents.File.Multiple.class))) return "File" + editable;
 		if (element.i$(conceptOf(DataComponents.Image.Multiple.class))) return "Image" + editable;
-		if (element.i$(conceptOf(OtherComponents.Icon.Multiple.class))) return "Icon" + editable;
+		if (element.i$(conceptOf(Icon.Multiple.class))) return "Icon" + editable;
 		if (element.i$(conceptOf(DataComponents.Number.Multiple.class))) return "Number" + editable;
 		if (element.i$(conceptOf(DataComponents.Date.Multiple.class))) return "Date" + editable;
-		if (element.i$(conceptOf(OtherComponents.BaseStamp.Multiple.class))) {
-			if (element.i$(conceptOf(OtherComponents.OwnerTemplateStamp.class))) {
-				OwnerTemplateStamp stamp = element.a$(OwnerTemplateStamp.class);
-				return ownerTemplateStampPackage(stamp.owner()) + "." + firstUpperCase(stamp.template());
+		if (element.i$(conceptOf(BaseStamp.Multiple.class))) {
+			if (element.i$(conceptOf(InheritTemplateStamp.class))) {
+				InheritTemplateStamp stamp = element.a$(InheritTemplateStamp.class);
+				return inheritTemplateStampPackage(stamp.owner()) + "." + firstUpperCase(stamp.template());
 			}
 			return element.i$(conceptOf(TemplateStamp.class)) ? firstUpperCase(element.a$(TemplateStamp.class).template().name$()) : "io.intino.alexandria." + targetPackageName() + ".Display";
 		}
@@ -252,10 +249,10 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	}
 
 	protected boolean isMultipleSpecificComponent(Layer element) {
-		return element.i$(conceptOf(OtherComponents.BaseStamp.Multiple.class)) || element.i$(conceptOf(Block.Multiple.class));
+		return element.i$(conceptOf(BaseStamp.Multiple.class)) || element.i$(conceptOf(Block.Multiple.class));
 	}
 
-	protected String ownerTemplateStampPackage(Service.UI.Use use) {
+	protected String inheritTemplateStampPackage(Service.UI.Use use) {
 		return use.package$() + ".box.ui.displays.templates";
 	}
 
@@ -295,34 +292,34 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	}
 
 	protected void addDecoratedFrames(FrameBuilder frame, boolean decorated) {
-		boolean isAbstract = decorated && !(element.i$(conceptOf(TemplateStamp.class)) || element.i$(conceptOf(OwnerTemplateStamp.class)) || element.i$(conceptOf(ProxyStamp.class)));
+		boolean isAbstract = decorated && !(element.i$(conceptOf(TemplateStamp.class)) || element.i$(conceptOf(InheritTemplateStamp.class)) || element.i$(conceptOf(ExternalTemplateStamp.class)) || element.i$(conceptOf(OtherComponents.LibraryTemplateStamp.class)));
 		if (isAbstract) frame.add("abstract", "Abstract");
 		else frame.add("notDecorated", element.name$());
 		FrameBuilder abstractBoxFrame = new FrameBuilder().add("box");
 		if (isAbstract) abstractBoxFrame.add("decorated");
 		abstractBoxFrame.add("box", boxName());
-		if (belongsToAccessible(element)) abstractBoxFrame.add("accessible");
+		if (isExposed(element)) abstractBoxFrame.add("exposed");
 		frame.add("abstractBox", abstractBoxFrame);
 	}
 
-	protected void addAccessibleFrames(FrameBuilder frame, boolean accessibleDisplay) {
-		FrameBuilder frameBuilder = accessibleNotifierImportFrame();
-		if (accessibleDisplay) {
-			frame.add("accessibleNotifierImport", frameBuilder);
+	protected void addExposedFrames(FrameBuilder frame, boolean exposedDisplay) {
+		FrameBuilder frameBuilder = exposedNotifierImportFrame();
+		if (exposedDisplay) {
+			frame.add("exposedNotifierImport", frameBuilder);
 			return;
 		}
-		boolean accessible = element.isAccessible();
-		if (!accessible) {
-			frame.add("accessibleNotifierImport", frameBuilder);
+		boolean exposed = element.isExposed();
+		if (!exposed) {
+			frame.add("exposedNotifierImport", frameBuilder);
 			return;
 		}
-		frame.add("accessibleNotifier", buildBaseFrame().add("name", nameOf(element)));
-		frame.add("accessibleNotifierImport", frameBuilder.add("accessible"));
+		frame.add("exposedNotifier", buildBaseFrame().add("name", nameOf(element)));
+		frame.add("exposedNotifierImport", frameBuilder.add("exposed"));
 		frame.add("notifyProxyMethod", buildBaseFrame().add("notifyProxyMethod"));
 	}
 
-	private FrameBuilder accessibleNotifierImportFrame() {
-		FrameBuilder frameBuilder = buildBaseFrame().add("accessibleNotifierImport").add("name", nameOf(element));
+	private FrameBuilder exposedNotifierImportFrame() {
+		FrameBuilder frameBuilder = buildBaseFrame().add("exposedNotifierImport").add("name", nameOf(element));
 		frameBuilder.add("notifier", notifierName(element));
 		if (context.serviceDirectory() != null && context.serviceDirectory().exists())
 			frameBuilder.add("serviceName", context.serviceDirectory().getName());
@@ -342,17 +339,17 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		builder.add("component", componentFrame(component, virtualParent));
 	}
 
-	protected boolean belongsToAccessible(Display element) {
-		if (element.isAccessible()) return true;
+	protected boolean isExposed(Display element) {
+		if (element.isExposed()) return true;
 		Display owner = element.core$().ownerAs(Display.class);
 		while (owner != null) {
-			if (owner.isAccessible()) return true;
+			if (owner.isExposed()) return true;
 			owner = owner.core$().ownerAs(Display.class);
 		}
 		return false;
 	}
 
-	private void writeDisplaysFor(Display.Accessible display, FrameBuilder builder) {
+	private void writeDisplaysFor(Display.Exposed display, FrameBuilder builder) {
 		write(builder);
 		writer.writeNotifier(display.a$(PassiveView.class), builder);
 		writer.writeRequester(display.a$(PassiveView.class), builder);

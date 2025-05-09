@@ -38,22 +38,27 @@ Concept OtherComponents
 		sub TemplateStamp
 			var Template template
 
-		sub DisplayStamp
-			var Display display
-
 		!! Stamps template that belongs to owner project
-		sub OwnerTemplateStamp
+		sub InheritTemplateStamp
 			var Service.UI.Use owner
 			var string template
 
+		!! Stamps template that belongs to alexandria library
+		sub LibraryTemplateStamp
+			var Service.UI.Import import
+			var string template
+
 		!! Stamps template from other app
-		sub ProxyStamp
+		sub ExternalTemplateStamp
 			var string proxy
 			var Service.UI.Use from
 
 			Concept Parameter
 				var string name
 				var string value
+
+		sub DisplayStamp
+			var Display display
 
 	Concept Frame extends Component
 		var string url

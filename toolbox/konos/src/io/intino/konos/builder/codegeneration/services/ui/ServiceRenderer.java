@@ -49,7 +49,7 @@ public class ServiceRenderer extends UIRenderer {
 		final List<Display> displays = service.graph().rootDisplays(context.graphName());
 		FrameBuilder builder = buildFrame().add("ui").add("name", service.name$()).add("resource", resourcesFrame(service.resourceList()));
 		if (userHome(service) != null) builder.add("userHome", userHome(service).name$());
-		if (target == Target.AccessibleAccessor) builder.add("accessibleAccessor");
+		if (target == Target.ExposedAccessor) builder.add("exposedAccessor");
 		if (!displays.isEmpty()) {
 			builder.add("display", displaysFrame(displays)).add("displaysImport", packageName());
 			boolean hasNotifiers = displays.stream().anyMatch(this::hasConcreteNotifier);
@@ -87,8 +87,8 @@ public class ServiceRenderer extends UIRenderer {
 
 	private Frame frameOf(Display display) {
 		final FrameBuilder result = newDisplayFrame(display, new FrameBuilder("display"));
-		if (display.isAccessible())
-			result.add("accessible").add("display", newDisplayFrame(display, new FrameBuilder("display").add("proxy")));
+		if (display.isExposed())
+			result.add("exposed").add("display", newDisplayFrame(display, new FrameBuilder("display").add("proxy")));
 		if (!hasConcreteNotifier(display)) {
 			result.add("genericNotifier");
 			result.add("generic", notifierName(display));

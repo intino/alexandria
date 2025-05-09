@@ -18,10 +18,13 @@ rule type(component, child, displaystamp, single) and trigger(declarations)
 	public <<$ancestors+firstUpperCase...[.].>> $name+firstUpperCase $name;
 	<<$component+declarations...[$NL]>>
 
-rule type(component, child, ownertemplatestamp, single) and trigger(declarations)
+rule type(component, child, inherittemplatestamp, single) and trigger(declarations)
 	public $ownerPackage.$template+firstUpperCase $name;
 
-rule type(component, child, proxystamp, single) and trigger(declarations)
+rule type(component, child, externaltemplatestamp, single) and trigger(declarations)
+	public <<$ancestors+firstUpperCase...[.].>> $name+firstUpperCase $name;
+
+rule type(component, child, librarytemplatestamp, single) and trigger(declarations)
 	public <<$ancestors+firstUpperCase...[.].>> $name+firstUpperCase $name;
 
 rule type(component, child, basestamp, single) and trigger(declarations)
@@ -34,10 +37,13 @@ rule type(component, child) and trigger(declarations)
 rule type(component, child, displaystamp) and trigger(declaration)
 	public <<$ancestors+firstUpperCase...[.].>> $name+firstUpperCase $name;
 
-rule type(component, child, ownertemplatestamp, single) and trigger(declaration)
+rule type(component, child, inherittemplatestamp, single) and trigger(declaration)
 	public $ownerPackage.$template+firstUpperCase $name;
 
-rule type(component, child, proxystamp, single) and trigger(declaration)
+rule type(component, child, externaltemplatestamp, single) and trigger(declaration)
+	public <<$ancestors+firstUpperCase...[.].>> $name+firstUpperCase $name;
+
+rule type(component, child, librarytemplatestamp, single) and trigger(declaration)
 	public <<$ancestors+firstUpperCase...[.].>> $name+firstUpperCase $name;
 
 rule type(component, child, basestamp, single) and trigger(declaration)
@@ -191,7 +197,7 @@ rule type(component, child, displaystamp) and trigger(class)
 		<<$component+method...[$NL$NL]>>
 	}
 
-rule type(component, child, proxystamp) and trigger(class)
+rule type(component, child, externaltemplatestamp) and trigger(class)
 	public class $name+firstUpperCase extends $extends $implements {
 		<<$reference+declaration...[$NL]>>
 		<<$component+declaration...[$NL]>>
@@ -217,6 +223,15 @@ rule type(component, child, proxystamp) and trigger(class)
 		$methods
 		<<$component+class...[$NL$NL]>>
 		<<$component+method...[$NL$NL]>>
+	}
+
+rule type(component, child, librarytemplatestamp, single) and trigger(class)
+	public class $name+firstUpperCase extends $extends $implements {
+
+		public $name+firstUpperCase($abstractBox+type box) {
+			super(box);
+		}
+
 	}
 
 rule type(component, child, basestamp, single) and trigger(class)
@@ -345,8 +360,11 @@ rule type(extends, item)
 rule type(extends, displaystamp)
 	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet...[]<io.intino.alexandria.ui.displays.notifiers.$type+firstUpperCase$facet...[]~Notifier, $abstractBox+type>
 
-rule type(extends, proxystamp)
-	io.intino.alexandria.ui.displays.components.ProxyStamp<io.intino.alexandria.ui.displays.notifiers.ProxyStampNotifier, $abstractBox+type>
+rule type(extends, externaltemplatestamp)
+	io.intino.alexandria.ui.displays.components.ExternalTemplateStamp<io.intino.alexandria.ui.displays.notifiers.ExternalTemplateStampNotifier, $abstractBox+type>
+
+rule type(extends, librarytemplatestamp)
+	io.intino.alexandria.ui.displays.components.LibraryTemplateStamp<io.intino.alexandria.ui.displays.notifiers.LibraryTemplateStampNotifier, $abstractBox+type>
 
 rule type(extends, basestamp)
 	$type+firstUpperCase
@@ -386,19 +404,25 @@ rule type(component, child, displaystamp) and trigger(rootReferences)
 	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 	<<$component+rootChildReferences...[$NL]>>
 
-rule type(component, child, ownertemplatestamp, multiple) and trigger(rootReferences)
+rule type(component, child, inherittemplatestamp, multiple) and trigger(rootReferences)
 	if ($name == null) $name = register(new $ownerPackage.$name+firstUpperCase(<<($ownerBox~Box)>>box().owner()).<$ownerPackage.$name+firstUpperCase>id("$id").owner($owner.this));
 
-rule type(component, child, proxystamp, multiple) and trigger(rootReferences)
+rule type(component, child, externaltemplatestamp, multiple) and trigger(rootReferences)
+	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+
+rule type(component, child, librarytemplatestamp, multiple) and trigger(rootReferences)
 	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 
 rule type(component, child, basestamp, multiple) and trigger(rootReferences)
 	if ($name == null) $name = register(new $name+firstUpperCase(<<($concreteBox+firstUpperCase~Box)>>box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 
-rule type(component, child, ownertemplatestamp, single) and trigger(rootReferences)
+rule type(component, child, inherittemplatestamp, single) and trigger(rootReferences)
 	if ($name == null) $name = register(new $ownerPackage.$template+firstUpperCase$generic(<<($ownerBox~Box)>>box().owner()).<$ownerPackage.$template+firstUpperCase$generic>id("$id").owner($owner.this));
 
-rule type(component, child, proxystamp, single) and trigger(rootReferences)
+rule type(component, child, externaltemplatestamp, single) and trigger(rootReferences)
+	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+
+rule type(component, child, librarytemplatestamp, single) and trigger(rootReferences)
 	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 
 rule type(component, child, basestamp, single) and trigger(rootReferences)
@@ -443,16 +467,19 @@ rule type(component, child) and trigger(initializations)
 rule type(component, child, displaystamp)
 	if ($name == null) $name = $owner.this.$name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 
-rule type(component, child, ownertemplatestamp, multiple)
+rule type(component, child, inherittemplatestamp, multiple)
 	if ($name == null) $name = $owner.this.$name = register(new $name+firstUpperCase(<<($concreteBox+firstUpperCase~Box)>>box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 
 rule type(component, child, basestamp, multiple)
 	if ($name == null) $name = $owner.this.$name = register(new $name+firstUpperCase(<<($concreteBox+firstUpperCase~Box)>>box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 
-rule type(component, child, ownertemplatestamp, single)
+rule type(component, child, inherittemplatestamp, single)
 	if ($name == null) $name = $owner.this.$name = register(new $ownerPackage.$template+firstUpperCase$generic(<<($ownerBox~Box)>>box().owner()).<$ownerPackage.$template+firstUpperCase$generic>id("$id").owner($owner.this));
 
-rule type(component, child, proxystamp, single)
+rule type(component, child, externaltemplatestamp, single)
+	if ($name == null) $name = $owner.this.$name = register(new $name+firstUpperCase(<<($concreteBox+firstUpperCase~Box)>>box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+
+rule type(component, child, librarytemplatestamp, single)
 	if ($name == null) $name = $owner.this.$name = register(new $name+firstUpperCase(<<($concreteBox+firstUpperCase~Box)>>box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 
 rule type(component, child, basestamp, single)
@@ -592,9 +619,12 @@ rule type(properties) and trigger(common)
 	<<name("$name");>>
 	<<_color("$color");>>
 
-rule type(properties, proxyStamp) and trigger(specific)
-	_proxy(new $proxyPackage.$proxyDisplay+firstUpperCase(new io.intino.alexandria.ui.server.pages.Unit("$proxyUseName", $proxyUseUrl<<,"$proxyUseSocketPath">>)));
+rule type(properties, externaltemplatestamp) and trigger(specific)
+	_proxy(new <<$proxyPackage.>>$proxyDisplay(new io.intino.alexandria.ui.server.pages.Unit("$proxyUseName", $proxyUseUrl<<,"$proxyUseSocketPath">>)));
 	<<$parameter...[$NL]>>
+
+rule type(properties, librarytemplatestamp) and trigger(specific)
+	<<_template("$template");>>
 
 rule type(properties, selector) and trigger(specific)
 	<<_multipleSelection($multipleSelection);>>
@@ -953,7 +983,7 @@ rule type(item) and trigger(property)
 	public $name+firstUpperCase $name;
 
 rule type(item) and trigger(addMethod)
-	$methodAccessibility $name+firstUpperCase create$methodName+firstUpperCase(<<$itemClass element>>) {
+	$methodVisibility $name+firstUpperCase create$methodName+firstUpperCase(<<$itemClass element>>) {
 		$name+firstUpperCase result = new $name+firstUpperCase(<<($concreteBox+firstUpperCase~Box)>>box());
 		result.id(java.util.UUID.randomUUID().toString());
 		<<result.item($itemVariable);>>

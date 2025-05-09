@@ -76,8 +76,11 @@ rule type(extends, multiple)
 rule type(extends, displaystamp)
 	io.intino.alexandria.mobile.android.displays.components.$type+firstUpperCase$facet...[]
 
-rule type(extends, proxystamp)
-	io.intino.alexandria.mobile.android.displays.components.ProxyStamp
+rule type(extends, externaltemplatestamp)
+	io.intino.alexandria.mobile.android.displays.components.ExternalTemplateStamp
+
+rule type(extends, librarytemplatestamp)
+	io.intino.alexandria.mobile.android.displays.components.LibraryTemplateStamp
 
 rule type(extends, basestamp)
 	$package.mobile.android.displays.templates.$type+firstUpperCase

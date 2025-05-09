@@ -66,5 +66,5 @@ rule attribute(decorated) and trigger(origin)
 rule trigger(origin)
 	..
 
-rule type(accessibleImport)
-	import $service+firstUpperCase~AccessibleDisplays from '$elements/gen/AccessibleDisplays';
+rule type(exposedImport)
+	import $service+firstUpperCase~ExposedDisplays from '$elements/gen/ExposedDisplays';

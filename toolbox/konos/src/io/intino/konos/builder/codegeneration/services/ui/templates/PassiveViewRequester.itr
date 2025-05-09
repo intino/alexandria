@@ -1,4 +1,4 @@
-rule type(display, accessible)
+rule type(display, exposed)
 	package $package+validPackage.ui.displays.requesters;
 
 	import $package+validPackage.ui.displays.<<$packageType~s.>>$name+FirstUppercase;
@@ -81,7 +81,7 @@ rule type(request) and trigger(request)
 		return;
 	}
 
-rule type(parameter, accessible) and trigger(parameter)
+rule type(parameter, exposed) and trigger(parameter)
 	display.$value+firstLowercase(manager.fromQuery("$value"));
 
 rule type(list) and trigger(parameter)

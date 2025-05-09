@@ -23,15 +23,17 @@ import java.util.stream.Collectors;
 public class JavalinHttpRouter<SM extends AlexandriaHttpManager<?>> implements AlexandriaHttpRouter<SM> {
 	private final String path;
 	private final Javalin service;
+	private final List<String> webDirectories;
 	private ManagerProvider<SM> managerProvider;
 	protected PushService<?, ?> pushService;
 	private Function<AlexandriaHttpManager<?>, Boolean> validator = null;
 	private Consumer<PushService<?, ?>> pushServiceConsumer = null;
 	private static final Set<String> Paths = new HashSet<>();
 
-	public JavalinHttpRouter(Javalin service, String path) {
+	public JavalinHttpRouter(Javalin service, String path, List<String> webDirectories) {
 		this.service = service;
 		this.path = path;
+		this.webDirectories = webDirectories;
 		this.managerProvider = this::defaultManager;
 	}
 
@@ -169,6 +171,11 @@ public class JavalinHttpRouter<SM extends AlexandriaHttpManager<?>> implements A
 
 	private AlexandriaHttpResourceProvider resourceProvider(Context context) {
 		return new AlexandriaHttpResourceProvider() {
+			@Override
+			public List<String> webDirectories() {
+				return webDirectories;
+			}
+
 			@Override
 			public List<Resource> resources() {
 				return context.uploadedFiles().stream().map(f -> new Resource(f.filename(), f.content()).metadata().contentType(f.contentType())).collect(Collectors.toList());
