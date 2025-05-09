@@ -95,8 +95,8 @@ public class AlexandriaHttpServer<R extends AlexandriaHttpRouter<?>> {
 		service.exception(exceptionClass, handler);
 	}
 
-	private Consumer<PushService<?, ?>> pushServiceConsumer() {
-		return (pushService) -> AlexandriaHttpServer.this.pushService = pushService;
+	public interface ResourceCaller<SM extends AlexandriaHttpManager<?>> {
+		void call(SM manager) throws AlexandriaException;
 	}
 
 	protected R createRouter(String path) {
@@ -104,8 +104,13 @@ public class AlexandriaHttpServer<R extends AlexandriaHttpRouter<?>> {
 		return (R) new JavalinHttpRouter<>(service, path, webDirectories);
 	}
 
-	public interface ResourceCaller<SM extends AlexandriaHttpManager<?>> {
-		void call(SM manager) throws AlexandriaException;
+	protected void init() {
+		if (service != null) return;
+		service = create(webDirectories, maxResourceSize);
+	}
+
+	private Consumer<PushService<?, ?>> pushServiceConsumer() {
+		return (pushService) -> AlexandriaHttpServer.this.pushService = pushService;
 	}
 
 	private static Javalin create(List<String> webDirectories, long maxResourceSize) {
@@ -183,11 +188,6 @@ public class AlexandriaHttpServer<R extends AlexandriaHttpRouter<?>> {
 	private static boolean isInClasspath(String path) {
 		if (path == null) return false;
 		return AlexandriaHttpServer.class.getClassLoader().getResourceAsStream(path) != null;
-	}
-
-	private void init() {
-		if (service != null) return;
-		service = create(webDirectories, maxResourceSize);
 	}
 
 }
