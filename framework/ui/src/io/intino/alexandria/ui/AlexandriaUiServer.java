@@ -27,6 +27,7 @@ public class AlexandriaUiServer extends AlexandriaHttpServer<UIRouter> {
 	}
 
 	public <T> void registerWs(String path, WebSocketListener socket) {
+		init();
 		service.ws(path, config -> {
 			config.onConnect(e -> socket.onWebSocketConnect(e.session));
 			config.onClose(e -> socket.onWebSocketClose(e.status(), e.reason()));
