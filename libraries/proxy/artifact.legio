@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "2.1.8") proxy
+Artifact("io.intino.alexandria", "2.2.0") proxy
 
 	Imports
 		Compile("io.intino.alexandria", "logger", "2.0.0")
@@ -9,7 +9,7 @@ Artifact("io.intino.alexandria", "2.1.8") proxy
 		Compile("org.apache.httpcomponents", "fluent-hc", "4.5.7")
 		Compile("commons-io", "commons-io", "2.4")
 
-		Provided("io.intino.alexandria", "http", "2.1.11")
+		Provided("io.intino.alexandria", "http", "2.2.0")
 
 		Test("junit", "junit", "4.12")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources=true)
