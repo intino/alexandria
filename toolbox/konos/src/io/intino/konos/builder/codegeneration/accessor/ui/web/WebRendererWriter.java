@@ -59,8 +59,8 @@ public class WebRendererWriter extends UiRendererWriter {
 		if (!context.cache().isModified(element) && pushRequesterFile.exists()) return true;
 		Frame frame = builder.toFrame();
 		Template template = pushRequesterTemplate(element, builder);
-		boolean accessible = isAccessible(frame);
-		if (accessible || template == null) return false;
+		boolean exposed = isExposed(frame);
+		if (exposed || template == null) return false;
 		String name = nameOfPassiveViewFile(element, frame, "PushRequester");
 		if (!hasConcreteRequester(element)) return false;
 		writeFrame(displayRequestersFolder(gen(), target), element, name, new Engine(template).addAll(Formatters.all).render(frame));
@@ -68,7 +68,7 @@ public class WebRendererWriter extends UiRendererWriter {
 	}
 
 	public Template srcTemplate(Layer layer, FrameBuilder builder) {
-		if (builder.is("accessible")) return null;
+		if (builder.is("exposed")) return null;
 		if (!ElementHelper.isRoot(layer)) return null;
 		return new DisplayTemplate();
 	}
@@ -84,7 +84,7 @@ public class WebRendererWriter extends UiRendererWriter {
 	}
 
 	private void writeSrc(Layer element, String type, FrameBuilder builder) {
-		final String newDisplay = displayFilename(element.name$(), builder.is("accessible") ? "Proxy" : "");
+		final String newDisplay = displayFilename(element.name$(), builder.is("exposed") ? "Proxy" : "");
 		Template template = srcTemplate(element, builder);
 		if (template == null) return;
 		File sourceFile = displayFile(src(), newDisplay, type, target);
@@ -96,7 +96,7 @@ public class WebRendererWriter extends UiRendererWriter {
 	private void writeGen(Layer element, String type, FrameBuilder builder) {
 		Template template = genTemplate(element, builder);
 		if (template == null) return;
-		final String newDisplay = displayName(element, isAccessible(builder));
+		final String newDisplay = displayName(element, isExposed(builder));
 		writeFrame(displayFolder(gen(), type, target), element, newDisplay, new Engine(template).addAll(Formatters.all).render(builder.add("gen").toFrame()));
 	}
 }

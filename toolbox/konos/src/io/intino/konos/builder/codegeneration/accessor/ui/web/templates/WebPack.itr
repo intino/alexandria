@@ -34,7 +34,8 @@ rule type(webpack)
 			]
 		},
 		entry : {
-			$page+gen...[,$NL]
+			$page+gen...[,$NL]<<,
+			$exposedDisplay+gen...[,$NL]>>
 		},
 		output: {
 			path: "$outDirectory/$serviceName/www/$serviceName",
@@ -58,7 +59,8 @@ rule type(webpack)
 				from: 'res',
 				to: './res'
 			}]),
-			$page+plugin...[,$NL]
+			$page+plugin...[,$NL]<<,
+			$exposedDisplay+plugin...[,$NL]>>
 		]
 	};
 
@@ -74,6 +76,9 @@ rule type(alias, alexandriaProject)
 rule type(page) and trigger(gen)
 	'$templateName' : './gen/apps/$templateName+firstUppercase~.js'
 
+rule type(exposedDisplay) and trigger(gen)
+	'$name' : './gen/apps/$name+firstUppercase~.js'
+
 rule type(page) and trigger(plugin)
 	new HtmlWebPackPlugin({
 		hash: true,
@@ -81,4 +86,13 @@ rule type(page) and trigger(plugin)
 		chunks: ['$templateName'],
 		template: "./src/$templateName.html",
 		filename: "./$templateName.html"
+	})
+
+rule type(exposedDisplay) and trigger(plugin)
+	new HtmlWebPackPlugin({
+		hash: true,
+		title: "Test UI",
+		chunks: ['$name'],
+		template: "./src/$name.html",
+		filename: "./$name.html"
 	})

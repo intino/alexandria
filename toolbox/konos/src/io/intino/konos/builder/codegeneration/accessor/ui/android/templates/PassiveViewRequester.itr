@@ -13,7 +13,7 @@ rule type(display)
         <<$request...[$NL]~>>
     }
 
-rule attribute(accessible) and trigger(proxy)
+rule attribute(exposed) and trigger(proxy)
 	Proxy
 
 rule trigger(proxy)

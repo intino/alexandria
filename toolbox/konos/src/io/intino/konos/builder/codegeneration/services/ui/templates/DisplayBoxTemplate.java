@@ -19,7 +19,7 @@ public class DisplayBoxTemplate extends Template {
 		rules.add(rule().condition(all(allTypes("box", "decorated"), trigger("extensiontagged"))).output(literal("<B extends Box>")));
 		rules.add(rule().condition(all(allTypes("box"), trigger("extensiontagged"))));
 		rules.add(rule().condition(all(allTypes("box", "decorated"), trigger("type"))).output(literal("B")));
-		rules.add(rule().condition(all(allTypes("box", "accessible"), trigger("type"))).output(literal("Box")));
+		rules.add(rule().condition(all(allTypes("box", "exposed"), trigger("type"))).output(literal("Box")));
 		rules.add(rule().condition(all(allTypes("box"), trigger("type"))).output(placeholder("box", "firstUpperCase")).output(literal("Box")));
 		return rules;
 	}

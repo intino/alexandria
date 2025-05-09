@@ -38,6 +38,10 @@ public class AlexandriaHttpManager<P extends PushService<? extends Session<?>, ?
 		setUpSessionCookiePath();
 	}
 
+	public List<String> webDirectories() {
+		return resourceProvider.webDirectories();
+	}
+
 	public P pushService() {
 		return this.pushService;
 	}

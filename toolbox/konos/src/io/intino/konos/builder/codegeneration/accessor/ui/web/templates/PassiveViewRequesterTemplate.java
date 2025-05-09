@@ -15,9 +15,9 @@ public class PassiveViewRequesterTemplate extends Template {
 		List<Rule> rules = new ArrayList<>();
 		rules.add(rule().condition(allTypes("display")).output(placeholder("import")).output(literal("\n\nexport default class ")).output(placeholder("name", "firstUpperCase")).output(placeholder("proxy")).output(literal("Requester extends ")).output(placeholder("parentType")).output(literal(" {\n\tconstructor(element) {\n\t\tsuper(element);\n\t};\n\t")).output(expression().output(placeholder("request").multiple("\n"))).output(literal("\n\tdidMount = () => {\n\t\tthis.pushService.send({ op: \"didMount\", s: \"")).output(placeholder("name", "lowerCase")).output(literal("\", d: this.element.shortId(), o: this.element.props.owner(), c: this.element.props.context()}, this.element.ownerUnit());\n\t};\n}")));
 		rules.add(rule().condition(all(attribute("extensionof"), trigger("import"))).output(literal("import ")).output(placeholder("parent", "firstUpperCase")).output(literal("Requester from \"./")).output(placeholder("parent", "firstUpperCase")).output(literal("Requester\"")));
-		rules.add(rule().condition(all(attribute("accessible"), trigger("import"))).output(literal("import Requester from \"alexandria-ui-elements/gen/displays/requesters/ProxyDisplayRequester\";")));
+		rules.add(rule().condition(all(attribute("exposed"), trigger("import"))).output(literal("import Requester from \"alexandria-ui-elements/gen/displays/requesters/ProxyDisplayRequester\";")));
 		rules.add(rule().condition(trigger("import")).output(literal("import Requester from \"./Requester\";")));
-		rules.add(rule().condition(all(attribute("accessible"), trigger("proxy"))).output(literal("Proxy")));
+		rules.add(rule().condition(all(attribute("exposed"), trigger("proxy"))).output(literal("Proxy")));
 		rules.add(rule().condition(trigger("proxy")));
 		rules.add(rule().condition(all(attribute("extensionof"), trigger("parenttype"))).output(placeholder("parent", "firstUpperCase")).output(literal("Requester")));
 		rules.add(rule().condition(trigger("parenttype")).output(literal("Requester")));

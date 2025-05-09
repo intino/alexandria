@@ -1,4 +1,4 @@
-package io.intino.konos.builder.codegeneration.accessor.ui.accessible;
+package io.intino.konos.builder.codegeneration.accessor.ui.exposed;
 
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Renderer;
@@ -12,11 +12,11 @@ import io.intino.konos.dsl.Service;
 
 import java.io.File;
 
-public class UiAccessibleAccessorRenderer extends Renderer {
+public class UiExposedAccessorRenderer extends Renderer {
 	private final Service.UI service;
 	private final File destination;
 
-	public UiAccessibleAccessorRenderer(CompilationContext compilationContext, Service.UI service, File destination) {
+	public UiExposedAccessorRenderer(CompilationContext compilationContext, Service.UI service, File destination) {
 		super(compilationContext);
 		this.service = service;
 		this.destination = destination;
@@ -26,9 +26,9 @@ public class UiAccessibleAccessorRenderer extends Renderer {
 	@Override
 	public void render() throws KonosException {
 		context.serviceDirectory(new File(context.configuration().moduleDirectory().getParentFile(), Formatters.camelCaseToKebabCase().format(service.name$()).toString()));
-		new ServiceRenderer(context, service, Target.AccessibleAccessor, destination()).execute();
-		new DisplayListRenderer(context, service, new AccessibleRendererWriter(context, destination())).execute();
-		new I18nRenderer(context, service, Target.AccessibleAccessor, destination()).execute();
+		new ServiceRenderer(context, service, Target.ExposedAccessor, destination()).execute();
+		new DisplayListRenderer(context, service, new ExposedRendererWriter(context, destination())).execute();
+		new I18nRenderer(context, service, Target.ExposedAccessor, destination()).execute();
 	}
 
 	private File destination() {

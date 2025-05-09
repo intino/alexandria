@@ -1,4 +1,4 @@
-rule type(display, accessible)
+rule type(display, exposed)
 
 rule type(display, template, scrollable)
     package $package.mobile.android.displays<<.$packageType~s>>

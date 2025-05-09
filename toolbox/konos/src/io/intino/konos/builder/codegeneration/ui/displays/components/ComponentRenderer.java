@@ -36,7 +36,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		String frameId = frameId();
 		if (componentFrameMap.containsKey(frameId)) return componentFrameMap.get(frameId);
 		FrameBuilder builder = super.buildFrame().add("component");
-		if (!belongsToAccessible(element)) builder.add("concreteBox", boxName());
+		if (!isExposed(element)) builder.add("concreteBox", boxName());
 		if (isEmbeddedComponent(element)) builder.add("embedded");
 		addOwner(builder);
 		addProperties(builder);
@@ -124,7 +124,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (isEmbeddedComponent(component)) builder.add("embedded");
 		Component parentComponent = component.core$().ownerAs(Component.class);
 		builder.add("box", boxName());
-		if (!belongsToAccessible(component)) builder.add("concreteBox", boxName());
+		if (!isExposed(component)) builder.add("concreteBox", boxName());
 		builder.add("id", shortId(component));
 		if (parentComponent != null) builder.add("parentId", nameOf(parentComponent));
 		builder.add("properties", renderer.properties());
@@ -241,8 +241,8 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			if (multiple.collapsed()) methodsFrame.add("collapsable");
 			methodsFrame.add("componentType", multipleComponentType(element));
 			methodsFrame.add("componentName", multipleComponentName(element));
-			if (element.i$(conceptOf(OwnerTemplateStamp.class)))
-				methodsFrame.add("componentOwnerBox", element.a$(OwnerTemplateStamp.class).owner().name());
+			if (element.i$(conceptOf(InheritTemplateStamp.class)))
+				methodsFrame.add("componentOwnerBox", element.a$(InheritTemplateStamp.class).owner().name());
 			if (element.i$(conceptOf(Editable.class))) {
 				methodsFrame.add("editableMethods", new FrameBuilder("editableMethods"));
 				if (!isMultipleSpecificComponent(element)) methodsFrame.add("editableClass", editableClassFrame());
@@ -273,17 +273,18 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (element.i$(conceptOf(BaseStamp.class)) && !element.i$(conceptOf(DisplayStamp.class))) {
 			builder.add("basestamp");
 			if (!element.i$(conceptOf(Multiple.class))) builder.add("single");
-			if (element.i$(conceptOf(OwnerTemplateStamp.class))) builder.add("ownertemplatestamp");
+			if (element.i$(conceptOf(InheritTemplateStamp.class))) builder.add("inherittemplatestamp");
 			if (element.i$(conceptOf(DisplayStamp.class))) builder.add("displaystamp");
-			if (element.i$(conceptOf(ProxyStamp.class))) builder.add("proxystamp");
+			if (element.i$(conceptOf(ExternalTemplateStamp.class))) builder.add("externaltemplatestamp");
+			if (element.i$(conceptOf(LibraryTemplateStamp.class))) builder.add("librarytemplatestamp");
 			String templateName = templateName(element.a$(BaseStamp.class));
 			builder.add("template", templateName);
 			builder.add("type", templateName);
 			builder.add("generic", genericOf(element.a$(BaseStamp.class)));
-			if (element.i$(conceptOf(OwnerTemplateStamp.class))) {
-				Service.UI.Use owner = element.a$(OwnerTemplateStamp.class).owner();
-				builder.add("ownerPackage", ownerTemplateStampPackage(owner));
-				builder.add("ownerBox", ownerTemplateStampBox(owner));
+			if (element.i$(conceptOf(InheritTemplateStamp.class))) {
+				Service.UI.Use owner = element.a$(InheritTemplateStamp.class).owner();
+				builder.add("ownerPackage", inheritTemplateStampPackage(owner));
+				builder.add("ownerBox", inheritTemplateStampBox(owner));
 			}
 			return true;
 		}
@@ -298,7 +299,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		return false;
 	}
 
-	private String ownerTemplateStampBox(Service.UI.Use use) {
+	private String inheritTemplateStampBox(Service.UI.Use use) {
 		return use.package$() + ".box." + use.name();
 	}
 
@@ -311,8 +312,8 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	private String templateName(BaseStamp stamp) {
-		if (stamp.i$(conceptOf(OtherComponents.OwnerTemplateStamp.class)))
-			return stamp.a$(OwnerTemplateStamp.class).template();
+		if (stamp.i$(conceptOf(InheritTemplateStamp.class)))
+			return stamp.a$(InheritTemplateStamp.class).template();
 		if (stamp.i$(conceptOf(OtherComponents.TemplateStamp.class))) {
 			Template template = stamp.a$(TemplateStamp.class).template();
 			return template != null ? template.name$() : null;

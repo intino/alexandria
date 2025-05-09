@@ -2,40 +2,40 @@ rule type(manifest)
 	$display+import...[$NL]
 	export { $display+export...[,] }
 
-rule type(item, accessible) and trigger(import)
+rule type(item, exposed) and trigger(import)
 	import $name+firstUppercase~Proxy from "./displays/items/$name+firstUppercase~Proxy"
 
 rule type(item) and trigger(import)
 	import $name+firstUppercase from "../$directory/displays/items/$name+firstUppercase"
 
-rule type(row, accessible) and trigger(import)
+rule type(row, exposed) and trigger(import)
 	import $name+firstUppercase~Proxy from "./displays/rows/$name+firstUppercase~Proxy"
 
 rule type(row) and trigger(import)
 	import $name+firstUppercase from "../$directory/displays/rows/$name+firstUppercase"
 
-rule type(table, accessible) and trigger(import)
+rule type(table, exposed) and trigger(import)
 	import $name+firstUppercase~Proxy from "./displays/tables/$name+firstUppercase~Proxy"
 
 rule type(table) and trigger(import)
 	import $name+firstUppercase from "../$directory/displays/tables/$name+firstUppercase"
 
-rule type(list, accessible) and trigger(import)
+rule type(list, exposed) and trigger(import)
 	import $name+firstUppercase~Proxy from "./displays/lists/$name+firstUppercase~Proxy"
 
 rule type(list) and trigger(import)
 	import $name+firstUppercase from "../$directory/displays/lists/$name+firstUppercase"
 
-rule type(magazine, accessible) and trigger(import)
+rule type(magazine, exposed) and trigger(import)
 	import $name+firstUppercase~Proxy from "./displays/magazines/$name+firstUppercase~Proxy"
 
 rule type(magazine) and trigger(import)
 	import $name+firstUppercase from "../$directory/displays/magazines/$name+firstUppercase"
 
-rule type(template, accessible) and trigger(import)
+rule type(template, exposed) and trigger(import)
 	import $name+firstUppercase~Proxy from "./displays/templates/$name+firstUppercase~Proxy"
 
-rule type(map, accessible) and trigger(import)
+rule type(map, exposed) and trigger(import)
 	import $name+firstUppercase~Proxy from "./displays/maps/$name+firstUppercase~Proxy"
 
 rule type(map) and trigger(import)
@@ -44,26 +44,26 @@ rule type(map) and trigger(import)
 rule type(template) and trigger(import)
 	import $name+firstUppercase from "../gen/displays/templates/$name+firstUppercase"
 
-rule type(block, accessible) and trigger(import)
+rule type(block, exposed) and trigger(import)
 	import $name+firstUppercase~Proxy from "./displays/blocks/$name+firstUppercase~Proxy"
 
 rule type(block) and trigger(import)
 	import $name+firstUppercase from "../$directory/displays/blocks/$name+firstUppercase"
 
-rule type(component, accessible) and trigger(import)
+rule type(component, exposed) and trigger(import)
 	import $name+firstUppercase~Proxy from "./displays/components/$name+firstUppercase~Proxy"
 
 rule type(component) and trigger(import)
 	import $name+firstUppercase from "../$directory/displays/components/$name+firstUppercase"
 
-rule type(display, accessible) and trigger(import)
+rule type(display, exposed) and trigger(import)
 	import $name+firstUppercase~Proxy from "./displays/$name+firstUppercase~Proxy"
 
 rule type(display) and trigger(import)
 	import $name+firstUppercase from "../$directory/displays/$name+firstUppercase"
 
 rule type(display) and trigger(export)
-	$name+firstUppercase~$accessible
+	$name+firstUppercase~$exposed
 
-rule type(accessible)
+rule type(exposed)
 	Proxy

@@ -56,7 +56,7 @@ public class ResourceRenderer extends io.intino.konos.builder.codegeneration.ui.
 		result.add("pageDisplay", template.name$());
 		result.add("pageDisplayId", shortId(template));
 		result.add("pageDisplayType", typeOf(template));
-		uiService.useList().forEach(use -> result.add("accessibleImport", accessibleImportFrame(use)));
+		uiService.useList().forEach(use -> result.add("exposedImport", exposedImportFrame(use)));
 		addPageDisplayOrigin(result, template);
 		return result;
 	}
@@ -68,8 +68,8 @@ public class ResourceRenderer extends io.intino.konos.builder.codegeneration.ui.
 		builder.add("pageDisplayOrigin", originFrame);
 	}
 
-	private Frame accessibleImportFrame(Service.UI.Use use) {
-		FrameBuilder result = new FrameBuilder("accessibleImport");
+	private Frame exposedImportFrame(Service.UI.Use use) {
+		FrameBuilder result = new FrameBuilder("exposedImport");
 		result.add("name", use.name$());
 		result.add("url", use.url());
 		result.add("elements", camelCaseToSnakeCase(use.service()));

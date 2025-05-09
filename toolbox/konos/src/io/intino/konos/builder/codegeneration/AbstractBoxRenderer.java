@@ -245,7 +245,18 @@ public class AbstractBoxRenderer extends Renderer {
 		if (service.edition() != null)
 			builder.add("edition", new FrameBuilder(isCustom(service.edition().by()) ? "custom" : "standard").add("value", service.edition().by()).toFrame());
 		service.useList().forEach(use -> builder.add("use", serviceNameOf(use)));
+		service.importList().forEach($import -> builder.add("importLibrary", importFrameOf($import)));
 		return builder.toFrame();
+	}
+
+	private FrameBuilder importFrameOf(Service.UI.Import $import) {
+		FrameBuilder result = buildBaseFrame().add("importLibrary");
+		result.add("name", $import.name$());
+		result.add("libraryName", parameter($import.name()));
+		result.add("basePackage", parameter($import.package$()));
+		result.add("libraryFile", parameter($import.libraryFile()));
+		result.add("destination", System.getProperty("java.io.tmpdir"));
+		return result;
 	}
 
 	private String serviceNameOf(Service.UI.Use use) {

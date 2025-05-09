@@ -27,7 +27,7 @@ Concept Display extends PassiveView
 	var string parentDisplay = empty
 	has Block
 
-	Facet Accessible
+	Facet Exposed
 		var string[] parameters = empty
 		var string[] events = empty
 		var boolean confidential = true

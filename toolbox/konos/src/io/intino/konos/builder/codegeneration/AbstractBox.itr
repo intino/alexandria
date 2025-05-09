@@ -15,6 +15,10 @@ rule type(box)
 	<<$messagehub+import>>
 	<<$terminal+import>>
 	<<import io.intino.alexandria.http.AlexandriaHttpServer;$hasREST>>
+	<<import io.intino.alexandria.ui.services.libraries.AlexandriaLibraryArchetype$hasUI+hideUi>>
+	<<import io.intino.alexandria.ui.services.libraries.AlexandriaLibraryInstaller$hasUI+hideUi>>
+	<<import io.intino.alexandria.ui.services.libraries.AlexandriaLibraryLoader$hasUI+hideUi>>
+	<<import io.intino.alexandria.ui.services.libraries.AlexandriaLibraryUiInitializer$hasUI+hideUi>>
 	<<import io.intino.alexandria.ui.services.push.PushService$hasUI+hideUi>>
 	<<import io.intino.alexandria.ui.Soul$hasUi+hideUi>>
 
@@ -103,6 +107,8 @@ rule type(box)
 		}
 
 		<<$hasUi+registerSoul>>
+
+		<<$service+method...[$NL]>>
 
 		<<$service+getter...[$NL$NL]>>
 
@@ -212,6 +218,7 @@ rule type(service, ui) and trigger(setupMethod)
 		beforeSetup$name+firstUpperCase~Ui(server);
 		$package+validPackage.ui.$name+PascalCase~Service.init(server, ($configuration+PascalCase~Box) this, pushService, new $package+validPackage.ui.displays.RouteDispatcher());
 		$use...[$NL]
+		$importLibrary...[$NL]
 		io.intino.alexandria.ui.UiElementsService.initDisplays(server, pushService);
 	}
 
@@ -345,6 +352,9 @@ rule type(workflow) and trigger(field)
 rule type(agenda) and trigger(field)
 	protected AgendaService agenda;
 
+rule type(service, ui) and trigger(method)
+    $importLibrary+method...[$NL]
+
 rule type(service, messaging) and trigger(getter)
 	public $name+PascalCase~Service $name+CamelCase() {
 		return $name+CamelCase;
@@ -408,6 +418,18 @@ rule trigger(translatorServiceInitialization)
 
 rule trigger(useDictionaries)
 	translatorService.addAll($this);
+
+rule type(importLibrary) and trigger(method)
+	private void init$name+firstUpperCase~Library(io.intino.alexandria.ui.AlexandriaUiServer server, PushService pushService) {
+	    AlexandriaLibraryArchetype archetype = new AlexandriaLibraryArchetype(new java.io.File("$destination"), $basePackage, $libraryName);
+	    AlexandriaLibraryLoader loader = new AlexandriaLibraryLoader(archetype);
+	    new AlexandriaLibraryInstaller(archetype).install(new java.io.File($libraryFile));
+	    new AlexandriaLibraryUiInitializer(this, loader).initialize(server, pushService);
+	    server.add(loader.webDirectory().getAbsolutePath());
+	}
+
+rule type(importLibrary)
+	init$name+firstUpperCase~Library(server, pushService);
 
 rule trigger(registerSoul)
 	public java.util.List<Soul> souls() {

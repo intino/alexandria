@@ -14,13 +14,13 @@ rule type(display)
 rule attribute(extensionOf) and trigger(import)
 	import $parent+firstUpperCase~Requester from "./$parent+firstUpperCase~Requester"
 
-rule attribute(accessible) and trigger(import)
+rule attribute(exposed) and trigger(import)
 	import Requester from "alexandria-ui-elements/gen/displays/requesters/ProxyDisplayRequester";
 
 rule trigger(import)
 	import Requester from "./Requester";
 
-rule attribute(accessible) and trigger(proxy)
+rule attribute(exposed) and trigger(proxy)
 	Proxy
 
 rule trigger(proxy)

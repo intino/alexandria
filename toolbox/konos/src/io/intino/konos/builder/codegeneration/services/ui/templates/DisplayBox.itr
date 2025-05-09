@@ -11,7 +11,7 @@ rule type(box) and trigger(extensionTagged)
 rule type(box, decorated) and trigger(type)
 	B
 
-rule type(box, accessible) and trigger(type)
+rule type(box, exposed) and trigger(type)
 	Box
 
 rule type(box) and trigger(type)

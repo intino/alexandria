@@ -23,7 +23,8 @@ public class ComponentTemplate extends Template {
 		rules.add(rule().condition(allTypes("extends", "multiple", "image")).output(literal("UiMultipleImage")));
 		rules.add(rule().condition(allTypes("extends", "multiple")).output(literal("UiMultiple")));
 		rules.add(rule().condition(allTypes("extends", "displaystamp")).output(literal("Ui")).output(placeholder("type", "firstUpperCase")).output(placeholder("facet").multiple("")));
-		rules.add(rule().condition(allTypes("extends", "proxystamp")).output(literal("UiProxyStamp")));
+		rules.add(rule().condition(allTypes("extends", "externaltemplatestamp")).output(literal("UiExternalTemplateStamp")));
+		rules.add(rule().condition(allTypes("extends", "librarytemplatestamp")).output(literal("UiLibraryTemplateStamp")));
 		rules.add(rule().condition(allTypes("extends", "basestamp")).output(literal("Displays")).output(placeholder("type", "firstUpperCase")));
 		rules.add(rule().condition(allTypes("extends")).output(literal("Ui")).output(placeholder("type", "firstUpperCase")).output(placeholder("facet").multiple("")));
 		rules.add(rule().condition(allTypes("facet")).output(placeholder("name", "firstUpperCase")));

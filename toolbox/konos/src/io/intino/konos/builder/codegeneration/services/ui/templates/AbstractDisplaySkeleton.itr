@@ -1,4 +1,4 @@
-rule type(display, accessible)
+rule type(display, exposed)
 	package $package.ui.displays<<.$packageType~s>>;
 
 	import $package+validPackage.ui.displays.notifiers.$name+PascalCase~ProxyNotifier;
@@ -14,7 +14,7 @@ rule type(display, accessible)
 			super("$name+firstUpperCase", unit, "/$name+CamelCase+lowercase~proxy");
 		}
 
-		<<$request+accessible...[$NL$NL]>>
+		<<$request+exposed...[$NL$NL]>>
 		<<$parameter+method...[$NL$NL]>>
 		<<$event+method...[$NL$NL]>>
 	}
@@ -79,7 +79,7 @@ rule type(notifierImport, item)
 rule type(notifierImport, row)
 	import io.intino.alexandria.ui.displays.notifiers.RowNotifier;
 
-rule type(notifierImport, template, accessible)
+rule type(notifierImport, template, exposed)
 	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
 
 rule type(notifierImport, template)
@@ -91,7 +91,7 @@ rule type(notifierImport)
 rule type(parametrized, generic)
 	<DN extends $name+firstUpperCase~Notifier, $abstractBox+extension>
 
-rule type(parametrized, accessible)
+rule type(parametrized, exposed)
 	<DN extends $name+firstUpperCase~Notifier, $abstractBox+extension>
 
 rule type(parametrized)
@@ -100,7 +100,7 @@ rule type(parametrized)
 rule type(displayExtends, generic)
 	extends $parent<DN, $abstractBox+type>
 
-rule type(displayExtends, template, accessible)
+rule type(displayExtends, template, exposed)
 	extends io.intino.alexandria.ui.displays.components.Template<DN, $modelClass, $abstractBox+type>
 
 rule type(displayExtends, template)
@@ -179,7 +179,7 @@ rule type(methods, dynamicloaded)
 		notifier.refreshLoading(false);
 	}
 
-rule type(request) and trigger(accessible)
+rule type(request) and trigger(exposed)
 	public void $name(<<$parameter value>>) {
 		request("$name"<<, $parameter+parameterValue>>);
 	}

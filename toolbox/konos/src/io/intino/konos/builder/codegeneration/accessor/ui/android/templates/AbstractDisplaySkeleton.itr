@@ -1,4 +1,4 @@
-rule type(display, accessible)
+rule type(display, exposed)
 	import React from "react";
 	<<$alexandriaBlockImport>>
 	<<$alexandriaTemplateStampImport>>
@@ -95,7 +95,7 @@ rule type(display, noAbstract)
     import androidx.core.content.ContextCompat.*
 
 	<<$parent+import>>
-	$accessibleNotifierImport
+	$exposedNotifierImport
 	import io.intino.alexandria.mobile.displays.requesters.$requester~Requester
 	import $package.mobile.android.R
 
@@ -111,10 +111,10 @@ rule type(display, noAbstract)
 		<<$notifyProxyMethod>>
 	}
 
-rule type(accessibleNotifierImport, accessible)
+rule type(exposedNotifierImport, exposed)
 	import $package.mobile.displays.notifiers.$name+firstUpperCase~Notifier
 
-rule type(accessibleNotifierImport)
+rule type(exposedNotifierImport)
 	import io.intino.alexandria.mobile.displays.notifiers.$notifier~Notifier
 
 rule type(notifyProxyMethod)
@@ -206,7 +206,7 @@ rule trigger(parameter)
 rule type(displayRegistration) and trigger(import)
 	import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 
-rule type(displayRegistration, accessible) and trigger(declaration)
+rule type(displayRegistration, exposed) and trigger(declaration)
 	DisplayFactory.register("$name+PascalCase~Proxy", $name+PascalCase~Proxy);
 
 rule type(displayRegistration) and trigger(declaration)
@@ -221,7 +221,7 @@ rule type(alexandriaImport, embedded)
 rule type(alexandriaComponentImport)
 	import Ui$type+firstUpperCase$facet...[] from "alexandria-ui-elements/<<$componentTarget>>/displays/<<$componentDirectory/>>$type+firstUpperCase$facet...[]";
 
-rule type(projectComponentImport, ownertemplatestamp)
+rule type(projectComponentImport, inherittemplatestamp)
 	import Displays$name+firstUpperCase from "$ownerModuleName/gen/displays/templates/$name+firstUpperCase";
 
 rule type(projectComponentImport)
@@ -298,7 +298,7 @@ rule type(renderTagAttributes)
 rule attribute(parent) and trigger(import)
     import $package.mobile.android.displays.$parentDirectory.$parent+firstUpperCase
 
-rule attribute(accessible) and trigger(import)
+rule attribute(exposed) and trigger(import)
     import io.intino.alexandria.mobile.android.displays.ProxyDisplay
 
 rule attribute(baseDisplay) and trigger(import)

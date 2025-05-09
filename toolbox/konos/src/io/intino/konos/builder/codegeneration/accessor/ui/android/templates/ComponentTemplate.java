@@ -36,7 +36,8 @@ public class ComponentTemplate extends Template {
 		rules.add(rule().condition(allTypes("extends", "multiple", "image")).output(literal("io.intino.alexandria.mobile.android.displays.components.MultipleImage")));
 		rules.add(rule().condition(allTypes("extends", "multiple")).output(literal("io.intino.alexandria.mobile.android.displays.components.Multiple")));
 		rules.add(rule().condition(allTypes("extends", "displaystamp")).output(literal("io.intino.alexandria.mobile.android.displays.components.")).output(placeholder("type", "firstUpperCase")).output(placeholder("facet").multiple("")));
-		rules.add(rule().condition(allTypes("extends", "proxystamp")).output(literal("io.intino.alexandria.mobile.android.displays.components.ProxyStamp")));
+		rules.add(rule().condition(allTypes("extends", "externaltemplatestamp")).output(literal("io.intino.alexandria.mobile.android.displays.components.ExternalTemplateStamp")));
+		rules.add(rule().condition(allTypes("extends", "librarytemplatestamp")).output(literal("io.intino.alexandria.mobile.android.displays.components.LibraryTemplateStamp")));
 		rules.add(rule().condition(allTypes("extends", "basestamp")).output(placeholder("package")).output(literal(".mobile.android.displays.templates.")).output(placeholder("type", "firstUpperCase")));
 		rules.add(rule().condition(allTypes("extends")).output(literal("io.intino.alexandria.mobile.android.displays.components.")).output(placeholder("type", "firstUpperCase")).output(placeholder("facet").multiple("")));
 		rules.add(rule().condition(allTypes("facet")).output(placeholder("name", "firstUpperCase")));

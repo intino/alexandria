@@ -6,9 +6,9 @@ rule type(display)
 	$schemaImport
 	import $package+validPackage.$box+firstUpperCase~Box;
 	import $package+validPackage.ui.displays<<.$packageType~s>>.Abstract$name+firstUpperCase;
-	<<$accessibleNotifier+import>>
+	<<$exposedNotifier+import>>
 
-	public class $name+firstUpperCase extends Abstract$name+firstUpperCase<~<<$accessibleNotifier, >>$box+firstUpperCase~Box> {
+	public class $name+firstUpperCase extends Abstract$name+firstUpperCase<~<<$exposedNotifier, >>$box+firstUpperCase~Box> {
 
 		public $name+firstUpperCase($box+firstUpperCase~Box box) {
 			super(box);
@@ -18,10 +18,10 @@ rule type(display)
 		<<$parameter+setter...[$NL$NL]>>
 	}
 
-rule type(accessibleNotifier) and trigger(import)
+rule type(exposedNotifier) and trigger(import)
 	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
 
-rule type(accessibleNotifier)
+rule type(exposedNotifier)
 	$name+firstUpperCase~Notifier
 
 rule type(templatesImport)

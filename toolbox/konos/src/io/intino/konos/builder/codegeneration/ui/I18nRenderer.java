@@ -88,7 +88,7 @@ public class I18nRenderer extends UIRenderer {
 	}
 
 	private Template template() {
-		return target == Target.Service || target == Target.AccessibleAccessor ?
+		return target == Target.Service || target == Target.ExposedAccessor ?
 				new io.intino.konos.builder.codegeneration.services.ui.templates.I18nTemplate() :
 				new I18nTemplate();
 	}

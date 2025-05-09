@@ -7,8 +7,8 @@ import io.intino.konos.builder.codegeneration.accessor.PomGenerator;
 import io.intino.konos.builder.codegeneration.accessor.analytic.AnalyticBuilderRenderer;
 import io.intino.konos.builder.codegeneration.accessor.messaging.MessagingAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.rest.RESTAccessorRenderer;
-import io.intino.konos.builder.codegeneration.accessor.ui.accessible.UiAccessibleAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.ui.android.AndroidSchemaWriter;
+import io.intino.konos.builder.codegeneration.accessor.ui.exposed.UiExposedAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.ui.web.ServiceListRenderer;
 import io.intino.konos.builder.codegeneration.analytic.AnalyticRenderer;
 import io.intino.konos.builder.codegeneration.bpm.BpmRenderer;
@@ -113,9 +113,9 @@ public class FullRenderer {
 			context.postCompileActionMessages().add(new ArtifactBuildActionMessage(context.module(), pom, pomGenerator.coors(root.getParentFile()), context.configuration().invokedPhase().name()));
 		}
 		for (Service.UI service : graph.uiServiceList()) {
-			if (service.templates().stream().noneMatch(Display::isAccessible)) continue;
+			if (service.templates().stream().noneMatch(Display::isExposed)) continue;
 			var root = new File(context.configuration().genDirectory(), "ui#" + accessorName(service.asService()));
-			new UiAccessibleAccessorRenderer(context, service, new File(root, "src")).render();
+			new UiExposedAccessorRenderer(context, service, new File(root, "src")).render();
 			File pom = pomGenerator.generate("ui", root);
 			context.postCompileActionMessages().add(new ArtifactBuildActionMessage(context.project(), pom, pomGenerator.coors(root), context.configuration().invokedPhase().name()));
 		}

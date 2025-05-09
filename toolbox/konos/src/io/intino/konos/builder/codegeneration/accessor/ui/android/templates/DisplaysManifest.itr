@@ -7,7 +7,7 @@ rule type(manifest)
     import io.intino.alexandria.mobile.android.displays.PassiveView
     import io.intino.alexandria.mobile.displays.DisplayDefinition
 
-    object $accessible~Displays {
+    object $exposed~Displays {
 
         fun get(definition: DisplayDefinition, context: Context) : PassiveView<*, *>? {
             return when(definition.type()) {

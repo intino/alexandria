@@ -37,7 +37,7 @@ public class DisplaysManifestRenderer extends UIRenderer {
 		Set<PassiveView> baseDisplays = baseDisplays(displays);
 		renderDisplays(displays, baseDisplays);
 		renderedDisplays.clear();
-		renderAccessibleDisplays(displays, baseDisplays);
+		renderExposedDisplays(displays, baseDisplays);
 	}
 
 	private void renderDisplays(Set<Display> displays, Set<PassiveView> baseDisplays) {
@@ -49,13 +49,13 @@ public class DisplaysManifestRenderer extends UIRenderer {
 		Commons.write(new File(gen(Target.Accessor) + File.separator + "Displays.js").toPath(), new DisplaysManifestTemplate().render(result.toFrame(), Formatters.all));
 	}
 
-	private void renderAccessibleDisplays(Set<Display> displays, Set<PassiveView> baseDisplays) {
+	private void renderExposedDisplays(Set<Display> displays, Set<PassiveView> baseDisplays) {
 		FrameBuilder result = new FrameBuilder("manifest");
 
-		baseDisplays.stream().filter(d -> d.i$(Display.Accessible.class)).forEach(d -> renderDisplay(d, result, true));
-		displays.stream().filter(d -> !renderedDisplays.contains(d.core$().id()) && d.isAccessible()).forEach(d -> renderDisplay(d, result, true));
+		baseDisplays.stream().filter(d -> d.i$(Display.Exposed.class)).forEach(d -> renderDisplay(d, result, true));
+		displays.stream().filter(d -> !renderedDisplays.contains(d.core$().id()) && d.isExposed()).forEach(d -> renderDisplay(d, result, true));
 
-		Commons.write(new File(gen(Target.Accessor) + File.separator + "AccessibleDisplays.js").toPath(), new DisplaysManifestTemplate().render(result.toFrame(), Formatters.all));
+		Commons.write(new File(gen(Target.Accessor) + File.separator + "ExposedDisplays.js").toPath(), new DisplaysManifestTemplate().render(result.toFrame(), Formatters.all));
 	}
 
 	private Set<PassiveView> baseDisplays(Set<Display> displays) {
@@ -76,20 +76,20 @@ public class DisplaysManifestRenderer extends UIRenderer {
 		renderDisplay(display, builder, false);
 	}
 
-	private <D extends PassiveView> void renderDisplay(D display, FrameBuilder builder, boolean accessible) {
-		builder.add("display", display(display, accessible));
+	private <D extends PassiveView> void renderDisplay(D display, FrameBuilder builder, boolean exposed) {
+		builder.add("display", display(display, exposed));
 		renderedDisplays.add(display.core$().id());
 	}
 
-	private <D extends PassiveView> Frame display(D display, boolean accessible) {
+	private <D extends PassiveView> Frame display(D display, boolean exposed) {
 		FrameBuilder result = new FrameBuilder("display", typeOf(display));
 
 		result.add("name", nameOf(display));
 		result.add("directory", ElementHelper.isRoot(display) ? "src" : "gen");
 
-		if (accessible) {
-			result.add("accessible");
-			result.add("accessible", new FrameBuilder("accessible"));
+		if (exposed) {
+			result.add("exposed");
+			result.add("exposed", new FrameBuilder("exposed"));
 		}
 
 		return result.toFrame();

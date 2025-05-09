@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Display<DN, Box> {
+public class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Display<DN, Box> {
     private final String type;
     private final Unit unit;
     private final String path;
@@ -31,6 +31,10 @@ public abstract class ProxyDisplay<DN extends ProxyDisplayNotifier> extends Disp
     private final Set<PendingRequest> pendingRequestList = new LinkedHashSet<>();
     private Map<String, String> parameters = new HashMap<>();
     private final Map<String, Consumer<Boolean>> messageListeners = new HashMap<>();
+
+    public ProxyDisplay(Unit unit) {
+        this("", unit, "");
+    }
 
     public ProxyDisplay(String type, Unit unit, String path) {
         super(null);
