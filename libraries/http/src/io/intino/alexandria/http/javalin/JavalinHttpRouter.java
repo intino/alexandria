@@ -154,7 +154,7 @@ public class JavalinHttpRouter<SM extends AlexandriaHttpManager<?>> implements A
 		try {
 			caller.call((SM) manager);
 		} catch (AlexandriaException e) {
-			manager.response().error(500, e.toString());
+			manager.response().error(Integer.parseInt(e.code()), e.toString());
 		} catch (Throwable e) {
 			Logger.error(e);
 			manager.response().error(500, e.toString());
