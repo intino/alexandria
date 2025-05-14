@@ -246,9 +246,15 @@ public class Timetag implements Comparable<Timetag> {
 	}
 
 	public Timetag toScale(Scale scale) {
-     	if (scale == scale()) return this;
-        if (tag.length() > scale.digits()) return new Timetag(tag.substring(0, scale.digits()));
-		return new Timetag(tag + "0".repeat(scale.digits() - tag.length()));
+        if (tag.length() == scale.digits()) return this;
+
+		StringBuilder builder = new StringBuilder(tag);
+		if (builder.length() < Scale.Month.digits()) builder.append("01");
+		if (builder.length() < Scale.Day.digits()) builder.append("01");
+		if (builder.length() < Scale.Hour.digits()) builder.append("00");
+		if (builder.length() < Scale.Minute.digits()) builder.append("00");
+
+		return new Timetag(builder.substring(0, scale.digits()));
 	}
 
 	private static class TimetagIterator implements Iterator<Timetag> {
