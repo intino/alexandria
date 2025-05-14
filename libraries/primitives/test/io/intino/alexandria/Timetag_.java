@@ -18,6 +18,15 @@ public class Timetag_ {
 		assertTrue(timetag.isBetween("202203", "202203"));
 	}
 
+	@Test
+	public void comparison() {
+		assertTrue(Timetag.of("20250514").isBefore(Timetag.of("20250515")));
+        assertFalse(Timetag.of("20250514").isBefore(Timetag.of("20250513")));
+		assertFalse(Timetag.of("202505140000").isBefore(Timetag.of("20250514")));
+		assertFalse(Timetag.of("20250514").isBefore(Timetag.of("202505140000")));
+		assertTrue(Timetag.of("2025").isAfter(Timetag.of("202305140000")));
+		assertFalse(Timetag.of("202305140000").isAfter(Timetag.of("2025")));
+	}
 
 	@Test
 	public void datetime() {

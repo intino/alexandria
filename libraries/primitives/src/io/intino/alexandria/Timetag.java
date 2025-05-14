@@ -237,11 +237,18 @@ public class Timetag implements Comparable<Timetag> {
 
 	@Override
 	public int compareTo(Timetag other) {
-		return tag.compareTo(other.tag);
+		if(scale() == other.scale()) return tag.compareTo(other.tag);
+		return tag.compareTo(other.toScale(scale()).tag);
 	}
 
 	public int compare(Timetag timetag) {
 		return compareTo(timetag);
+	}
+
+	public Timetag toScale(Scale scale) {
+     	if (scale == scale()) return this;
+        if (tag.length() > scale.digits()) return new Timetag(tag.substring(0, scale.digits()));
+		return new Timetag(tag + "0".repeat(scale.digits() - tag.length()));
 	}
 
 	private static class TimetagIterator implements Iterator<Timetag> {
