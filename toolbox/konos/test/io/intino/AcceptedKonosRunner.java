@@ -126,8 +126,8 @@ public class AcceptedKonosRunner {
 	}
 
 	@Test
-	public void limpiezaPlayas() {
-		KonoscRunner.main(new String[]{temp(home + "confFiles/limpieza-playas.txt")});
+	public void limpiezaColegios() {
+		KonoscRunner.main(new String[]{temp(home + "confFiles/limpieza-colegios.txt")});
 	}
 
 	@Test
