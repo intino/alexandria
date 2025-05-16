@@ -67,7 +67,7 @@ class ActionSplit extends AbstractActionSplit {
                 <Grow {...TransitionProps} style={{transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'}}>
                   <Paper>
                     <ClickAwayListener onClickAway={this.handleClose.bind(this)}>
-                      <MenuList id="split-button-menu">
+                      <MenuList id="split-button-menu" style={{maxHeight:'50vh',overflow:'auto'}}>
                         {this.state.options.map((option, index) => (
                           <MenuItem key={option} selected={index === this.state.selectedIndex}
                                     onClick={this.handleMenuItemClick.bind(this, index)}>
