@@ -3,7 +3,6 @@ package io.intino.alexandria.ui;
 import io.intino.alexandria.http.AlexandriaHttpServer;
 import io.intino.alexandria.ui.server.UIRouter;
 import io.intino.alexandria.ui.services.AuthService;
-import org.eclipse.jetty.websocket.api.WebSocketListener;
 
 public class AlexandriaUiServer extends AlexandriaHttpServer<UIRouter> {
 	private AuthService authService;
@@ -26,14 +25,14 @@ public class AlexandriaUiServer extends AlexandriaHttpServer<UIRouter> {
 		return this;
 	}
 
-	public <T> void registerWs(String path, WebSocketListener socket) {
+	public <T> void registerWs(String path, AlexandriaWebSocket socket) {
 		init();
 		service.ws(path, config -> {
 			config.onConnect(e -> socket.onWebSocketConnect(e.session));
-			config.onClose(e -> socket.onWebSocketClose(e.status(), e.reason()));
-			config.onMessage(e -> socket.onWebSocketText(e.message()));
-			config.onBinaryMessage(e -> socket.onWebSocketBinary(e.data(), e.offset(), e.length()));
-			config.onError(e -> socket.onWebSocketError(e.error()));
+			config.onClose(e -> socket.onWebSocketClose(e.session, e.status(), e.reason()));
+			config.onMessage(e -> socket.onWebSocketText(e.session, e.message()));
+			config.onBinaryMessage(e -> socket.onWebSocketBinary(e.session, e.data(), e.offset(), e.length()));
+			config.onError(e -> socket.onWebSocketError(e.session, e.error()));
 		});
 	}
 
