@@ -52,6 +52,10 @@ public class AlexandriaHttpServer<R extends AlexandriaHttpRouter<?>> {
 		this.maxResourceSize = maxResourceSize;
 	}
 
+	public Javalin service() {
+		return service;
+	}
+
 	public AlexandriaHttpServer<?> start() {
 		if (started) return this;
 		init();
