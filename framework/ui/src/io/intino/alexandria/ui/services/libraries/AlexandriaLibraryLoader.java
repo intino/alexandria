@@ -135,6 +135,8 @@ public class AlexandriaLibraryLoader extends ClassLoader {
 	private void extractClasses() {
 		File[] files = archetype.directory().listFiles();
 		if (files != null && files.length > 0) return;
+		if (!archetype.directory().exists()) archetype.directory().mkdirs();
+		if (!archetype.file().exists()) return;
 		ZipHelper.extract(archetype.file(), archetype.directory());
 	}
 

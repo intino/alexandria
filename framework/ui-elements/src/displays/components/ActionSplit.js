@@ -125,7 +125,7 @@ class ActionSplit extends AbstractActionSplit {
         for (var i=0; i<options.length; i++) {
             if (options[i] === option) return i;
         }
-        return 0;
+        return -1;
     };
 }
 

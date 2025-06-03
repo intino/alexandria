@@ -12,7 +12,7 @@ rule type(webpack)
                     use: { loader: 'babel-loader', options: { presets: ['@babel/preset-env'] } }
                 },
                 {
-                    test: /\\.mjs$$/,
+                    test: /\\.m?js$$/,
                     include: /node_modules/,
                     type: "javascript/auto",
                     loader: "babel-loader"
