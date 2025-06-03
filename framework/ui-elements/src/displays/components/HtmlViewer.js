@@ -5,6 +5,7 @@ import HtmlViewerNotifier from "../../../gen/displays/notifiers/HtmlViewerNotifi
 import HtmlViewerRequester from "../../../gen/displays/requesters/HtmlViewerRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
+import Theme from 'app-elements/gen/Theme';
 
 const styles = theme => ({});
 
@@ -24,7 +25,7 @@ class HtmlViewer extends AbstractHtmlViewer {
 	render() {
 	    this.refreshEvents();
 	    if (this.state.content === "") return (<React.Fragment/>);
-	    return (<div id={this.props.id + "-html"} dangerouslySetInnerHTML={{__html: this.state.content}}></div>);
+	    return (<div id={this.props.id + "-html"} dangerouslySetInnerHTML={{__html: this.content()}}></div>);
 	};
 
 	refresh = (content) => {
@@ -59,6 +60,16 @@ class HtmlViewer extends AbstractHtmlViewer {
         w.close();
         return true;
     };
+
+    content = () => {
+        const result = this.state.content;
+        const isDark = Theme.get().isDark();
+        return isDark ? this.addDark(result) : result;
+    };
+
+    addDark = (content) => {
+        return "<div class='dark'>" + content + "</div>";
+    }
 
 }
 

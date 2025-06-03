@@ -425,9 +425,11 @@ rule trigger(useDictionaries)
 
 rule type(importLibrary) and trigger(method)
 	private void init$name+firstUpperCase~Library(io.intino.alexandria.ui.AlexandriaUiServer server, PushService pushService) {
+		java.io.File library = new java.io.File($libraryFile);
+		if (!library.exists()) return;
 	    AlexandriaLibraryArchetype archetype = new AlexandriaLibraryArchetype(new java.io.File("$destination"), $basePackage, $libraryName);
 	    AlexandriaLibraryLoader loader = new AlexandriaLibraryLoader(archetype);
-	    new AlexandriaLibraryInstaller(archetype).install(new java.io.File($libraryFile));
+	    new AlexandriaLibraryInstaller(archetype).install(library);
 	    new AlexandriaLibraryUiInitializer(this, loader).initialize(server, pushService);
 	    server.add(loader.webDirectory().getAbsolutePath());
 	    libraryLoaders.add(loader);
