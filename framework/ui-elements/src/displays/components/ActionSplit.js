@@ -115,6 +115,7 @@ class ActionSplit extends AbstractActionSplit {
 
     executeOption = (index) => {
         if (!this.canExecute()) return;
+        if (index < 0) return;
         const option = this.state.options[index];
         this.requester.execute(option);
         this.trace(option);
