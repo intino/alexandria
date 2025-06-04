@@ -134,8 +134,7 @@ public class RESTResourceRenderer extends Renderer {
 		FrameBuilder builder = new FrameBuilder(response.getClass().getSimpleName());
 		if (response.asType() != null) builder.add(response.asType().getClass().getSimpleName());
 		builder.add("value", Commons.returnType(response, packageName()));
-		if (response.isText() && response.dataFormat() != Response.DataFormat.html)
-			builder.add("format", MimeTypes.get(response.dataFormat().toString()));
+		if (response.isObject()) builder.add("format", "application/json");
 		return builder.toFrame();
 	}
 
