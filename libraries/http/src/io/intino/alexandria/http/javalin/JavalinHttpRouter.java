@@ -9,6 +9,7 @@ import io.intino.alexandria.http.server.*;
 import io.intino.alexandria.logger.Logger;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import io.javalin.http.HttpResponseException;
 import io.javalin.http.UploadedFile;
 
 import java.util.HashSet;
@@ -135,9 +136,10 @@ public class JavalinHttpRouter<SM extends AlexandriaHttpManager<?>> implements A
 		try {
 			caller.call((SM) manager);
 		} catch (AlexandriaException e) {
-			manager.response().status(Integer.parseInt(e.code()));
-			manager.body(e.toString());
-			throw new RuntimeException("Error " + Integer.parseInt(e.code()) + " processing request: " + e);
+			throw new HttpResponseException(Integer.parseInt(e.code()), e.toString());
+		} catch (Throwable e) {
+			Logger.error(e);
+			manager.response().error(500, e.toString());
 		}
 	}
 
