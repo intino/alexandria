@@ -32,9 +32,8 @@ public class JavalinHttpResponse implements AlexandriaHttpResponse {
 	@Override
 	public void error(int code, String message) {
 		try {
-			context.res().setStatus(code);
-			context.res().getWriter().write(message);
 			if (message.startsWith("{")) context.res().setContentType("application/json");
+			context.res().sendError(code, message);
 		} catch (IOException e) {
 			Logger.error(e);
 		}

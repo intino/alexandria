@@ -83,6 +83,10 @@ Component closeBlock as ExtensionOf(actionable)
 Component openDialog as ExtensionOf(actionable)
 	Request execute
 
+Component closeApp as ExtensionOf(actionable)
+	Notification close
+	Request execute
+
 Component openLayer as ExtensionOf(actionable)
 	Notification openAddress
 	Request execute
