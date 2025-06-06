@@ -152,6 +152,7 @@ Concept ActionableComponents
 
 		Facet Behavior
 			sub Action > var word:{CurrentObject Selection} context = CurrentObject
+			sub CloseApp
 			sub OpenDrawer > var Block.Drawer drawer
 			sub CloseDrawer > var Block.Drawer drawer
 			sub OpenPage > var Service.UI.Resource.Page page
