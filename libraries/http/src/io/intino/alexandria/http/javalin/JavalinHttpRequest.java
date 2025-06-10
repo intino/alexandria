@@ -4,9 +4,7 @@ import io.intino.alexandria.http.server.AlexandriaHttpRequest;
 import io.javalin.http.Context;
 import jakarta.servlet.http.HttpServletRequest;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class JavalinHttpRequest implements AlexandriaHttpRequest {
 	private final Context context;
@@ -47,17 +45,17 @@ public class JavalinHttpRequest implements AlexandriaHttpRequest {
 
 	@Override
 	public List<String> queryParams() {
-		List<String> result = new ArrayList<>(context.queryParamMap().keySet());
+		Set<String> result = new HashSet<>(context.queryParamMap().keySet());
 		result.addAll(context.formParamMap().keySet());
 		result.addAll(context.req().getParameterMap().keySet());
-		return result;
+		return new ArrayList<>(result);
 	}
 
 	@Override
 	public List<String> queryParams(String key) {
-		List<String> result = context.queryParams(key);
-		result = !result.isEmpty() ? result : context.formParams(key);
-		result = !result.isEmpty() ? result : List.of(context.req().getParameter(key));
+		List<String> result = new ArrayList<>(context.queryParams(key));
+		if (result.isEmpty()) result.addAll(context.formParams(key));
+		if (result.isEmpty()) result.add(context.req().getParameter(key));
 		return result;
 	}
 
