@@ -123,6 +123,7 @@ public class AlexandriaHttpServer<R extends AlexandriaHttpRouter<?>> {
 		Javalin result = Javalin.create(config -> {
 			register(webDirectories, config);
 			ResourceHandler defaultHandler = config.pvt.resourceHandler;
+			config.http.maxRequestSize = maxResourceSize;
 			config.pvt.resourceHandler = new ResourceHandler() {
 				@Override
 				public boolean canHandle(Context context) {
@@ -148,7 +149,7 @@ public class AlexandriaHttpServer<R extends AlexandriaHttpRouter<?>> {
 			};
 		});
 		result.before(ctx -> {
-			MultipartConfigElement multipartConfig = new MultipartConfigElement("", maxResourceSize, -1L, -1);
+			MultipartConfigElement multipartConfig = new MultipartConfigElement("", maxResourceSize, Double.valueOf(maxResourceSize*1.5).longValue(), -1);
 			ctx.req().setAttribute("org.eclipse.jetty.multipartConfig", multipartConfig);
 		});
 		result.exception(Exception.class, (exception, context) -> Logger.error(exception));
