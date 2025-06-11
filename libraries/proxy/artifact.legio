@@ -9,7 +9,7 @@ Artifact("io.intino.alexandria", "2.2.5") proxy
 		Compile("org.apache.httpcomponents", "fluent-hc", "4.5.7")
 		Compile("commons-io", "commons-io", "2.4")
 
-		Provided("io.intino.alexandria", "http", "2.2.8")
+		Provided("io.intino.alexandria", "http", "2.2.10")
 
 		Test("junit", "junit", "4.12")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources=true)
