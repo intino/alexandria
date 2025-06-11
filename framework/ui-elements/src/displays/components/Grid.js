@@ -79,6 +79,7 @@ class Grid extends AbstractGrid {
 		    groupByMode: null,
 		    openColumnsDialog: false,
 		    visibleColumns: [],
+		    maxColumnSize: 350,
 		};
 	};
 
@@ -348,7 +349,7 @@ class Grid extends AbstractGrid {
             for (let j=0; j<columns.length; j++) {
                 if (columns[j].type == "Icon" || columns[j].type == "MaterialIcon") continue;
                 const width = this.getWidth(this.state.rows[i][columns[j].name]);
-                result[columns[j].name] = Math.max(width, result[columns[j].name]);
+                result[columns[j].name] = Math.min(Math.max(width, result[columns[j].name]), this.state.maxColumnSize);
             }
         }
 
