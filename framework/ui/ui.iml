@@ -79,7 +79,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Intino: dnie:xmlsec:1.4.2-ADSI" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:exceptions:2.1.2" level="project" />
     <orderEntry type="library" name="Intino: org.apache.httpcomponents:httpmime:4.5.14" level="project" />
-    <orderEntry type="module" module-name="ui-elements" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:http:2.2.8" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.1.6" level="project" />
     <orderEntry type="library" name="Intino: io.javalin:javalin:6.6.0" level="project" />
@@ -106,5 +105,6 @@
     <orderEntry type="library" name="Intino: commons-codec:commons-codec:1.18.0" level="project" />
     <orderEntry type="library" name="Intino: eu.medsea.mimeutil:mime-util:2.1.3" level="project" />
     <orderEntry type="library" name="Intino: log4j:log4j:1.2.14" level="project" />
+    <orderEntry type="module" module-name="ui-elements" />
   </component>
 </module>
