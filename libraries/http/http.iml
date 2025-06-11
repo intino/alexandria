@@ -43,5 +43,19 @@
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-core-common:11.0.25" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-servlet:11.0.25" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-core-server:11.0.25" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: io.intino.alexandria:rest-accessor:3.1.8" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: io.intino.alexandria:json:1.2.3" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: com.google.code.gson:gson:2.10.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: org.apache.commons:commons-lang3:3.14.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: commons-io:commons-io:2.16.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: org.glassfish.tyrus:tyrus-client:2.1.5" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: org.glassfish.tyrus:tyrus-core:2.1.5" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: org.glassfish.tyrus:tyrus-spi:2.1.5" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: jakarta.websocket:jakarta.websocket-client-api:2.1.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: jakarta.websocket:jakarta.websocket-api:2.1.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: org.glassfish.tyrus:tyrus-container-grizzly-client:2.1.5" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: org.glassfish.grizzly:grizzly-framework:4.0.2" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: org.glassfish.grizzly:grizzly-http-server:4.0.2" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: org.glassfish.grizzly:grizzly-http:4.0.2" level="project" />
   </component>
 </module>

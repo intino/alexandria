@@ -6,6 +6,7 @@ use Theme
 
 Service(title = "", favicon = "") UiElements as UI(targets=Web Android, port = "9000", url="http://10.0.2.2:9000")
 	googleApiKey = "AIzaSyA8FjeAX36umrYD8Jk2FbRFWqDEulInKIA"
+	maxResourceSize = 1MB
 
 	Resource(path = "/") home as Page(docsTemplate) Main
 	Resource(path = "/widgets") widgets as Page(docsTemplate)
