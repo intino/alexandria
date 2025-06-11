@@ -121,6 +121,7 @@ public class AlexandriaHttpServer<R extends AlexandriaHttpRouter<?>> {
 		Javalin result = Javalin.create(config -> {
 			register(webDirectories, config);
 			ResourceHandler defaultHandler = config.pvt.resourceHandler;
+			config.jetty.modifyServer(server -> server.setAttribute("org.eclipse.jetty.server.Request.maxFormContentSize", maxResourceSize));
 			config.pvt.resourceHandler = new ResourceHandler() {
 				@Override
 				public boolean canHandle(Context context) {
