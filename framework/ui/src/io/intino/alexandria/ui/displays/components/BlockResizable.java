@@ -10,6 +10,10 @@ public class BlockResizable<DN extends BlockResizableNotifier, B extends Box> ex
         super(box);
     }
 
+    public void refreshLayout(Integer... percentages) {
+        notifier.refreshLayout(java.util.List.of(percentages));
+    }
+
     protected void refreshVisibility(String child, boolean visible) {
         notifier.refreshChildVisibility(new BlockResizableVisibility().child(child).visible(visible));
     }

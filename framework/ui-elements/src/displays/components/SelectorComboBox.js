@@ -13,14 +13,11 @@ export const SelectorComboBoxTextViewStyles = {
         ...provided,
         background: 'transparent',
         border: '0',
-        height: '20px',
         minHeight: '20px'
     }),
     valueContainer: (provided, state) => ({
         ...provided,
-        height: '20px',
         padding: '0 6px',
-        fontSize: '10pt',
     }),
     input: (provided, state) => ({
         ...provided,
@@ -31,7 +28,6 @@ export const SelectorComboBoxTextViewStyles = {
     }),
     indicatorsContainer: (provided, state) => ({
         ...provided,
-        height: '20px',
     }),
 };
 

@@ -19,6 +19,7 @@ class BlockResizable extends AbstractBlockResizable {
 		super(props);
 		this.notifier = new BlockResizableNotifier(this);
 		this.requester = new BlockResizableRequester(this);
+		this.panelGroup = React.createRef();
 		this.state = {
 		    ...this.state,
 		    childrenVisibility: {},
@@ -41,7 +42,7 @@ class BlockResizable extends AbstractBlockResizable {
 	renderChildren = () => {
 		const children = React.Children.map(this.props.children, (child, i) => { return this.renderChild(child, i); });
 		return (
-		    <PanelGroup direction={this._direction()} style={this.style()}>
+		    <PanelGroup ref={this.panelGroup} direction={this._direction()} style={this.style()}>
 		        {children}
 		    </PanelGroup>
 		);
@@ -77,6 +78,11 @@ class BlockResizable extends AbstractBlockResizable {
         else props.height = "100%";
         return React.cloneElement(child, { ...child.props, ...props } );
 	};
+
+	refreshLayout = (info) => {
+	    if (this.panelGroup.current == null) return;
+	    this.panelGroup.current.setLayout(info);
+	}
 
 	refreshChildVisibility = (info) => {
 	    const childrenVisibility = this.state.childrenVisibility;
