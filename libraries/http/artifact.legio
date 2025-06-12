@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "2.2.6") http
+Artifact("io.intino.alexandria", "2.2.12") http
 	Imports
 		Compile("io.intino.alexandria", "exceptions", "2.1.2")
 		Compile("io.intino.alexandria", "primitives", "1.1.6")
@@ -15,5 +15,6 @@ Artifact("io.intino.alexandria", "2.2.6") http
 			Exclude("org.slf4j", "slf4j-log4j12")
 			Exclude("log4j", "log4j")
 		Test("junit", "junit", "4.13.2")
+		Test("io.intino.alexandria", "rest-accessor", "3.1.8")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")

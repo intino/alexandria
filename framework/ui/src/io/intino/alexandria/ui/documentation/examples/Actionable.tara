@@ -203,3 +203,13 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 						MaterialIconButton(icon\="Brightness5", title\="Dark mode") as SetDarkMode
 						MaterialIconButton(icon\="Brightness7", title\="Light mode") as SetLightMode
 						=========
+
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="Close application operation")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Link(title="Close application") close as CloseApp
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Link(title\="Close application") as CloseApp
+						=========

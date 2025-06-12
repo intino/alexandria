@@ -1,8 +1,8 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "2.2.3") soap
+Artifact("io.intino.alexandria", "2.2.8") soap
 	Imports
-		Compile("io.intino.alexandria", "http", "2.2.4")
+		Compile("io.intino.alexandria", "http", "2.2.12")
 		Compile("io.intino.alexandria", "xml", "1.0.0")
 		Compile("io.intino.alexandria", "json", "1.2.3")
 

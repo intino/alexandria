@@ -16,6 +16,8 @@ import io.javalin.http.ExceptionHandler;
 import io.javalin.http.staticfiles.Location;
 import io.javalin.http.staticfiles.ResourceHandler;
 import io.javalin.http.staticfiles.StaticFileConfig;
+import jakarta.servlet.MultipartConfigElement;
+import jakarta.servlet.ServletException;
 
 import java.io.File;
 import java.io.IOException;
@@ -100,7 +102,7 @@ public class AlexandriaHttpServer<R extends AlexandriaHttpRouter<?>> {
 	}
 
 	public interface ResourceCaller<SM extends AlexandriaHttpManager<?>> {
-		void call(SM manager) throws AlexandriaException;
+		void call(SM manager) throws AlexandriaException, ServletException, IOException;
 	}
 
 	protected R createRouter(String path) {
@@ -121,6 +123,7 @@ public class AlexandriaHttpServer<R extends AlexandriaHttpRouter<?>> {
 		Javalin result = Javalin.create(config -> {
 			register(webDirectories, config);
 			ResourceHandler defaultHandler = config.pvt.resourceHandler;
+			config.http.maxRequestSize = maxResourceSize;
 			config.pvt.resourceHandler = new ResourceHandler() {
 				@Override
 				public boolean canHandle(Context context) {
@@ -144,6 +147,10 @@ public class AlexandriaHttpServer<R extends AlexandriaHttpRouter<?>> {
 					return defaultHandler != null && defaultHandler.addStaticFileConfig(config);
 				}
 			};
+		});
+		result.before(ctx -> {
+			MultipartConfigElement multipartConfig = new MultipartConfigElement("", maxResourceSize, Double.valueOf(maxResourceSize*1.5).longValue(), -1);
+			ctx.req().setAttribute("org.eclipse.jetty.multipartConfig", multipartConfig);
 		});
 		result.exception(Exception.class, (exception, context) -> Logger.error(exception));
 		return result;

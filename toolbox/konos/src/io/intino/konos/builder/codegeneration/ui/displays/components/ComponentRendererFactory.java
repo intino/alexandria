@@ -75,6 +75,7 @@ public class ComponentRendererFactory {
 		map.put(conceptOf(Actionable.SignDocument.class), config -> new SignDocumentRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
 		map.put(conceptOf(Actionable.OpenDrawer.class), config -> new OpenDrawerRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
 		map.put(conceptOf(Actionable.OpenLayer.class), config -> new OpenLayerRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
+		map.put(conceptOf(Actionable.CloseApp.class), config -> new CloseAppRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
 		map.put(conceptOf(Actionable.CloseLayer.class), config -> new CloseLayerRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
 		map.put(conceptOf(Actionable.CloseDrawer.class), config -> new CloseDrawerRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));
 		map.put(conceptOf(Actionable.OpenBlock.class), config -> new OpenBlockRenderer(config.context(), config.component().a$(Actionable.class), config.provider()));

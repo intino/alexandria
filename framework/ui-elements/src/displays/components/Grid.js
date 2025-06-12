@@ -79,6 +79,7 @@ class Grid extends AbstractGrid {
 		    groupByMode: null,
 		    openColumnsDialog: false,
 		    visibleColumns: [],
+		    maxColumnSize: 350,
 		};
 	};
 
@@ -133,7 +134,6 @@ class Grid extends AbstractGrid {
                 rowsCount={this.state.rows.length}
                 emptyRowsView={this.emptyRowsView.bind(this)}
                 enableCellSelect={true}
-                minColumnWidth={200}
                 rowSelection={{
                     showCheckbox: showCheckbox,
                     enableShiftSelect: null,
@@ -337,17 +337,52 @@ class Grid extends AbstractGrid {
         this.requester.groupBy(groupBy);
     };
 
+    columnsWidths = () => {
+        const result = {};
+        const columns = this.state.columns;
+        const gridCanvas = this.grid != null ? this.grid.getDataGridDOMNode().querySelector('.react-grid-Canvas') : null;
+
+        for (let i=0; i<columns.length; i++)
+            result[columns[i].name] = columns[i].type == "Icon" || columns[i].type == "MaterialIcon" ? 40 : this.state.rows.length > 0 ? this.getWidth(columns[i].label, 8) : undefined;
+
+        for (let i=0; i<this.state.rows.length; i++) {
+            for (let j=0; j<columns.length; j++) {
+                if (columns[j].type == "Icon" || columns[j].type == "MaterialIcon") continue;
+                const width = this.getWidth(this.state.rows[i][columns[j].name]);
+                result[columns[j].name] = Math.min(Math.max(width, result[columns[j].name]), this.state.maxColumnSize);
+            }
+        }
+
+        let totalWidth = 0;
+        let lastVisibleColumn = null;
+        for (let j=0; j<columns.length; j++) {
+            if (this.state.visibleColumns.length > 0 && !this.state.visibleColumns[j]) continue;
+            totalWidth += result[columns[j].name];
+            lastVisibleColumn = columns[j];
+        }
+
+        if (gridCanvas != null && gridCanvas.clientWidth > totalWidth && lastVisibleColumn != null)
+            result[lastVisibleColumn.name] = result[lastVisibleColumn.name] + gridCanvas.clientWidth - totalWidth - 60;
+
+        return result;
+    };
+
     columns = () => {
+        const widths = this.columnsWidths();
         return this.state.columns.filter((column, idx) => this.isColumnVisible(idx)).map((column, idx) => ({
             key: column.name,
             name: column.label,
             filterable: true, editable: false,
             sortable: column.sortable, draggable: false,
-            resizable: true, frozen: column.fixed, width: column.width != -1 ? column.width : undefined,
+            resizable: true, frozen: column.fixed, width: widths[column.name],
             headerRenderer : this.columnRenderer(column, idx),
-            formatter : this.rowFormatter.bind(this, column)
+            formatter : this.rowFormatter.bind(this, column),
         }));
     };
+
+    getWidth = (value, factor) => {
+        return value.length * (factor != null ? factor : 6);
+    }
 
     selectorColumns = () => {
         return this.state.columns.map((column, idx) => ({
