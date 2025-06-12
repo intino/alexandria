@@ -70,7 +70,7 @@ public class JMXClient {
 					.filter(Future::isDone)
 					.map(JMXClient::get)
 					.filter(Objects::nonNull)
-					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (k1, k2) -> k1));
 		} catch (InterruptedException e) {
 			Logger.error(e);
 			return Map.of();

@@ -9,8 +9,8 @@ public class SwaggerSpec {
 	public String host;
 	public String basePath;
 	public List<String> schemes;
-	public List<String> consumes = Arrays.asList("text/plain; charset=utf-8", " application/json", "multipart/form-data");
-	public List<String> produces = Arrays.asList("text/plain; charset=utf-8", " application/json", "multipart/form-data");
+	public List<String> consumes = Arrays.asList("text/plain; charset=utf-8", "application/json", "multipart/form-data");
+	public List<String> produces = Arrays.asList("text/plain; charset=utf-8", "application/json", "multipart/form-data");
 	public Map<String, Path> paths;
 	public Map<String, Definition> definitions;
 	public Map<String, SecurityDefinition> securityDefinitions;
@@ -69,8 +69,8 @@ public class SwaggerSpec {
 			public String description;
 			public String operationId;
 			public List<String> tags;
-			public List<String> consumes = Arrays.asList("text/plain; charset=utf-8", " application/json", "multipart/form-data");
-			public List<String> produces = Arrays.asList("text/plain; charset=utf-8", " application/json", "multipart/form-data");
+			public List<String> consumes = Arrays.asList("text/plain; charset=utf-8", "application/json", "multipart/form-data");
+			public List<String> produces = Arrays.asList("text/plain; charset=utf-8", "application/json", "multipart/form-data");
 			public List<String> schemes;
 			public Boolean deprecated;
 			public List<Parameter> parameters;
@@ -170,7 +170,7 @@ public class SwaggerSpec {
 
 	public static class SecuritySchema {
 		List<String> basic = null;
-		List<String> bearer = null;
+		List<String> bearerAuth = null;
 		List<String> api_key = null;
 
 		public SecuritySchema basic() {
@@ -179,7 +179,7 @@ public class SwaggerSpec {
 		}
 
 		public SecuritySchema bearer() {
-			bearer = new ArrayList<>();
+			bearerAuth = new ArrayList<>();
 			return this;
 		}
 	}
