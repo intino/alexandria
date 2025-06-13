@@ -12,7 +12,7 @@ Template(layout=Vertical, spacing=DP8) sortingExamplesMold
 					Text(format=subtitle2 description airRight,value="mostrar primero")
 					Sorting(collections=list1) gender1 as Labeled("female population")
 				List(itemClass="io.intino.alexandria.ui.documentation.Person") list1
-					Mold > Item(height=60px,width=30%) sorting1Mold
+					Mold > Item(height=60px,relativeWidth=30%) sorting1Mold
 							Text firstName1
 							Block(layout=Horizontal, spacing=DP16)
 								Text(format=description) gender1
@@ -24,7 +24,7 @@ Template(layout=Vertical, spacing=DP8) sortingExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="mostrar primero")
 						&nbsp;&nbsp;&nbsp;&nbsp;Sorting(collections\=list) gender1 as Labeled("female population")
 						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) sortingMold<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,relativeWidth\=30%) sortingMold<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text firstName<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal, spacing\=DP16)<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) gender<br/>
@@ -41,7 +41,7 @@ Template(layout=Vertical, spacing=DP8) sortingExamplesMold
 					Sorting(collections=list2) female as Option Labeled("female population")
 					Sorting(collections=list2) male as Option Labeled("male population")
 				List(itemClass="io.intino.alexandria.ui.documentation.Person") list2
-					Mold > Item(height=60px,width=30%) sorting2Mold
+					Mold > Item(height=60px,relativeWidth=30%) sorting2Mold
 							Text firstName2
 							Block(layout=Horizontal, spacing=DP16)
 								Text(format=description) gender2
@@ -56,7 +56,7 @@ Template(layout=Vertical, spacing=DP8) sortingExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;Sorting(collections\=list) as Option("female") Labeled("female population")
 						&nbsp;&nbsp;&nbsp;&nbsp;Sorting(collections\=list) as Option("male") Labeled("male population")
 						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) sortingMold<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,relativeWidth\=30%) sortingMold<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text firstName<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal, spacing\=DP16)<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) gender<br/>

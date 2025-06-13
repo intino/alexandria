@@ -10,14 +10,14 @@ Template(layout=Vertical, spacing=DP8) tableExamplesMold
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filledNoAir)
 				Table(itemClass="io.intino.alexandria.ui.documentation.Person") table1
-					Mold > Item(height=60px,width=30%) table11Mold > Text firstName as Editable
-					Mold > Item(height=60px,width=70%) table12Mold > Text lastName as Editable
+					Mold > Item(height=60px,relativeWidth=30%) table11Mold > Text firstName as Editable
+					Mold > Item(height=60px,relativeWidth=70%) table12Mold > Text lastName as Editable
 			Block > Text as Code(language=Html)
 					value
 						=========
 						Table(itemClass\="io.intino.alexandria.ui.documentation.Person") table<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) table1Mold > Text firstName as Editable<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=70%) table2Mold > Text lastName as Editable
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,relativeWidth\=30%) table1Mold > Text firstName as Editable<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,relativeWidth\=70%) table2Mold > Text lastName as Editable
 						=========
 
 		Block example2 as Relative(width=48%, height=100%)
@@ -26,20 +26,20 @@ Template(layout=Vertical, spacing=DP8) tableExamplesMold
 				Table(itemClass="io.intino.alexandria.ui.documentation.Person") table2 as Selectable(multiple=false)
 					Mold
 						Heading firstNameHeading > Text(value="first name")
-						Item(height=60px,width=30%) table21Mold > Text firstName
+						Item(height=60px,relativeWidth=30%) table21Mold > Text firstName
 					Mold
 						Heading lastNameHeading > Text(value="last name")
-						Item(height=60px,width=70%) table22Mold > Text lastName
+						Item(height=60px,relativeWidth=70%) table22Mold > Text lastName
 			Block > Text as Code(language=Html)
 					value
 						=========
 						Table(itemClass\="io.intino.alexandria.ui.documentation.Person") table<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Mold<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Heading firstNameHeading > Text(value\="first name")<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Item(height\=60px,width\=30%) table21Mold > Text firstName<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Item(height\=60px,relativeWidth\=30%) table21Mold > Text firstName<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Mold<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Heading lastNameHeading > Text(value\="last name")<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Item(height\=60px,width\=70%) table22Mold > Text lastName
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Item(height\=60px,relativeWidth\=70%) table22Mold > Text lastName
 						=========
 
 		Block as Relative(width=48%, height=100%)
