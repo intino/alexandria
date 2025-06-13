@@ -25,24 +25,24 @@ const CollectionBehavior = (collection) => {
 
     window.addEventListener("resize", () => self.refreshDelayed());
 
-    self.renderCollection = (height, width, mode) => {
+    self.renderCollection = (height, width, mode, header) => {
         const items = self.items();
         const navigable = collection.props.navigable;
 
         if (collection.state.loading) return self.renderLoading(height, width);
         if (items.length <= 0) return self.renderEmpty(height, width);
 
-        if (navigable == null) return self.renderInfiniteList(items, height, width, mode);
+        if (navigable == null) return self.renderInfiniteList(items, height, width, mode, header);
         return (
             <div>
                 {navigable === "Top" ? self.renderPagination() : undefined}
-                {self.renderList(items, height - PaginationHeight, width, mode, null, null)}
+                {self.renderList(items, height - PaginationHeight, width, mode, null, null, header)}
                 {navigable === "Bottom" ? self.renderPagination() : undefined}
             </div>
         );
     };
 
-    self.renderInfiniteList = (items, height, width, mode) => {
+    self.renderInfiniteList = (items, height, width, mode, header) => {
         let itemHeight = self.collection.props.itemHeight;
         const hasMore = items.length < self.collection.state.itemCount;
         const scrollableTarget = self.collection.props.id + "_infinite";
@@ -55,6 +55,7 @@ const CollectionBehavior = (collection) => {
                 <InfiniteScroll dataLength={items.length} next={self.loadNextPage.bind(self)}
                         scrollThreshold={0.9} hasMore={hasMore} loader={self.renderLoadingMore()}
                         height={height} style={{height:height+"px",width:width+'px'}} scrollableTarget={scrollableTarget}>
+                    {header != null && header}
                     {self.renderItems(items, mode, itemHeight, "layout horizontal flex center item")}
                 </InfiniteScroll>
             </div>
@@ -77,8 +78,10 @@ const CollectionBehavior = (collection) => {
         toolbar.style.display = hasMore && !scrollIsVisible ? "block" : "none";
     };
 
-    self.renderList = (items, height, width, mode, onItemsRendered, ref) => {
+    self.renderList = (items, height, width, mode, onItemsRendered, ref, header) => {
         let itemHeight = self.collection.props.itemHeight;
+        let itemWidth = self.collection.props.itemWidth != null ? self.collection.props.itemWidth : width;
+        let offsetHeight = self.collection.props.itemWidth != null ? -30 : 0;
         const itemCount = self.collection.props.navigable == null ? self.collection.state.itemCount : self.collection.state.pageSize;
         const hasMore = self.collection.props.navigable == null ? items.length < itemCount : false;
         const scrollableTarget = self.collection.props.id + "_infinite";
@@ -87,7 +90,8 @@ const CollectionBehavior = (collection) => {
             <div id={scrollableTarget} style={{ height: height, width: width, overflow: "auto" }}>
                 <InfiniteScroll dataLength={items.length} next={self.loadNextPage.bind(self)}
                         scrollThreshold={0.9} hasMore={hasMore} loader={self.renderLoadingMore()}
-                        height={height} style={{height:height+"px",width:width+'px'}} scrollableTarget={scrollableTarget}>
+                        height={height} style={{height:(height+offsetHeight)+"px",width:itemWidth+'px',overflowX:self.collection.props.itemWidth!=null?"hidden":"auto"}} scrollableTarget={scrollableTarget}>
+                    {header != null && header}
                     {self.renderItems(items, mode, itemHeight, "")}
                 </InfiniteScroll>
             </div>
@@ -215,9 +219,10 @@ const CollectionBehavior = (collection) => {
         const id = item != null ? item.pl.id : undefined;
         const classNamesValue = classNames(classes.itemView, customClasses, selectable && multiple ? classes.selectable : undefined, selecting ? classes.selecting : undefined);
         const finalStyle = selectable && !multiple && self.isItemSelected(item) ? { ...style, ...self.getSelectedStyleRules() } : style;
+        const widthStyle = self.collection.props.itemWidth != null ? {width: self.collection.props.itemWidth + "px"} : {};
         return (
             <React.Fragment>
-                <div id={self.elementId(id)} style={finalStyle} key={index} onClick={selectable && !multiple ? self.handleSelect.bind(self, id) : undefined} className={classNamesValue}>
+                <div id={self.elementId(id)} style={{...finalStyle,...widthStyle}} key={index} onClick={selectable && !multiple ? self.handleSelect.bind(self, id) : undefined} className={classNamesValue}>
                     {/*{multiple ? <Checkbox checked={self.isItemSelected(item)} className={classes.selector} onChange={self.handleSelect.bind(self, id)} /> : undefined}*/}
                     {multiple ? <CollectionBehaviorCheckbox checked={self.isItemSelected(item)} classes={classes} onCheck={self.handleSelect.bind(self, id)} /> : undefined}
                     {view}
@@ -388,8 +393,8 @@ const CollectionBehavior = (collection) => {
     };
 
     return {
-        renderCollection: (height, width, mode) => {
-            return self.renderCollection(height, width, mode);
+        renderCollection: (height, width, mode, header) => {
+            return self.renderCollection(height, width, mode, header);
         },
         renderLoading: () => {
             return self.renderLoading();

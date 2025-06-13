@@ -125,10 +125,10 @@ rule type(properties, location) and trigger(specific)
 	<< center={{lat:$centerLat,lng:$centerLng}}>><< zoom={{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}}>><< modes={["$mode...[","]"]}>><< controls="$controls">>
 
 rule type(properties, map) and trigger(specific)
-	<< pageSize={$pageSize}>><< type="$type">><< itemHeight={$itemHeight}>><< center={{lat:$centerLat,lng:$centerLng}}>><< zoom={{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}}>><< controls="$controls">><< selection="$selection">>
+	<< pageSize={$pageSize}>><< type="$type">><< itemHeight={$itemHeight}>><< itemWidth={$itemWidth}>><< center={{lat:$centerLat,lng:$centerLng}}>><< zoom={{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}}>><< controls="$controls">><< selection="$selection">>
 
 rule type(properties, collection) and trigger(specific)
-	<< noItemsMessage="$noItemsMessage">><< noItemsFoundMessage="$noItemsFoundMessage">><< pageSize={$pageSize}>><< itemHeight={$itemHeight}>><< scrollingMark={$scrollingMark}>><< navigable="$navigable">><< selection="$selection">>
+	<< noItemsMessage="$noItemsMessage">><< noItemsFoundMessage="$noItemsFoundMessage">><< pageSize={$pageSize}>><< itemHeight={$itemHeight}>><< itemWidth={$itemWidth}>><< scrollingMark={$scrollingMark}>><< navigable="$navigable">><< selection="$selection">>
 
 rule type(properties, heading) and trigger(specific)
 	 style={{width:"$width~%",paddingRight:"10px"<<,$paddingLeft:"10px">>}}<< hidden="$hidden">>

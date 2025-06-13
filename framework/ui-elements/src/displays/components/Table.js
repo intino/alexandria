@@ -63,21 +63,28 @@ export class EmbeddedTable extends AbstractTable {
 
     render() {
         const { classes } = this.props;
-        const selectable = this.props.selection != null;
-        const multiple = this.allowMultiSelection();
         const headerHeight = this.header.current != null ? this.header.current.offsetHeight : 0;
-        const minHeight = this.props.itemHeight * this.state.itemCount;
-        const height = this.container.current != null ? this.container.current.offsetHeight : 0;
-        const headerClass = height <= minHeight ? classes.withScroller : classes.withoutScroller;
+        const header = this.headerContent();
 
         return (
             <div ref={this.container} style={{height:"100%",width:"100%",position:'relative'}} className="layout vertical flex">
                 { ComponentBehavior.labelBlock(this.props) }
-                <div ref={this.header} className={classNames(classes.headerView, headerClass, "layout horizontal center", selectable && multiple ? classes.selectable : {})} style={{position:"relative"}}>
-                    <div className={classNames(classes.selectAll, selectable ? classes.selectable : {})}><Checkbox className={classes.selector} onChange={this.handleCheck.bind(this)} /></div>
-                    {this.props.children}
-                </div>
-                <div className="layout flex" style={{width:"100%",height:"calc(100% - " + headerHeight + "px)"}}><AutoSizer>{({ height, width }) => (this.behavior.renderCollection(height, width))}</AutoSizer></div>
+                <div className="layout flex" style={{width:"100%",height:"calc(100% - " + headerHeight + "px)"}}><AutoSizer>{({ height, width }) => (this.behavior.renderCollection(height, width, null, header))}</AutoSizer></div>
+            </div>
+        );
+    };
+
+    headerContent = () => {
+        const { classes } = this.props;
+        const selectable = this.props.selection != null;
+        const multiple = this.allowMultiSelection();
+        const minHeight = this.props.itemHeight * this.state.itemCount;
+        const height = this.container.current != null ? this.container.current.offsetHeight : 0;
+        const headerClass = height <= minHeight ? classes.withScroller : classes.withoutScroller;
+        return (
+            <div ref={this.header} className={classNames(classes.headerView, headerClass, "layout horizontal center", selectable && multiple ? classes.selectable : {})} style={{position:"relative"}}>
+                <div className={classNames(classes.selectAll, selectable ? classes.selectable : {})}><Checkbox className={classes.selector} onChange={this.handleCheck.bind(this)} /></div>
+                {this.props.children}
             </div>
         );
     }
