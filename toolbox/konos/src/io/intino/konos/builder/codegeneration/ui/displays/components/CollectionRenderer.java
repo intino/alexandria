@@ -19,6 +19,7 @@ public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 	@Override
 	public FrameBuilder properties() {
 		FrameBuilder result = super.properties();
+		Integer width = itemWidth();
 		result.add("collection");
 		if (element.i$(conceptOf(Navigable.class)))
 			result.add("navigable", element.a$(Navigable.class).position().name());
@@ -26,6 +27,7 @@ public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 		if (element.i$(conceptOf(CatalogComponents.Magazine.class)) ||element.i$(conceptOf(CatalogComponents.List.class)) || element.i$(conceptOf(CatalogComponents.Table.class)) || element.i$(conceptOf(CatalogComponents.Grid.class)))
 			result.add("pageSize", element.pageSize());
 		result.add("itemHeight", itemHeight());
+		if (width != null) result.add("itemWidth", width);
 		result.add("scrollingMark", element.scrollingMark());
 		if (element.isSelectable()) result.add("selection", element.asSelectable().multiple() ? "multiple" : "single");
 		if (element.noItemsMessage() != null) result.add("noItemsMessage", element.noItemsMessage());
@@ -82,6 +84,12 @@ public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 	private int itemHeight() {
 		if (!element.i$(conceptOf(CatalogComponents.Moldable.class))) return 100;
 		return element.a$(CatalogComponents.Moldable.class).moldList().stream().mapToInt(m -> m.item().height()).max().orElse(100);
+	}
+
+	private Integer itemWidth() {
+		if (!element.i$(conceptOf(CatalogComponents.Moldable.class))) return null;
+		int width = element.a$(CatalogComponents.Moldable.class).moldList().stream().mapToInt(m -> m.item().width()).sum();
+		return width > 0 ? width : null;
 	}
 
 	private void addColumns(FrameBuilder result) {

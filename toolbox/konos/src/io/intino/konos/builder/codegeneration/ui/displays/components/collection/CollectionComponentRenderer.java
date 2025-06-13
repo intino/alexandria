@@ -34,7 +34,9 @@ public abstract class CollectionComponentRenderer<C extends Component> extends C
 
 	private int width() {
 		if (element.core$().ownerAs(CatalogComponents.Moldable.class) == null) return 0;
-		return element.core$().ownerAs(CatalogComponents.Moldable.Mold.class).item().width();
+		CatalogComponents.Moldable.Mold.Item item = element.core$().ownerAs(CatalogComponents.Moldable.Mold.class).item();
+		if (item.width() != -1) return item.width();
+		return item.relativeWidth();
 	}
 
 	int defaultWidth() {

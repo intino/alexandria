@@ -166,10 +166,10 @@ rule type(properties, location) and trigger(specific)
 	<< alexandria:location_center="{lat:$centerLat,lng:$centerLng}">><< alexandria:location_zoom="{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}">><< alexandria:location_modes="['$mode...[',']']">><< alexandria:location_controls="$controls">>
 
 rule type(properties, map) and trigger(specific)
-	<< alexandria:map_page_size="$pageSize">><< alexandria:map_type="$type">><< alexandria:map_item_height="$itemHeight">><< alexandria:map_center="{lat:$centerLat,lng:$centerLng}">><< alexandria:map_zoom="{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}">><< alexandria:map_controls="$controls">>
+	<< alexandria:map_page_size="$pageSize">><< alexandria:map_type="$type">><< alexandria:map_item_height="$itemHeight">><< alexandria:map_item_width="$itemWidth">><< alexandria:map_center="{lat:$centerLat,lng:$centerLng}">><< alexandria:map_zoom="{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}">><< alexandria:map_controls="$controls">>
 
 rule type(properties, collection) and trigger(specific)
-	<< alexandria:collection_no_items_message="$noItemsMessage">><< alexandria:map_no_items_found_message="$noItemsFoundMessage">><< alexandria:collection_page_size="$pageSize">><< alexandria:collection_item_height="$itemHeight">><< alexandria:collection_scrolling_mark="$scrollingMark">><< alexandria:collection_navigable="$navigable">><< alexandria:collection_selection="$selection">>
+	<< alexandria:collection_no_items_message="$noItemsMessage">><< alexandria:map_no_items_found_message="$noItemsFoundMessage">><< alexandria:collection_page_size="$pageSize">><< alexandria:collection_item_height="$itemHeight">><< alexandria:collection_item_width="$itemWidth">><< alexandria:collection_scrolling_mark="$scrollingMark">><< alexandria:collection_navigable="$navigable">><< alexandria:collection_selection="$selection">>
 
 rule type(properties, heading) and trigger(specific)
 	 alexandria:heading_style="{width:'$width~%',paddingRight:'10px'<<,$paddingLeft:'10px'>>}"<< alexandria:heading_hidden="$hidden">>

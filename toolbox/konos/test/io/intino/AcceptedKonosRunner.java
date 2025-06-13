@@ -142,7 +142,7 @@ public class AcceptedKonosRunner {
 
 	@Test
 	public void sinergia() {
-		KonoscRunner.main(new String[]{temp(home + "confFiles/sinergia.full.txt")});
+		KonoscRunner.main(new String[]{temp(home + "confFiles/sinergia.txt")});
 	}
 
 	@Test
