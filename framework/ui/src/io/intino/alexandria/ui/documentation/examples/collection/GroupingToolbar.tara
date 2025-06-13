@@ -15,7 +15,7 @@ Template(layout=Vertical, spacing=DP8) groupingToolbarExamplesMold
 					Block(layout=Vertical Flexible, format=airTop) right
 						Block > GroupingToolbar(groupings=groupings.gender1 groupings.ageGroup1, format=whiteBackground airBottom)
 						List(itemClass="io.intino.alexandria.ui.documentation.Person") list1
-							Mold > Item(height=60px,width=30%) groupingToolbar1Mold
+							Mold > Item(height=60px,relativeWidth=30%) groupingToolbar1Mold
 									Text firstName1
 									Block(layout=Horizontal, spacing=DP16)
 										Text(format=description) gender1

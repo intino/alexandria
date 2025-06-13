@@ -27,24 +27,24 @@ Template(layout=Vertical, spacing=DP8) listExamplesMold
 			Text(format=h6, value="Navigable facet with position Top")
 			Block(spacing=DP8, format=filledNoAir)
 				List(itemClass="io.intino.alexandria.ui.documentation.Person") list3 as Navigable(position=Top)
-					Mold > Item(height=60px,width=30%) list3Mold > Text firstName as Editable
+					Mold > Item(height=60px,relativeWidth=30%) list3Mold > Text firstName as Editable
 			Block > Text as Code(language=Html)
 					value
 						=========
 						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list as Navigable(position\=Top)<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) listMold > Text firstName as Editable
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,relativeWidth\=30%) listMold > Text firstName as Editable
 						=========
 
 		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Navigable facet with position Bottom")
 			Block(spacing=DP8, format=filledNoAir)
 				List(itemClass="io.intino.alexandria.ui.documentation.Person") list4 as Navigable(position=Bottom)
-					Mold > Item(height=60px,width=30%) list4Mold > Text firstName as Editable
+					Mold > Item(height=60px,relativeWidth=30%) list4Mold > Text firstName as Editable
 			Block > Text as Code(language=Html)
 					value
 						=========
 						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list as Navigable(position\=Bottom)<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) listMold > Text firstName as Editable
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,relativeWidth\=30%) listMold > Text firstName as Editable
 						=========
 
 		Block as Relative(width=48%, height=100%)
@@ -54,7 +54,7 @@ Template(layout=Vertical, spacing=DP8) listExamplesMold
 					MaterialIconButton(title="add", icon="Add") add as Action
 					MaterialIconButton(title="remove", icon="Delete") remove as Action(context=Selection) Affirmed("Are you sure you want to delete the element?")
 				List(itemClass="io.intino.alexandria.ui.documentation.Person") list5 as Selectable(multiple=true)
-					Mold > Item(height=60px,width=30%) list5Mold > Text firstName
+					Mold > Item(height=60px,relativeWidth=30%) list5Mold > Text firstName
 			Block > Text as Code(language=Html)
 					value
 						=========
@@ -62,5 +62,5 @@ Template(layout=Vertical, spacing=DP8) listExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;MaterialIconButton(title\="añadir", icon\="Add") add as Action<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;MaterialIconButton(title\="eliminar", icon\="Delete") as Action(context\=Selection) Affirmed("Are you sure you want to delete the element?")<br/>
 						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list5 as Selectable(multiple\=true)<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) list5Mold > Text firstName<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,relativeWidth\=30%) list5Mold > Text firstName<br/>
 						=========

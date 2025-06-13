@@ -134,6 +134,7 @@ class Grid extends AbstractGrid {
                 rowsCount={this.state.rows.length}
                 emptyRowsView={this.emptyRowsView.bind(this)}
                 enableCellSelect={true}
+                minColumnWidth={130}
                 rowSelection={{
                     showCheckbox: showCheckbox,
                     enableShiftSelect: null,

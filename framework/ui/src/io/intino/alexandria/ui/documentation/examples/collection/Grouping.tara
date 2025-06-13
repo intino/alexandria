@@ -12,7 +12,7 @@ Template(layout=Vertical, spacing=DP8) groupingExamplesMold
 					Grouping(format=whiteBackground,collections=list1) gender1 as Labeled("gender")
 					Grouping(format=whiteBackground,collections=list1) ageGroup1 as Labeled("age group")
 				List(itemClass="io.intino.alexandria.ui.documentation.Person") list1
-					Mold > Item(height=60px,width=30%) grouping1Mold
+					Mold > Item(height=60px,relativeWidth=30%) grouping1Mold
 							Text firstName1
 							Block(layout=Horizontal, spacing=DP16)
 								Text(format=description) gender1
@@ -23,7 +23,7 @@ Template(layout=Vertical, spacing=DP8) groupingExamplesMold
 						Grouping(collections\=list1) gender as Labeled("gender")<br/>
 						Grouping(collections\=list1) ageGroup as Labeled("age group")<br/>
 						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) groupingMold
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,relativeWidth\=30%) groupingMold
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text firstName
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal, spacing\=DP16)
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) gender
@@ -37,7 +37,7 @@ Template(layout=Vertical, spacing=DP8) groupingExamplesMold
 					Grouping(format=whiteBackground,collections=list2) gender2 as Labeled("gender") ComboBox
 					Grouping(format=whiteBackground,collections=list2) ageGroup2 as Labeled("age group") ComboBox
 				List(itemClass="io.intino.alexandria.ui.documentation.Person") list2
-					Mold > Item(height=60px,width=30%) grouping2Mold
+					Mold > Item(height=60px,relativeWidth=30%) grouping2Mold
 							Text firstName2
 							Block(layout=Horizontal, spacing=DP16)
 								Text(format=description) gender2
@@ -48,7 +48,7 @@ Template(layout=Vertical, spacing=DP8) groupingExamplesMold
 						Grouping(collections\=list2) gender as Labeled("gender") ComboBox<br/>
 						Grouping(collections\=list2) ageGroup as Labeled("age group") ComboBox<br/>
 						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list2<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) groupingMold
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,relativeWidth\=30%) groupingMold
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text firstName
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal, spacing\=DP16)
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) gender
