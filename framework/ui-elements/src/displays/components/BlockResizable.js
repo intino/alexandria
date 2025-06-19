@@ -53,7 +53,7 @@ class BlockResizable extends AbstractBlockResizable {
 	    return (
             <React.Fragment>
                 {index > 0 && <PanelResizeHandle className="ResizeHandle" style={{background:this._color()}}/>}
-                <Panel defaultSize={this._size(child)} minSize={this.props.minSize != null ? this.props.minSize : 20}>{this.renderChildElement(child)}</Panel>
+                <Panel onResize={this.handleResize.bind(this, child)} defaultSize={this._size(child)} minSize={this.props.minSize != null ? this.props.minSize : 20}>{this.renderChildElement(child)}</Panel>
             </React.Fragment>
         );
 	};
@@ -90,7 +90,13 @@ class BlockResizable extends AbstractBlockResizable {
 	    this.setState({childrenVisibility});
 	}
 
+	handleResize = (child, size) => {
+        this.updateCookie(size, this.props.id + "_" + this._id(child));
+	};
+
 	_size = (child) => {
+        const cookieSize = this.getCookie(this.props.id + "_" + this._id(child));
+        if (cookieSize != null) return cookieSize;
 	    const size = this._isHorizontalDirection() ? child.props.width : child.props.height;
 	    if (size == null) return -1;
 	    return parseInt(size.replace("%", "").replace("px", ""));

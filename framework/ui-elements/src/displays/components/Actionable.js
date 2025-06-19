@@ -389,7 +389,7 @@ export default class Actionable extends AbstractActionable {
 
 	renderSignField = () => {
 	    if (this.props.signed.mode === "OneTimePassword") return this.renderPasscode();
-        return (<TextField autoFocus={true} style={{width:'100%'}} type="password" value={this.translate(this.state.signInfo.sign)}
+        return (<TextField autoFocus={true} style={{width:'100%'}} type={this.props.signed.mode === "SimpleText" ? "text" : "password"} value={this.translate(this.state.signInfo.sign)}
                            onChange={this.handleSignTextChange.bind(this)} onKeyPress={this.handleSignKeypress.bind(this)}/>);
 	};
 

@@ -146,7 +146,7 @@ Concept ActionableComponents
 			sub Affirmed
 				var string affirmText
 			sub Signed
-				var word:{SimplePassword OneTimePassword} mode = SimplePassword
+				var word:{SimpleText SimplePassword OneTimePassword} mode = SimplePassword
 				var string signText
 				var string reasonText = empty
 

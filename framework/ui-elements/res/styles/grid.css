@@ -1,9 +1,25 @@
+.alexandria-grid.dark .react-grid-Canvas {
+    background: #1f1f1f;
+}
+
+.alexandria-grid.dark .react-grid-Cell {
+    background: #1f1f1f;
+}
+
+.alexandria-grid.dark .react-grid-HeaderCell, .alexandria-grid.dark .react-grid-Header {
+    background: #111;
+}
+
 .react-grid-Cell, .react-grid-HeaderCell {
     border-right: 0;
 }
 
 .react-grid-Cell {
     cursor: pointer;
+}
+
+.alexandria-grid.dark .react-grid-Toolbar {
+    background: transparent;
 }
 
 .react-grid-Toolbar {
@@ -15,6 +31,10 @@
 
 .pull-right {
     float: right;
+}
+
+.alexandria-grid.dark .react-grid-Grid, .alexandria-grid.dark .react-grid-Main {
+    background: #1f1f1f;
 }
 
 .react-grid-Container, .react-grid-Grid {

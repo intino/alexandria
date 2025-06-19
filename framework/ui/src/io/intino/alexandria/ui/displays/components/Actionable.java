@@ -37,7 +37,7 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
 
     public enum Mode { Link, Button, IconButton, MaterialIconButton, Toggle, IconToggle, MaterialIconToggle, SplitButton, IconSplitButton, MaterialIconSplitButton, AvatarIconButton }
     public enum Highlight { None, Outline, Fill }
-    public enum SignMode { SimplePassword, OneTimePassword }
+    public enum SignMode { SimpleText, SimplePassword, OneTimePassword }
 
     public Actionable(B box) {
         super(box);
