@@ -78,7 +78,7 @@ class User extends AbstractUser {
                     onClose={this.handleCloseDialog.bind(this)}
                     anchorOrigin={{
                         vertical: 'bottom',
-                        horizontal: 'right',
+                        horizontal: 'center',
                     }}
                     transformOrigin={{
                         vertical: 'top',

@@ -84,10 +84,11 @@ class Grid extends AbstractGrid {
 	};
 
     render() {
+        const theme = Theme.get();
         if (!this.state.visible) return (<React.Fragment/>);
         window.setTimeout(() => this.restoreHorizontalScroll(), 10);
         return (
-            <div style={{height:'100%',width:'100%',position:'relative'}}>
+            <div className={theme.isDark() ? "alexandria-grid dark" : "alexandria-grid"} style={{height:'100%',width:'100%',position:'relative'}}>
                 {this.state.loading && this.renderLoading()}
                 {this.renderGrid()}
                 {this.renderCookieConsent()}
