@@ -660,7 +660,7 @@ export default class Actionable extends AbstractActionable {
 
 	_addFilter = (props) => {
 	    const theme = Theme.get();
-	    return theme.isDark() ? { filter: "invert(1)" } : {};
+	    return theme.isDark() && this.state.darkIcon == null && this.props.darkIcon == null ? { filter: "invert(1)" } : {};
 	};
 
 	_addDimensions = (props) => {
