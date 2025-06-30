@@ -9,7 +9,6 @@ export default class BaseImage extends AbstractBaseImage {
 	};
 
 	refresh = (value) => {
-	    this.reloaded.current = false;
 		this.setState({ value: value });
 	};
 
