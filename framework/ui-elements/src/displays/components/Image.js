@@ -47,8 +47,6 @@ class Image extends AbstractImage {
 	};
 
 	forceParameter = () => {
-	    if (!this.reloaded.current) return "";
-	    this.reloaded.current = true;
 	    return (this.state.value.indexOf("?") != -1 ? "&" : "?") + "r=" + Math.random();
 	};
 
