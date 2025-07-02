@@ -49,6 +49,7 @@ Component textEditable as ExtensionOf(baseText)
 	Request notifyBlur as Text
 Component textEditableCode as ExtensionOf(baseText)
 	Notification refreshReadonly as Bool
+	Notification refreshFocused as Bool
 	Request notifyChange as Text
 
 Component baseFile

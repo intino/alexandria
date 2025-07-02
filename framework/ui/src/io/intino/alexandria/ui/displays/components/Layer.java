@@ -109,7 +109,7 @@ public class Layer<DN extends LayerNotifier, B extends Box> extends AbstractLaye
 	public void close() {
 		if (!beforeClose()) return;
 		notifier.close();
-		soul().popLayer();
+		soul().removeLayer(this);
 		notifyClose();
 	}
 
