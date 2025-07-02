@@ -97,6 +97,11 @@ public abstract class Soul implements DisplayRepository {
         }
     }
 
+    public void removeLayer(Layer<?, ?> layer) {
+        layers.remove(layer);
+        remove(layer.template());
+    }
+
     public <T extends Display<?, ?>> List<T> displays(Class<T> clazz) {
         return new ArrayList<>(displays.values()).stream().filter(c -> clazz.isAssignableFrom(c.getClass())).map(clazz::cast).collect(toList());
     }

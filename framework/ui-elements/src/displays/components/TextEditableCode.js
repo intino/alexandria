@@ -58,6 +58,14 @@ class TextEditableCode extends AbstractTextEditableCode {
 	refresh = (value) => {
 		this.setState({ "value": value });
 	};
+
+	refreshReadonly = (readonly) => {
+		this.setState({ readonly });
+	};
+
+	refreshFocused = (focused) => {
+	};
+
 }
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(TextEditableCode));
