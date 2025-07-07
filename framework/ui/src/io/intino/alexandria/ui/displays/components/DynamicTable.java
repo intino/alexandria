@@ -110,12 +110,14 @@ public abstract class DynamicTable<B extends Box, ItemComponent extends io.intin
     @Override
     public void loadMoreItems(CollectionMoreItems info) {
         DynamicTableCollectionBehavior behavior = behavior();
+        if (behavior == null) return;
         behavior.moreItems(info);
     }
 
     @Override
     public void changePage(Integer page) {
         DynamicTableCollectionBehavior behavior = behavior();
+        if (behavior == null) return;
         behavior.page(page);
         notifier.refresh();
     }
@@ -123,6 +125,7 @@ public abstract class DynamicTable<B extends Box, ItemComponent extends io.intin
     @Override
     public void changePageSize(Integer size) {
         DynamicTableCollectionBehavior behavior = behavior();
+        if (behavior == null) return;
         behavior.pageSize(size);
         notifier.refresh();
     }
@@ -214,6 +217,7 @@ public abstract class DynamicTable<B extends Box, ItemComponent extends io.intin
     public void showItems(DynamicTableRowParams params) {
         Section section = sectionOf(params.section());
         DynamicTableCollectionBehavior behavior = behavior();
+        if (behavior == null) return;
         behavior.section(section);
         behavior.row(params.row());
         behavior.reload();
@@ -222,6 +226,7 @@ public abstract class DynamicTable<B extends Box, ItemComponent extends io.intin
 
     private Section sectionOf(String section) {
         DynamicTableCollectionBehavior behavior = behavior();
+        if (behavior == null) return null;
         List<Section> sections = behavior.sections();
         return sections.stream().filter(s -> s.label().equals(section)).findFirst().orElse(null);
     }
@@ -229,6 +234,7 @@ public abstract class DynamicTable<B extends Box, ItemComponent extends io.intin
     @Override
     public void didMount() {
         DynamicTableCollectionBehavior behavior = behavior();
+        if (behavior == null) return;
         DynamicTableDatasource source = source();
         notifier.setupDynamicTable((DynamicTableSetup) new DynamicTableSetup().visibleColumns(visibleColumns).name(source != null ? source.name() : null).openRowExternal(openRowListener != null).selectRowsEnabled(selectRowsListener != null).pageSize(pageSize()).itemCount(behavior.itemCount()));
         notifyReady();
@@ -239,6 +245,7 @@ public abstract class DynamicTable<B extends Box, ItemComponent extends io.intin
         DynamicTableDatasource source = source();
         if (source == null) return;
         DynamicTableCollectionBehavior behavior = behavior();
+        if (behavior == null) return;
         behavior.setup(source, pageSize());
         notifier.setupDynamicTable((DynamicTableSetup) new DynamicTableSetup().visibleColumns(visibleColumns).name(source.name()).openRowExternal(openRowListener != null).selectRowsEnabled(selectRowsListener != null).pageSize(pageSize()).itemCount(behavior.itemCount()));
         notifyReady();
