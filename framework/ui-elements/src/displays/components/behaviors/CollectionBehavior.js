@@ -66,7 +66,7 @@ const CollectionBehavior = (collection) => {
         if (self.loadingNextPage) return;
         const scrollableTarget = document.getElementById(scrollableTargetId);
         const scrollContainer = scrollableTarget != null && scrollableTarget.childNodes[0] != null ? scrollableTarget.childNodes[0].firstChild : null;
-        const scrollIsVisible = scrollContainer == null || scrollContainer.offsetHeight == 0 || scrollContainer.scrollHeight > scrollContainer.offsetHeight;
+        const scrollIsVisible = scrollContainer == null || scrollContainer.offsetHeight == 0 || scrollContainer.scrollHeight-100 > scrollContainer.offsetHeight;
         if (!hasMore || scrollIsVisible) return;
         self.loadingNextPage = true;
         self.loadNextPage();

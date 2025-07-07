@@ -40,22 +40,26 @@ public abstract class PageCollection<DN extends PageCollectionNotifier, B extend
 
     public void loadNextPage() {
         PageCollectionBehavior behavior = behavior();
+        if (behavior == null) return;
         behavior.nextPage();
     }
 
     public void loadMoreItems(CollectionMoreItems info) {
         PageCollectionBehavior behavior = behavior();
+        if (behavior == null) return;
         behavior.moreItems(info);
     }
 
     public void changePage(Integer page) {
         PageCollectionBehavior behavior = behavior();
+        if (behavior == null) return;
         behavior.page(page);
         notifier.refresh();
     }
 
     public void changePageSize(Integer size) {
         PageCollectionBehavior behavior = behavior();
+        if (behavior == null) return;
         behavior.pageSize(size);
         notifier.refresh();
     }
@@ -72,6 +76,7 @@ public abstract class PageCollection<DN extends PageCollectionNotifier, B extend
         PageDatasource source = source();
         if (source == null) return;
         PageCollectionBehavior behavior = behavior();
+        if (behavior == null) return;
         behavior.setup(source, pageSize);
         notifier.setupPageCollection((PageCollectionSetup) new PageCollectionSetup().pageSize(pageSize).itemCount(behavior.itemCount()));
         notifyReady();

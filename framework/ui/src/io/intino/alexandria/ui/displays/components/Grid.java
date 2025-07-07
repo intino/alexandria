@@ -112,12 +112,14 @@ public class Grid<DN extends GridNotifier, B extends Box, Item> extends Abstract
     @SuppressWarnings("unchecked")
     public void updateGroupByOptions(GridGroupByOptionsInfo info) {
         GridCollectionBehavior<Item> behavior = behavior();
+        if (behavior == null) return;
         refreshGroupByOptions(info);
         if (behavior.groupBy() != null) behavior.groupBy(null);
     }
 
     public void groupBy(GridGroupByInfo info) {
         GridCollectionBehavior<Item> behavior = behavior();
+        if (behavior == null) return;
         notifier.refreshGroupBy(info);
         behavior.groupBy(info.group() != null ? groupByOf(info) : null);
         notifyRefreshItemCount();
@@ -125,6 +127,7 @@ public class Grid<DN extends GridNotifier, B extends Box, Item> extends Abstract
 
     private void refreshGroupByOptions(GridGroupByOptionsInfo info) {
         GridCollectionBehavior<Item> behavior = behavior();
+        if (behavior == null) return;
         GridDatasource<Item> source = source();
         List<String> groupByOptions = info.column() != null ? source.columnGroups(column(info.column()), info.mode(), behavior.condition(), behavior.filters()) : Collections.emptyList();
         notifier.refreshGroupByOptions(groupByOptions);
