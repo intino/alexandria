@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "6.6.12") ui-framework-elements
+Artifact("io.intino.alexandria", "6.6.13") ui-framework-elements
 	WebImports
 		WebComponent("@date-io/moment", "^1.3.7")
 		WebComponent("@material-ui/core", "^4.12.4")
@@ -19,7 +19,7 @@ Artifact("io.intino.alexandria", "6.6.12") ui-framework-elements
 		WebComponent("react", "^16.13.1")
 		WebComponent("react-dom", "^16.13.1")
 		WebComponent("react-is", "^16.13.1")
-		WebComponent("react-draggable", "^4.3.1")
+		WebComponent("react-draggable", "4.4.6")
 		WebComponent("react-ace", "^12.0.0")
 		WebComponent("react-materialize", "^3.10.0")
 		WebComponent("react-moment", "^0.8.4")
