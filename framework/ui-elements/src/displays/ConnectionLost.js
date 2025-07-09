@@ -91,7 +91,7 @@ class ConnectionLost extends I18nComponent {
                 </CardActions>
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                     <Paper className={classes.collapse}>
-                        <Typography gutterBottom>{this.translate("Connection with " + unit + " is broken")}</Typography>
+                        <Typography gutterBottom>{this.translate("Connection with " + (unit == "Default" ? "server" : unit) + " is broken")}</Typography>
                         <Button size="small" className={classes.button} onClick={this.handleReload.bind(this)}>
                             <RefreshIcon className={classes.checkIcon} />
                             {this.translate("Reload page")}
