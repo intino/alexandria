@@ -30,9 +30,9 @@ rule type(box)
 		<<$sentinel+field>>
 		<<$workflow+field>>
 		<<protected Map<String, Soul> uiSouls = new java.util.HashMap<>()$hasUi+hideUi>>
+		<<protected java.util.List<AlexandriaLibraryLoader> libraryLoaders = new java.util.ArrayList<>();$hasUI+hideUi>>
 		<<private java.util.List<io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>()$hasUi+hideUi>>
 		<<private io.intino.alexandria.ui.services.AuthService authService$hasUi+hideUi>>
-		<<private java.util.List<AlexandriaLibraryLoader> libraryLoaders = new java.util.ArrayList<>();$hasUI+hideUi>>
 
 		public AbstractBox(String[] args) {
 			this(new $name+PascalCase~Configuration(args));
