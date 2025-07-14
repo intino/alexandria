@@ -24,7 +24,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private boolean buildChildren = false;
 	private boolean decorated;
 	private Display owner;
-	public static final Map<String, FrameBuilder> componentFrameMap = Collections.synchronizedMap(new LRUCache<>(10000));
+	private static final Map<String, FrameBuilder> componentFrameMap = Collections.synchronizedMap(new LRUCache<>(30000));
 
 	public ComponentRenderer(CompilationContext compilationContext, C component, RendererWriter provider) {
 		super(compilationContext, component, provider);
