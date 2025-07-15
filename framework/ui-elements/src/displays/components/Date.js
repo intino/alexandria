@@ -46,7 +46,7 @@ class Date extends AbstractDate {
 				{ ComponentBehavior.labelBlock(this.props, 'body1', {...this.style(),margin:'0 5px 0 0'}) }
 				<Typography variant={this.variant("body1")} className={classes.value} style={this.style()}>
 					{this.state.value &&
-					<Moment format={!hasMode ? pattern : undefined}
+					<Moment utc={!this.props.useTimezone} format={!hasMode ? pattern : undefined}
 							fromNow={this.props.mode === "fromnow"}
 							toNow={this.props.mode === "tonow"}
 							ago date={this.state.value} locale={language}/>
