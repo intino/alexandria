@@ -104,7 +104,7 @@ rule type(properties, block) and trigger(specific)
 	<< layout="$layout...[ ]">><< width="$width">><< height="$height">><< spacing="$spacing">><< $paper>><< $badge>><< $drawer>><< $popover>><< animation={{mode:"$mode",direction:"$transitionDirection",duration:"$transitionDuration"}}>><< hidden="$hidden">><< isHoverContainer="$isHoverContainer">><< splitMobileLabel="$splitMobileLabel">><< autoSize={$autoSize}>><< minSize={$minSize}>>
 
 rule type(properties, date) and trigger(specific)
-	<< pattern="$pattern">><< mode="$mode">><< value={new Date($value)}>><< timePicker={$timePicker}>><< mask="$mask">><< embedded={$embedded}>><< allowEmpty={$allowEmpty}>><< views={["$view...[","]"]}>><< shrink={$shrink}>>
+	<< pattern="$pattern">><< mode="$mode">><< value={new Date($value)}>><< timePicker={$timePicker}>><< mask="$mask">><< embedded={$embedded}>><< allowEmpty={$allowEmpty}>><< views={["$view...[","]"]}>><< shrink={$shrink}>><< useTimezone={$useTimezone}>>
 
 rule type(properties, user) and trigger(specific)
 	<< mode="$mode">>

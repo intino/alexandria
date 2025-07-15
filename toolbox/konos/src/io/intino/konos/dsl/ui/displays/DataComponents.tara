@@ -99,6 +99,7 @@ Concept DataComponents
 		var string pattern = "DD/MM/YYYY"
 		var word:{FromNow ToNow None} mode = None
 		var instant value = empty
+		var boolean useTimezone = true
 		Facet Multiple extends Multiple
 		Facet Editable extends Editable
 			var instant min = empty
