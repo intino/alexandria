@@ -13,6 +13,7 @@ import java.io.File;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.format;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
@@ -82,6 +83,7 @@ public class ExposedDisplayActionRenderer extends ActionRenderer {
 		Service.UI service = display.graph().serviceList().stream().filter(Service::isUI).map(Service::asUI).findFirst().orElse(null);
 		if (service == null) return builder;
 		builder.add("uiService", service.name$());
+		if (service.googleApiKey() != null) builder.add("googleApiKey", customize("googleApiKey", service.googleApiKey()));
 		if (service.title() != null) builder.add("title", titleFrame(service));
 		if (service.favicon() != null) builder.add("favicon", service.favicon());
 		return builder;
