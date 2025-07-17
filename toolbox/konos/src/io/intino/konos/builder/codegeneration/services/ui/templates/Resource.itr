@@ -47,6 +47,7 @@ rule type(resource, exposedDisplay, entryPoint)
             (($name+firstUpperCase~Page)page).box = box;
             page.clientId = clientId;
             page.webDirectories = manager.webDirectories();
+            <<page.googleApiKey = $googleApiKey+format;>>
             page.device = parameterValue("device");
             page.token = parameterValue("token");
 			$parameter...[$NL]
@@ -150,7 +151,7 @@ rule type(resource, exposedDisplay)
 			page.box = box;
 			page.clientId = client.id();
 			page.webDirectories = manager.webDirectories();
-			page.googleApiKey = "";
+			<<page.googleApiKey = $googleApiKey+format;>>
 			page.device = parameterValue("device");
 			$parameter...[$NL]
 			if (!page.hasPermissions()) {

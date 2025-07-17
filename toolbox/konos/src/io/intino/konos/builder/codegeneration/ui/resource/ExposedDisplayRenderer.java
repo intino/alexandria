@@ -11,10 +11,12 @@ import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.dsl.Display;
+import io.intino.konos.dsl.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.resourceFilename;
 import static io.intino.konos.builder.helpers.CodeGenerationHelper.resourceFolder;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
@@ -49,7 +51,8 @@ public class ExposedDisplayRenderer extends UIRenderer {
 		builder.add("resource");
 		builder.add(display.getClass().getSimpleName());
 		builder.add("render", renderFrame());
-
+		Service.UI service = display.graph().serviceList().stream().filter(Service::isUI).map(Service::asUI).findFirst().orElse(null);
+		if (service != null && service.googleApiKey() != null) builder.add("googleApiKey", customize("googleApiKey", service.googleApiKey()));
 		builder.add("parameter", parameters(display, proxy));
 		return builder;
 	}
