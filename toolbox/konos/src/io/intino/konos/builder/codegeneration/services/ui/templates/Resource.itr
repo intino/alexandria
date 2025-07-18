@@ -35,6 +35,7 @@ rule type(resource, exposedDisplay, entryPoint)
             String clientId = UUID.randomUUID().toString();
             UiPage page = new $name+firstUpperCase~Page();
             page.session = manager.session(manager.fromQuery("session"));
+            page.session.token(manager.fromQuery("token") != null ? io.intino.alexandria.ui.services.auth.Token.build(manager.fromQuery("token")) : null);
             page.session.browser().onRedirect(location -> manager.redirect(location));
             page.session.browser().requestUrl(manager.requestUrl());
             page.session.whenLogin(new Function<String, String>() {
