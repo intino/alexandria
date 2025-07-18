@@ -56,7 +56,7 @@ public abstract class LibraryTemplateStamp<DN extends LibraryTemplateStampNotifi
 
 	private static final String Url = "%s/_alexandria-displays/%s?session=%s&client=%s&token=%s";
 	private String url() {
-		String token = session().token() != null ? session().token().id() : "";
+		String token = session().client().id();
 		StringBuilder result = new StringBuilder();
 		result.append(String.format(Url, session().browser().baseUrl(), template.toLowerCase(), session().id(), session().client().id(), token));
 		parameters.forEach((key, value) -> result.append("&").append(key).append("=").append(value));
