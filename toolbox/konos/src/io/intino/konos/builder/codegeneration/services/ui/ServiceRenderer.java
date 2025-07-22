@@ -98,7 +98,10 @@ public class ServiceRenderer extends UIRenderer {
 
 	private FrameBuilder newDisplayFrame(Display display, FrameBuilder builder) {
 		String type = typeOf(display);
-		if (!type.equalsIgnoreCase("display")) builder.add("type", typeOf(display).toLowerCase());
+		if (!type.equalsIgnoreCase("display")) {
+			builder.add(typeOf(display).toLowerCase());
+			builder.add("type", typeOf(display).toLowerCase());
+		}
 		builder.add("name", nameOf(display)).add("package", packageName());
 		builder.add("requesterType", requesterTypeOf(display));
 		if (display.requestList().stream().anyMatch(r -> r.responseType().equals(Asset)))

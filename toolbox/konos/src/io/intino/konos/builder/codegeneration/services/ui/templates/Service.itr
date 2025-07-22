@@ -76,8 +76,12 @@ rule type(resource) and trigger(path)
 rule trigger(userHome)
 	server.route("/alexandria/user").get(manager -> new $this+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
 
+rule type(display, exposed, row) and trigger(entryPoint)
+
 rule type(display, exposed) and trigger(entryPoint)
 	server.route("/_alexandria-displays/$name+lowercase").get(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
+
+rule type(display, exposed, row) and trigger(path)
 
 rule type(display, exposed) and trigger(path)
 	server.route("/$name+lowercase~proxy/:displayId/personify").post(manager -> new $name+firstUpperCase~ProxyResource(box, manager, notifierProvider()).execute());

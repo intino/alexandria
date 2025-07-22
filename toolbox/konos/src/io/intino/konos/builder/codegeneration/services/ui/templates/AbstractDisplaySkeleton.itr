@@ -76,6 +76,9 @@ rule type(notifierImport, dynamictable)
 rule type(notifierImport, item)
 	import io.intino.alexandria.ui.displays.notifiers.ItemNotifier;
 
+rule type(notifierImport, row, exposed)
+	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
+
 rule type(notifierImport, row)
 	import io.intino.alexandria.ui.displays.notifiers.RowNotifier;
 
@@ -92,7 +95,7 @@ rule type(parametrized, generic)
 	<DN extends $name+firstUpperCase~Notifier, $abstractBox+extension>
 
 rule type(parametrized, exposed)
-	<DN extends $name+firstUpperCase~Notifier, $abstractBox+extension>
+	<DN extends $name+firstUpperCase~Notifier, B extends Box>
 
 rule type(parametrized)
 	$abstractBox+extensionTagged
@@ -117,6 +120,9 @@ rule type(displayExtends, collection)
 
 rule type(displayExtends, item)
 	extends io.intino.alexandria.ui.displays.components.Item<ItemNotifier, $itemClass, $abstractBox+type>
+
+rule type(displayExtends, row, exposed)
+	extends io.intino.alexandria.ui.displays.components.Row<DN, $itemClass, Box>
 
 rule type(displayExtends, row)
 	extends io.intino.alexandria.ui.displays.components.Row<RowNotifier, $itemClass, $abstractBox+type>
