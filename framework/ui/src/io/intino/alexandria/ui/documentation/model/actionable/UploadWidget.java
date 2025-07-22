@@ -14,6 +14,7 @@ public class UploadWidget extends ActionableWidget {
 	protected void addProperties() {
 		super.addProperties();
 		add(property("multipleSelection", Property.Type.Bool, "Used to determine if allows multiple files"));
+		add(property("progress", Property.Type.Bool, "Used to determine whether to show file upload progress"));
 	}
 
 	protected void addMethods() {

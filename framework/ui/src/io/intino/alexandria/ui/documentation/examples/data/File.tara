@@ -49,3 +49,14 @@ Template(layout=Vertical, spacing=DP8) fileExamplesMold
 							File(value\="data/example.pdf") as Relative(width\=100%, height\=100%) Editable(showDropZone\=true, showPasteZone\=true)
 							=========
 
+	Block(layout=Horizontal Wrap, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="Editable facet with drop zone and progress bar")
+			Block(spacing=DP8, format=filled)
+				Block as Absolute(height=600px)
+					File(value="data/example.pdf", format=widgetDemo) file5 as Relative(width=100%, height=100%) Editable(showDropZone=true, showProgress=true, dropZoneLimit=4)
+				Block > Text file5Code as Code(language=Html)
+						value
+							=========
+							File(value\="data/example.pdf") as Relative(width\=100%, height\=100%) Editable(showDropZone\=true, showProgress\=true, dropZoneLimit\=4)
+							=========

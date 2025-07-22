@@ -6,6 +6,8 @@ import UploadRequester from "../../../gen/displays/requesters/UploadRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import { withSnackbar } from 'notistack';
 import classNames from "classnames";
+import ProgressBar from "./ProgressBar";
+import { Backdrop, Box, CircularProgress, IconButton } from "@material-ui/core";
 
 const styles = theme => ({
     label : {
@@ -17,6 +19,15 @@ const styles = theme => ({
     disabled : {
         color: 'grey',
         cursor: 'default',
+    },
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+    },
+    progressContainer: {
+        marginTop: theme.spacing(2),
+        width: '80%',
+        maxWidth: '600px',
+        minWidth: '250px',
     }
 });
 
@@ -29,18 +40,62 @@ class Upload extends AbstractUpload {
 		this.requester = new UploadRequester(this);
 		this.state = {
 		    ...this.state,
-		    allowedTypes: this.props.allowedTypes
+		    allowedTypes: this.props.allowedTypes,
+		    uploadingFiles: {},
+		    showProgress: false,
 		}
 	};
 
     withWrapper = (content) => {
-        const { classes } = this.props;
+        const { classes, progress } = this.props;
+        const { uploadingFiles } = this.state;
+        const isUploading = Object.entries(uploadingFiles).length > 0;
         return (
 	        <React.Fragment>
 	            <input type="file" id={this.props.id + "_input"} onChange={this.handleChange.bind(this)} multiple={this.allowMultiple()} hidden disabled={this.state.readonly ? true : undefined} accept={this._allowedTypes()}/>
                 <label className={classNames(classes.label, this.state.readonly ? classes.disabled : undefined)} id={this.props.id + "_inputLabel"} disabled={this.state.readonly ? true : undefined} for={this.props.id + "_input"}>{content}</label>
+                {progress && isUploading && this._renderProgressIcon()}
+                {progress && this._renderProgressBar()}
             </React.Fragment>
         );
+    };
+
+    _renderProgressBar = () => {
+        const { classes } = this.props;
+        const { showProgress, uploadingFiles } = this.state;
+        return (
+        <Backdrop className={classes.backdrop} open={showProgress} onClick={this.closeProgress}>
+            <Box className={classes.progressContainer}>
+                {Object.entries(uploadingFiles).map(([fileId, fileData]) => (
+                    <ProgressBar
+                        key={fileId}
+                        label={fileData.fileName}
+                        info={this._formatFileSize(fileData.fileSize)}
+                        progress={fileData.progress}
+                    />
+                ))}
+            </Box>
+        </Backdrop>);
+    };
+
+    _renderProgressIcon = () => {
+        return (
+            <IconButton
+                onClick={this.openProgress}
+                title={this.translate("Show progress")}
+                aria-label={this.translate("Show progress")}
+            >
+                <CircularProgress size={20}/>
+            </IconButton>
+        );
+    };
+
+    openProgress = () => {
+        this.setState({ showProgress: true });
+    };
+
+    closeProgress = () => {
+        this.setState({ showProgress: false });
     };
 
     allowMultiple = () => {
@@ -61,8 +116,15 @@ class Upload extends AbstractUpload {
 	handleChange = (e) => {
 	    const files = e.target.files;
 	    this.requester.notifyUploading(files.length);
-	    for (let i=0; i<files.length; i++) this.requester.add(files[i]);
+	    for (let i=0; i<files.length; i++) this._uploadFile(files[i]);
 	};
+
+	_uploadFile = (file) => {
+	    const fileId = this._newUploadingFile(file);
+	    this.requester.add(file, (progress) => {
+            this._handleFileProgress(fileId, progress);
+        });
+	}
 
 	_allowedTypes = () => {
 	    if (this.state.allowedTypes == null || this.state.allowedTypes.length == 0) return undefined;
@@ -95,8 +157,58 @@ class Upload extends AbstractUpload {
 	        if (this.state.allowedTypes[i] == type) return true;
 	    }
 	    return false;
-	}
+	};
 
+    _formatFileSize = (bytes) => {
+      const units = ['bytes', 'KB', 'MB', 'GB', 'TB'];
+      let i = 0;
+      while (bytes >= 1024 && i < units.length - 1) {
+        bytes /= 1024;
+        i++;
+      }
+      return `${bytes.toFixed(2)} ${units[i]}`;
+    };
+
+    _newUploadingFile(file) {
+        const fileId = `${file.name}-${Date.now()}`;
+        this.setState(prevState => {
+            const uploadingFiles = Object.assign({}, prevState.uploadingFiles);
+            uploadingFiles[fileId] = {
+                fileName: file.name,
+                fileSize: file.size,
+                progress: 0
+            };
+            return {
+                uploadingFiles,
+                showProgress: true
+            };
+        });
+        return fileId;
+    };
+
+    _handleFileProgress(fileId, progress) {
+        this.setState(prevState => {
+            const updatedFiles = Object.assign({}, prevState.uploadingFiles);
+            if (updatedFiles[fileId].progress < 100 && progress >= 100) {
+                setTimeout(() => {
+                    this._handleFileComplete(fileId);
+                }, 1000);
+            }
+            updatedFiles[fileId] = Object.assign({}, prevState.uploadingFiles[fileId], { progress });
+            return { uploadingFiles: updatedFiles };
+        });
+    };
+
+    _handleFileComplete = (fileId) => {
+        this.setState(prevState => {
+            const newFiles = Object.assign({}, prevState.uploadingFiles);
+            delete newFiles[fileId];
+            return {
+                uploadingFiles: newFiles,
+                showProgress: Object.keys(newFiles).length > 0 ? prevState.showProgress : false,
+            };
+        });
+    };
 }
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(Upload));
