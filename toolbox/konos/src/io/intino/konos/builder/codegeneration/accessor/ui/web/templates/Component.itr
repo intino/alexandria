@@ -89,7 +89,7 @@ rule type(properties, image) and trigger(specific)
 	<< width="$width">><< height="$height">><< mobileReduceFactor={$mobileReduceFactor}>><< allowFullscreen={$allowFullscreen}>><< colorInvertedWithDarkMode={$colorInvertedWithDarkMode}>>
 
 rule type(properties, file) and trigger(specific)
-	<< width="$width">><< height="$height">><< preview={$preview}>><< dropZone={$dropZone}>><< pasteZone={$pasteZone}>><< maxSize={$maxSize}>><< allowedTypes={[$allowedTypes]}>>
+	<< width="$width">><< height="$height">><< preview={$preview}>><< dropZone={$dropZone}>><< pasteZone={$pasteZone}>><< progress={$progress}>><< dropZoneLimit={$dropZoneLimit}>><< maxSize={$maxSize}>><< allowedTypes={[$allowedTypes]}>>
 
 rule type(properties, chart) and trigger(specific)
 	<< width="$width">><< height="$height">>
@@ -152,7 +152,7 @@ rule type(properties, export) and trigger(specific)
 	<< from={$from}>><< to={$to}>><< min={$min}>><< max={$max}>><< range={{min:$rangeMin,max:$rangeMax}}>><< options={["$option...[","]"]}>>
 
 rule type(properties, upload) and trigger(specific)
-	<< multipleSelection={$multipleSelection}>><< allowedTypes={[$allowedTypes]}>>
+	<< multipleSelection={$multipleSelection}>><< progress={$progress}>><< allowedTypes={[$allowedTypes]}>>
 
 rule type(properties, download) and trigger(specific)
 	<< options={["$option...[","]"]}>>

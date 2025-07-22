@@ -32,15 +32,15 @@ rule trigger(parentType)
 	Requester
 
 rule type(parameter) and trigger(request)
-	$name = function(value) {
+	$name = function(value<<, $progressCallback>>) {
 		if (this.addToHistory(value)) return;
-		$method({ app: this.element.context, op: "$name", s: "$display+lowercase", d: this.element.shortId(), o: this.element.props.owner(), c: this.element.props.context(), v: $parameter}, this.element.ownerUnit());
+		$method({ app: this.element.context, op: "$name", s: "$display+lowercase", d: this.element.shortId(), o: this.element.props.owner(), c: this.element.props.context(), v: $parameter}, this.element.ownerUnit()<<, undefined, $progressCallback>>);
 	}
 
 rule trigger(request)
-	$name = (<<$parameterSignature>>) => {
+	$name = (<<$parameterSignature>><<, $progressCallback>>) => {
 		if (this.addToHistory(<<$parameterSignature>>)) return;
-		$method({ app: this.element.context, op: "$name", s: "$display+lowercase", d: this.element.shortId(), o: this.element.props.owner(), c: this.element.props.context()<<, v: $parameter>>}, this.element.ownerUnit());
+		$method({ app: this.element.context, op: "$name", s: "$display+lowercase", d: this.element.shortId(), o: this.element.props.owner(), c: this.element.props.context()<<, v: $parameter>>}, this.element.ownerUnit()<<, undefined, $progressCallback>>);
 	};
 
 rule type(object) and trigger(parameter)
