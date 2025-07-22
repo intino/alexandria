@@ -184,8 +184,9 @@ public class KonosGraph extends io.intino.konos.dsl.AbstractGraph {
 		String name = firstUpperCase(element.name$()) + "Row";
 		HelperComponents privateComponents = helperComponentsList().size() <= 0 ? create(element.core$().stash()).helperComponents() : helperComponents(0);
 		HelperComponents.Row row = privateComponents.rowList().stream().filter(c -> c.name$().equals(name)).findFirst().orElse(null);
-		if (row == null)
-			privateComponents.create(name).row(itemList);//TODO parameters antes no estaba, es empty list correcto? ask mario
+		if (row != null) return;
+		HelperComponents.Row newRow = privateComponents.create(name).row(itemList);
+		if (element.core$().ownerAs(Display.Exposed.class) != null) newRow.core$().addAspect(Display.Exposed.class); //TODO parameters antes no estaba, es empty list correcto? ask mario
 	}
 
 	private static String firstUpperCase(String value) {
