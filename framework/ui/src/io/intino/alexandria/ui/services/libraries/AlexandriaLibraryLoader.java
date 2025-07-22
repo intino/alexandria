@@ -37,6 +37,16 @@ public class AlexandriaLibraryLoader extends ClassLoader {
 		return baos.toByteArray();
 	}
 
+	private static final String I18nClass = "%s.I18n";
+	public Class<?> i18nClass() {
+		try {
+			return loadClass(String.format(I18nClass, archetype.rootPackage(), archetype.libraryName()));
+		} catch (ClassNotFoundException e) {
+			Logger.error(e);
+			return null;
+		}
+	}
+
 	private static final String ServiceClass = "%s.ui.%sElementsService";
 	public Class<?> serviceClass() {
 		try {

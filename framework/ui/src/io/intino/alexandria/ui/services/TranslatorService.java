@@ -2,6 +2,7 @@ package io.intino.alexandria.ui.services;
 
 import io.intino.alexandria.ui.services.translator.Dictionary;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,10 @@ public class TranslatorService {
 		String selectedLanguage = locateDictionaryLanguage(language);
 		Dictionary languageDictionary = dictionaries.get(selectedLanguage);
 		return languageDictionary != null && languageDictionary.containsKey(word) ? languageDictionary.get(word) : word;
+	}
+
+	public void add(TranslatorService service) {
+		addAll(new ArrayList<>(service.dictionaries.values()));
 	}
 
 	public void addAll(List<Dictionary> dictionaries) {
