@@ -1,28 +1,42 @@
 package io.intino.alexandria.ui.services.libraries;
 
-import io.intino.alexandria.core.Box;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.ui.AlexandriaUiBox;
 import io.intino.alexandria.ui.AlexandriaUiServer;
 import io.intino.alexandria.ui.services.push.PushService;
+import io.intino.alexandria.ui.services.translator.Dictionary;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 public class AlexandriaLibraryUiInitializer {
 	private final AlexandriaLibraryLoader libraryLoader;
-	private final Box box;
+	private final AlexandriaUiBox box;
 
-	public AlexandriaLibraryUiInitializer(Box box, AlexandriaLibraryLoader libraryLoader) {
+	public AlexandriaLibraryUiInitializer(AlexandriaUiBox box, AlexandriaLibraryLoader libraryLoader) {
 		super();
 		this.box = box;
 		this.libraryLoader = libraryLoader;
 	}
 
 	public void initialize(AlexandriaUiServer server, PushService pushService) {
+		initTranslatorService(server, pushService);
 		initDisplays(server, pushService);
 		initProxyDisplays(server, pushService);
 		initExposedDisplays(server, pushService);
+	}
+
+	private void initTranslatorService(AlexandriaUiServer server, PushService pushService) {
+		try {
+			Class<?> i18nClass = libraryLoader.i18nClass();
+			if (i18nClass == null) return;
+			Method method = i18nClass.getMethod("dictionaries");
+			Object dictionaries = method.invoke(null);
+			box.translatorService().addAll((List< Dictionary>) dictionaries);
+		} catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+			Logger.error(e);
+		}
 	}
 
 	private void initDisplays(AlexandriaUiServer server, PushService pushService) {

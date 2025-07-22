@@ -263,8 +263,8 @@ rule type(service, soap) and trigger(soap)
 	Logger.info("Soap service $name: started!");>>
 
 rule type(service, ui) and trigger(ui)
-	setup$name+firstUpperCase~Ui();
 	<<this.initTranslatorService()>>;
+	setup$name+firstUpperCase~Ui();
 	io.intino.alexandria.ui.AlexandriaUiServer server$name+firstUpperCase~Instance = (io.intino.alexandria.ui.AlexandriaUiServer) io.intino.alexandria.http.AlexandriaHttpServerBuilder.instance();
 	server$name+firstUpperCase~Instance.start();
 	Logger.info("UI $name: started at port " + $port + "!");
