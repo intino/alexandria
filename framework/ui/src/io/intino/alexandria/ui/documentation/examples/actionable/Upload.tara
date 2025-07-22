@@ -24,3 +24,15 @@ Template(layout=Vertical, spacing=DP8) uploadExamplesMold
 						=========
 						Button(title\="upload...") as Upload(multipleSelection\=true)
 						=========
+
+	Block(layout=Horizontal Wrap, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="No facets with multiple selection and progress")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Link(title="upload...") upload3 as Upload(multipleSelection=true, showProgress=true)
+
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Link(title\="upload...") as Upload(multipleSelection\=true, showProgress\=true)
+						=========

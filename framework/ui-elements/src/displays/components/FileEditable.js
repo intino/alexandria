@@ -5,10 +5,11 @@ import FileEditableRequester from "../../../gen/displays/requesters/FileEditable
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import File from "./File";
 import Block from "./Block";
+import ProgressBar from "./ProgressBar";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
 import Theme from "app-elements/gen/Theme";
 import { DropzoneArea } from 'material-ui-dropzone';
-import { IconButton } from "@material-ui/core";
+import { IconButton, Box } from "@material-ui/core";
 import { CloudDownload, Add, Cancel } from "@material-ui/icons";
 import 'alexandria-ui-elements/res/styles/components/fileeditable/styles.css';
 import 'alexandria-ui-elements/res/styles/layout.css';
@@ -22,7 +23,10 @@ const styles = theme => ({
 	    border: "1px dashed #0000001f",
 	    marginTop: "5px",
 	    padding: "10px"
-	}
+	},
+    progressContainer: {
+        marginTop: theme.spacing(2),
+    }
 });
 
 class FileEditable extends AbstractFile {
@@ -38,7 +42,9 @@ class FileEditable extends AbstractFile {
             filename: null,
             readonly: this.props.readonly,
             editable: false,
-            allowedTypes: this.props.allowedTypes
+            allowedTypes: this.props.allowedTypes,
+            uploadingFiles: {},
+            key: 0
         };
 	};
 
@@ -55,10 +61,19 @@ class FileEditable extends AbstractFile {
 	};
 
 	saveFile(file, value) {
+	    if (!file) return;
+
+	    const fileId = this._newUploadingFile(file);
 	    this.requester.notifyUploading();
-		this.requester.notifyChange(file);
+		this.requester.notifyChange(file, (progress) => {
+		    this._handleFileProgress(fileId, progress);
+        });
 		this.setState({ value: value });
-	};
+
+		if (this.props.progress && !this._isUploadingFiles()) {
+			this._resetDropzone();
+		}
+    };
 
 	render() {
 		if (!this.state.visible) return (<React.Fragment/>);
@@ -83,10 +98,14 @@ class FileEditable extends AbstractFile {
 	};
 
 	_renderComponent = () => {
+	    const { readonly } = this.state;
+	    const { dropZone, pasteZone, progress } = this.props;
+
 	    const result = [];
-	    if (this.props.dropZone && !this.state.readonly) result.push(this._renderDropZone());
-	    else if (!this.props.pasteZone) result.push(this._renderInput());
-	    if (this.props.pasteZone && !this.state.readonly) result.push(this._renderPasteZone());
+	    if (dropZone && !readonly) result.push(this._renderDropZone());
+	    else if (!pasteZone) result.push(this._renderInput());
+	    if (pasteZone && !readonly) result.push(this._renderPasteZone());
+	    if (progress && this._isUploadingFiles()) result.push(this._renderProgress());
 	    return result;
 	};
 
@@ -98,17 +117,18 @@ class FileEditable extends AbstractFile {
 	};
 
 	_renderDropZone = () => {
-		const { classes } = this.props;
+		const { maxSize, dropZoneLimit } = this.props;
 	    return (
             <DropzoneArea
+                key={this.state.key}
                 Icon={Add}
                 acceptedFiles={this._allowedTypes()}
                 dropzoneText={this.translate("Drag and drop a file here or click")}
                 fileObjects={this.state.files}
                 dropzoneClass="fileeditable-dropzone"
                 dropzoneParagraphClass="fileeditable-dropzone-paragraph"
-                filesLimit={1}
-                maxFileSize={this.props.maxSize != null ? this.props.maxSize : 20971520000}
+                filesLimit={ dropZoneLimit || 1 }
+                maxFileSize={maxSize != null ? maxSize : 20971520000}
                 showPreviews={false}
                 showPreviewsInDropzone={true}
                 useChipsForPreview
@@ -204,7 +224,24 @@ class FileEditable extends AbstractFile {
 	        if (this.state.allowedTypes[i] == type) return true;
 	    }
 	    return false;
-	}
+	};
+
+	_renderProgress = () => {
+	    const { classes } = this.props;
+	    const { uploadingFiles } = this.state;
+	    return (
+            <Box className={classes.progressContainer}>
+                {Object.entries(uploadingFiles).map(([fileId, fileData]) => (
+                    <ProgressBar
+                        key={fileId}
+                        label={fileData.fileName}
+                        info={this._formatFileSize(fileData.fileSize)}
+                        progress={fileData.progress}
+                    />
+                ))}
+            </Box>
+        );
+	};
 
 	refresh = (info) => {
 		this.setState({ value: info.value, filename: info.filename });
@@ -224,6 +261,61 @@ class FileEditable extends AbstractFile {
             if (this.state.readonly) this.inputRef.current.scrollIntoView();
             else this.inputRef.current.focus();
 	    }, 100);
+	};
+
+    _newUploadingFile(file) {
+        const fileId = `${file.name}-${Date.now()}`;
+        this.setState(prevState => {
+            const uploadingFiles = Object.assign({}, prevState.uploadingFiles);
+            uploadingFiles[fileId] = {
+                fileName: file.name,
+                fileSize: file.size,
+                progress: 0
+            };
+            return { uploadingFiles };
+        });
+        return fileId;
+    };
+
+    _handleFileProgress(fileId, progress) {
+        this.setState(prevState => {
+            const updatedFiles = Object.assign({}, prevState.uploadingFiles);
+            if (updatedFiles[fileId].progress < 100 && progress >= 100) {
+                setTimeout(() => {
+                    this._handleFileComplete(fileId);
+                }, 1000);
+            }
+            updatedFiles[fileId] = Object.assign({}, prevState.uploadingFiles[fileId], { progress });
+            return { uploadingFiles: updatedFiles };
+        });
+    };
+
+    _handleFileComplete = (fileId) => {
+        this.setState(prevState => {
+            const newFiles = Object.assign({}, prevState.uploadingFiles);
+            delete newFiles[fileId];
+            return { uploadingFiles: newFiles };
+        });
+    };
+
+    _formatFileSize = (bytes) => {
+      const units = ['bytes', 'KB', 'MB', 'GB', 'TB'];
+      let i = 0;
+      while (bytes >= 1024 && i < units.length - 1) {
+        bytes /= 1024;
+        i++;
+      }
+      return `${bytes.toFixed(2)} ${units[i]}`;
+    };
+
+	_isUploadingFiles = () => {
+        return Object.keys(this.state.uploadingFiles).length > 0;
+	};
+
+	_resetDropzone = () => {
+		window.setTimeout(() => {
+			this.setState({ key: this.state.key+1 });
+		}, 0);
 	};
 }
 

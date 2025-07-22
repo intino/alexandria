@@ -273,6 +273,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 					.add("value", notification.asType().type());
 			if (notification.isList()) parameterFrame.add("list");
 			result.add("parameter", parameterFrame);
+			if (notification.isFile()) result.add("progressCallback", "progressCallback");
 		}
 		return result.toFrame();
 	}
@@ -393,6 +394,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 			result.add("parameterType", request.asType().type());
 			result.add("customParameterType", customParameterType(request));
 			result.add("parameterSignature", "value");
+			if (request.isFile()) result.add("progressCallback", "progressCallback");
 		} else result.add("nullParameter", "null");
 		if (request.responseType() == Asset) {
 			result.add("method", new FrameBuilder().add("download", "download"));
@@ -406,6 +408,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	private static FrameBuilder customParameterType(Request request) {
 		FrameBuilder result = new FrameBuilder("parameterType", request.asType().getClass().getSimpleName().replace("Data", ""));
 		if (request.isList()) result.add("list");
+		if (request.isFile()) result.add("progressCallback", "progressCallback");
 		result.add("value", request.asType().type());
 		return result;
 	}

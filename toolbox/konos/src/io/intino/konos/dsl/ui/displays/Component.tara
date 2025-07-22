@@ -172,6 +172,7 @@ Concept ActionableComponents
 			sub SignDocument > var string document = empty
 			sub Upload
 				var boolean multipleSelection = false
+				var boolean showProgress = false
 				var word[]:{Image Video Application Text Xml Html Pdf Excel Jar Zip} allowedTypes = empty
 			sub SetDarkMode
 			sub SetLightMode

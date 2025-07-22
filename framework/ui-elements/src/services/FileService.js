@@ -4,7 +4,7 @@ const FileService = {
     create : function (configuration) {
 
         return {
-            upload: (message, successCallback, failureCallback) => {
+            upload: (message, successCallback, failureCallback, progressCallback) => {
                 var request = buildRequest(message, message.v == null ? true : isFile(message.v));
 
                 var options = {
@@ -12,7 +12,21 @@ const FileService = {
                     cache: false,
                     url: buildUrl(message),
                     processData: !request.multipart,
-                    data: request
+                    data: request,
+                    xhr: function() {
+                        if (progressCallback) {
+                            var xhr = $.ajaxSettings.xhr();
+                            if (xhr.upload) {
+                                xhr.upload.addEventListener("progress", function(e) {
+                                    if (e.lengthComputable) {
+                                        var percent = Math.round((e.loaded / e.total) * 100);
+                                        progressCallback(percent);
+                                    }
+                                }, false);
+                            }
+                        }
+                        return xhr;
+                    }
                 };
 
                 if (request.multipart) {

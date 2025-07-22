@@ -19,6 +19,7 @@ public class UploadRenderer extends ActionableRenderer {
 		FrameBuilder result = super.properties();
 		ActionableComponents.Actionable.Upload upload = element.asUpload();
 		if (upload.multipleSelection()) result.add("multipleSelection", upload.multipleSelection());
+		result.add("progress", upload.showProgress());
 		result.add("allowedTypes", "\"" + upload.allowedTypes().stream().map(Enum::name).collect(Collectors.joining("\",\"")) + "\"");
 		return result;
 	}
