@@ -150,7 +150,7 @@ const CollectionBehavior = (collection) => {
         const countInstances = instances.length;
         const instancesToRefresh = countInstances < pageSize ? instances : instances.slice(instances.length-pageSize);
         const ids = self.itemsIds(instancesToRefresh);
-        self.collection.requester.notifyItemsRendered({items: ids, visible: ids});
+        if (self.collection.requester.notifyItemsRendered != null) self.collection.requester.notifyItemsRendered({items: ids, visible: ids});
     };
 
     self.width = (index) => {

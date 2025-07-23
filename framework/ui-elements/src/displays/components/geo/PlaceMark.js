@@ -45,7 +45,7 @@ export default class PlaceMark extends I18nComponent {
         const pos = placeMark.pos;
         const content = this.props.content;
         return (
-            <InfoWindow key={"_info" + pos} visible={true} position={GeometryUtil.centerOf(placeMark.location)} onCloseClick={this.hideInfo.bind(this)}>
+            <InfoWindow key={"_info" + pos} visible={true} position={GeometryUtil.centerOf(placeMark.location)} onCloseClick={this.hideInfo.bind(this)} options={{ headerDisabled: true }}>
                 <div>{content != null ? React.createElement(DisplayFactory.get(content.tp), content.pl) : "Loading"}</div>
             </InfoWindow>
         );
