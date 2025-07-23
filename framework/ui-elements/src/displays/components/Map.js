@@ -125,6 +125,7 @@ export class EmbeddedMap extends AbstractMap {
 		return (
 			<PlaceMark icon={this.state.icon}
 					   onShowInfo={this.handleShowInfo.bind(this)}
+					   label="hola mundo"
 					   content={items.length > 0 ? items[0] : undefined}
 					   key={pos} placeMark={placeMark} clusterer={clusterer}>
 			</PlaceMark>
