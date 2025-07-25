@@ -89,8 +89,8 @@ class DateEditable extends AbstractDateEditable {
 
 		const { timePicker, classes } = this.props;
 		const range = this.state.range;
-		const min = range.min !== undefined && range.min != 0 ? range.min : undefined;
-		const max = range.max !== undefined && range.max != 0 ? range.max : undefined;
+		const min = range.min !== undefined && range.min != 0 ? range.min : this.props.mode === "fromnow" ? new Date() : undefined;
+		const max = range.max !== undefined && range.max != 0 ? range.max : this.props.mode === "tonow" ? new Date() : undefined;
 		const dateLabel = this.translate(this.props.label != null ? this.props.label : undefined);
 		const timeLabel = this.translate(this.props.label != null ? this.props.label : undefined);
 		const pattern = this.state.pattern;
