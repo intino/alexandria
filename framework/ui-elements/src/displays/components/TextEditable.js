@@ -80,7 +80,7 @@ class TextEditable extends AbstractTextEditable {
 
 	renderRichEditor = (props) => {
 	    return (
-	        <Editor {...props} containerProps={{ style: { resize: 'vertical' } }}
+	        <Editor {...props} containerProps={{ style: { resize: 'vertical', height:'100%' } }}
 	                value={this.state.value}
 	                onChange={this.handleChange.bind(this)} />
         );
