@@ -10,6 +10,7 @@ import InputMask from "react-input-mask";
 import { withSnackbar } from 'notistack';
 import Delayer from '../../util/Delayer';
 import TextBehavior from "./behaviors/TextBehavior";
+import Editor from 'react-simple-wysiwyg';
 
 const styles = theme => ({
 	default : {
@@ -58,7 +59,7 @@ class TextEditable extends AbstractTextEditable {
 		const onFocus = this.handleFocus.bind(this);
 		const onBlur = this.handleBlur.bind(this);
 	    if (!this.state.readonly && this.state.pattern != null) return this.renderWithMask({onFocus: onFocus, onBlur: onBlur});
-	    return this.renderField({value: this.state.value, onFocus: onFocus, onBlur: onBlur, onChange: this.handleChange.bind(this), maxLength: this.props.maxLength != null ? this.props.maxLength : undefined});
+	    return this.renderComponent({value: this.state.value, onFocus: onFocus, onBlur: onBlur, onChange: this.handleChange.bind(this), maxLength: this.props.maxLength != null ? this.props.maxLength : undefined});
 	};
 
 	renderWithMask = (props) => {
@@ -67,8 +68,21 @@ class TextEditable extends AbstractTextEditable {
 	        <InputMask {...props} mask={this.state.pattern.value} formatChars={formatChars}
 	                   value={this.state.value} onChange={this.handleChange.bind(this)} /*disabled={this.state.readonly}*/
 	                   alwaysShowMask={true} maskChar={this.state.pattern.maskCharacter}>
-                {() => this.renderField()}
+                {() => this.renderComponent()}
             </InputMask>
+        );
+	};
+
+	renderComponent = (props) => {
+	    if (this.props.editionMode === "Rich") return this.renderRichEditor(props);
+	    return this.renderField(props);
+	};
+
+	renderRichEditor = (props) => {
+	    return (
+	        <Editor {...props} containerProps={{ style: { resize: 'vertical' } }}
+	                value={this.state.value}
+	                onChange={this.handleChange.bind(this)} />
         );
 	};
 
