@@ -47,6 +47,7 @@ public class AlexandriaLibraryInstaller {
 
 	private void copy(File library) {
 		try {
+			if (!archetype.file().getParentFile().exists()) archetype.file().getParentFile().mkdirs();
 			Files.copy(library.toPath(), archetype.file().toPath());
 		} catch (IOException e) {
 			Logger.error(e);
@@ -54,6 +55,7 @@ public class AlexandriaLibraryInstaller {
 	}
 
 	private void extract(File library) {
+		if (!archetype.directory().getParentFile().exists()) archetype.directory().getParentFile().mkdirs();
 		ZipHelper.extract(library, archetype.directory());
 	}
 
