@@ -114,7 +114,7 @@ rule type(requester)
 			const address = this.element.historyAddress();
 			const id = (param instanceof Array) ? (param.length > 0 ? param[0] : "") : param;
 			if (address == null) return false;
-			history.push(address.replace(/([?&][^=]+=):[^&#]*/, id), {});
+			history.push(address.replace(/\\/:[^/]+/g, "/" + id).replace(/([?&][^=]+=):[^&#]*/, "$$1" + id), {});
 			return true;
 		};
 	}
