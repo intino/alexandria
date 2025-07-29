@@ -115,6 +115,7 @@ public class Grid<DN extends GridNotifier, B extends Box, Item> extends Abstract
         if (behavior == null) return;
         refreshGroupByOptions(info);
         if (behavior.groupBy() != null) behavior.groupBy(null);
+        if (info.column() == null) notifyRefreshItemCount();
     }
 
     public void groupBy(GridGroupByInfo info) {

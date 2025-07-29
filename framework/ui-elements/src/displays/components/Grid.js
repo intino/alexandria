@@ -189,7 +189,7 @@ class Grid extends AbstractGrid {
         const styles = { ...selectorComboBoxStyles(Theme.get()), ...SelectorComboBoxTextViewStyles, ...GridSelectorStyles };
         return (
             <Select className={classes.columnSelector} isClearable={true}
-                placeholder={this.translate("Group by")} options={this.selectorColumns()}
+                placeholder={this.translate("Group by")} options={this.selectorColumns().filter(c => c.label != "")}
                 value={this.state.groupBy} onChange={this.handleSelectGroupBy.bind(this)} styles={styles}/>
         );
     };
