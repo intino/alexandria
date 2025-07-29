@@ -148,6 +148,33 @@ rule type(ui, action, gen, asset)
 		public $box+PascalCase~Box box;
 	}
 
+rule type(ui, action, exposed, gen)
+	package $package+validPackage.ui.pages;
+
+	import io.intino.alexandria.ui.AlexandriaUiBox;
+	import io.intino.alexandria.exceptions.*;
+	import java.util.*;
+
+	public abstract class Abstract$name+PascalCase~Page extends io.intino.alexandria.ui.server.pages.WebPage {
+		public AlexandriaUiBox box;
+
+		public Abstract$name+PascalCase~Page() { super("$uiService+camelCaseToKebabCase+lowerCase"); }
+
+		public $returnType execute() <<throws $throws+FirstUpperCase...[, ]>> {
+			$executeBody
+		}
+
+		@Override
+		protected String title() {
+			return $title;
+		}
+
+		@Override
+		protected java.net.URL favicon() {
+			return <<$favicon?null;>>
+		}
+	}
+
 rule type(ui, action, gen)
 	package $package+validPackage.ui.pages;
 

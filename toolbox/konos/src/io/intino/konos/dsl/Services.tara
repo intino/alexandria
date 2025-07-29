@@ -182,6 +182,7 @@ Concept:Named Service
 			has Parameter
 			Facet Main
 			Facet Confidential
+			Facet Exposed
 			Facet Page
 				var Template template
 			Facet StaticPage
