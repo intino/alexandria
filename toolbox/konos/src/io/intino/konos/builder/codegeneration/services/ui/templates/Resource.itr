@@ -328,7 +328,7 @@ rule type(resource, exposed)
 			manager.pushService().onClose(clientId).execute(new Consumer<io.intino.alexandria.ui.services.push.UIClient>() {
 				@Override
 				public void accept(io.intino.alexandria.ui.services.push.UIClient client) {
-				    ((AbstractBox)box).soul(client.id()).ifPresent(s -> s.destroy());
+    				if (client.soul() != null) client.soul().destroy();
 					box.unRegisterSoul(client.id());
 					manager.unRegister(client);
 				}
