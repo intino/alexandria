@@ -74,6 +74,7 @@ public class ServiceRenderer extends UIRenderer {
 
 	private Frame frameOf(Service.UI.Resource resource) {
 		final FrameBuilder result = new FrameBuilder("resource").add("abstractResource");
+		if (resource.isExposed()) result.add("exposed");
 		result.add("name", resource.name$());
 		final Service.UI service = resource.core$().ownerAs(Service.UI.class);
 		String path = resource.path();

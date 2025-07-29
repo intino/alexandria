@@ -68,11 +68,11 @@ public abstract class LibraryTemplateStamp<DN extends LibraryTemplateStampNotifi
 		notifier.refresh(url());
 	}
 
-	private static final String Url = "%s/%s%ssession=%s&client=%s&token=%s";
+	private static final String Url = "%s%s%ssession=%s&client=%s&token=%s";
 	private String url() {
 		String token = session().client().id();
 		StringBuilder result = new StringBuilder();
-		result.append(String.format(Url, session().browser().baseUrl(), path.replace(":template", template.toLowerCase()), path.contains("?") ? "&" : "?", session().id(), session().client().id(), token));
+		result.append(String.format(Url, session().browser().baseUrl(), (!path.startsWith("/") ? "/" : "") + path.replace(":template", template.toLowerCase()), path.contains("?") ? "&" : "?", session().id(), session().client().id(), token));
 		parameters.forEach((key, value) -> result.append("&").append(key).append("=").append(value));
 		return result.toString();
 	}

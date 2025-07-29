@@ -45,8 +45,13 @@ rule type(ui)
             server.route("/asset/:name").get(manager -> new AssetResource(name -> new AssetResourceLoader(box).load(name), manager, notifierProvider()).execute());
 			<<$userHome>>
 			<<$resource+path...[$NL]>>
+			initExposedResources(box, server, pushService);
 			initProxyDisplays(box, server, pushService);
 			initDisplays(server, pushService);
+		}
+
+		public static void initExposedResources(io.intino.alexandria.ui.AlexandriaUiBox box, AlexandriaUiServer server, PushService pushService) {
+			$resource+exposed...[$NL]
 		}
 
 		public static void initProxyDisplays(io.intino.alexandria.ui.AlexandriaUiBox box, AlexandriaUiServer server, PushService pushService) {
@@ -65,6 +70,11 @@ rule type(ui)
 		$display+method...[$NL]
 	}
 
+rule type(resource, exposed) and trigger(exposed)
+	$path+exposed...[$NL]
+
+rule type(resource) and trigger(exposed)
+
 rule type(resource) and trigger(path)
 	$path...[$NL]
 
@@ -81,6 +91,9 @@ rule type(display) and trigger(path)
 rule type(path, editor)
 	server.route("$value"<<$custom...[]>>).get(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
 	server.route("$value"<<$custom...[]>>).post(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
+
+rule type(path) and trigger(exposed)
+	server.route("$value"<<$custom...[]>>).get(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
 
 rule type(path)
 	server.route("$value"<<$custom...[]>>).get(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
