@@ -82,54 +82,6 @@ rule type(action) and not type(ui)
 		}
 	}
 
-rule type(ui, exposedDisplay, entryPoint, gen)
-	package $package+validPackage.ui.pages;
-
-    import io.intino.alexandria.ui.AlexandriaUiBox;
-
-    public abstract class Abstract$name+PascalCase~Page extends io.intino.alexandria.ui.server.pages.WebPage {
-        public AlexandriaUiBox box;
-
-        public Abstract$name+PascalCase~Page() { super("$uiService+camelCaseToKebabCase+lowerCase"); }
-
-		public String execute() <<throws $throws+FirstUpperCase...[, ]>> {
-			return super.template("$name+firstLowerCase");
-		}
-
-		@Override
-		protected String title() {
-			return <<$title?"">>;
-		}
-
-		@Override
-		protected java.net.URL favicon() {
-			return <<$favicon?null;>>
-		}
-    }
-
-rule type(ui, exposedDisplay, entryPoint)
-	package $package+validPackage.ui.pages;
-
-	import $package+validPackage.ui.displays<<.$packageType~s>>.$display+PascalCase;
-
-    public class $name+PascalCase~Page extends Abstract$name+PascalCase~Page {
-        <<$parameter+type...[$NL]>>
-
-        public io.intino.alexandria.ui.Soul prepareSoul(io.intino.alexandria.ui.services.push.UIClient client) {
-            return new io.intino.alexandria.ui.Soul(session) {
-                @Override
-                public void personify() {
-                    $name+PascalCase display = new $name+PascalCase(box);
-                    $parameter+methodCall...[$NL]
-                    register(display);
-                    display.init();
-                    display.refresh();
-                }
-            };
-        }
-
-    }
-
 rule type(ui, exposedDisplay)
 	package $package+validPackage.ui.pages;
 

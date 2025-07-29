@@ -28,4 +28,5 @@ public class ResourceListRenderer extends UIRenderer {
 		for (Service.UI.Resource r : resourceList) new ResourceRenderer(context, r, target).execute();
 		for (Display.Exposed d : exposedDisplays) new ExposedDisplayRenderer(context, d, target).execute();
 	}
+
 }

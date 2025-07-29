@@ -57,7 +57,7 @@ public class AlexandriaLibraryLoader extends ClassLoader {
 		}
 	}
 
-	private static final String TemplateClass = "%s.ui.resources.%sResource";
+	private static final String TemplateClass = "%s.ui.resources.%sProxyResource";
 	public Class<?> libraryTemplateEntryPointClass(String name) {
 		try {
 			return loadClass(String.format(TemplateClass, archetype.rootPackage(), firstUpperCase(name)));

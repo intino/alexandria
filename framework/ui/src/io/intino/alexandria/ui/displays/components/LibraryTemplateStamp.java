@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 public abstract class LibraryTemplateStamp<DN extends LibraryTemplateStampNotifier, B extends Box> extends AbstractLibraryTemplateStamp<B> {
 	private String template;
+	private String path;
 	private final java.util.Map<String, String> parameters = new HashMap<>();
 
 	public LibraryTemplateStamp(B box) {
@@ -22,6 +23,10 @@ public abstract class LibraryTemplateStamp<DN extends LibraryTemplateStampNotifi
 		return _template(value);
 	}
 
+	public LibraryTemplateStamp<DN, B> path(String path) {
+		return _path(path);
+	}
+
 	public LibraryTemplateStamp<DN, B> add(String name, String value) {
 		this.parameters.put(name, value);
 		return this;
@@ -29,6 +34,11 @@ public abstract class LibraryTemplateStamp<DN extends LibraryTemplateStampNotifi
 
 	protected LibraryTemplateStamp<DN, B> _template(String value) {
 		this.template = value;
+		return this;
+	}
+
+	protected LibraryTemplateStamp<DN, B> _path(String value) {
+		this.path = value;
 		return this;
 	}
 
@@ -47,6 +57,10 @@ public abstract class LibraryTemplateStamp<DN extends LibraryTemplateStampNotifi
 			notifyUser(translate("Template type must be defined"), UserMessage.Type.Error);
 			return;
 		}
+		if (path == null) {
+			notifyUser(translate("Template path must be defined"), UserMessage.Type.Error);
+			return;
+		}
 		if (!existsTemplate()) {
 			notifyUser(translate("Template not found in library"), UserMessage.Type.Error);
 			return;
@@ -54,11 +68,11 @@ public abstract class LibraryTemplateStamp<DN extends LibraryTemplateStampNotifi
 		notifier.refresh(url());
 	}
 
-	private static final String Url = "%s/_alexandria-displays/%s?session=%s&client=%s&token=%s";
+	private static final String Url = "%s/%s%ssession=%s&client=%s&token=%s";
 	private String url() {
 		String token = session().client().id();
 		StringBuilder result = new StringBuilder();
-		result.append(String.format(Url, session().browser().baseUrl(), template.toLowerCase(), session().id(), session().client().id(), token));
+		result.append(String.format(Url, session().browser().baseUrl(), path.replace(":template", template.toLowerCase()), path.contains("?") ? "&" : "?", session().id(), session().client().id(), token));
 		parameters.forEach((key, value) -> result.append("&").append(key).append("=").append(value));
 		return result.toString();
 	}

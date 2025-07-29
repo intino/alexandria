@@ -630,6 +630,7 @@ rule type(properties, externaltemplatestamp) and trigger(specific)
 
 rule type(properties, librarytemplatestamp) and trigger(specific)
 	<<_template("$template");>>
+	<<_path("$path");>>
 
 rule type(properties, selector) and trigger(specific)
 	<<_multipleSelection($multipleSelection);>>
