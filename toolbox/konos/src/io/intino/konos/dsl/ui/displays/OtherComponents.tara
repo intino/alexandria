@@ -47,6 +47,7 @@ Concept OtherComponents
 		sub LibraryTemplateStamp
 			var Service.UI.Import import
 			var string template
+			var string path
 
 		!! Stamps template from other app
 		sub ExternalTemplateStamp

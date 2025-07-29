@@ -38,9 +38,6 @@ public class ExposedDisplayRenderer extends UIRenderer {
 			FrameBuilder builder = createFrame(true);
 			Commons.writeFrame(resourceFolder(gen(target), target), resourceFilename(display.name$(), "ProxyResource"), new ResourceTemplate().render(builder.toFrame(), Formatters.all));
 			context.compiledFiles().add(new OutputItem(context.sourceFileOf(display), javaFile(resourceFolder(gen(target), target), resourceFilename(display.name$(), "ProxyResource")).getAbsolutePath()));
-			builder = createFrame(false).add("entryPoint");
-			Commons.writeFrame(resourceFolder(gen(target), target), resourceFilename(display.name$(), "Resource"), new ResourceTemplate().render(builder.toFrame(), Formatters.all));
-			context.compiledFiles().add(new OutputItem(context.sourceFileOf(display), javaFile(resourceFolder(gen(target), target), resourceFilename(display.name$(), "Resource")).getAbsolutePath()));
 		}
 
 		new ExposedDisplayActionRenderer(context, display, target).execute();

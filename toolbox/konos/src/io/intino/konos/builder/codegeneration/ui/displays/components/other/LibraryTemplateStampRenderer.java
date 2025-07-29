@@ -17,6 +17,8 @@ public class LibraryTemplateStampRenderer extends ComponentRenderer<LibraryTempl
 		FrameBuilder properties = super.properties();
 		String template = element.template();
 		if (template != null) properties.add("template", template);
+		String path = element.path();
+		if (path != null) properties.add("path", path);
 		return properties;
 	}
 

@@ -24,7 +24,6 @@ public class AlexandriaLibraryUiInitializer {
 		initTranslatorService(server, pushService);
 		initDisplays(server, pushService);
 		initProxyDisplays(server, pushService);
-		initExposedDisplays(server, pushService);
 	}
 
 	private void initTranslatorService(AlexandriaUiServer server, PushService pushService) {
@@ -56,17 +55,6 @@ public class AlexandriaLibraryUiInitializer {
 			if (serviceClass == null) return;
 			Method method = serviceClass.getMethod("initProxyDisplays", AlexandriaUiBox.class, AlexandriaUiServer.class, PushService.class);
 			method.invoke("initProxyDisplays", box, server, pushService);
-		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-			Logger.error(e);
-		}
-	}
-
-	private void initExposedDisplays(AlexandriaUiServer server, PushService pushService) {
-		try {
-			Class<?> serviceClass = libraryLoader.serviceClass();
-			if (serviceClass == null) return;
-			Method method = serviceClass.getMethod("initExposedDisplays", AlexandriaUiBox.class, AlexandriaUiServer.class, PushService.class);
-			method.invoke("initExposedDisplays", box, server, pushService);
 		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
 			Logger.error(e);
 		}

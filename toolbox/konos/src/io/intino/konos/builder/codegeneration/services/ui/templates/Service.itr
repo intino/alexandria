@@ -45,13 +45,8 @@ rule type(ui)
             server.route("/asset/:name").get(manager -> new AssetResource(name -> new AssetResourceLoader(box).load(name), manager, notifierProvider()).execute());
 			<<$userHome>>
 			<<$resource+path...[$NL]>>
-			initExposedDisplays(box, server, pushService);
 			initProxyDisplays(box, server, pushService);
 			initDisplays(server, pushService);
-		}
-
-		public static void initExposedDisplays(io.intino.alexandria.ui.AlexandriaUiBox box, AlexandriaUiServer server, PushService pushService) {
-			$display+entryPoint...[$NL]
 		}
 
 		public static void initProxyDisplays(io.intino.alexandria.ui.AlexandriaUiBox box, AlexandriaUiServer server, PushService pushService) {
@@ -75,11 +70,6 @@ rule type(resource) and trigger(path)
 
 rule trigger(userHome)
 	server.route("/alexandria/user").get(manager -> new $this+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
-
-rule type(display, exposed, row) and trigger(entryPoint)
-
-rule type(display, exposed) and trigger(entryPoint)
-	server.route("/_alexandria-displays/$name+lowercase").get(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
 
 rule type(display, exposed, row) and trigger(path)
 

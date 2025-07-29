@@ -38,13 +38,6 @@ public class ExposedDisplayActionRenderer extends ActionRenderer {
 
 		if (!alreadyRendered(src(target), display.name$() + "ProxyPage"))
 			writeFrame(destinationPackage(src(target)), display.name$() + "ProxyPage", new ActionTemplate().render(builder.toFrame(), Formatters.all));
-
-		builder.add("entryPoint");
-		if (!alreadyRendered(src(target), display.name$() + "Page"))
-			writeFrame(destinationPackage(src(target)), display.name$() + "Page", new ActionTemplate().render(builder.toFrame(), Formatters.all));
-
-		builder.add("gen");
-		writeFrame(destinationPackage(gen(target)), "Abstract" + Formatters.firstUpperCase(display.name$()) + "Page", new ActionTemplate().render(builder.toFrame(), Formatters.all));
 	}
 
 	@Override
