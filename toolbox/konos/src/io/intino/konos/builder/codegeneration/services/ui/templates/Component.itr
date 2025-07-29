@@ -230,6 +230,8 @@ rule type(component, child, librarytemplatestamp, single) and trigger(class)
 
 		public $name+firstUpperCase($abstractBox+type box) {
 			super(box);
+			<<$properties+common>>
+			<<$properties+specific>>
 		}
 
         @Override
