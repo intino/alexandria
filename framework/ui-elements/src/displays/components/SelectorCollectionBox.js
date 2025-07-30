@@ -99,6 +99,8 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 		const value = this.selection(items);
 		const color = this.state.readonly ? theme.palette.grey.A700 : "inherit";
         const isDark = theme.isDark();
+        let components = components= { Option: this.renderOption.bind(this), MenuList: this.renderDialog.bind(this), MultiValueLabel: this.renderMultiValueLabel.bind(this) };
+        if (this.openOnInput()) components = { DropdownIndicator:() => null, IndicatorSeparator:() => null, ...components };
 
 	    return (
 			<div className={classes.container} style={this.style()}>
@@ -108,7 +110,7 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 						closeMenuOnSelect={!multiple} autoFocus={this.props.focused} menuIsOpen={this.state.opened}
 						placeholder={this.selectMessage()}
 						className="basic-multi-select" classNamePrefix="select"
-                        components={{ Option: this.renderOption.bind(this), MenuList: this.renderDialog.bind(this), MultiValueLabel: this.renderMultiValueLabel.bind(this) }}
+                        components={components}
 						value={value} options={items}
 						onChange={this.handleChange.bind(this)}
 						onInputChange={this.handleSearch.bind(this)}
@@ -216,11 +218,14 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
     };
 
     handleSearch = (value) => {
+        if (this.openOnInput() && this.condition == null && (value == null || value === "" || value.length < 3)) return;
+        this.condition = value;
         this.open();
         Delayer.execute(this, () => this.requester.search(value), 500);
     };
 
     handleOpen = (e) => {
+        if (this.openOnInput() && (this.condition == null || this.condition === "" || this.condition.length < 3)) return;
         if (this.state.readonly) return;
         if (this.state.trigger != null) return;
         this.open();
@@ -233,6 +238,10 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 
 	handleAllowOther = () => {
 	    this.requester.selectOther();
+	};
+
+	openOnInput = () => {
+	    return this.props.openMode === "Input";
 	};
 
 	style() {

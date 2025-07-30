@@ -73,6 +73,7 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 		if (collectionBox.allowOther()) builder.add("allowOther", true);
 		String placeholder = collectionBox.placeholder();
 		if (placeholder != null && !placeholder.isEmpty()) builder.add("placeholder", placeholder);
+		if (collectionBox.openMode() != Selector.CollectionBox.OpenMode.Focus) builder.add("openMode", collectionBox.openMode().name());
 	}
 
 	private void addCheckBoxProperties(FrameBuilder builder) {
