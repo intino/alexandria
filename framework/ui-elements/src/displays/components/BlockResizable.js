@@ -81,7 +81,10 @@ class BlockResizable extends AbstractBlockResizable {
 
 	refreshLayout = (info) => {
 	    if (this.panelGroup.current == null) return;
-	    this.panelGroup.current.setLayout(info);
+	    const currentLayout = this.panelGroup.current.getLayout();
+	    const newLayout = [];
+	    for (let i=0; i<info.length; i++) newLayout.push(info[i] != -1 ? info[i] : currentLayout[i]);
+	    this.panelGroup.current.setLayout(newLayout);
 	}
 
 	refreshChildVisibility = (info) => {
