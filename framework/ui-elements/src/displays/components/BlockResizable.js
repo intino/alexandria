@@ -94,6 +94,7 @@ class BlockResizable extends AbstractBlockResizable {
 	}
 
 	handleResize = (child, size) => {
+	    this.requester.layoutModified(this.panelGroup.current.getLayout());
         this.updateCookie(size, this.props.id + "_" + this._id(child));
 	};
 
