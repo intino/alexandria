@@ -28,15 +28,15 @@ public class MultipleExamplesMold extends AbstractMultipleExamplesMold<UiFramewo
     public void init() {
         super.init();
         multiple1.addAll(List.of("Value 1", "Value 2", "Value 3"));
-        multiple2.add("Value 1", "lorem ipsum dolor sit amet");
-        multiple2.add("Value 2");
-        multiple2.add("Value 3");
-        files().forEach(f -> multiple3.add(f));
-        multiple3.onChange(event -> {
+        multiple3.add("Value 1", "lorem ipsum dolor sit amet");
+        multiple3.add("Value 2");
+        multiple3.add("Value 3");
+        files().forEach(f -> multiple4.add(f));
+        multiple4.onChange(event -> {
             ImageEditable<?, ?> display = event.component();
             display.value(save(event.item()));
         });
-        multiple3.onRemove(event -> {
+        multiple4.onRemove(event -> {
             javaFiles().get(event.index()).delete();
         });
     }

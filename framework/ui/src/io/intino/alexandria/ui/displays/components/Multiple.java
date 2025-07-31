@@ -48,7 +48,9 @@ public abstract class Multiple<B extends Box, C extends Component, V> extends Ab
     }
 
     public C add() {
-        return add((V) null);
+        C result = add((V) null);
+        if (result instanceof Editable) ((Editable<?, ?>)result).focus();
+        return result;
     }
 
     protected abstract C add(V value);
