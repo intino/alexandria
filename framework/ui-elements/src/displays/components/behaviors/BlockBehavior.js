@@ -40,7 +40,7 @@ const BlockBehavior = (function () {
             let result = layoutClasses(block);
             result += result !== "" ? " " + hoverContainerClass(block) : "";
             result += result !== "" ? " " + hiddenClass(block) : "";
-            result += result !== "" ? " " + block.cssRuleSelectors() : "";
+            result += (result !== "" && block.cssRuleSelectors != null) ? " " + block.cssRuleSelectors() : "";
             return result.trim();
         },
         renderAnimation : (animation, visible, content) => {

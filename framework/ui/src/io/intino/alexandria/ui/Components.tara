@@ -19,8 +19,10 @@ Component blockSplitter
 	Request back
 
 Component blockResizable
-	Notification refreshLayout as Integer List
+	Notification refreshLayout as Real List
 	Notification refreshChildVisibility as Object(BlockResizableVisibility)
+
+	Request layoutModified as Real List
 
 Component blockParallax
 	Notification refresh as Text
