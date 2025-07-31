@@ -15,11 +15,21 @@ Template(layout=Vertical, spacing=DP8) multipleExamplesMold
 							Text as Multiple<br/>
 							=========
 
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="Editable facet")
+			Block(spacing=DP8, format=filled)
+				Text multiple2 as Multiple(noItemsMessage="No elements found") Editable
+				Block > Text multiple2Code as Multiple
+						value
+							=========
+							Text as Multiple Editable<br/>
+							=========
+
 		Block multiple2Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets with collapsed")
 			Block(spacing=DP8, format=filled) multiple2Content
-				TemplateStamp(template=multiple2Template) multiple2 as Multiple(collapsed=true)
-				Block > Text multiple2Code as Multiple
+				TemplateStamp(template=multiple2Template) multiple3 as Multiple(collapsed=true)
+				Block > Text multiple3Code as Multiple
 						value
 							=========
 							TemplateStamp(template\=multiple2Template) multiple2 as Multiple(collapsed\=true)</br>
@@ -30,8 +40,8 @@ Template(layout=Vertical, spacing=DP8) multipleExamplesMold
 		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets with Image")
 			Block(spacing=DP8, format=filled)
-				Image multiple3 as Multiple(noItemsMessage="No elements found") Editable
-				Block > Text multiple3Code as Multiple
+				Image multiple4 as Multiple(noItemsMessage="No elements found") Editable
+				Block > Text multiple4Code as Multiple
 						value
 							=========
 							Image as Multiple<br/>
