@@ -43,6 +43,7 @@ class Upload extends AbstractUpload {
 		    allowedTypes: this.props.allowedTypes,
 		    uploadingFiles: {},
 		    showProgress: false,
+		    multipleSelection: this.props.multipleSelection
 		}
 	};
 
@@ -52,10 +53,12 @@ class Upload extends AbstractUpload {
         const isUploading = Object.entries(uploadingFiles).length > 0;
         return (
 	        <React.Fragment>
-	            <input type="file" id={this.props.id + "_input"} onChange={this.handleChange.bind(this)} multiple={this.allowMultiple()} hidden disabled={this.state.readonly ? true : undefined} accept={this._allowedTypes()}/>
-                <label className={classNames(classes.label, this.state.readonly ? classes.disabled : undefined)} id={this.props.id + "_inputLabel"} disabled={this.state.readonly ? true : undefined} for={this.props.id + "_input"}>{content}</label>
-                {progress && isUploading && this._renderProgressIcon()}
-                {progress && this._renderProgressBar()}
+    	        <div class="layout horizontal center">
+                    <input type="file" id={this.props.id + "_input"} onChange={this.handleChange.bind(this)} multiple={this.allowMultiple()} hidden disabled={this.state.readonly ? true : undefined} accept={this._allowedTypes()}/>
+                    <label className={classNames(classes.label, this.state.readonly ? classes.disabled : undefined)} id={this.props.id + "_inputLabel"} disabled={this.state.readonly ? true : undefined} for={this.props.id + "_input"}>{content}</label>
+                    {progress && isUploading && this._renderProgressIcon()}
+                    {progress && this._renderProgressBar()}
+                </div>
             </React.Fragment>
         );
     };
@@ -81,10 +84,11 @@ class Upload extends AbstractUpload {
     _renderProgressIcon = () => {
         return (
             <IconButton
+                size="small"
                 onClick={this.openProgress}
                 title={this.translate("Show progress")}
                 aria-label={this.translate("Show progress")}
-            >
+                style={{marginRight:'5px'}}>
                 <CircularProgress size={20}/>
             </IconButton>
         );
@@ -98,8 +102,18 @@ class Upload extends AbstractUpload {
         this.setState({ showProgress: false });
     };
 
+    refreshMultipleSelection = (value) => {
+        this.setState({ multipleSelection: value });
+    };
+
+    launch = () => {
+        const element = document.getElementById(this.props.id + "_input");
+        if (element == null) return;
+        element.click();
+    };
+
     allowMultiple = () => {
-        return this.props.multipleSelection != null && this.props.multipleSelection;
+        return this.state.multipleSelection != null && this.state.multipleSelection;
     };
 
 	openDialog = () => {
