@@ -40,6 +40,10 @@ public class Upload<DN extends UploadNotifier, B extends Box> extends AbstractUp
 		return this;
 	}
 
+	public void multipleSelection(boolean value) {
+		notifier.refreshMultipleSelection(value);
+	}
+
 	public void execute() {
 		filesToUploadCount = 0;
 		files = new ArrayList<>();
