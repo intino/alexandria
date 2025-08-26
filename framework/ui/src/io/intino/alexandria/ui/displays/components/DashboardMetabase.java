@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
 import com.auth0.jwt.algorithms.Algorithm;
+import io.intino.alexandria.Json;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.DashboardMetabaseInfo;
 import io.intino.alexandria.ui.displays.notifiers.DashboardMetabaseNotifier;
@@ -8,7 +9,6 @@ import io.intino.alexandria.ui.displays.notifiers.DashboardMetabaseNotifier;
 import java.sql.Date;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.stream.Collectors;
 
 public class DashboardMetabase<DN extends DashboardMetabaseNotifier, B extends Box> extends AbstractDashboardMetabase<DN, B> {
     private String url;
@@ -19,7 +19,7 @@ public class DashboardMetabase<DN extends DashboardMetabaseNotifier, B extends B
     private Theme theme = Theme.Light;
 
     private static final String Header = "{\"alg\":\"HS256\",\"typ\":\"JWT\"}";
-    private static final String Payload = "{\"resource\":{\"dashboard\":%d},\"params\":{%s},\"iat\":%d}";
+    private static final String Payload = "{\"resource\":{\"dashboard\":%d},\"params\":%s,\"iat\":%d}";
 
     public enum Theme { Dark, Light }
 
@@ -107,7 +107,7 @@ public class DashboardMetabase<DN extends DashboardMetabaseNotifier, B extends B
     }
 
     private String params() {
-        return parameters().entrySet().stream().map(e -> "\"" + e.getKey() + "\":\"" + e.getValue() + "\"").collect(Collectors.joining(","));
+        return Json.toJson(parameters());
     }
 
     private byte[] sign(String header, String payload) {
