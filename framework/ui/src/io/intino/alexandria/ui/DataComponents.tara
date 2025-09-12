@@ -59,6 +59,7 @@ Component fileEditable as ExtensionOf(baseFile)
 	Notification refreshReadonly as Bool
 	Notification refreshAllowedTypes as Text List
 	Notification refreshFocused as Bool
+	Notification refreshMaxSize as LongInteger
 	Request notifyUploading
 	Request notifyChange as File
 	Request(Asset) downloadFile

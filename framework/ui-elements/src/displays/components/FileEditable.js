@@ -43,6 +43,7 @@ class FileEditable extends AbstractFile {
             readonly: this.props.readonly,
             editable: false,
             allowedTypes: this.props.allowedTypes,
+            maxSize: this.props.maxSize,
             uploadingFiles: {},
             key: 0
         };
@@ -117,7 +118,8 @@ class FileEditable extends AbstractFile {
 	};
 
 	_renderDropZone = () => {
-		const { maxSize, dropZoneLimit } = this.props;
+		const { dropZoneLimit } = this.props;
+		const maxSize = this.state.maxSize;
 	    return (
             <DropzoneArea
                 key={this.state.key}
@@ -261,6 +263,10 @@ class FileEditable extends AbstractFile {
             if (this.state.readonly) this.inputRef.current.scrollIntoView();
             else this.inputRef.current.focus();
 	    }, 100);
+	};
+
+	refreshMaxSize = (maxSize) => {
+		this.setState({ maxSize });
 	};
 
     _newUploadingFile(file) {
