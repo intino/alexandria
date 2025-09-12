@@ -25,6 +25,7 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 	protected ChangeListener changeListener = null;
 	private ReadonlyListener readonlyListener = null;
 	private File preview;
+	private long maxSize;
 
 	public FileEditable(B box) {
 		super(box);
@@ -75,6 +76,16 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 	public FileEditable<DN, B> allowedTypesByName(java.util.List<String> types) {
 		_allowedTypesByName(types);
 		notifyAllowedTypes(types);
+		return this;
+	}
+
+	public long maxSize() {
+		return maxSize;
+	}
+
+	public FileEditable<DN, B> maxSize(long value) {
+		_maxSize(value);
+		notifyMaxSize(value);
 		return this;
 	}
 
@@ -145,6 +156,11 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 		return this;
 	}
 
+	protected FileEditable<DN, B> _maxSize(long value) {
+		this.maxSize = value;
+		return this;
+	}
+
 	private void createPreview() {
 		preview = new File<>(box()).id(UUID.randomUUID().toString());
 		add(preview, DefaultInstanceContainer);
@@ -162,6 +178,10 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 
 	private void notifyAllowedTypes(java.util.List<String> types) {
 		notifier.refreshAllowedTypes(new ArrayList<>(types));
+	}
+
+	private void notifyMaxSize(long value) {
+		notifier.refreshMaxSize(value);
 	}
 
 }
