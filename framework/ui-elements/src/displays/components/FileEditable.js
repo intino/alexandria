@@ -132,7 +132,7 @@ class FileEditable extends AbstractFile {
                 filesLimit={ dropZoneLimit || 1 }
                 maxFileSize={maxSize != null ? maxSize : 20971520000}
                 showPreviews={false}
-                showPreviewsInDropzone={true}
+                showPreviewsInDropzone={this.state.value != null}
                 useChipsForPreview
                 previewGridProps={{container: { spacing: 1, direction: 'row' }}}
                 previewText={this.translate("Selected file")}
