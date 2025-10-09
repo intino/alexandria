@@ -1,4 +1,5 @@
 import React from "react";
+import { useRef, useEffect  } from "react";
 import { withStyles } from '@material-ui/core/styles';
 import AbstractHtmlViewer from "../../../gen/displays/components/AbstractHtmlViewer";
 import HtmlViewerNotifier from "../../../gen/displays/notifiers/HtmlViewerNotifier";
@@ -8,6 +9,22 @@ import { withSnackbar } from 'notistack';
 import Theme from 'app-elements/gen/Theme';
 
 const styles = theme => ({});
+
+function HtmlViewerInnerHTML(props) {
+  const { id, html } = props
+  const divRef = useRef(null)
+
+  const refreshContent = () => {
+    const parsedHTML = document.createRange().createContextualFragment(html);
+    divRef.current.innerHTML = "";
+    divRef.current.appendChild(parsedHTML);
+  }
+  window.setTimeout(() => refreshContent(), 100);
+
+  return (
+    <div id={id} ref={divRef}></div>
+  )
+}
 
 class HtmlViewer extends AbstractHtmlViewer {
 
@@ -25,7 +42,7 @@ class HtmlViewer extends AbstractHtmlViewer {
 	render() {
 	    this.refreshEvents();
 	    if (this.state.content === "") return (<React.Fragment/>);
-	    return (<div id={this.props.id + "-html"} dangerouslySetInnerHTML={{__html: this.content()}}></div>);
+	    return (<HtmlViewerInnerHTML id={this.props.id + "-html"} html={this.content()} />);
 	};
 
 	refresh = (content) => {
