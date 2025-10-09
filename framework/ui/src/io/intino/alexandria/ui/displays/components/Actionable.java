@@ -110,8 +110,13 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
     }
 
     public void refresh() {
-        ActionableInfo info = new ActionableInfo().title(title()).disabled(disabled());
-        notifier.refresh(info);
+        refreshInfo();
+        refreshIconIfRequired();
+        refreshDarkIconIfRequired();
+    }
+
+    private void refreshInfo() {
+        notifier.refresh(new ActionableInfo().title(title()).disabled(disabled()));
     }
 
     public void notifyUser(String message) {
