@@ -22,6 +22,8 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 	private boolean readonly;
 	private java.util.List<String> allowedTypes;
 	protected Listener uploadingListener = null;
+	protected Listener downloadStartedListener = null;
+	protected Listener downloadFinishedListener = null;
 	protected ChangeListener changeListener = null;
 	private ReadonlyListener readonlyListener = null;
 	private File preview;
@@ -94,6 +96,16 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 		return this;
 	}
 
+	public FileEditable<DN, B> onDownloadStarted(Listener listener) {
+		this.downloadStartedListener = listener;
+		return this;
+	}
+
+	public FileEditable<DN, B> onDownloadFinished(Listener listener) {
+		this.downloadFinishedListener = listener;
+		return this;
+	}
+
 	@Override
 	public FileEditable<DN, B> onChange(ChangeListener listener) {
 		this.changeListener = listener;
@@ -115,6 +127,14 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 		if (uploadingListener != null) uploadingListener.accept(new Event(this));
 	}
 
+	public void notifyDownloadStarted() {
+		if (downloadStartedListener != null) downloadStartedListener.accept(new Event(this));
+	}
+
+	public void notifyDownloadFinished() {
+		if (downloadFinishedListener != null) downloadFinishedListener.accept(new Event(this));
+	}
+
 	public void notifyChange(Resource value) {
 		if (changeListener != null) changeListener.accept(new ChangeEvent(this, value));
 	}
@@ -132,7 +152,10 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 			@Override
 			public InputStream content() {
 				try {
-					return value.openStream();
+					notifyDownloadStarted();
+					InputStream result = value.openStream();
+					notifyDownloadFinished();
+					return result;
 				} catch (IOException e) {
 					Logger.error(e);
 					return new ByteArrayInputStream(new byte[0]);

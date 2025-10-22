@@ -62,11 +62,10 @@ class FileEditable extends AbstractFile {
 	};
 
 	saveFile(file, value) {
-	    if (!file) return;
-
-	    const fileId = this._newUploadingFile(file);
+	    const fileId = file != null ? this._newUploadingFile(file) : null;
 	    this.requester.notifyUploading();
 		this.requester.notifyChange(file, (progress) => {
+		    if (fileId == null) return;
 		    this._handleFileProgress(fileId, progress);
         });
 		this.setState({ value: value });
