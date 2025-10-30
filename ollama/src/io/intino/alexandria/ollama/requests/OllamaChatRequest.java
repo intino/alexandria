@@ -19,6 +19,7 @@ public class OllamaChatRequest extends WithOptions<OllamaChatRequest> implements
 	private List<OllamaMessage> messages;
 	private List<OllamaTool> tools;
 	private String format;
+	private Boolean think;
 	private boolean stream;
 	@SerializedName("keep_alive")
 	private String keepAlive;
@@ -82,6 +83,15 @@ public class OllamaChatRequest extends WithOptions<OllamaChatRequest> implements
 
 	public OllamaChatRequest format(String format) {
 		this.format = format;
+		return this;
+	}
+
+	public Boolean think() {
+		return think;
+	}
+
+	public OllamaChatRequest think(Boolean think) {
+		this.think = think;
 		return this;
 	}
 

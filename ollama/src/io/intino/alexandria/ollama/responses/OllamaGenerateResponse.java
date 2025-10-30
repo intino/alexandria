@@ -8,6 +8,7 @@ public class OllamaGenerateResponse extends OllamaResponse {
 	@SerializedName("created_at")
 	private String createdAt;
 	private String response;
+	private String thinking;
 	private boolean done;
 	private int[] context;
 	@SerializedName("total_duration")
@@ -46,11 +47,24 @@ public class OllamaGenerateResponse extends OllamaResponse {
 	}
 
 	public String text() {
-		return response();
+		return response;
+	}
+
+	public String fullText() {
+		return thinking == null || thinking.isBlank() ? response : "<think>\n%s\n</think>\n%s".formatted(thinking, response);
 	}
 
 	public OllamaGenerateResponse response(String response) {
 		this.response = response;
+		return this;
+	}
+
+	public String thinking() {
+		return thinking;
+	}
+
+	public OllamaGenerateResponse thinking(String thinking) {
+		this.thinking = thinking;
 		return this;
 	}
 

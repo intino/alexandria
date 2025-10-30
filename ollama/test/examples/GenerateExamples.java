@@ -6,6 +6,8 @@ import io.intino.alexandria.ollama.requests.OllamaGenerateRequest;
 
 public class GenerateExamples {
 
+	private static final String LLM = "qwen3:4b-thinking";
+
 	public static void main(String[] args) throws OllamaAPIException {
 		generate();
 		generateStream();
@@ -15,19 +17,20 @@ public class GenerateExamples {
 	private static void generate() throws OllamaAPIException {
 		Ollama ollama = Ollama.newClient();
 
-		ollama.pullIfNotExists("llama3");
+		ollama.pullIfNotExists(LLM);
 
-		var response = ollama.generate("llama3", "Hello, what is an int in Java?");
+		var response = ollama.generate(LLM, "Hello, what is an int in Java?");
 
+		System.out.println(response.thinking());
 		System.out.println(response.text());
 	}
 
 	private static void generateStream() throws OllamaAPIException {
 		Ollama ollama = Ollama.newClient();
 
-		ollama.pullIfNotExists("llama3");
+		ollama.pullIfNotExists(LLM);
 
-		var response = ollama.generateStream("llama3", "Hello, what is an int in Java?");
+		var response = ollama.generateStream(LLM, "Hello, what is an int in Java?");
 
 		for(var part : response) {
 			System.out.print(part.text());
@@ -37,10 +40,10 @@ public class GenerateExamples {
 	private static void generateWithOptions() throws OllamaAPIException {
 		Ollama ollama = Ollama.newClient();
 
-		ollama.pullIfNotExists("llama3");
+		ollama.pullIfNotExists(LLM);
 
 		var response = ollama.generate(new OllamaGenerateRequest()
-				.model("llama3")
+				.model(LLM)
 				.temperature(0.1)
 				.numCtx(1024)
 				.seed(0)
