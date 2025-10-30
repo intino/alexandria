@@ -14,19 +14,31 @@ import { CloudDownload, Add, Cancel } from "@material-ui/icons";
 import 'alexandria-ui-elements/res/styles/components/fileeditable/styles.css';
 import 'alexandria-ui-elements/res/styles/layout.css';
 import { withStyles } from '@material-ui/core/styles';
+import NumberUtil from 'alexandria-ui-elements/src/util/NumberUtil';
 
 const styles = theme => ({
+    info: {
+        fontSize: '9pt',
+        color: theme.isDark() ? '#799deb' : '#2563EB',
+        margin: '2px 0 0 2px'
+    },
+    errorMessage: {
+        margin: "5px 0 0",
+        background: "#f44336",
+        color: "white",
+        padding: "10px",
+        borderRadius: "6px",
+    },
 	dropzoneText: {
 		background: "red",
 	},
 	pasteInput: {
-	    border: "1px dashed #0000001f",
+	    border: theme.isDark() ? "1px dashed #ffffff1f" : "1px dashed #0000001f",
+	    borderRadius: "4px",
 	    marginTop: "5px",
-	    padding: "10px"
+	    padding: "10px",
+	    background: theme.isDark() ? "#424242" : "white"
 	},
-    progressContainer: {
-        marginTop: theme.spacing(2),
-    }
 });
 
 class FileEditable extends AbstractFile {
@@ -45,7 +57,8 @@ class FileEditable extends AbstractFile {
             allowedTypes: this.props.allowedTypes,
             maxSize: this.props.maxSize,
             uploadingFiles: {},
-            key: 0
+            key: 0,
+            errorMessage: null,
         };
 	};
 
@@ -63,12 +76,18 @@ class FileEditable extends AbstractFile {
 
 	saveFile(file, value) {
 	    const fileId = file != null ? this._newUploadingFile(file) : null;
+
+	    if (file != null && this._isMaxSizeExceeded(file)) {
+	        this._showFileExceededMessage(file);
+	        return;
+	    }
+
 	    this.requester.notifyUploading();
 		this.requester.notifyChange(file, (progress) => {
 		    if (fileId == null) return;
 		    this._handleFileProgress(fileId, progress);
         });
-		this.setState({ value: value });
+		this.setState({ value: value, errorMessage: null });
 
 		if (this.props.progress && !this._isUploadingFiles()) {
 			this._resetDropzone();
@@ -88,9 +107,24 @@ class FileEditable extends AbstractFile {
                 {label != null && label !== "" ? <div style={{color:color,fontSize:"10pt",color:"#0000008a",marginBottom:"5px"}}>{this.translate(label)}</div> : undefined }
 				{this._renderPreview()}
 				{this._renderComponent()}
+				{this._renderInfoMessage()}
+				{this._renderErrorMessage()}
 			</Block>
 		);
 	};
+
+    _renderInfoMessage = () => {
+        const maxSize = this.state.maxSize;
+        if (maxSize == null || maxSize == -1) return (<React.Fragment/>);
+        const { classes } = this.props;
+        return (<div className={classes.info}>{this.translate("Maximum size: %s").replace("%s", this._formatFileSize(this.state.maxSize))}</div>);
+    };
+
+    _renderErrorMessage = () => {
+        if (this.state.errorMessage == null) return (<React.Fragment/>);
+        const { classes } = this.props;
+	    return (<div className={classes.errorMessage}>{this.state.errorMessage}</div>);
+    };
 
 	_renderPreview = () => {
 	    if (!this.props.preview || this.state.value == null) return (<React.Fragment/>);
@@ -129,19 +163,36 @@ class FileEditable extends AbstractFile {
                 dropzoneClass="fileeditable-dropzone"
                 dropzoneParagraphClass="fileeditable-dropzone-paragraph"
                 filesLimit={ dropZoneLimit || 1 }
-                maxFileSize={maxSize != null ? maxSize : 20971520000}
+                maxFileSize={maxSize != null && maxSize != -1 ? maxSize : 20971520000}
                 showPreviews={false}
                 showPreviewsInDropzone={this.state.value != null}
                 useChipsForPreview
                 previewGridProps={{container: { spacing: 1, direction: 'row' }}}
                 previewText={this.translate("Selected file")}
-                showAlerts={false}
+                showAlerts={true}
+                getDropRejectMessage={(file) => this._errorMessage(file)}
                 showFilenames={true}
                 onDelete={(file) => { this.saveFile(null, null) }}
                 onChange={(files) => { for (var i=0; i<files.length;i++) this.saveFile(files[i], files[i].name); }}
             />
         );
 	};
+
+	_isMaxSizeExceeded = (file) => {
+	    const maxSize = this.state.maxSize;
+	    if (maxSize == null || maxSize == -1) return false;
+	    return file.size > maxSize;
+	};
+
+	_showFileExceededMessage = (file) => {
+	    this.setState({errorMessage: this._errorMessage(file)});
+	};
+
+	_errorMessage = (file) => {
+	    const exceeded = this._isMaxSizeExceeded(file);
+	    if (exceeded) return this.translate("File is too big. Maximum size is set to %s").replace("%s", this._formatFileSize(this.state.maxSize));
+	    else return this.translate("Could not upload file");
+	}
 
 	_renderPasteZone = () => {
 	    if (!this.props.pasteZone) return (<React.Fragment/>);
@@ -231,15 +282,18 @@ class FileEditable extends AbstractFile {
 	    const { classes } = this.props;
 	    const { uploadingFiles } = this.state;
 	    return (
-            <Box className={classes.progressContainer}>
-                {Object.entries(uploadingFiles).map(([fileId, fileData]) => (
-                    <ProgressBar
-                        key={fileId}
-                        label={fileData.fileName}
-                        info={this._formatFileSize(fileData.fileSize)}
-                        progress={fileData.progress}
-                    />
-                ))}
+            <Box>
+                {Object.entries(uploadingFiles).map(([fileId, fileData]) => {
+                    if (this._isMaxSizeExceeded({size: fileData.fileSize})) return (<React.Fragment/>);
+                    else return (
+                        <ProgressBar
+                            key={fileId}
+                            label={fileData.fileName}
+                            info={this._formatFileSize(fileData.fileSize)}
+                            progress={fileData.progress}
+                        />
+                    )
+                })}
             </Box>
         );
 	};
@@ -310,7 +364,7 @@ class FileEditable extends AbstractFile {
         bytes /= 1024;
         i++;
       }
-      return `${bytes.toFixed(2)} ${units[i]}`;
+      return `${NumberUtil.format(bytes, bytes % 1 === 0 ? '0' : '0.0')} ${units[i]}`;
     };
 
 	_isUploadingFiles = () => {

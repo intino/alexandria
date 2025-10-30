@@ -15,6 +15,7 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Theme from "app-elements/gen/Theme";
 import Spinner from "./Spinner"
+import Text from "./Text"
 import 'alexandria-ui-elements/res/styles/components/multiple/styles.css';
 
 export default class Multiple extends AbstractMultiple {

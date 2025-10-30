@@ -16,14 +16,14 @@ Template(layout=Vertical, spacing=DP8) fileExamplesMold
 							File(value\="data/example.pdf") as Relative(width\=100%, height\=100%)
 							=========
 		Block as Relative(width=48%, height=100%)
-			Text(format=h6, value="Editable facet with paste zone")
+			Text(format=h6, value="Editable facet")
 			Block(spacing=DP8, format=filled)
 				Block as Absolute(height=600px)
-					File(value="data/example.pdf", format=widgetDemo) file2 as Relative(width=100%, height=100%) Editable(showPasteZone=true)
+					File(format=widgetDemo) file2 as Relative(width=100%, height=100%) Editable(showDropZone=false, showProgress=true)
 				Block > Text file2Code as Code(language=Html)
 						value
 							=========
-							File(value\="data/example.pdf") as Relative(width\=100%, height\=100%) Editable(showPasteZone\=true)
+							File(value\="data/example.pdf") as Relative(width\=100%, height\=100%) Editable(showDropZone\=false, showProgress\=true)
 							=========
 
 	Block(layout=Horizontal Wrap, spacing=DP24)
@@ -59,4 +59,14 @@ Template(layout=Vertical, spacing=DP8) fileExamplesMold
 						value
 							=========
 							File(value\="data/example.pdf") as Relative(width\=100%, height\=100%) Editable(showDropZone\=true, showProgress\=true, dropZoneLimit\=4)
+							=========
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="Editable facet with paste zone")
+			Block(spacing=DP8, format=filled)
+				Block as Absolute(height=600px)
+					File(value="data/example.pdf", format=widgetDemo) file6 as Relative(width=100%, height=100%) Editable(showPasteZone=true)
+				Block > Text file6Code as Code(language=Html)
+						value
+							=========
+							File(value\="data/example.pdf") as Relative(width\=100%, height\=100%) Editable(showPasteZone\=true)
 							=========
