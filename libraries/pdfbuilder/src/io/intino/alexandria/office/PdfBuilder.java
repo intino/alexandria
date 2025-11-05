@@ -66,12 +66,29 @@ public class PdfBuilder {
 		this.backend = requireNonNull(backend);
 	}
 
+	public byte[] toPdf() throws IOException {
+		return backend.toPdf(inputDocx);
+	}
+
+	public void save(OutputStream outputStream) throws IOException {
+		backend.save(inputDocx, outputStream);
+	}
+
 	public void save(File destinationPDF) throws IOException {
 		backend.save(inputDocx, destinationPDF);
 	}
 
 	public interface Backend {
-		void save(SourceDocx inputDocx, File destinationPDF) throws IOException;
+
+		byte[] toPdf(SourceDocx inputDocx) throws IOException;
+
+		default void save(SourceDocx inputDocx, File destinationPDF) throws IOException {
+			try(OutputStream out = new BufferedOutputStream(new FileOutputStream(destinationPDF))) {
+				save(inputDocx, out);
+			}
+		}
+
+		void save(SourceDocx inputDocx, OutputStream out) throws IOException;
 	}
 
 	public static class ApachePOIBackend implements Backend {
@@ -79,11 +96,23 @@ public class PdfBuilder {
 		@Override
 		public void save(SourceDocx inputDocx, File destinationPDF) throws IOException {
 			try(OutputStream out = new BufferedOutputStream(new FileOutputStream(destinationPDF))) {
-				try(InputStream doc = new BufferedInputStream(inputDocx.open())) {
-					XWPFDocument document = new XWPFDocument(doc);
-					PdfOptions options = PdfOptions.getDefault();
-					PdfConverter.getInstance().convert(document, out, options);
-				}
+				save(inputDocx, out);
+			}
+		}
+
+		@Override
+		public byte[] toPdf(SourceDocx inputDocx) throws IOException {
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			save(inputDocx, out);
+			return out.toByteArray();
+		}
+
+		@Override
+		public void save(SourceDocx inputDocx, OutputStream out) throws IOException {
+			try(InputStream doc = new BufferedInputStream(inputDocx.open())) {
+				XWPFDocument document = new XWPFDocument(doc);
+				PdfOptions options = PdfOptions.getDefault();
+				PdfConverter.getInstance().convert(document, out, options);
 			}
 		}
 	}
