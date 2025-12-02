@@ -21,6 +21,7 @@ public class OllamaMessage {
 
 	private Role role = Role.user;
 	private String content;
+	private String thinking;
 	private List<String> images;
 	@SerializedName("tool_calls")
 	private List<OllamaToolCall> toolCalls;
@@ -65,6 +66,15 @@ public class OllamaMessage {
 
 	public OllamaMessage content(String content) {
 		this.content = content;
+		return this;
+	}
+
+	public String thinking() {
+		return thinking;
+	}
+
+	public OllamaMessage thinking(String thinking) {
+		this.thinking = thinking;
 		return this;
 	}
 
