@@ -5,9 +5,7 @@ import io.intino.alexandria.ui.displays.events.SearchEvent;
 import io.intino.alexandria.ui.displays.events.SearchListener;
 import io.intino.alexandria.ui.displays.notifiers.SearchBoxNotifier;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
@@ -15,8 +13,10 @@ public class SearchBox<DN extends SearchBoxNotifier, B extends Box> extends Abst
     private SearchListener searchListener;
     private java.util.List<Collection> collections = new ArrayList<>();
     private String condition = null;
+	private String newCondition = null;
+	private boolean searching = false;
 
-    public SearchBox(B box) {
+	public SearchBox(B box) {
         super(box);
     }
 
@@ -43,13 +43,37 @@ public class SearchBox<DN extends SearchBoxNotifier, B extends Box> extends Abst
     }
 
     public void search(String condition) {
-        this.condition = condition;
-        notifySelected();
+		this.condition = condition;
+		if (searching) {
+			newCondition = condition;
+			return;
+		}
+		notifySelected();
     }
 
     private void notifySelected() {
-        notifyCollections();
-        notifyListener();
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				try {
+					searching = true;
+					notifyCollections();
+					notifyListener();
+					searching = false;
+					searchIfRequired();
+				}
+				finally {
+					searching = false;
+				}
+			}
+
+			private void searchIfRequired() {
+				if (newCondition == null) return;
+				search(newCondition);
+				newCondition = null;
+			}
+		}, 0);
     }
 
     private void notifyCollections() {

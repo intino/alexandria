@@ -156,6 +156,72 @@ public class Datasources {
 		return personDatasource(personPopulation());
 	}
 
+	public static PageDatasource<Person> groupedPersonDatasource() {
+		List<Person> population = personPopulation();
+
+		return new PageDatasource<Person>() {
+
+			@Override
+			public long itemCount(String condition, List<Filter> filters) {
+				return filterPersonPopulation(population, condition, filters).size();
+			}
+
+			@Override
+			public List<Person> items(int start, int count, String condition, List<Filter> filters, List<String> sortings) {
+				List<Person> persons = filterPersonPopulation(population, condition, filters);
+				if (sortings.size() > 0) persons.sort(sortingComparator(sortings));
+				return page(persons, start, count);
+			}
+
+			@Override
+			public String section(Person element) {
+				return String.valueOf(element.age());
+			}
+
+			@Override
+			public List<Group> groups(String key) {
+				if (key.toLowerCase().contains("gender")) return Datasources.groups("persongender", personPopulation(), item -> ((Person)item).gender().name());
+				if (key.toLowerCase().contains("age group")) return Datasources.groups("personagegroup", personPopulation(), item -> ageGroupLabel(((Person)item).age()));
+				return emptyList();
+			}
+
+			public Comparator<Person> sortingComparator(List<String> sortings) {
+				if (sortings.size() <= 0) return Comparator.comparing(Person::lastName);
+				Comparator<Person> comparator = null;
+
+				for (String sorting : sortings) {
+					if (comparator == null) comparator = comparator(sorting);
+					else comparator.thenComparing(comparator(sorting));
+				}
+
+				return comparator;
+			}
+
+			private Comparator<Person> comparator(String sorting) {
+				if (sorting.contains("oldest")) return (o1, o2) -> Integer.compare(o2.age(), o1.age());
+				else if (sorting.contains("youthest")) return Comparator.comparingInt(Person::age);
+				else if (sorting.contains("female")) return genderComparator(Female);
+				else if (sorting.contains("male")) return genderComparator(Male);
+				else return Comparator.comparing(Person::lastName);
+			}
+
+			private Comparator<Person> genderComparator(Person.Gender flag) {
+				return (o1, o2) -> {
+					if (o1.gender() == Female && o2.gender() == Female && flag == Female) return 1;
+					if (o1.gender() == Female && o2.gender() == Female && flag == Male) return -1;
+					if (o1.gender() == Male && o2.gender() == Male && flag == Male) return 1;
+					if (o1.gender() == Male && o2.gender() == Male && flag == Female) return -1;
+					if (o1.gender() == Male && o2.gender() == Female && flag == Female) return 1;
+					if (o1.gender() == Female && o2.gender() == Male && flag == Female) return -1;
+					if (o1.gender() == Male && o2.gender() == Female && flag == Male) return -1;
+					if (o1.gender() == Female && o2.gender() == Male && flag == Male) return 1;
+					return 1;
+				};
+			}
+
+		};
+	}
+
 	public static PageDatasource<Person> personDatasource(List<Person> population) {
 
 		return new PageDatasource<Person>() {
