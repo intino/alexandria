@@ -64,3 +64,15 @@ Template(layout=Vertical, spacing=DP8) listExamplesMold
 						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list5 as Selectable(multiple\=true)<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,relativeWidth\=30%) list5Mold > Text firstName<br/>
 						=========
+
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="Selectable facet with Toolbar")
+			Block(spacing=DP8, format=filledNoAir)
+				List(itemClass="io.intino.alexandria.ui.documentation.Person") list6 as Selectable(multiple=true)
+					Mold > Item(height=60px,relativeWidth=30%) list6Mold > Text firstName
+			Block > Text as Code(language=Html)
+					value
+						=========
+						List(itemClass\="io.intino.alexandria.ui.documentation.Person") as Selectable(multiple\=true)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,relativeWidth\=30%) listMold > Text firstName<br/>
+						=========
