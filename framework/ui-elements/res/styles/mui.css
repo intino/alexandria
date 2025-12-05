@@ -1,0 +1,4 @@
+.MuiInputLabel-shrink {
+    font-size: 10pt !important;
+    transform: translate(0, 1.5px) scale(1) !important;
+}

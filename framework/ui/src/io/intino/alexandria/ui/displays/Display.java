@@ -13,7 +13,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.sql.Array;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -212,7 +211,7 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	}
 
 	public List<Display> promisedChildren(List<String> ids) {
-		return allPromisedChildren().stream().filter(c -> ids.contains(c.id())).collect(toList());
+		return allPromisedChildren().stream().filter(c -> c != null && ids.contains(c.id())).collect(toList());
 	}
 
 	public <T extends Display> List<T> children(Class<T> clazz) {

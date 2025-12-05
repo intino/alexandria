@@ -101,10 +101,10 @@ class FileEditable extends AbstractFile {
 		const label = this.props.label !== "" ? this.props.label : undefined;
 		const width = this.props.width != null ? this.props.width : "100%";
 		const height = this.props.height != null ? this.props.height : "100%";
-		const color = this.state.readonly ? theme.palette.grey.A700 : "inherit";
+		const color = this.state.readonly ? theme.palette.grey.A700 : theme.isDark() ? "#ffffffb3" : "#0000008a";
 		return (
 			<Block layout="vertical" style={{...this.style(),width:width,height:height}}>
-                {label != null && label !== "" ? <div style={{color:color,fontSize:"10pt",color:"#0000008a",marginBottom:"5px"}}>{this.translate(label)}</div> : undefined }
+                {label != null && label !== "" ? <div style={{color:color,fontSize:"10pt",marginBottom:"5px"}}>{this.translate(label)}</div> : undefined }
 				{this._renderPreview()}
 				{this._renderComponent()}
 				{this._renderInfoMessage()}
