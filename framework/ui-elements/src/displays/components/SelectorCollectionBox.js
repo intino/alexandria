@@ -97,7 +97,7 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 		const label = this.props.label;
 		const items = this.items();
 		const value = this.selection(items);
-		const color = this.state.readonly ? theme.palette.grey.A700 : "inherit";
+		const color = this.state.readonly ? theme.palette.grey.A700 : theme.isDark() ? "#ffffffb3" : "#0000008a";
         const isDark = theme.isDark();
         let components = components= { Option: this.renderOption.bind(this), MenuList: this.renderDialog.bind(this), MultiValueLabel: this.renderMultiValueLabel.bind(this) };
         if (this.openOnInput()) components = { DropdownIndicator:() => null, IndicatorSeparator:() => null, ...components };
@@ -174,7 +174,7 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 	renderMultiValueLabel = (props) => {
 	    const { classes } = this.props;
 	    const theme = Theme.get();
-	    const color = this.state.readonly ? theme.palette.primary.main : "inherit";
+	    const color = this.state.readonly ? theme.palette.primary.main : theme.isDark() ? "#ffffffb3" : "#0000008a";
         return (<a className={classes.multiValueLabel} style={{color:color}}onClick={this.handleOptionClick.bind(this, props)}>{props.data.value}</a>);
     };
 

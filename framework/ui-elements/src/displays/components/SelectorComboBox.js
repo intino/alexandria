@@ -88,7 +88,7 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 		const multiple = this.state.multipleSelection;
 		const label = this.props.label;
 		const value = this.selection(items);
-		const color = this.state.readonly ? theme.palette.grey.A700 : "inherit";
+		const color = this.state.readonly ? theme.palette.grey.A700 : theme.isDark() ? "#ffffffb3" : "#0000008a";
         const isDark = Theme.get().isDark();
 		const styles = this.props.view === "TextView" ? { ...selectorComboBoxStyles(Theme.get()), ...SelectorComboBoxTextViewStyles } : { ...selectorComboBoxStyles(Theme.get()) };
 

@@ -41,7 +41,7 @@ class SelectorCheckBox extends AbstractSelectorCheckBox {
 	    if (!this.state.visible) return (<React.Fragment/>);
 		const { classes, theme } = this.props;
 		const label = this.props.label;
-		const color = this.state.readonly ? theme.palette.grey.A700 : "inherit";
+		const color = this.state.readonly ? theme.palette.grey.A700 : theme.isDark() ? "#ffffffb3" : "#0000008a";
 		return (
 		    <div style={this.style()}>
                 {label != null && label !== "" ? <div className={classes.label} style={{color:color}}>{label}</div> : undefined }
