@@ -9,7 +9,7 @@ rule type(webpack)
 			rules: [
                 {
                     test: /\\.js$$/,
-                    include: [ /node_modules/highcharts/ ],
+                    include: [ /node_modules\\/highcharts/ ],
                     use: { loader: 'babel-loader' }
                 },
                 {
@@ -39,7 +39,7 @@ rule type(webpack)
 			]
 		},
 		entry : {
-			$page+gen...[,$NL]<<,
+			$page+gen...[,$NL]
 		},
 		output: {
 			path: "$outDirectory/$serviceName/www/$serviceName",

@@ -42,7 +42,7 @@
     "io.intino.alexandria:scheduler-framework": "1.2.0",
     "io.intino.alexandria:http": "2.2.0",
     "io.intino.alexandria:slack-framework": "2.0.8",
-    "io.intino.alexandria:ui-framework": "6.5.0",
+    "io.intino.alexandria:ui-framework": "6.7.26",
     "io.intino.alexandria:rest": "4.2.0",
     "io.intino.alexandria:cli-framework": "1.0.7",
     "io.intino.alexandria:soap": "2.2.0",
