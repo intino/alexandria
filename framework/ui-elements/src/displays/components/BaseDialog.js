@@ -29,7 +29,7 @@ export default class BaseDialog extends AbstractBaseDialog {
 			marginTop: "61px"
 		},
 		icon : {
-			color: "white"
+			color: theme.isDark() ? "black" : "white"
 		},
 	});
 
