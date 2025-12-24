@@ -176,8 +176,8 @@ const CollectionBehavior = (collection) => {
         const sections = self.sections(items);
         const index = [-1];
         const result = [];
-        for (var section in sections) {
-            const content = sections[section].map((i, idx) => {
+        for (const [section, elements] of sections) {
+            const content = elements.map((i, idx) => {
                 index[0]++;
                 return self.renderItem(items, mode, { index: index[0], isScrolling: false, customClasses: customItemClasses, itemHeight: itemHeight });
             });
@@ -188,12 +188,14 @@ const CollectionBehavior = (collection) => {
     };
 
     self.sections = (items) => {
-        const sections = {};
-        for (var i=0; i<items.length; i++) {
+        const sections = new Map();
+
+        for (let i = 0; i < items.length; i++) {
             const section = items[i] != null && items[i].pl.section != null ? items[i].pl.section : "__default";
-            if (sections[section] == null) sections[section] = [];
-            sections[section].push(items[i]);
+            if (!sections.has(section)) sections.set(section, []);
+            sections.get(section).push(items[i]);
         }
+
         return sections;
     };
 
