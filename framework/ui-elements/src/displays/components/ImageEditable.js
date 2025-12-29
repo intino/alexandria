@@ -97,7 +97,7 @@ class ImageEditable extends AbstractImageEditable {
 	};
 
 	handleRemove(e) {
-		this.requester.notifyChange(null);
+		this.requester.notifyRemove();
 	};
 
 	handleDownload(e) {

@@ -93,6 +93,10 @@ public class ImageEditable<DN extends ImageEditableNotifier, B extends Box> exte
 
 	public void notifyChange(io.intino.alexandria.Resource value) {
 		if (changeListener != null) changeListener.accept(new ChangeEvent(this, value));
+
+	}
+	public void notifyRemove() {
+		notifyChange(null);
 	}
 
 	protected ImageEditable<DN, B> _defaultValue(URL defaultValue) {
