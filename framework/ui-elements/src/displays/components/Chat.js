@@ -561,7 +561,7 @@ class Chat extends AbstractChat {
     handleAttachmentFileChange = (file, name) => {
         const attachment = this.state.attachment;
         attachment.file = { value: file, name: name };
-		this.requester.uploadAttachment(file);
+		this.requester.uploadAttachment(file, progress => {});
 		this.setState({ attachment });
     };
 
