@@ -93,11 +93,11 @@ class ImageEditable extends AbstractImageEditable {
 
 	handleChange(e) {
 	    this.requester.notifyUploading();
-		this.requester.notifyChange(e.target.files[0]);
+		this.requester.notifyChange(e.target.files[0], progress => {});
 	};
 
 	handleRemove(e) {
-		this.requester.notifyRemove();
+		this.requester.notifyChange(null, progress => {});
 	};
 
 	handleDownload(e) {
