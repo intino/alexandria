@@ -26,6 +26,7 @@ export default class BaseDialog extends AbstractBaseDialog {
 			padding: "2px 15px",
 		},
 		fullscreen : {
+		    overflow: "hidden",
 			marginTop: "61px"
 		},
 		icon : {
