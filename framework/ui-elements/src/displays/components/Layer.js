@@ -20,6 +20,7 @@ const styles = theme => ({
         padding: "2px 15px",
     },
     contentWithHeader : {
+        overflow: "hidden",
         marginTop: "61px",
     },
     content : {
