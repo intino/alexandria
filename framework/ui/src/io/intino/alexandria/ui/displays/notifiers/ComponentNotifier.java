@@ -12,6 +12,10 @@ public class ComponentNotifier extends DisplayNotifier {
 		super(display, carrier);
 	}
 
+	public void refreshPageTitle(String value) {
+		putToDisplay("refreshPageTitle", "v", value);
+	}
+
 	public void refreshLoading(Boolean value) {
 		putToDisplay("refreshLoading", "v", value);
 	}

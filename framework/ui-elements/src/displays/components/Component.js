@@ -52,6 +52,10 @@ export default class Component extends AlexandriaDisplay {
         return ComponentBehavior.variant(this.props, defaultVariant);
     };
 
+    refreshPageTitle = (title) => {
+        window.document.title = title;
+    };
+
     refreshLoading = (loading) => {
         this.setState({ loading: loading });
     };
