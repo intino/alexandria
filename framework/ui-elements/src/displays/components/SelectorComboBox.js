@@ -13,7 +13,7 @@ export const SelectorComboBoxTextViewStyles = {
         ...provided,
         background: 'transparent',
         border: '0',
-        minHeight: '20px'
+        minHeight: '20px',
     }),
     valueContainer: (provided, state) => ({
         ...provided,
@@ -36,6 +36,24 @@ export function selectorComboBoxStyles(theme) {
         singleValue: (provided, state) => ({
             ...provided,
             color: theme.isDark() ? 'white' : '#333',
+        }),
+        multiValueRemove: (provided, state) => ({
+            ...provided,
+            cursor: 'pointer',
+            color: Theme.get().palette.primary.main,
+            display: state.isDisabled ? 'none' : 'inherit',
+            ':hover': {
+              backgroundColor: Theme.get().palette.primary.main,
+              color: 'white',
+            },
+        }),
+        indicatorsContainer: (provided, state) => ({
+            ...provided,
+            display: state.isDisabled ? 'none' : 'inherit',
+        }),
+        placeholder: (provided, state) => ({
+            ...provided,
+            display: state.isDisabled ? 'none' : 'inherit',
         }),
         menu: provided => ({ ...provided, zIndex: 9999 }),
         option: (styles, { data, isDisabled, isFocused, isSelected }) => {
@@ -65,7 +83,19 @@ const styles = theme => ({
         fontSize: "10pt",
         color: "#0000008a",
         marginBottom: "5px",
-    }
+    },
+    multiValueLabel : {
+        pointerEvents:'all',
+        cursor:'pointer',
+        color: theme.isDark() ? 'white' : 'black',
+        padding:'3px 6px 3px 6px',
+        fontSize:'85%',
+        textOverflow:'ellipsis',
+        whiteSpace:'nowrap',
+        boxSizing:'border-box',
+        overflow:'hidden',
+        borderRadius:'2px',
+    },
 });
 
 class SelectorComboBox extends AbstractSelectorComboBox {
@@ -101,7 +131,7 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 						closeMenuOnSelect={!multiple} autoFocus={this.props.focused}
 						placeholder={this.selectMessage()} options={items}
 						className="basic-multi-select" classNamePrefix="select"
-						components={{ Option: this.renderOption.bind(this)}}
+						components={{ Option: this.renderOption.bind(this), MultiValueLabel: this.renderMultiValueLabel.bind(this) }}
 						menuPlacement="auto" maxMenuHeight={this.props.maxMenuHeight} value={value}
 						filterOption={this.handleFilter.bind(this)}
 						onChange={this.handleChange.bind(this)}
@@ -154,6 +184,13 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 			<components.Option {...props} className={classes.container}>{item}</components.Option>
 		) : null;
 	};
+
+	renderMultiValueLabel = (props) => {
+	    const { classes } = this.props;
+	    const theme = Theme.get();
+	    const color = this.state.readonly ? theme.palette.grey.A700 : theme.isDark() ? "#ffffffb3" : "black";
+        return (<a className={classes.multiValueLabel} style={{color:color}}>{props.data.label}</a>);
+    };
 
 	handleFilter = (candidate, condition) => {
 	    const split = condition.toLowerCase().split(" ");

@@ -3,6 +3,7 @@ package io.intino.alexandria.ui.displays.templates;
 import io.intino.alexandria.UiFrameworkBox;
 import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.events.AddCollectionItemEvent;
+import io.intino.alexandria.ui.displays.items.Selector11ListMold;
 import io.intino.alexandria.ui.displays.items.Selector8ListMold;
 import io.intino.alexandria.ui.displays.items.Selector9ListMold;
 import io.intino.alexandria.ui.documentation.Person;
@@ -34,11 +35,18 @@ public class SelectorExamplesMold extends AbstractSelectorExamplesMold<UiFramewo
 //        selector8.onOpen(e -> notifyUser("Open " + e.value(), UserMessage.Type.Info));
         selector8.valueProvider(person -> ((Person)person).firstName());
 //        selector8.readonly(true);
-//        selector8.selection(Datasources.personDatasource().items(0, 10, null, Collections.emptyList(), Collections.emptyList()).get(0));
+//        selector8.selection(Datasources.personDatasource().items(0, 10, null, Collections.emptyList(), Collections.emptyList()).subList(0, 2));
         selector9.selector9List.source(Datasources.personDatasource());
         selector9.selector9List.onAddItem(this::onAddItemSelector9);
         selector9.onSelect(e -> notifyPerson(e.selection()));
         selector9.valueProvider(person -> ((Person)person).firstName());
+		selector10.onSelect(e -> notify(e.selection()));
+//		selector10.readonly(true);
+//		selector10.selection("option 1", "option 2");
+		selector11.selector11List.source(Datasources.personDatasource());
+		selector11.selector11List.onAddItem(this::onAddItemSelector11);
+		selector11.onSelect(e -> notifyPerson(e.selection()));
+		selector11.valueProvider(person -> ((Person)person).firstName());
     }
 
     private void notify(List<String> selection) {
@@ -68,5 +76,11 @@ public class SelectorExamplesMold extends AbstractSelectorExamplesMold<UiFramewo
         Person person = event.item();
         component.firstName.value(person.firstName());
     }
+
+	private void onAddItemSelector11(AddCollectionItemEvent event) {
+		Selector11ListMold component = event.component();
+		Person person = event.item();
+		component.firstName.value(person.firstName());
+	}
 
 }
