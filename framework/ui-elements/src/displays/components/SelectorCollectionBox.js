@@ -19,6 +19,24 @@ function selectorCollectionBoxViewStyles(theme) {
             color: theme.isDark() ? 'white' : '#333',
         }),
         menu: provided => ({ ...provided, zIndex: 9999 }),
+        multiValueRemove: (provided, state) => ({
+            ...provided,
+            cursor: 'pointer',
+            color: Theme.get().palette.primary.main,
+            display: state.isDisabled ? 'none' : 'inherit',
+            ':hover': {
+              backgroundColor: Theme.get().palette.primary.main,
+              color: 'white',
+            },
+        }),
+        indicatorsContainer: (provided, state) => ({
+            ...provided,
+            display: state.isDisabled ? 'none' : 'inherit',
+        }),
+        placeholder: (provided, state) => ({
+            ...provided,
+            display: state.isDisabled ? 'none' : 'inherit',
+        }),
         option: (styles, { data, isDisabled, isFocused, isSelected }) => {
             return {
               ...styles,
@@ -53,9 +71,8 @@ const styles = theme => ({
     multiValueLabel : {
         pointerEvents:'all',
         cursor:'pointer',
-        color: theme.palette.primary.main,
-        padding:'3px',
-        paddingLeft:'6px',
+        color: theme.isDark() ? 'white' : 'black',
+        padding:'3px 6px 3px 6px',
         fontSize:'85%',
         textOverflow:'ellipsis',
         whiteSpace:'nowrap',
@@ -174,7 +191,7 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
 	renderMultiValueLabel = (props) => {
 	    const { classes } = this.props;
 	    const theme = Theme.get();
-	    const color = this.state.readonly ? theme.palette.primary.main : theme.isDark() ? "#ffffffb3" : "#0000008a";
+	    const color = this.state.readonly ? theme.palette.grey.A700 : theme.isDark() ? "#ffffffb3" : "black";
         return (<a className={classes.multiValueLabel} style={{color:color}}onClick={this.handleOptionClick.bind(this, props)}>{props.data.value}</a>);
     };
 
@@ -199,6 +216,7 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
     };
 
     close = () => {
+        this.searchComponent.current.blur();
         this.setState({ opened: false });
     };
 

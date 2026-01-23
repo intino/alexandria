@@ -58,6 +58,22 @@ Template(layout=Vertical, spacing=DP8) selectorExamplesMold
 						=========
 
 		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="ComboBox facet with multiple selection")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Selector selector10 as ComboBox(multipleSelection=true)
+					Text(value="option 1") comboBoxOption101 as Option
+					Text(value="option 2") comboBoxOption102 as Option
+					Text(value="option 3") comboBoxOption103 as Option
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Selector as ComboBox Traceable<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 1") comboBoxOption1 as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 2") comboBoxOption2 as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") comboBoxOption3 as Option
+						=========
+
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="ListBox facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Selector selector4 as ListBox
@@ -119,6 +135,19 @@ Template(layout=Vertical, spacing=DP8) selectorExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 1") checkBoxOption1 as Option<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 2") checkBoxOption2 as Option<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") checkBoxOption3 as Option
+						=========
+
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="CollectionBox facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Selector selector11 as CollectionBox(multipleSelection=false, allowOther=false)
+					List(itemClass="io.intino.alexandria.ui.documentation.Person") selector11List as Selectable
+						Mold > Item(height = 30px) selector11ListMold > Text firstName
+
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Selector as CollectionBox(multipleSelection\=true, allowOther\=true)<br/>
 						=========
 
 		Block as Relative(width=48%, height=100%)
