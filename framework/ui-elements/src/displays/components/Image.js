@@ -8,6 +8,7 @@ import BrowserUtil from "alexandria-ui-elements/src/util/BrowserUtil";
 import ImageGallery from 'react-image-gallery';
 import Theme from "app-elements/gen/Theme";
 import classNames from "classnames";
+import 'react-image-gallery/styles/css/image-gallery.css';
 
 const styles = theme => ({
 	image: {
