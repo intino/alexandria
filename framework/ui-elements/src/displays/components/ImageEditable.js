@@ -19,9 +19,9 @@ const styles = theme => ({
 		height: "calc(100% - 20px)",
 		width: "100%",
 		objectFit: 'contain',
+		position: "absolute",
 	},
 	overlay: {
-		position: "absolute",
 		background: "rgba(0, 0, 0, 0.1)",
 		border: "1px solid #efefef",
 		width: "100%",
@@ -132,7 +132,11 @@ class ImageEditable extends AbstractImageEditable {
                 {!showImageGallery && this.state.value && <img className={classes.image} alt={this.props.label} title={this.props.label} src={url} />}
                 <label htmlFor={inputId} className={classes.overlay} style={{display:labelDisplay}}></label>
                 <div className={classes.bordered} style={{display:borderDisplay}}></div>
-			    {showImageGallery && <ImageGallery items={[this._galleryItems()]} showThumbnails={false} showBullets={false} showPlayButton={false} /> }
+			    {(showImageGallery && this.state.value != null) &&
+					<div className={classes.image} style={{top:'-20px'}} >
+						<ImageGallery items={[this._galleryItems()]} showThumbnails={false} showBullets={false} showPlayButton={false} />
+					</div>
+				}
 			    {!this.state.readonly &&
 			        <React.Fragment>
                         <input accept="image/*" id={inputId} type="file"
@@ -140,9 +144,11 @@ class ImageEditable extends AbstractImageEditable {
                            disabled={this.state.readonly} value="" />
                     </React.Fragment>
                 }
-				{<a className={classes.edit} onClick={this.handleEdit.bind(this)}>{this.translate(this.translate("Edit..."))}</a>}
-				{this.state.value && <a className={classes.remove} onClick={this.handleRemove.bind(this)} style={removeStyle}>{this.translate("Remove")}</a>}
-				{this.state.value && <a className={classes.download} onClick={this.handleDownload.bind(this)}>{this.translate("Download")}</a>}
+				<div style={{marginTop:'4px'}}>
+					{<a className={classes.edit} onClick={this.handleEdit.bind(this)}>{this.translate(this.translate("Edit..."))}</a>}
+					{this.state.value && <a className={classes.remove} onClick={this.handleRemove.bind(this)} style={removeStyle}>{this.translate("Remove")}</a>}
+					{this.state.value && <a className={classes.download} onClick={this.handleDownload.bind(this)}>{this.translate("Download")}</a>}
+				</div>
 			</div>
 		);
 	};
@@ -165,7 +171,7 @@ class ImageEditable extends AbstractImageEditable {
 			result.width = this.props.width;
 			result.minWidth = this.props.width;
 		}
-		if (!this._showImageGallery() && this.props.height != null) {
+		if (this.props.height != null) {
 			result.height = this.props.height;
 			result.minHeight = this.props.height;
 		}
