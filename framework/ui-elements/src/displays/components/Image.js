@@ -44,7 +44,7 @@ class Image extends AbstractImage {
 
 	render() {
 		if (!this.state.visible) return (<React.Fragment/>);
-		if (this.state.value == null) return (<React.Fragment/>);
+		if (this.state.value == null) return (<div style={{...this.style(),position:'relative'}}></div>);
 		const source = this.state.value + this.forceParameter();
 		const { classes } = this.props;
 		return (
