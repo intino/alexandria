@@ -1,15 +1,14 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import AbstractImageEditable from "../../../gen/displays/components/AbstractImageEditable";
 import ImageEditableNotifier from "../../../gen/displays/notifiers/ImageEditableNotifier";
 import ImageEditableRequester from "../../../gen/displays/requesters/ImageEditableRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
-import { AddAPhoto } from '@material-ui/icons';
+import {withSnackbar} from 'notistack';
 import ComponentBehavior from "./behaviors/ComponentBehavior";
 import Theme from "app-elements/gen/Theme";
 import ImageGallery from 'react-image-gallery';
-import BrowserUtil from "alexandria-ui-elements/src/util/BrowserUtil";
+import Resizer from "react-image-file-resizer";
 
 const styles = theme => ({
 	input: {
@@ -17,7 +16,6 @@ const styles = theme => ({
 	},
 	image: {
 		display: "block",
-		position: "absolute",
 		height: "calc(100% - 20px)",
 		width: "100%",
 		objectFit: 'contain',
@@ -30,7 +28,8 @@ const styles = theme => ({
 		height: "calc(100% - 20px)",
 		"justify-content": "center",
 		"align-items": "center",
-		cursor: "pointer"
+		cursor: "pointer",
+		top: "0"
 	},
 	bordered: {
 		position: "absolute",
@@ -39,37 +38,30 @@ const styles = theme => ({
 		height: "calc(100% - 20px)",
 		"justify-content": "center",
 		"align-items": "center",
+		top: '0'
 	},
 	icon: {
 		color: "#005ba4"
 	},
 	download : {
-        background: 'white',
-        padding: '2px 7px',
-	    position: 'absolute',
-        bottom: '0',
-        left: '0',
         cursor: 'pointer',
-        fontSize: '8pt',
         width: '70px',
-        marginLeft: '4px',
-        marginBottom: '24px',
+        marginLeft: '10px',
         textAlign: 'center',
         color: theme.palette.primary.main,
 	},
 	remove : {
-        background: 'white',
-        padding: '2px 7px',
-	    position: 'absolute',
-        bottom: '0',
-        left: '0',
         cursor: 'pointer',
-        fontSize: '8pt',
         width: '70px',
-        marginLeft: '80px',
-        marginBottom: '24px',
+		marginLeft: '10px',
         textAlign: 'center',
         color: theme.palette.primary.main,
+	},
+	edit : {
+		cursor: 'pointer',
+		width: '70px',
+		textAlign: 'center',
+		color: theme.palette.primary.main,
 	},
 });
 
@@ -92,8 +84,20 @@ class ImageEditable extends AbstractImageEditable {
 	};
 
 	handleChange(e) {
-	    this.requester.notifyUploading();
-		this.requester.notifyChange(e.target.files[0], progress => {});
+		let fileInput = false;
+		if (e.target.files[0]) fileInput = true;
+		if (!fileInput) return;
+		this.requester.notifyUploading();
+		if (this.props.width == null || this.props.height == null) {
+			this.requester.notifyChange(e.target.files[0], progress => {});
+			return;
+		}
+		const width = parseInt(this.props.width.replace("px", ""));
+		const height = parseInt(this.props.height.replace("px", ""));
+		Resizer.imageFileResizer(e.target.files[0], width, height, "PNG",
+			100, 0, (file) => { this.requester.notifyChange(file, progress => {}); },
+			"file", width, null
+		);
 	};
 
 	handleRemove(e) {
@@ -102,6 +106,11 @@ class ImageEditable extends AbstractImageEditable {
 
 	handleDownload(e) {
 	    this.requester.download();
+	};
+
+	handleEdit(e) {
+	    const input = document.getElementById(this._inputId());
+		if (input != null) input.click();
 	};
 
 	render() {
@@ -120,21 +129,20 @@ class ImageEditable extends AbstractImageEditable {
 		return (
 			<div style={{...this.style(),position:'relative'}}>
 			    { ComponentBehavior.labelBlock(this.props, "body1", { color: theme.palette.grey.A700, marginRight: '5px', fontSize: "9pt", color: "#777777" }) }
-                {this.state.value && <img className={classes.image} title={this.props.label} src={url} />}
-                <label htmlFor={inputId} className={classes.overlay} style={{display:labelDisplay}}>
-                    <AddAPhoto className={classes.icon} />
-                </label>
+                {!showImageGallery && this.state.value && <img className={classes.image} alt={this.props.label} title={this.props.label} src={url} />}
+                <label htmlFor={inputId} className={classes.overlay} style={{display:labelDisplay}}></label>
                 <div className={classes.bordered} style={{display:borderDisplay}}></div>
 			    {showImageGallery && <ImageGallery items={[this._galleryItems()]} showThumbnails={false} showBullets={false} showPlayButton={false} /> }
-			    {!showImageGallery &&
+			    {!this.state.readonly &&
 			        <React.Fragment>
                         <input accept="image/*" id={inputId} type="file"
                            className={classes.input} onChange={this.handleChange.bind(this)}
                            disabled={this.state.readonly} value="" />
                     </React.Fragment>
                 }
-                {this.state.value && <a className={classes.remove} onClick={this.handleRemove.bind(this)} style={removeStyle}>{this.translate("Remove")}</a>}
-                {this.state.value && <a className={classes.download} onClick={this.handleDownload.bind(this)}>{this.translate("Download")}</a>}
+				{<a className={classes.edit} onClick={this.handleEdit.bind(this)}>{this.translate(this.translate("Edit..."))}</a>}
+				{this.state.value && <a className={classes.remove} onClick={this.handleRemove.bind(this)} style={removeStyle}>{this.translate("Remove")}</a>}
+				{this.state.value && <a className={classes.download} onClick={this.handleDownload.bind(this)}>{this.translate("Download")}</a>}
 			</div>
 		);
 	};
@@ -147,13 +155,7 @@ class ImageEditable extends AbstractImageEditable {
 	};
 
 	_inputId = () => {
-        var dt = new Date().getTime();
-        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            var r = (dt + Math.random()*16)%16 | 0;
-            dt = Math.floor(dt/16);
-            return (c=='x' ? r :(r&0x3|0x8)).toString(16);
-        });
-        return uuid + "-image-input";
+        return this.props.id + "-image-input";
     }
 
 	style() {
@@ -180,7 +182,7 @@ class ImageEditable extends AbstractImageEditable {
 	};
 
     _showImageGallery = () => {
-        return this.props.allowFullscreen && this.state.readonly;
+        return this.props.allowFullscreen;
     }
 
 }

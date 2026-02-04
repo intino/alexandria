@@ -7,8 +7,15 @@ import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import BrowserUtil from "alexandria-ui-elements/src/util/BrowserUtil";
 import ImageGallery from 'react-image-gallery';
 import Theme from "app-elements/gen/Theme";
+import classNames from "classnames";
 
 const styles = theme => ({
+	image: {
+		display: "block",
+		height: "calc(100% - 20px)",
+		width: "100%",
+		objectFit: 'contain',
+	},
 });
 
 class Image extends AbstractImage {
@@ -38,11 +45,12 @@ class Image extends AbstractImage {
 		if (!this.state.visible) return (<React.Fragment/>);
 		if (this.state.value == null) return (<React.Fragment/>);
 		const source = this.state.value + this.forceParameter();
+		const { classes } = this.props;
 		return (
-			<React.Fragment>
+			<div style={{...this.style(),position:'relative'}}>
 			    {this.props.allowFullscreen && <ImageGallery className={this.cssRuleSelectors()} items={[this._galleryItems()]} showThumbnails={false} showBullets={false} showPlayButton={false} /> }
-                {!this.props.allowFullscreen && <img className={this.cssRuleSelectors()} style={this.style()} title={this.props.label} src={source}/> }
-			</React.Fragment>
+                {!this.props.allowFullscreen && <img className={classNames(classes.image,this.cssRuleSelectors())} alt={this.props.label} title={this.props.label} src={source}/> }
+			</div>
 		);
 	};
 
@@ -57,8 +65,6 @@ class Image extends AbstractImage {
 	_galleryItems = () => {
 	    return {
 	        original: this.state.value,
-	        originalHeight: this._height(),
-            originalWidth: this._width(),
 	        thumbnail: this.state.value
         };
 	};
