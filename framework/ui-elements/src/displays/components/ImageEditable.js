@@ -9,6 +9,7 @@ import ComponentBehavior from "./behaviors/ComponentBehavior";
 import Theme from "app-elements/gen/Theme";
 import ImageGallery from 'react-image-gallery';
 import Resizer from "react-image-file-resizer";
+import 'react-image-gallery/styles/css/image-gallery.css';
 
 const styles = theme => ({
 	input: {
