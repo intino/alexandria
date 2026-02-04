@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "6.7.34") ui-framework-elements
+Artifact("io.intino.alexandria", "6.7.35") ui-framework-elements
 	WebImports
 		WebComponent("@date-io/moment", "^1.3.7")
 		WebComponent("@material-ui/core", "^4.12.4")
@@ -47,6 +47,7 @@ Artifact("io.intino.alexandria", "6.7.34") ui-framework-elements
 		WebComponent("marked", "^4.0.0")
 		WebComponent("react-resizable-panels", "^2.1.7")
 		WebComponent("react-simple-wysiwyg", "^3.2.2")
+		WebComponent("react-image-file-resizer", "^0.4.8")
 
 		Resolution("react", "^16.13.1")
 		Resolution("react-dom", "^16.13.1")
