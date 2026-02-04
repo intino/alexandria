@@ -28,7 +28,8 @@ Template(layout=Vertical, spacing=DP8) imageExamplesMold
 		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Editable facet")
 			Block(spacing=DP8, format=filled)
-				Image(defaultValue="images/image.jpg") image3 as Editable(format=widgetDemo) Absolute(width=200px, height=200px)
+				Image image3 as Editable(format=widgetDemo) Absolute(width=200px, height=200px)
+				//Image(defaultValue="images/image.jpg") image3 as Editable(format=widgetDemo) Absolute(width=200px, height=200px)
 				Block > Text image3Code as Code(language=Html)
 						value
 							=========
@@ -38,7 +39,8 @@ Template(layout=Vertical, spacing=DP8) imageExamplesMold
 		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Editable facet (allowFullscreen)")
 			Block(spacing=DP8, format=filled)
-				Image(defaultValue="images/image.jpg", format=widgetDemo, allowFullscreen=true) image4 as Editable Absolute(width=200px, height=150px)
+				//Image(defaultValue="images/image.jpg", format=widgetDemo, allowFullscreen=true) image4 as Editable Absolute(width=200px, height=150px)
+				Image(format=widgetDemo, allowFullscreen=true) image4 as Editable Absolute(width=200px, height=200px)
 				Block > Text as Code(language=Html)
 						value
 							=========
