@@ -134,7 +134,7 @@ class ImageEditable extends AbstractImageEditable {
                 <label htmlFor={inputId} className={classes.overlay} style={{display:labelDisplay}}></label>
                 <div className={classes.bordered} style={{display:borderDisplay}}></div>
 			    {(showImageGallery && this.state.value != null) &&
-					<div className={classes.image} style={{top:'-20px'}} >
+					<div className={classes.image} style={{top:'0px'}} >
 						<ImageGallery items={[this._galleryItems()]} showThumbnails={false} showBullets={false} showPlayButton={false} />
 					</div>
 				}
@@ -145,7 +145,7 @@ class ImageEditable extends AbstractImageEditable {
                            disabled={this.state.readonly} value="" />
                     </React.Fragment>
                 }
-				<div style={{marginTop:'4px'}}>
+				<div style={{marginTop:'4px',zIndex:'2',position:'relative',background:'white'}}>
 					{<a className={classes.edit} onClick={this.handleEdit.bind(this)}>{this.translate(this.translate("Edit..."))}</a>}
 					{this.state.value && <a className={classes.remove} onClick={this.handleRemove.bind(this)} style={removeStyle}>{this.translate("Remove")}</a>}
 					{this.state.value && <a className={classes.download} onClick={this.handleDownload.bind(this)}>{this.translate("Download")}</a>}
