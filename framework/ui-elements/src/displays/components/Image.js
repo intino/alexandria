@@ -7,7 +7,6 @@ import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import BrowserUtil from "alexandria-ui-elements/src/util/BrowserUtil";
 import ImageGallery from 'react-image-gallery';
 import Theme from "app-elements/gen/Theme";
-import classNames from "classnames";
 import 'react-image-gallery/styles/css/image-gallery.css';
 
 const styles = theme => ({
@@ -25,12 +24,12 @@ class Image extends AbstractImage {
 		super(props);
 		this.notifier = new ImageNotifier(this);
 		this.requester = new ImageRequester(this);
-        this.state = {
-            ...this.state,
-            value : this.props.value,
-            width : this.props.width,
-            height : this.props.height
-        };
+		this.state = {
+			...this.state,
+			value : this.props.value,
+			width : this.props.width,
+			height : this.props.height
+		};
 	};
 
 	componentDidMount() {
@@ -49,14 +48,14 @@ class Image extends AbstractImage {
 		const { classes } = this.props;
 		return (
 			<div style={{...this.style(),position:'relative'}}>
-			    {this.props.allowFullscreen && <ImageGallery className={this.cssRuleSelectors()} items={[this._galleryItems()]} showThumbnails={false} showBullets={false} showPlayButton={false} /> }
-                {!this.props.allowFullscreen && <img className={classNames(classes.image,this.cssRuleSelectors())} alt={this.props.label} title={this.props.label} src={source}/> }
+				{this.props.allowFullscreen && <ImageGallery className={this.cssRuleSelectors()} items={[this._galleryItems()]} showThumbnails={false} showBullets={false} showPlayButton={false} /> }
+				{!this.props.allowFullscreen && <img className={this.cssRuleSelectors()} style={this.style()} alt={this.props.label} title={this.props.label} src={source}/> }
 			</div>
 		);
 	};
 
 	forceParameter = () => {
-	    return (this.state.value.indexOf("?") != -1 ? "&" : "?") + "r=" + Math.random();
+		return (this.state.value.indexOf("?") != -1 ? "&" : "?") + "r=" + Math.random();
 	};
 
 	resize = () => {
@@ -64,10 +63,10 @@ class Image extends AbstractImage {
 	};
 
 	_galleryItems = () => {
-	    return {
-	        original: this.state.value,
-	        thumbnail: this.state.value
-        };
+		return {
+			original: this.state.value,
+			thumbnail: this.state.value
+		};
 	};
 
 	_width = () => {
