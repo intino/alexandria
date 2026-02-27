@@ -1,5 +1,6 @@
 dsl Konos
 
+use Form
 use Upload
 use Wizard
 use Chat
@@ -61,6 +62,7 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block fileExamples as Conditional > TemplateStamp(template=fileExamplesMold) fileExamplesMold
 			Block imageExamples as Conditional > TemplateStamp(template=imageExamplesMold) imageExamplesMold
 			Block dateExamples as Conditional > TemplateStamp(template=dateExamplesMold) dateExamplesMold
+			Block formExamples as Conditional > TemplateStamp(template=formExamplesMold) formExamplesMold
 			Block multipleExamples as Conditional > TemplateStamp(template=multipleExamplesMold) multipleExamplesMold
 			Block chartExamples as Conditional > TemplateStamp(template=chartExamplesMold) chartExamplesMold
 			Block blockExamples as Conditional > TemplateStamp(template=blockExamplesMold) blockExamplesMold

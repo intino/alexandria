@@ -1,9 +1,9 @@
 import React from "react";
-import { Paper, InputBase } from '@material-ui/core';
+import {OutlinedInput} from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import ClearIcon from '@material-ui/icons/Clear';
-import { withStyles } from '@material-ui/core/styles';
-import { fade } from '@material-ui/core/styles/colorManipulator';
+import {withStyles} from '@material-ui/core/styles';
+import {fade} from '@material-ui/core/styles/colorManipulator';
 import AbstractSearchBox from "../../../gen/displays/components/AbstractSearchBox";
 import SearchBoxNotifier from "../../../gen/displays/notifiers/SearchBoxNotifier";
 import SearchBoxRequester from "../../../gen/displays/requesters/SearchBoxRequester";
@@ -18,7 +18,7 @@ const styles = theme => ({
 	},
 	search: {
 		position: 'relative',
-		borderRadius: theme.shape.borderRadius,
+		borderRadius: '14pt',
 		backgroundColor: theme.isDark() ? fade("#444", 0.75) : fade(theme.palette.common.white, 0.75),
 		'&:hover': {
 			backgroundColor: theme.isDark() ? "#444" : theme.palette.common.white,
@@ -41,12 +41,12 @@ const styles = theme => ({
 	},
 	clearIcon: {
 		top: '0',
-        right: '0',
-        cursor: 'pointer',
-        height: '100%',
-        position: 'absolute',
-        marginRight: '10px',
-        marginTop: '6px',
+		right: '0',
+		cursor: 'pointer',
+		position: 'absolute',
+		marginTop: '18px',
+		marginRight: '24px',
+		background: 'white',
 	},
 	inputRoot: {
 		color: 'inherit',
@@ -54,7 +54,6 @@ const styles = theme => ({
 	},
 	inputInput: {
 		paddingTop: theme.spacing(1),
-		paddingRight: theme.spacing(1),
 		paddingBottom: theme.spacing(1),
 		paddingLeft: theme.spacing(10),
 		transition: theme.transitions.create('width'),
@@ -98,11 +97,11 @@ class SearchBox extends AbstractSearchBox {
 			<div className={classNames(classes.root, "layout horizontal")} style={{...this.style(),position:'relative'}}>
 				<div className={classes.grow}/>
 				<div style={{position:'relative'}}>
-					<Paper className={classes.search} elevation={1}>
+					<div className={classes.search} elevation={1}>
 						<div className={classes.searchIcon}>
 							<SearchIcon/>
 						</div>
-                        <InputBase
+                        <OutlinedInput
                             placeholder={placeholder}
                             value={this.state.value}
                             onChange={this.handleSearch.bind(this)}
@@ -112,9 +111,9 @@ class SearchBox extends AbstractSearchBox {
                                 input: classes.inputInput,
                             }}
                         />
-                        {this.state.value !== "" && <a onClick={this.handleClear.bind(this)} className={classes.clearIcon}><ClearIcon/></a>}
-					</Paper>
-					{this.props.showCountMessasge && <div className={classNames(classes.count, "layout horizontal end-justified")}><div title={this.countHint()}>{this.countMessage()}</div></div>}
+                        {this.state.value != null && this.state.value !== "" && <a onClick={this.handleClear.bind(this)} className={classes.clearIcon}><ClearIcon/></a>}
+					</div>
+					{this.props.showCountMessage && <div className={classNames(classes.count, "layout horizontal end-justified")}><div title={this.countHint()}>{this.countMessage()}</div></div>}
 				</div>
 			</div>
 		);

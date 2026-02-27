@@ -69,6 +69,8 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
         if (imageExamples.isVisible()) imageExamples.imageExamplesMold.refresh();
         dateExamples.visible(widget instanceof DateWidget);
         if (dateExamples.isVisible()) dateExamples.dateExamplesMold.refresh();
+        formExamples.visible(widget instanceof FormWidget);
+        if (formExamples.isVisible()) formExamples.formExamplesMold.refresh();
         multipleExamples.visible(widget instanceof MultipleWidget);
         if (multipleExamples.isVisible()) multipleExamples.multipleExamplesMold.refresh();
         chartExamples.visible(widget instanceof ChartWidget);

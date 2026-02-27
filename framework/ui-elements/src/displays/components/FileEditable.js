@@ -3,41 +3,74 @@ import AbstractFile from "../../../gen/displays/components/AbstractFile";
 import FileEditableNotifier from "../../../gen/displays/notifiers/FileEditableNotifier";
 import FileEditableRequester from "../../../gen/displays/requesters/FileEditableRequester";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
-import File from "./File";
 import Block from "./Block";
 import ProgressBar from "./ProgressBar";
-import ComponentBehavior from "./behaviors/ComponentBehavior";
 import Theme from "app-elements/gen/Theme";
-import { DropzoneArea } from 'material-ui-dropzone';
-import { IconButton, Box } from "@material-ui/core";
-import { CloudDownload, Add, Cancel } from "@material-ui/icons";
+import {DropzoneArea} from 'material-ui-dropzone';
+import {Box} from "@material-ui/core";
+import {Add} from "@material-ui/icons";
 import 'alexandria-ui-elements/res/styles/components/fileeditable/styles.css';
 import 'alexandria-ui-elements/res/styles/layout.css';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import NumberUtil from 'alexandria-ui-elements/src/util/NumberUtil';
+import classnames from 'classnames';
+import 'alexandria-ui-elements/res/styles/components/fields.css';
+import ComponentBehavior from "./behaviors/ComponentBehavior";
 
 const styles = theme => ({
     info: {
-        fontSize: '9pt',
         color: theme.isDark() ? '#799deb' : '#2563EB',
-        margin: '2px 0 0 2px'
+        margin: '2px 10px 0 2px'
     },
     errorMessage: {
         margin: "5px 0 0",
-        background: "#f44336",
-        color: "white",
-        padding: "10px",
+        background: "#fdecec",
+        color: "#e13939",
+        padding: "2px 10px",
         borderRadius: "6px",
     },
 	dropzoneText: {
 		background: "red",
 	},
+	readonlyDropzone: {
+		position: "absolute",
+		top: 0,
+		left: 0,
+		width: "100%",
+		height: "100%",
+		zIndex: 10,
+		opacity: 0.05
+	},
 	pasteInput: {
-	    border: theme.isDark() ? "1px dashed #ffffff1f" : "1px dashed #0000001f",
-	    borderRadius: "4px",
+	    border: theme.isDark() ? "1px solid #ffffffde" : "1px solid #555",
+	    borderRadius: "14px",
 	    marginTop: "5px",
-	    padding: "10px",
-	    background: theme.isDark() ? "#424242" : "white"
+	    padding: "18px 10px",
+		background: 'none',
+		"&:hover": {
+			background: "#eaf9ff",
+		},
+		"&:focus": {
+			border: theme.isDark() ? "1px solid #ffffffde" : "1px solid #00000023",
+		}
+	},
+	readonlyPasteInput: {
+		border: theme.isDark() ? "1px solid #ffffffde" : "1px solid #d7d7d7",
+		background: 'none !important',
+		"&::placeholder": {
+			color: "#00000030 !important"
+		},
+	},
+	empty : {
+		fontSize: '12pt',
+	},
+	link : {
+		cursor: 'pointer',
+		width: '70px',
+		textAlign: 'center',
+		marginRight: '10px',
+		fontSize: '11pt',
+		color: theme.palette.primary.main,
 	},
 });
 
@@ -96,19 +129,22 @@ class FileEditable extends AbstractFile {
 
 	render() {
 		if (!this.state.visible) return (<React.Fragment/>);
-        const { classes } = this.props;
+        const { classes, progress } = this.props;
         const theme = Theme.get();
 		const label = this.props.label !== "" ? this.props.label : undefined;
-		const width = this.props.width != null ? this.props.width : "100%";
-		const height = this.props.height != null ? this.props.height : "100%";
+		const width = this.props.width != null ? this.props.width : "auto";
+		const height = this.props.height != null ? this.props.height : "auto";
 		const color = this.state.readonly ? theme.palette.grey.A700 : theme.isDark() ? "#ffffffb3" : "#0000008a";
 		return (
-			<Block layout="vertical" style={{...this.style(),width:width,height:height}}>
-                {label != null && label !== "" ? <div style={{color:color,fontSize:"10pt",marginBottom:"5px"}}>{this.translate(label)}</div> : undefined }
-				{this._renderPreview()}
-				{this._renderComponent()}
-				{this._renderInfoMessage()}
-				{this._renderErrorMessage()}
+			<Block layout="vertical" style={{...this.style(),width:width,height:height}} className="file-editable">
+				<div className={classnames("layout ", this._isInlineComponent() ? "horizontal center" : "vertical")}>
+					{ ComponentBehavior.labelBlock(this.props, "body1", { marginRight: '15px', color: theme.palette.grey.primary, fontSize: this._isInlineComponent() ? "14pt" : "9pt"}) }
+					{this._renderPreview()}
+					{this._renderComponent()}
+					{this._renderInfoMessage()}
+					{this._renderErrorMessage()}
+				</div>
+				{(progress && this._isUploadingFiles()) && this._renderProgress()}
 			</Block>
 		);
 	};
@@ -132,15 +168,21 @@ class FileEditable extends AbstractFile {
 	};
 
 	_renderComponent = () => {
-	    const { readonly } = this.state;
-	    const { dropZone, pasteZone, progress } = this.props;
+	    const { dropZone, pasteZone } = this.props;
 
 	    const result = [];
-	    if (dropZone && !readonly) result.push(this._renderDropZone());
-	    else if (!pasteZone) result.push(this._renderInput());
-	    if (pasteZone && !readonly) result.push(this._renderPasteZone());
-	    if (progress && this._isUploadingFiles()) result.push(this._renderProgress());
-	    return result;
+		if (dropZone || pasteZone) {
+			if (dropZone) result.push(this._renderDropZone());
+			if (pasteZone) result.push(this._renderPasteZone());
+		}
+	    else result.push(this._renderInput());
+
+		return result;
+	};
+
+	_isInlineComponent = () => {
+		const { dropZone, pasteZone, preview } = this.props;
+		return !dropZone && !pasteZone && !preview;
 	};
 
 	handlePaste = (e) => {
@@ -153,34 +195,39 @@ class FileEditable extends AbstractFile {
 	_renderDropZone = () => {
 		const { dropZoneLimit } = this.props;
 		const maxSize = this.state.maxSize;
+		const { classes } = this.props;
 	    return (
-            <DropzoneArea
-                key={this.state.key}
-                Icon={Add}
-                acceptedFiles={this._allowedTypes()}
-                dropzoneText={this.translate("Drag and drop a file here or click")}
-                fileObjects={this.state.files}
-                dropzoneClass="fileeditable-dropzone"
-                dropzoneParagraphClass="fileeditable-dropzone-paragraph"
-                filesLimit={ dropZoneLimit || 1 }
-                maxFileSize={maxSize != null && maxSize != -1 ? maxSize : 20971520000}
-                showPreviews={false}
-                showPreviewsInDropzone={this.state.value != null}
-                useChipsForPreview
-                previewGridProps={{container: { spacing: 1, direction: 'row' }}}
-                previewText={this.translate("Selected file")}
-                showAlerts={true}
-                getDropRejectMessage={(file) => this._errorMessage(file)}
-                showFilenames={true}
-                onDelete={(file) => { this.saveFile(null, null) }}
-                onChange={(files) => { for (var i=0; i<files.length;i++) this.saveFile(files[i], files[i].name); }}
-            />
+			<div style={{position:'relative'}}>
+				{this.state.readonly && <div className={classes.readonlyDropzone}></div>}
+				<DropzoneArea
+					key={this.state.key}
+					Icon={Add}
+					acceptedFiles={this._allowedTypes()}
+					dropzoneText={!this.state.readonly ? this.translate("Drag and drop a file here or click") : ""}
+					fileObjects={this.state.files}
+					dropzoneClass={this.state.readonly ? "fileeditable-dropzone-readonly" : "fileeditable-dropzone" }
+					dropzoneParagraphClass="fileeditable-dropzone-paragraph"
+					dropzoneIconClass="fileeditable-dropzone-icon"
+					filesLimit={ dropZoneLimit || 1 }
+					maxFileSize={maxSize != null && maxSize !== -1 ? maxSize : 20971520000}
+					showPreviews={false}
+					showPreviewsInDropzone={this.state.value != null}
+					useChipsForPreview
+					previewGridProps={{container: { spacing: 1, direction: 'row' }}}
+					previewText={this.translate("Selected file")}
+					showAlerts={true}
+					getDropRejectMessage={(file) => this._errorMessage(file)}
+					showFilenames={true}
+					onDelete={(file) => { this.saveFile(null, null) }}
+					onChange={(files) => { for (let i=0; i<files.length; i++) this.saveFile(files[i], files[i].name); }}
+				/>
+			</div>
         );
 	};
 
 	_isMaxSizeExceeded = (file) => {
 	    const maxSize = this.state.maxSize;
-	    if (maxSize == null || maxSize == -1) return false;
+	    if (maxSize == null || maxSize === -1) return false;
 	    return file.size > maxSize;
 	};
 
@@ -198,8 +245,8 @@ class FileEditable extends AbstractFile {
 	    if (!this.props.pasteZone) return (<React.Fragment/>);
 		const { classes } = this.props;
         return (
-            <input className={classes.pasteInput}
-                   placeholder={this.translate("Paste content here from clipboard")}
+            <input className={classnames(classes.pasteInput, this.state.readonly ? classes.readonlyPasteInput : undefined)}
+                   placeholder={!this.state.readonly ? this.translate("Paste content here from clipboard") : ""}
                    disabled={this.state.readonly ? true : undefined}
                    onPaste={this.handlePaste.bind(this)} value="" ></input>
         );
@@ -208,20 +255,21 @@ class FileEditable extends AbstractFile {
 	_renderInput = () => {
         return (
             <React.Fragment>
-                {this.state.value != null && this._renderInputValue()}
-                {this.state.value == null && this._renderInputField()}
+                {(this.state.readonly || this.state.value != null) && this._renderInputValue()}
+                {(!this.state.readonly && this.state.value == null) && this._renderInputField()}
             </React.Fragment>
         );
 	};
 
 	_renderInputValue = () => {
+		const { classes } = this.props;
 	    const empty = this.state.value == null || this.state.value === "";
 	    const readonly = this.state.readonly;
 	    return (
-	        <div className="layout horizontal center" style={{padding:'0 5px',border:'1px solid #ddd',marginBottom:'4px'}}>
-	            <div className="layout vertical flex" style={{marginRight:'10px'}}>{this.filename()}</div>
-	            <IconButton title={this.translate("Download")} size="small" color="primary" disabled={empty} onClick={this.handleDownload.bind(this)}><CloudDownload/></IconButton>
-	            <IconButton title={this.translate("Remove")} size="small" color="primary" disabled={readonly} onClick={this.handleClear.bind(this)}><Cancel/></IconButton>
+	        <div className="layout horizontal center">
+				{(readonly && empty && this._isInlineComponent()) && <div className={classes.empty}>{this.translate("No attachment")}</div>}
+				{!empty && <a className={classes.link} onClick={this.handleDownload.bind(this)}>{this.translate("Download")}</a>}
+				{(!empty && !readonly) && <a className={classes.link} onClick={this.handleClear.bind(this)}>{this.translate("Remove")}</a>}
             </div>
         );
 	};
@@ -238,8 +286,15 @@ class FileEditable extends AbstractFile {
 
 	_renderInputField = () => {
 	    const allowedTypes = this._allowedTypes();
-	    return (<input ref={this.inputRef} type="file" disabled={this.state.readonly ? true : undefined}
-	                   onChange={this.handleChange.bind(this)} value="" accept={allowedTypes != null ? allowedTypes.toString() : undefined}></input>);
+		const { classes } = this.props;
+		const inputId = this.props.id + "-file-input";
+	    return (
+			<React.Fragment>
+				{!this.state.readonly && <label htmlFor={inputId}><a className={classes.link}>{this.translate("Select")}</a></label>}
+				<input id={inputId} style={{display:"none"}} ref={this.inputRef} type="file" disabled={this.state.readonly ? true : undefined}
+					   onChange={this.handleChange.bind(this)} value="" accept={allowedTypes != null ? allowedTypes.toString() : undefined}></input>
+			</React.Fragment>
+		);
     };
 
 	_allowedTypes = () => {

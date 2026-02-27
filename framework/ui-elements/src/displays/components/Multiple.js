@@ -1,21 +1,19 @@
 import React from "react";
-import makeStyles from '@material-ui/core/styles/makeStyles'
-import { Button, IconButton, Tooltip, Typography } from '@material-ui/core';
-import { Clear } from '@material-ui/icons';
+import {Button, IconButton, Tooltip, Typography} from '@material-ui/core';
+import {Clear} from '@material-ui/icons';
 import AbstractMultiple from "../../../gen/displays/components/AbstractMultiple";
 import MultipleNotifier from "../../../gen/displays/notifiers/MultipleNotifier";
 import MultipleRequester from "../../../gen/displays/requesters/MultipleRequester";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
-import { enrichDisplayProperties } from "../Display";
+import {enrichDisplayProperties} from "../Display";
 import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Theme from "app-elements/gen/Theme";
 import Spinner from "./Spinner"
-import Text from "./Text"
 import 'alexandria-ui-elements/res/styles/components/multiple/styles.css';
 
 export default class Multiple extends AbstractMultiple {
@@ -168,7 +166,7 @@ export default class Multiple extends AbstractMultiple {
 
 	_style = (multiple) => {
 		let spacingStyle = this._spacingStyle(multiple);
-		if (spacingStyle === undefined) spacingStyle = (multiple.arrangement.toLowerCase() === "horizontal") ? { right: 5, top: 2, bottom: 2 } : { right: 0, top: 0, bottom: 0 };
+		if (spacingStyle === undefined) spacingStyle = (multiple.arrangement.toLowerCase() === "horizontal") ? { right: 5, top: 2, bottom: 2 } : { right: 0, top: 0, bottom: 5 };
 		return { marginRight: spacingStyle.right + "px", marginTop: spacingStyle.top + "px", marginBottom: spacingStyle.bottom + "px"/*, height: "calc(100% - " + spacingStyle.bottom + "px)"*/ };
 	};
 

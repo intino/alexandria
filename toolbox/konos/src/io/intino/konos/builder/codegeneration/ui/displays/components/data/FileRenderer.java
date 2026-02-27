@@ -17,6 +17,7 @@ public class FileRenderer extends SizedRenderer<File> {
 	@Override
 	public FrameBuilder properties() {
 		FrameBuilder result = super.properties();
+		if (element.isReadonly()) result.add("readonly", element.isReadonly());
 		if (element.value() != null && !element.value().isEmpty())
 			result.add("value", resourceMethodFrame("value", element.value()));
 		if (element.isEditable() && element.asEditable().showPreview()) result.add("preview", true);

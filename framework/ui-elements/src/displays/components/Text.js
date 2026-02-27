@@ -1,7 +1,7 @@
 import React from "react";
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Block from "./Block";
 import AbstractText from "../../../gen/displays/components/AbstractText";
 import TextNotifier from "../../../gen/displays/notifiers/TextNotifier";
@@ -9,7 +9,6 @@ import TextRequester from "../../../gen/displays/requesters/TextRequester";
 import TextBehavior from "./behaviors/TextBehavior";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
-import 'alexandria-ui-elements/res/styles/mui.css';
 
 const styles = theme => ({
 	label: {

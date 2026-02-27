@@ -1,6 +1,27 @@
+.MuiDropzoneArea-root {
+    background: none !important;
+}
+
 .fileeditable-dropzone {
+    border-color: #555 !important;
+}
+
+.fileeditable-dropzone:hover {
+    background: #eaf9ff !important;
+}
+
+.fileeditable-dropzone-readonly {
+    border-color: #d7d7d7 !important;
+}
+
+.fileeditable-dropzone-readonly:hover {
+    background: inherit !important;
+}
+
+.fileeditable-dropzone, .fileeditable-dropzone-readonly {
     height: 100%;
     min-height: 175px !important;
+    border-radius: 14px !important;
 }
 
 .fileeditable-dropzone-paragraph {
@@ -9,9 +30,18 @@
     color: #757575 !important;
 }
 
+.fileeditable-dropzone-readonly .fileeditable-dropzone-paragraph {
+    color: #00000030 !important;
+}
+
 .MuiDropzoneArea-icon {
     height: 32px !important;
     width: 32px !important;
+}
+
+.fileeditable-dropzone-readonly .MuiDropzoneArea-icon {
+    /*color: #00000030 !important;*/
+    display: none;
 }
 
 .MuiGrid-spacing-xs-1 {
