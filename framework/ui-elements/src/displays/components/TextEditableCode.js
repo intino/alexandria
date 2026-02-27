@@ -1,13 +1,13 @@
-import React, { Suspense } from "react";
-import { withStyles } from '@material-ui/core/styles';
+import React, {Suspense} from "react";
+import {withStyles} from '@material-ui/core/styles';
 import AbstractTextEditableCode from "../../../gen/displays/components/AbstractTextEditableCode";
 import TextEditableCodeNotifier from "../../../gen/displays/notifiers/TextEditableCodeNotifier";
 import TextEditableCodeRequester from "../../../gen/displays/requesters/TextEditableCodeRequester";
 import CodeBehavior from "./behaviors/CodeBehavior";
 import Spinner from "../../../src/displays/components/Spinner";
-import { Theme } from "app-elements/gen/Theme";
+import {Theme} from "app-elements/gen/Theme";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from 'notistack';
 import Delayer from '../../util/Delayer';
 
 const TextEditableCodeAce = React.lazy(() => {
@@ -33,6 +33,7 @@ class TextEditableCode extends AbstractTextEditableCode {
 		this.state = {
     		...this.state,
     		value : this.props.value,
+			readonly: this.props.readonly
 		}
 	};
 
@@ -49,7 +50,7 @@ class TextEditableCode extends AbstractTextEditableCode {
 		return (
 			<Suspense fallback={<div className="layout horizontal center-center" style={ {margin: "10px", height: "100%"} }><Spinner/></div>}>
 				<div style={this.style()}><TextEditableCodeAce language={this.props.language} theme={theme} className={classes.editor}
-															   width="100%" height="100%"
+															   width="100%" height="100%" readonly={this.state.readonly}
 															   value={value} onChange={this.handleChange.bind(this)}/></div>
 			</Suspense>
 		);

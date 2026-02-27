@@ -71,7 +71,7 @@ Concept DataComponents
 		Facet Relative extends Relative
 		Facet Multiple extends Multiple
 		Facet Editable extends Editable
-			var boolean showPreview = false
+			var boolean showPreview = true
 			Concept:{0..1} Validation
 				var double:{kbytes} maxSize
 				var string[] allowedExtensions = empty

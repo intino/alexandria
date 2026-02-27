@@ -23,6 +23,8 @@ public class ImageRenderer extends SizedRenderer<Image> {
 		if (element.mobileReduceFactor() != 0) result.add("mobileReduceFactor", element.mobileReduceFactor());
 		if (element.allowFullscreen()) result.add("allowFullScreen", element.allowFullscreen());
 		if (element.colorInvertedWithDarkMode()) result.add("colorInvertedWithDarkMode", element.colorInvertedWithDarkMode());
+		if (element.isReadonly()) result.add("readonly", element.isReadonly());
+		if (element.isEditable() && !element.asEditable().showPreview()) result.add("showPreview", element.asEditable().showPreview());
 		return result;
 	}
 

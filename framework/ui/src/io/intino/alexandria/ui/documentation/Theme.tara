@@ -22,9 +22,11 @@ Format("background:'white',borderRadius:'3px',height:'100%'", darkContent="backg
 Format("background:'red'") redBackground
 Format("padding:'10px 20px'") air
 Format("marginTop:'10px'") airTop
+Format("marginTop:'50px'") bigAirTop
 Format("marginBottom:'10px'") airBottom
 Format("marginLeft:'20px'") doubleAirLeft
 Format("marginRight:'20px'") doubleAirRight
+Format("marginTop:'20px'") doubleAirTop
 Format("marginBottom:'20px'") doubleAirBottom
 Format("marginRight:'10px'") airLeft
 Format("marginRight:'10px'") airRight

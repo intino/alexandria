@@ -1,0 +1,146 @@
+:focus-visible {
+    outline-style: solid;
+    outline-width: 2px !important;
+    outline-color: #0b487f !important;
+}
+
+.MuiFormLabel-root {
+    color: black !important;
+    transform: translate(14px, -6px) scale(0.8) !important;
+}
+
+.MuiOutlinedInput-notchedOutline {
+    border-radius: 14px !important;
+    border-color: #555 !important;
+}
+
+.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-width: 2px !important;
+    border-color: #0b487f !important;
+}
+
+.selector-combo-box.readonly .MuiOutlinedInput-notchedOutline, .selector-collection-box.readonly .MuiOutlinedInput-notchedOutline, .Mui-disabled .MuiOutlinedInput-notchedOutline {
+    border-color: #d7d7d7 !important;
+}
+
+.MuiInputBase-root legend {
+    font-size: 1em !important;
+    max-width: 100% !important;
+}
+
+.MuiInputBase-root legend > span {
+    display: block !important;
+}
+
+.MuiInputBase-input {
+    /*font-size: 12pt !important;*/
+}
+
+.MuiOutlinedInput-input, .selector-combo-box .MuiInputBase-formControl, .selector-collection-box .MuiInputBase-formControl  {
+    min-height: 38px;
+    padding-top: 7px !important;
+    padding-bottom: 7px !important;
+}
+
+.MuiInputBase-formControl:hover {
+    background: #eaf9ff !important;
+    border-radius: 14px;
+}
+
+.selector-combo-box .MuiInputBase-formControl:hover, .selector-collection-box .MuiInputBase-formControl:hover  {
+    cursor: text;
+}
+
+.Mui-disabled.MuiInputBase-formControl:hover, .selector-combo-box.readonly .MuiInputBase-formControl:hover, .selector-collection-box.readonly .MuiInputBase-formControl:hover {
+    background: none !important;
+    cursor: default;
+}
+
+.MuiInputBase-input::placeholder {
+    font-weight: normal;
+}
+
+.MuiInputBase-input.Mui-disabled {
+    color: black;
+}
+
+.basic-multi-select {
+    width: 100%;
+}
+
+.basic-multi-select .select__indicator-separator {
+    display: none;
+}
+
+.basic-multi-select .select__indicators {
+    padding-right: 20px;
+}
+
+.selector-combo-box.focus fieldset, .selector-collection-box.focus fieldset {
+    border: 2px solid #3f51b5 !important;
+    border-radius: 14px;
+}
+
+.basic-multi-select .select__control, .basic-multi-select .select__control:hover {
+    background: transparent;
+    border: 0;
+}
+
+.select__control--is-focused {
+    border-color: #555 !important;
+    border-width: 0 !important;
+    box-shadow: 0 0 0 1px transparent !important;
+}
+
+.selector-combo-box.no-label .PrivateNotchedOutline-root-46, .selector-collection-box.no-label .PrivateNotchedOutline-root-46 {
+    top: 0 !important;
+}
+
+.selector-combo-box .PrivateNotchedOutline-root-46, .selector-collection-box .PrivateNotchedOutline-root-46 {
+    top: -5px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 0 8px;
+    overflow: hidden;
+    position: absolute;
+    border-style: solid;
+    border-width: 1px;
+    pointer-events: none;
+}
+.PrivateNotchedOutline-legendLabelled-48 {
+    width: auto;
+    height: 11px;
+    display: block;
+    padding: 0;
+    font-size: 0.75em;
+    max-width: 0.01px;
+    text-align: left;
+    transition: max-width 50ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+    visibility: hidden;
+}
+
+.PrivateNotchedOutline-legendNotched-49 {
+    transition: max-width 100ms cubic-bezier(0.0, 0, 0.2, 1) 50ms;
+}
+
+.date-editable.readonly .MuiInputAdornment-root {
+    display: none;
+}
+
+.date-editable .MuiFormHelperText-root {
+    display: none !important;
+}
+
+.image-editable .image-gallery {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.text-editable-rich-editor.readonly .rsw-toolbar {
+    display: none;
+}

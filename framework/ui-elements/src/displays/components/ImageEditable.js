@@ -6,31 +6,57 @@ import ImageEditableRequester from "../../../gen/displays/requesters/ImageEditab
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import {withSnackbar} from 'notistack';
 import ComponentBehavior from "./behaviors/ComponentBehavior";
-import Theme from "app-elements/gen/Theme";
 import ImageGallery from 'react-image-gallery';
 import Resizer from "react-image-file-resizer";
 import 'react-image-gallery/styles/css/image-gallery.css';
+import Theme from "app-elements/gen/Theme";
+import classnames from 'classnames';
+import 'alexandria-ui-elements/res/styles/components/fields.css';
+import {Fullscreen} from '@material-ui/icons';
 
 const styles = theme => ({
 	input: {
 		display: "none"
 	},
 	image: {
+		border: theme.isDark() ? "1px solid #0a0a0a" : "1px solid #555",
 		display: "block",
-		height: "calc(100% - 20px)",
-		width: "100%",
 		objectFit: 'contain',
 		position: "absolute",
+		borderRadius: "14px",
+		"&:hover": {
+			background: "#eaf9ff",
+			border: "1px solid #555"
+		},
+	},
+	disabledImage: {
+		border: theme.isDark() ? "1px solid #0a0a0a" : "1px solid #efefef",
+		"&:hover": {
+			background: "none !important",
+		}
 	},
 	overlay: {
-		background: "rgba(0, 0, 0, 0.1)",
-		border: "1px solid #efefef",
-		width: "100%",
-		height: "calc(100% - 20px)",
+		borderRadius: "14px",
 		"justify-content": "center",
 		"align-items": "center",
-		cursor: "pointer",
-		top: "0"
+		top: "0",
+		"&:hover": {
+			border: theme.isDark() ? "1px solid #ffffff00" : "1px solid #555",
+			background: "#eaf9ff",
+		},
+		"&:focus": {
+			border: theme.isDark() ? "1px solid #ffffffde" : "1px solid #00000023",
+		}
+	},
+	borderedOverlay: {
+		border: theme.isDark() ? "1px solid #0a0a0a" : "1px solid #555",
+	},
+	disabledOverlay: {
+		border: theme.isDark() ? "1px solid #0a0a0a" : "1px solid #efefef",
+		"&:hover": {
+			border: theme.isDark() ? "1px solid #0a0a0a" : "1px solid #efefef",
+			background: "none !important",
+		},
 	},
 	bordered: {
 		position: "absolute",
@@ -39,30 +65,21 @@ const styles = theme => ({
 		height: "calc(100% - 20px)",
 		"justify-content": "center",
 		"align-items": "center",
-		top: '0'
+		top: '0',
 	},
 	icon: {
 		color: "#005ba4"
 	},
-	download : {
+	empty : {
+		fontSize: '12pt',
+	},
+	link : {
         cursor: 'pointer',
         width: '70px',
-        marginLeft: '10px',
         textAlign: 'center',
+		marginRight: '10px',
+		fontSize: '11pt',
         color: theme.palette.primary.main,
-	},
-	remove : {
-        cursor: 'pointer',
-        width: '70px',
-		marginLeft: '10px',
-        textAlign: 'center',
-        color: theme.palette.primary.main,
-	},
-	edit : {
-		cursor: 'pointer',
-		width: '70px',
-		textAlign: 'center',
-		color: theme.palette.primary.main,
 	},
 });
 
@@ -77,6 +94,7 @@ class ImageEditable extends AbstractImageEditable {
             value: this.props.value,
             readonly: this.props.readonly,
             focused: this.props.focused,
+			showPreview: this.props.showPreview != null ? this.props.showPreview : true,
         }
 	};
 
@@ -105,6 +123,51 @@ class ImageEditable extends AbstractImageEditable {
 		this.requester.notifyChange(null, progress => {});
 	};
 
+	renderFullScreen = () => {
+		return (
+			<a className="image-gallery-icon image-gallery-fullscreen-button" color="primary" onClick={this.handlePreview.bind(this)}>
+				<Fullscreen fontSize="large"/>
+			</a>
+		);
+	}
+
+	handlePreview(e) {
+		const overlay = document.createElement("div");
+		overlay.style.position = "fixed";
+		overlay.style.top = "0";
+		overlay.style.left = "0";
+		overlay.style.width = "100vw";
+		overlay.style.height = "100vh";
+		overlay.style.background = "rgba(0, 0, 0, 0.9)";
+		overlay.style.display = "flex";
+		overlay.style.alignItems = "center";
+		overlay.style.justifyContent = "center";
+		overlay.style.zIndex = "9999";
+		overlay.style.cursor = "zoom-out";
+
+		// Crear imagen
+		const fullImg = document.createElement("img");
+		fullImg.src = this.state.value;
+		fullImg.style.maxWidth = "90%";
+		fullImg.style.maxHeight = "90%";
+		fullImg.style.objectFit = "contain";
+
+		overlay.appendChild(fullImg);
+
+		overlay.addEventListener("click", function () {
+			document.body.removeChild(overlay);
+		});
+
+		document.addEventListener("keydown", function escClose(e) {
+			if (e.key === "Escape") {
+				document.body.removeChild(overlay);
+				document.removeEventListener("keydown", escClose);
+			}
+		});
+
+		document.body.appendChild(overlay);
+	};
+
 	handleDownload(e) {
 	    this.requester.download();
 	};
@@ -119,36 +182,35 @@ class ImageEditable extends AbstractImageEditable {
 
 		const { classes } = this.props;
 		const inputId = this._inputId();
-		const theme = Theme.get();
-		const labelDisplay = this.state.readonly ? "none" : "flex";
-		const borderDisplay = this.state.readonly ? "flex" : "none";
-		const removeButtonDisplay = this.state.readonly || this.state.value == null ? "none" : "flex";
 		const showImageGallery = this._showImageGallery();
-		const url = this.state.value != null ? this.state.value + (this.state.value.indexOf("?") == -1 ? "?" : "&") + Math.random() : null;
+		const theme = Theme.get();
+		const url = this.state.value != null ? this.state.value + (this.state.value.indexOf("?") === -1 ? "?" : "&") + Math.random() : null;
         const removeStyle = this.state.readonly ? { display: 'none', pointerEvents: 'none' } : {};
 
 		return (
-			<div style={{...this.style(),position:'relative'}}>
-			    { ComponentBehavior.labelBlock(this.props, "body1", { color: theme.palette.grey.A700, marginRight: '5px', fontSize: "9pt", color: "#777777" }) }
-                {!showImageGallery && this.state.value && <img className={classes.image} alt={this.props.label} title={this.props.label} src={url} />}
-                <label htmlFor={inputId} className={classes.overlay} style={{display:labelDisplay}}></label>
-                <div className={classes.bordered} style={{display:borderDisplay}}></div>
-			    {(showImageGallery && this.state.value != null) &&
-					<div className={classes.image} style={{top:'0px'}} >
-						<ImageGallery items={[this._galleryItems()]} showThumbnails={false} showBullets={false} showPlayButton={false} />
+			<div style={{position:'relative',...this.style()}} className={classnames("image-editable layout ", this.state.showPreview ? "vertical" : "horizontal center")}>
+			    { ComponentBehavior.labelBlock(this.props, "body1", { marginRight: '15px', color: theme.palette.grey.primary, fontSize: this.state.showPreview ? "9pt" : "14pt" }) }
+				{this.state.showPreview &&
+					<label htmlFor={inputId} className={classnames(classes.overlay, this.state.readonly ? classes.disabledOverlay : undefined, !showImageGallery || this.state.value == null ? classes.borderedOverlay : undefined)} style={{display:'flex',cursor: this.state.readonly ? 'default' : 'pointer',...this.sizeStyle()}} >
+						{this.state.showPreview && !showImageGallery && this.state.value && <img className={classnames(classes.image, this.state.readonly ? classes.disabledImage : undefined)} alt={this.props.label} title={this.props.label} src={url} style={this.sizeStyle()}/>}
+					</label>
+				}
+			    {(this.state.showPreview && showImageGallery && this.state.value != null) &&
+					<div className={classnames(classes.image, this.state.readonly ? classes.disabledImage : undefined)} style={{top:'19px',...this.sizeStyle()}} >
+						<ImageGallery items={[this._galleryItems()]} showThumbnails={false} showBullets={false} showPlayButton={false} renderFullscreenButton={this.renderFullScreen.bind(this)}/>
 					</div>
 				}
-			    {!this.state.readonly &&
-			        <React.Fragment>
-                        <input accept="image/*" id={inputId} type="file"
-                           className={classes.input} onChange={this.handleChange.bind(this)}
-                           disabled={this.state.readonly} value="" />
-                    </React.Fragment>
-                }
-				<div style={{marginTop:'4px',zIndex:'6',position:'relative',background:'white'}}>
-					{<a className={classes.edit} onClick={this.handleEdit.bind(this)}>{this.translate(this.translate("Edit..."))}</a>}
-					{this.state.value && <a className={classes.remove} onClick={this.handleRemove.bind(this)} style={removeStyle}>{this.translate("Remove")}</a>}
-					{this.state.value && <a className={classes.download} onClick={this.handleDownload.bind(this)}>{this.translate("Download")}</a>}
+				<React.Fragment>
+					<input accept="image/*" id={inputId} type="file"
+					   className={classes.input} onChange={this.handleChange.bind(this)}
+					   disabled={this.state.readonly} value="" />
+				</React.Fragment>
+				<div style={{marginTop:'4px',zIndex:'6',position:'relative'}}>
+					{(this.state.readonly && !this.state.value && !this.state.showPreview) && <div className={classes.empty}>{this.translate("No image")}</div>}
+					{(!this.state.readonly && !this.state.value) && <a className={classes.link} onClick={this.handleEdit.bind(this)}>{this.translate("Select")}</a>}
+					{!this.state.showPreview && this.state.value && <a className={classes.link} onClick={this.handlePreview.bind(this)}>{this.translate("Preview")}</a>}
+					{this.state.value && <a className={classes.link} onClick={this.handleDownload.bind(this)}>{this.translate("Download")}</a>}
+					{(!this.state.readonly && this.state.value) && <a className={classes.link} onClick={this.handleRemove.bind(this)} style={removeStyle}>{this.translate("Remove")}</a>}
 				</div>
 			</div>
 		);
@@ -165,9 +227,9 @@ class ImageEditable extends AbstractImageEditable {
         return this.props.id + "-image-input";
     }
 
-	style() {
-		var result = super.style();
-		if (result == null) result = {};
+	sizeStyle() {
+		const result = {};
+		if (!this.state.showPreview) return result;
 		if (this.props.width != null) {
 			result.width = this.props.width;
 			result.minWidth = this.props.width;
@@ -176,7 +238,6 @@ class ImageEditable extends AbstractImageEditable {
 			result.height = this.props.height;
 			result.minHeight = this.props.height;
 		}
-		result.position = "relative";
 		return result;
 	};
 

@@ -20,6 +20,7 @@ public class DateRenderer extends ComponentRenderer<Date> {
 		if (element.value() != null) result.add("value", element.value().toEpochMilli());
 		if (element.mode() != Date.Mode.None) result.add("mode", element.mode().name().toLowerCase());
 		if (!element.useTimezone()) result.add("useTimezone", false);
+		if (element.isReadonly()) result.add("readonly", element.isReadonly());
 		addEditableProperties(result);
 		return result;
 	}

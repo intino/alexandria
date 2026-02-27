@@ -1,0 +1,127 @@
+dsl Konos
+
+use Theme
+
+Template(layout=Vertical, spacing=DP8) formExamplesMold
+
+	Block(layout=Vertical)
+
+		Block(layout=Horizontal Wrap, format=airBottom)
+			Block(format=airRight) as Relative(width=48%, height=100%)
+				Text(format=h6 doubleAirTop, value="Readonly TEXT fields")
+				Block(format=airTop airBottom)
+					Text(format=airTop) text1 as Editable Readonly
+					Text(format=airTop) text2 as Editable(placeholder="Text field with placeholder aaa") Readonly
+					Text(format=airTop) text3 as Editable Labeled("Text field with label") Readonly
+					Text(format=airTop, shrink=false) text4 as Editable(placeholder="Text field with placeholder and label") Labeled("Text field with shrink to false") Readonly
+					Text(format=airTop, shrink=true) text5 as Editable(placeholder="Text field with placeholder and label") Labeled("Text field with shrink to true") Readonly
+					Text(format=airTop) text6 as Editable Labeled("Text field with pattern") Readonly > Validation(pattern="0N0/00")
+					Text(format=airTop airBottom) text7 as Editable Readonly Labeled("Text field with error")
+					Text(format=doubleAirTop) text8 as Code(language=Html) Editable Readonly Labeled("Text field with code facet")
+			Block as Relative(width=48%, height=100%)
+				Text(format=h6 doubleAirTop, value="TEXT fields")
+				Block(format=airTop airBottom)
+					Text(format=airTop) editableText1 as Editable
+					Text(format=airTop) editableText2 as Editable(placeholder="Text field with placeholder")
+					Text(format=airTop) editableText3 as Editable Labeled("Text field with label")
+					Text(format=airTop, shrink=false) editableText4 as Editable(placeholder="Text field with placeholder and label") Labeled("Text field with shrink to false")
+					Text(format=airTop, shrink=true) editableText5 as Editable(placeholder="Text field with placeholder and label") Labeled("Text field with shrink to true")
+					Text(format=airTop) editableText6 as Editable Labeled("Text field with pattern") > Validation(pattern="0N0/00")
+					Text(format=airTop) editableText7 as Editable Labeled("Text field with error")
+					Text(format=airTop) editableText8 as Code(language=Html) Editable Labeled("Text field with code facet")
+
+		Block(layout=Horizontal Wrap, format=airBottom)
+			Block(format=airRight) as Relative(width=48%, height=100%)
+				Text(format=h6 doubleAirTop, value="Readonly MEMO fields")
+				Block(format=airTop airBottom)
+					Text(format=airTop, shrink=true) memo1 as Memo(height=5Rows) Editable(placeholder="Memo field with placeholder and label") Labeled("Memo field") Readonly
+					Text(format=airTop) memo2 as Memo(editionMode=Rich) Editable Readonly
+			Block as Relative(width=48%, height=100%)
+				Text(format=h6 doubleAirTop, value="MEMO fields")
+				Block(format=airTop airBottom)
+					Text(format=airTop, shrink=true) editableMemo1 as Memo(height=5Rows) Editable(placeholder="Memo field with placeholder and label") Labeled("Memo field")
+					Text(format=airTop) editableMemo2 as Memo(editionMode=Rich) Editable
+
+		Block(layout=Horizontal Wrap, format=airBottom)
+			Block(format=airRight) as Relative(width=48%, height=100%)
+				Text(format=h6 doubleAirTop, value="Readonly NUMBER fields")
+				Block(format=airTop airBottom)
+					Number(format=airTop, value = 0, min=0, max=100, step=10) number1 as Editable Readonly Labeled("Number field")
+					Number(format=airTop, value = 0, min=0, max=100, step=10, prefix="Price:", suffix="$") number2 as Editable Readonly Labeled("Number field")
+					Number(format=airTop, value = 0, min=0, max=100, step=10, prefix="Price:", suffix="$") number3 as Editable Readonly Labeled("Number field with error")
+			Block as Relative(width=48%, height=100%)
+				Text(format=h6 doubleAirTop, value="NUMBER fields")
+				Block(format=airTop airBottom)
+					Number(format=airTop, value = 0, min=0, max=100, step=10) editableNumber1 as Editable Labeled("Number field")
+					Number(format=airTop, value = 0, min=0, max=100, step=10, prefix="Price:", suffix="$") editableNumber2 as Editable Labeled("Number field")
+					Number(format=airTop, value = 0, min=0, max=100, step=10, prefix="Price:", suffix="$") editableNumber3 as Editable Labeled("Number field with error")
+
+		Block(layout=Horizontal Wrap, format=airBottom)
+			Block(format=airRight) as Relative(width=48%, height=100%)
+				Text(format=h6 doubleAirTop, value="Readonly IMAGE fields")
+				Block(format=airTop airBottom)
+					Image(format=airTop) image1 as Editable Labeled("Image field") Absolute(width=200px, height=200px) Readonly
+					Image(value="images/image.jpg", format=doubleAirTop, allowFullscreen=true) image2 as Editable Labeled("Image field with fullscreen") Absolute(width=200px, height=200px) Readonly
+					Image(value="images/image.jpg", format=doubleAirTop, showPreview=false) image3 as Editable Labeled("Image field with no preview") Absolute(width=200px, height=200px) Readonly
+					Image(format=doubleAirTop, showPreview=false) image4 as Editable Labeled("Image field with no preview and empty") Absolute(width=200px, height=200px) Readonly
+
+			Block as Relative(width=48%, height=100%)
+				Text(format=h6 doubleAirTop, value="IMAGE fields")
+				Block(format=airTop airBottom)
+					Image(format=airTop) editableImage1 as Editable Labeled("Image field") Absolute(width=200px, height=200px)
+					Image(value="images/image.jpg", format=airTop, allowFullscreen=true) editableImage2 as Editable Labeled("Image field with fullscreen") Absolute(width=200px, height=200px)
+					Image(value="images/image.jpg", format=doubleAirTop, showPreview=false) editableImage3 as Editable Labeled("Image field with no preview") Absolute(width=200px, height=200px)
+					Image(format=doubleAirTop, showPreview=false) editableImage4 as Editable Labeled("Image field with no preview and empty") Absolute(width=200px, height=200px)
+
+		Block(layout=Horizontal Wrap, format=airBottom)
+			Block(format=airRight) as Relative(width=48%, height=100%)
+				Text(format=h6 doubleAirTop, value="Readonly FILE fields")
+				Block(format=airTop airBottom)
+					File(format=airTop) file1 as Relative(width=100%, height=100%) Editable(showDropZone=false, showProgress=true) Labeled("File field") Readonly
+					File(format=airTop) file2 as Relative(width=100%, height=100%) Editable(showDropZone=true, showProgress=true) Labeled("File field with drop zone") Readonly
+					File(format=airTop) file3 as Relative(width=100%, height=100%) Editable(showDropZone=false, showPasteZone=true, showProgress=true) Labeled("File field with paste zone") Readonly
+					File(format=airTop) file4 as Relative(width=100%, height=100%) Editable(showDropZone=true, showPasteZone=true, showProgress=true) Labeled("File field with drop zone and paste zone") Readonly
+
+			Block as Relative(width=48%, height=100%)
+				Text(format=h6 doubleAirTop, value="FILE fields")
+				Block(format=airTop airBottom)
+					File(format=airTop) editableFile1 as Relative(width=100%, height=100%) Editable(showDropZone=false, showProgress=true) Labeled("File field")
+					File(format=airTop) editableFile2 as Relative(width=100%, height=100%) Editable(showDropZone=true, showProgress=true) Labeled("File field with drop zone")
+					File(format=airTop) editableFile3 as Relative(width=100%, height=100%) Editable(showDropZone=false, showPasteZone=true, showProgress=true) Labeled("File field with paste zone")
+					File(format=airTop) editableFile4 as Relative(width=100%, height=100%) Editable(showDropZone=true, showPasteZone=true, showProgress=true) Labeled("File field with drop zone and paste zone")
+
+		Block(layout=Horizontal Wrap, format=airBottom)
+			Block(format=airRight) as Relative(width=48%, height=100%)
+				Text(format=h6 doubleAirTop, value="Readonly DATE fields")
+				Block(format=airTop airBottom)
+					Date(format=airTop) date1 as Editable Labeled("Date field") Readonly
+					Date(format=airTop) date2 as Editable(allowEmpty=true) Labeled("Date field with empty option") Readonly
+					Date(format=bigAirTop) date3 as Editable(timePicker=true, pattern="DD/MM/YYYY HH:mm") Labeled("Date field with time picker") Readonly
+					//Date(format=airTop) date4 as Editable(embedded=true, pattern = "DD/MM/YYYY") Labeled("Embedded date field") Readonly
+
+			Block as Relative(width=48%, height=100%)
+				Text(format=h6 doubleAirTop, value="DATE fields")
+				Block(format=airTop airBottom)
+					Date(format=airTop) editableDate1 as Editable Labeled("Date field")
+					Date(format=airTop) editableDate2 as Editable(allowEmpty=true) Labeled("Date field with empty option")
+					Date(format=airTop) editableDate3 as Editable(timePicker=true, pattern="DD/MM/YYYY HH:mm") Labeled("Date field with time picker")
+					//Date(format=airTop) editableDate4 as Editable(embedded=true, pattern = "DD/MM/YYYY") Labeled("Embedded date field")
+
+		Block(layout=Horizontal Wrap, format=airBottom)
+			Block(format=airRight) as Relative(width=48%, height=100%)
+				Text(format=h6 doubleAirTop, value="Readonly SELECTOR fields")
+				Block(format=airTop airBottom)
+					Selector(format=airTop) selector1 as ComboBox Readonly Labeled("Selector field as combobox") > Text(value="option 1") tabOption11 as Option; Text(value="option 2") tabOption12 as Option; Text(value="option 3") tabOption13 as Option
+					Selector(format=airTop) selector2 as ComboBox(multipleSelection=true) Readonly Labeled("Selector field as combobox with multiple selection") > Text(value="option 1") tabOption21 as Option; Text(value="option 2") tabOption22 as Option; Text(value="option 3") tabOption23 as Option
+					Selector(format=airTop) selector3 as CollectionBox Readonly Labeled("Selector field as collectionbox")
+						List(itemClass="io.intino.alexandria.ui.documentation.Person") selector3List as Selectable
+							Mold > Item(height = 30px) selector3ListMold > Text firstName
+
+			Block as Relative(width=48%, height=100%)
+				Text(format=h6 doubleAirTop, value="SELECTOR fields")
+				Block(format=airTop airBottom)
+					Selector(format=airTop) editableSelector1 as ComboBox Labeled("Selector field as combobox") > Text(value="option 1") editableTabOption11 as Option; Text(value="option 2") editableTabOption12 as Option; Text(value="option 3") editableTabOption13 as Option
+					Selector(format=airTop) editableSelector2 as ComboBox(multipleSelection=true) Labeled("Selector field as combobox") > Text(value="option 1") editableTabOption21 as Option; Text(value="option 2") editableTabOption22 as Option; Text(value="option 3") editableTabOption23 as Option
+					Selector(format=airTop) editableSelector3 as CollectionBox Labeled("Selector field as collectionbox")
+						List(itemClass="io.intino.alexandria.ui.documentation.Person") editableSelector3List as Selectable
+							Mold > Item(height = 30px) editableSelector3ListMold > Text firstName
