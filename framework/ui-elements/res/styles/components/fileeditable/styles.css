@@ -6,8 +6,12 @@
     border-color: #555 !important;
 }
 
+.fileeditable-dropzone {
+    background: #f5ffff !important;
+}
+
 .fileeditable-dropzone:hover {
-    background: #eaf9ff !important;
+    background: #d2f1fe !important;
 }
 
 .fileeditable-dropzone-readonly {
