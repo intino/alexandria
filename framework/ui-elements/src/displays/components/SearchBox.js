@@ -44,13 +44,21 @@ const styles = theme => ({
 		right: '0',
 		cursor: 'pointer',
 		position: 'absolute',
-		marginTop: '18px',
+		marginTop: '16px',
 		marginRight: '24px',
 		background: 'white',
+	},
+	clearIconSmall: {
+		marginTop: '9px',
 	},
 	inputRoot: {
 		color: 'inherit',
 		width: '100%',
+	},
+	inputRootSmall: {
+		color: 'inherit',
+		width: '100%',
+		height: '38px',
 	},
 	inputInput: {
 		paddingTop: theme.spacing(1),
@@ -83,14 +91,14 @@ class SearchBox extends AbstractSearchBox {
 		this.requester = new SearchBoxRequester(this);
 		this.input = React.createRef();
 		this.state = {
-		    count: null,
-		    value: '',
-		    ...this.state,
+			count: null,
+			value: '',
+			...this.state,
 		}
 	};
 
 	render() {
-	    if (!this.state.visible) return (<React.Fragment/>);
+		if (!this.state.visible) return (<React.Fragment/>);
 		const {classes} = this.props;
 		const placeholder = this.translate(this.props.placeholder != null && this.props.placeholder !== "" ? this.props.placeholder : "Search...");
 		return (
@@ -101,17 +109,17 @@ class SearchBox extends AbstractSearchBox {
 						<div className={classes.searchIcon}>
 							<SearchIcon/>
 						</div>
-                        <OutlinedInput
-                            placeholder={placeholder}
-                            value={this.state.value}
-                            onChange={this.handleSearch.bind(this)}
-                            ref={this.input}
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                            }}
-                        />
-                        {this.state.value != null && this.state.value !== "" && <a onClick={this.handleClear.bind(this)} className={classes.clearIcon}><ClearIcon/></a>}
+						<OutlinedInput
+							placeholder={placeholder}
+							value={this.state.value}
+							onChange={this.handleSearch.bind(this)}
+							ref={this.input}
+							classes={{
+								root: this.props.size === "Small" ? classes.inputRootSmall : classes.inputRoot,
+								input: classes.inputInput,
+							}}
+						/>
+						{this.state.value != null && this.state.value !== "" && <a onClick={this.handleClear.bind(this)} className={classNames(classes.clearIcon, this.props.size === "Small" ? classes.clearIconSmall : undefined)}><ClearIcon/></a>}
 					</div>
 					{this.props.showCountMessage && <div className={classNames(classes.count, "layout horizontal end-justified")}><div title={this.countHint()}>{this.countMessage()}</div></div>}
 				</div>

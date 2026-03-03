@@ -97,6 +97,7 @@ Concept CatalogComponents
 		var Collection[] collections
 		var string placeholder = empty
 		var boolean showCountMessage = true
+		var word:{Small Large} size = Large
 		Facet Addressable
 			var Service.UI.Resource addressableResource
         	var boolean encoded = false

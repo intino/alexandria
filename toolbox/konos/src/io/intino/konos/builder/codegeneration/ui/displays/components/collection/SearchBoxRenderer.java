@@ -24,6 +24,7 @@ public class SearchBoxRenderer extends BindingCollectionRenderer<SearchBox> {
 		addAddressableProperties(result);
 		if (placeholder != null && !placeholder.isEmpty()) result.add("placeholder", placeholder);
 		if (element.showCountMessage()) result.add("showCountMessage", true);
+		if (element.size() != null && element.size() != SearchBox.Size.Large) result.add("size", element.size().name());
 		return result;
 	}
 
