@@ -161,7 +161,7 @@ rule type(properties, download, selection) and trigger(specific)
 	<< options={["$option...[","]"]}>>
 
 rule type(properties, searchbox) and trigger(specific)
-	<< placeholder="$placeholder">><< showCountMessage="$showCountMessage">>
+	<< placeholder="$placeholder">><< showCountMessage="$showCountMessage">><< size="$size">>
 
 rule type(properties, slider) and trigger(specific)
 	<< range={{min:$min,max:$max}}>><< value={$value}>>

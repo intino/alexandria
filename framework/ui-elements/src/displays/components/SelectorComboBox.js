@@ -141,9 +141,13 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 		const color = this.state.readonly ? theme.palette.grey.A700 : theme.isDark() ? "#ffffffb3" : "#0000008a";
 		const isDark = Theme.get().isDark();
 		const styles = this.props.view === "TextView" ? { ...selectorComboBoxStyles(Theme.get()), ...SelectorComboBoxTextViewStyles } : { ...selectorComboBoxStyles(Theme.get()) };
+		const readonlyClass = this.state.readonly ? "readonly" : "";
+		const labelClass = label == null || label === "" ? "no-label" : undefined;
+		const viewClass = this.props.view === "FilterView" ? "filter-view" : this.props.view === "TextView" ? "text-view" : undefined;
+		const containerClasses = classnames(classes.container, "selector selector-combo-box", readonlyClass, labelClass, viewClass)
 
 		return (
-			<div id={this.props.id + "-container"} className={classnames(classes.container, "selector selector-combo-box", this.state.readonly ? "readonly" : "", label == null || label === "" ? "no-label" : undefined)} style={{...this.style()}}>
+			<div id={this.props.id + "-container"} className={containerClasses} style={{...this.style()}}>
 				{this.renderTraceConsent()}
 				<div className="MuiFormControl-root MuiTextField-root" style={{width:"100%"}}>
 					<label className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined Mui-focused Mui-focused" data-shrink="true">

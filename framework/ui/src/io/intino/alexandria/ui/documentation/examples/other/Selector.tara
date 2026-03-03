@@ -74,6 +74,38 @@ Template(layout=Vertical, spacing=DP8) selectorExamplesMold
 						=========
 
 		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="ComboBox facet with text view")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Selector selector20 as ComboBox(view=TextView)
+					Text(value="option 1") comboBoxOption201 as Option
+					Text(value="option 2") comboBoxOption202 as Option
+					Text(value="option 3") comboBoxOption203 as Option
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Selector as ComboBox Traceable<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 1") comboBoxOption1 as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 2") comboBoxOption2 as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") comboBoxOption3 as Option
+						=========
+
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="ComboBox facet with filter view")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Selector selector30 as ComboBox(view=FilterView)
+					Text(value="option 1") comboBoxOption301 as Option
+					Text(value="option 2") comboBoxOption302 as Option
+					Text(value="option 3") comboBoxOption303 as Option
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Selector as ComboBox Traceable<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 1") comboBoxOption1 as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 2") comboBoxOption2 as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") comboBoxOption3 as Option
+						=========
+
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="ListBox facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Selector selector4 as ListBox

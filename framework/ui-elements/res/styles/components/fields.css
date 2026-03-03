@@ -23,6 +23,10 @@
     border-color: #d7d7d7 !important;
 }
 
+.selector-combo-box.text-view .MuiOutlinedInput-notchedOutline {
+    border: 0 !important;
+}
+
 .MuiInputBase-root legend {
     font-size: 1em !important;
     max-width: 100% !important;
@@ -40,6 +44,12 @@
     min-height: 38px;
     padding-top: 7px !important;
     padding-bottom: 7px !important;
+}
+
+.selector-combo-box.filter-view .MuiInputBase-formControl {
+    min-height: 20px;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
 }
 
 .MuiInputBase-formControl:hover {
@@ -109,6 +119,12 @@
     border-width: 1px;
     pointer-events: none;
 }
+
+.selector-combo-box.filter-view .PrivateNotchedOutline-root-46 {
+    padding: 0 !important;
+    height: 38px;
+}
+
 .PrivateNotchedOutline-legendLabelled-48 {
     width: auto;
     height: 11px;
