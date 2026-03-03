@@ -131,10 +131,10 @@ rule type(properties, collection) and trigger(specific)
 	<< noItemsMessage="$noItemsMessage">><< noItemsFoundMessage="$noItemsFoundMessage">><< pageSize={$pageSize}>><< itemHeight={$itemHeight}>><< itemWidth={$itemWidth}>><< scrollingMark={$scrollingMark}>><< navigable="$navigable">><< selection="$selection">>
 
 rule type(properties, heading) and trigger(specific)
-	 style={{width:"$width~%",paddingRight:"10px"<<,$paddingLeft:"10px">>}}<< hidden="$hidden">>
+	 style={{<<width:"$absoluteWidth~px",>><<width:"$relativeWidth~%",>>paddingRight:"10px"<<,$paddingLeft:"10px">>}}<< hidden="$hidden">>
 
 rule type(properties, item) and trigger(specific)
-	 style={{width:"$width~%",paddingRight:"10px"<<,$paddingLeft:"10px">>}}<< hidden="$hidden">>
+	 style={{<<width:"$absoluteWidth~px",>><<width:"$relativeWidth~%",>>paddingRight:"10px"<<,$paddingLeft:"10px">>}}<< hidden="$hidden">>
 
 rule type(properties, spinner) and trigger(specific)
 	<< mode="$mode">><< size={$size}>>

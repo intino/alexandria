@@ -18,7 +18,9 @@ public abstract class CollectionComponentRenderer<C extends Component> extends C
 	@Override
 	public FrameBuilder properties() {
 		FrameBuilder result = super.properties();
-		result.add("width", width() != -1 ? width() : defaultWidth());
+		if (relativeWidth() != -1) result.add("relativeWidth", relativeWidth());
+		else if (absoluteWidth() != -1) result.add("absoluteWidth", absoluteWidth());
+		else result.add("relativeWidth", defaultWidth());
 		int position = position();
 		if (position == 0) result.add("paddingLeft", "paddingLeft");
 		result.add("paddingSize", position == 0 ? "20" : "10");
@@ -32,11 +34,16 @@ public abstract class CollectionComponentRenderer<C extends Component> extends C
 		return element.core$().ownerAs(CatalogComponents.Moldable.Mold.class).hidden();
 	}
 
-	private int width() {
+	private int relativeWidth() {
 		if (element.core$().ownerAs(CatalogComponents.Moldable.class) == null) return 0;
 		CatalogComponents.Moldable.Mold.Item item = element.core$().ownerAs(CatalogComponents.Moldable.Mold.class).item();
-		if (item.width() != -1) return item.width();
 		return item.relativeWidth();
+	}
+
+	private int absoluteWidth() {
+		if (element.core$().ownerAs(CatalogComponents.Moldable.class) == null) return 0;
+		CatalogComponents.Moldable.Mold.Item item = element.core$().ownerAs(CatalogComponents.Moldable.Mold.class).item();
+		return item.width();
 	}
 
 	int defaultWidth() {

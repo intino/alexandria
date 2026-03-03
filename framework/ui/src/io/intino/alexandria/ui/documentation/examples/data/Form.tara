@@ -64,6 +64,7 @@ Template(layout=Vertical, spacing=DP8) formExamplesMold
 					Image(value="images/image.jpg", format=doubleAirTop, allowFullscreen=true) image2 as Editable Labeled("Image field with fullscreen") Absolute(width=200px, height=200px) Readonly
 					Image(value="images/image.jpg", format=doubleAirTop, showPreview=false) image3 as Editable Labeled("Image field with no preview") Absolute(width=200px, height=200px) Readonly
 					Image(format=doubleAirTop, showPreview=false) image4 as Editable Labeled("Image field with no preview and empty") Absolute(width=200px, height=200px) Readonly
+					Image image5 as Editable Absolute(width=200px, height=200px) Readonly
 
 			Block as Relative(width=48%, height=100%)
 				Text(format=h6 doubleAirTop, value="IMAGE fields")
@@ -72,6 +73,7 @@ Template(layout=Vertical, spacing=DP8) formExamplesMold
 					Image(value="images/image.jpg", format=airTop, allowFullscreen=true) editableImage2 as Editable Labeled("Image field with fullscreen") Absolute(width=200px, height=200px)
 					Image(value="images/image.jpg", format=doubleAirTop, showPreview=false) editableImage3 as Editable Labeled("Image field with no preview") Absolute(width=200px, height=200px)
 					Image(format=doubleAirTop, showPreview=false) editableImage4 as Editable Labeled("Image field with no preview and empty") Absolute(width=200px, height=200px)
+					Image(format=airTop, allowFullscreen=true) editableImage5 as Editable Absolute(width=200px, height=200px)
 
 		Block(layout=Horizontal Wrap, format=airBottom)
 			Block(format=airRight) as Relative(width=48%, height=100%)

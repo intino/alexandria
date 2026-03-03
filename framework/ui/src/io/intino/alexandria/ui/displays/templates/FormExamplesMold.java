@@ -46,6 +46,7 @@ public class FormExamplesMold extends AbstractFormExamplesMold<UiFrameworkBox> {
 		editableImage2.onChange(e -> update(e, image2, editableImage2));
 		editableImage3.onChange(e -> update(e, image3, editableImage3));
 		editableImage4.onChange(e -> update(e, image4, editableImage4));
+		editableImage5.onChange(e -> update(e, image5, editableImage5));
 		editableFile1.maxSize(100);
 		editableSelector1.onSelect(e -> {
 			if (e.selection().isEmpty()) selector1.select();
