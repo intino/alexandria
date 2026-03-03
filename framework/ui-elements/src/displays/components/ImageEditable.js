@@ -124,6 +124,7 @@ class ImageEditable extends AbstractImageEditable {
 	};
 
 	renderFullScreen = () => {
+		if (this.state.value == null || this.state.value === "") return (<React.Fragment/>);
 		return (
 			<a className="image-gallery-icon image-gallery-fullscreen-button" color="primary" onClick={this.handlePreview.bind(this)}>
 				<Fullscreen fontSize="large"/>
@@ -196,7 +197,7 @@ class ImageEditable extends AbstractImageEditable {
 					</label>
 				}
 			    {(this.state.showPreview && showImageGallery && this.state.value != null) &&
-					<div className={classnames(classes.image, this.state.readonly ? classes.disabledImage : undefined)} style={{top:'19px',...this.sizeStyle()}} >
+					<div className={classnames(classes.image, this.state.readonly ? classes.disabledImage : undefined)} style={{top: this.props.label != null && this.props.label !== "" ? '19px' : '0',...this.sizeStyle()}} >
 						<ImageGallery items={[this._galleryItems()]} showThumbnails={false} showBullets={false} showPlayButton={false} renderFullscreenButton={this.renderFullScreen.bind(this)}/>
 					</div>
 				}

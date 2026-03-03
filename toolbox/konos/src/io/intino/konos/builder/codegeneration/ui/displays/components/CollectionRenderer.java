@@ -88,6 +88,7 @@ public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 
 	private Integer itemWidth() {
 		if (!element.i$(conceptOf(CatalogComponents.Moldable.class))) return null;
+		if (!element.a$(CatalogComponents.Moldable.class).moldList().stream().allMatch(m -> m.item().width() != -1)) return null;
 		int width = element.a$(CatalogComponents.Moldable.class).moldList().stream().mapToInt(m -> m.item().width()).sum();
 		return width > 0 ? width : null;
 	}

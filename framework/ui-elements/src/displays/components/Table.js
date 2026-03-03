@@ -1,18 +1,16 @@
 import React from "react";
-import { Checkbox } from "@material-ui/core";
-import { withStyles } from '@material-ui/core/styles';
-import { withSnackbar } from 'notistack';
+import {Checkbox} from "@material-ui/core";
+import {withStyles} from '@material-ui/core/styles';
+import {withSnackbar} from 'notistack';
 import AbstractTable from "../../../gen/displays/components/AbstractTable";
 import TableNotifier from "../../../gen/displays/notifiers/TableNotifier";
 import TableRequester from "../../../gen/displays/requesters/TableRequester";
 import AutoSizer from 'react-virtualized-auto-sizer';
 import classNames from "classnames";
 import 'alexandria-ui-elements/res/styles/layout.css';
-import Heading from "./Heading";
-import { CollectionStyles } from "./Collection";
+import {CollectionStyles} from "./Collection";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
-import Block from "./Block";
 
 export const TableStyles = theme => ({
     ...CollectionStyles(theme),
@@ -82,9 +80,13 @@ export class EmbeddedTable extends AbstractTable {
         const height = this.container.current != null ? this.container.current.offsetHeight : 0;
         const headerClass = height <= minHeight ? classes.withScroller : classes.withoutScroller;
         return (
-            <div ref={this.header} className={classNames(classes.headerView, headerClass, "layout horizontal center", selectable && multiple ? classes.selectable : {})} style={{position:"relative"}}>
-                <div className={classNames(classes.selectAll, selectable ? classes.selectable : {})}><Checkbox className={classes.selector} onChange={this.handleCheck.bind(this)} /></div>
-                {this.props.children}
+            <div className="layout vertical flex">
+                <div ref={this.header} className={classNames(classes.headerView, headerClass, "layout horizontal flex center", selectable && multiple ? classes.selectable : {})} style={{position:"relative"}}>
+                    <div className="layout horizontal flex center">
+                        <div className={classNames(classes.selectAll, selectable ? classes.selectable : {})}><Checkbox className={classes.selector} onChange={this.handleCheck.bind(this)} /></div>
+                        {this.props.children}
+                    </div>
+                </div>
             </div>
         );
     }
