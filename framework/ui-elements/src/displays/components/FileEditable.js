@@ -46,12 +46,13 @@ const styles = theme => ({
 	    borderRadius: "14px",
 	    marginTop: "5px",
 	    padding: "18px 10px",
-		background: 'none',
+		background: '#f5ffff',
 		"&:hover": {
-			background: "#eaf9ff",
+			background: "#d2f1fe",
 		},
 		"&:focus": {
 			border: theme.isDark() ? "1px solid #ffffffde" : "1px solid #00000023",
+			background: "#d2f1fe",
 		}
 	},
 	readonlyPasteInput: {

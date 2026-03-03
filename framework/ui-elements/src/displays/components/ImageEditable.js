@@ -24,14 +24,25 @@ const styles = theme => ({
 		objectFit: 'contain',
 		position: "absolute",
 		borderRadius: "14px",
+		background: "#f5ffff",
 		"&:hover": {
-			background: "#eaf9ff",
+			background: "#d2f1fe",
+			border: "1px solid #555"
+		},
+		"&:focus": {
+			background: "#d2f1fe",
 			border: "1px solid #555"
 		},
 	},
 	disabledImage: {
 		border: theme.isDark() ? "1px solid #0a0a0a" : "1px solid #efefef",
+		background: "none !important",
 		"&:hover": {
+			border: "0 !important",
+			background: "none !important",
+		},
+		"&:focus": {
+			border: "0 !important",
 			background: "none !important",
 		}
 	},
@@ -40,9 +51,10 @@ const styles = theme => ({
 		"justify-content": "center",
 		"align-items": "center",
 		top: "0",
+		background: "#f5ffff",
 		"&:hover": {
 			border: theme.isDark() ? "1px solid #ffffff00" : "1px solid #555",
-			background: "#eaf9ff",
+			background: "#d2f1fe",
 		},
 		"&:focus": {
 			border: theme.isDark() ? "1px solid #ffffffde" : "1px solid #00000023",
@@ -53,7 +65,12 @@ const styles = theme => ({
 	},
 	disabledOverlay: {
 		border: theme.isDark() ? "1px solid #0a0a0a" : "1px solid #efefef",
+		background: "none !important",
 		"&:hover": {
+			border: theme.isDark() ? "1px solid #0a0a0a" : "1px solid #efefef",
+			background: "none !important",
+		},
+		"&:focus": {
 			border: theme.isDark() ? "1px solid #0a0a0a" : "1px solid #efefef",
 			background: "none !important",
 		},

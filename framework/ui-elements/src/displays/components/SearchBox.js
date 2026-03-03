@@ -50,6 +50,7 @@ const styles = theme => ({
 	},
 	clearIconSmall: {
 		marginTop: '9px',
+		height: '26px',
 	},
 	inputRoot: {
 		color: 'inherit',
