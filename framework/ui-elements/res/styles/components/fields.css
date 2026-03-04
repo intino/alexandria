@@ -178,6 +178,7 @@
 
 .image-editable .image-gallery-image {
     aspect-ratio: 1;
+    border-radius: 14px;
 }
 
 .text-editable-rich-editor.readonly .rsw-toolbar {
