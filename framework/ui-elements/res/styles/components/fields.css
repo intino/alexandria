@@ -46,27 +46,20 @@
     padding-bottom: 7px !important;
 }
 
+.selector-combo-box.text-view .MuiInputBase-formControl {
+    min-height: auto;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
 .selector-combo-box.filter-view .MuiInputBase-formControl {
     min-height: 20px;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
 }
 
-.Mui-focused.MuiInputBase-formControl, .selector-combo-box.focus .MuiInputBase-formControl, .selector-collection-box.focus .MuiInputBase-formControl {
-    background: #d2f1fe !important;
-}
-
-.Mui-disabled.MuiInputBase-formControl, .selector-combo-box.readonly .MuiInputBase-formControl, .selector-collection-box.readonly .MuiInputBase-formControl {
-    background: none !important;
-}
-
-.MuiInputBase-formControl {
-    background: #f5ffff !important;
-    border-radius: 14px !important;
-}
-
 .MuiInputBase-formControl:hover {
-    background: #d2f1fe !important;
+    background: #eaf9ff !important;
     border-radius: 14px;
 }
 
