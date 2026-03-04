@@ -176,6 +176,10 @@
     flex-direction: column;
 }
 
+.image-editable .image-gallery-image {
+    aspect-ratio: 1;
+}
+
 .text-editable-rich-editor.readonly .rsw-toolbar {
     display: none;
 }
