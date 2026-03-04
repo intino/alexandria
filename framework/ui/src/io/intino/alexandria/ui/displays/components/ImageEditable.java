@@ -93,8 +93,9 @@ public class ImageEditable<DN extends ImageEditableNotifier, B extends Box> exte
 
 	public void notifyChange(io.intino.alexandria.Resource value) {
 		if (changeListener != null) changeListener.accept(new ChangeEvent(this, value));
-
+		refresh();
 	}
+
 	public void notifyRemove() {
 		notifyChange(null);
 	}

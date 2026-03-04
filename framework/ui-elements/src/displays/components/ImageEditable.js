@@ -7,7 +7,6 @@ import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import {withSnackbar} from 'notistack';
 import ComponentBehavior from "./behaviors/ComponentBehavior";
 import ImageGallery from 'react-image-gallery';
-import Resizer from "react-image-file-resizer";
 import 'react-image-gallery/styles/css/image-gallery.css';
 import Theme from "app-elements/gen/Theme";
 import classnames from 'classnames';
@@ -116,7 +115,13 @@ class ImageEditable extends AbstractImageEditable {
 	};
 
 	refresh = (value) => {
-		this.setState({ "value": value });
+		this.setState({ "value": this.forceReload(value) });
+	};
+
+	forceReload = (value) => {
+		if (value == null) return null;
+		const prefix = value.indexOf("?") !== -1 ? "&" : "?";
+		return value + prefix + "_r=" + Math.random();
 	};
 
 	handleChange(e) {
@@ -124,16 +129,7 @@ class ImageEditable extends AbstractImageEditable {
 		if (e.target.files[0]) fileInput = true;
 		if (!fileInput) return;
 		this.requester.notifyUploading();
-		if (this.props.width == null || this.props.height == null) {
-			this.requester.notifyChange(e.target.files[0], progress => {});
-			return;
-		}
-		const width = parseInt(this.props.width.replace("px", ""));
-		const height = parseInt(this.props.height.replace("px", ""));
-		Resizer.imageFileResizer(e.target.files[0], width, height, "PNG",
-			100, 0, (file) => { this.requester.notifyChange(file, progress => {}); },
-			"file", width, null
-		);
+		this.requester.notifyChange(e.target.files[0], progress => {});
 	};
 
 	handleRemove(e) {
