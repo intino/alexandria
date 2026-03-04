@@ -1,13 +1,13 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
-import { Typography, Link, Popover } from '@material-ui/core';
+import {withStyles} from '@material-ui/core/styles';
+import {Link, Popover, Typography} from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton'
 import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew'
 import AbstractUser from "../../../gen/displays/components/AbstractUser";
 import UserNotifier from "../../../gen/displays/notifiers/UserNotifier";
 import UserRequester from "../../../gen/displays/requesters/UserRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from 'notistack';
 import Divider from "./Divider";
 import classnames from "classnames";
 import 'alexandria-ui-elements/res/styles/layout.css';
@@ -39,6 +39,7 @@ class User extends AbstractUser {
         super(props);
         this.notifier = new UserNotifier(this);
         this.requester = new UserRequester(this);
+        this.popover = React.createRef();
         this.state = {
             ...this.state,
             info: null,
@@ -61,47 +62,47 @@ class User extends AbstractUser {
             <div className="layout horizontal">
                 <a ref={this.trigger} onClick={this.handleOpenDialog.bind(this)} title={info.fullName} className={!photoWithFullname || hasChildren ? classes.trigger : undefined}><img style={this.style()} className={classes.photo} src={info.photo} title={info.fullName}/></a>
                 {photoWithFullname &&
-                <div style={{marginLeft:"10px",marginTop:"5px"}}>
-                    <div className="layout vertical center-justified hidden-ifmobile">
-                        <Typography variant={variant}>{info.fullName}</Typography>
-                        <Link className={classes.link} component="button" variant={variant} onClick={this.handleLogout.bind(this)}>{this.translate("Logout")}</Link>
+                    <div style={{marginLeft:"10px",marginTop:"5px"}}>
+                        <div className="layout vertical center-justified hidden-ifmobile">
+                            <Typography variant={variant}>{info.fullName}</Typography>
+                            <Link className={classes.link} component="button" variant={variant} onClick={this.handleLogout.bind(this)}>{this.translate("Logout")}</Link>
+                        </div>
+                        <div className="layout vertical center-justified hidden-ifnotmobile">
+                            <IconButton onClick={this.handleLogout.bind(this)} className={classes.link}><PowerSettingsNew/></IconButton>
+                        </div>
                     </div>
-                    <div className="layout vertical center-justified hidden-ifnotmobile">
-                        <IconButton onClick={this.handleLogout.bind(this)} className={classes.link}><PowerSettingsNew/></IconButton>
-                    </div>
-                </div>
                 }
                 {(hasChildren || !photoWithFullname) &&
-                <Popover
-                    open={this.state.trigger != null}
-                    anchorEl={this.state.trigger}
-                    onClose={this.handleCloseDialog.bind(this)}
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'center',
-                    }}
-                    transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}>
-                    <div className={classes.dialogContent}>
-                        {!photoWithFullname &&
-                        <React.Fragment>
-                            <Typography className={classes.air}>{info.fullName}</Typography>
-                            <Divider/>
-                        </React.Fragment>
-                        }
-                        {this.props.children}
-                        {!photoWithFullname &&
-                        <React.Fragment>
-                            <Divider/>
-                            <div className={classnames(classes.air, "layout horizontal end-justified")}>
-                                <Link component="button" variant={variant} onClick={this.handleLogout.bind(this)}>{this.translate("Logout")}</Link>
-                            </div>
-                        </React.Fragment>
-                        }
-                    </div>
-                </Popover>
+                    <Popover ref={this.popover}
+                             open={this.state.trigger != null}
+                             anchorEl={this.state.trigger}
+                             onClose={this.handleCloseDialog.bind(this)}
+                             anchorOrigin={{
+                                 vertical: 'top',
+                                 horizontal: 'center',
+                             }}
+                             transformOrigin={{
+                                 vertical: 'top',
+                                 horizontal: 'right',
+                             }}>
+                        <div className={classes.dialogContent}>
+                            {!photoWithFullname &&
+                                <React.Fragment>
+                                    <Typography className={classes.air}>{info.fullName}</Typography>
+                                    <Divider/>
+                                </React.Fragment>
+                            }
+                            {this.props.children}
+                            {!photoWithFullname &&
+                                <React.Fragment>
+                                    <Divider/>
+                                    <div className={classnames(classes.air, "layout horizontal end-justified")}>
+                                        <Link component="button" variant={variant} onClick={this.handleLogout.bind(this)}>{this.translate("Logout")}</Link>
+                                    </div>
+                                </React.Fragment>
+                            }
+                        </div>
+                    </Popover>
                 }
             </div>
         );
@@ -110,6 +111,8 @@ class User extends AbstractUser {
     handleOpenDialog = (e) => {
         this.setState({trigger: e.currentTarget});
         this.requester.refreshChildren();
+        const widget = this;
+        window.setTimeout(() => widget.setState({ key: Math.random() }), 100);
     };
 
     handleCloseDialog = () => {
