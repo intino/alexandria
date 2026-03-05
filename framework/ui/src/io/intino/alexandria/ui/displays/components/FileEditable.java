@@ -127,6 +127,7 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 	public void refresh() {
 		refreshPreview();
 		notifier.refresh(info());
+		if (downloadListener != null) notifier.refreshDownloadDelegated(true);
 	}
 
 	public void notifyUploading() {
@@ -145,11 +146,11 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 		if (changeListener != null) changeListener.accept(new ChangeEvent(this, value));
 	}
 
+	public void notifyDownload() {
+		downloadListener.accept(new Event(this));
+	}
+
 	public UIFile downloadFile() {
-		if (downloadListener != null) {
-			downloadListener.accept(new Event(this));
-			return null;
-		}
 		URL value = value();
 		return new UIFile() {
 			@Override
