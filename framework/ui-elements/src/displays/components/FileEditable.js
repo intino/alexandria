@@ -90,6 +90,7 @@ class FileEditable extends AbstractFile {
             editable: false,
             allowedTypes: this.props.allowedTypes,
             maxSize: this.props.maxSize,
+			downloadDelegated: false,
             uploadingFiles: {},
             key: 0,
             errorMessage: null,
@@ -105,7 +106,8 @@ class FileEditable extends AbstractFile {
 	};
 
 	handleDownload(e) {
-	    this.requester.downloadFile();
+		if (this.state.downloadDelegated) this.requester.notifyDownload();
+		else this.requester.downloadFile();
 	};
 
 	saveFile(file, value) {
@@ -376,6 +378,10 @@ class FileEditable extends AbstractFile {
 
 	refreshMaxSize = (maxSize) => {
 		this.setState({ maxSize });
+	};
+
+	refreshDownloadDelegated = (downloadDelegated) => {
+		this.setState({ downloadDelegated });
 	};
 
     _newUploadingFile(file) {

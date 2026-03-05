@@ -3,6 +3,7 @@ package io.intino.alexandria.ui.displays.templates;
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.UiFrameworkBox;
 import io.intino.alexandria.logger.Logger;
+import io.intino.alexandria.ui.displays.components.FileEditable;
 import io.intino.alexandria.ui.displays.components.ImageEditable;
 import io.intino.alexandria.ui.displays.events.ChangeEvent;
 
@@ -47,7 +48,8 @@ public class FormExamplesMold extends AbstractFormExamplesMold<UiFrameworkBox> {
 		editableImage3.onChange(e -> update(e, image3, editableImage3));
 		editableImage4.onChange(e -> update(e, image4, editableImage4));
 		editableImage5.onChange(e -> update(e, image5, editableImage5));
-		editableFile1.maxSize(100);
+		//editableFile1.maxSize(100);
+		editableFile1.onChange(e -> update(e, file1, editableFile1));
 		editableSelector1.onSelect(e -> {
 			if (e.selection().isEmpty()) selector1.select();
 			else selector1.select(firstLowerCase(((String) e.selection().get(0)).replace("editable", "")));
@@ -58,7 +60,18 @@ public class FormExamplesMold extends AbstractFormExamplesMold<UiFrameworkBox> {
 		});
 	}
 
-	private void update(ChangeEvent event, ImageEditable<?, ?> editable, ImageEditable<?, ?> readonly) {
+	private void update(ChangeEvent event, ImageEditable<?, ?> readonly, ImageEditable<?, ?> editable) {
+		try {
+			Resource value = event.value();
+			update(value, editable);
+			if (value != null) value.stream().reset();
+			update(value, readonly);
+		} catch (IOException e) {
+			Logger.error(e);
+		}
+	}
+
+	private void update(ChangeEvent event, FileEditable<?, ?> readonly, FileEditable<?, ?> editable) {
 		try {
 			Resource value = event.value();
 			update(value, editable);
@@ -76,6 +89,16 @@ public class FormExamplesMold extends AbstractFormExamplesMold<UiFrameworkBox> {
 	private void update(Resource value, ImageEditable<?, ?> display) {
 		try {
 			java.io.File file = value != null ? toFile("/tmp/updated-test-image.png", value) : null;
+			display.value(file != null ? file.toURI().toURL() : null);
+		} catch (IOException e) {
+			Logger.error(e);
+		}
+
+	}
+
+	private void update(Resource value, FileEditable<?, ?> display) {
+		try {
+			java.io.File file = value != null ? toFile("/tmp/updated-test-file.pdf", value) : null;
 			display.value(file != null ? file.toURI().toURL() : null);
 		} catch (IOException e) {
 			Logger.error(e);
