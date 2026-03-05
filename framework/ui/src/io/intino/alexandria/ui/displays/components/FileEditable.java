@@ -23,6 +23,7 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 	private java.util.List<String> allowedTypes;
 	protected Listener uploadingListener = null;
 	protected Listener downloadStartedListener = null;
+	protected Listener downloadListener = null;
 	protected Listener downloadFinishedListener = null;
 	protected ChangeListener changeListener = null;
 	private ReadonlyListener readonlyListener = null;
@@ -101,6 +102,11 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 		return this;
 	}
 
+	public FileEditable<DN, B> onDownload(Listener listener) {
+		this.downloadListener = listener;
+		return this;
+	}
+
 	public FileEditable<DN, B> onDownloadFinished(Listener listener) {
 		this.downloadFinishedListener = listener;
 		return this;
@@ -140,6 +146,10 @@ public class FileEditable<DN extends FileEditableNotifier, B extends Box> extend
 	}
 
 	public UIFile downloadFile() {
+		if (downloadListener != null) {
+			downloadListener.accept(new Event(this));
+			return null;
+		}
 		URL value = value();
 		return new UIFile() {
 			@Override
