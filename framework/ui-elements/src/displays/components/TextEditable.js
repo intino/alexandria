@@ -67,6 +67,8 @@ class TextEditable extends AbstractTextEditable {
 	};
 
 	handleFocus(e) {
+		const element = document.getElementById(this.props.id + "-error");
+		if (element != null) element.style.display = "none";
 		this.requester.notifyFocus();
 	};
 
@@ -77,10 +79,12 @@ class TextEditable extends AbstractTextEditable {
 
 	handleMouseLeave() {
 		const element = document.getElementById(this.props.id + "-error");
-		if (element != null) element.style.display = "block";
+		if (element != null && document.activeElement !== this.inputRef.current) element.style.display = "block";
 	};
 
 	handleBlur(e) {
+		const element = document.getElementById(this.props.id + "-error");
+		if (element != null) element.style.display = "block";
 		Delayer.stop(this);
 		this.requester.notifyBlur(this.state.value);
 	};
@@ -129,7 +133,7 @@ class TextEditable extends AbstractTextEditable {
 
 		return (
 			<div style={{position:"relative"}}>
-				{(!this.state.readonly && error != null) && <div id={this.props.id + "-error"} className={classes.error} onMouseEnter={this.handleMouseEnter.bind(this)}>{error}</div>}
+				{(!this.state.readonly && error != null) && <div ref={this.errorRef} id={this.props.id + "-error"} className={classes.error} onMouseEnter={this.handleMouseEnter.bind(this)}>{error}</div>}
 				<TextField {...props} format={this.variant("body1")} style={this.style()} className={classes.default} label={label}
 						   onKeyPress={this.handleKeypress.bind(this)} type={type} autoFocus={this.props.focused}
 						   placeholder={placeholder} multiline={this._multiline()} rows={this._rowsCount()}

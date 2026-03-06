@@ -67,6 +67,11 @@ class NumberEditable extends AbstractNumberEditable {
 		Delayer.execute(this, () => this.requester.notifyChange(value !== "" ? value : "0"), 500);
 	};
 
+	handleFocus(e) {
+		const element = document.getElementById(this.props.id + "-error");
+		if (element != null) element.style.display = "none";
+	};
+
 	handleMouseEnter() {
 		const element = document.getElementById(this.props.id + "-error");
 		if (element != null) element.style.display = "none";
@@ -74,8 +79,13 @@ class NumberEditable extends AbstractNumberEditable {
 
 	handleMouseLeave() {
 		const element = document.getElementById(this.props.id + "-error");
-		if (element != null) element.style.display = "block";
+		if (element != null && document.activeElement !== this.inputRef.current) element.style.display = "block";
 	};
+
+	handleBlur(e) {
+		const element = document.getElementById(this.props.id + "-error");
+		if (element != null) element.style.display = "block";
+	}
 
 	render() {
 		if (!this.state.visible) return (<React.Fragment/>);
@@ -94,6 +104,8 @@ class NumberEditable extends AbstractNumberEditable {
 						   autoComplete="off" disabled={this.state.readonly} size="Small" variant="outlined"
 						   InputLabelProps={{ shrink: this.props.shrink !== null ? this.props.shrink : undefined }}
 						   inputRef={this.inputRef}
+						   onFocus={this.handleFocus.bind(this)}
+						   onBlur={this.handleBlur.bind(this)}
 						   inputProps={{
 							   min: this.state.min !== -1 ? this.state.min : undefined,
 							   max: this.state.max !== -1 ? this.state.max : undefined,
