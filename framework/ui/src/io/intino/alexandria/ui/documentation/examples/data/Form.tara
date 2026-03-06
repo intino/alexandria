@@ -104,7 +104,7 @@ Template(layout=Vertical, spacing=DP8) formExamplesMold
 			Block as Relative(width=48%, height=100%)
 				Text(format=h6 doubleAirTop, value="DATE fields")
 				Block(format=airTop airBottom)
-					Date(format=airTop) editableDate1 as Editable Labeled("Date field")
+					Date(format=airTop) editableDate1 as Editable(min="2000-01-01T00:00:00Z") Labeled("Date field")
 					Date(format=airTop) editableDate2 as Editable(allowEmpty=true) Labeled("Date field with empty option")
 					Date(format=airTop) editableDate3 as Editable(timePicker=true, pattern="DD/MM/YYYY HH:mm") Labeled("Date field with time picker")
 					//Date(format=airTop) editableDate4 as Editable(embedded=true, pattern = "DD/MM/YYYY") Labeled("Embedded date field")

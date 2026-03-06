@@ -106,16 +106,24 @@ class DateEditable extends AbstractDateEditable {
 
     handleMouseLeave() {
         const element = document.getElementById(this.props.id + "-error");
-        if (element != null && element.innerHTML !== "") element.style.display = "block";
+        if (element != null && this.lastError != null && document.activeElement !== this.inputRef.current) element.style.display = "block";
     };
 
     handleError(e) {
-        if (e == null || e === "") return;
+        if (e == null || e === "") {
+            this.lastError = null;
+            return;
+        }
         const element = document.getElementById(this.props.id + "-error");
         if (element == null) return;
         element.innerHTML = e;
         if (this.inputRef.current != null && this.inputRef.current !== document.activeElement) element.style.display = "block";
         this.lastError = e;
+    };
+
+    handleFocus() {
+        const element = document.getElementById(this.props.id + "-error");
+        if (element != null) element.style.display = "none";
     };
 
     handleBlur() {
@@ -158,10 +166,11 @@ class DateEditable extends AbstractDateEditable {
                                             ToolbarComponent={toolbar}
                                             renderDay={this.isWeekView() ? this.renderWrappedWeekDay.bind(this) : undefined}
                                             onError={this.handleError.bind(this)}
+                                            onFocus={this.handleFocus.bind(this)}
                                             onBlur={this.handleBlur.bind(this)}
                                             onMouseLeave={this.handleMouseLeave.bind(this)}
-                                            minDateMessage={this.translate("Date should not be before %s").replace("%s", moment(min).format(pattern))}
-                                            maxDateMessage={this.translate("Date should not be after %s").replace("%s", moment(this._max(max)).format(pattern))}/>
+                                            minDateMessage={this.translate("The date $1 must be the same as or later than $2").replace("$1", moment(this.state.value).format(pattern)).replace("$2", moment(min).format(pattern))}
+                                            maxDateMessage={this.translate("The date $1 must be the same as or earlier than $2").replace("$1", moment(this.state.value).format(pattern)).replace("$2", moment(this._max(max)).format(pattern))}/>
                                 </MuiPickersUtilsProvider>
                              : undefined
                 }
@@ -177,10 +186,11 @@ class DateEditable extends AbstractDateEditable {
                                             ToolbarComponent={toolbar}
                                             renderDay={this.isWeekView() ? this.renderWrappedWeekDay.bind(this) : undefined}
                                             onError={this.handleError.bind(this)}
+                                            onFocus={this.handleFocus.bind(this)}
                                             onBlur={this.handleBlur.bind(this)}
                                             onMouseLeave={this.handleMouseLeave.bind(this)}
-                                            minDateMessage={this.translate("Date should not be before %s").replace("%s", moment(min).format(pattern))}
-                                            maxDateMessage={this.translate("Date should not be after %s").replace("%s", moment(this._max(max)).format(pattern))}/>
+                                            minDateMessage={this.translate("The date $1 must be the same as or later than $2").replace("$1", moment(this.state.value).format(pattern)).replace("$2", moment(min).format(pattern))}
+                                            maxDateMessage={this.translate("The date $1 must be the same as or earlier than $2").replace("$1", moment(this.state.value).format(pattern)).replace("$2", moment(this._max(max)).format(pattern))}/>
                                 </MuiPickersUtilsProvider>
                              : undefined
                 }
@@ -197,10 +207,11 @@ class DateEditable extends AbstractDateEditable {
                                             ToolbarComponent={toolbar}
                                             renderDay={this.isWeekView() ? this.renderWrappedWeekDay.bind(this) : undefined}
                                             onError={this.handleError.bind(this)}
+                                            onFocus={this.handleFocus.bind(this)}
                                             onBlur={this.handleBlur.bind(this)}
                                             onMouseLeave={this.handleMouseLeave.bind(this)}
-                                            minDateMessage={this.translate("Date should not be before %s").replace("%s", moment(min).format(pattern))}
-                                            maxDateMessage={this.translate("Date should not be after %s").replace("%s", moment(this._max(max)).format(pattern))}/>
+                                            minDateMessage={this.translate("The date $1 must be the same as or later than $2").replace("$1", moment(this.state.value).format(pattern)).replace("$2", moment(min).format(pattern))}
+                                            maxDateMessage={this.translate("The date $1 must be the same as or earlier than $2").replace("$1", moment(this.state.value).format(pattern)).replace("$2", moment(this._max(max)).format(pattern))}/>
                                 </MuiPickersUtilsProvider>
                              : undefined
                 }
