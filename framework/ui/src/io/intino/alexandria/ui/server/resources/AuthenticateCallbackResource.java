@@ -37,8 +37,8 @@ public class AuthenticateCallbackResource extends Resource {
 
             manager.writeHeader("authId", requestAuthId());
             manager.redirect(callbackUrl(action));
-        } catch (CouldNotObtainAccessToken error) {
-            manager.write(error);
+        } catch (CouldNotObtainAccessToken ignored) {
+            manager.redirect(home());
         }
     }
 

@@ -1,6 +1,15 @@
-import React, { Suspense } from "react";
+import React, {Suspense} from "react";
 import AbstractActionable from "../../../gen/displays/components/AbstractActionable";
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, IconButton, Typography } from "@material-ui/core";
+import {
+	Button,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogContentText,
+	DialogTitle,
+	IconButton,
+	Typography
+} from "@material-ui/core";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import TextField from '@material-ui/core/TextField';
 import Delayer from 'alexandria-ui-elements/src/util/Delayer';
@@ -158,8 +167,9 @@ export default class Actionable extends AbstractActionable {
 
 	renderButton = () => {
 		const {classes} = this.props;
+		const color = this.state.color != null ? this.state.color : undefined;
 		return (
-		    <Button id={this.triggerId()} style={this.style()} size={this._size()} color="primary" variant={this._highlightVariant()}
+		    <Button id={this.triggerId()} style={{...this.style(),backgroundColor: color}} size={this._size()} color="primary" variant={this._highlightVariant()}
 						onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
 						disabled={this._readonly()} className={classes.button}>
 				{this.renderWithWrappedContent()}
