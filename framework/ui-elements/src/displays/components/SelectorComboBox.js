@@ -8,6 +8,8 @@ import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import Theme from 'app-elements/gen/Theme';
 import 'alexandria-ui-elements/res/styles/components/fields.css';
 import classnames from 'classnames';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import InputLabel from '@material-ui/core/InputLabel';
 
 export const SelectorComboBoxTextViewStyles = {
 	control: (provided, state) => ({
@@ -155,6 +157,8 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 					</label>
 
 					<div className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-formControl MuiInputBase-adornedEnd" style={{width:"100%"}}>
+						<OutlinedInput style={{display:"none"}}></OutlinedInput>
+						<InputLabel style={{display:"none"}}></InputLabel>
 
 						<Select isMulti={multiple} isDisabled={this.state.readonly} isSearchable
 								ref={!this.state.readonly ? this.selectorRef : undefined}

@@ -9,8 +9,11 @@ import Delayer from '../../util/Delayer';
 import classnames from 'classnames';
 import {withSnackbar} from 'notistack';
 import 'alexandria-ui-elements/res/styles/layout.css';
+import 'alexandria-ui-elements/res/styles/components/fields.css';
 import BrowserUtil from 'alexandria-ui-elements/src/util/BrowserUtil';
 import Theme from "app-elements/gen/Theme";
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import InputLabel from '@material-ui/core/InputLabel';
 
 function selectorCollectionBoxViewStyles(theme) {
     return {
@@ -144,6 +147,8 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
                     </label>
 
                     <div className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-formControl MuiInputBase-adornedEnd" style={{width:"100%"}}>
+                        <OutlinedInput style={{display:"none"}}></OutlinedInput>
+                        <InputLabel style={{display:"none"}}></InputLabel>
 
                         <Select ref={this.searchComponent} isMulti={multiple} isDisabled={this.state.readonly} isSearchable
                                 closeMenuOnSelect={!multiple} autoFocus={this.props.focused} menuIsOpen={this.state.opened}
