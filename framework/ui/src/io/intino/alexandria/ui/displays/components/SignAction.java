@@ -9,6 +9,7 @@ import io.intino.alexandria.ui.displays.UserMessage;
 import io.intino.alexandria.ui.displays.components.sign.AutoFirmaServer;
 import io.intino.alexandria.ui.displays.events.*;
 import io.intino.alexandria.ui.displays.notifiers.SignActionNotifier;
+import io.intino.alexandria.ui.utils.CadesSignatureHelper;
 import io.intino.icod.core.SignatureInfo;
 import io.intino.icod.core.XadesSignatureHelper;
 
@@ -99,7 +100,8 @@ public abstract class SignAction<DN extends SignActionNotifier, B extends Box> e
 
 	public void success(SignActionSignatureSuccess success) {
 		notifyUser(translate(signSuccessMessage), UserMessage.Type.Success);
-		signListener.accept(new SignEvent(this, success.signature(), success.certificate(), info(success.signature())));
+		if (signListener == null) return;
+		signListener.accept(new SignEvent(this, success.signature(), success.certificate(), info(success.signature(), success.certificate())));
 	}
 
 	public void failure(SignActionSignatureFailure failure) {
@@ -133,8 +135,9 @@ public abstract class SignAction<DN extends SignActionNotifier, B extends Box> e
 		return this;
 	}
 
-	protected SignatureInfo info(String signature) {
-		if (format != SignAction.SignFormat.XAdES) return new SignatureInfo(null, null, null);
+	protected SignatureInfo info(String signature, String certificate) {
+		if (format == SignFormat.CAdES) return CadesSignatureHelper.getInfo(certificate);
+		else if (format != SignFormat.XAdES) return new SignatureInfo(null, null, null);
 		return new XadesSignatureHelper().getInfo(signature);
 	}
 

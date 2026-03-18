@@ -96,7 +96,7 @@ public class SignDocument<DN extends SignDocumentNotifier, B extends Box> extend
     }
 
     private SignEvent.SignEventInfo signInfoOf(SignDocumentSignatureSuccess success) {
-        return new SignEvent.SignEventInfo(success.id(), success.signature(), success.certificate(), info(success.signature()));
+        return new SignEvent.SignEventInfo(success.id(), success.signature(), success.certificate(), info(success.signature(), success.certificate()));
     }
 
     private void sign() {

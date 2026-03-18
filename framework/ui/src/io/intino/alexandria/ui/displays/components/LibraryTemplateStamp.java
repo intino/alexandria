@@ -74,6 +74,7 @@ public abstract class LibraryTemplateStamp<DN extends LibraryTemplateStampNotifi
 		StringBuilder result = new StringBuilder();
 		result.append(String.format(Url, session().browser().baseUrl(), (!path.startsWith("/") ? "/" : "") + path.replace(":template", template.toLowerCase()), path.contains("?") ? "&" : "?", session().id(), session().client().id(), token));
 		parameters.forEach((key, value) -> result.append("&").append(key).append("=").append(value));
+		result.append("&m=").append(Math.random());
 		return result.toString();
 	}
 

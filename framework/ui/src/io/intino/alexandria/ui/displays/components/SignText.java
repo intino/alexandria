@@ -17,6 +17,10 @@ public class SignText<DN extends SignTextNotifier, B extends Box> extends Abstra
         signData = signMode() == SignMode.CounterSign ? content : signData(content);
     }
 
+    public void textBase64(String content) {
+        signData = content;
+    }
+
     private String signData(String content) {
         return Base64.encode(content.getBytes(StandardCharsets.UTF_8));
     }
