@@ -28,8 +28,8 @@ const styles = theme => ({
 		left: '0px',
 		color: '#e13939',
 		width: 'calc(100% - 4px)',
-		height: "calc(100% - 14px)",
-		margin: '12px 2px',
+		height: "calc(100% - 4px)",
+		margin: '2px 2px',
 		position: 'absolute',
 		background: '#fdecec',
 		padding: '14px 15px 0',
@@ -132,11 +132,12 @@ class TextEditable extends AbstractTextEditable {
 		const error = this.state.error;
 
 		return (
-			<div style={{position:"relative"}}>
-				{(!this.state.readonly && error != null) && <div ref={this.errorRef} id={this.props.id + "-error"} className={classes.error} onMouseEnter={this.handleMouseEnter.bind(this)}>{error}</div>}
-				<TextField {...props} format={this.variant("body1")} style={this.style()} className={classes.default} label={label}
+			<div style={{position:"relative",...this.style()}}>
+				{(!this.state.readonly && error != null) && <div id={this.props.id + "-error"} className={classes.error} onMouseEnter={this.handleMouseEnter.bind(this)}>{error}</div>}
+				<TextField {...props} format={this.variant("body1")} className={classes.default} label={label}
 						   onKeyPress={this.handleKeypress.bind(this)} type={type} autoFocus={this.props.focused}
 						   placeholder={placeholder} multiline={this._multiline()} rows={this._rowsCount()}
+						   helperText={this.state.readonly ? undefined : this.props.helperText}
 						   InputLabelProps={{ shrink: this.state.readonly ? true : this.props.shrink !== null ? this.props.shrink : undefined }}
 						   disabled={this.state.readonly}
 						   size="Small" variant="outlined"
