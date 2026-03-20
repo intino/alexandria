@@ -1,13 +1,23 @@
 import React from "react";
-import { Link, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Checkbox, Button, FormControlLabel } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import {
+    Button,
+    Checkbox,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    FormControlLabel,
+    Link
+} from '@material-ui/core';
+import {withStyles} from '@material-ui/core/styles';
 import AbstractGrid from "../../../gen/displays/components/AbstractGrid";
 import GridNotifier from "../../../gen/displays/notifiers/GridNotifier";
 import GridRequester from "../../../gen/displays/requesters/GridRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from 'notistack';
 import DataGrid from "react-data-grid";
-import { ToolsPanel } from "react-data-grid-addons";
+import {ToolsPanel} from "react-data-grid-addons";
 import 'alexandria-ui-elements/res/styles/grid.css';
 import 'alexandria-ui-elements/res/styles/layout.css';
 import history from "alexandria-ui-elements/src/util/History";
@@ -17,7 +27,7 @@ import Select from "react-select";
 import {RiseLoader} from "react-spinners";
 import Theme from "app-elements/gen/Theme";
 import classNames from "classnames";
-import { selectorComboBoxStyles, SelectorComboBoxTextViewStyles } from "./SelectorComboBox";
+import {selectorComboBoxStyles, SelectorComboBoxTextViewStyles} from "./SelectorComboBox";
 
 const GridSelectorStyles = {
     valueContainer: (provided, state) => ({
@@ -57,31 +67,31 @@ const styles = theme => ({
 
 class Grid extends AbstractGrid {
 
-	constructor(props) {
-		super(props);
-		this.notifier = new GridNotifier(this);
-		this.requester = new GridRequester(this);
+    constructor(props) {
+        super(props);
+        this.notifier = new GridNotifier(this);
+        this.requester = new GridRequester(this);
         this.lastLoadedPage = [];
         this.lastRow = 0;
         this.grid = null;
-		this.state = {
-		    ...this.state,
-		    name: this.props.id,
-		    columns: [],
-		    modes: [],
-		    selectedIndexes: [],
-		    rows: [],
-		    sortColumn: null,
-		    sortDirection: null,
-		    groupBy: null,
-		    groupByOptions: [],
-		    groupByOption: null,
-		    groupByMode: null,
-		    openColumnsDialog: false,
-		    visibleColumns: [],
-		    maxColumnSize: 350,
-		};
-	};
+        this.state = {
+            ...this.state,
+            name: this.props.id,
+            columns: [],
+            modes: [],
+            selectedIndexes: [],
+            rows: [],
+            sortColumn: null,
+            sortDirection: null,
+            groupBy: null,
+            groupByOptions: [],
+            groupByOption: null,
+            groupByMode: null,
+            openColumnsDialog: false,
+            visibleColumns: [],
+            maxColumnSize: 350,
+        };
+    };
 
     render() {
         const theme = Theme.get();
@@ -103,20 +113,20 @@ class Grid extends AbstractGrid {
     };
 
     scrollToRow(idx) {
-    	var top = this.grid.getRowOffsetHeight() * idx;
-    	var gridCanvas = this.grid.getDataGridDOMNode().querySelector('.react-grid-Canvas');
-    	if (gridCanvas != null) gridCanvas.scrollTop = top;
+        var top = this.grid.getRowOffsetHeight() * idx;
+        var gridCanvas = this.grid.getDataGridDOMNode().querySelector('.react-grid-Canvas');
+        if (gridCanvas != null) gridCanvas.scrollTop = top;
     };
 
     saveHorizontalScroll = (defaultValue) => {
-    	var gridCanvas = this.grid.getDataGridDOMNode().querySelector('.react-grid-Canvas');
-    	this.horizontalScroll = gridCanvas != null ? gridCanvas.scrollLeft : (defaultValue != null ? defaultValue : 0);
+        var gridCanvas = this.grid.getDataGridDOMNode().querySelector('.react-grid-Canvas');
+        this.horizontalScroll = gridCanvas != null ? gridCanvas.scrollLeft : (defaultValue != null ? defaultValue : 0);
     };
 
     restoreHorizontalScroll() {
         if (this.horizontalScroll == null) return;
-    	var gridCanvas = this.grid.getDataGridDOMNode().querySelector('.react-grid-Canvas');
-    	if (gridCanvas != null) gridCanvas.scrollLeft = this.horizontalScroll;
+        var gridCanvas = this.grid.getDataGridDOMNode().querySelector('.react-grid-Canvas');
+        if (gridCanvas != null) gridCanvas.scrollLeft = this.horizontalScroll;
     };
 
     renderGrid = () => {
@@ -189,8 +199,8 @@ class Grid extends AbstractGrid {
         const styles = { ...selectorComboBoxStyles(Theme.get()), ...SelectorComboBoxTextViewStyles, ...GridSelectorStyles };
         return (
             <Select className={classes.columnSelector} isClearable={true}
-                placeholder={this.translate("Group by")} options={this.selectorColumns().filter(c => c.label != "")}
-                value={this.state.groupBy} onChange={this.handleSelectGroupBy.bind(this)} styles={styles}/>
+                    placeholder={this.translate("Group by")} options={this.selectorColumns().filter(c => c.label != "" && c.type != "Icon" && c.type != "MaterialIcon")}
+                    value={this.state.groupBy} onChange={this.handleSelectGroupBy.bind(this)} styles={styles}/>
         );
     };
 
@@ -202,9 +212,9 @@ class Grid extends AbstractGrid {
         const { classes } = this.props;
         return (
             <Select className={classes.columnSelector} isClearable={false}
-                placeholder={this.translate("Group by criteria")} options={modes}
-                value={this.state.groupByMode} onChange={this.handleSelectGroupByMode.bind(this)}
-                styles={styles}/>
+                    placeholder={this.translate("Group by criteria")} options={modes}
+                    value={this.state.groupByMode} onChange={this.handleSelectGroupByMode.bind(this)}
+                    styles={styles}/>
         );
     };
 
@@ -218,9 +228,9 @@ class Grid extends AbstractGrid {
                 {options.length == 0 && <div style={{marginLeft:'10px'}}>{this.translate("No groups available")}</div>}
                 {options.length > 0 &&
                     <Select className={classes.columnSelector} isClearable={true}
-                        placeholder={this.translate("Group")} options={options}
-                        value={this.state.groupByOption} onChange={this.handleSelectGroupByOption.bind(this)}
-                        styles={styles}/>
+                            placeholder={this.translate("Group")} options={options}
+                            value={this.state.groupByOption} onChange={this.handleSelectGroupByOption.bind(this)}
+                            styles={styles}/>
                 }
             </div>
         );
@@ -242,7 +252,7 @@ class Grid extends AbstractGrid {
                     <DialogContentText id="alert-dialog-description">{this.renderColumnsCheckboxes()}</DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                  <Button onClick={this.handleCloseColumnsDialog.bind(this)} color="primary" autoFocus>{this.translate("Close")}</Button>
+                    <Button onClick={this.handleCloseColumnsDialog.bind(this)} color="primary" autoFocus>{this.translate("Close")}</Button>
                 </DialogActions>
             </Dialog>
         );
@@ -460,7 +470,7 @@ class Grid extends AbstractGrid {
     };
 
     rowInfo = (index, value, address, color) => {
-         return index + "##" + (value != null ? value : "") + "##" + (address != null ? address : "") + "##" + (color != null ? color : "");
+        return index + "##" + (value != null ? value : "") + "##" + (address != null ? address : "") + "##" + (color != null ? color : "");
     };
 
     rowIndex = (value) => {
@@ -518,9 +528,9 @@ class Grid extends AbstractGrid {
         this.setState({ rows: rows });
     };
 
-	pageOf = (index) => {
-		return Math.floor(index / this.state.pageSize) + (index % this.state.pageSize > 0 ? 1 : 0);
-	};
+    pageOf = (index) => {
+        return Math.floor(index / this.state.pageSize) + (index % this.state.pageSize > 0 ? 1 : 0);
+    };
 
     renderColumn(column, index) {
         return (<div>{this.translate(column.label)}</div>);
@@ -544,41 +554,41 @@ class Grid extends AbstractGrid {
         this.requester.selection(indexes);
     };
 
-	refreshInfo = (info) => {
-	    this.setState({
-	        columns: info.columns,
-	        modes: info.modes,
-	        name: info.name,
+    refreshInfo = (info) => {
+        this.setState({
+            columns: info.columns,
+            modes: info.modes,
+            name: info.name,
         });
-	};
+    };
 
-	loadState = (stateName) => {
-	    const state = this.getCookie(this.cookieName(stateName));
-	    if (state == null) return;
-	    this.requester.updateState(state);
-	};
+    loadState = (stateName) => {
+        const state = this.getCookie(this.cookieName(stateName));
+        if (state == null) return;
+        this.requester.updateState(state);
+    };
 
-	saveState = (property, value) => {
-	    const cookieName = this.cookieName(this.state.name);
-	    let state = this.getCookie(cookieName);
-	    if (state == null) state = {};
-	    state[property] = value;
+    saveState = (property, value) => {
+        const cookieName = this.cookieName(this.state.name);
+        let state = this.getCookie(cookieName);
+        if (state == null) state = {};
+        state[property] = value;
         this.updateCookie(state, cookieName);
-	};
+    };
 
-	cookieName = (key) => {
-	    return key + "_grid";
-	};
+    cookieName = (key) => {
+        return key + "_grid";
+    };
 
-	refreshItemCount = (itemCount) => {
-		this.setState({ itemCount: itemCount });
-	};
+    refreshItemCount = (itemCount) => {
+        this.setState({ itemCount: itemCount });
+    };
 
     handleOpenColumnsDialog = () => {
         this.setState({openColumnsDialog:true});
     };
 
-	handleCloseColumnsDialog = () => {
+    handleCloseColumnsDialog = () => {
         this.setState({openColumnsDialog:false});
     };
 
