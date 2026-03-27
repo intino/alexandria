@@ -8,8 +8,10 @@ import {
     DialogContentText,
     DialogTitle,
     FormControlLabel,
+    IconButton,
     Link
 } from '@material-ui/core';
+import {ArrowDownward, ArrowUpward} from '@material-ui/icons';
 import {withStyles} from '@material-ui/core/styles';
 import AbstractGrid from "../../../gen/displays/components/AbstractGrid";
 import GridNotifier from "../../../gen/displays/notifiers/GridNotifier";
@@ -88,6 +90,7 @@ class Grid extends AbstractGrid {
             groupByOption: null,
             groupByMode: null,
             openColumnsDialog: false,
+            columnsOrdering: [],
             visibleColumns: [],
             maxColumnSize: 350,
         };
@@ -240,16 +243,24 @@ class Grid extends AbstractGrid {
         const { classes } = this.props;
         const allSelected = this.isAllColumnsSelected();
         const noneSelected = this.isAllColumnsUnselected();
+        const noConfiguration = this.state.visibleColumns.length === 0 && this.state.columnsOrdering.length === 0;
         return (
             <Dialog open={this.state.openColumnsDialog} onClose={this.handleCloseColumnsDialog.bind(this)}>
                 <DialogTitle id="alert-dialog-title">{this.translate("Show columns")}</DialogTitle>
-                <DialogContent style={{minWidth:"300px"}}>
-                    <div className="layout horizontal end-justified">
-                        <a className={classNames(classes.toolbarAction, allSelected ? classes.toolbarActionDisabled : "")} onClick={this.handleSelectAllColumns.bind(this)} disabled={allSelected}>{this.translate("All")}</a>
-                        <a className={classNames(classes.toolbarAction, noneSelected ? classes.toolbarActionDisabled : "")} onClick={this.handleUnselectAllColumns.bind(this)} disabled={noneSelected}>{this.translate("None")}</a>
-                        <a className={classes.toolbarAction} onClick={this.handleInvertColumnsSelection.bind(this)} disabled={false}>{this.translate("Invert")}</a>
+                <DialogContent style={{minWidth:"450px"}}>
+                    <div className="layout horizontal">
+                        <div className="layout horizontal flex">
+                            <a className={classNames(classes.toolbarAction, allSelected ? classes.toolbarActionDisabled : "")} onClick={this.handleSelectAllColumns.bind(this)} disabled={allSelected}>{this.translate("All")}</a>
+                            <a className={classNames(classes.toolbarAction, noneSelected ? classes.toolbarActionDisabled : "")} onClick={this.handleUnselectAllColumns.bind(this)} disabled={noneSelected}>{this.translate("None")}</a>
+                            <a className={classes.toolbarAction} onClick={this.handleInvertColumnsSelection.bind(this)} disabled={false}>{this.translate("Invert")}</a>
+                        </div>
+                        <div className="layout horizontal end-justified">
+                            <a className={classNames(classes.toolbarAction, noConfiguration ? classes.toolbarActionDisabled : "")} onClick={this.handleResetColumns.bind(this)} disabled={allSelected}>{this.translate("Reset")}</a>
+                        </div>
                     </div>
-                    <DialogContentText id="alert-dialog-description">{this.renderColumnsCheckboxes()}</DialogContentText>
+                    <div style={{overflow:'auto',height:'350px'}}>
+                        <DialogContentText id="alert-dialog-description">{this.renderColumnsCheckboxes()}</DialogContentText>
+                    </div>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.handleCloseColumnsDialog.bind(this)} color="primary" autoFocus>{this.translate("Close")}</Button>
@@ -282,11 +293,64 @@ class Grid extends AbstractGrid {
     };
 
     renderColumnCheckbox = (column) => {
-        return (<div><FormControlLabel control={<Checkbox checked={this.isColumnVisible(column.index)} onChange={this.handleToggleColumn.bind(this, column.index)} color="primary" name={column.index}/>} label={this.translate(column.label)}/></div>);
+        return (
+            <div className="layout horizontal center" onMouseOver={this.handleShowColumnToolbar.bind(this, column)} onMouseLeave={this.handleHideColumnToolbar.bind(this, column)}>
+                <div className="layout horizontal flex">
+                    <FormControlLabel control={<Checkbox checked={this.isColumnVisible(column.originalIndex)} onChange={this.handleToggleColumn.bind(this, column.originalIndex)} color="primary" name={column.index}/>} label={this.translate(column.label)}/>
+                </div>
+                <div className="layout horizontal center end-justified" id={this.props.id + column.index + "_toolbar"} style={{display:'none',marginRight:'10px'}}>
+                    <IconButton onClick={this.handleMoveUpColumn.bind(this, column)} size="small"><ArrowUpward/></IconButton>
+                    <IconButton onClick={this.handleMoveDownColumn.bind(this, column)} size="small"><ArrowDownward/></IconButton>
+                </div>
+            </div>
+        );
+    };
+
+    handleShowColumnToolbar = (column) => {
+        const element = document.getElementById(this.props.id + column.index + "_toolbar");
+        if (element == null) return;
+        element.style.display = "block";
+    };
+
+    handleHideColumnToolbar = (column) => {
+        const element = document.getElementById(this.props.id + column.index + "_toolbar");
+        if (element == null) return;
+        element.style.display = "none";
+    };
+
+    handleMoveUpColumn = (column) => {
+        const current = this.state.columnsOrdering.length !== 0 ? this.state.columnsOrdering : this.state.columns;
+        const newOrdering = current.map((c, idx) => {
+            const index = c.index != null ? c.index : idx;
+            if (index === column.index) return {name: c.name, index: index - 1};
+            if (index === column.index - 1) return {name: c.name, index: index + 1};
+            return {name: c.name, index: index};
+        });
+        this.saveState("columnsOrdering", newOrdering);
+        this.requester.updateColumnsOrdering(newOrdering);
+    };
+
+    handleMoveDownColumn = (column) => {
+        const current = this.state.columnsOrdering.length !== 0 ? this.state.columnsOrdering : this.state.columns;
+        const newOrdering = current.map((c, idx) => {
+            const index = c.index != null ? c.index : idx;
+            if (index === column.index) return {name: c.name, index: index + 1};
+            if (index === column.index + 1) return {name: c.name, index: index - 1};
+            return {name: c.name, index: index};
+        });
+        this.saveState("columnsOrdering", newOrdering);
+        this.requester.updateColumnsOrdering(newOrdering);
     };
 
     isColumnVisible = (index) => {
         return this.state.visibleColumns[index] == null || this.state.visibleColumns[index] === true;
+    };
+
+    handleResetColumns = () => {
+        this.saveState("visibleColumns", []);
+        this.saveState("columnsOrdering", []);
+        this.requester.updateVisibleColumns([]);
+        this.requester.updateColumnsOrdering([]);
     };
 
     handleSelectAllColumns = () => {
@@ -355,11 +419,11 @@ class Grid extends AbstractGrid {
         const gridCanvas = this.grid != null ? this.grid.getDataGridDOMNode().querySelector('.react-grid-Canvas') : null;
 
         for (let i=0; i<columns.length; i++)
-            result[columns[i].name] = columns[i].type == "Icon" || columns[i].type == "MaterialIcon" ? 40 : this.state.rows.length > 0 ? this.getWidth(columns[i].label, 8) : undefined;
+            result[columns[i].name] = columns[i].type === "Icon" || columns[i].type === "MaterialIcon" ? 40 : this.state.rows.length > 0 ? this.getWidth(columns[i].label, 8) : undefined;
 
         for (let i=0; i<this.state.rows.length; i++) {
             for (let j=0; j<columns.length; j++) {
-                if (columns[j].type == "Icon" || columns[j].type == "MaterialIcon") continue;
+                if (columns[j].type === "Icon" || columns[j].type === "MaterialIcon") continue;
                 const width = this.getWidth(this.state.rows[i][columns[j].name]);
                 result[columns[j].name] = Math.min(Math.max(width, result[columns[j].name]), this.state.maxColumnSize);
             }
@@ -381,7 +445,7 @@ class Grid extends AbstractGrid {
 
     columns = () => {
         const widths = this.columnsWidths();
-        return this.state.columns.filter((column, idx) => this.isColumnVisible(idx)).map((column, idx) => ({
+        return this._sortColumns(this.state.columns.filter((column, idx) => this.isColumnVisible(idx))).map((column, idx) => ({
             key: column.name,
             name: column.label,
             filterable: true, editable: false,
@@ -397,14 +461,27 @@ class Grid extends AbstractGrid {
     }
 
     selectorColumns = () => {
-        return this.state.columns.map((column, idx) => ({
+        const originalIndexes = {};
+        for (let i=0; i<this.state.columns.length; i++) originalIndexes[this.state.columns[i].name] = i;
+        return this._sortColumns(this.state.columns).map((column, idx) => ({
             value: column.name,
             label: this.translate(column.label),
             type: column.type,
             width: column.width,
-            index: idx
+            index: idx,
+            originalIndex: originalIndexes[column.name]
         }));
     };
+
+    _sortColumns = (columns) => {
+        if (this.state.columnsOrdering.length === 0) return columns;
+        const columnsMap = Object.fromEntries(columns.map(col => [col.name, col]));
+        return this.state.columnsOrdering
+            .slice()
+            .sort((a, b) => a.index - b.index)
+            .map(o => columnsMap[o.name])
+            .filter(Boolean);
+    }
 
     columnRenderer = (column, idx) => {
         const type = column.type;
@@ -463,7 +540,7 @@ class Grid extends AbstractGrid {
         if (this.loadingNextPage) return;
         const hasMore = this.state.rows.length < this.state.itemCount;
         const scrollableTarget = this.grid != null && this.grid.getDataGridDOMNode() != null ? this.grid.getDataGridDOMNode().querySelector('.react-grid-Canvas') : null;
-        const scrollIsVisible = scrollableTarget == null || scrollableTarget.offsetHeight == 0 || scrollableTarget.scrollHeight-100 > scrollableTarget.offsetHeight;
+        const scrollIsVisible = scrollableTarget == null || scrollableTarget.offsetHeight === 0 || scrollableTarget.scrollHeight-100 > scrollableTarget.offsetHeight;
         if (!hasMore || scrollIsVisible) return;
         this.loadingNextPage = true;
         this.requester.loadNextPage();
@@ -610,6 +687,13 @@ class Grid extends AbstractGrid {
         this.setState({groupByOptions: options});
     };
 
+    refreshColumnsOrdering = (value) => {
+        const index = this.lastRow > 0 ? this.lastRow - 1 : 0;
+        this.setState({columnsOrdering: value});
+        window.dispatchEvent(new Event('resize'));
+        this.scrollToRow(index);
+    };
+
     refreshVisibleColumns = (value) => {
         const index = this.lastRow > 0 ? this.lastRow - 1 : 0;
         this.setState({visibleColumns: this.visibleColumnsArrayOf(value)});
@@ -619,7 +703,7 @@ class Grid extends AbstractGrid {
 
     visibleColumnsArrayOf = (value) => {
         const result = [];
-        for (let i=0; i<value.length; i++) result[this.findColumn(value[i].name)] = value[i].visible;
+        for (let i=0; i<value.length; i++) result.push(value[i].visible);
         return result;
     };
 

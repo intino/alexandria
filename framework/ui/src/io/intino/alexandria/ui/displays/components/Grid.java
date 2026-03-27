@@ -17,10 +17,8 @@ import io.intino.alexandria.ui.model.datasource.grid.GridGroupBy;
 import io.intino.alexandria.ui.model.datasource.grid.GridItem;
 import io.intino.alexandria.ui.model.datasource.grid.GridValue;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -30,6 +28,7 @@ public class Grid<DN extends GridNotifier, B extends Box, Item> extends Abstract
     private CellClickListener cellClickListener;
     private List<io.intino.alexandria.ui.model.datasource.grid.GridColumn<Item>> columns = new ArrayList<>();
     private List<GridColumn> visibleColumns = new ArrayList<>();
+    private List<GridColumnOrdering> columnsOrdering = new ArrayList<>();
     private ItemResolver<Item> itemResolver;
     private List<Item> items = new ArrayList<>();
 
@@ -82,6 +81,23 @@ public class Grid<DN extends GridNotifier, B extends Box, Item> extends Abstract
         notifier.refreshVisibleColumns(visibleColumns);
     }
 
+    public java.util.Map<String, Integer> columnsOrdering() {
+        if (columnsOrdering != null) return columnsOrdering.stream().collect(Collectors.toMap(GridColumnOrdering::name, GridColumnOrdering::index));
+        java.util.Map<String, Integer> result = new HashMap<>();
+        for (int i = 0; i < columns.size(); i++) result.put(columns.get(i).name(), i);
+        return result;
+    }
+
+    public Grid<DN, B, Item> columnsOrdering(List<GridColumnOrdering> columns) {
+        updateColumnsOrdering(columns);
+        return this;
+    }
+
+    public void updateColumnsOrdering(List<GridColumnOrdering> value) {
+        this.columnsOrdering = value;
+        notifier.refreshColumnsOrdering(value);
+    }
+
     public Grid<DN, B, Item> onSortColumn(SortColumnListener listener) {
         this.sortColumnListener = listener;
         return this;
@@ -102,6 +118,7 @@ public class Grid<DN extends GridNotifier, B extends Box, Item> extends Abstract
     public void updateState(GridState state) {
         if (state == null) return;
         if (!state.visibleColumns().isEmpty()) updateVisibleColumns(state.visibleColumns());
+        if (!state.columnsOrdering().isEmpty()) updateColumnsOrdering(state.columnsOrdering());
         if (state.sort() != null && SortColumnEvent.Mode.from(state.sort().mode()) != SortColumnEvent.Mode.None) sort(state.sort());
         if (state.groupBy() != null) {
             updateGroupByOptions(new GridGroupByOptionsInfo().column(state.groupBy().column()).mode(state.groupBy().mode()));
