@@ -284,6 +284,11 @@ Schema GridState
 	Attribute sort as Object(GridSortInfo)
 	Attribute groupBy as Object(GridGroupByInfo)
 	Attribute visibleColumns as Object(GridColumn) List
+	Attribute columnsOrdering as Object(GridColumnOrdering) List
+
+Schema GridColumnOrdering
+	Attribute name as Text
+	Attribute index as Integer
 
 Schema GridColumn
 	Attribute name as Text
