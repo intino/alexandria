@@ -13,7 +13,7 @@ public class NumberExamplesMold extends AbstractNumberExamplesMold<AlexandriaUiB
     public void init() {
         super.init();
         number1.countDecimals(10);
-        number3.onChange((event) -> number3.notifyUser(String.format("Valor: %.0f", (double)event.value()), UserMessage.Type.Info));
+        number3.onChange((event) -> number3.notifyUser(String.format("Valor: %.2f", (double)event.value()), UserMessage.Type.Info));
         number3.focus();
         number7.error("Field value is wrong");
     }

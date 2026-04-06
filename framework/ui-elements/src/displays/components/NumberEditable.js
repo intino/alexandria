@@ -1,4 +1,5 @@
 import React from "react";
+import {NumericFormat} from "react-number-format";
 import {withStyles} from '@material-ui/core/styles';
 import AbstractNumberEditable from "../../../gen/displays/components/AbstractNumberEditable";
 import NumberEditableNotifier from "../../../gen/displays/notifiers/NumberEditableNotifier";
@@ -63,8 +64,12 @@ class NumberEditable extends AbstractNumberEditable {
 
 	handleChange(e) {
 		const value = e.target.value;
-		this.setState({ value: value });
-		Delayer.execute(this, () => this.requester.notifyChange(value !== "" ? value : "0"), 500);
+		this.setState({ value: value !== "" ? this._number(value) : "0" });
+		Delayer.execute(this, () => this.requester.notifyChange(value !== "" ? this._number(value) : "0"), 500);
+	};
+
+	_number = (value) => {
+		return value.replace(/\./g, "").replace(",", ".");
 	};
 
 	handleFocus(e) {
@@ -94,32 +99,49 @@ class NumberEditable extends AbstractNumberEditable {
 		const label = this.props.label !== "" ? this.translate(this.props.label) : undefined;
 		const error = this.state.error;
 		const value = this.state.value != null ? this.state.value : (this.state.min !== -1 ? this.state.min : 0);
+		const { thousandSeparator, decimalSeparator } = this.separators();
 
 		return (
 			<div style={{position:"relative"}}>
-				{(!this.state.readonly && error != null) && <div id={this.props.id + "-error"} className={classes.error} onMouseEnter={this.handleMouseEnter.bind(this)}>{error}</div>}
-				<TextField format={this.variant("body1")} style={this.style()} className={classnames(classes.default, "number-editable")} label={label} type="number"
-						   value={value} onChange={this.handleChange.bind(this)} autoFocus={this.props.focused}
-						   onMouseLeave={this.handleMouseLeave.bind(this)}
-						   autoComplete="off" disabled={this.state.readonly} size="Small" variant="outlined"
-						   InputLabelProps={{ shrink: this.props.shrink !== null ? this.props.shrink : undefined }}
-						   inputRef={this.inputRef}
-						   onFocus={this.handleFocus.bind(this)}
-						   onBlur={this.handleBlur.bind(this)}
-						   inputProps={{
-							   min: this.state.min !== -1 ? this.state.min : undefined,
-							   max: this.state.max !== -1 ? this.state.max : undefined,
-							   step: this.props.step !== -1 ? this.props.step : undefined,
-							   className: classes.input
-						   }}
-						   InputProps={{
-							   readOnly: this.state.readonly,
-							   startAdornment: this.state.prefix !== undefined ? <InputAdornment position="start">{this.translate(this.state.prefix)}</InputAdornment> : undefined,
-							   endAdornment: this.state.suffix !== undefined ? <InputAdornment position="end">{this.translate(this.state.suffix)}</InputAdornment> : undefined
-						   }}/>
+				{(!this.state.readonly && error != null) && <div id={this.props.id + "-error"} className={classes.error} style={this._errorStyle()} onMouseEnter={this.handleMouseEnter.bind(this)}>{error}</div>}
+				<NumericFormat
+					value={value}
+					customInput={TextField}
+					thousandSeparator={thousandSeparator}
+					decimalSeparator={decimalSeparator}
+					decimalScale={this.props.decimals != null ? this.props.decimals : 0}
+					format={this.variant("body1")} style={this.style()} className={classnames(classes.default, "number-editable")} label={label} type="text"
+					onChange={this.handleChange.bind(this)} autoFocus={this.props.focused}
+					onMouseLeave={this.handleMouseLeave.bind(this)}
+					autoComplete="off" disabled={this.state.readonly} size="Small" variant="outlined"
+					InputLabelProps={{ shrink: this.props.shrink !== null ? this.props.shrink : undefined }}
+					inputRef={this.inputRef}
+					onFocus={this.handleFocus.bind(this)}
+					onBlur={this.handleBlur.bind(this)}
+					inputProps={{
+						min: this.state.min !== -1 ? this.state.min : undefined,
+						max: this.state.max !== -1 ? this.state.max : undefined,
+						step: this.props.step !== -1 ? this.props.step : undefined,
+						className: classes.input
+					}}
+					InputProps={{
+						readOnly: this.state.readonly,
+						startAdornment: this.state.prefix !== undefined ? <InputAdornment position="start">{this.translate(this.state.prefix)}</InputAdornment> : undefined,
+						endAdornment: this.state.suffix !== undefined ? <InputAdornment position="end">{this.translate(this.state.suffix)}</InputAdornment> : undefined
+					}}>
+				</NumericFormat>
 			</div>
 		);
 	};
+
+    separators = () => {
+		const language = window.Application.configuration.language;
+        const parts = new Intl.NumberFormat(language).formatToParts(1234567.89);
+        return {
+            thousandSeparator: parts.find(p => p.type === 'group')?.value || null,
+            decimalSeparator: parts.find(p => p.type === 'decimal')?.value || null
+        };
+    }
 
 	refresh = (value) => {
 		this.setState({ "value": value });
@@ -139,6 +161,17 @@ class NumberEditable extends AbstractNumberEditable {
 
 	refreshRange = (range) => {
 		this.setState({ min: range.min, max: range.max });
+	};
+
+	_errorStyle = () => {
+		const style = this.style();
+		let current = style.marginTop;
+		if (!current) return { marginTop: "2px" };
+		const match = current.match(/^([\d.]+)px$/);
+		if (!match) return { marginTop: "2px" };
+		let marginTop = parseFloat(match[1]);
+		marginTop += 2;
+		return { marginTop: marginTop + "px" }
 	};
 }
 
