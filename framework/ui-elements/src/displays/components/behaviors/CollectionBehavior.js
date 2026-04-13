@@ -1,11 +1,11 @@
 import React from "react";
-import { Typography, Checkbox } from "@material-ui/core";
+import {Checkbox, Typography} from "@material-ui/core";
 import classNames from "classnames";
 import TablePagination from '@material-ui/core/TablePagination';
 import 'alexandria-ui-elements/res/styles/layout.css';
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { enrichDisplayProperties } from 'alexandria-ui-elements/src/displays/Display';
-import {RiseLoader,BeatLoader} from "react-spinners";
+import {enrichDisplayProperties} from 'alexandria-ui-elements/src/displays/Display';
+import {BeatLoader, RiseLoader} from "react-spinners";
 import Theme from "app-elements/gen/Theme";
 import InfiniteScroll from "react-infinite-scroll-component";
 
@@ -53,8 +53,8 @@ const CollectionBehavior = (collection) => {
         return (
             <div id={scrollableTarget} style={{ height: height, width: width, overflow: "auto" }}>
                 <InfiniteScroll dataLength={items.length} next={self.loadNextPage.bind(self)}
-                        scrollThreshold={0.9} hasMore={hasMore} loader={self.renderLoadingMore()}
-                        height={height} style={{height:height+"px",width:width+'px'}} scrollableTarget={scrollableTarget}>
+                                scrollThreshold={0.9} hasMore={hasMore} loader={self.renderLoadingMore()}
+                                height={height} style={{height:height+"px",width:width+'px'}} scrollableTarget={scrollableTarget}>
                     {header != null && header}
                     {self.renderItems(items, mode, itemHeight, "layout horizontal flex center item")}
                 </InfiniteScroll>
@@ -89,8 +89,8 @@ const CollectionBehavior = (collection) => {
         return (
             <div id={scrollableTarget} style={{ height: height, width: width, overflow: "auto" }}>
                 <InfiniteScroll dataLength={items.length} next={self.loadNextPage.bind(self)}
-                        scrollThreshold={0.9} hasMore={hasMore} loader={self.renderLoadingMore()}
-                        height={height} style={{height:(height+offsetHeight)+"px",width:itemWidth+'px',overflowX:self.collection.props.itemWidth!=null?"hidden":"auto"}} scrollableTarget={scrollableTarget}>
+                                scrollThreshold={0.9} hasMore={hasMore} loader={self.renderLoadingMore()}
+                                height={height} style={{height:(height+offsetHeight)+"px",width:itemWidth+'px',overflowX:self.collection.props.itemWidth!=null?"hidden":"auto"}} scrollableTarget={scrollableTarget}>
                     {header != null && header}
                     {self.renderItems(items, mode, itemHeight, "")}
                 </InfiniteScroll>
@@ -222,11 +222,12 @@ const CollectionBehavior = (collection) => {
         var selecting = self.selection.length > 0;
         const id = item != null ? item.pl.id : undefined;
         const classNamesValue = classNames(classes.itemView, customClasses, selectable && multiple ? classes.selectable : undefined, selecting ? classes.selecting : undefined);
+        const selectableStyle = selectable ? {cursor: "pointer"} : {};
         const finalStyle = selectable && !multiple && self.isItemSelected(item) ? { ...style, ...self.getSelectedStyleRules() } : style;
         const widthStyle = self.collection.props.itemWidth != null ? {width: self.collection.props.itemWidth + "px"} : {};
         return (
             <React.Fragment>
-                <div id={self.elementId(id)} style={{...finalStyle,...widthStyle}} key={index} onClick={selectable && !multiple ? self.handleSelect.bind(self, id) : undefined} className={classNamesValue}>
+                <div id={self.elementId(id)} style={{...selectableStyle,...finalStyle,...widthStyle}} key={index} onClick={selectable && !multiple ? self.handleSelect.bind(self, id) : undefined} className={classNamesValue}>
                     {/*{multiple ? <Checkbox checked={self.isItemSelected(item)} className={classes.selector} onChange={self.handleSelect.bind(self, id)} /> : undefined}*/}
                     {multiple ? <CollectionBehaviorCheckbox checked={self.isItemSelected(item)} classes={classes} onCheck={self.handleSelect.bind(self, id)} /> : undefined}
                     {view}
@@ -356,7 +357,7 @@ const CollectionBehavior = (collection) => {
         return {
             border: "1px solid " + theme.palette.secondary.main,
             borderRadius: "5px",
-            background: theme.isDark() ? "transparent" : "white"
+            background: theme.isDark() ? "transparent" : "white",
         };
     };
 
