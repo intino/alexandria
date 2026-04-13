@@ -19,7 +19,8 @@ export const TableStyles = theme => ({
         marginRight: "5px"
     },
     headerView : {
-        borderBottom: "1px solid #ddd",
+        background: theme.isDark() ? "black" : "#ddd",
+        borderBottom: theme.isDark() ? "1px solid black" : "1px solid #ddd",
     },
     withoutScroller : {
         width: "100%"

@@ -1,12 +1,12 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
-import { ButtonGroup, Button, Popper, Grow, Paper, ClickAwayListener, MenuItem, MenuList } from '@material-ui/core';
+import {withStyles} from '@material-ui/core/styles';
+import {Button, ButtonGroup, ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper} from '@material-ui/core';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AbstractActionSplit from "../../../gen/displays/components/AbstractActionSplit";
 import ActionSplitNotifier from "../../../gen/displays/notifiers/ActionSplitNotifier";
 import ActionSplitRequester from "../../../gen/displays/requesters/ActionSplitRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from 'notistack';
 
 const styles = theme => ({});
 
@@ -62,7 +62,7 @@ class ActionSplit extends AbstractActionSplit {
 
 	renderDialog = () => {
 	    return (
-            <Popper open={this.state.open} anchorEl={this.anchorRef.current} role={undefined} transition disablePortal style={{zIndex:1,marginRight:'20px',...this.style()}}>
+            <Popper open={this.state.open} anchorEl={this.anchorRef.current} role={undefined} transition disablePortal style={{zIndex:2,marginRight:'20px',...this.style()}}>
               {({ TransitionProps, placement }) => (
                 <Grow {...TransitionProps} style={{transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'}}>
                   <Paper>
