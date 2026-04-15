@@ -42,8 +42,8 @@
 
 .MuiOutlinedInput-input, .selector-combo-box .MuiInputBase-formControl, .selector-collection-box .MuiInputBase-formControl  {
     min-height: 38px;
-    padding-top: 7px !important;
-    padding-bottom: 7px !important;
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
 }
 
 .selector-combo-box.text-view .MuiInputBase-formControl {
@@ -183,4 +183,8 @@
 
 .text-editable-rich-editor.readonly .rsw-toolbar {
     display: none;
+}
+
+.MuiOutlinedInput-multiline {
+    padding: 10px 14px !important;
 }

@@ -45,7 +45,7 @@ const styles = theme => ({
 	    border: theme.isDark() ? "1px solid #ffffffde" : "1px solid #555",
 	    borderRadius: "14px",
 	    marginTop: "5px",
-	    padding: "18px 10px",
+	    padding: "14px 10px",
 		background: '#f5ffff',
 		"&:hover": {
 			background: "#d2f1fe",

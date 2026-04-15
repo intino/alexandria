@@ -31,6 +31,7 @@ export const SelectorComboBoxTextViewStyles = {
 	}),
 	indicatorsContainer: (provided, state) => ({
 		...provided,
+		paddingRight: '8px !important'
 	}),
 };
 
@@ -69,6 +70,7 @@ export function selectorComboBoxStyles(theme) {
 		indicatorsContainer: (provided, state) => ({
 			...provided,
 			display: state.isDisabled ? 'none' : 'inherit',
+			paddingRight: '8px !important',
 		}),
 		placeholder: (provided, state) => ({
 			...provided,
