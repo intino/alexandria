@@ -54,3 +54,14 @@
 .react-grid-Cell--frozen, .react-grid-Cell--frozen:focus {
     z-index: 0;
 }
+
+.react-grid-HeaderCell.column-type-MaterialIcon, .react-grid-HeaderCell.column-type-Icon {
+    margin: 0 !important;
+    padding-left: 3px !important;
+    padding-right: 3px !important;
+}
+
+.react-grid-Cell.column-type-MaterialIcon, .react-grid-Cell.column-type-Icon {
+    margin: 0 !important;
+    padding: 0 3px !important;
+}
