@@ -40,7 +40,8 @@ Template(layout=Vertical, spacing=DP8) textExamplesMold
 			Text(format=h6, value="Editable facet with pattern")
 			Block(format=filled)
 				Text(format=body1 widgetDemo) text4 as Editable(helperText="Some important helper text") Labeled("campo editable")
-					Validation(pattern="0N0/00")
+					//Validation(pattern="0N0/00")
+					Validation(pattern="00.00.000M.000.00c99m") > Length(min=0, max=21)
 				Block > Text as Code(language=Html)
 						value
 							=========

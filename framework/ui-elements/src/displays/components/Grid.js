@@ -288,7 +288,10 @@ class Grid extends AbstractGrid {
     renderColumnsCheckboxes = () => {
         const result = [];
         const columns = this.selectorColumns();
-        for (let i=1; i<columns.length; i++) result.push(this.renderColumnCheckbox(columns[i]));
+        for (let i=0; i<columns.length; i++) {
+            if (columns[i].label === "") continue;
+            result.push(this.renderColumnCheckbox(columns[i]));
+        }
         return result;
     };
 
@@ -419,7 +422,7 @@ class Grid extends AbstractGrid {
         const gridCanvas = this.grid != null ? this.grid.getDataGridDOMNode().querySelector('.react-grid-Canvas') : null;
 
         for (let i=0; i<columns.length; i++)
-            result[columns[i].name] = columns[i].type === "Icon" || columns[i].type === "MaterialIcon" ? 40 : this.state.rows.length > 0 ? this.getWidth(columns[i].label, 8) : undefined;
+            result[columns[i].name] = columns[i].type === "Icon" || columns[i].type === "MaterialIcon" ? 29 : this.state.rows.length > 0 ? this.getWidth(columns[i].label, 8) : undefined;
 
         for (let i=0; i<this.state.rows.length; i++) {
             for (let j=0; j<columns.length; j++) {
@@ -453,6 +456,7 @@ class Grid extends AbstractGrid {
             resizable: true, frozen: column.fixed, width: widths[column.name],
             headerRenderer : this.columnRenderer(column, idx),
             formatter : this.rowFormatter.bind(this, column),
+            cellClass: "column-type-" + column.type
         }));
     };
 
