@@ -32,6 +32,7 @@ public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 		if (element.isSelectable()) result.add("selection", element.asSelectable().multiple() ? "multiple" : "single");
 		if (element.noItemsMessage() != null) result.add("noItemsMessage", element.noItemsMessage());
 		if (element.noItemsFoundMessage() != null) result.add("noItemsFoundMessage", element.noItemsFoundMessage());
+		if (element.i$(CatalogComponents.Grid.class)) result.add("showToolbar", element.a$(CatalogComponents.Grid.class).showToolbar());
 		addColumns(result);
 		return result;
 	}
@@ -109,10 +110,22 @@ public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 		if (column.pattern() != null) result.add("pattern", column.pattern());
 		result.add("itemClass", element.itemClass() != null ? element.itemClass() : "java.lang.Void");
 		result.add("type", column.isClickable() ? "Link" : column.type().name());
-		if (!column.isAddressable()) return result;
-		CatalogComponents.Grid.Column.Addressable addressable = column.asAddressable();
-		result.add("address", addressable.addressableResource() != null ? addressable.addressableResource().path() : "");
+		addPill(column, result);
+		addAddressableColumn(column, result);
 		return result;
+	}
+
+	private void addPill(CatalogComponents.Grid.Column column, FrameBuilder builder) {
+		if (!column.isHighlighted()) return;
+		CatalogComponents.Grid.Column.Highlighted highlighted = column.asHighlighted();
+		builder.add("textColor", highlighted.textColor());
+		builder.add("backgroundColor", highlighted.backgroundColor());
+	}
+
+	private void addAddressableColumn(CatalogComponents.Grid.Column column, FrameBuilder builder) {
+		if (!column.isAddressable()) return;
+		CatalogComponents.Grid.Column.Addressable addressable = column.asAddressable();
+		builder.add("address", addressable.addressableResource() != null ? addressable.addressableResource().path() : "");
 	}
 
 	@SuppressWarnings("rawtypes")

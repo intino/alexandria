@@ -128,7 +128,7 @@ rule type(properties, map) and trigger(specific)
 	<< pageSize={$pageSize}>><< type="$type">><< itemHeight={$itemHeight}>><< itemWidth={$itemWidth}>><< center={{lat:$centerLat,lng:$centerLng}}>><< zoom={{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}}>><< controls="$controls">><< selection="$selection">>
 
 rule type(properties, collection) and trigger(specific)
-	<< noItemsMessage="$noItemsMessage">><< noItemsFoundMessage="$noItemsFoundMessage">><< pageSize={$pageSize}>><< itemHeight={$itemHeight}>><< itemWidth={$itemWidth}>><< scrollingMark={$scrollingMark}>><< navigable="$navigable">><< selection="$selection">>
+	<< noItemsMessage="$noItemsMessage">><< noItemsFoundMessage="$noItemsFoundMessage">><< pageSize={$pageSize}>><< itemHeight={$itemHeight}>><< itemWidth={$itemWidth}>><< scrollingMark={$scrollingMark}>><< navigable="$navigable">><< selection="$selection">><< showToolbar={$showToolbar}>>
 
 rule type(properties, heading) and trigger(specific)
 	 style={{<<width:"$absoluteWidth~px",>><<width:"$relativeWidth~%",>>paddingRight:"10px"<<,$paddingLeft:"10px">>}}<< hidden="$hidden">>

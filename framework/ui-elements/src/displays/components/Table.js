@@ -19,7 +19,7 @@ export const TableStyles = theme => ({
         marginRight: "5px"
     },
     headerView : {
-        background: theme.isDark() ? "black" : "#ddd",
+        background: theme.isDark() ? "black" : "#f9f9f9",
         borderBottom: theme.isDark() ? "1px solid black" : "1px solid #ddd",
     },
     withoutScroller : {
