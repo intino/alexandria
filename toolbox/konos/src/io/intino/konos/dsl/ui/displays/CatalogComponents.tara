@@ -54,6 +54,8 @@ Concept CatalogComponents
 			sub DynamicTable
 
 		sub Grid
+			var boolean showToolbar = true
+
 			Concept:Named:{1..*} Column extends Component
 				var string label
 				var word:{Text Number Date Icon MaterialIcon} type
@@ -62,6 +64,9 @@ Concept CatalogComponents
 				var boolean fixed = false
 				var string pattern = empty
 				Facet Clickable
+				Facet Highlighted
+					var string textColor
+					var string backgroundColor
 				Facet Addressable
 					var Service.UI.Resource addressableResource
                 	var boolean encoded = false

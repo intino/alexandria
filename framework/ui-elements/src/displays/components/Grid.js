@@ -162,6 +162,7 @@ class Grid extends AbstractGrid {
                 onRowClick={this.handleRowClick.bind(this)}
                 onScroll={this.handleScroll.bind(this)}
                 toolbar={
+                    this.props.showToolbar &&
                     <ToolsPanel.AdvancedToolbar>
                         <div className="layout horizontal flex center">
                             {this.selectorColumns().length > 1 && <div><a className={classes.columnsAction} onClick={this.handleOpenColumnsDialog.bind(this)} disabled={selectorColumnsDisabled}>{this.translate("Show columns...")}</a></div>}
@@ -498,13 +499,25 @@ class Grid extends AbstractGrid {
         const { classes } = this.props;
         const type = column.type;
         const value = this.rowValue(data.value);
-        const color = this.rowColor(data.value);
-        const style = color !== undefined ? { color: color } : {};
+        const style = this.style(column, data);
         if (type === "Icon") return (<Icon icon={value} color={color}/>);
         else if (type === "MaterialIcon") return (<MaterialIcon icon={value} color={color}/>);
         else if (type === "Link" && data.row.selectable) return (<Link className={classNames(classes.link)} style={style} component="button" onClick={this.handleCellClick.bind(this, column, data)}>{value}</Link>);
         else if (type === "Number" || type === "Date") return (<div style={{textAlign:'right',...style}}>{value}</div>);
         return (<div style={style}>{value}</div>);
+    };
+
+    style = (column, data) => {
+        const style = {};
+        const color = this.rowColor(data.value);
+        const backgroundColor = this.rowBackgroundColor(data.value);
+        if (column.textColor !== undefined || color !== undefined) style.color = color !== undefined ? color : column.textColor;
+        if (column.backgroundColor !== undefined || backgroundColor !== undefined) {
+            style.backgroundColor = backgroundColor !== undefined ? backgroundColor : column.backgroundColor;
+            style.textAlign = "center";
+            style.borderRadius = "6px";
+        }
+        return style;
     };
 
     handleRowClick = (row, data, c, e) => {
@@ -550,8 +563,8 @@ class Grid extends AbstractGrid {
         this.requester.loadNextPage();
     };
 
-    rowInfo = (index, value, address, color) => {
-        return index + "##" + (value != null ? value : "") + "##" + (address != null ? address : "") + "##" + (color != null ? color : "");
+    rowInfo = (index, value, address, color, backgroundColor) => {
+        return index + "##" + (value != null ? value : "") + "##" + (address != null ? address : "") + "##" + (color != null ? color : "") + "##" + (backgroundColor != null ? backgroundColor : "");
     };
 
     rowIndex = (value) => {
@@ -571,6 +584,11 @@ class Grid extends AbstractGrid {
     rowColor = (value) => {
         const info = value.split("##");
         return info.length > 3 && info[3] !== "" ? info[3] : undefined;
+    };
+
+    rowBackgroundColor = (value) => {
+        const info = value.split("##");
+        return info.length > 4 && info[4] !== "" ? info[4] : undefined;
     };
 
     columnIndex = (columnName) => {
@@ -600,7 +618,8 @@ class Grid extends AbstractGrid {
             for (let j=0; j<columns.length; j++) {
                 const address = newRows[i].cells[j].address != null ? newRows[i].cells[j].address : null;
                 const color = newRows[i].cells[j].color != null ? newRows[i].cells[j].color : null;
-                row[columns[j].name] = this.rowInfo(i+offset, newRows[i].cells[j].value, address, color);
+                const backgroundColor = newRows[i].cells[j].backgroundColor != null ? newRows[i].cells[j].backgroundColor : null;
+                row[columns[j].name] = this.rowInfo(i+offset, newRows[i].cells[j].value, address, color, backgroundColor);
             }
             rows.push(row);
         }

@@ -177,6 +177,8 @@ public class Grid<DN extends GridNotifier, B extends Box, Item> extends Abstract
         result.type(GridColumn.Type.valueOf(column.type().name()));
         result.sortable(column.sortable());
         result.fixed(column.fixed());
+        result.textColor(column.textColor());
+        result.backgroundColor(column.backgroundColor());
         result.width(column.width());
         result.visible(column.visible());
         return result;
@@ -256,6 +258,7 @@ public class Grid<DN extends GridNotifier, B extends Box, Item> extends Abstract
         GridCell result = new GridCell();
         result.value(column.formatter().apply(value));
         result.color(value.color());
+        result.backgroundColor(value.backgroundColor());
         if (column.type() == io.intino.alexandria.ui.model.datasource.grid.GridColumn.Type.Link)
             result.address(itemResolver.address(column, item));
         return result;

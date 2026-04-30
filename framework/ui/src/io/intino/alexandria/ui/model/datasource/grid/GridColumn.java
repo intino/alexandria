@@ -12,6 +12,8 @@ public class GridColumn<T> {
 	private boolean sortable = false;
 	private boolean visible;
 	private boolean fixed;
+	private String textColor;
+	private String backgroundColor;
 	private String pattern = "dd/MM/yyyy HH:mm:ss";
 	private Formatter formatter = defaultFormatter();
 
@@ -86,6 +88,24 @@ public class GridColumn<T> {
 
 	public GridColumn fixed(boolean fixed) {
 		this.fixed = fixed;
+		return this;
+	}
+
+	public String textColor() {
+		return textColor;
+	}
+
+	public GridColumn textColor(String textColor) {
+		this.textColor = textColor;
+		return this;
+	}
+
+	public String backgroundColor() {
+		return backgroundColor;
+	}
+
+	public GridColumn backgroundColor(String backgroundColor) {
+		this.backgroundColor = backgroundColor;
 		return this;
 	}
 

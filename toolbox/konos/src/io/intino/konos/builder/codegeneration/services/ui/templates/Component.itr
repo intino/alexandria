@@ -1015,7 +1015,7 @@ rule type(useUrl, custom)
 	box().configuration().get("$value")
 
 rule type(column)
-	_add(new io.intino.alexandria.ui.model.datasource.grid.GridColumn<$itemClass>().name("$name").label("$label").type(io.intino.alexandria.ui.model.datasource.grid.GridColumn.Type.$type)<<.width($width)>><<.sortable($sortable)>><<.address("$address")>><<.fixed($fixed)>><<.pattern("$pattern")>>);
+	_add(new io.intino.alexandria.ui.model.datasource.grid.GridColumn<$itemClass>().name("$name").label("$label").type(io.intino.alexandria.ui.model.datasource.grid.GridColumn.Type.$type)<<.width($width)>><<.sortable($sortable)>><<.address("$address")>><<.fixed($fixed)>><<.pattern("$pattern")>><<.textColor("$textColor")>><<.backgroundColor("$backgroundColor")>>);
 
 rule type(useUrl)
 	"$value"
