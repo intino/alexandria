@@ -514,8 +514,9 @@ class Grid extends AbstractGrid {
         if (column.textColor !== undefined || color !== undefined) style.color = color !== undefined ? color : column.textColor;
         if (column.backgroundColor !== undefined || backgroundColor !== undefined) {
             style.backgroundColor = backgroundColor !== undefined ? backgroundColor : column.backgroundColor;
-            style.textAlign = "center";
             style.borderRadius = "6px";
+            style.display = "inline-block";
+            style.padding = "0px 10px";
         }
         return style;
     };
