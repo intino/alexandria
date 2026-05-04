@@ -436,13 +436,13 @@ class Grid extends AbstractGrid {
         let totalWidth = 0;
         let lastVisibleColumn = null;
         for (let j=0; j<columns.length; j++) {
-            if (this.state.visibleColumns.length > 0 && !this.state.visibleColumns[j]) continue;
+            if (this.state.visibleColumns.length > 0 && this.state.visibleColumns.length === columns.length && !this.state.visibleColumns[j]) continue;
             totalWidth += result[columns[j].name];
             lastVisibleColumn = columns[j];
         }
 
         if (gridCanvas != null && gridCanvas.clientWidth > totalWidth && lastVisibleColumn != null)
-            result[lastVisibleColumn.name] = result[lastVisibleColumn.name] + gridCanvas.clientWidth - totalWidth - 60;
+            result[lastVisibleColumn.name] = result[lastVisibleColumn.name] + gridCanvas.clientWidth - totalWidth;
 
         return result;
     };
@@ -508,7 +508,7 @@ class Grid extends AbstractGrid {
     };
 
     style = (column, data) => {
-        const style = {};
+        const style = { zIndex: 1 };
         const color = this.rowColor(data.value);
         const backgroundColor = this.rowBackgroundColor(data.value);
         if (column.textColor !== undefined || color !== undefined) style.color = color !== undefined ? color : column.textColor;
@@ -522,14 +522,13 @@ class Grid extends AbstractGrid {
 
     handleRowClick = (row, data, c, e) => {
         if (!data.selectable) return;
-        const columns = this.linkColumns();
-        const column = columns.length > 0 ? columns[0] : (this.state.columns.length > 0 ? this.state.columns[0] : null);
+        const column = this.state.columns[c.idx];
         if (column == null) return;
         const dataValue = data[column.name];
         const value = this.rowValue(dataValue);
         const address = this.rowAddress(dataValue);
         if (address != null) history.push(address, {});
-        this.requester.cellClick({ column: column.name, columnIndex: 0, row: value, rowIndex: row });
+        this.requester.cellClick({ column: column.name, columnIndex: c.idx, row: value, rowIndex: row });
     };
 
     linkColumns = () => {
