@@ -78,6 +78,7 @@ class Grid extends AbstractGrid {
         this.grid = null;
         this.state = {
             ...this.state,
+            key: 0,
             name: this.props.id,
             columns: [],
             modes: [],
@@ -94,6 +95,11 @@ class Grid extends AbstractGrid {
             visibleColumns: [],
             maxColumnSize: 350,
         };
+    };
+
+    componentDidMount() {
+        super.componentDidMount();
+        window.addEventListener('resize', this.resize.bind(this));
     };
 
     render() {
@@ -142,6 +148,7 @@ class Grid extends AbstractGrid {
         return (
             <DataGrid
                 ref={(g) => {this.grid = g;}}
+                key={this.state.key}
                 columns={columns}
                 className="rdg-dark"
                 rowGetter={this.handleRowGetter.bind(this)}
@@ -429,7 +436,7 @@ class Grid extends AbstractGrid {
             for (let j=0; j<columns.length; j++) {
                 if (columns[j].type === "Icon" || columns[j].type === "MaterialIcon") continue;
                 const width = this.getWidth(this.state.rows[i][columns[j].name]);
-                result[columns[j].name] = Math.min(Math.max(width, result[columns[j].name]), this.state.maxColumnSize);
+                result[columns[j].name] = Math.min(Math.max(width, result[columns[j].name]), this.state.maxColumnSize) + 10;
             }
         }
 
@@ -438,7 +445,7 @@ class Grid extends AbstractGrid {
         for (let j=0; j<columns.length; j++) {
             if (this.state.visibleColumns.length > 0 && this.state.visibleColumns.length === columns.length && !this.state.visibleColumns[j]) continue;
             totalWidth += result[columns[j].name];
-            lastVisibleColumn = columns[j];
+            if (columns[j].type !== "Number" && columns[j].type !== "Date" && columns[j].type !== "Icon" && columns[j].type !== "MaterialIcon") lastVisibleColumn = columns[j];
         }
 
         if (gridCanvas != null && gridCanvas.clientWidth > totalWidth && lastVisibleColumn != null)
@@ -753,6 +760,10 @@ class Grid extends AbstractGrid {
         this.lastLoadedPage = [];
         this.lastRow = 0;
         this.setState({rows:[]});
+    };
+
+    resize = () => {
+        this.setState({key: this.state.key+1});
     };
 
 }
