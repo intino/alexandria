@@ -24,7 +24,10 @@ public class GridValue {
 	public String asText() {
 		if (value == null) return null;
 		if (value instanceof String) return (String) value;
-		if (isNumber()) return String.valueOf(asNumber());
+		if (isNumber()) {
+			if (value instanceof Integer) return String.valueOf(value);
+			return String.valueOf(asNumber());
+		}
 		if (isInstant()) return String.valueOf(asInstant());
 		return (String) value;
 	}
