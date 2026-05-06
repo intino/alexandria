@@ -505,6 +505,7 @@ class Grid extends AbstractGrid {
     rowFormatter = (column, data) => {
         const { classes } = this.props;
         const type = column.type;
+        const color = this.rowColor(data.value);
         const value = this.rowValue(data.value);
         const style = this.style(column, data);
         if (type === "Icon") return (<Icon icon={value} color={color}/>);
