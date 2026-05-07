@@ -430,13 +430,13 @@ class Grid extends AbstractGrid {
         const gridCanvas = this.grid != null ? this.grid.getDataGridDOMNode().querySelector('.react-grid-Canvas') : null;
 
         for (let i=0; i<columns.length; i++)
-            result[columns[i].name] = columns[i].type === "Icon" || columns[i].type === "MaterialIcon" ? 29 : this.state.rows.length > 0 ? this.getWidth(columns[i].label, 8) : undefined;
+            result[columns[i].name] = columns[i].type === "Icon" || columns[i].type === "MaterialIcon" ? 29 : this.state.rows.length > 0 ? this.getWidth(columns[i].label, 10) : undefined;
 
         for (let i=0; i<this.state.rows.length; i++) {
             for (let j=0; j<columns.length; j++) {
                 if (columns[j].type === "Icon" || columns[j].type === "MaterialIcon") continue;
-                const width = this.getWidth(this.state.rows[i][columns[j].name]);
-                result[columns[j].name] = Math.min(Math.max(width, result[columns[j].name]), this.state.maxColumnSize) + 10;
+                const width = columns[j].width != -1 ? columns[j].width : Math.max(this.getWidth(this.rowValue(this.state.rows[i][columns[j].name]), 9), result[columns[j].name]);
+                result[columns[j].name] = Math.min(width, this.state.maxColumnSize);
             }
         }
 
@@ -449,7 +449,7 @@ class Grid extends AbstractGrid {
         }
 
         if (gridCanvas != null && gridCanvas.clientWidth > totalWidth && lastVisibleColumn != null)
-            result[lastVisibleColumn.name] = result[lastVisibleColumn.name] + gridCanvas.clientWidth - totalWidth;
+            result[lastVisibleColumn.name] = result[lastVisibleColumn.name] + gridCanvas.clientWidth - totalWidth - (result[lastVisibleColumn.name]/3);
 
         return result;
     };
@@ -469,6 +469,7 @@ class Grid extends AbstractGrid {
     };
 
     getWidth = (value, factor) => {
+        if (value == null) return 0;
         return value.length * (factor != null ? factor : 6);
     }
 
@@ -531,13 +532,14 @@ class Grid extends AbstractGrid {
 
     handleRowClick = (row, data, c, e) => {
         if (!data.selectable) return;
-        const column = this.state.columns[c.idx];
+        const columnIndex = this.findColumn(c.key);
+        const column = this.state.columns[columnIndex];
         if (column == null) return;
         const dataValue = data[column.name];
         const value = this.rowValue(dataValue);
         const address = this.rowAddress(dataValue);
         if (address != null) history.push(address, {});
-        this.requester.cellClick({ column: column.name, columnIndex: c.idx, row: value, rowIndex: row });
+        this.requester.cellClick({ column: column.name, columnIndex: columnIndex, row: value, rowIndex: row });
     };
 
     linkColumns = () => {
