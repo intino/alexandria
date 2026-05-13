@@ -44,6 +44,14 @@ public class GridValue {
 		return value instanceof Double || value instanceof Integer;
 	}
 
+	public boolean isInteger() {
+		return value instanceof Integer;
+	}
+
+	public boolean isDouble() {
+		return value instanceof Double;
+	}
+
 	public Double asNumber() {
 		if (value == null) return null;
 		if (value instanceof Double) return (Double)value;
