@@ -499,8 +499,15 @@ class Grid extends AbstractGrid {
     columnRenderer = (column, idx) => {
         const type = column.type;
         const style = { display: 'inline-block' };
-        if (type === "Number" || type === "Date") style.float = 'right';
+        const rows = this.state.rows;
+        const isNumber = rows.length > 0 ? this._isNumber(this.rowValue(rows[0][column.name])) : false;
+        if (isNumber || type === "Number" || type === "Date") style.float = 'right';
         return (<div style={style}>{this.translate(column.label)}</div>);
+    };
+
+    _isNumber = (value) => {
+        if (value == null) return false;
+        return !isNaN(Number(value.replace(/\./g, '').replace(',', '.')));
     };
 
     rowFormatter = (column, data) => {
@@ -509,10 +516,11 @@ class Grid extends AbstractGrid {
         const color = this.rowColor(data.value);
         const value = this.rowValue(data.value);
         const style = this.style(column, data);
+        const isNumber = this._isNumber(value);
         if (type === "Icon") return (<Icon icon={value} color={color}/>);
         else if (type === "MaterialIcon") return (<MaterialIcon icon={value} color={color}/>);
         else if (type === "Link" && data.row.selectable) return (<Link className={classNames(classes.link)} style={style} component="button" onClick={this.handleCellClick.bind(this, column, data)}>{value}</Link>);
-        else if (type === "Number" || type === "Date") return (<div style={{textAlign:'right',...style}}>{value}</div>);
+        else if (isNumber || type === "Number" || type === "Date") return (<div style={{textAlign:'right',...style}}>{value}</div>);
         return (<div style={style}>{value}</div>);
     };
 

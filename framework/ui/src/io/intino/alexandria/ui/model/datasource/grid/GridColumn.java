@@ -1,7 +1,9 @@
 package io.intino.alexandria.ui.model.datasource.grid;
 
+import java.text.NumberFormat;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class GridColumn<T> {
 	private String name;
@@ -134,6 +136,8 @@ public class GridColumn<T> {
 	private Formatter defaultFormatter() {
 		return value -> {
 			if (value.isInstant()) return formatInstant(value);
+			else if (value.isInteger()) return formatInteger(value);
+			else if (value.isNumber()) return formatDouble(value);
 			return value.asText();
 		};
 	}
@@ -141,6 +145,21 @@ public class GridColumn<T> {
 	private String formatInstant(GridValue value) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern).withZone(ZoneId.of("UTC"));
 		return formatter.format(value.asInstant());
+	}
+
+	private String formatInteger(GridValue value) {
+		return formatNumber(value, 0);
+	}
+
+	private String formatDouble(GridValue value) {
+		return formatNumber(value, 2);
+	}
+
+	private static String formatNumber(GridValue value, int digits) {
+		NumberFormat nf = NumberFormat.getNumberInstance(Locale.getDefault());
+		nf.setMinimumFractionDigits(digits);
+		nf.setMaximumFractionDigits(digits);
+		return nf.format(value.asNumber());
 	}
 
 }
