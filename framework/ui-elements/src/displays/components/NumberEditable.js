@@ -11,6 +11,7 @@ import {withSnackbar} from 'notistack';
 import Delayer from '../../util/Delayer';
 import 'alexandria-ui-elements/res/styles/components/fields.css';
 import classnames from 'classnames';
+import Theme from "app-elements/gen/Theme";
 
 const styles = theme => ({
 	default : {
@@ -32,12 +33,12 @@ const styles = theme => ({
 	error : {
 		top: '0px',
 		left: '0px',
-		color: '#e13939',
+		color: theme.isDark() ? 'white' : '#e13939',
 		width: 'calc(100% - 4px)',
 		height: "calc(100% - 14px)",
 		margin: '12px 2px',
 		position: 'absolute',
-		background: '#fdecec',
+		background: theme.isDark() ? '#910000' : '#fdecec',
 		padding: '14px 15px 0',
 		borderRadius: '14px',
 		fontSize: '12pt',
@@ -100,9 +101,10 @@ class NumberEditable extends AbstractNumberEditable {
 		const error = this.state.error;
 		const value = this.state.value != null ? this.state.value : (this.state.min !== -1 ? this.state.min : 0);
 		const { thousandSeparator, decimalSeparator } = this.separators();
+		const theme = Theme.get();
 
 		return (
-			<div style={{position:"relative"}}>
+			<div style={{position:"relative"}} className={theme.isDark() ? "dark" : undefined}>
 				{(!this.state.readonly && error != null) && <div id={this.props.id + "-error"} className={classes.error} style={this._errorStyle()} onMouseEnter={this.handleMouseEnter.bind(this)}>{error}</div>}
 				<NumericFormat
 					value={value}

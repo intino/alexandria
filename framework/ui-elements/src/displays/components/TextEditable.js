@@ -13,6 +13,7 @@ import TextBehavior from "./behaviors/TextBehavior";
 import Editor from 'react-simple-wysiwyg';
 import 'alexandria-ui-elements/res/styles/components/fields.css';
 import classnames from "classnames";
+import Theme from "app-elements/gen/Theme";
 
 const styles = theme => ({
 	default : {
@@ -26,12 +27,12 @@ const styles = theme => ({
 	error : {
 		top: '0px',
 		left: '0px',
-		color: '#e13939',
+		color: theme.isDark() ? 'white' : '#e13939',
 		width: 'calc(100% - 4px)',
 		height: "calc(100% - 4px)",
 		margin: '2px 2px',
 		position: 'absolute',
-		background: '#fdecec',
+		background: theme.isDark() ? '#910000' : '#fdecec',
 		padding: '14px 15px 0',
 		borderRadius: '14px',
 		fontSize: '12pt',
@@ -100,8 +101,9 @@ class TextEditable extends AbstractTextEditable {
 
 	renderWithMask = (props) => {
 		const formatChars = this._formatChars();
+		const theme = Theme.get();
 		return (
-			<InputMask {...props} mask={this.state.pattern.value} formatChars={formatChars}
+			<InputMask {...props} mask={this.state.pattern.value} formatChars={formatChars} className={theme.isDark() ? "dark" : undefined}
 					   value={this.state.value} onChange={this.handleChange.bind(this)} /*disabled={this.state.readonly}*/
 					   alwaysShowMask={true} maskChar={this.state.pattern.maskCharacter}>
 				{() => this.renderComponent()}
@@ -115,8 +117,9 @@ class TextEditable extends AbstractTextEditable {
 	};
 
 	renderRichEditor = (props) => {
+		const theme = Theme.get();
 		return (
-			<div className={classnames("text-editable-rich-editor", this.state.readonly ? "readonly" : undefined)} style={this.style()}>
+			<div className={classnames("text-editable-rich-editor", this.state.readonly ? "readonly" : undefined, theme.isDark() ? "dark" : undefined)} style={this.style()}>
 				<Editor {...props} containerProps={{ style: { ...this.style(), resize: 'vertical', height:'100%'/*, fontSize: '14pt'*/ } }}
 						value={this.state.value} disabled={this.state.readonly}
 						onChange={this.handleChange.bind(this)} />
@@ -130,9 +133,10 @@ class TextEditable extends AbstractTextEditable {
 		const placeholder = !this.state.readonly && this.props.placeholder !== "" ? this.translate(this.props.placeholder) : undefined;
 		const type = this.props.type != null ? this.props.type : undefined;
 		const error = this.state.error;
+		const theme = Theme.get();
 
 		return (
-			<div style={{position:"relative",...this.style()}}>
+			<div style={{position:"relative",...this.style()}} className={theme.isDark() ? "dark" : undefined}>
 				{(!this.state.readonly && error != null) && <div id={this.props.id + "-error"} className={classes.error} onMouseEnter={this.handleMouseEnter.bind(this)}>{error}</div>}
 				<TextField {...props} format={this.variant("body1")} className={classes.default} label={label}
 						   onKeyPress={this.handleKeypress.bind(this)} type={type} autoFocus={this.props.focused}

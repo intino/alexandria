@@ -9,6 +9,11 @@
     transform: translate(14px, -6px) scale(0.8) !important;
 }
 
+.dark .MuiFormLabel-root {
+    color: white !important;
+    transform: translate(14px, -6px) scale(0.8) !important;
+}
+
 .MuiOutlinedInput-notchedOutline {
     border-radius: 14px !important;
     border-color: #555 !important;
@@ -62,6 +67,10 @@
     background: #d2f1fe !important;
 }
 
+.dark .Mui-focused.MuiInputBase-formControl, .selector-combo-box.dark.focus .MuiInputBase-formControl, .selector-collection-box.dark.focus .MuiInputBase-formControl {
+    background: #222 !important;
+}
+
 .Mui-disabled.MuiInputBase-formControl, .selector-combo-box.readonly .MuiInputBase-formControl, .selector-collection-box.readonly .MuiInputBase-formControl {
     background: none !important;
 }
@@ -71,8 +80,18 @@
     border-radius: 14px !important;
 }
 
+.dark .MuiInputBase-formControl {
+    background: #404040 !important;
+    border-radius: 14px !important;
+}
+
 .MuiInputBase-formControl:hover {
     background: #d2f1fe !important;
+    border-radius: 14px;
+}
+
+.dark .MuiInputBase-formControl:hover {
+    background: #222 !important;
     border-radius: 14px;
 }
 

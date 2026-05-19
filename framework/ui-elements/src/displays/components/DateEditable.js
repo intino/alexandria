@@ -16,6 +16,7 @@ import 'alexandria-ui-elements/res/styles/layout.css';
 import moment from 'moment';
 import classNames from 'classnames';
 import 'alexandria-ui-elements/res/styles/components/fields.css';
+import Theme from "app-elements/gen/Theme";
 
 const styles = theme => ({
 	date : {
@@ -68,12 +69,12 @@ const styles = theme => ({
     error : {
         top: '0px',
         left: '0px',
-        color: '#e13939',
+        color: theme.isDark() ? 'white' : '#e13939',
         width: 'calc(100% - 4px)',
         height: "calc(100% - 4px)",
         margin: '2px',
         position: 'absolute',
-        background: '#fdecec',
+        background: theme.isDark() ? '#910000' : '#fdecec',
         padding: '15px 15px 0',
         borderRadius: '14px',
         fontSize: '12pt',
@@ -151,8 +152,9 @@ class DateEditable extends AbstractDateEditable {
 		const variant = this._variant();
 		const toolbar = this._isEmbedded() && this.props.mode === "fromnow" ? (props) => (<React.Fragment/>) : undefined;
 		const hasDateInfo = this._hasDateInfo();
+        const theme = Theme.get();
 		return (
-			<div style={{...this.style(),position:'relative'}} className={classNames("date-editable", this.state.readonly ? "readonly" : undefined)}>
+			<div style={{...this.style(),position:'relative'}} className={classNames("date-editable", this.state.readonly ? "readonly" : undefined, theme.isDark() ? "dark" : undefined)}>
                 {!this.state.readonly && <div id={this.props.id + "-error"} className={classes.error} style={{display:'none'}} onMouseEnter={this.handleMouseEnter.bind(this)}></div>}
 				{ !timePicker ? <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={moment.locale(Application.configuration.language)}>
                                     <KeyboardDatePicker variant={variant} placeholder={!this.state.readonly ? pattern : undefined} autoOk

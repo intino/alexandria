@@ -24,8 +24,8 @@ const styles = theme => ({
 	},
 	errorMessage: {
 		margin: "5px 0 0",
-		background: "#fdecec",
-		color: "#e13939",
+		background: theme.isDark() ? '#910000' : '#fdecec',
+		color: theme.isDark() ? 'white' : '#e13939',
 		padding: "2px 10px",
 		borderRadius: "6px",
 	},
@@ -46,13 +46,13 @@ const styles = theme => ({
 		borderRadius: "14px",
 		marginTop: "5px",
 		padding: "14px 10px",
-		background: '#f5ffff',
+		background: theme.isDark() ? "#404040" : "#f5ffff",
 		"&:hover": {
-			background: "#d2f1fe",
+			background: theme.isDark() ? "#222" : "#d2f1fe",
 		},
 		"&:focus": {
 			border: theme.isDark() ? "1px solid #ffffffde" : "1px solid #00000023",
-			background: "#d2f1fe",
+			background: theme.isDark() ? "#222" : "#d2f1fe",
 		}
 	},
 	readonlyPasteInput: {
@@ -139,7 +139,7 @@ class FileEditable extends AbstractFile {
 		const height = this.props.height != null ? this.props.height : "100%";
 		const color = this.state.readonly ? theme.palette.grey.A700 : theme.isDark() ? "#ffffffb3" : "#0000008a";
 		return (
-			<Block layout="vertical" style={{...this.style(),width:width,height:height}} className="file-editable">
+			<Block layout="vertical" style={{...this.style(),width:width,height:height}} className={classnames("file-editable", theme.isDark() ? "dark" : undefined)}>
 				<div className={classnames("layout ", this._isInlineComponent() ? "horizontal center" : "vertical")}>
 					{ ComponentBehavior.labelBlock(this.props, "body1", { marginRight: '15px', color: theme.palette.grey.primary, fontSize: this._isInlineComponent() ? "14pt" : "9pt"}) }
 					{this._renderPreview()}

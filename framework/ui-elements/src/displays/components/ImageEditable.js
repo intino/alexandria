@@ -23,13 +23,13 @@ const styles = theme => ({
 		objectFit: 'contain',
 		position: "absolute",
 		borderRadius: "14px",
-		background: "#f5ffff",
+		background: theme.isDark() ? "#404040" : "#f5ffff",
 		"&:hover": {
-			background: "#d2f1fe",
+			background: theme.isDark() ? "#222" : "#d2f1fe",
 			border: "1px solid #555"
 		},
 		"&:focus": {
-			background: "#d2f1fe",
+			background: theme.isDark() ? "#222" : "#d2f1fe",
 			border: "1px solid #555"
 		},
 	},
@@ -50,10 +50,10 @@ const styles = theme => ({
 		"justify-content": "center",
 		"align-items": "center",
 		top: "0",
-		background: "#f5ffff",
+		background: theme.isDark() ? "#404040" : "#f5ffff",
 		"&:hover": {
 			border: theme.isDark() ? "1px solid #ffffff00" : "1px solid #555",
-			background: "#d2f1fe",
+			background: theme.isDark() ? "#222" : "#d2f1fe",
 		},
 		"&:focus": {
 			border: theme.isDark() ? "1px solid #ffffffde" : "1px solid #00000023",
@@ -202,7 +202,7 @@ class ImageEditable extends AbstractImageEditable {
         const removeStyle = this.state.readonly ? { display: 'none', pointerEvents: 'none' } : {};
 
 		return (
-			<div style={{position:'relative',...this.style()}} className={classnames("image-editable layout ", this.state.showPreview ? "vertical" : "horizontal center")}>
+			<div style={{position:'relative',...this.style()}} className={classnames("image-editable layout ", this.state.showPreview ? "vertical" : "horizontal center", theme.isDark() ? "dark" : undefined)}>
 			    { ComponentBehavior.labelBlock(this.props, "body1", { marginRight: '15px', color: theme.palette.grey.primary, fontSize: this.state.showPreview ? "9pt" : "14pt" }) }
 				{this.state.showPreview &&
 					<label htmlFor={inputId} className={classnames(classes.overlay, this.state.readonly ? classes.disabledOverlay : undefined, !showImageGallery || this.state.value == null ? classes.borderedOverlay : undefined)} style={{display:'flex',cursor: this.state.readonly ? 'default' : 'pointer',...this.sizeStyle()}} >
