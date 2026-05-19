@@ -148,7 +148,8 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 		const readonlyClass = this.state.readonly ? "readonly" : "";
 		const labelClass = label == null || label === "" ? "no-label" : undefined;
 		const viewClass = this.props.view === "FilterView" ? "filter-view" : this.props.view === "TextView" ? "text-view" : undefined;
-		const containerClasses = classnames(classes.container, "selector selector-combo-box", readonlyClass, labelClass, viewClass)
+		const darkClass = isDark ? "dark" : undefined
+		const containerClasses = classnames(classes.container, "selector selector-combo-box", readonlyClass, labelClass, viewClass, darkClass);
 
 		return (
 			<div id={this.props.id + "-container"} className={containerClasses} style={{...this.style()}}>

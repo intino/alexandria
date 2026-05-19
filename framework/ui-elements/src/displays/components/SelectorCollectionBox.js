@@ -138,7 +138,7 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
         if (this.openOnInput()) components = { DropdownIndicator:() => null, IndicatorSeparator:() => null, ...components };
 
         return (
-            <div id={this.props.id + "-container"} className={classnames(classes.container, "selector-collection-box", this.state.readonly ? "readonly" : undefined, label == null || label === "" ? "no-label" : undefined)} style={this.style()}>
+            <div id={this.props.id + "-container"} className={classnames(classes.container, "selector-collection-box", this.state.readonly ? "readonly" : undefined, label == null || label === "" ? "no-label" : undefined, isDark ? "dark" : undefined)} style={this.style()}>
                 {this.renderTraceConsent()}
 
                 <div className="MuiFormControl-root MuiTextField-root" style={{width:"100%"}}>
