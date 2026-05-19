@@ -1,5 +1,5 @@
 import React from "react";
-import { Slide, Fade, Grow, Zoom } from '@material-ui/core';
+import {Fade, Grow, Slide, Zoom} from '@material-ui/core';
 
 const BlockBehavior = (function () {
 
@@ -11,7 +11,8 @@ const BlockBehavior = (function () {
         layout = layout.replace("centercenter", "center-center");
         layout = layout.replace("preverse", "p-reverse");
         layout = layout.replace("lreverse", "l-reverse");
-        layout = layout.replace("rjustified", "r-justified");("tjustified", "t-justified");
+        layout = layout.replace("rjustified", "r-justified");
+        layout = layout.replace("tjustified", "t-justified");
         layout = layout.replace("djustified", "d-justified");
         layout = layout.replace("nowrap", "no-wrap");
         return "layout " + layout;

@@ -6,35 +6,58 @@
     border-color: #555 !important;
 }
 
+.fileeditable-dropzone-dark {
+    border-color: #aaaaaa !important;
+}
+
 .fileeditable-dropzone {
     background: #f5ffff !important;
+}
+
+.fileeditable-dropzone-dark {
+    background: #424242 !important;
 }
 
 .fileeditable-dropzone:hover {
     background: #d2f1fe !important;
 }
 
+.fileeditable-dropzone-dark:hover {
+    background: #353535 !important;
+}
+
 .fileeditable-dropzone-readonly {
     border-color: #d7d7d7 !important;
+}
+
+.fileeditable-dropzone-readonly-dark {
+    border-color: #ffffff1f !important;
 }
 
 .fileeditable-dropzone-readonly:hover {
     background: inherit !important;
 }
 
-.fileeditable-dropzone, .fileeditable-dropzone-readonly {
+.fileeditable-dropzone, .fileeditable-dropzone-dark, .fileeditable-dropzone-readonly, .fileeditable-dropzone-readonly-dark {
     height: 100%;
     min-height: 175px !important;
     border-radius: 14px !important;
 }
 
-.fileeditable-dropzone-paragraph {
+.fileeditable-dropzone-paragraph, .fileeditable-dropzone-paragraph-dark {
     font-size: 10pt !important;
     padding: 0 20px;
+}
+
+.fileeditable-dropzone-paragraph {
     color: #757575 !important;
 }
 
-.fileeditable-dropzone-readonly .fileeditable-dropzone-paragraph {
+.fileeditable-dropzone-paragraph-dark {
+    color: #aaa !important;
+}
+
+.fileeditable-dropzone-readonly .fileeditable-dropzone-paragraph, .fileeditable-dropzone-readonly-dark .fileeditable-dropzone-paragraph {
     color: #00000030 !important;
 }
 
@@ -43,7 +66,7 @@
     width: 32px !important;
 }
 
-.fileeditable-dropzone-readonly .MuiDropzoneArea-icon {
+.fileeditable-dropzone-readonly .MuiDropzoneArea-icon, .fileeditable-dropzone-readonly-dark .MuiDropzoneArea-icon {
     /*color: #00000030 !important;*/
     display: none;
 }

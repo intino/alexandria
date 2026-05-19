@@ -33,8 +33,14 @@ rule type(webpack)
 					loader: "html-loader"
 				},
 				{
-					test: /\\.css$$/,
-					loader: 'style-loader!css-loader'
+					test: /\\.css$$/i,
+                    use: [
+                        "style-loader",
+                        {
+                            loader: "css-loader",
+                            options: { esModule: false }
+                        }
+                    ]
 				}
 			]
 		},
@@ -51,7 +57,11 @@ rule type(webpack)
 				<<$alias>>
 				"app-elements": path.resolve(__dirname, '.'),
 				"$serviceName": path.resolve(__dirname, '.')
-			}
+			},
+			fallback: {
+                'react/jsx-runtime': 'react/jsx-runtime.js',
+                'react/jsx-dev-runtime': 'react/jsx-dev-runtime.js',
+            },
 		},
 		plugins: [
 			new CircularDependencyPlugin({
@@ -59,10 +69,12 @@ rule type(webpack)
 				allowAsyncCycles: false,
 				cwd: process.cwd(),
 			}),
-			new CopyWebpackPlugin([{
-				from: 'res',
-				to: './res'
-			}]),
+			new CopyWebpackPlugin({
+                patterns: [{
+                    from: path.resolve(__dirname, "res"),
+                    to: './res'
+                }]
+            }),
 			$page+plugin...[,$NL]
 		]
 	};
