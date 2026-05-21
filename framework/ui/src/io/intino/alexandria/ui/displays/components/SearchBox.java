@@ -5,7 +5,10 @@ import io.intino.alexandria.ui.displays.events.SearchEvent;
 import io.intino.alexandria.ui.displays.events.SearchListener;
 import io.intino.alexandria.ui.displays.notifiers.SearchBoxNotifier;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 import static java.util.stream.Collectors.toList;
 
@@ -42,38 +45,32 @@ public class SearchBox<DN extends SearchBoxNotifier, B extends Box> extends Abst
         return this;
     }
 
-    public void search(String condition) {
+    public synchronized void search(String condition) {
 		this.condition = condition;
 		if (searching) {
 			newCondition = condition;
 			return;
 		}
+		searching = true;
 		notifySelected();
     }
 
     private void notifySelected() {
-		Timer timer = new Timer();
-		timer.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				try {
-					searching = true;
-					notifyCollections();
-					notifyListener();
+		CompletableFuture.runAsync(() -> {
+			try {
+				notifyCollections();
+				notifyListener();
+			} finally {
+				synchronized (this) {
 					searching = false;
-					searchIfRequired();
-				}
-				finally {
-					searching = false;
+					if (newCondition != null) {
+						String next = newCondition;
+						newCondition = null;
+						search(next);
+					}
 				}
 			}
-
-			private void searchIfRequired() {
-				if (newCondition == null) return;
-				search(newCondition);
-				newCondition = null;
-			}
-		}, 0);
+		});
     }
 
     private void notifyCollections() {
