@@ -1,7 +1,30 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "7.0.2") ui-framework-elements
+Artifact("io.intino.alexandria", "7.0.3") ui-framework-elements
+
 	WebImports
+        PackDependency("@babel/core", "^7.4.5")
+        PackDependency("@babel/plugin-proposal-class-properties", "^7.4.4")
+        PackDependency("@babel/plugin-syntax-dynamic-import", "^7.2.0")
+        PackDependency("@babel/preset-env", "^7.4.5")
+        PackDependency("@babel/preset-react", "^7.0.0")
+        PackDependency("acorn", "^6.1.1")
+        PackDependency("babel-loader", "^8.0.6")
+        PackDependency("babel-plugin-dynamic-import-webpack", "^1.1.0")
+        PackDependency("circular-dependency-plugin", "^5.0.2")
+        PackDependency("copy-webpack-plugin", "^14.0.0")
+        PackDependency("css-loader", "^7.1.4")
+        PackDependency("fsevents", "^2.1.2")
+        PackDependency("html-loader", "^5.1.0")
+        PackDependency("html-webpack-plugin", "^5.6.7")
+        PackDependency("jss", "^9.8.7")
+        PackDependency("prop-types", "^15.7.2")
+        PackDependency("style-loader", "^0.23.1")
+        PackDependency("styled-components", "^4.3.1")
+        PackDependency("webpack", "^5.106.2")
+        PackDependency("webpack-cli", "^7.0.2")
+        PackDependency("webpack-dev-server", "^5.2.4")
+
 		WebComponent("@date-io/moment", "^1.3.7")
 		WebComponent("@material-ui/core", "^4.12.4")
 		WebComponent("@material-ui/icons", "^4.11.3")
@@ -29,7 +52,7 @@ Artifact("io.intino.alexandria", "7.0.2") ui-framework-elements
 		WebComponent("react-virtualized-auto-sizer", "^1.0.2")
 		WebComponent("react-window", "^1.8.2")
 		WebComponent("react-window-infinite-loader", "^1.0.3")
-		WebComponent("react-cookie-consent", "^8.0.1")
+		WebComponent("react-cookie-consent", "^10.0.1")
 		WebComponent("history", "^4.10.1")
 		WebComponent("material-ui-dropzone", "^3.1.0")
 		WebComponent("react-image-gallery", "^1.2.7")
