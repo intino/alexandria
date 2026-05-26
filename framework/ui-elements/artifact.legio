@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "7.0.5") ui-framework-elements
+Artifact("io.intino.alexandria", "7.0.6") ui-framework-elements
 
 	WebImports
 		WebComponent("@date-io/moment", "^1.3.7")
@@ -58,7 +58,7 @@ Artifact("io.intino.alexandria", "7.0.5") ui-framework-elements
 		Resolution("react", "^16.13.1")
 		Resolution("react-dom", "^16.13.1")
 		Resolution("react-is", "^16.13.1")
-		Resolution("react-cookie-consent", "^10.0.1")
+		Resolution("react-cookie-consent", "^6.4.0")
 
         PackDependency("@babel/core", "^7.4.5")
         PackDependency("@babel/plugin-proposal-class-properties", "^7.4.4")
