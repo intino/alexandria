@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "7.0.4") ui-framework-elements
+Artifact("io.intino.alexandria", "7.0.5") ui-framework-elements
 
 	WebImports
 		WebComponent("@date-io/moment", "^1.3.7")
@@ -17,9 +17,9 @@ Artifact("io.intino.alexandria", "7.0.4") ui-framework-elements
 		WebComponent("notistack", "^1.0.10")
 		WebComponent("numeral", "^2.0.6")
 		WebComponent("plotly.js", "^3.5.1")
-		WebComponent("react", "^18.2.0")
-		WebComponent("react-dom", "^18.2.0")
-		WebComponent("react-is", "^18.2.0")
+		WebComponent("react", "^16.13.1")
+		WebComponent("react-dom", "^16.13.1")
+		WebComponent("react-is", "^16.13.1")
 		WebComponent("react-draggable", "4.4.6")
 		WebComponent("react-ace", "^12.0.0")
 		WebComponent("react-materialize", "3.9.0")
@@ -55,9 +55,10 @@ Artifact("io.intino.alexandria", "7.0.4") ui-framework-elements
 		WebComponent("react-image-file-resizer", "^0.4.8")
 		WebComponent("react-number-format", "^5.4.5")
 
-		Resolution("react", "^18.2.0")
-		Resolution("react-dom", "^18.2.0")
-		Resolution("react-is", "^18.2.0")
+		Resolution("react", "^16.13.1")
+		Resolution("react-dom", "^16.13.1")
+		Resolution("react-is", "^16.13.1")
+		Resolution("react-cookie-consent", "^10.0.1")
 
         PackDependency("@babel/core", "^7.4.5")
         PackDependency("@babel/plugin-proposal-class-properties", "^7.4.4")
