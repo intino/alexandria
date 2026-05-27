@@ -16,5 +16,6 @@ Artifact("io.intino.alexandria", "2.2.12") http
 			Exclude("log4j", "log4j")
 		Test("junit", "junit", "4.13.2")
 		Test("io.intino.alexandria", "rest-accessor", "3.1.8")
+
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
