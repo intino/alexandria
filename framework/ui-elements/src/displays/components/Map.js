@@ -1,16 +1,15 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import AbstractMap from "../../../gen/displays/components/AbstractMap";
 import MapNotifier from "../../../gen/displays/notifiers/MapNotifier";
 import MapRequester from "../../../gen/displays/requesters/MapRequester";
 import {CollectionStyles} from "./Collection";
-import { GoogleMap, MarkerClusterer, HeatmapLayer, KmlLayer } from '@react-google-maps/api'
+import {GoogleMap, KmlLayer, MarkerClusterer} from '@react-google-maps/api'
 import 'alexandria-ui-elements/res/styles/layout.css';
 import PlaceMark from "./geo/PlaceMark";
 import SearchDialog from "./geo/SearchDialog";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import GeoBehavior from "./behaviors/GeoBehavior";
-import GeometryUtil from "../../util/GeometryUtil";
 
 export const MapStyles = theme => ({
 	...CollectionStyles(theme),
@@ -35,16 +34,16 @@ export class EmbeddedMap extends AbstractMap {
 		this.notifier = new MapNotifier(this);
 		this.requester = new MapRequester(this);
 		this.container = React.createRef();
-        this.map = null;
-        this.state = {
-            ...this.state,
-            placeMarks: [],
-            center: this.props.center,
-            zoom: this.props.zoom,
-            placeMark: null,
-            kmlLayer: null,
-            closeAllInfoWindows: true,
-        };
+		this.map = null;
+		this.state = {
+			...this.state,
+			placeMarks: [],
+			center: this.props.center,
+			zoom: this.props.zoom,
+			placeMark: null,
+			kmlLayer: null,
+			closeAllInfoWindows: true,
+		};
 	};
 
 	render() {
@@ -52,14 +51,14 @@ export class EmbeddedMap extends AbstractMap {
 		let height = $(container).height();
 		return (
 			<div ref={this.container} className="layout flex" style={{position:'relative'}}>
-			    {this.renderSearch()}
+				{this.renderSearch()}
 				<GoogleMap
-				    className="map"
-				    mapContainerStyle={{height:"100%"}}
-				    zoom={GeoBehavior.zoom(this).defaultZoom}
-				    center={GeoBehavior.center(this)}
-				    onLoad={this.registerMap.bind(this)}
-				    options={this.mapOptions()}>
+					className="map"
+					mapContainerStyle={{height:"100%"}}
+					zoom={GeoBehavior.zoom(this).defaultZoom}
+					center={GeoBehavior.center(this)}
+					onLoad={this.registerMap.bind(this)}
+					options={this.mapOptions()}>
 					<div style={{height: height, width: '100%'}}/>
 					{this.renderLayer()}
 				</GoogleMap>
@@ -68,25 +67,22 @@ export class EmbeddedMap extends AbstractMap {
 	};
 
 	renderSearch = () => {
-	    return (<SearchDialog map={this.getMap.bind(this)} classes={this.props.classes} mapOptions={this.mapOptions()}/>);
+		return (<SearchDialog map={this.getMap.bind(this)} classes={this.props.classes} mapOptions={this.mapOptions()}/>);
 	};
 
 	getMap = () => {
-	    return this.map;
+		return this.map;
 	};
 
 	registerMap = (map) => {
-	    this.map = map;
+		this.map = map;
 		map.addListener("click", this.hideActiveMarker.bind(this));
 	};
 
 	renderLayer = () => {
 		if (this.isCluster()) return this.renderCluster();
 		else if (this.isHeatMap()) {
-		    const result = [];
-		    result.push(this.renderHeatmap());
-		    if (this.isSelectable()) result.push(this.renderCluster());
-		    return result;
+			return this.isSelectable() ? this.renderCluster() : this.renderPlaceMarks();
 		}
 		else if (this.isKml()) return this.renderKml();
 		return this.renderPlaceMarks();
@@ -105,11 +101,6 @@ export class EmbeddedMap extends AbstractMap {
 		);
 	};
 
-	renderHeatmap = () => {
-	    const data = this.state.placeMarks.map(pm => { return { location: GeometryUtil.firstPoint(pm.location), weight: pm.weight }; });
-		return (<HeatmapLayer data={data}/>);
-	};
-
 	renderKml = () => {
 		const { classes } = this.props;
 		var isLocal = this.state.kmlLayer != null && this.state.kmlLayer.indexOf("localhost") !== -1;
@@ -124,9 +115,10 @@ export class EmbeddedMap extends AbstractMap {
 		const items = this.behavior.items();
 		return (
 			<PlaceMark icon={this.state.icon}
-					   onShowInfo={this.handleShowInfo.bind(this)}
-					   content={items.length > 0 ? items[0] : undefined}
-					   key={pos} placeMark={placeMark} clusterer={clusterer}>
+			           onShowInfo={this.handleShowInfo.bind(this)}
+			           label="hola mundo"
+			           content={items.length > 0 ? items[0] : undefined}
+			           key={pos} placeMark={placeMark} clusterer={clusterer}>
 			</PlaceMark>
 		);
 	};
@@ -143,11 +135,11 @@ export class EmbeddedMap extends AbstractMap {
 	};
 
 	updateCenter = (center) => {
-	    this.setState({center});
+		this.setState({center});
 	};
 
 	updateZoom = (zoom) => {
-	    this.setState({zoom});
+		this.setState({zoom});
 	};
 
 	isCluster = () => {
@@ -163,7 +155,7 @@ export class EmbeddedMap extends AbstractMap {
 	};
 
 	isSelectable = () => {
-	    return this.props.selection != null;
+		return this.props.selection != null;
 	};
 
 	setup = (info) => {
@@ -175,25 +167,25 @@ export class EmbeddedMap extends AbstractMap {
 		this.current.hideInfo();
 	};
 
-    mapOptions = () => {
-        const controls = this.props.controls != null ? this.props.controls : "";
-        const all = controls.indexOf("all") != -1;
+	mapOptions = () => {
+		const controls = this.props.controls != null ? this.props.controls : "";
+		const all = controls.indexOf("all") != -1;
 		return {
-            zoomControl: controls.indexOf("zoom") != -1 || all,
-            mapTypeControl: controls.indexOf("maptype") != -1 || all,
-            scaleControl: controls.indexOf("scale") != -1 || all,
-            streetViewControl: controls.indexOf("streetview") != -1 || all,
-            rotateControl: controls.indexOf("rotate") != -1 || all,
-            fullscreenControl: controls.indexOf("fullscreen") != -1 || all
-        };
-    };
+			zoomControl: controls.indexOf("zoom") != -1 || all,
+			mapTypeControl: controls.indexOf("maptype") != -1 || all,
+			scaleControl: controls.indexOf("scale") != -1 || all,
+			streetViewControl: controls.indexOf("streetview") != -1 || all,
+			rotateControl: controls.indexOf("rotate") != -1 || all,
+			fullscreenControl: controls.indexOf("fullscreen") != -1 || all
+		};
+	};
 
 }
 
 class Map extends EmbeddedMap {
-    constructor(props) {
-        super(props);
-    }
+	constructor(props) {
+		super(props);
+	}
 }
 
 export default withStyles(MapStyles, { withTheme: true })(Map);
