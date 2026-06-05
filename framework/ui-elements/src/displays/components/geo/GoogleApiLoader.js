@@ -1,6 +1,6 @@
 import * as React from "react";
 import I18nComponent from "../../I18nComponent";
-import { LoadScript } from "@react-google-maps/api";
+import {LoadScript} from "@react-google-maps/api";
 
 class GoogleApiLoader extends I18nComponent {
 
@@ -10,7 +10,7 @@ class GoogleApiLoader extends I18nComponent {
 
     render() {
         const key = Application.configuration.googleApiKey;
-        return (<LoadScript onLoad={this.notifyLoad.bind(this)} libraries={["visualization","drawing"]} googleMapsApiKey={key}>{this.props.children}</LoadScript>);
+        return (<LoadScript onLoad={this.notifyLoad.bind(this)} libraries={["drawing"]} googleMapsApiKey={key}>{this.props.children}</LoadScript>);
     };
 
     notifyLoad = () => {
