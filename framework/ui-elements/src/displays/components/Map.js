@@ -1,16 +1,15 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import AbstractMap from "../../../gen/displays/components/AbstractMap";
 import MapNotifier from "../../../gen/displays/notifiers/MapNotifier";
 import MapRequester from "../../../gen/displays/requesters/MapRequester";
 import {CollectionStyles} from "./Collection";
-import { GoogleMap, MarkerClusterer, HeatmapLayer, KmlLayer } from '@react-google-maps/api'
+import {GoogleMap, KmlLayer, MarkerClusterer} from '@react-google-maps/api'
 import 'alexandria-ui-elements/res/styles/layout.css';
 import PlaceMark from "./geo/PlaceMark";
 import SearchDialog from "./geo/SearchDialog";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import GeoBehavior from "./behaviors/GeoBehavior";
-import GeometryUtil from "../../util/GeometryUtil";
 
 export const MapStyles = theme => ({
 	...CollectionStyles(theme),
@@ -83,10 +82,7 @@ export class EmbeddedMap extends AbstractMap {
 	renderLayer = () => {
 		if (this.isCluster()) return this.renderCluster();
 		else if (this.isHeatMap()) {
-		    const result = [];
-		    result.push(this.renderHeatmap());
-		    if (this.isSelectable()) result.push(this.renderCluster());
-		    return result;
+		    return this.isSelectable() ? this.renderCluster() : this.renderPlaceMarks();
 		}
 		else if (this.isKml()) return this.renderKml();
 		return this.renderPlaceMarks();
@@ -103,11 +99,6 @@ export class EmbeddedMap extends AbstractMap {
 				}
 			</MarkerClusterer>
 		);
-	};
-
-	renderHeatmap = () => {
-	    const data = this.state.placeMarks.map(pm => { return { location: GeometryUtil.firstPoint(pm.location), weight: pm.weight }; });
-		return (<HeatmapLayer data={data}/>);
 	};
 
 	renderKml = () => {
