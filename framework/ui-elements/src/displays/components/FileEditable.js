@@ -292,7 +292,7 @@ class FileEditable extends AbstractFile {
 	_renderInputField = () => {
 		const allowedTypes = this._allowedTypes();
 		const { classes } = this.props;
-		const inputId = this.props.id + "-file-input";
+		const inputId = Math.random() + "-file-input";
 		return (
 			<React.Fragment>
 				{!this.state.readonly && <label htmlFor={inputId}><a className={classes.link}>{this.translate("Select")}</a></label>}
