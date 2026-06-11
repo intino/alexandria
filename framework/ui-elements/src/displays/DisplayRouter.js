@@ -5,6 +5,8 @@ import DisplayRouterRequester from "../../gen/displays/requesters/DisplayRouterR
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import history from 'alexandria-ui-elements/src/util/History';
 
+export const DisplayRouterContext = React.createContext(null);
+
 class DisplayRouter extends AbstractDisplayRouter {
 	static Listening = false;
 
@@ -38,7 +40,11 @@ class DisplayRouter extends AbstractDisplayRouter {
 	};
 
 	render() {
-		return (<React.Fragment>{this.props.children}</React.Fragment>);
+		return (
+			<DisplayRouterContext.Provider value={this.requester}>
+				<React.Fragment>{this.props.children}</React.Fragment>
+			</DisplayRouterContext.Provider>
+		);
 	}
 }
 
