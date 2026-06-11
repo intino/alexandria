@@ -6,6 +6,10 @@ rule type(display)
 			super(element);
 		};
 		<<$request...[$NL]>>
+		ready = () => {
+			if (this.addToHistory()) return;
+			this.pushService.send({ op: "ready", s: "$name+lowerCase", d: this.element.shortId(), o: this.element.props.owner(), c: this.element.props.context()}, this.element.ownerUnit());
+		};
 		didMount = () => {
 			this.pushService.send({ op: "didMount", s: "$name+lowerCase", d: this.element.shortId(), o: this.element.props.owner(), c: this.element.props.context()}, this.element.ownerUnit());
 		};

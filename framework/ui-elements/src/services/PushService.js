@@ -3,6 +3,8 @@ const PushService = (function () {
     var service = {};
 
     service.pendingMessages = [];
+    service.pendingIncomingMessages = {};
+    service.pendingIncomingFlush = {};
     service.connections = [];
     service.retries = [];
     service.pendingConnections = [];
@@ -33,10 +35,14 @@ const PushService = (function () {
         socket.onmessage = function (event) {
             if (event.data instanceof Blob) return;
             var data = JSON.parse(event.data);
-            var callbacks = callback(data.n).slice(0);
-            callbacks.forEach(function (callback) {
-                callback(data.p);
-            });
+            var listeners = callback(data.n).slice(0);
+            if (listeners.length > 0) {
+                listeners.forEach(function (callback) {
+                    callback(data.p);
+                });
+                return;
+            }
+            queueIncomingMessage(data.n, data.p);
         };
 
         socket.onerror = function(e) {
@@ -78,6 +84,12 @@ const PushService = (function () {
         if (!(name in callbacks))
             callbacks[name] = [];
         callbacks[name].push(callback);
+        if (service.pendingIncomingMessages[name] != null && service.pendingIncomingMessages[name].length > 0) {
+            if (!service.pendingIncomingFlush[name]) {
+                service.pendingIncomingFlush[name] = true;
+                window.setTimeout(() => flushPendingIncomingMessages(name), 0);
+            }
+        }
         return {
             deregister: function () {
                 var index = callbacks[name].indexOf(callback);
@@ -92,6 +104,10 @@ const PushService = (function () {
         const socket = this.connections[app];
         if (socket != null && socket.ready) socket.send(encodeURIComponent(JSON.stringify(message)));
         else service.pendingMessages.push({ message: message, app: app });
+    };
+
+    service.ready = function(app) {
+        this.send({ op: "ready", s: "displayrouter" }, app);
     };
 
     service.isConnectionRegistered = function(app) {
@@ -111,8 +127,34 @@ const PushService = (function () {
         return name in callbacks ? callbacks[name] : [];
     }
 
+    function queueIncomingMessage(name, payload) {
+        if (!(name in service.pendingIncomingMessages))
+            service.pendingIncomingMessages[name] = [];
+        service.pendingIncomingMessages[name].push(payload);
+
+        if (service.pendingIncomingFlush[name]) return;
+        service.pendingIncomingFlush[name] = true;
+        window.setTimeout(() => flushPendingIncomingMessages(name), 0);
+    }
+
+    function flushPendingIncomingMessages(name) {
+        const listeners = callback(name).slice(0);
+        const pending = service.pendingIncomingMessages[name];
+        if (pending == null || pending.length === 0 || listeners.length === 0) {
+            service.pendingIncomingFlush[name] = false;
+            return;
+        }
+        service.pendingIncomingMessages[name] = [];
+        service.pendingIncomingFlush[name] = false;
+        pending.forEach(function (payload) {
+            listeners.forEach(function (listener) {
+                listener(payload);
+            });
+        });
+    }
+
     function sendPendingMessages(service) {
-        for (let i=0; i<service.pendingMessages; i++) {
+        for (let i = 0; i < service.pendingMessages.length; i++) {
             const pendingMessage = service.pendingMessages[i];
             service.send(pendingMessage.message, pendingMessage.app);
         }
