@@ -9,6 +9,7 @@ rule type(app)
 	import TranslatorService from "alexandria-ui-elements/src/services/TranslatorService";
 	import GoogleApiLoader from "alexandria-ui-elements/src/displays/components/geo/GoogleApiLoader";
 	import DisplayRouter from "alexandria-ui-elements/src/displays/DisplayRouter";
+	import ReadyGate from "alexandria-ui-elements/src/displays/components/ReadyGate";
 
 	var launchApplication = function () {
 		var configuration = loadConfiguration();
@@ -81,7 +82,7 @@ rule type(page) and trigger(import)
 
 rule type(page) and trigger(render)
 	const requireGoogleApi = Application.configuration.googleApiKey != null && Application.configuration.googleApiKey !== "";
-	const content = requireGoogleApi ? <GoogleApiLoader onLoad={openPushService()}><$templateName+firstUpperCase~Page/></GoogleApiLoader> : <$templateName+firstUpperCase~Page/>;
+	const content = requireGoogleApi ? <GoogleApiLoader onLoad={openPushService()}><><$templateName+firstUpperCase~Page/><ReadyGate/></></GoogleApiLoader> : <><$templateName+firstUpperCase~Page/><ReadyGate/></>;
 	const $templateName+firstLowerCase = document.getElementById("$templateName+firstUpperCase");
 	if ($templateName+firstLowerCase) ReactDOM.render(<DisplayRouter id="__router__" owner={()=>""} context={()=>""}>{content}</DisplayRouter>, $templateName+firstLowerCase);
 	if (!requireGoogleApi) openPushService();

@@ -59,6 +59,10 @@ public class PushService extends io.intino.alexandria.http.pushservice.PushServi
 		String operation = message.operation();
 
 		if (operation != null && operation.equals("ping")) return;
+		if (operation != null && operation.equals("ready") && "displayrouter".equals(message.sender())) {
+			if (client != null) client.ready();
+			return;
+		}
 
 		if (requester == null) {
 			super.onMessage(client, content);
