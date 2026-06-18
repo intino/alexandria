@@ -16,6 +16,7 @@ import io.javalin.http.ExceptionHandler;
 import io.javalin.http.staticfiles.Location;
 import io.javalin.http.staticfiles.ResourceHandler;
 import io.javalin.http.staticfiles.StaticFileConfig;
+import io.javalin.security.RouteRole;
 import jakarta.servlet.MultipartConfigElement;
 import jakarta.servlet.ServletException;
 
@@ -25,6 +26,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -98,7 +100,7 @@ public class AlexandriaHttpServer<R extends AlexandriaHttpRouter<?>> {
 
 	public <T extends Exception> void handle(Class<T> exceptionClass, ExceptionHandler<? super T> handler) {
 		init();
-		service.exception(exceptionClass, handler);
+		service.unsafe.routes.exception(exceptionClass, handler);
 	}
 
 	public interface ResourceCaller<SM extends AlexandriaHttpManager<?>> {
@@ -122,12 +124,12 @@ public class AlexandriaHttpServer<R extends AlexandriaHttpRouter<?>> {
 	private static Javalin create(List<String> webDirectories, long maxResourceSize) {
 		Javalin result = Javalin.create(config -> {
 			register(webDirectories, config);
-			ResourceHandler defaultHandler = config.pvt.resourceHandler;
+			ResourceHandler defaultHandler = config.unsafe.resourceHandler;
 			config.http.maxRequestSize = maxResourceSize;
-			config.pvt.resourceHandler = new ResourceHandler() {
+			config.resourceHandler(new ResourceHandler() {
 				@Override
 				public boolean canHandle(Context context) {
-					return defaultHandler != null && defaultHandler.canHandle(context);
+					return defaultHandler == null || defaultHandler.canHandle(context);
 				}
 
 				@Override
@@ -146,13 +148,18 @@ public class AlexandriaHttpServer<R extends AlexandriaHttpRouter<?>> {
 				public boolean addStaticFileConfig(StaticFileConfig config) {
 					return defaultHandler != null && defaultHandler.addStaticFileConfig(config);
 				}
-			};
+
+				@Override
+				public java.util.Set<RouteRole> resourceRouteRoles(Context context) {
+					return defaultHandler != null ? defaultHandler.resourceRouteRoles(context) : Collections.emptySet();
+				}
+			});
 		});
-		result.before(ctx -> {
+		result.unsafe.routes.before(ctx -> {
 			MultipartConfigElement multipartConfig = new MultipartConfigElement("", maxResourceSize, Double.valueOf(maxResourceSize*1.5).longValue(), -1);
 			ctx.req().setAttribute("org.eclipse.jetty.multipartConfig", multipartConfig);
 		});
-		result.exception(Exception.class, (exception, context) -> Logger.error(exception));
+		result.unsafe.routes.exception(Exception.class, (exception, context) -> Logger.error(exception));
 		return result;
 	}
 

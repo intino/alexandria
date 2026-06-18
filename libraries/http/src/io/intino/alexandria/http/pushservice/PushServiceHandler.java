@@ -5,13 +5,10 @@ import io.intino.alexandria.logger.Logger;
 import io.javalin.websocket.WsConfig;
 import org.eclipse.jetty.io.EofException;
 import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.annotations.*;
-import org.eclipse.jetty.websocket.common.WebSocketSession;
 
 import java.time.Duration;
 import java.util.*;
 
-@WebSocket(maxTextMessageSize = 5 * 1024 * 1024)
 public class PushServiceHandler {
 	private final PushService pushService;
 	private final Map<String, List<AlexandriaHttpClient>> clientsMap = new HashMap<>();
@@ -25,7 +22,6 @@ public class PushServiceHandler {
 		init(socket);
 	}
 
-	@OnWebSocketConnect
 	public void onConnect(Session session) {
 		Client client = client(session);
 		if (client != null) {
@@ -35,7 +31,6 @@ public class PushServiceHandler {
 		pushService.onOpen(client(session));
 	}
 
-	@OnWebSocketError
 	public void onError(Session session, Throwable error) {
 		String sessionId = AlexandriaHttpClient.sessionId(session);
 		try {
@@ -51,7 +46,6 @@ public class PushServiceHandler {
 		else Logger.debug(error.toString());
 	}
 
-	@OnWebSocketClose
 	public void onClose(Session session, int statusCode, String reason) {
 		String sessionId = AlexandriaHttpClient.sessionId(session);
 		cancelClose(session);
@@ -63,11 +57,13 @@ public class PushServiceHandler {
 		doCloseDelayed(session, sessionId);
 	}
 
-	@OnWebSocketMessage
 	public void onMessage(Session session, String message) {
 		Client client = client(session);
-		if (client == null) session.disconnect();
-		pushService.onMessage(client(session), message);
+		if (client == null) {
+			session.disconnect();
+			return;
+		}
+		pushService.onMessage(client, message);
 	}
 
 	protected AlexandriaHttpClient client(Session session) {
@@ -132,18 +128,27 @@ public class PushServiceHandler {
 	}
 
 	private String clientId(Session session) {
-		String[] params = ((WebSocketSession) session).getCoreSession().getRequestURI().getQuery().split("&");
-		if (params.length <= 0) return null;
-		String[] split = params[0].split("=");
-		return split.length > 1 ? split[1] : null;
+		Map<String, String> queryString = parseQueryString(session.getUpgradeRequest().getRequestURI().getQuery());
+		return queryString.get("id");
+	}
+
+	private static Map<String, String> parseQueryString(String queryString) {
+		if (queryString == null || queryString.isBlank()) return Collections.emptyMap();
+		Map<String, String> result = new HashMap<>();
+		for (String param : queryString.split("&")) {
+			String[] split = param.split("=", 2);
+			if (split.length == 0 || split[0].isBlank()) continue;
+			result.put(split[0], split.length > 1 ? split[1] : "");
+		}
+		return result;
 	}
 
 	private static final int MaxTextMessageSize = 5 * 1024 * 1024; // 5 MB
 	private static final int MaxIdleTimeout = 24 * 60 * 60 * 1000; // One day
 	private void init(WsConfig socket) {
 		socket.onConnect(context -> {
-			context.session.getPolicy().setIdleTimeout(Duration.ofMillis(MaxIdleTimeout));
-			context.session.getPolicy().setMaxTextMessageSize(MaxTextMessageSize);
+			context.session.setIdleTimeout(Duration.ofMillis(MaxIdleTimeout));
+			context.session.setMaxTextMessageSize(MaxTextMessageSize);
 			onConnect(context.session);
 		});
 		socket.onError(context -> onError(context.session, context.error()));

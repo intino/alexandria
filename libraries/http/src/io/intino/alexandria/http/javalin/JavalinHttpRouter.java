@@ -11,6 +11,7 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.HttpResponseException;
 import io.javalin.http.UploadedFile;
+import io.javalin.websocket.WsHandlerType;
 
 import java.util.HashSet;
 import java.util.List;
@@ -41,49 +42,49 @@ public class JavalinHttpRouter<SM extends AlexandriaHttpManager<?>> implements A
 	@Override
 	public JavalinHttpRouter<SM> before(ResourceCaller<SM> caller) {
 		if (!canRegister(path, "before")) return this;
-		service.before(adapt(path), (context) -> before(caller, manager(context)));
+		service.unsafe.routes.before(adapt(path), (context) -> before(caller, manager(context)));
 		return this;
 	}
 
 	@Override
 	public JavalinHttpRouter<SM> get(ResourceCaller<SM> caller) {
 		if (!canRegister(path, "get")) return this;
-		service.get(adapt(path), (context) -> JavalinHttpRouter.this.execute(caller, manager(context)));
+		service.unsafe.routes.get(adapt(path), (context) -> JavalinHttpRouter.this.execute(caller, manager(context)));
 		return this;
 	}
 
 	@Override
 	public JavalinHttpRouter<SM> post(ResourceCaller<SM> caller) {
 		if (!canRegister(path, "post")) return this;
-		service.post(adapt(path), (context) -> execute(caller, manager(context)));
+		service.unsafe.routes.post(adapt(path), (context) -> execute(caller, manager(context)));
 		return this;
 	}
 
 	@Override
 	public JavalinHttpRouter<SM> put(ResourceCaller<SM> caller) {
 		if (!canRegister(path, "put")) return this;
-		service.put(adapt(path), (context) -> execute(caller, manager(context)));
+		service.unsafe.routes.put(adapt(path), (context) -> execute(caller, manager(context)));
 		return this;
 	}
 
 	@Override
 	public JavalinHttpRouter<SM> delete(ResourceCaller<SM> caller) {
 		if (!canRegister(path, "delete")) return this;
-		service.delete(adapt(path), (context) -> execute(caller, manager(context)));
+		service.unsafe.routes.delete(adapt(path), (context) -> execute(caller, manager(context)));
 		return this;
 	}
 
 	@Override
 	public JavalinHttpRouter<SM> patch(ResourceCaller<SM> caller) {
 		if (!canRegister(path, "patch")) return this;
-		service.patch(adapt(path), (context) -> execute(caller, manager(context)));
+		service.unsafe.routes.patch(adapt(path), (context) -> execute(caller, manager(context)));
 		return this;
 	}
 
 	@Override
 	public JavalinHttpRouter<SM> after(ResourceCaller<SM> caller) {
 		if (!canRegister(path, "after")) return this;
-		service.after(adapt(path), (context) -> after(caller, manager(context)));
+		service.unsafe.routes.after(adapt(path), (context) -> after(caller, manager(context)));
 		return this;
 	}
 
@@ -102,7 +103,7 @@ public class JavalinHttpRouter<SM extends AlexandriaHttpManager<?>> implements A
 		this.pushService = service;
 		if (this.pushServiceConsumer != null) this.pushServiceConsumer.accept(pushService);
 		if (!canRegister(path, "socket")) return;
-		this.service.ws(adapt(path), config -> new PushServiceHandler(config, pushService));
+		this.service.unsafe.routes.addWsHandler(WsHandlerType.WEBSOCKET, adapt(path), config -> new PushServiceHandler(config, pushService));
 	}
 
 	@Override
@@ -180,13 +181,21 @@ public class JavalinHttpRouter<SM extends AlexandriaHttpManager<?>> implements A
 
 			@Override
 			public List<Resource> resources() {
-				return context.uploadedFiles().stream().map(f -> new Resource(f.filename(), f.content()).metadata().contentType(f.contentType())).collect(Collectors.toList());
+				return context.uploadedFiles().stream().map(f -> uploadedFile(f.filename(), f.contentType(), f.content())).collect(Collectors.toList());
 			}
 
 			@Override
 			public Resource resource(String name) {
 				UploadedFile file = context.uploadedFile(name);
-				return file != null ? new Resource(file.filename(), file.content()).metadata().contentType(file.contentType()) : null;
+				return file != null ? uploadedFile(file.filename(), file.contentType(), file.content()) : null;
+			}
+
+			private Resource uploadedFile(String filename, String contentType, java.io.InputStream content) {
+				try {
+					return new Resource(filename, contentType, content.readAllBytes());
+				} catch (java.io.IOException e) {
+					throw new RuntimeException(e);
+				}
 			}
 		};
 	}

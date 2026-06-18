@@ -1,11 +1,9 @@
 package io.intino.alexandria.http.server;
 
 import io.intino.alexandria.http.pushservice.Client;
-import org.eclipse.jetty.websocket.api.RemoteEndpoint;
+import org.eclipse.jetty.websocket.api.Callback;
 import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.WriteCallback;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -72,32 +70,18 @@ public class AlexandriaHttpClient implements Client {
 	public boolean send(String message) {
 		if (!session.isOpen()) return false;
 
-		try {
-			RemoteEndpoint remote = session.getRemote();
-			remote.sendString(message, new WriteCallback() {
-				@Override
-				public void writeFailed(Throwable throwable) {
-					if (!messagesQueue.contains(message))
-						messagesQueue.add(message);
-				}
-
-				@Override
-				public void writeSuccess() {
-					if (messagesQueue.contains(message))
-						messagesQueue.remove(message);
-				}
-			});
-			remote.flush();
-		} catch (IOException ignored) {
-			return false;
-		}
+		session.sendText(message, Callback.from(() -> {
+			if (messagesQueue.contains(message)) messagesQueue.remove(message);
+		}, throwable -> {
+			if (!messagesQueue.contains(message)) messagesQueue.add(message);
+		}));
 
 		return true;
 	}
 
 	@Override
 	public void destroy() {
-		queueTimer.cancel();
+		if (queueTimer != null) queueTimer.cancel();
 		messagesQueue.clear();
 	}
 
@@ -112,6 +96,7 @@ public class AlexandriaHttpClient implements Client {
 	}
 
 	private static Map<String, String> parseQueryString(String queryString) {
+		if (queryString == null || queryString.isBlank()) return Collections.emptyMap();
 		return Stream.of(queryString.split("&"))
 				.map(param -> param.split("="))
 				.collect(toMap(p -> p[0], p -> p.length > 1 ? p[1] : "", (a, b) -> a));
