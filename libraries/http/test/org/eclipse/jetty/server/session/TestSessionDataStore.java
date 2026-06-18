@@ -1,5 +1,8 @@
 package org.eclipse.jetty.server.session;
 
+import org.eclipse.jetty.session.AbstractSessionDataStore;
+import org.eclipse.jetty.session.SessionData;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;

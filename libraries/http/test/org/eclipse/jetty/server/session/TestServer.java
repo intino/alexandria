@@ -1,12 +1,18 @@
 package org.eclipse.jetty.server.session;
 
+import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee10.servlet.SessionHandler;
+import org.eclipse.jetty.ee10.webapp.WebAppContext;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.NetworkConnector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.server.SessionIdManager;
+import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.session.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestServer {
 	public static int DEFAULT_MAX_INACTIVE = 30;
@@ -31,9 +37,8 @@ public class TestServer {
 		_scavengePeriod = scavengePeriod;
 		_cacheFactory = cacheFactory;
 		_storeFactory = storeFactory;
-		_contexts = new ContextHandlerCollection();
+		_contexts = new ContextHandlerCollection(new ContextHandler[0]);
 		_sessionIdManager = newSessionIdManager();
-		_server.setSessionIdManager(_sessionIdManager);
 		((DefaultSessionIdManager) _sessionIdManager).setServer(_server);
 		_housekeeper = new HouseKeeper();
 		_housekeeper.setIntervalSec(_scavengePeriod);
@@ -89,11 +94,13 @@ public class TestServer {
 	}
 
 	public ServletContextHandler addContext(String contextPath) throws Exception {
-		ServletContextHandler context = new ServletContextHandler(_contexts, contextPath);
+		ServletContextHandler context = new ServletContextHandler();
+		context.setContextPath(contextPath);
 		SessionHandler sessionHandler = newSessionHandler();
 		sessionHandler.setSessionIdManager(_sessionIdManager);
 		sessionHandler.setMaxInactiveInterval(_maxInactivePeriod);
 		context.setSessionHandler(sessionHandler);
+		addContextHandler(context);
 
 		return context;
 	}
@@ -103,13 +110,21 @@ public class TestServer {
 	}
 
 	public WebAppContext addWebAppContext(String warPath, String contextPath) throws Exception {
-		WebAppContext context = new WebAppContext(_contexts, warPath, contextPath);
+		WebAppContext context = new WebAppContext(warPath, contextPath);
 		SessionHandler sessionHandler = newSessionHandler();
 		sessionHandler.setSessionIdManager(_sessionIdManager);
 		sessionHandler.setMaxInactiveInterval(_maxInactivePeriod);
 		context.setSessionHandler(sessionHandler);
+		addContextHandler(context);
 
 		return context;
+	}
+
+	private void addContextHandler(ContextHandler context) {
+		List<Handler> handlers = new ArrayList<>(_contexts.getHandlers());
+		handlers.add(context);
+		_contexts.setHandlers(handlers);
+		_contexts.mapContexts();
 	}
 
 	public Server getServer() {

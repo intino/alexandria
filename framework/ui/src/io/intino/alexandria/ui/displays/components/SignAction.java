@@ -11,7 +11,7 @@ import io.intino.alexandria.ui.displays.events.*;
 import io.intino.alexandria.ui.displays.notifiers.SignActionNotifier;
 import io.intino.alexandria.ui.utils.CadesSignatureHelper;
 import io.intino.icod.core.SignatureInfo;
-import io.intino.icod.core.XadesSignatureHelper;
+import io.intino.icod.services.DefaultSignatureHelper;
 
 public abstract class SignAction<DN extends SignActionNotifier, B extends Box> extends AbstractSignAction<DN, B> {
 	public boolean readonly = false;
@@ -138,7 +138,7 @@ public abstract class SignAction<DN extends SignActionNotifier, B extends Box> e
 	protected SignatureInfo info(String signature, String certificate) {
 		if (format == SignFormat.CAdES) return CadesSignatureHelper.getInfo(certificate);
 		else if (format != SignFormat.XAdES) return new SignatureInfo(null, null, null);
-		return new XadesSignatureHelper().getInfo(signature);
+		return new DefaultSignatureHelper().create().getInfo(signature);
 	}
 
 	private SignActionSetup setup() {
