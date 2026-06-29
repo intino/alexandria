@@ -30,7 +30,7 @@ const CollectionBehavior = (collection) => {
         const navigable = collection.props.navigable;
 
         if (collection.state.loading) return self.renderLoading(height, width);
-        if (items.length <= 0) return self.renderEmpty(height, width);
+        if (items.length <= 0) return self.renderEmpty(height, width, header);
 
         if (navigable == null) return self.renderInfiniteList(items, height, width, mode, header);
         return (
@@ -135,9 +135,14 @@ const CollectionBehavior = (collection) => {
         return (<div style={{marginTop:'10px',marginLeft:'10px'}}><BeatLoader color={theme.palette.secondary.main} loading={true}/></div>);
     };
 
-    self.renderEmpty = (height, width) => {
+    self.renderEmpty = (height, width, header) => {
         const noItemsMessage = self.collection.props.noItemsMessage != null ? self.collection.props.noItemsMessage : "No elements";
-        return (<Typography style={{height, width, padding:"10px 0",fontSize:'13pt',paddingTop:'100px'}} className="layout horizontal center-justified">{self.collection.translate(noItemsMessage)}</Typography>);
+        return (
+            <div style={{height, width}}>
+                {header != null && header}
+                <Typography style={{padding:"10px 0",fontSize:'13pt',paddingTop:'100px'}} className="layout horizontal center-justified">{self.collection.translate(noItemsMessage)}</Typography>
+            </div>
+        );
     };
 
     self.notifyItemsRenderedDelayed = (items) => {
