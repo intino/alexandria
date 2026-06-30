@@ -541,6 +541,7 @@ public class MimeTypes {
 		});
 		mimeTypesInverted.put("text/xml", "xml");
 		mimeTypesInverted.put("application/pdf", "pdf");
+		mimeTypesInverted.put("application/x-zip-compressed", "zip");
 		mimeTypesInverted.put("text/plain", "txt");
 		mimeTypesInverted.put("image/jpeg", "jpg");
 		mimeTypesInverted.put("image/png", "png");

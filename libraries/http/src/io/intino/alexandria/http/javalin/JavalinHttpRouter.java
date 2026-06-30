@@ -187,7 +187,13 @@ public class JavalinHttpRouter<SM extends AlexandriaHttpManager<?>> implements A
 			@Override
 			public Resource resource(String name) {
 				UploadedFile file = context.uploadedFile(name);
-				return file != null ? uploadedFile(file.filename(), file.contentType(), file.content()) : null;
+				return file != null ? uploadedFile(file.filename(), contentTypeOf(file), file.content()) : null;
+			}
+
+			private String contentTypeOf(UploadedFile file) {
+				String contentType = file.contentType();
+				if ("application/x-zip-compressed".equals(contentType)) contentType = "application/zip";
+				return contentType;
 			}
 
 			private Resource uploadedFile(String filename, String contentType, java.io.InputStream content) {
