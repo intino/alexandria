@@ -198,7 +198,7 @@ public class JavalinHttpRouter<SM extends AlexandriaHttpManager<?>> implements A
 
 			private Resource uploadedFile(String filename, String contentType, java.io.InputStream content) {
 				try {
-					return new Resource(filename, contentType, content.readAllBytes());
+					return new Resource(filename, content.readAllBytes()).metadata().contentType(contentType);
 				} catch (java.io.IOException e) {
 					throw new RuntimeException(e);
 				}
