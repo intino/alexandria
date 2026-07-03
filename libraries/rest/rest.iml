@@ -60,5 +60,6 @@
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:jetty-websocket-core-common:12.1.8" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:jetty-websocket-jetty-server:12.1.8" level="project" />
     <orderEntry type="library" name="Intino: org.jetbrains.kotlin:kotlin-stdlib:2.2.20" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:http:3.0.2" level="project" />
   </component>
 </module>

@@ -554,14 +554,22 @@ class Grid extends AbstractGrid {
         return info;
     };
 
-    _formatIntegerValue = (value, number) => {
-        if (typeof value === 'string') {
-            const trimmedValue = value.trim();
-            if (/,0+$/.test(trimmedValue)) return trimmedValue.replace(/,0+$/, '');
-            if (/\.0+$/.test(trimmedValue)) return trimmedValue.replace(/\.0+$/, '');
+    _numberLocale = () => {
+        if (typeof Application !== "undefined" && Application.configuration != null && Application.configuration.language != null) {
+            return Application.configuration.language;
         }
+        if (typeof document !== "undefined" && document.configuration != null && document.configuration.language != null) {
+            return document.configuration.language;
+        }
+        if (typeof navigator !== "undefined" && navigator.language != null) return navigator.language;
+        return undefined;
+    };
 
-        return String(Math.trunc(number));
+    _formatIntegerValue = (value, number) => {
+        return value != null ? value.replace(",00", "") : value;
+        const integerNumber = Math.trunc(number);
+        const locale = this._numberLocale();
+        return new Intl.NumberFormat(locale, { maximumFractionDigits: 0, useGrouping: "always" }).format(integerNumber);
     };
 
     _formatNumericValue = (value, column, numericColumnInfo) => {
