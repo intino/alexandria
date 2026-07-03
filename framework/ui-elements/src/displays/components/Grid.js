@@ -76,6 +76,9 @@ class Grid extends AbstractGrid {
         this.lastLoadedPage = [];
         this.lastRow = 0;
         this.grid = null;
+        this.numericColumnCache = {};
+        this.numericColumnCacheRows = null;
+        this.numericColumnCacheRowsLength = null;
         this.state = {
             ...this.state,
             key: 0,
@@ -499,15 +502,73 @@ class Grid extends AbstractGrid {
     columnRenderer = (column, idx) => {
         const type = column.type;
         const style = { display: 'inline-block' };
-        const rows = this.state.rows;
-        const isNumber = rows.length > 0 ? this._isNumber(this.rowValue(rows[0][column.name])) : false;
-        if (isNumber || type === "Number" || type === "Date") style.float = 'right';
+        const numericColumnInfo = this._getNumericColumnInfo(column.name);
+        if (this._isRightAlignedColumn(column, numericColumnInfo)) style.float = 'right';
         return (<div style={style}>{this.translate(column.label)}</div>);
     };
 
-    _isNumber = (value) => {
-        if (value == null) return false;
-        return !isNaN(Number(value.replace(/\./g, '').replace(',', '.')));
+    _toNumber = (value) => {
+        if (value == null || value === '') return null;
+        const normalized = String(value).replace(/\./g, '').replace(',', '.');
+        const number = Number(normalized);
+        return Number.isNaN(number) ? null : number;
+    };
+
+    _isRightAlignedColumn = (column, numericColumnInfo) => {
+        return numericColumnInfo.isNumericColumn || column.type === "Number" || column.type === "Date";
+    };
+
+    _getNumericColumnInfo = (columnName) => {
+        const rows = this.state.rows;
+        if (this.numericColumnCacheRows !== rows || this.numericColumnCacheRowsLength !== rows.length) {
+            this.numericColumnCache = {};
+            this.numericColumnCacheRows = rows;
+            this.numericColumnCacheRowsLength = rows.length;
+        }
+        if (this.numericColumnCache[columnName] != null) return this.numericColumnCache[columnName];
+        if (rows.length === 0) {
+            const info = {
+                hasNumericValues: false,
+                isNumericColumn: false,
+                isIntegerColumn: false,
+            };
+            this.numericColumnCache[columnName] = info;
+            return info;
+        }
+
+        const sample = rows.slice(0, 50);
+        const sampledValues = sample
+            .map(row => this.rowValue(row[columnName]))
+            .filter(value => value != null && value !== '');
+        const numericValues = sampledValues
+            .map(value => this._toNumber(value))
+            .filter(value => value != null);
+
+        const info = {
+            hasNumericValues: numericValues.length > 0,
+            isNumericColumn: sampledValues.length > 0 && numericValues.length === sampledValues.length,
+            isIntegerColumn: numericValues.length > 0 && numericValues.length === sampledValues.length && numericValues.every(Number.isInteger),
+        };
+
+        this.numericColumnCache[columnName] = info;
+        return info;
+    };
+
+    _formatIntegerValue = (value, number) => {
+        if (typeof value === 'string') {
+            const trimmedValue = value.trim();
+            if (/,0+$/.test(trimmedValue)) return trimmedValue.replace(/,0+$/, '');
+            if (/\.0+$/.test(trimmedValue)) return trimmedValue.replace(/\.0+$/, '');
+        }
+
+        return String(Math.trunc(number));
+    };
+
+    _formatNumericValue = (value, column, numericColumnInfo) => {
+        const number = this._toNumber(value);
+        if (number == null) return value;
+        if (numericColumnInfo.isIntegerColumn) return this._formatIntegerValue(value, number);
+        return value;
     };
 
     rowFormatter = (column, data) => {
@@ -516,11 +577,12 @@ class Grid extends AbstractGrid {
         const color = this.rowColor(data.value);
         const value = this.rowValue(data.value);
         const style = this.style(column, data);
-        const isNumber = this._isNumber(value);
+        const numericColumnInfo = this._getNumericColumnInfo(column.name);
+        const formattedValue = this._formatNumericValue(value, column, numericColumnInfo);
         if (type === "Icon") return (<Icon icon={value} color={color}/>);
         else if (type === "MaterialIcon") return (<MaterialIcon icon={value} color={color}/>);
         else if (type === "Link" && data.row.selectable) return (<Link className={classNames(classes.link)} style={style} component="button" onClick={this.handleCellClick.bind(this, column, data)}>{value}</Link>);
-        else if (isNumber || type === "Number" || type === "Date") return (<div style={{textAlign:'right',...style}}>{value}</div>);
+        else if (this._isRightAlignedColumn(column, numericColumnInfo)) return (<div style={{textAlign:'right',...style}}>{formattedValue}</div>);
         return (<div style={style}>{value}</div>);
     };
 
