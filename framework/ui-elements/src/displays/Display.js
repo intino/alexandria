@@ -2,7 +2,7 @@ import React from "react";
 import PassiveView from "./PassiveView";
 import Typography from "@material-ui/core/Typography";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
-import CookieConsent, { Cookies } from "react-cookie-consent";
+import CookieConsent, {Cookies} from "react-cookie-consent";
 import Theme from 'app-elements/gen/Theme';
 import history from "alexandria-ui-elements/src/util/History";
 
@@ -55,6 +55,12 @@ export default class Display extends PassiveView {
         let currentInstances = this.instances(container);
         params.value.forEach(instance => currentInstances[instance.idx] = instance);
         this._registerInstances(container, currentInstances);
+    };
+
+    hiddenClass = () => {
+        const hidden = this.props.hidden;
+        if (hidden == null || hidden === "Never") return "";
+        return "hidden-" + hidden.toLowerCase();
     };
 
     removeInstance = (params) => {

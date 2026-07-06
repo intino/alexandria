@@ -1,7 +1,6 @@
 import React from "react";
 import AlexandriaDisplay from "../Display";
 import Theme from "app-elements/gen/Theme";
-import ComponentNotifier from "../notifiers/ComponentNotifier";
 import {RiseLoader} from "react-spinners";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
 
@@ -86,12 +85,6 @@ export default class Component extends AlexandriaDisplay {
 
     refreshCssSelectors = (value) => {
         this.setState({ cssSelectors: value });
-    };
-
-    hiddenClass = () => {
-        const hidden = this.props.hidden;
-        if (hidden == null || hidden === "Never") return "";
-        return "hidden-" + hidden.toLowerCase();
     };
 
     _addFormats() {
