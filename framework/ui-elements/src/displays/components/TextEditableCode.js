@@ -22,6 +22,8 @@ const TextEditableCodeAce = React.lazy(() => {
 const styles = theme => ({
 	container: {
 		...outlinedSurfaceStyles(theme),
+		display: "flex",
+		flexDirection: "column",
 		background: fieldPalette(theme).background,
 		boxShadow: fieldPalette(theme).shadow,
 		width: "100%",
@@ -30,6 +32,8 @@ const styles = theme => ({
 		overflow: "hidden",
 	},
 	editor: {
+		display: "flex",
+		flex: 1,
 		width: "100%",
 		minHeight: "100px",
 		height: "100%",
@@ -38,9 +42,15 @@ const styles = theme => ({
 		boxShadow: fieldPalette(theme).shadow,
 		color: fieldPalette(theme).textColor,
 		"& .ace_editor": {
+			flex: 1,
+			width: "100% !important",
+			height: "100% !important",
 			borderRadius: "16px",
 			backgroundColor: fieldPalette(theme).background,
 			color: fieldPalette(theme).textColor,
+		},
+		"& .ace_editor, & .ace_editor > textarea, & .ace_editor .ace_scroller, & .ace_editor .ace_content": {
+			height: "100% !important",
 		},
 		"& .ace_editor .ace_scroller, & .ace_editor .ace_layer, & .ace_editor .ace_gutter-layer, & .ace_editor .ace_text-layer, & .ace_editor .ace_marker-layer": {
 			backgroundColor: fieldPalette(theme).background,

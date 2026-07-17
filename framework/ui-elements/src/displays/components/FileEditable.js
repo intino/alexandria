@@ -40,6 +40,9 @@ const styles = theme => ({
 			boxShadow: "0 0 0 4px " + fieldPalette(theme).focusRing,
 		},
 	},
+	editableSurface: {
+		cursor: "pointer",
+	},
 	info: {
 		color: theme.palette.mode === "dark" ? '#93c5fd' : '#2563EB',
 		margin: '2px 10px 0 2px',
@@ -266,7 +269,7 @@ class FileEditable extends AbstractFile {
 		return (
 			<div style={{position:'relative'}}>
 				{this.state.readonly && <div className={classes.readonlyDropzone}></div>}
-					<div className={classnames("fileeditable-surface", classes.surface, this.state.readonly ? classes.readonlySurface : undefined, this.state.readonly ? "fileeditable-surface-readonly" : undefined)}>
+					<div className={classnames("fileeditable-surface", classes.surface, !this.state.readonly ? classes.editableSurface : undefined, this.state.readonly ? classes.readonlySurface : undefined, this.state.readonly ? "fileeditable-surface-readonly" : undefined)}>
 					<DropzoneArea
 						key={this.state.key}
 						Icon={Add}

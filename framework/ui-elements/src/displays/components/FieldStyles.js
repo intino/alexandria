@@ -10,15 +10,14 @@ const normalizeFieldRadius = (value) => {
 export const fieldPalette = (theme) => {
 	const dark = theme.palette.mode === "dark";
 	syncThemeCssVariables(theme);
-	const background = themeFormatValue(theme, "whiteBackground", "background", dark ? "rgba(20,27,36,0.96)" : "#f8fbff");
 	const borderRadius = normalizeFieldRadius(themeFormatValue(theme, "whiteBackground", "borderRadius", "16px"));
 	return {
 		dark,
-		background,
-		hoverBackground: dark ? "rgba(27,36,47,0.98)" : "#eef6ff",
-		focusBackground: dark ? "rgba(16,43,71,0.92)" : "#e3f2fd",
-		borderColor: dark ? "rgba(148,163,184,0.28)" : "rgba(15,23,42,0.18)",
-		hoverBorderColor: dark ? "rgba(191,219,254,0.42)" : "rgba(15,23,42,0.36)",
+		background: "var(--alex-field-bg)",
+		hoverBackground: "var(--alex-field-bg-hover)",
+		focusBackground: "var(--alex-field-bg-focus)",
+		borderColor: dark ? "rgba(148,163,184,0.32)" : "rgba(59,130,246,0.22)",
+		hoverBorderColor: dark ? "rgba(191,219,254,0.46)" : "rgba(59,130,246,0.34)",
 		focusColor: dark ? theme.palette.primary.light : theme.palette.primary.main,
 		textColor: dark ? "rgba(255,255,255,0.92)" : "rgba(15,23,42,0.92)",
 		placeholderColor: dark ? "rgba(226,232,240,0.5)" : "rgba(15,23,42,0.46)",
@@ -65,6 +64,9 @@ export const outlinedFieldStyles = (theme) => {
 			minHeight: "52px",
 			boxShadow: shadow,
 			transition: "background-color 160ms ease, box-shadow 160ms ease, border-color 160ms ease",
+		},
+		"& .MuiInputBase-root:not(.Mui-disabled)": {
+			cursor: "text",
 		},
 		"& .MuiInputBase-root:hover": {
 			backgroundColor: hoverBackground,
@@ -170,6 +172,7 @@ export const outlinedSurfaceStyles = (theme) => {
 		background: background,
 		boxShadow: shadow,
 		transition: "background-color 160ms ease, box-shadow 160ms ease, border-color 160ms ease",
+		cursor: "pointer",
 		"&:hover": {
 			background: hoverBackground,
 			borderColor: hoverBorderColor,
