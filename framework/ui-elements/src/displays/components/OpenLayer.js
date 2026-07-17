@@ -5,6 +5,7 @@ import OpenLayerNotifier from "../../../gen/displays/notifiers/OpenLayerNotifier
 import OpenLayerRequester from "../../../gen/displays/requesters/OpenLayerRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import Actionable from "./Actionable";
+import Layer from "./Layer"; // do not remove
 
 const styles = theme => ({});
 
@@ -29,6 +30,10 @@ class OpenLayer extends AbstractOpenLayer {
                 {this.renderInstances()}
             </React.Fragment>
 		);
+	};
+
+	renderLayer = () => {
+		return (<Layer/>);
 	};
 
 	doExecute = () => {
