@@ -18,10 +18,16 @@ import {fieldPalette} from "./FieldStyles";
 
 function selectorCollectionBoxViewStyles(theme) {
     const palette = fieldPalette(theme);
+    const controlBackground = palette.dark ? "rgba(44, 57, 72, 0.86)" : palette.background;
+    const controlHoverBackground = palette.dark ? "rgba(49, 64, 80, 0.92)" : palette.hoverBackground;
+    const menuBackground = palette.dark ? "rgba(23, 29, 38, 0.98)" : palette.background;
+    const optionHoverBackground = palette.dark ? "rgba(148, 163, 184, 0.12)" : palette.hoverBackground;
+    const optionSelectedBackground = palette.dark ? "rgba(144, 202, 249, 0.18)" : palette.focusBackground;
+    const optionSelectedColor = palette.dark ? "rgba(255,255,255,0.96)" : palette.textColor;
     return {
         control: (provided, state) => ({
             ...provided,
-            background: palette.background,
+            background: controlBackground,
             borderRadius: "16px",
             boxShadow: "none",
             minHeight: "0",
@@ -29,6 +35,7 @@ function selectorCollectionBoxViewStyles(theme) {
             borderColor: palette.borderColor,
             cursor: state.isDisabled ? "default" : provided.cursor,
             ":hover": {
+                background: state.isDisabled ? controlBackground : controlHoverBackground,
                 borderColor: state.isDisabled ? palette.borderColor : palette.hoverBorderColor,
             },
         }),
@@ -76,13 +83,13 @@ function selectorCollectionBoxViewStyles(theme) {
         }),
         menuList: (provided) => ({
             ...provided,
-            background: palette.background,
+            background: menuBackground,
         }),
         option: (styles, { isDisabled, isFocused, isSelected }) => {
             return {
                 ...styles,
-                backgroundColor: isSelected ? palette.focusColor : (isFocused ? palette.hoverBackground : palette.background),
-                color: isDisabled ? palette.disabledText : (isSelected ? (palette.dark ? "#08111d" : "white") : palette.textColor),
+                backgroundColor: isSelected ? optionSelectedBackground : (isFocused ? optionHoverBackground : menuBackground),
+                color: isDisabled ? palette.disabledText : (isSelected ? optionSelectedColor : palette.textColor),
             };
         },
         menuPortal: (provided) => ({

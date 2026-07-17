@@ -12,12 +12,18 @@ import moment from 'moment';
 import classNames from 'classnames';
 import 'alexandria-ui-elements/res/styles/components/fields.css';
 import Theme from "app-elements/gen/Theme";
-import {errorFieldStyles, fieldErrorStyles, outlinedFieldStyles} from "./FieldStyles";
+import {errorFieldStyles, fieldErrorStyles, fieldPalette, outlinedFieldStyles} from "./FieldStyles";
 
 const styles = theme => ({
 	date : outlinedFieldStyles(theme),
 	datetime : outlinedFieldStyles(theme),
 	errorField: errorFieldStyles(theme),
+	container: {
+		borderRadius: fieldPalette(theme).borderRadius,
+	},
+	editable: {
+		cursor: "text",
+	},
 	dayWrapper: {
         position: "relative",
     },
@@ -114,6 +120,9 @@ class DateEditable extends AbstractDateEditable {
         if (!this.state.visible) return (<React.Fragment/>);
 
         const { timePicker, classes } = this.props;
+		const runtimeTheme = Theme.get();
+		const activeTheme = runtimeTheme != null ? runtimeTheme : this.props.theme;
+		const palette = fieldPalette(activeTheme);
 		const range = this.state.range;
 		const min = range.min !== undefined && range.min != 0 ? range.min : this.props.mode === "fromnow" ? new Date() : undefined;
 		const max = range.max !== undefined && range.max != 0 ? range.max : this.props.mode === "tonow" ? new Date() : undefined;
@@ -162,16 +171,21 @@ class DateEditable extends AbstractDateEditable {
                 },
                 input: {
                     className: inputClasses,
-                    style: { borderRadius: "16px" }
+                    style: this.state.readonly ? { borderRadius: "16px" } : {
+                        borderRadius: "16px",
+                        background: palette.background,
+                        boxShadow: palette.shadow,
+                        cursor: "text"
+                    }
                 }
             },
             size: "small",
             variant: "outlined"
         };
-		const theme = Theme.get();
+		const theme = runtimeTheme;
 		const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
 			return (
-				<div style={{...this.style(),position:'relative'}} className={classNames("date-editable", this.state.readonly ? "readonly" : undefined, isDark ? "dark" : undefined)}>
+				<div style={{...this.style(),position:'relative'}} className={classNames("date-editable", classes.container, !this.state.readonly ? classes.editable : undefined, this.state.readonly ? "readonly" : undefined, isDark ? "dark" : undefined)}>
                 {!this.state.readonly && <div id={this.props.id + "-error"} className={classes.error} style={{display:'none'}}></div>}
 				{ !showTimePicker ? <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={Application.configuration.language}>
                                     <DatePicker

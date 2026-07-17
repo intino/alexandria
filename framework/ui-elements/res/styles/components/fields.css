@@ -5,11 +5,12 @@
 }
 
 :root {
-    --alex-field-bg: #f8fbff;
-    --alex-field-bg-hover: #eef6ff;
-    --alex-field-bg-focus: #e3f2fd;
-    --alex-field-border: rgba(15, 23, 42, 0.18);
-    --alex-field-border-hover: rgba(15, 23, 42, 0.36);
+    --alex-field-bg: #c1d8ff;
+    --alex-field-bg-hover: #e8f2ff;
+    --alex-field-bg-focus: #ddefff;
+    --alex-field-shell-bg: rgba(59, 130, 246, 0.06);
+    --alex-field-border: rgba(59, 130, 246, 0.42);
+    --alex-field-border-hover: rgba(59, 130, 246, 0.34);
     --alex-field-focus: #1976d2;
     --alex-field-label: rgba(15, 23, 42, 0.62);
     --alex-field-text: rgba(15, 23, 42, 0.92);
@@ -24,11 +25,12 @@
 }
 
 .dark {
-    --alex-field-bg: rgba(20, 27, 36, 0.96);
-    --alex-field-bg-hover: rgba(27, 36, 47, 0.98);
-    --alex-field-bg-focus: rgba(16, 43, 71, 0.92);
-    --alex-field-border: rgba(148, 163, 184, 0.28);
-    --alex-field-border-hover: rgba(191, 219, 254, 0.42);
+    --alex-field-bg: rgba(52, 68, 88, 0.98);
+    --alex-field-bg-hover: rgba(31, 43, 56, 0.99);
+    --alex-field-bg-focus: rgba(18, 47, 77, 0.92);
+    --alex-field-shell-bg: rgba(148, 163, 184, 0.08);
+    --alex-field-border: rgba(148, 163, 184, 0.32);
+    --alex-field-border-hover: rgba(191, 219, 254, 0.46);
     --alex-field-focus: #90caf9;
     --alex-field-label: rgba(226, 232, 240, 0.72);
     --alex-field-text: rgba(255, 255, 255, 0.92);
@@ -76,6 +78,107 @@
 
 .selector-combo-box.text-view .MuiOutlinedInput-notchedOutline {
     border: 0 !important;
+}
+
+.text-editable-rich-editor:not(.readonly) .rsw-editor {
+    background: var(--alex-field-bg) !important;
+    background-color: var(--alex-field-bg) !important;
+    border: 1px solid var(--alex-field-border) !important;
+    border-radius: 16px !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.75);
+    overflow: hidden;
+}
+
+.dark.text-editable-rich-editor:not(.readonly) .rsw-editor {
+    background: var(--alex-field-bg) !important;
+    background-color: var(--alex-field-bg) !important;
+    box-shadow: none !important;
+}
+
+.text-editable-rich-editor:not(.readonly) .rsw-editor:hover {
+    background: var(--alex-field-bg-hover) !important;
+    background-color: var(--alex-field-bg-hover) !important;
+    border-color: var(--alex-field-border-hover) !important;
+}
+
+.text-editable-rich-editor:not(.readonly) .rsw-editor:focus-within {
+    background: var(--alex-field-bg-focus) !important;
+    background-color: var(--alex-field-bg-focus) !important;
+    border-color: var(--alex-field-focus) !important;
+    box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.14) !important;
+}
+
+.dark.text-editable-rich-editor:not(.readonly) .rsw-editor:focus-within {
+    box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.22) !important;
+}
+
+.text-editable-rich-editor:not(.readonly) .rsw-toolbar {
+    background: color-mix(in srgb, var(--alex-field-bg) 92%, white 8%) !important;
+    border-bottom: 1px solid var(--alex-field-border) !important;
+}
+
+.dark.text-editable-rich-editor:not(.readonly) .rsw-toolbar {
+    background: color-mix(in srgb, var(--alex-field-bg) 96%, black 4%) !important;
+}
+
+.text-editable-rich-editor:not(.readonly) .rsw-ce {
+    background: transparent !important;
+    color: var(--alex-field-text) !important;
+}
+
+.date-editable:not(.readonly) .MuiInputBase-root,
+.date-editable:not(.readonly) .MuiOutlinedInput-root,
+.date-editable:not(.readonly) .MuiPickersOutlinedInput-root,
+.date-editable:not(.readonly) .MuiPickersInputBase-root,
+.date-editable:not(.readonly) .MuiInputBase-formControl {
+    background: var(--alex-field-bg) !important;
+    background-color: var(--alex-field-bg) !important;
+    border-radius: 16px !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.75);
+}
+
+.dark.date-editable:not(.readonly) .MuiInputBase-root,
+.dark.date-editable:not(.readonly) .MuiOutlinedInput-root,
+.dark.date-editable:not(.readonly) .MuiPickersOutlinedInput-root,
+.dark.date-editable:not(.readonly) .MuiPickersInputBase-root,
+.dark.date-editable:not(.readonly) .MuiInputBase-formControl {
+    background: var(--alex-field-bg) !important;
+    background-color: var(--alex-field-bg) !important;
+    box-shadow: none !important;
+}
+
+.date-editable:not(.readonly) .MuiInputBase-root:hover,
+.date-editable:not(.readonly) .MuiOutlinedInput-root:hover,
+.date-editable:not(.readonly) .MuiPickersOutlinedInput-root:hover,
+.date-editable:not(.readonly) .MuiPickersInputBase-root:hover,
+.date-editable:not(.readonly) .MuiInputBase-formControl:hover {
+    background: var(--alex-field-bg-hover) !important;
+    background-color: var(--alex-field-bg-hover) !important;
+}
+
+.date-editable:not(.readonly) .MuiInputBase-root.Mui-focused,
+.date-editable:not(.readonly) .MuiOutlinedInput-root.Mui-focused,
+.date-editable:not(.readonly) .MuiPickersOutlinedInput-root.Mui-focused,
+.date-editable:not(.readonly) .MuiPickersInputBase-root.Mui-focused,
+.date-editable:not(.readonly) .MuiInputBase-formControl.Mui-focused {
+    background: var(--alex-field-bg-focus) !important;
+    background-color: var(--alex-field-bg-focus) !important;
+}
+
+.date-editable:not(.readonly) .MuiOutlinedInput-notchedOutline,
+.date-editable:not(.readonly) .MuiPickersOutlinedInput-notchedOutline {
+    border-color: var(--alex-field-border) !important;
+    border-radius: 16px !important;
+}
+
+.date-editable:not(.readonly) .MuiInputBase-root:hover .MuiOutlinedInput-notchedOutline,
+.date-editable:not(.readonly) .MuiInputBase-root:hover .MuiPickersOutlinedInput-notchedOutline {
+    border-color: var(--alex-field-border-hover) !important;
+}
+
+.date-editable:not(.readonly) .MuiInputBase-root.Mui-focused .MuiOutlinedInput-notchedOutline,
+.date-editable:not(.readonly) .MuiInputBase-root.Mui-focused .MuiPickersOutlinedInput-notchedOutline {
+    border-color: var(--alex-field-focus) !important;
 }
 
 .selector-combo-box .MuiInputBase-root legend,
