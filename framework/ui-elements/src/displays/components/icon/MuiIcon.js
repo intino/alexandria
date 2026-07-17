@@ -2,5 +2,7 @@ import React from "react";
 import * as Icons from "@mui/icons-material";
 
 export default function MuiIcon(props) {
-    return React.createElement(Icons[props.icon], props);
+    const IconComponent = props != null ? Icons[props.icon] : undefined;
+    if (IconComponent == null) return null;
+    return React.createElement(IconComponent, props);
 }

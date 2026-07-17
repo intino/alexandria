@@ -38,12 +38,24 @@ export default class BaseSelector extends AbstractBaseSelector {
 		if (this.state.options != null) {
 			result = [];
 			const ownerId = this.props.id;
-			this.state.options.forEach(option => result.push(React.createElement(DisplayFactory.get("Text"), { id: ownerId + option, mode: 'normal', name: option, value: option, color: 'inherit', className: 'option'})));
+			const TextComponent = DisplayFactory.get("Text");
+			if (TextComponent == null) {
+				console.error("DisplayFactory component not registered", "Text");
+				return [];
+			}
+			this.state.options.forEach(option => result.push(React.createElement(TextComponent, { id: ownerId + option, mode: 'normal', name: option, value: option, color: 'inherit', className: 'option'})));
 		}
         else if (result == null) {
 			const instances = this.instances();
 			result = [];
-			instances.forEach(instance => result.push(React.createElement(DisplayFactory.get(instance.tp), instance.pl)));
+			instances.forEach(instance => {
+				const Component = DisplayFactory.get(instance.tp);
+				if (Component == null) {
+					console.error("DisplayFactory component not registered", instance != null ? instance.tp : instance, instance);
+					return;
+				}
+				result.push(React.createElement(Component, instance.pl));
+			});
 		}
 
 		return result;
