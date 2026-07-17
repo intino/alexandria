@@ -49,9 +49,15 @@ class BlockResizable extends AbstractBlockResizable {
 
 	renderChild = (child, index) => {
 	    if (!this._isVisible(child)) return (<React.Fragment/>);
+	    const resizeHandleClass = this._isHorizontalDirection()
+	    	? "ResizeHandle ResizeHandleVertical"
+	    	: "ResizeHandle ResizeHandleHorizontal";
 	    return (
             <React.Fragment>
-                {index > 0 && <PanelResizeHandle className="ResizeHandle" style={{background:this._color()}}/>}
+                {index > 0 &&
+                	<PanelResizeHandle className={resizeHandleClass} style={{"--resize-handle-color": this._color()}}>
+                		<div className="ResizeHandleGrip"/>
+                	</PanelResizeHandle>}
                 <Panel onResize={this.handleResize.bind(this, child)} defaultSize={this._size(child)} minSize={this.props.minSize != null ? this.props.minSize : 20}>{this.renderChildElement(child)}</Panel>
             </React.Fragment>
         );
