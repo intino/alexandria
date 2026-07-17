@@ -1,10 +1,9 @@
-import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractCloseBlock from "../../../gen/displays/components/AbstractCloseBlock";
 import CloseBlockNotifier from "../../../gen/displays/notifiers/CloseBlockNotifier";
 import CloseBlockRequester from "../../../gen/displays/requesters/CloseBlockRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import Actionable from "./Actionable";
 
 class CloseBlock extends AbstractCloseBlock {

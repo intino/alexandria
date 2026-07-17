@@ -1,10 +1,9 @@
-import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractOpenPage from "../../../gen/displays/components/AbstractOpenPage";
 import OpenPageNotifier from "../../../gen/displays/notifiers/OpenPageNotifier";
 import OpenPageRequester from "../../../gen/displays/requesters/OpenPageRequester";
 import Actionable from "./Actionable"
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 class OpenPage extends AbstractOpenPage {

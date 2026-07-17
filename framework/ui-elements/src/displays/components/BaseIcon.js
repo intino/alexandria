@@ -38,8 +38,9 @@ export default class BaseIcon extends AbstractBaseIcon {
 
 	_icon = () => {
 	    const theme = Theme.get();
-	    if (theme.isDark() && this.state.darkIcon != null) return this.state.darkIcon;
-	    if (theme.isDark() && this.props.darkIcon != null) return this.props.darkIcon;
+	    const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
+	    if (isDark && this.state.darkIcon != null) return this.state.darkIcon;
+	    if (isDark && this.props.darkIcon != null) return this.props.darkIcon;
 		return this.state.icon != null ? this.state.icon : this.props.icon;
 	};
 

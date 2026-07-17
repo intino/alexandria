@@ -64,8 +64,13 @@ public abstract class PushService<S extends Session<C>, C extends Client> {
 	}
 
 	public void onMessage(C client, String message) {
-		messageListeners.putIfAbsent(client.id(), new ArrayList<>());
-		messageListeners.get(client.id()).forEach(listener -> listener.accept(message));
+		List<Consumer<String>> listeners;
+		synchronized (messageListeners) {
+			messageListeners.putIfAbsent(client.id(), new ArrayList<>());
+			listeners = new ArrayList<>(messageListeners.get(client.id()));
+		}
+		if (listeners.isEmpty()) return;
+		listeners.forEach(listener -> listener.accept(message));
 	}
 
 	public void onClose(C client) {

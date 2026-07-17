@@ -33,7 +33,7 @@ const DropzoneArea = (props) => {
 
 	return (
 		<div className={rootClassName}
-			 style={_dropzoneStyle()}
+			 style={_dropzoneStyle(props)}
 			 onDragOver={(event) => event.preventDefault()}
 			 onDrop={handleDrop}
 			 onClick={() => inputRef.current && inputRef.current.click()}>
@@ -60,8 +60,8 @@ const DropzoneArea = (props) => {
 	);
 };
 
-const _dropzoneStyle = () => ({
-	border: "1px dashed",
+const _dropzoneStyle = (props) => ({
+	border: "none",
 	cursor: "pointer",
 	display: "flex",
 	flexDirection: "column",
@@ -69,6 +69,8 @@ const _dropzoneStyle = () => ({
 	justifyContent: "center",
 	boxSizing: "border-box",
 	textAlign: "center",
+	background: "transparent",
+	color: "inherit",
 });
 
 const _fileObjects = (fileObjects) => {

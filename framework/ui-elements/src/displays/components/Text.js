@@ -1,7 +1,7 @@
 import React from "react";
-import Typography from '@material-ui/core/Typography';
-import Tooltip from '@material-ui/core/Tooltip';
-import {withStyles} from '@material-ui/core/styles';
+import Typography from '@mui/material/Typography';
+import Tooltip from '@mui/material/Tooltip';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import Block from "./Block";
 import AbstractText from "../../../gen/displays/components/AbstractText";
 import TextNotifier from "../../../gen/displays/notifiers/TextNotifier";
@@ -41,10 +41,11 @@ class Text extends AbstractText {
 		}
 	};
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.value === this.props.value) return;
-        this.setState({ value: nextProps.value });
-    }
+	componentDidUpdate(prevProps) {
+		if (this.props.value === prevProps.value) return;
+		if (this.state.value === this.props.value) return;
+		this.setState({ value: this.props.value });
+	}
 
 	render() {
 		if (!this.state.visible) return (<React.Fragment/>);

@@ -100,7 +100,7 @@ public class DynamicTableCollectionBehavior<Item> extends CollectionBehavior<Dyn
 	private void updateItems() {
 		DynamicTableItemLoader<Item> itemLoader = itemLoader();
 		int count = itemLoader.pageCount();
-		while (page > count && page > 0) page--;
+		while (page >= count && page > 0) page--;
 		if (count == 0) return;
 		collection().add(itemLoader.page(page));
 	}

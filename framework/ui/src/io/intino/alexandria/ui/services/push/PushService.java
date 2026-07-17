@@ -68,6 +68,7 @@ public class PushService extends io.intino.alexandria.http.pushservice.PushServi
 			super.onMessage(client, content);
 			return;
 		}
+		if (!requesterMap.containsKey(requester)) return;
 
 		try {
 			linkToThread(client);

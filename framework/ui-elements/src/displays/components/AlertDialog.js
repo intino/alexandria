@@ -1,15 +1,23 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
-import {Dialog, DialogContent, DialogContentText, DialogActions, Button, Dialog as MuiDialog} from "@material-ui/core";
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
+import {Button, Dialog, DialogActions, DialogContentText} from "@mui/material";
 import AbstractAlertDialog from "../../../gen/displays/components/AbstractAlertDialog";
 import AlertDialogNotifier from "../../../gen/displays/notifiers/AlertDialogNotifier";
 import AlertDialogRequester from "../../../gen/displays/requesters/AlertDialogRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import BaseDialog from './BaseDialog';
-import { makeDraggable } from "./BaseDialog";
+import {dialogActionButtonStyles, dialogPrimaryButtonStyles} from "./ButtonStyles";
 
-const styles = theme => ({...BaseDialog.Styles(theme)});
+const styles = theme => ({
+	...BaseDialog.Styles(theme),
+	dialogButton: {
+		...dialogActionButtonStyles(theme),
+	},
+	dialogPrimaryButton: {
+		...dialogPrimaryButtonStyles(theme),
+	},
+});
 
 class AlertDialog extends AbstractAlertDialog {
 
@@ -20,20 +28,22 @@ class AlertDialog extends AbstractAlertDialog {
 	};
 
 	render() {
+		const handleClose = (event, reason) => {
+			if (this.state.modal && reason === "backdropClick") return;
+			this.handleClose(event, reason);
+		};
 		return (
 			<Dialog fullScreen={this.props.fullscreen}
                     fullWidth={this._widthDefined()} maxWidth={this._widthDefined() ? "xl" : "sm"}
-			        open={this.state.opened} onClose={this.handleClose.bind(this)}
-                    disableBackdropClick={this.state.modal}
-                    disableEscapeKeyDown={this.state.modal}
-			        TransitionComponent={this.props.fullscreen ? this._transition() : undefined}
-			        PaperComponent={!this.props.fullscreen ? makeDraggable.bind(this, this.props.id, this.sizeStyle()) : undefined}
+			        open={this.state.opened} onClose={handleClose}
+			        slots={this.props.fullscreen ? { transition: this._transition() } : undefined}
+			        PaperComponent={!this.props.fullscreen ? this.DraggablePaper : undefined}
                     aria-labelledby={this.props.id + "_draggable"}>
 				{this.renderTitle()}
 				{this.renderContent(() => <DialogContentText>{this.props.message}</DialogContentText>)}
 				<DialogActions>
-					<Button onClick={this.handleClose.bind(this)} color="primary">{this.closeLabel()}</Button>
-					{this.props.acceptLabel != null && <Button onClick={this.handleAccept.bind(this)} color="primary">{this.acceptLabel()}</Button>}
+					<Button className={this.props.classes.dialogButton} onClick={this.handleClose.bind(this)} color="primary">{this.closeLabel()}</Button>
+					{this.props.acceptLabel != null && <Button className={this.props.classes.dialogPrimaryButton} variant="contained" onClick={this.handleAccept.bind(this)} color="primary">{this.acceptLabel()}</Button>}
 				</DialogActions>
 			</Dialog>
 		);

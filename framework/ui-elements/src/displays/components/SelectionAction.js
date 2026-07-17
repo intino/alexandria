@@ -1,10 +1,9 @@
-import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractSelectionAction from "../../../gen/displays/components/AbstractSelectionAction";
 import SelectionActionNotifier from "../../../gen/displays/notifiers/SelectionActionNotifier";
 import SelectionActionRequester from "../../../gen/displays/requesters/SelectionActionRequester";
 import Actionable from "./Actionable";
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 class SelectionAction extends AbstractSelectionAction {

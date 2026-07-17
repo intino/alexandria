@@ -1,11 +1,11 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
-import {ListItemSecondaryAction, Typography} from "@material-ui/core";
-import Select, { components } from "react-select";
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
+import {Typography} from "@mui/material";
+import Select, {components} from "react-select";
 import AbstractGroupingComboBox from "../../../gen/displays/components/AbstractGroupingComboBox";
 import GroupingComboBoxNotifier from "../../../gen/displays/notifiers/GroupingComboBoxNotifier";
 import GroupingComboBoxRequester from "../../../gen/displays/requesters/GroupingComboBoxRequester";
-import { BaseGroupingStyles } from "./BaseGrouping";
+import {BaseGroupingStyles} from "./BaseGrouping";
 import classNames from "classnames";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import NumberUtil from 'alexandria-ui-elements/src/util/NumberUtil';
@@ -55,7 +55,8 @@ class GroupingComboBox extends AbstractGroupingComboBox {
         const { classes } = this.props;
         const selectedOptions = this.state.selection.map(s => this._findGroup(s));
         const options = this._options();
-        const isDark = Theme.get().isDark();
+        const theme = Theme.get();
+        const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
         return (
             <div className={classes.container} style={this.style()}>
                 <Select isMulti isSearchable closeMenuOnSelect={false} placeholder={this.selectMessage()}

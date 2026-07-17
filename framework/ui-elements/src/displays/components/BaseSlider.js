@@ -1,12 +1,24 @@
 import React from "react";
-import Slider from '@material-ui/core/Slider';
-import { withStyles } from '@material-ui/core';
-import { Tooltip, MenuItem, Select, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@material-ui/core';
-import { PlayCircleFilled, PauseCircleFilled, NavigateBefore, NavigateNext } from '@material-ui/icons';
+import Slider from '@mui/material/Slider';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    MenuItem,
+    Select,
+    TextField,
+    Tooltip
+} from '@mui/material';
+import {NavigateBefore, NavigateNext, PauseCircleFilled, PlayCircleFilled} from '@mui/icons-material';
 import AbstractBaseSlider from "../../../gen/displays/components/AbstractBaseSlider";
 import Delayer from "../../util/Delayer";
 import classNames from "classnames";
 import 'alexandria-ui-elements/res/styles/layout.css';
+import {dialogActionButtonStyles, dialogPrimaryButtonStyles} from "./ButtonStyles";
 
 const styles = theme => ({
 	root: {
@@ -189,8 +201,8 @@ export default class BaseSlider extends AbstractBaseSlider {
 					{this.renderValueEditor()}
 				</DialogContent>
 				<DialogActions>
-					<Button onClick={this.handleCloseValueDialog.bind(this)} color="primary">{this.translate("Cancel")}</Button>
-					<Button variant="contained" onClick={this.handleValueChange.bind(this)} color="primary">{this.translate("OK")}</Button>
+					<Button sx={dialogActionButtonStyles} onClick={this.handleCloseValueDialog.bind(this)} color="primary">{this.translate("Cancel")}</Button>
+					<Button sx={dialogPrimaryButtonStyles} variant="contained" onClick={this.handleValueChange.bind(this)} color="primary">{this.translate("OK")}</Button>
 				</DialogActions>
 			</Dialog>
 		);
@@ -202,11 +214,11 @@ export default class BaseSlider extends AbstractBaseSlider {
 			<TextField format={this.variant("body1")} type="number"
 					   value={this.state.editorValue} onChange={this.handleValueEditorChange.bind(this)} onKeyPress={this.handleValueEditorKeyPress.bind(this)}
 					   style={{width:'100%'}} autoFocus={true}
-					   inputProps={{
+					   slotProps={{ htmlInput: {
 						   min: range.min !== -1 ? range.min : undefined,
 						   max: range.max !== -1 ? range.max : undefined,
 						   step: 1
-					   }}/>
+					   } }}/>
 		);
 	};
 

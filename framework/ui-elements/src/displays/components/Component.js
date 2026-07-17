@@ -99,7 +99,7 @@ export default class Component extends AlexandriaDisplay {
         const theme = Theme.get();
         const result = {};
         formats.forEach(f => {
-            let style = theme.palette.type == "dark" && theme.darkFormats[f] != null ? theme.darkFormats[f] : theme.formats[f];
+            let style = theme.palette.mode == "dark" && theme.darkFormats[f] != null ? theme.darkFormats[f] : theme.formats[f];
             if (style == null) return;
             for (let rule in style) result[rule] = style[rule];
         });

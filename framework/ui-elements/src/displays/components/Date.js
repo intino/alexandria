@@ -1,8 +1,7 @@
 import React from "react";
-import Typography from '@material-ui/core/Typography';
-import { withStyles } from '@material-ui/core/styles';
-import Moment from 'react-moment';
-import 'moment-timezone';
+import Typography from '@mui/material/Typography';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
+import moment from 'moment';
 import AbstractDate from "../../../gen/displays/components/AbstractDate";
 import DateNotifier from "../../../gen/displays/notifiers/DateNotifier";
 import DateRequester from "../../../gen/displays/requesters/DateRequester";
@@ -45,16 +44,19 @@ class Date extends AbstractDate {
 			<Block layout="horizontal center">
 				{ ComponentBehavior.labelBlock(this.props, 'body1', {...this.style(),margin:'0 5px 0 0'}) }
 				<Typography variant={this.variant("body1")} className={classes.value} style={this.style()}>
-					{this.state.value &&
-					<Moment utc={!this.props.useTimezone} format={!hasMode ? pattern : undefined}
-							fromNow={this.props.mode === "fromnow"}
-							toNow={this.props.mode === "tonow"}
-							ago date={this.state.value} locale={language}/>
-					}
+					{this.state.value && this.renderValue(pattern, hasMode, language)}
 					{!this.state.value && <React.Fragment>-</React.Fragment>}
 				</Typography>
 			</Block>
 		);
+	};
+
+	renderValue = (pattern, hasMode, language) => {
+		const value = this.props.useTimezone ? moment(this.state.value) : moment.utc(this.state.value);
+		if (this.props.mode === "fromnow") return value.locale(language).fromNow();
+		if (this.props.mode === "tonow") return value.locale(language).toNow();
+		if (this.props.mode === "ago") return value.locale(language).fromNow();
+		return value.locale(language).format(!hasMode ? pattern : undefined);
 	};
 
 	refresh = (value) => {

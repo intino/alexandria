@@ -680,7 +680,9 @@ rule type(properties, image, avatar) and trigger(specific)
 
 rule type(properties, image, multiple, componentClass) and trigger(specific)
 	<<$value+resourceMethod>>
+	<<$darkValue+resourceMethod>>
 	<<$defaultValue+resourceMethod>>
+	<<$defaultDarkValue+resourceMethod>>
 	<<_readonly($readonly);>>
 
 rule type(properties, image, multiple) and trigger(specific)
@@ -688,7 +690,9 @@ rule type(properties, image, multiple) and trigger(specific)
 
 rule type(properties, image) and trigger(specific)
 	<<$value+resourceMethod>>
+	<<$darkValue+resourceMethod>>
 	<<$defaultValue+resourceMethod>>
+	<<$defaultDarkValue+resourceMethod>>
 	<<_readonly($readonly);>>
 
 rule type(properties, file, multiple, componentClass) and trigger(specific)

@@ -34,9 +34,9 @@ Template(layout=Vertical, spacing=DP8) sortingExamplesMold
 		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Sortings inside Selector")
 			Block(spacing=DP8, format=filledNoAir)
-				Selector(format=air) selector as ComboBox
+				Selector selector as ComboBox
 					multipleSelection = true
-					Sorting(collections=list2) youthest as Option Labeled("youthest population")
+					Sorting(collections=list2) youngest as Option Labeled("youngest population")
 					Sorting(collections=list2) oldest as Option Labeled("oldest population")
 					Sorting(collections=list2) female as Option Labeled("female population")
 					Sorting(collections=list2) male as Option Labeled("male population")

@@ -1,11 +1,11 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
-import { Switch, FormControlLabel } from '@material-ui/core';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
+import {FormControlLabel, Switch} from '@mui/material';
 import AbstractActionSwitch from "../../../gen/displays/components/AbstractActionSwitch";
 import ActionSwitchNotifier from "../../../gen/displays/notifiers/ActionSwitchNotifier";
 import ActionSwitchRequester from "../../../gen/displays/requesters/ActionSwitchRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 
 const styles = theme => ({});
 

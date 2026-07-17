@@ -1,5 +1,5 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractOption from "../../../gen/displays/components/AbstractOption";
 import OptionNotifier from "../../../gen/displays/notifiers/OptionNotifier";
 import OptionRequester from "../../../gen/displays/requesters/OptionRequester";

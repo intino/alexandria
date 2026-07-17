@@ -1,14 +1,36 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
-import { Tabs, Tab } from '@material-ui/core';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
+import {Tab, Tabs} from '@mui/material';
 import AbstractSelectorTabs from "../../../gen/displays/components/AbstractSelectorTabs";
 import SelectorTabsNotifier from "../../../gen/displays/notifiers/SelectorTabsNotifier";
 import SelectorTabsRequester from "../../../gen/displays/requesters/SelectorTabsRequester";
 import Divider from './Divider';
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 
-const styles = theme => ({});
+const styles = theme => ({
+	root: theme.palette.mode === "dark" ? {
+		minHeight: "36px",
+		padding: "0 8px",
+	} : {},
+	indicator: {
+		height: "2px",
+		borderRadius: "999px",
+		backgroundColor: theme.palette.primary.main,
+	},
+	tabRoot: theme.palette.mode === "dark" ? {
+		minHeight: "36px",
+		paddingTop: 0,
+		paddingBottom: 0,
+		color: "rgba(226,232,240,0.72)",
+		"&.Mui-selected": {
+			color: "#90caf9",
+		},
+		"&.Mui-disabled": {
+			opacity: 0.4,
+		}
+	} : {}
+});
 
 class SelectorTabs extends AbstractSelectorTabs {
 
@@ -25,13 +47,15 @@ class SelectorTabs extends AbstractSelectorTabs {
 
 	render() {
 	    if (!this.state.visible) return (<React.Fragment/>);
+	    const { classes } = this.props;
 	    const selected = this.state.selected !== -1 ? this.state.selected : 0;
 	    const children = this._visibleOptions();
 	    const scrollButtons = this.props.scrollButtons != undefined ? this.props.scrollButtons.toLowerCase() : "off";
 	    const variant = scrollButtons !== "off" ? "scrollable" : undefined;
         return (
             <Tabs value={selected} variant="fullWidth" variant={variant} scrollButtons={scrollButtons}
-                  onChange={this.handleChange.bind(this)} color={this.props.color} style={this.style()}>
+                  onChange={this.handleChange.bind(this)} color={this.props.color} style={this.style()}
+                  className={classes.root} classes={{ indicator: classes.indicator }}>
                 {React.Children.map(children, (child, i) => { return this.renderTab(child, i); })}
             </Tabs>
         );
@@ -40,7 +64,7 @@ class SelectorTabs extends AbstractSelectorTabs {
     renderTab = (tab, i) => {
 	    const className = tab.props.className;
         if (className != null && className.indexOf("divider") !== -1) return (<Divider/>);
-        return (<Tab label={tab} index={i} style={this.styleOf(tab)}/>);
+        return (<Tab label={tab} index={i} style={this.styleOf(tab)} className={this.props.classes.tabRoot}/>);
     };
 
     refreshSelected = (tab) => {

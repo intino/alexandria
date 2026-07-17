@@ -1,7 +1,8 @@
 import React from "react";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@material-ui/core";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
 import OptionSelector from "./OptionSelector";
 import I18nComponent from "../../I18nComponent";
+import {dialogActionButtonStyles, dialogPrimaryButtonStyles} from "../ButtonStyles";
 
 export default class DownloadDialog extends I18nComponent {
 
@@ -17,8 +18,8 @@ export default class DownloadDialog extends I18nComponent {
 					<DialogTitle onClose={this.close}>{this.props.title}</DialogTitle>
 					<DialogContent style={{position:"relative",overflow:"hidden"}}>{this.renderOptions()}</DialogContent>
 					<DialogActions>
-						<Button onClick={this.close} color="primary">{this.translate("Cancel")}</Button>
-						<Button variant="contained" onClick={this.handleAccept} color="primary">{this.translate("OK")}</Button>
+						<Button sx={dialogActionButtonStyles} onClick={this.close} color="primary">{this.translate("Cancel")}</Button>
+						<Button sx={dialogPrimaryButtonStyles} variant="contained" onClick={this.handleAccept} color="primary">{this.translate("OK")}</Button>
 					</DialogActions>
 				</Dialog>
 		);

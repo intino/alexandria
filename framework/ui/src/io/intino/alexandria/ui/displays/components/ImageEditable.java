@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.schemas.ImageInfo;
 import io.intino.alexandria.ui.displays.components.editable.Editable;
 import io.intino.alexandria.ui.displays.events.*;
 import io.intino.alexandria.ui.displays.notifiers.ImageEditableNotifier;
@@ -32,7 +33,7 @@ public class ImageEditable<DN extends ImageEditableNotifier, B extends Box> exte
 
 	@Override
 	public void reload() {
-		notifier.refresh(serializedValue());
+		notifier.refresh(new ImageInfo().value(serializedValue()).darkValue(serializedDarkValue()));
 	}
 
 	@Override
@@ -115,6 +116,13 @@ public class ImageEditable<DN extends ImageEditableNotifier, B extends Box> exte
 		String result = null;
 		if (value() != null) result = Asset.toResource(baseAssetUrl(), value()).toUrl().toString();
 		else if (defaultValue != null) result = Asset.toResource(baseAssetUrl(), defaultValue).toUrl().toString();
+		return result;
+	}
+
+	@Override
+	String serializedDarkValue() {
+		String result = null;
+		if (darkValue() != null) result = Asset.toResource(baseAssetUrl(), darkValue()).toUrl().toString();
 		return result;
 	}
 

@@ -1,30 +1,23 @@
 import React from "react";
-import {withStyles} from '@material-ui/core/styles';
-import {Checkbox, FormControlLabel, IconButton} from '@material-ui/core';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
+import {Checkbox, FormControlLabel, IconButton} from '@mui/material';
 import AbstractDateEditable from "../../../gen/displays/components/AbstractDateEditable";
 import DateEditableNotifier from "../../../gen/displays/notifiers/DateEditableNotifier";
 import DateEditableRequester from "../../../gen/displays/requesters/DateEditableRequester";
-import MomentUtils from '@date-io/moment';
-import {
-    KeyboardDatePicker,
-    KeyboardDateTimePicker,
-    KeyboardTimePicker,
-    MuiPickersUtilsProvider
-} from '@material-ui/pickers';
+import {DatePicker, DateTimePicker, LocalizationProvider, TimePicker} from '@mui/x-date-pickers';
+import {AdapterMoment} from '@mui/x-date-pickers/AdapterMoment';
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import moment from 'moment';
 import classNames from 'classnames';
 import 'alexandria-ui-elements/res/styles/components/fields.css';
 import Theme from "app-elements/gen/Theme";
+import {errorFieldStyles, fieldErrorStyles, outlinedFieldStyles} from "./FieldStyles";
 
 const styles = theme => ({
-	date : {
-		width: "100%"
-	},
-	datetime : {
-		width: "100%"
-	},
+	date : outlinedFieldStyles(theme),
+	datetime : outlinedFieldStyles(theme),
+	errorField: errorFieldStyles(theme),
 	dayWrapper: {
         position: "relative",
     },
@@ -66,20 +59,9 @@ const styles = theme => ({
         borderTopRightRadius: "50%",
         borderBottomRightRadius: "50%",
     },
-    error : {
-        top: '0px',
-        left: '0px',
-        color: theme.isDark() ? 'white' : '#e13939',
-        width: 'calc(100% - 4px)',
-        height: "calc(100% - 4px)",
-        margin: '2px',
-        position: 'absolute',
-        background: theme.isDark() ? '#910000' : '#fdecec',
-        padding: '15px 15px 0',
-        borderRadius: '14px',
-        fontSize: '12pt',
-        zIndex: 1,
-    }
+    error : fieldErrorStyles(theme, {
+        padding: "0 18px",
+    })
 });
 
 class DateEditable extends AbstractDateEditable {
@@ -97,18 +79,8 @@ class DateEditable extends AbstractDateEditable {
             readonly : this.props.readonly,
             views : this.props.views,
             empty : this.props.value == null,
-        };
+		};
 	};
-
-    handleMouseEnter() {
-        const element = document.getElementById(this.props.id + "-error");
-        if (element != null) element.style.display = "none";
-    };
-
-    handleMouseLeave() {
-        const element = document.getElementById(this.props.id + "-error");
-        if (element != null && this.lastError != null && document.activeElement !== this.inputRef.current) element.style.display = "block";
-    };
 
     handleError(e) {
         if (e == null || e === "") {
@@ -138,83 +110,98 @@ class DateEditable extends AbstractDateEditable {
 		this._notifyChange(moment != null ? this.noZoneDate(moment) : null);
 	};
 
-	render() {
-		if (!this.state.visible) return (<React.Fragment/>);
+    render() {
+        if (!this.state.visible) return (<React.Fragment/>);
 
-		const { timePicker, classes } = this.props;
+        const { timePicker, classes } = this.props;
 		const range = this.state.range;
 		const min = range.min !== undefined && range.min != 0 ? range.min : this.props.mode === "fromnow" ? new Date() : undefined;
 		const max = range.max !== undefined && range.max != 0 ? range.max : this.props.mode === "tonow" ? new Date() : undefined;
 		const dateLabel = this.translate(this.props.label != null ? this.props.label : undefined);
 		const timeLabel = this.translate(this.props.label != null ? this.props.label : undefined);
 		const pattern = this.state.pattern;
-		const value = this.state.value != null ? this.state.value : null;
-		const variant = this._variant();
+		const value = this.state.value != null ? moment(this.state.value) : null;
 		const toolbar = this._isEmbedded() && this.props.mode === "fromnow" ? (props) => (<React.Fragment/>) : undefined;
 		const hasDateInfo = this._hasDateInfo();
-        const theme = Theme.get();
-		return (
-			<div style={{...this.style(),position:'relative'}} className={classNames("date-editable", this.state.readonly ? "readonly" : undefined, theme.isDark() ? "dark" : undefined)}>
-                {!this.state.readonly && <div id={this.props.id + "-error"} className={classes.error} style={{display:'none'}} onMouseEnter={this.handleMouseEnter.bind(this)}></div>}
-				{ !timePicker ? <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={moment.locale(Application.configuration.language)}>
-                                    <KeyboardDatePicker variant={variant} placeholder={!this.state.readonly ? pattern : undefined} autoOk
-                                            InputLabelProps={{ shrink: this.state.readonly ? true : this.props.shrink !== null ? this.props.shrink : undefined }}
-                                            inputProps={{ref:this.inputRef}}
-                                            inputVariant="outlined"
-                                            disabled={this.state.readonly}
-                                            format={pattern} className={classes.date} mask={this.props.mask}
+		const hasTimeInfo = this._hasTimeInfo();
+        const showTimePicker = timePicker || hasTimeInfo;
+        const hasError = this.lastError != null && this.lastError !== "";
+        const labelClasses = classNames(
+            "MuiFormLabel-root",
+            "MuiFormLabel-sizeSmall",
+            "MuiFormLabel-filled",
+            "MuiInputLabel-root",
+            "MuiInputLabel-formControl",
+            "MuiInputLabel-animated",
+            "MuiInputLabel-shrink",
+            "MuiInputLabel-sizeSmall",
+            "MuiInputLabel-outlined",
+            this.state.focused ? "Mui-focused" : undefined
+        );
+        const inputClasses = classNames(
+            "MuiInputBase-root",
+            "MuiInputBase-sizeSmall",
+            "MuiOutlinedInput-root",
+            "MuiOutlinedInput-sizeSmall",
+            "MuiInputBase-formControl",
+            "MuiInputBase-adornedEnd",
+            this.state.focused ? "Mui-focused" : undefined,
+            this.state.readonly ? "Mui-disabled" : undefined,
+            "date-editable-input"
+        );
+        const textFieldSlotProps = {
+            className: classNames(classes.date, hasError ? classes.errorField : undefined),
+            inputRef: this.inputRef,
+            disabled: this.state.readonly,
+            onFocus: this.handleFocus.bind(this),
+            onBlur: this.handleBlur.bind(this),
+            slotProps: {
+                inputLabel: {
+                    shrink: hasError ? true : (this.state.readonly ? true : this.props.shrink !== null ? this.props.shrink : undefined),
+                    className: labelClasses
+                },
+                input: {
+                    className: inputClasses,
+                    style: { borderRadius: "16px" }
+                }
+            },
+            size: "small",
+            variant: "outlined"
+        };
+		const theme = Theme.get();
+		const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
+			return (
+				<div style={{...this.style(),position:'relative'}} className={classNames("date-editable", this.state.readonly ? "readonly" : undefined, isDark ? "dark" : undefined)}>
+                {!this.state.readonly && <div id={this.props.id + "-error"} className={classes.error} style={{display:'none'}}></div>}
+				{ !showTimePicker ? <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={Application.configuration.language}>
+                                    <DatePicker
+                                            format={pattern} className={classes.date}
                                             value={value} onChange={this.handleChange.bind(this)}
-                                            minDate={min} maxDate={this._max(max)} label={dateLabel} views={this.views()}
-                                            ToolbarComponent={toolbar}
-                                            renderDay={this.isWeekView() ? this.renderWrappedWeekDay.bind(this) : undefined}
+                                            minDate={min != null ? moment(min) : undefined} maxDate={this._max(max) != null ? moment(this._max(max)) : undefined} label={dateLabel} views={this.views()}
                                             onError={this.handleError.bind(this)}
-                                            onFocus={this.handleFocus.bind(this)}
-                                            onBlur={this.handleBlur.bind(this)}
-                                            onMouseLeave={this.handleMouseLeave.bind(this)}
-                                            minDateMessage={this.translate("The date $1 must be the same as or later than $2").replace("$1", moment(this.state.value).format(pattern)).replace("$2", moment(min).format(pattern))}
-                                            maxDateMessage={this.translate("The date $1 must be the same as or earlier than $2").replace("$1", moment(this.state.value).format(pattern)).replace("$2", moment(this._max(max)).format(pattern))}/>
-                                </MuiPickersUtilsProvider>
+                                            slotProps={{ textField: textFieldSlotProps }}/>
+                                </LocalizationProvider>
                              : undefined
                 }
-				{ (timePicker && hasDateInfo) ? <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={moment.locale(Application.configuration.language)}>
-				                    <KeyboardDateTimePicker variant={variant} placeholder={!this.state.readonly ? pattern : undefined} autoOk
-				                            InputLabelProps={{ shrink: this.state.readonly ? true : this.props.shrink !== null ? this.props.shrink : undefined }}
-                                            inputProps={{ref:this.inputRef}}
-                                            inputVariant="outlined"
-                                            disabled={this.state.readonly}
+				{ (showTimePicker && hasDateInfo) ? <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={Application.configuration.language}>
+				                    <DateTimePicker
                                             format={pattern} className={classes.datetime}
                                             value={value} onChange={this.handleChange.bind(this)}
-                                            minDate={min} maxDate={this._max(max)} label={timeLabel}
-                                            ToolbarComponent={toolbar}
-                                            renderDay={this.isWeekView() ? this.renderWrappedWeekDay.bind(this) : undefined}
+                                            minDate={min != null ? moment(min) : undefined} maxDate={this._max(max) != null ? moment(this._max(max)) : undefined} label={timeLabel}
                                             onError={this.handleError.bind(this)}
-                                            onFocus={this.handleFocus.bind(this)}
-                                            onBlur={this.handleBlur.bind(this)}
-                                            onMouseLeave={this.handleMouseLeave.bind(this)}
-                                            minDateMessage={this.translate("The date $1 must be the same as or later than $2").replace("$1", moment(this.state.value).format(pattern)).replace("$2", moment(min).format(pattern))}
-                                            maxDateMessage={this.translate("The date $1 must be the same as or earlier than $2").replace("$1", moment(this.state.value).format(pattern)).replace("$2", moment(this._max(max)).format(pattern))}/>
-                                </MuiPickersUtilsProvider>
+                                            slotProps={{ textField: textFieldSlotProps }}/>
+                                </LocalizationProvider>
                              : undefined
                 }
-				{ (timePicker && !hasDateInfo) ? <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={moment.locale(Application.configuration.language)}>
-				                    <KeyboardTimePicker variant={variant} placeholder={!this.state.readonly ? pattern : undefined} autoOk
-				                            InputLabelProps={{ shrink: this.state.readonly ? true : this.props.shrink !== null ? this.props.shrink : undefined }}
+				{ (showTimePicker && !hasDateInfo) ? <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={Application.configuration.language}>
+				                    <TimePicker
 				                            ampm={false}
-                                            inputProps={{ref:this.inputRef}}
-                                            inputVariant="outlined"
-                                            disabled={this.state.readonly}
                                             format={pattern} className={classes.datetime}
                                             value={value} onChange={this.handleChange.bind(this)}
-                                            minDate={min} maxDate={this._max(max)} label={timeLabel}
-                                            ToolbarComponent={toolbar}
-                                            renderDay={this.isWeekView() ? this.renderWrappedWeekDay.bind(this) : undefined}
+                                            label={timeLabel}
                                             onError={this.handleError.bind(this)}
-                                            onFocus={this.handleFocus.bind(this)}
-                                            onBlur={this.handleBlur.bind(this)}
-                                            onMouseLeave={this.handleMouseLeave.bind(this)}
-                                            minDateMessage={this.translate("The date $1 must be the same as or later than $2").replace("$1", moment(this.state.value).format(pattern)).replace("$2", moment(min).format(pattern))}
-                                            maxDateMessage={this.translate("The date $1 must be the same as or earlier than $2").replace("$1", moment(this.state.value).format(pattern)).replace("$2", moment(this._max(max)).format(pattern))}/>
-                                </MuiPickersUtilsProvider>
+                                            slotProps={{ textField: textFieldSlotProps }}/>
+                                </LocalizationProvider>
                              : undefined
                 }
 				{(!this.state.readonly && this.props.allowEmpty) && <FormControlLabel control={<Checkbox disabled={this.state.readonly} checked={this.state.empty} onChange={this.handleAllowEmpty.bind(this)} />} label={this.translate("sin definir")} />}
@@ -282,12 +269,15 @@ class DateEditable extends AbstractDateEditable {
 
 	views = () => {
 	    const result = [];
-	    if (this.state.views == null || this.isWeekView()) return ["date"];
+	    if (this.state.views == null) return undefined;
+	    if (this.isWeekView()) return ["day"];
 	    for (var i=0; i<this.state.views.length; i++) {
-	        if (this.state.views[i].toLowerCase() === "week") continue;
-	        result.push(this.state.views[i].toLowerCase());
+	        const view = this.state.views[i].toLowerCase();
+	        if (view === "week" || view === "date") continue;
+	        if (["year", "month", "day"].indexOf(view) === -1) continue;
+	        result.push(view);
 	    }
-	    return result;
+	    return result.length > 0 ? result : undefined;
 	};
 
 	isWeekView = () => {
@@ -349,10 +339,18 @@ class DateEditable extends AbstractDateEditable {
         return moment.utc(value).endOf('week').toDate();
     };
 
-    _hasDateInfo = () => {
+	_hasDateInfo = () => {
         const pattern = this.state.pattern;
         if (pattern == null || pattern === "") return true;
         var infoList = ["M", "Mo", "MM", "MMM", "MMMM", "Q", "Qo", "D", "Do", "DD", "DDD", "DDDo", "DDDD", "d", "do", "dd", "ddd", "dddd", "e", "E", "w", "wo", "ww", "W", "Wo", "WW", "YY", "YYYY", "YYYYYY", "Y", "y", "N", "NN", "NNN", "NNNN", "NNNNN", "gg", "gggg", "GG", "GGGG"];
+        for (var i=0; i<infoList.length; i++) if (pattern.indexOf(infoList[i]) != -1) return true;
+        return false;
+    };
+
+    _hasTimeInfo = () => {
+        const pattern = this.state.pattern;
+        if (pattern == null || pattern === "") return false;
+        const infoList = ["H", "HH", "h", "hh", "k", "kk", "m", "mm", "s", "ss", "A", "a"];
         for (var i=0; i<infoList.length; i++) if (pattern.indexOf(infoList[i]) != -1) return true;
         return false;
     };

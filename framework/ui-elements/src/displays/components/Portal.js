@@ -1,10 +1,10 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractPortal from "../../../gen/displays/components/AbstractPortal";
 import PortalNotifier from "../../../gen/displays/notifiers/PortalNotifier";
 import PortalRequester from "../../../gen/displays/requesters/PortalRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 
 const styles = theme => ({});
 

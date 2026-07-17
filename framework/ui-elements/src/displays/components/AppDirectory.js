@@ -1,11 +1,11 @@
-import React, { Suspense } from "react";
-import { withStyles } from '@material-ui/core/styles';
-import { Typography, IconButton, Popover, List, ListItem } from '@material-ui/core';
+import React, {Suspense} from "react";
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
+import {IconButton, List, ListItemButton, Popover, Typography} from '@mui/material';
 import AbstractAppDirectory from "../../../gen/displays/components/AbstractAppDirectory";
 import AppDirectoryNotifier from "../../../gen/displays/notifiers/AppDirectoryNotifier";
 import AppDirectoryRequester from "../../../gen/displays/requesters/AppDirectoryRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 
 const styles = theme => ({
     container : {
@@ -84,9 +84,9 @@ class AppDirectory extends AbstractAppDirectory {
 	    const { classes } = this.props;
 	    const className = application.selected ? classes.selected : undefined;
 		return (
-		    <ListItem className={classes.listItem} key={application.name} button disabled={application.selected} onClick={this.handleSelect.bind(this, application)}>
+		    <ListItemButton className={classes.listItem} key={application.name} disabled={application.selected} onClick={this.handleSelect.bind(this, application)}>
 		        <Typography className={className} variant="body1">{application.name}</Typography>
-            </ListItem>
+            </ListItemButton>
         );
 	};
 

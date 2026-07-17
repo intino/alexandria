@@ -1,11 +1,9 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
-import Typography from "@material-ui/core/Typography";
-import Popover from "@material-ui/core/Popover";
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
+import Typography from "@mui/material/Typography";
 import AbstractNumber from "../../../gen/displays/components/AbstractNumber";
 import NumberNotifier from "../../../gen/displays/notifiers/NumberNotifier";
 import NumberRequester from "../../../gen/displays/requesters/NumberRequester";
-import TextBehavior from "./behaviors/TextBehavior";
 import Block from "./Block";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import NumberUtil from "alexandria-ui-elements/src/util/NumberUtil";

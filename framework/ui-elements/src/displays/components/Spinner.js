@@ -1,10 +1,10 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
-import { withSnackbar } from 'notistack';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import AbstractSpinner from "../../../gen/displays/components/AbstractSpinner";
 import SpinnerNotifier from "../../../gen/displays/notifiers/SpinnerNotifier";
 import SpinnerRequester from "../../../gen/displays/requesters/SpinnerRequester";
-import { BarLoader, CircleLoader, HashLoader, RingLoader, RiseLoader } from "react-spinners";
+import {BarLoader, CircleLoader, HashLoader, RingLoader, RiseLoader} from "react-spinners";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import Theme from 'app-elements/gen/Theme';
 
@@ -39,7 +39,7 @@ class Spinner extends AbstractSpinner {
 	};
 
 	color = () => {
-		if (this.props.color == null || this.props.color === "") return undefined;
+		if (this.props.color == null || this.props.color === "") return Theme.get().palette.secondary.main;
 		if (this.props.color === "primary") return Theme.get().palette.primary.main;
 		else if (this.props.color === "secondary") return Theme.get().palette.secondary.main;
 		return this.props.color;

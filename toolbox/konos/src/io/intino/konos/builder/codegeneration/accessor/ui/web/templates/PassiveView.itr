@@ -14,12 +14,12 @@ rule type(notifier)
 			var key = this.element.props.id + context;
 			//if (Notifier.subscriptions[key]) return;
 			//Notifier.subscriptions[key] = true;
+			this.when("clearContainer").toSelf().execute((parameters) => this.element.clearContainer(parameters));
 			this.when("addInstance").toSelf().execute((parameters) => this.element.addInstance(parameters));
 			this.when("addInstances").toSelf().execute((parameters) => this.element.addInstances(parameters));
 			this.when("insertInstance").toSelf().execute((parameters) => this.element.insertInstance(parameters));
 			this.when("insertInstances").toSelf().execute((parameters) => this.element.insertInstances(parameters));
 			this.when("removeInstance").toSelf().execute((parameters) => this.element.removeInstance(parameters));
-			this.when("clearContainer").toSelf().execute((parameters) => this.element.clearContainer(parameters));
 			this.when("redirect").toSelf().execute((parameters) => this.element.redirect(parameters));
 			this.when("dispatch").toSelf().execute((parameters) => this.element.dispatch(parameters));
 			this.when("addressed").toSelf().execute((parameters) => this.element.addressed(parameters));
@@ -39,10 +39,12 @@ rule type(notifier)
 								let ownerPath = parameters.o;
 								let context = element.props.context != null ? element.props.context() : null;
 								let elementId = element.shortId();
-								if (id === elementId && (ownerPath == null || ownerPath === "" || ownerPath === context || _containsAll(ownerPath, context))) {
-									action(parameters);
-								}
-							}));
+							if (id === elementId && (ownerPath == null || ownerPath === "" || _matchesPath(ownerPath, context))) {
+								action(parameters);
+								return true;
+							}
+							return false;
+						}));
 						}
 					}
 				},
@@ -50,21 +52,26 @@ rule type(notifier)
 					register(pushService.listen(message, function(parameters) {
 						if (parameters.n === element.name) {
 							action(parameters);
+							return true;
 						}
+						return false;
 					}));
 				}
 			};
 
-			function _containsAll(owner, context) {
-				if (context == null) return false;
-				let contextList = context.split(".");
-				let ownerList = owner.split(".");
-				return ownerList.length > contextList.length ? _containsInList(owner, contextList) : _containsInList(context, ownerList);
+			function _matchesPath(owner, context) {
+				if (context == null || context === "") return false;
+				if (owner === context) return true;
+				const ownerSegments = owner != null ? owner.split(".").filter(Boolean) : [];
+				const contextSegments = context.split(".").filter(Boolean);
+				return _hasSameTail(ownerSegments, contextSegments) || _hasSameTail(contextSegments, ownerSegments);
 			}
 
-			function _containsInList(content, list) {
-				for (var i=0; i<list.length; i++) {
-					if (content.indexOf(list[i]) === -1) return false;
+			function _hasSameTail(expected, actual) {
+				if (expected.length === 0 || expected.length > actual.length) return false;
+				const offset = actual.length - expected.length;
+				for (let i = 0; i < expected.length; i++) {
+					if (expected[i] !== actual[i + offset]) return false;
 				}
 				return true;
 			}

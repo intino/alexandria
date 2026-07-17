@@ -1,24 +1,26 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractChat from "../../../gen/displays/components/AbstractChat";
 import ChatNotifier from "../../../gen/displays/notifiers/ChatNotifier";
 import ChatRequester from "../../../gen/displays/requesters/ChatRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
-import { TextField, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Popover } from "@material-ui/core";
-import { Send, Add, Chat as ChatIcon, Clear } from '@material-ui/icons';
-import Moment from 'react-moment';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
+import {Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Popover, TextField} from "@mui/material";
+import {Add, Chat as ChatIcon, Clear, Send} from '@mui/icons-material';
+import moment from 'moment';
 import classnames from 'classnames';
 import InnerHTML from 'dangerously-set-html-content'
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import SaveAltIcon from '@material-ui/icons/SaveAlt';
+import Button from '@mui/material/Button';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import {emojify} from 'react-emojione';
 import 'alexandria-ui-elements/res/styles/layout.css';
 import 'alexandria-ui-elements/res/styles/components/chat/styles.css';
-import { BeatLoader } from "react-spinners";
-import { marked } from "marked";
-import { DropzoneArea } from 'material-ui-dropzone';
+import {BeatLoader} from "react-spinners";
+import {marked} from "marked";
+import {DropzoneArea} from './upload/DropzoneArea';
+import Theme from "app-elements/gen/Theme";
+import {outlinedFieldStyles} from "./FieldStyles";
+import {dialogActionButtonStyles, dialogPrimaryButtonStyles} from "./ButtonStyles";
 
 const styles = theme => ({
     container : {
@@ -31,7 +33,7 @@ const styles = theme => ({
         padding: "0 5px 5px",
         width: "100%",
         height: "calc(100% - 97px)",
-        background: theme.isLight() ? "white" : "#303030",
+        background: theme.palette.mode === "light" ? "white" : "#303030",
     },
     messagesContainerNoHeader : {
         height: "calc(100% - 47px)",
@@ -42,7 +44,7 @@ const styles = theme => ({
     },
     day : {
         padding: "3px 15px",
-        background: theme.isLight() ? "#dfdfdf" : "#535353",
+        background: theme.palette.mode === "light" ? "#dfdfdf" : "#535353",
         fontSize: "9pt",
         borderRadius: "10px",
         marginBottom: "5px"
@@ -54,12 +56,12 @@ const styles = theme => ({
         marginLeft: "10px",
     },
     outgoing : {
-        background: theme.isLight() ? "#e0f7dd" : "#3f603a",
+        background: theme.palette.mode === "light" ? "#e0f7dd" : "#3f603a",
         padding: "4px 10px",
         borderRadius: "13px",
     },
     incoming : {
-        background: theme.isLight() ? "#dde4f7" : "#445073",
+        background: theme.palette.mode === "light" ? "#dde4f7" : "#445073",
         padding: "4px 10px",
         borderRadius: "13px"
     },
@@ -72,11 +74,22 @@ const styles = theme => ({
     },
     input : {
         marginRight: "10px",
-        fontSize: "11pt",
         width: "100%",
-        border: theme.isLight() ? "1px solid #888" : "1px solid white",
-        borderRadius : "3px",
-        paddingLeft: "4px"
+    },
+    inputField: {
+        ...outlinedFieldStyles(theme),
+        "& .MuiInputBase-root": {
+            ...outlinedFieldStyles(theme)["& .MuiInputBase-root"],
+            minHeight: "44px",
+        },
+        "& .MuiOutlinedInput-input": {
+            ...outlinedFieldStyles(theme)["& .MuiOutlinedInput-input"],
+            fontSize: "11pt",
+        }
+    },
+    attachmentDescriptionField: {
+        ...outlinedFieldStyles(theme),
+        width: "100%",
     },
     file : {
         color: theme.palette.secondary.main
@@ -86,13 +99,13 @@ const styles = theme => ({
         minWidth: "100px"
     },
     header : {
-        background: theme.isLight() ? "#efefef" : "black",
+        background: theme.palette.mode === "light" ? "#efefef" : "black",
         padding: "10px",
         fontSize: "12pt",
         height: "44px",
     },
     toolbar : {
-        background: theme.isLight() ? "#efefef" : "black",
+        background: theme.palette.mode === "light" ? "#efefef" : "black",
         padding: "10px"
     },
     label : {
@@ -199,7 +212,7 @@ class Chat extends AbstractChat {
 	    const { classes } = this.props;
 		const language = window.Application.configuration.language;
 	    this.lastDay = date;
-	    return (<div className="layout vertical center"><Moment className={classnames("layout vertical center-center", classes.day)} format="ll" date={message.date} locale={language}/></div>);
+	    return (<div className="layout vertical center"><span className={classnames("layout vertical center-center", classes.day)}>{moment(message.date).locale(language).format("ll")}</span></div>);
 	};
 
 	renderOutgoingMessage = (message, index) => {
@@ -226,7 +239,7 @@ class Chat extends AbstractChat {
 	                    <div className={classes.content}>{this.renderMessageContent(message, index)}</div>
 	                    {this.renderMessageAttachments(message, index)}
 	                </div>
-                    <Moment className={classes.date} format="HH:mm" ago date={message.date} locale={language}/>
+                    <span className={classes.date}>{moment(message.date).locale(language).fromNow()}</span>
 	            </div>
                 {message.direction == "Outgoing" && images.outgoing != null && <img src={images.outgoing} style={{height:"24px",width:"24px",margin:"0 5px"}}/> }
 	        </div>
@@ -281,11 +294,31 @@ class Chat extends AbstractChat {
 
 	renderToolbar = () => {
 	    const { classes } = this.props;
+	    const theme = Theme.get();
+	    const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
 	    return (
 	        <React.Fragment>
                 <div className={classnames(classes.toolbar, "layout horizontal center")}>
                     <IconButton disabled={this.processing()} style={{marginRight:'5px'}} size="small" aria-label={this.translate("Add")} color="inherit" onClick={this.handleOpenAttachmentDialog.bind(this)}><Add fontSize="small"/></IconButton>
-                    <TextField onKeyUp={this.handleMessageKeyUp.bind(this)} onChange={this.handleMessageChange.bind(this)} autoFocus={true} value={this.state.message} format={this.variant("body1")} placeholder={this.translate("Write a message...")} type="text" className={classes.input} multiline={false} InputProps={{ readOnly: this.processing(), disableUnderline: true }}></TextField>
+                    <TextField
+                        onKeyUp={this.handleMessageKeyUp.bind(this)}
+                        onChange={this.handleMessageChange.bind(this)}
+                        autoFocus={true}
+                        value={this.state.message}
+                        format={this.variant("body1")}
+                        placeholder={this.translate("Write a message...")}
+                        type="text"
+                        className={classnames(classes.input, classes.inputField, isDark ? "dark" : undefined)}
+                        variant="outlined"
+                        size="small"
+                        multiline={false}
+                        slotProps={{
+                            input: {
+                                readOnly: this.processing(),
+                                style: { borderRadius: "16px" }
+                            }
+                        }}
+                    ></TextField>
                     <IconButton disabled={this.processing()} size="small" aria-label={this.translate("Send")} color="inherit" onClick={this.handleSendMessage.bind(this)}><Send fontSize="small"/></IconButton>
                 </div>
                 {this.renderAttachmentDialog()}
@@ -295,11 +328,13 @@ class Chat extends AbstractChat {
 
 	renderAttachmentDialog = () => {
 	    const { classes } = this.props;
+	    const theme = Theme.get();
+	    const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
         return (
             <Dialog open={this.state.addAttachmentDialogOpened} onClose={this.handleCloseAttachmentDialog.bind(this)}>
                 <DialogTitle id="alert-dialog-title">{this.translate("Add attachment")}</DialogTitle>
                 <DialogContent>
-                    <div className="layout vertical flex center" style={{overflow:"auto",width:"100%",height:"100%"}}>
+                    <div className={classnames("layout vertical flex center", isDark ? "dark file-editable" : "file-editable")} style={{overflow:"auto",width:"100%",height:"100%"}}>
                         <div style={{width:"400px",height:"100%"}}>
                             <DropzoneArea
                                 dropzoneText={this.translate("Drag and drop a file here or click")}
@@ -321,15 +356,23 @@ class Chat extends AbstractChat {
                             <TextField format={this.variant("body1")} label={this.translate("Description")} type="text"
                                        onChange={this.handleAttachmentDescriptionChange.bind(this)}
                                        style={{marginTop:'10px',width:'100%'}}
+                                       className={classnames(classes.attachmentDescriptionField, isDark ? "dark" : undefined)}
                                        value={this.state.attachment.description}
-                                       multiline={true} rows={3}>
+                                       multiline={true} rows={3}
+                                       variant="outlined"
+                                       size="small"
+                                       slotProps={{
+                                           input: {
+                                               style: { borderRadius: "16px" }
+                                           }
+                                       }}>
                             </TextField>
                         </div>
                     </div>
                 </DialogContent>
                 <DialogActions>
-                  <Button onClick={this.handleCloseAttachmentDialog.bind(this)} color="primary">{this.translate("Cancel")}</Button>
-                  <Button disabled={this.processing()} onClick={this.handleSendAttachment.bind(this)} color="primary" variant="contained">{this.translate("Add")}</Button>
+                  <Button sx={dialogActionButtonStyles} onClick={this.handleCloseAttachmentDialog.bind(this)} color="primary">{this.translate("Cancel")}</Button>
+                  <Button sx={dialogPrimaryButtonStyles} disabled={this.processing()} onClick={this.handleSendAttachment.bind(this)} color="primary" variant="contained">{this.translate("Add")}</Button>
                 </DialogActions>
             </Dialog>
         );
@@ -476,7 +519,7 @@ class Chat extends AbstractChat {
                     <div className={classnames(classes.file, "layout vertical center-center")}>
                         <div style={{padding:"50px 70px",background:"#4C494C",borderRadius:"10px",fontSize:"12pt",boxShadow:"3px 3px 25px black"}} className="layout vertical center-center">
                             <div style={{marginBottom:"10px",fontSize:"15pt",color:"white"}}>{notAvailable}</div>
-                            <Button variant="contained" color="primary" onClick={this._downloadAttachment.bind(this, attachment)}><SaveAltIcon style={{marginRight:"5px"}}/>{downloadTitle}</Button>
+                            <Button sx={dialogPrimaryButtonStyles} variant="contained" color="primary" onClick={this._downloadAttachment.bind(this, attachment)}><SaveAltIcon style={{marginRight:"5px"}}/>{downloadTitle}</Button>
                         </div>
                     </div>
                 </div>
@@ -510,7 +553,7 @@ class Chat extends AbstractChat {
 		    <div style={{width:'100%',height:'100%'}} ref={this.attachmentContainer}>
                 <div style={{height:"100%", width:"100%"}} className="layout vertical flex">
                     <div style={{height:"50px", background:"#26282B"}} className="layout horizontal start-justified">
-                        <Button style={{margin:'8px'}} variant="contained" color="primary" onClick={this._downloadAttachment.bind(this, attachment)}><SaveAltIcon style={{marginRight:"5px"}}/>{downloadTitle}</Button>
+                        <Button sx={dialogPrimaryButtonStyles} style={{margin:'8px'}} variant="contained" color="primary" onClick={this._downloadAttachment.bind(this, attachment)}><SaveAltIcon style={{marginRight:"5px"}}/>{downloadTitle}</Button>
                     </div>
                     <div style={{background:"#414447"}} className="layout vertical flex">
                         <div className={classnames(classes.file, "layout vertical center-center")}>

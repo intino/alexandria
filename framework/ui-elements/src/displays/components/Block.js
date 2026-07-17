@@ -1,6 +1,5 @@
 import React from "react";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
+import Paper from "@mui/material/Paper";
 import AbstractBlock from "../../../gen/displays/components/AbstractBlock";
 import BlockNotifier from "../../../gen/displays/notifiers/BlockNotifier";
 import BlockRequester from "../../../gen/displays/requesters/BlockRequester";
@@ -10,6 +9,8 @@ import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import 'alexandria-ui-elements/res/styles/hidden.css';
 import AutoSizer from 'react-virtualized-auto-sizer';
+import Theme from "app-elements/gen/Theme";
+import {paperSurfaceStyles} from "./ContainerStyles";
 
 export default class Block extends AbstractBlock {
 
@@ -71,10 +72,13 @@ export default class Block extends AbstractBlock {
 		if (!this.state.visible) style = {display:"none", ...style};
 
 		if (paper) {
+			const theme = Theme.get();
+			const paperStyle = theme != null ? paperSurfaceStyles(theme) : {};
+			const hasLabel = this.props.label != null && this.props.label !== "";
 			return (
-				<Paper style={style} className={classNames}>
-					{ ComponentBehavior.labelBlock(this.props, "h5", {padding:"0 0 5px"}) }
-					<div style={{padding:"0 10px 10px",height:"100%"}} className={classNames}>{this._renderChildren()}</div>
+				<Paper style={{...paperStyle, ...style}} className={classNames}>
+					{ ComponentBehavior.labelBlock(this.props, "h5", {padding:"18px 20px 6px"}) }
+					<div style={{padding: hasLabel ? "0 20px 20px" : "20px",height:"100%"}} className={classNames}>{this._renderChildren()}</div>
 				</Paper>
 			);
 		}

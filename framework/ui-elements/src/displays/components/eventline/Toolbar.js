@@ -1,7 +1,6 @@
 import React from "react";
-import classnames from "classnames";
-import { Typography, IconButton } from '@material-ui/core';
-import { FirstPage, NavigateBefore, NavigateNext, LastPage } from "@material-ui/icons";
+import {IconButton, Typography} from '@mui/material';
+import {FirstPage, LastPage, NavigateBefore, NavigateNext} from "@mui/icons-material";
 import Theme from "app-elements/gen/Theme";
 
 const EventlineToolbarStyles = {

@@ -1,8 +1,7 @@
-import React, { Component } from "react";
-import Theme from "app-elements/gen/Theme";
-import { Box, Typography, Paper, LinearProgress } from "@material-ui/core";
+import React, {Component} from "react";
+import {Box, LinearProgress, Paper, Typography} from "@mui/material";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 
 const styles = (theme) => ({
     progressItem: {

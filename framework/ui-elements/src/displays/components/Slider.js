@@ -1,6 +1,5 @@
-import React from "react";
-import { withStyles } from '@material-ui/core/styles';
-import { withSnackbar } from 'notistack';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import AbstractSlider from "../../../gen/displays/components/AbstractSlider";
 import SliderNotifier from "../../../gen/displays/notifiers/SliderNotifier";
 import SliderRequester from "../../../gen/displays/requesters/SliderRequester";

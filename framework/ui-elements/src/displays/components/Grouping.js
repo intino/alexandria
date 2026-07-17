@@ -1,10 +1,18 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractGrouping from "../../../gen/displays/components/AbstractGrouping";
 import GroupingNotifier from "../../../gen/displays/notifiers/GroupingNotifier";
 import GroupingRequester from "../../../gen/displays/requesters/GroupingRequester";
-import {Checkbox, List, ListItem, ListItemSecondaryAction, ListItemText, Typography} from "@material-ui/core";
-import { BaseGroupingStyles } from "./BaseGrouping";
+import {
+    Checkbox,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemSecondaryAction,
+    ListItemText,
+    Typography
+} from "@mui/material";
+import {BaseGroupingStyles} from "./BaseGrouping";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import NumberUtil from 'alexandria-ui-elements/src/util/NumberUtil';
@@ -40,18 +48,20 @@ class Grouping extends AbstractGrouping {
     renderGroup = (group, index) => {
         const { classes } = this.props;
         return (
-            <ListItem key={index} className={classes.group} role={undefined} dense button onClick={this.handleToggle(group)}>
-                <Checkbox className={classes.checkbox} checked={this.state.selection.indexOf(group.label) !== -1} tabIndex={-1} disableRipple/>
-                <ListItemText style={{margin:'0'}}>
-                    <div className="layout horizontal center">
-                        <div className="layout flex">{group.label}</div>
-                        {group.color != null && <Typography className={classes.colorBox} variant="body2" style={{backgroundColor:group.color,marginLeft:'10px'}}></Typography>}
-                    </div>
-                </ListItemText>
-                {group.count > 0 && <ListItemSecondaryAction className={classes.count}>{NumberUtil.format(group.count, "0,0")}</ListItemSecondaryAction>}
-            </ListItem>
-        );
-    };
+			<ListItem key={index} className={classes.group} role={undefined} dense disablePadding>
+                <ListItemButton onClick={this.handleToggle(group)} className={classes.group}>
+				<Checkbox className={classes.checkbox} checked={this.state.selection.indexOf(group.label) !== -1} tabIndex={-1} disableRipple/>
+				<ListItemText style={{margin:'0'}}>
+					<div className="layout horizontal center">
+						<div className="layout flex">{group.label}</div>
+						{group.color != null && <Typography className={classes.colorBox} variant="body2" style={{backgroundColor:group.color,marginLeft:'10px'}}></Typography>}
+					</div>
+				</ListItemText>
+				{group.count > 0 && <ListItemSecondaryAction className={classes.count}>{NumberUtil.format(group.count, "0,0")}</ListItemSecondaryAction>}
+                </ListItemButton>
+			</ListItem>
+		);
+	};
 
     handleToggle = group => () => {
         this.toggle(group);

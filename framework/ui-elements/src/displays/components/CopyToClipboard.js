@@ -1,10 +1,9 @@
-import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractCopyToClipboard from "../../../gen/displays/components/AbstractCopyToClipboard";
 import CopyToClipboardNotifier from "../../../gen/displays/notifiers/CopyToClipboardNotifier";
 import CopyToClipboardRequester from "../../../gen/displays/requesters/CopyToClipboardRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import Actionable from "./Actionable";
 
 class CopyToClipboard extends AbstractCopyToClipboard {

@@ -44,12 +44,12 @@ rule type(display, template)
 
 rule type(display, collection)
 	import React from "react";
-	import { withStyles } from '@material-ui/core/styles';
+	import { withStyles } from 'alexandria-ui-elements/src/util/muiStylesCompat';
 	import Abstract$name+firstUpperCase from "../../$packageTypeRelativeDirectory~gen/displays<</$packageType~s>>/Abstract$name+firstUpperCase";
 	import $name+firstUpperCase~Notifier from "../../$packageTypeRelativeDirectory~gen/displays/notifiers/$name+firstUpperCase~Notifier";
 	import $name+firstUpperCase~Requester from "../../$packageTypeRelativeDirectory~gen/displays/requesters/$name+firstUpperCase~Requester";
 	import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-	import { withSnackbar } from 'notistack';
+	import { withSnackbar } from 'alexandria-ui-elements/src/util/notistackCompat';
 	import { $type+firstUpperCase~Styles } from "alexandria-ui-elements/src/displays/components/$type+firstUpperCase";
 
 	const styles = theme => ({

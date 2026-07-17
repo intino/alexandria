@@ -17,7 +17,7 @@ Template(layout=Vertical, spacing=DP8) formExamplesMold
 					Text(format=airTop, shrink=true) text5 as Editable(placeholder="Text field with placeholder and label") Labeled("Text field with shrink to true") Readonly
 					Text(format=airTop) text6 as Editable Labeled("Text field with pattern") Readonly > Validation(pattern="0N0/00")
 					Text(format=airTop airBottom) text7 as Editable Readonly Labeled("Text field with error")
-					Text(format=doubleAirTop) text8 as Code(language=Html) Editable Readonly Labeled("Text field with code facet")
+					Text(format=airTop) text8 as Code(language=Html) Editable Readonly Labeled("Text field with code facet")
 			Block as Relative(width=48%, height=100%)
 				Text(format=h6 doubleAirTop, value="TEXT fields")
 				Block(format=airTop airBottom)

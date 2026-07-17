@@ -1,5 +1,4 @@
-import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractOpenDialog from "../../../gen/displays/components/AbstractOpenDialog";
 import OpenDialogNotifier from "../../../gen/displays/notifiers/OpenDialogNotifier";
 import OpenDialogRequester from "../../../gen/displays/requesters/OpenDialogRequester";

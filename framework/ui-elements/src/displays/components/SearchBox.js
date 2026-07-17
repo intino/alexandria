@@ -1,9 +1,8 @@
 import React from "react";
-import {OutlinedInput} from '@material-ui/core';
-import SearchIcon from '@material-ui/icons/Search';
-import ClearIcon from '@material-ui/icons/Clear';
-import {withStyles} from '@material-ui/core/styles';
-import {fade} from '@material-ui/core/styles/colorManipulator';
+import {OutlinedInput} from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import ClearIcon from '@mui/icons-material/Clear';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractSearchBox from "../../../gen/displays/components/AbstractSearchBox";
 import SearchBoxNotifier from "../../../gen/displays/notifiers/SearchBoxNotifier";
 import SearchBoxRequester from "../../../gen/displays/requesters/SearchBoxRequester";
@@ -11,6 +10,8 @@ import classNames from "classnames";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import NumberUtil from "../../util/NumberUtil";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
+import {fieldPalette} from "./FieldStyles";
+import Theme from "app-elements/gen/Theme";
 
 const styles = theme => ({
 	grow: {
@@ -18,11 +19,6 @@ const styles = theme => ({
 	},
 	search: {
 		position: 'relative',
-		borderRadius: '14pt',
-		backgroundColor: theme.isDark() ? fade("#444", 0.75) : fade(theme.palette.common.white, 0.75),
-		'&:hover': {
-			backgroundColor: theme.isDark() ? "#444" : theme.palette.common.white,
-		},
 		marginLeft: 0,
 		width: '100%',
 		[theme.breakpoints.up('sm')]: {
@@ -34,40 +30,113 @@ const styles = theme => ({
 		width: theme.spacing(9),
 		height: '100%',
 		position: 'absolute',
+		zIndex: 1,
 		pointerEvents: 'none',
 		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'center',
+		color: theme.palette.mode === "dark" ? "rgba(255,255,255,0.72)" : "rgba(15,23,42,0.62)",
+	},
+	searchIconSmall: {
+		width: theme.spacing(7),
 	},
 	clearIcon: {
-		top: '0',
+		top: '50%',
 		right: '0',
 		cursor: 'pointer',
 		position: 'absolute',
-		marginTop: '16px',
-		marginRight: '24px',
-		background: 'white',
+		transform: 'translateY(-50%)',
+		marginRight: '16px',
+		color: theme.palette.mode === "dark" ? "rgba(255,255,255,0.72)" : "rgba(15,23,42,0.62)",
 	},
 	clearIconSmall: {
-		marginTop: '9px',
 		height: '26px',
 	},
 	inputRoot: {
-		color: 'inherit',
+		color: fieldPalette(theme).textColor,
+		backgroundColor: fieldPalette(theme).background,
+		borderRadius: "16px",
+		boxShadow: "none",
+		transition: "background-color 160ms ease, box-shadow 160ms ease, border-color 160ms ease",
+		"& .MuiOutlinedInput-notchedOutline": {
+			borderColor: fieldPalette(theme).borderColor,
+			borderWidth: "1px",
+		},
+		"&:hover": {
+			backgroundColor: fieldPalette(theme).hoverBackground,
+		},
+		"&:hover .MuiOutlinedInput-notchedOutline": {
+			borderColor: fieldPalette(theme).hoverBorderColor,
+		},
+		"&.Mui-focused": {
+			backgroundColor: fieldPalette(theme).focusBackground,
+			boxShadow: `0 0 0 3px ${fieldPalette(theme).focusRing}`,
+		},
+		"&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+			borderColor: fieldPalette(theme).focusColor,
+			borderWidth: "1px",
+		},
 		width: '100%',
 	},
 	inputRootSmall: {
-		color: 'inherit',
+		color: fieldPalette(theme).textColor,
+		backgroundColor: fieldPalette(theme).background,
+		borderRadius: "16px",
+		boxShadow: "none",
+		transition: "background-color 160ms ease, box-shadow 160ms ease, border-color 160ms ease",
+		"& .MuiOutlinedInput-notchedOutline": {
+			borderColor: fieldPalette(theme).borderColor,
+			borderWidth: "1px",
+		},
+		"&:hover": {
+			backgroundColor: fieldPalette(theme).hoverBackground,
+		},
+		"&:hover .MuiOutlinedInput-notchedOutline": {
+			borderColor: fieldPalette(theme).hoverBorderColor,
+		},
+		"&.Mui-focused": {
+			backgroundColor: fieldPalette(theme).focusBackground,
+			boxShadow: `0 0 0 3px ${fieldPalette(theme).focusRing}`,
+		},
+		"&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+			borderColor: fieldPalette(theme).focusColor,
+			borderWidth: "1px",
+		},
 		width: '100%',
 		height: '38px',
+		minHeight: '38px',
+	},
+	inputInputSmall: {
+		color: fieldPalette(theme).textColor,
+		paddingTop: "4px !important",
+		paddingBottom: "4px !important",
+		paddingLeft: theme.spacing(7),
+		transition: theme.transitions.create('width'),
+		width: '100%',
+		paddingRight: '40px',
+		"&::placeholder": {
+			color: fieldPalette(theme).placeholderColor,
+			opacity: 1,
+		},
+		[theme.breakpoints.up('sm')]: {
+			width: 120,
+			'&:focus': {
+				width: 200,
+			},
+		},
 	},
 	inputInput: {
-		paddingTop: theme.spacing(1),
-		paddingBottom: theme.spacing(1),
+		color: fieldPalette(theme).textColor,
+		paddingTop: "11px !important",
+		paddingBottom: "11px !important",
 		paddingLeft: theme.spacing(10),
 		transition: theme.transitions.create('width'),
 		width: '100%',
-		paddingRight: '30px',
+		paddingRight: '46px',
+		"&::placeholder": {
+			color: fieldPalette(theme).placeholderColor,
+			opacity: 1,
+		},
 		[theme.breakpoints.up('sm')]: {
 			width: 120,
 			'&:focus': {
@@ -98,29 +167,66 @@ class SearchBox extends AbstractSearchBox {
 		}
 	};
 
+	componentDidMount() {
+		if (super.componentDidMount) super.componentDidMount();
+		const theme = Theme.get();
+		if (theme == null || typeof theme.onChangeMode !== "function") return;
+		this.previousChangeModeListener = theme.changeModeListener;
+		theme.onChangeMode((mode) => {
+			if (typeof this.previousChangeModeListener === "function") this.previousChangeModeListener(mode);
+			this.setState({ __searchBoxThemeMode: mode });
+		});
+	};
+
 	render() {
 		if (!this.state.visible) return (<React.Fragment/>);
-		const {classes} = this.props;
+		const {classes, theme: providedTheme} = this.props;
+		const runtimeTheme = Theme.get();
+		const activeTheme = runtimeTheme != null ? runtimeTheme : providedTheme;
+		const palette = fieldPalette(activeTheme);
+		const isDark = activeTheme != null && activeTheme.palette != null && activeTheme.palette.mode === "dark";
+		const darkInputSx = isDark ? {
+			backgroundColor: `${palette.background} !important`,
+			"& .MuiOutlinedInput-notchedOutline": {
+				borderColor: `${palette.borderColor} !important`,
+			},
+			"&:hover": {
+				backgroundColor: `${palette.hoverBackground} !important`,
+			},
+			"&:hover .MuiOutlinedInput-notchedOutline": {
+				borderColor: `${palette.hoverBorderColor} !important`,
+			},
+			"&.Mui-focused": {
+				backgroundColor: `${palette.focusBackground} !important`,
+				boxShadow: `0 0 0 3px ${palette.focusRing}`,
+			},
+			"&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+				borderColor: `${palette.focusColor} !important`,
+			},
+		} : undefined;
 		const placeholder = this.translate(this.props.placeholder != null && this.props.placeholder !== "" ? this.props.placeholder : "Search...");
 		return (
-			<div className={classNames(classes.root, "layout horizontal")} style={{...this.style(),position:'relative'}}>
+			<div className={classNames(classes.root, "layout horizontal", "alexandria-searchbox", isDark ? "dark" : undefined)} style={{...this.style(),position:'relative'}}>
 				<div className={classes.grow}/>
 				<div style={{position:'relative'}}>
 					<div className={classes.search} elevation={1}>
-						<div className={classes.searchIcon}>
+						<div className={classNames(classes.searchIcon, this.props.size === "Small" ? classes.searchIconSmall : undefined)} style={isDark ? { color: palette.placeholderColor } : undefined}>
 							<SearchIcon/>
 						</div>
 						<OutlinedInput
+							key={isDark ? "dark" : "light"}
 							placeholder={placeholder}
 							value={this.state.value}
 							onChange={this.handleSearch.bind(this)}
 							ref={this.input}
+							fullWidth
+							sx={darkInputSx}
 							classes={{
 								root: this.props.size === "Small" ? classes.inputRootSmall : classes.inputRoot,
-								input: classes.inputInput,
+								input: this.props.size === "Small" ? classes.inputInputSmall : classes.inputInput,
 							}}
 						/>
-						{this.state.value != null && this.state.value !== "" && <a onClick={this.handleClear.bind(this)} className={classNames(classes.clearIcon, this.props.size === "Small" ? classes.clearIconSmall : undefined)}><ClearIcon/></a>}
+						{this.state.value != null && this.state.value !== "" && <a onClick={this.handleClear.bind(this)} className={classNames(classes.clearIcon, this.props.size === "Small" ? classes.clearIconSmall : undefined)} style={isDark ? { color: palette.placeholderColor } : undefined}><ClearIcon/></a>}
 					</div>
 					{this.props.showCountMessage && <div className={classNames(classes.count, "layout horizontal end-justified")}><div title={this.countHint()}>{this.countMessage()}</div></div>}
 				</div>
@@ -133,7 +239,7 @@ class SearchBox extends AbstractSearchBox {
 	};
 
 	refreshCondition = (condition) => {
-		this.setState({value: condition});
+		this.setState({value: condition != null ? condition : ""});
 	};
 
 	handleClear = (e) => {

@@ -1,10 +1,9 @@
-import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractOpenSite from "../../../gen/displays/components/AbstractOpenSite";
 import OpenSiteNotifier from "../../../gen/displays/notifiers/OpenSiteNotifier";
 import OpenSiteRequester from "../../../gen/displays/requesters/OpenSiteRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import Actionable from "./Actionable"
 
 class OpenSite extends AbstractOpenSite {

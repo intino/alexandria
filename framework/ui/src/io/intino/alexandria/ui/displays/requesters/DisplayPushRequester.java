@@ -15,11 +15,12 @@ public abstract class DisplayPushRequester {
 		if (display == null) return;
 		String operation = operation(message);
 		if (operation.equals("didMount")) display.didMount();
+		if (operation.equals("ready")) display.ready();
 	}
 
 	public <D extends Display> D display(UIClient client, UIMessage message) {
 		Soul soul = client != null ? client.soul() : null;
-		return soul != null ? soul.displayWithId(message.owner(), message.context(), message.display()) : null;
+		return soul != null ? (D) soul.displayWithId(message.owner(), message.context(), message.display()) : null;
 	}
 
 	public String operation(UIMessage message) {

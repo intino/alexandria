@@ -1,10 +1,10 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractSetDarkMode from "../../../gen/displays/components/AbstractSetDarkMode";
 import SetDarkModeNotifier from "../../../gen/displays/notifiers/SetDarkModeNotifier";
 import SetDarkModeRequester from "../../../gen/displays/requesters/SetDarkModeRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import Theme from 'app-elements/gen/Theme';
 import Actionable from "./Actionable";
 

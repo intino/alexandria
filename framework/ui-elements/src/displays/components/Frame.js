@@ -1,5 +1,5 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractFrame from "../../../gen/displays/components/AbstractFrame";
 import FrameNotifier from "../../../gen/displays/notifiers/FrameNotifier";
 import FrameRequester from "../../../gen/displays/requesters/FrameRequester";

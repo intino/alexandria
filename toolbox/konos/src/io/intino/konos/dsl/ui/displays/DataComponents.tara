@@ -61,7 +61,9 @@ Concept DataComponents
 
 	Concept Image extends Component
 		var string value = empty
+		var string darkValue = empty
 		var string defaultValue = empty
+		var string defaultDarkValue = empty
 		var boolean allowFullscreen = false
 		var integer:{%} mobileReduceFactor = 0%
 		var boolean colorInvertedWithDarkMode = false

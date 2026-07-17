@@ -12,6 +12,7 @@ import java.util.Set;
 
 public abstract class Component<DN extends ComponentNotifier, B extends Box> extends AlexandriaDisplay<DN, B> {
 	private String color;
+	private String darkColor;
 	private boolean visible = true;
 	private List<ShowListener> showListeners = new ArrayList<>();
 	private List<HideListener> hideListeners = new ArrayList<>();

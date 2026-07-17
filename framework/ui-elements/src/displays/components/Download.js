@@ -1,11 +1,11 @@
-import React, { Suspense } from "react";
-import { withStyles } from '@material-ui/core/styles';
+import React, {Suspense} from "react";
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractDownload from "../../../gen/displays/components/AbstractDownload";
 import DownloadNotifier from "../../../gen/displays/notifiers/DownloadNotifier";
 import DownloadRequester from "../../../gen/displays/requesters/DownloadRequester";
 import DownloadDialog from "./actionable/DownloadDialog";
 import Actionable from "./Actionable";
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 const styles = theme => ({...Actionable.Styles(theme)});

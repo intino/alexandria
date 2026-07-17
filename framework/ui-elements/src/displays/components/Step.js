@@ -1,13 +1,13 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractStep from "../../../gen/displays/components/AbstractStep";
 import StepNotifier from "../../../gen/displays/notifiers/StepNotifier";
 import StepRequester from "../../../gen/displays/requesters/StepRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import MuiStep from "@material-ui/core/Step";
-import MuiStepLabel from "@material-ui/core/StepLabel";
+import MuiStep from "@mui/material/Step";
+import MuiStepLabel from "@mui/material/StepLabel";
 import StepIcon from "./icon/StepIcon";
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import Delayer from "../../util/Delayer";
 
 const styles = theme => ({});

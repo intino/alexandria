@@ -17,8 +17,8 @@ import io.intino.alexandria.ui.model.Datasource;
 import io.intino.alexandria.ui.model.datasource.Filter;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -41,8 +41,8 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         super(box);
     }
 
-    @Override
-    public void didMount() {
+	@Override
+	public void didMount() {
         notifier.setup(new CollectionSetup().itemCount(behavior.itemCount()));
         if (selection != null) notifier.refreshSelection(selection);
         notifyReady();
@@ -95,11 +95,11 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         setup();
     }
 
-    public void reload() {
+	public void reload() {
         if (behavior == null) return;
         behavior.reload();
         notifyRefreshItemCount();
-        selection(new ArrayList<>());
+        selection(new ArrayList<>(), false);
     }
 
     public void reloadWithSelection() {
@@ -110,7 +110,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         refreshSelection(selectedIndexList);
     }
 
-    public boolean ready() {
+        public boolean isReady() {
         return ready;
     }
 
@@ -118,7 +118,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         return (D) source;
     }
 
-    public void clearFilters() {
+	public void clearFilters() {
         behavior.clearFilters();
         notifyRefreshItemCount();
     }
@@ -142,31 +142,31 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         behavior.filters(filters);
     }
 
-    public void filter(String grouping, List<String> groups) {
+	public void filter(String grouping, List<String> groups) {
         if (behavior == null) return;
         behavior.filter(grouping, groups);
         notifyRefreshItemCount();
     }
 
-    public void filter(java.util.Map<String, List<String>> groupings) {
+	public void filter(java.util.Map<String, List<String>> groupings) {
         if (behavior == null) return;
         behavior.filter(groupings);
         notifyRefreshItemCount();
     }
 
-    public void filter(String grouping, Instant from, Instant to) {
+	public void filter(String grouping, Instant from, Instant to) {
         if (behavior == null) return;
         behavior.filter(grouping, from, to);
         notifyRefreshItemCount();
     }
 
-    public void filter(String condition) {
+	public void filter(String condition) {
         if (behavior == null) return;
         behavior.condition(condition);
         notifyRefreshItemCount();
     }
 
-    public void filter(Timetag timetag) {
+	public void filter(Timetag timetag) {
         if (behavior == null) return;
         behavior.timetag(timetag);
         notifyRefreshItemCount();
@@ -216,8 +216,12 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     }
 
     public void selection(List<String> selection) {
+        selection(selection, true);
+    }
+
+    private void selection(List<String> selection, boolean notifyListeners) {
         this.selection = selection;
-        new ArrayList<>(selectionListeners).forEach(l -> l.accept(new SelectionEvent(this, itemsOf(selection))));
+        if (notifyListeners) new ArrayList<>(selectionListeners).forEach(l -> l.accept(new SelectionEvent(this, itemsOf(selection))));
         notifier.refreshSelection(selection);
     }
 

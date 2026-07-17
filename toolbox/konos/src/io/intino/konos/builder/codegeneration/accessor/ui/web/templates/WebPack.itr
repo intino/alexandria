@@ -55,6 +55,7 @@ rule type(webpack)
 		resolve: {
 			alias: {
 				<<$alias>>
+				"@mui/styles$$": path.resolve(__dirname, './src/util/muiStylesCompat.js'),
 				"app-elements": path.resolve(__dirname, '.'),
 				"$serviceName": path.resolve(__dirname, '.')
 			},

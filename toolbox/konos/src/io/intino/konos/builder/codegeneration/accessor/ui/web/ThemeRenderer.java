@@ -51,7 +51,7 @@ public class ThemeRenderer extends UIRenderer {
 
 	private void addProperty(String name, String color, String darkColor, FrameBuilder result) {
 		result.add(name, color);
-		result.add("dark" + firstUpperCase(name), darkColor != null ? darkColor : color);
+		result.add("dark" + firstUpperCase(name), darkColor != null && !darkColor.trim().isEmpty() ? darkColor : color);
 	}
 
 	private Frame typography(Theme theme) {

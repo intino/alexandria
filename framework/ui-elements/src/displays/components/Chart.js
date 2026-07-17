@@ -1,5 +1,6 @@
-import React, { Suspense } from "react";
-import { Typography, withStyles} from "@material-ui/core";
+import React, {Suspense} from "react";
+import {Typography} from "@mui/material";
+import {withStyles} from "alexandria-ui-elements/src/util/muiStylesCompat";
 import AbstractChart from "../../../gen/displays/components/AbstractChart";
 import ChartNotifier from "../../../gen/displays/notifiers/ChartNotifier";
 import ChartRequester from "../../../gen/displays/requesters/ChartRequester";

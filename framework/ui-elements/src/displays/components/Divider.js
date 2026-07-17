@@ -1,10 +1,11 @@
 import React from "react";
-import {Divider as MuiDivider, withStyles} from '@material-ui/core';
+import {Divider as MuiDivider} from '@mui/material';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractDivider from "../../../gen/displays/components/AbstractDivider";
 import DividerNotifier from "../../../gen/displays/notifiers/DividerNotifier";
 import DividerRequester from "../../../gen/displays/requesters/DividerRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import {withSnackbar} from "notistack";
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 
 const styles = theme => ({
 	divider : {

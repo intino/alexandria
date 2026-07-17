@@ -1,23 +1,34 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractTimeline from "../../../gen/displays/components/AbstractTimeline";
 import TimelineNotifier from "../../../gen/displays/notifiers/TimelineNotifier";
 import TimelineRequester from "../../../gen/displays/requesters/TimelineRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { ArrowDropDown, ArrowDropUp, Close, MoreHoriz } from "@material-ui/icons";
-import { Typography, Dialog, DialogActions, DialogContent, DialogContentText,
-         DialogTitle, Button, Slide, IconButton, AppBar, FormControlLabel, Checkbox } from '@material-ui/core';
-import { withSnackbar } from 'notistack';
-import classnames from "classnames";
+import {Close, MoreHoriz} from "@mui/icons-material";
+import {
+    AppBar,
+    Button,
+    Checkbox,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    FormControlLabel,
+    IconButton,
+    Slide,
+    Typography
+} from '@mui/material';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import Highcharts from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';
-import Delayer from 'alexandria-ui-elements/src/util/Delayer';
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
+import {DndProvider} from 'react-dnd'
+import {HTML5Backend} from 'react-dnd-html5-backend'
 import TimelineMagnitude from './timeline/magnitude'
 import Theme from "app-elements/gen/Theme";
 import 'alexandria-ui-elements/res/styles/components/timeline/styles.css';
+import {dialogActionButtonStyles} from "./ButtonStyles";
 
 const styles = theme => ({
     magnitude : { position:'relative', padding:'5px 0', marginBottom: '1px' },
@@ -142,7 +153,7 @@ class Timeline extends AbstractTimeline {
             this.requester.fetch({ magnitude: this.state.magnitude.name, start: this.state.history.from, end: this.state.history.to })
         }, 100);
         return (
-            <Dialog fullScreen={true} TransitionComponent={Timeline.SlideTransition} open={this.state.history.visible} onClose={this.handleCloseHistoryDialog.bind(this)}>
+            <Dialog fullScreen={true} slots={{ transition: Timeline.SlideTransition }} open={this.state.history.visible} onClose={this.handleCloseHistoryDialog.bind(this)}>
                 <AppBar className={classes.dialogHeader}>
                     <div className="layout horizontal flex center">
                         <Typography variant="h5">{this.state.magnitude.label}</Typography>
@@ -399,7 +410,7 @@ class Timeline extends AbstractTimeline {
                       </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                      <Button onClick={this.handleCloseConfigurationDialog.bind(this)} color="primary" autoFocus>{this.translate("Close")}</Button>
+                      <Button sx={dialogActionButtonStyles} onClick={this.handleCloseConfigurationDialog.bind(this)} color="primary" autoFocus>{this.translate("Close")}</Button>
                     </DialogActions>
                 </Dialog>
             </div>

@@ -18,8 +18,8 @@ public abstract class PageCollection<DN extends PageCollectionNotifier, B extend
         super(box);
     }
 
-    @Override
-    public void didMount() {
+	@Override
+	public void didMount() {
         notifier.setupPageCollection((PageCollectionSetup) new PageCollectionSetup().pageSize(pageSize).itemCount(behavior() != null ? behavior().itemCount() : 0));
         notifyReady();
     }
@@ -28,7 +28,7 @@ public abstract class PageCollection<DN extends PageCollectionNotifier, B extend
         return pageSize;
     }
 
-    public void notifyItemsRendered(io.intino.alexandria.schemas.CollectionItemsRenderedInfo info) {
+	public void notifyItemsRendered(io.intino.alexandria.schemas.CollectionItemsRenderedInfo info) {
         promisedChildren(info.items()).forEach(this::register);
         List<Display> children = children(info.visible());
         for (int i=0; i<children.size(); i++) {
@@ -50,7 +50,7 @@ public abstract class PageCollection<DN extends PageCollectionNotifier, B extend
         behavior.moreItems(info);
     }
 
-    public void changePage(Integer page) {
+	public void changePage(Integer page) {
         PageCollectionBehavior behavior = behavior();
         if (behavior == null) return;
         behavior.page(page);
@@ -72,7 +72,7 @@ public abstract class PageCollection<DN extends PageCollectionNotifier, B extend
     protected abstract AddCollectionItemEvent itemEvent(Display c, int index);
 
     @Override
-    void setup() {
+	void setup() {
         PageDatasource source = source();
         if (source == null) return;
         PageCollectionBehavior behavior = behavior();

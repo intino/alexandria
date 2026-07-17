@@ -161,6 +161,9 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	public void didMount() {
 	}
 
+	public void ready() {
+	}
+
 	public void refresh() {
 	}
 

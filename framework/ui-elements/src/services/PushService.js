@@ -3,8 +3,9 @@ const PushService = (function () {
     var service = {};
 
     service.pendingMessages = [];
-    service.pendingIncomingMessages = {};
-    service.pendingIncomingFlush = {};
+    service.pendingIncomingMessages = [];
+    service.pendingIncomingFlush = false;
+    service.flushingIncomingMessages = false;
     service.connections = [];
     service.retries = [];
     service.pendingConnections = [];
@@ -37,10 +38,7 @@ const PushService = (function () {
             var data = JSON.parse(event.data);
             var listeners = callback(data.n).slice(0);
             if (listeners.length > 0) {
-                listeners.forEach(function (callback) {
-                    callback(data.p);
-                });
-                return;
+                if (dispatchToListeners(listeners, data.p)) return;
             }
             queueIncomingMessage(data.n, data.p);
         };
@@ -84,17 +82,17 @@ const PushService = (function () {
         if (!(name in callbacks))
             callbacks[name] = [];
         callbacks[name].push(callback);
-        if (service.pendingIncomingMessages[name] != null && service.pendingIncomingMessages[name].length > 0) {
-            if (!service.pendingIncomingFlush[name]) {
-                service.pendingIncomingFlush[name] = true;
-                window.setTimeout(() => flushPendingIncomingMessages(name), 0);
-            }
+        if (service.pendingIncomingMessages.length > 0 && !service.pendingIncomingFlush) {
+            service.pendingIncomingFlush = true;
+            window.setTimeout(() => flushPendingIncomingMessages(), 0);
         }
         return {
             deregister: function () {
+                if (callbacks[name] == null) return;
                 var index = callbacks[name].indexOf(callback);
                 if (index === -1) return;
                 callbacks[name].splice(index, 1);
+                if (callbacks[name].length === 0) delete callbacks[name];
             }
         }
     };
@@ -128,29 +126,71 @@ const PushService = (function () {
     }
 
     function queueIncomingMessage(name, payload) {
-        if (!(name in service.pendingIncomingMessages))
-            service.pendingIncomingMessages[name] = [];
-        service.pendingIncomingMessages[name].push(payload);
-
-        if (service.pendingIncomingFlush[name]) return;
-        service.pendingIncomingFlush[name] = true;
-        window.setTimeout(() => flushPendingIncomingMessages(name), 0);
+        service.pendingIncomingMessages.push({ name, payload });
+        if (service.pendingIncomingFlush) return;
+        service.pendingIncomingFlush = true;
+        window.setTimeout(() => flushPendingIncomingMessages(), 0);
     }
 
-    function flushPendingIncomingMessages(name) {
-        const listeners = callback(name).slice(0);
-        const pending = service.pendingIncomingMessages[name];
-        if (pending == null || pending.length === 0 || listeners.length === 0) {
-            service.pendingIncomingFlush[name] = false;
+    function flushPendingIncomingMessages() {
+        if (service.flushingIncomingMessages) return;
+        if (service.pendingIncomingMessages.length === 0) {
+            service.pendingIncomingFlush = false;
             return;
         }
-        service.pendingIncomingMessages[name] = [];
-        service.pendingIncomingFlush[name] = false;
-        pending.forEach(function (payload) {
-            listeners.forEach(function (listener) {
-                listener(payload);
-            });
+
+        service.flushingIncomingMessages = true;
+        const queuedMessages = service.pendingIncomingMessages.slice(0);
+        service.pendingIncomingMessages = [];
+        const remaining = [];
+        const blockedTargets = new Set();
+        service.pendingIncomingFlush = false;
+        queuedMessages.forEach(function (pendingMessage) {
+            const name = pendingMessage.name;
+            const payload = pendingMessage.payload;
+            const target = targetKey(name, payload);
+            if (blockedTargets.has(target)) {
+                remaining.push(pendingMessage);
+                return;
+            }
+            const listeners = callback(name).slice(0);
+            if (listeners.length === 0) {
+                blockedTargets.add(target);
+                remaining.push(pendingMessage);
+                return;
+            }
+            const handled = dispatchToListeners(listeners, payload);
+            if (!handled) {
+                blockedTargets.add(target);
+                remaining.push(pendingMessage);
+                return;
+            }
         });
+        service.pendingIncomingMessages = remaining.concat(service.pendingIncomingMessages);
+        service.flushingIncomingMessages = false;
+
+        if (service.pendingIncomingMessages.length > 0 && !service.pendingIncomingFlush) {
+            service.pendingIncomingFlush = true;
+            window.setTimeout(() => flushPendingIncomingMessages(), 0);
+        }
+    }
+
+    function targetKey(name, payload) {
+        if (payload == null) return name + "|global";
+        const display = payload.i != null ? payload.i : "";
+        const owner = payload.o != null ? payload.o : "";
+        const component = payload.n != null ? payload.n : "";
+        if (display === "" && owner === "" && component === "") return name + "|global";
+        return owner + "|" + display + "|" + component;
+    }
+
+    function dispatchToListeners(listeners, payload) {
+        let handled = false;
+        listeners.forEach(function (listener) {
+            const result = listener(payload) === true;
+            if (result) handled = true;
+        });
+        return handled;
     }
 
     function sendPendingMessages(service) {
@@ -158,6 +198,7 @@ const PushService = (function () {
             const pendingMessage = service.pendingMessages[i];
             service.send(pendingMessage.message, pendingMessage.app);
         }
+        service.pendingMessages = [];
     }
 
     function ping(socket, service) {

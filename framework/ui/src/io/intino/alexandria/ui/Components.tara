@@ -290,6 +290,7 @@ Component baseDialog
 
 	Request open
 	Request close
+	Request ready
 
 Component dialog as ExtensionOf(baseDialog)
 Component alertDialog as ExtensionOf(baseDialog)

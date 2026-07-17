@@ -1,11 +1,7 @@
 import React from "react";
-import classnames from "classnames";
-import { Typography, IconButton } from '@material-ui/core';
-import { NavigateBefore, NavigateNext } from "@material-ui/icons";
+import {Typography} from '@mui/material';
 import Theme from "app-elements/gen/Theme";
-import Moment from 'react-moment';
-import 'moment-timezone';
-import Highcharts from 'highcharts';
+import moment from 'moment';
 
 const TimelineSummaryStyles = {
     container : { height:'100%',margin:'2px 20px 5px 0' },
@@ -40,7 +36,7 @@ const TimelineSummary = ({ summary, evolution, width, unit, translate }) => {
         return (
             <div className="layout vertical flex end-justified">
                 <div className="layout horizontal end-justified center flex">
-                    {date && <div className="layout horizontal start-justified flex" style={{...TimelineSummaryStyles.date,marginRight:'10px'}}><Moment format="DD/MM/YYYY HH:mm" date={date} locale={language}/></div>}
+                    {date && <div className="layout horizontal start-justified flex" style={{...TimelineSummaryStyles.date,marginRight:'10px'}}>{moment(date).locale(language).format("DD/MM/YYYY HH:mm")}</div>}
                     <span>{formattedValue}</span>
                     {formattedUnit()}
                 </div>

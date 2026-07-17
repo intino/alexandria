@@ -1,14 +1,13 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractReel from "../../../gen/displays/components/AbstractReel";
 import ReelNotifier from "../../../gen/displays/notifiers/ReelNotifier";
 import ReelRequester from "../../../gen/displays/requesters/ReelRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
+import {DndProvider} from 'react-dnd'
+import {HTML5Backend} from 'react-dnd-html5-backend'
 import ReelSignal from './reel/signal'
-import Theme from "app-elements/gen/Theme";
 
 const ReelStepWidth = 20;
 const ReelStepLabelWidth = 200;

@@ -1,16 +1,27 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractWizardNavigator from "../../../gen/displays/components/AbstractWizardNavigator";
 import WizardNavigatorNotifier from "../../../gen/displays/notifiers/WizardNavigatorNotifier";
 import WizardNavigatorRequester from "../../../gen/displays/requesters/WizardNavigatorRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
-import MuiButton from "@material-ui/core/Button";
-import MuiStep from "@material-ui/core/Step";
-import MuiStepLabel from "@material-ui/core/StepLabel";
-import StepIcon from "./icon/StepIcon";
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
+import MuiButton from "@mui/material/Button";
+import MuiStep from "@mui/material/Step";
+import MuiStepLabel from "@mui/material/StepLabel";
+import {dialogActionButtonStyles, dialogPrimaryButtonStyles} from "./ButtonStyles";
 
-const styles = theme => ({});
+const styles = theme => ({
+	button: {
+		...dialogActionButtonStyles(theme),
+		padding: "8px 14px",
+		minHeight: "36px",
+	},
+	primaryButton: {
+		...dialogPrimaryButtonStyles(theme),
+		padding: "8px 14px",
+		minHeight: "36px",
+	},
+});
 
 class WizardNavigator extends AbstractWizardNavigator {
 
@@ -34,10 +45,10 @@ class WizardNavigator extends AbstractWizardNavigator {
 	    const count = this.state.stepsCount;
 		return (
 		    <div className="layout horizontal center flex">
-                <MuiButton onClick={() => this.requester.back()} disabled={!this.state.allowBack}>{this.translate("Back")}</MuiButton>
+                <MuiButton className={this.props.classes.button} onClick={() => this.requester.back()} disabled={!this.state.allowBack}>{this.translate("Back")}</MuiButton>
 			    <div className="layout horizontal center-center flex">{this._renderSteps()}</div>
-			    <MuiButton onClick={() => this.requester.next()} style={{display:active != count-1 ? "block" : "none"}} disabled={!this.state.allowNext}>{this.translate("Next")}</MuiButton>
-			    <MuiButton onClick={() => this.handleFinish()} style={{display:this.state.allowFinish ? "block" : "none"}}>{this.translate("Finish")}</MuiButton>
+			    <MuiButton className={this.props.classes.button} onClick={() => this.requester.next()} style={{display:active != count-1 ? "block" : "none"}} disabled={!this.state.allowNext}>{this.translate("Next")}</MuiButton>
+			    <MuiButton className={this.props.classes.primaryButton} variant="contained" onClick={() => this.handleFinish()} style={{display:this.state.allowFinish ? "block" : "none"}}>{this.translate("Finish")}</MuiButton>
 		    </div>
         );
 	};

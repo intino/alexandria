@@ -1,11 +1,11 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractGroupingToolbar from "../../../gen/displays/components/AbstractGroupingToolbar";
 import GroupingToolbarNotifier from "../../../gen/displays/notifiers/GroupingToolbarNotifier";
 import GroupingToolbarRequester from "../../../gen/displays/requesters/GroupingToolbarRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { Chip, Button, Typography } from '@material-ui/core';
-import { withSnackbar } from 'notistack';
+import {Button, Chip, Typography} from '@mui/material';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import 'alexandria-ui-elements/res/styles/layout.css';
 
 const styles = theme => ({

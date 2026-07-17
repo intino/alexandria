@@ -1,10 +1,9 @@
-import React, { Suspense } from "react";
-import { withStyles } from '@material-ui/core/styles';
+import React, {Suspense} from "react";
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractOpenLayer from "../../../gen/displays/components/AbstractOpenLayer";
 import OpenLayerNotifier from "../../../gen/displays/notifiers/OpenLayerNotifier";
 import OpenLayerRequester from "../../../gen/displays/requesters/OpenLayerRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import Layer from 'alexandria-ui-elements/src/displays/components/Layer';
 import Actionable from "./Actionable";
 
 const styles = theme => ({});

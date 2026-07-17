@@ -1,10 +1,9 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractImageAvatar from "../../../gen/displays/components/AbstractImageAvatar";
 import ImageAvatarNotifier from "../../../gen/displays/notifiers/ImageAvatarNotifier";
 import ImageAvatarRequester from "../../../gen/displays/requesters/ImageAvatarRequester";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
-import Delayer from '../../util/Delayer';
 
 const styles = theme => ({
 	value: {

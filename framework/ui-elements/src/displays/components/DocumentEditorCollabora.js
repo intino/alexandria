@@ -1,10 +1,10 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractDocumentEditorCollabora from "../../../gen/displays/components/AbstractDocumentEditorCollabora";
 import DocumentEditorCollaboraNotifier from "../../../gen/displays/notifiers/DocumentEditorCollaboraNotifier";
 import DocumentEditorCollaboraRequester from "../../../gen/displays/requesters/DocumentEditorCollaboraRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 
 const styles = theme => ({});
 

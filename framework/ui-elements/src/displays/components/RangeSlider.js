@@ -1,7 +1,7 @@
 import React from "react";
-import { TextField } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import { withSnackbar } from 'notistack';
+import {TextField} from '@mui/material';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import AbstractRangeSlider from "../../../gen/displays/components/AbstractRangeSlider";
 import RangeSliderNotifier from "../../../gen/displays/notifiers/RangeSliderNotifier";
 import RangeSliderRequester from "../../../gen/displays/requesters/RangeSliderRequester";
@@ -40,19 +40,19 @@ class RangeSlider extends AbstractRangeSlider {
                 <TextField format={this.variant("body1")} type="number"
                            value={this.state.editorValue} onChange={this.handleValueEditorChange.bind(this)} onKeyPress={this.handleValueEditorKeyPress.bind(this)}
                            style={{width:'100%'}} autoFocus={true}
-                           inputProps={{
+                           slotProps={{ htmlInput: {
                                min: range.min !== -1 ? range.min : undefined,
                                max: range.max !== -1 ? range.max : undefined,
                                step: 1
-                           }}/>
+                           } }}/>
                 <TextField format={this.variant("body1")} type="number"
                            value={this.state.editorTo} onChange={this.handleToEditorChange.bind(this)} onKeyPress={this.handleValueEditorKeyPress.bind(this)}
                            style={{width:'100%',marginTop:'10px'}} autoFocus={true}
-                           inputProps={{
+                           slotProps={{ htmlInput: {
                                min: range.min !== -1 ? range.min : undefined,
                                max: range.max !== -1 ? range.max : undefined,
                                step: 1
-                           }}/>
+                           } }}/>
             </React.Fragment>
 		);
 	};

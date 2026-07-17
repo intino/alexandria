@@ -1,13 +1,13 @@
-    import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import React from "react";
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import classNames from "classnames";
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import Collapse from "@material-ui/core/Collapse";
-import ExpandMore from "@material-ui/icons/ExpandMore";
-import ExpandLess from "@material-ui/icons/ExpandLess";
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import ListSubheader from '@mui/material/ListSubheader';
+import Collapse from "@mui/material/Collapse";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import ExpandLess from "@mui/icons-material/ExpandLess";
 import AbstractSelectorMenu from "../../../gen/displays/components/AbstractSelectorMenu";
 import SelectorMenuNotifier from "../../../gen/displays/notifiers/SelectorMenuNotifier";
 import SelectorMenuRequester from "../../../gen/displays/requesters/SelectorMenuRequester";
@@ -67,15 +67,15 @@ class SelectorMenu extends AbstractSelectorMenu {
 		const { classes } = this.props;
 
 		this._index++;
-		return (<ListItem button className={classNames(this._index === this.state.selected ? classes.selected : undefined, classes.item)}
+		return (<ListItemButton className={classNames(this._index === this.state.selected ? classes.selected : undefined, classes.item)}
 						  selected={this._index === this.state.selected}
-						  onClick={this.handleSelect.bind(this, this._index)}>{item}</ListItem>);
+						  onClick={this.handleSelect.bind(this, this._index)}>{item}</ListItemButton>);
 	};
 
 	renderBlock = (block) => {
 		if (block.props.collapsible) return (
 			<React.Fragment>
-				<ListItem button onClick={this.handleOpen.bind(this, block)}><ListItemText>{block.props.label}</ListItemText>{this.state.open[block.props.label] ? <ExpandLess /> : <ExpandMore />}</ListItem>
+				<ListItemButton onClick={this.handleOpen.bind(this, block)}><ListItemText>{block.props.label}</ListItemText>{this.state.open[block.props.label] ? <ExpandLess /> : <ExpandMore />}</ListItemButton>
 				<Collapse in={this.state.open[block.props.label]} timeout="auto">{this.renderBlockList(block)}</Collapse>
 			</React.Fragment>
 		);

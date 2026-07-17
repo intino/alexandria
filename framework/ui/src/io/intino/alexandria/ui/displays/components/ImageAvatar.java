@@ -30,4 +30,9 @@ public class ImageAvatar<DN extends ImageAvatarNotifier, B extends Box> extends 
 		return AvatarUtil.generateAvatar(text, color() != null ? color() : "black");
 	}
 
+	@Override
+	String serializedDarkValue() {
+		return serializedValue();
+	}
+
 }

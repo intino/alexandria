@@ -30,7 +30,7 @@ public class JMXServerTemplate extends Template {
 		rules.add(rule().condition(all(allTypes("returnType", "list"), trigger("returntype"))).output(literal("java.util.List<")).output(placeholder("value")).output(literal(">")));
 		rules.add(rule().condition(all(allTypes("returnType"), trigger("returntype"))).output(placeholder("value")));
 		rules.add(rule().condition(trigger("quoted")).output(literal("\"")).output(placeholder("value")).output(literal("\"")));
-		rules.add(rule().condition(all(any(any(any(attribute("", "String"), attribute("", "Double")), attribute("", "Integer")), attribute("", "Long")), trigger("fulltype"))).output(literal("java.lang.")).output(placeholder("")));
+		rules.add(rule().condition(all(any(any(any(attribute("","String"), attribute("","Double")), attribute("","Integer")), attribute("","Long")), trigger("fulltype"))).output(literal("java.lang.")).output(placeholder("")));
 		return rules;
 	}
 

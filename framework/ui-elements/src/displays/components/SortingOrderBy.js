@@ -1,11 +1,11 @@
 import React from "react";
-import {withStyles} from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractSortingOrderBy from "../../../gen/displays/components/AbstractSortingOrderBy";
 import SortingOrderByNotifier from "../../../gen/displays/notifiers/SortingOrderByNotifier";
 import SortingOrderByRequester from "../../../gen/displays/requesters/SortingOrderByRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import {withSnackbar} from 'notistack';
-import {TableCell, TableSortLabel, Typography} from "@material-ui/core";
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
+import {TableCell, TableSortLabel, Typography} from "@mui/material";
 import {BaseSortingStyles} from "./BaseSorting";
 
 const styles = theme => ({

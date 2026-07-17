@@ -1,10 +1,9 @@
-import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractOpenPreviousItem from "../../../gen/displays/components/AbstractOpenPreviousItem";
 import OpenPreviousItemNotifier from "../../../gen/displays/notifiers/OpenPreviousItemNotifier";
 import OpenPreviousItemRequester from "../../../gen/displays/requesters/OpenPreviousItemRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import Actionable from "./Actionable";
 
 const styles = theme => ({});

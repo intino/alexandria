@@ -26,6 +26,13 @@ public class Image<DN extends ImageNotifier, B extends Box> extends AbstractImag
 		return result;
 	}
 
+	@Override
+	String serializedDarkValue() {
+		URL value = darkValue();
+		if (value == null) return null;
+		return isFile(value) ? Asset.toResource(baseAssetUrl(), value).toUrl().toString() : value.toString();
+	}
+
 	private boolean isFile(URL value) {
 		try {
 			return value.toString().startsWith("jar:") || new java.io.File(value.toURI()).isFile();

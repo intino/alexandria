@@ -9,12 +9,16 @@ import {
     DialogTitle,
     IconButton,
     Typography
-} from "@material-ui/core";
+} from "@mui/material";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
-import TextField from '@material-ui/core/TextField';
+import TextField from '@mui/material/TextField';
 import Delayer from 'alexandria-ui-elements/src/util/Delayer';
 import StringUtil from 'alexandria-ui-elements/src/util/StringUtil';
 import Theme from "app-elements/gen/Theme";
+import classnames from "classnames";
+import {containerPalette, dialogPaperStyles} from "./ContainerStyles";
+import {dialogActionButtonStyles, dialogPrimaryButtonStyles} from "./ButtonStyles";
+import {linkPalette} from "./ThemeTokens";
 
 const ActionableMui = React.lazy(() => {
 	return new Promise(resolve => {
@@ -27,33 +31,127 @@ export default class Actionable extends AbstractActionable {
 
 	static Styles = theme => ({
 		link : {
-			color: theme.palette.primary.main,
+			color: linkPalette(theme).color,
 			cursor: "pointer",
+			textDecoration: "none",
+			transition: "opacity 120ms ease, color 120ms ease",
+			'&:hover': {
+				color: linkPalette(theme).hoverColor,
+				opacity: 0.88,
+				textDecoration: "none",
+			},
 		},
 		button : {
 			cursor: "pointer",
             whiteSpace: "nowrap",
+			borderRadius: "12px",
+			padding: "5px 12px",
+			minHeight: "32px",
+			textTransform: "uppercase",
+			boxShadow: "none",
+			border: theme.palette.mode === "dark" ? "1px solid rgba(148,163,184,0.14)" : "1px solid rgba(15,23,42,0.06)",
+			background: "transparent",
+			color: theme.palette.mode === "dark" ? "rgba(226,232,240,0.92)" : "rgba(15,23,42,0.82)",
+			transition: "background-color 120ms ease, border-color 120ms ease, color 120ms ease",
+			"&:hover": {
+				border: theme.palette.mode === "dark" ? "1px solid rgba(148,163,184,0.22)" : "1px solid rgba(15,23,42,0.10)",
+				background: theme.palette.mode === "dark" ? "rgba(255,255,255,0.04)" : "rgba(15,23,42,0.03)",
+				boxShadow: "none",
+			},
+			"&.MuiButton-outlined": {
+				border: theme.palette.mode === "dark" ? "1px solid rgba(144,202,249,0.26)" : "1px solid rgba(25,118,210,0.18)",
+				background: "transparent",
+				color: theme.palette.mode === "dark" ? "rgba(226,232,240,0.94)" : theme.palette.primary.main,
+			},
+			"&.MuiButton-outlined:hover": {
+				border: theme.palette.mode === "dark" ? "1px solid rgba(144,202,249,0.40)" : "1px solid rgba(25,118,210,0.26)",
+				background: theme.palette.mode === "dark" ? "rgba(144,202,249,0.08)" : "rgba(25,118,210,0.05)",
+				boxShadow: "none",
+			},
+			"&.MuiButton-contained": {
+				border: theme.palette.mode === "dark" ? "1px solid rgba(144,202,249,0.42)" : "1px solid rgba(25,118,210,0.22)",
+				background: theme.palette.mode === "dark" ? "linear-gradient(180deg, rgba(144,202,249,0.24) 0%, rgba(96,165,250,0.18) 100%)" : "linear-gradient(180deg, rgba(25,118,210,0.16) 0%, rgba(25,118,210,0.11) 100%)",
+				color: theme.palette.mode === "dark" ? "rgba(248,250,252,0.99)" : theme.palette.primary.dark,
+			},
+			"&.MuiButton-contained:hover": {
+				border: theme.palette.mode === "dark" ? "1px solid rgba(144,202,249,0.54)" : "1px solid rgba(25,118,210,0.30)",
+				background: theme.palette.mode === "dark" ? "linear-gradient(180deg, rgba(144,202,249,0.30) 0%, rgba(96,165,250,0.24) 100%)" : "linear-gradient(180deg, rgba(25,118,210,0.22) 0%, rgba(25,118,210,0.16) 100%)",
+				boxShadow: "none",
+			},
+			"&.Mui-disabled": {
+				color: theme.palette.mode === "dark" ? "rgba(148,163,184,0.44)" : "rgba(100,116,139,0.50)",
+				border: theme.palette.mode === "dark" ? "1px solid rgba(71,85,105,0.24)" : "1px solid rgba(148,163,184,0.24)",
+				background: theme.palette.mode === "dark" ? "rgba(15,23,42,0.16)" : "rgba(248,250,252,0.56)",
+				opacity: 1,
+				cursor: "not-allowed",
+				pointerEvents: "auto",
+			},
+			"&.Mui-disabled:hover": {
+				border: theme.palette.mode === "dark" ? "1px solid rgba(71,85,105,0.24)" : "1px solid rgba(148,163,184,0.24)",
+				background: theme.palette.mode === "dark" ? "rgba(15,23,42,0.16)" : "rgba(248,250,252,0.56)",
+				boxShadow: "none",
+			},
+			"&.MuiButton-contained.Mui-disabled": {
+				color: theme.palette.mode === "dark" ? "rgba(148,163,184,0.48)" : "rgba(100,116,139,0.54)",
+				border: theme.palette.mode === "dark" ? "1px solid rgba(71,85,105,0.26)" : "1px solid rgba(148,163,184,0.26)",
+				background: theme.palette.mode === "dark" ? "linear-gradient(180deg, rgba(30,41,59,0.26) 0%, rgba(15,23,42,0.22) 100%)" : "linear-gradient(180deg, rgba(226,232,240,0.62) 0%, rgba(241,245,249,0.78) 100%)",
+			},
 		},
 		iconButton : {
 			cursor: "pointer",
+			borderRadius: "12px",
+			padding: "5px",
+			transition: "background-color 120ms ease, transform 120ms ease",
+			'&:hover': {
+				backgroundColor: theme.palette.mode === "dark" ? "rgba(144,202,249,0.10)" : "rgba(25,118,210,0.07)",
+			},
 		},
 		materialIconButton : {
 			cursor: "pointer",
+			borderRadius: "12px",
+			padding: "5px",
+			transition: "background-color 120ms ease, transform 120ms ease",
+			'&:hover': {
+				backgroundColor: theme.palette.mode === "dark" ? "rgba(144,202,249,0.10)" : "rgba(25,118,210,0.07)",
+			},
 		},
 		readonly : {
 			color: theme.palette.grey.A700,
 			cursor: "default"
 		},
 		shortcut : {
-		    color: theme.palette.grey.primary,
-		    padding: '2px 4px',
+		    color: theme.palette.mode === "dark" ? "rgba(255,255,255,0.72)" : "rgba(15,23,42,0.62)",
+		    background: theme.palette.mode === "dark" ? "rgba(255,255,255,0.06)" : "rgba(248,251,255,0.92)",
+		    border: theme.palette.mode === "dark" ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(15,23,42,0.1)",
+		    borderRadius: '10px',
+		    padding: '4px 8px',
 		    marginRight: '2px',
 		    fontSize: '7pt',
 		    marginLeft: '10px',
 		},
 		shortcutPart : {
 		    margin: '0 1px'
-		}
+		},
+		dialogPaper: {
+			...dialogPaperStyles(theme),
+		},
+		signField: {
+			"& .MuiInputBase-root": {
+				borderRadius: "14px",
+			},
+		},
+		passcodeField: {
+			"& .MuiInputBase-root": {
+				borderRadius: "14px",
+				background: containerPalette(theme).surfaceMuted,
+			},
+		},
+		dialogButton: {
+			...dialogActionButtonStyles(theme),
+		},
+		dialogPrimaryButton: {
+			...dialogPrimaryButtonStyles(theme),
+		},
 	});
 
 	constructor(props) {
@@ -277,14 +375,15 @@ export default class Actionable extends AbstractActionable {
 
 	renderAffirmed = () => {
 		if (!this.requireAffirmed()) return;
+		const { classes } = this.props;
 		const openAffirm = this.state.openAffirm != null ? this.state.openAffirm : false;
 		return (
-		    <Dialog onClose={this.handleAffirmClose} open={openAffirm}>
+		    <Dialog onClose={this.handleAffirmClose} open={openAffirm} slotProps={{ paper: { className: classes.dialogPaper } }}>
 				<DialogTitle onClose={this.handleAffirmClose}>{this.translate("Confirm")}</DialogTitle>
 				<DialogContent><DialogContentText>{this.translate(this.state.affirmed)}</DialogContentText></DialogContent>
 				<DialogActions>
-					<Button onClick={this.handleAffirmClose} color="primary" style={{marginRight:'10px'}}>{this.translate("Cancel")}</Button>
-					<Button variant="contained" onClick={this.handleAffirmAccept} color="primary">{this.translate("OK")}</Button>
+					<Button className={classes.dialogButton} onClick={this.handleAffirmClose} color="primary" style={{marginRight:'10px'}}>{this.translate("Cancel")}</Button>
+					<Button className={classes.dialogPrimaryButton} variant="contained" onClick={this.handleAffirmAccept} color="primary">{this.translate("OK")}</Button>
 				</DialogActions>
 			</Dialog>
 		);
@@ -292,9 +391,10 @@ export default class Actionable extends AbstractActionable {
 
 	renderSignConfiguration = () => {
 		if (!this.requireSign()) return;
+		const { classes } = this.props;
 		const openSignConfig = this.state.openSignConfig != null ? this.state.openSignConfig : false;
 		return (
-		    <Dialog onClose={this.handleSignConfigurationClose} open={openSignConfig}>
+		    <Dialog onClose={this.handleSignConfigurationClose} open={openSignConfig} slotProps={{ paper: { className: classes.dialogPaper } }}>
 				<DialogTitle onClose={this.handleSignConfigurationClose}>{this.translate("Enable two factor authentication")}</DialogTitle>
 				<DialogContent>
 				    <DialogContentText style={{marginBottom:'5px'}}>{this.translate("Download one time password app like Google Authenticator App in your device, then follow steps below.")}</DialogContentText>
@@ -309,8 +409,8 @@ export default class Actionable extends AbstractActionable {
 				    <div style={{marginTop:'10px'}}>{this.renderPasscode()}</div>
                 </DialogContent>
 				<DialogActions>
-					<Button onClick={this.handleSignConfigurationClose} color="primary" style={{marginRight:'10px'}}>{this.translate("Cancel")}</Button>
-					<Button variant="contained" onClick={this.handleSignConfigurationAccept} color="primary">{this.translate("OK")}</Button>
+					<Button className={classes.dialogButton} onClick={this.handleSignConfigurationClose} color="primary" style={{marginRight:'10px'}}>{this.translate("Cancel")}</Button>
+					<Button className={classes.dialogPrimaryButton} variant="contained" onClick={this.handleSignConfigurationAccept} color="primary">{this.translate("OK")}</Button>
 				</DialogActions>
 			</Dialog>
 		);
@@ -320,15 +420,18 @@ export default class Actionable extends AbstractActionable {
 	    const setupDialog = this.state.openSignConfig;
 	    const disabled = !setupDialog && this.state.signInfo.setupRequired;
 	    const theme = Theme.get();
+		const { classes } = this.props;
+		const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
+		const borderColor = isDark ? "#555" : "#ddd";
 	    return (
 	        <div style={{marginTop:'10px'}}>
-                <div className="layout horizontal center-center">
-                    <TextField disabled={disabled} id={this._fieldKeycode(0)} style={{marginRight:'10px'}} autoFocus={true} type="tel" InputProps={{disableUnderline:true}} inputProps={{style: { padding:'0 10px',border:'1px solid #ddd',borderRadius:'5px',width:'20px',fontSize:'23pt' }, maxlength: 1 }} value={this._signDigit(0)} onClick={this.handleSignKeycodeClick.bind(this)} onKeyUp={this.handleSignKeycodeUp.bind(this, 0)} onChange={this.handleSignKeycodeChange.bind(this, 0)} />
-                    <TextField disabled={disabled} id={this._fieldKeycode(1)} style={{marginRight:'10px'}} type="tel" InputProps={{disableUnderline:true}} inputProps={{style: { padding:'0 10px',border:'1px solid #ddd',borderRadius:'5px',width:'20px',fontSize:'23pt' }, maxlength: 1 }} value={this._signDigit(1)} onClick={this.handleSignKeycodeClick.bind(this)} onKeyUp={this.handleSignKeycodeUp.bind(this, 1)} onChange={this.handleSignKeycodeChange.bind(this, 1)} />
-                    <TextField disabled={disabled} id={this._fieldKeycode(2)} style={{marginRight:'10px'}} type="tel" InputProps={{disableUnderline:true}} inputProps={{style: { padding:'0 10px',border:'1px solid #ddd',borderRadius:'5px',width:'20px',fontSize:'23pt' }, maxlength: 1 }} value={this._signDigit(2)} onClick={this.handleSignKeycodeClick.bind(this)} onKeyUp={this.handleSignKeycodeUp.bind(this, 2)} onChange={this.handleSignKeycodeChange.bind(this, 2)} />
-                    <TextField disabled={disabled} id={this._fieldKeycode(3)} style={{marginRight:'10px'}} type="tel" InputProps={{disableUnderline:true}} inputProps={{style: { padding:'0 10px',border:'1px solid #ddd',borderRadius:'5px',width:'20px',fontSize:'23pt' }, maxlength: 1 }} value={this._signDigit(3)} onClick={this.handleSignKeycodeClick.bind(this)} onKeyUp={this.handleSignKeycodeUp.bind(this, 3)} onChange={this.handleSignKeycodeChange.bind(this, 3)} />
-                    <TextField disabled={disabled} id={this._fieldKeycode(4)} style={{marginRight:'10px'}} type="tel" InputProps={{disableUnderline:true}} inputProps={{style: { padding:'0 10px',border:'1px solid #ddd',borderRadius:'5px',width:'20px',fontSize:'23pt' }, maxlength: 1 }} value={this._signDigit(4)} onClick={this.handleSignKeycodeClick.bind(this)} onKeyUp={this.handleSignKeycodeUp.bind(this, 4)} onChange={this.handleSignKeycodeChange.bind(this, 4)} />
-                    <TextField disabled={disabled} id={this._fieldKeycode(5)} style={{marginRight:'10px'}} type="tel" InputProps={{disableUnderline:true}} inputProps={{style: { padding:'0 10px',border:'1px solid #ddd',borderRadius:'5px',width:'20px',fontSize:'23pt' }, maxlength: 1 }} value={this._signDigit(5)} onClick={this.handleSignKeycodeClick.bind(this)} onKeyUp={this.handleSignKeycodeUp.bind(this, 5)} onChange={this.handleSignKeycodeChange.bind(this, 5)} />
+                <div className={classnames("layout horizontal center-center", isDark ? "dark" : undefined)}>
+                    <TextField className={classes.passcodeField} disabled={disabled} id={this._fieldKeycode(0)} style={{marginRight:'10px'}} autoFocus={true} type="tel" variant="standard" slotProps={{ input: { disableUnderline:true }, htmlInput: { style: { padding:'0 10px 0 12px',border:'1px solid ' + borderColor,borderRadius:'15px',width:'20px',fontSize:'23pt' }, maxLength: 1 } }} value={this._signDigit(0)} onClick={this.handleSignKeycodeClick.bind(this)} onKeyUp={this.handleSignKeycodeUp.bind(this, 0)} onChange={this.handleSignKeycodeChange.bind(this, 0)} />
+                    <TextField className={classes.passcodeField} disabled={disabled} id={this._fieldKeycode(1)} style={{marginRight:'10px'}} type="tel" variant="standard" slotProps={{ input: { disableUnderline:true }, htmlInput: { style: { padding:'0 10px 0 12px',border:'1px solid ' + borderColor,borderRadius:'15px',width:'20px',fontSize:'23pt' }, maxLength: 1 } }} value={this._signDigit(1)} onClick={this.handleSignKeycodeClick.bind(this)} onKeyUp={this.handleSignKeycodeUp.bind(this, 1)} onChange={this.handleSignKeycodeChange.bind(this, 1)} />
+                    <TextField className={classes.passcodeField} disabled={disabled} id={this._fieldKeycode(2)} style={{marginRight:'10px'}} type="tel" variant="standard" slotProps={{ input: { disableUnderline:true }, htmlInput: { style: { padding:'0 10px 0 12px',border:'1px solid ' + borderColor,borderRadius:'15px',width:'20px',fontSize:'23pt' }, maxLength: 1 } }} value={this._signDigit(2)} onClick={this.handleSignKeycodeClick.bind(this)} onKeyUp={this.handleSignKeycodeUp.bind(this, 2)} onChange={this.handleSignKeycodeChange.bind(this, 2)} />
+                    <TextField className={classes.passcodeField} disabled={disabled} id={this._fieldKeycode(3)} style={{marginRight:'10px'}} type="tel" variant="standard" slotProps={{ input: { disableUnderline:true }, htmlInput: { style: { padding:'0 10px 0 12px',border:'1px solid ' + borderColor,borderRadius:'15px',width:'20px',fontSize:'23pt' }, maxLength: 1 } }} value={this._signDigit(3)} onClick={this.handleSignKeycodeClick.bind(this)} onKeyUp={this.handleSignKeycodeUp.bind(this, 3)} onChange={this.handleSignKeycodeChange.bind(this, 3)} />
+                    <TextField className={classes.passcodeField} disabled={disabled} id={this._fieldKeycode(4)} style={{marginRight:'10px'}} type="tel" variant="standard" slotProps={{ input: { disableUnderline:true }, htmlInput: { style: { padding:'0 10px 0 12px',border:'1px solid ' + borderColor,borderRadius:'15px',width:'20px',fontSize:'23pt' }, maxLength: 1 } }} value={this._signDigit(4)} onClick={this.handleSignKeycodeClick.bind(this)} onKeyUp={this.handleSignKeycodeUp.bind(this, 4)} onChange={this.handleSignKeycodeChange.bind(this, 4)} />
+                    <TextField className={classes.passcodeField} disabled={disabled} id={this._fieldKeycode(5)} style={{marginRight:'10px'}} type="tel" variant="standard" slotProps={{ input: { disableUnderline:true }, htmlInput: { style: { padding:'0 10px 0 12px',border:'1px solid ' + borderColor,borderRadius:'15px',width:'20px',fontSize:'23pt' }, maxLength: 1 } }} value={this._signDigit(5)} onClick={this.handleSignKeycodeClick.bind(this)} onKeyUp={this.handleSignKeycodeUp.bind(this, 5)} onChange={this.handleSignKeycodeChange.bind(this, 5)} />
                 </div>
                 {disabled && <div style={{marginTop:'10px', color: theme.palette.secondary.main}}>{this.translate("Two factor authentication not enabled. Before signing, you must enable it by clicking in enable button.")}</div>}
             </div>
@@ -363,15 +466,18 @@ export default class Actionable extends AbstractActionable {
 
 	_signDigit = (pos) => {
 	    const sign = this.state.signInfo.sign;
-	    return sign != null ? sign[pos] : "";
+	    if (sign == null) return "";
+	    const digit = sign[pos];
+	    return digit != null ? digit : "";
 	};
 
 	renderSign = () => {
 		if (!this.requireSign()) return;
+		const { classes } = this.props;
 		const openSign = this.state.openSign != null ? this.state.openSign : false;
 		const isOneTimePasswordSignMode = this.props.signed.mode === "OneTimePassword";
 		return (
-		    <Dialog onClose={this.handleSignClose} open={openSign}>
+		    <Dialog onClose={this.handleSignClose} open={openSign} slotProps={{ paper: { className: classes.dialogPaper } }}>
 				<DialogTitle onClose={this.handleSignClose}>{this.translate("Sign")}</DialogTitle>
 				<DialogContent>
 				    <DialogContentText style={{marginBottom:'5px'}}>{this.translate(this.props.signed.text)}</DialogContentText>
@@ -387,12 +493,12 @@ export default class Actionable extends AbstractActionable {
 				<DialogActions>
 				    { this.state.signInfo.canSetup &&
                         <div className="layout horizontal flexible" style={{width:'100%',display:isOneTimePasswordSignMode?'block':'none'}}>
-                            <Button onClick={this.handleSignSetup} color="primary">{this.translate(this.state.signInfo.setupRequired ? "Enable" : "Setup")}</Button>
+                            <Button className={classes.dialogButton} onClick={this.handleSignSetup} color="primary">{this.translate(this.state.signInfo.setupRequired ? "Enable" : "Setup")}</Button>
                         </div>
                     }
 				    <div className="layout horizontal end-justified">
-					    <Button onClick={this.handleSignClose} color="primary" style={{marginRight:'10px'}}>{this.translate("Cancel")}</Button>
-					    <Button variant="contained" onClick={this.handleSignAccept} color="primary">{this.translate("OK")}</Button>
+					    <Button className={classes.dialogButton} onClick={this.handleSignClose} color="primary" style={{marginRight:'10px'}}>{this.translate("Cancel")}</Button>
+					    <Button className={classes.dialogPrimaryButton} variant="contained" onClick={this.handleSignAccept} color="primary">{this.translate("OK")}</Button>
                     </div>
 				</DialogActions>
 			</Dialog>
@@ -401,7 +507,7 @@ export default class Actionable extends AbstractActionable {
 
 	renderSignField = () => {
 	    if (this.props.signed.mode === "OneTimePassword") return this.renderPasscode();
-        return (<TextField autoFocus={true} style={{width:'100%'}} type={this.props.signed.mode === "SimpleText" ? "text" : "password"} value={this.translate(this.state.signInfo.sign)}
+        return (<TextField className={this.props.classes.signField} autoFocus={true} style={{width:'100%'}} type={this.props.signed.mode === "SimpleText" ? "text" : "password"} value={this.translate(this.state.signInfo.sign) ?? ""}
                            onChange={this.handleSignTextChange.bind(this)} onKeyPress={this.handleSignKeypress.bind(this)}/>);
 	};
 
@@ -653,7 +759,8 @@ export default class Actionable extends AbstractActionable {
 	};
 
 	_icon = () => {
-	    const isDark = Theme.get().isDark();
+	    const theme = Theme.get();
+	    const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
 	    if (isDark) {
 	        if (this.state.darkIcon != null) return this.state.darkIcon;
 	        if (this.props.darkIcon != null) return this.props.darkIcon;
@@ -672,7 +779,8 @@ export default class Actionable extends AbstractActionable {
 
 	_addFilter = (props) => {
 	    const theme = Theme.get();
-	    return theme.isDark() && this.state.darkIcon == null && this.props.darkIcon == null ? { filter: "invert(1)" } : {};
+	    const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
+	    return isDark && this.state.darkIcon == null && this.props.darkIcon == null ? { filter: "invert(1)" } : {};
 	};
 
 	_addDimensions = (props) => {

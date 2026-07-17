@@ -8,8 +8,8 @@ export default class BaseImage extends AbstractBaseImage {
 		this.reloaded = React.createRef();
 	};
 
-	refresh = (value) => {
-		this.setState({ value: value });
+	refresh = (info) => {
+		this.setState({ value: info.value, darkValue: info.darkValue });
 	};
 
 }

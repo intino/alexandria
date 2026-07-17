@@ -1,5 +1,5 @@
 import React from "react";
-import {withStyles} from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractSelectorComboBox from "../../../gen/displays/components/AbstractSelectorComboBox";
 import SelectorComboBoxNotifier from "../../../gen/displays/notifiers/SelectorComboBoxNotifier";
 import SelectorComboBoxRequester from "../../../gen/displays/requesters/SelectorComboBoxRequester";
@@ -8,8 +8,9 @@ import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import Theme from 'app-elements/gen/Theme';
 import 'alexandria-ui-elements/res/styles/components/fields.css';
 import classnames from 'classnames';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import InputLabel from '@material-ui/core/InputLabel';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import {fieldPalette} from "./FieldStyles";
 
 export const SelectorComboBoxTextViewStyles = {
 	control: (provided, state) => ({
@@ -35,21 +36,60 @@ export const SelectorComboBoxTextViewStyles = {
 	}),
 };
 
+export const SelectorComboBoxFilterViewStyles = {
+	control: (provided, state) => ({
+		...provided,
+		minHeight: '38px',
+		height: '38px',
+		borderRadius: '19px',
+	}),
+	valueContainer: (provided, state) => ({
+		...provided,
+		height: '36px',
+		padding: '0 13px',
+	}),
+	input: (provided, state) => ({
+		...provided,
+		margin: '0px',
+		paddingTop: 0,
+		paddingBottom: 0,
+	}),
+	indicatorsContainer: (provided, state) => ({
+		...provided,
+		height: '36px',
+		paddingRight: '8px !important'
+	}),
+};
+
 export function selectorComboBoxStyles(theme) {
+	const palette = fieldPalette(theme);
 	return {
 		control: (provided, state) => ({
 			...provided,
+			background: palette.background,
+			borderRadius: "16px",
+			boxShadow: "none",
+			minHeight: "0",
+			height: "52px",
+			cursor: state.isDisabled ? "default" : provided.cursor,
 			":hover": {
-				border: "1px solid black"
+				border: state.isDisabled ? provided.border : `1px solid ${palette.hoverBorderColor}`
 			},
 		}),
 		valueContainer: (provided, state) => ({
 			...provided,
 			padding: "0 13px",
+			height: "50px",
 		}),
 		singleValue: (provided, state) => ({
 			...provided,
-			color: theme.isDark() ? 'white' : '#333',
+			color: palette.textColor,
+		}),
+		input: (provided) => ({
+			...provided,
+			margin: 0,
+			paddingTop: 0,
+			paddingBottom: 0,
 		}),
 		multiValue: (provided, state) => ({
 			...provided,
@@ -60,29 +100,43 @@ export function selectorComboBoxStyles(theme) {
 		multiValueRemove: (provided, state) => ({
 			...provided,
 			cursor: 'pointer',
-			color: Theme.get().palette.primary.main,
+			color: theme.palette.primary.main,
 			display: state.isDisabled ? 'none' : 'inherit',
 			':hover': {
-				backgroundColor: Theme.get().palette.primary.main,
+				backgroundColor: theme.palette.primary.main,
 				color: 'white',
 			},
 		}),
 		indicatorsContainer: (provided, state) => ({
 			...provided,
 			display: state.isDisabled ? 'none' : 'inherit',
+			height: "50px",
 			paddingRight: '8px !important',
 		}),
 		placeholder: (provided, state) => ({
 			...provided,
 			display: state.isDisabled ? 'none' : 'inherit',
+			color: palette.placeholderColor,
 		}),
 		menu: provided => ({ ...provided, zIndex: 9999 }),
+		menuList: (provided) => ({
+			...provided,
+			background: palette.background,
+		}),
 		option: (styles, { data, isDisabled, isFocused, isSelected }) => {
 			return {
 				...styles,
-				color: isDisabled ? '#ccc' : (isSelected ? (theme.isDark() ? "black" : "white") : (theme.isDark() ? "white" : "black")),
+				backgroundColor: isSelected ? palette.focusColor : (isFocused ? palette.hoverBackground : palette.background),
+				color: isDisabled ? palette.disabledText : (isSelected ? (palette.dark ? "#08111d" : "white") : palette.textColor),
+				"&:active": {
+					backgroundColor: palette.focusBackground,
+				},
 			};
 		},
+		menuPortal: (provided) => ({
+			...provided,
+			zIndex: 16000,
+		}),
 	};
 };
 
@@ -102,13 +156,13 @@ const styles = theme => ({
 	},
 	label : {
 		fontSize: "10pt",
-		color: "#0000008a",
+		color: theme.palette.mode === "dark" ? "rgba(226,232,240,0.84)" : "#0000008a",
 		marginBottom: "5px",
 	},
 	multiValueLabel : {
 		pointerEvents:'all',
 		cursor:'pointer',
-		color: theme.isDark() ? 'white' : 'black',
+		color: theme.palette.mode === "dark" ? 'rgba(226,232,240,0.92)' : 'black',
 		padding:'4px 6px 4px 6px',
 		//fontSize:'14pt',
 		textOverflow:'ellipsis',
@@ -137,29 +191,61 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 	render() {
 		if (!this.state.visible) return (<React.Fragment/>);
 
-		const { classes, theme } = this.props;
+		const { classes } = this.props;
+		const runtimeTheme = Theme.get();
+		const theme = runtimeTheme != null ? runtimeTheme : this.props.theme;
 		const items = this.items();
 		const multiple = this.state.multipleSelection;
 		const label = this.props.label;
 		const value = this.selection(items);
-		const color = this.state.readonly ? theme.palette.grey.A700 : theme.isDark() ? "#ffffffb3" : "#0000008a";
-		const isDark = Theme.get().isDark();
-		const styles = this.props.view === "TextView" ? { ...selectorComboBoxStyles(Theme.get()), ...SelectorComboBoxTextViewStyles } : { ...selectorComboBoxStyles(Theme.get()) };
+		const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
+		const styles = this.props.view === "TextView"
+			? { ...selectorComboBoxStyles(theme), ...SelectorComboBoxTextViewStyles }
+			: this.props.view === "FilterView"
+				? { ...selectorComboBoxStyles(theme), ...SelectorComboBoxFilterViewStyles }
+				: { ...selectorComboBoxStyles(theme) };
 		const readonlyClass = this.state.readonly ? "readonly" : "";
 		const labelClass = label == null || label === "" ? "no-label" : undefined;
 		const viewClass = this.props.view === "FilterView" ? "filter-view" : this.props.view === "TextView" ? "text-view" : undefined;
 		const darkClass = isDark ? "dark" : undefined
+		const menuPortalTarget = typeof document !== "undefined" ? document.body : null;
 		const containerClasses = classnames(classes.container, "selector selector-combo-box", readonlyClass, labelClass, viewClass, darkClass);
+		const labelClasses = classnames(
+			"MuiFormLabel-root",
+			"MuiFormLabel-sizeSmall",
+			"MuiFormLabel-filled",
+			"MuiInputLabel-root",
+			"MuiInputLabel-formControl",
+			"MuiInputLabel-animated",
+			"MuiInputLabel-shrink",
+			"MuiInputLabel-sizeSmall",
+			"MuiInputLabel-outlined",
+			this.state.focused ? "Mui-focused" : undefined,
+			isDark ? "dark" : undefined
+		);
+		const inputClasses = classnames(
+			"MuiInputBase-root",
+			"MuiInputBase-sizeSmall",
+			"MuiOutlinedInput-root",
+			"MuiOutlinedInput-sizeSmall",
+			"MuiInputBase-formControl",
+			"MuiInputBase-adornedEnd",
+			this.state.focused ? "Mui-focused" : undefined,
+			this.state.readonly ? "Mui-disabled" : undefined,
+			labelClass,
+			viewClass,
+			darkClass
+		);
 
 		return (
 			<div id={this.props.id + "-container"} className={containerClasses} style={{...this.style()}}>
 				{this.renderTraceConsent()}
 				<div className="MuiFormControl-root MuiTextField-root" style={{width:"100%"}}>
-					<label className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined Mui-focused Mui-focused" data-shrink="true">
+					<label className={labelClasses} data-shrink="true">
 						{label != null && label !== "" ? this.translate(label) : ""}
 					</label>
 
-					<div className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-formControl MuiInputBase-adornedEnd" style={{width:"100%"}}>
+					<div className={inputClasses} style={{width:"100%"}}>
 						<OutlinedInput style={{display:"none"}}></OutlinedInput>
 						<InputLabel style={{display:"none"}}></InputLabel>
 
@@ -172,6 +258,8 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 									Option: this.renderOption.bind(this),
 									MultiValueLabel: this.renderMultiValueLabel.bind(this)
 								}}
+								menuPortalTarget={menuPortalTarget}
+								menuPosition="fixed"
 								menuPlacement="auto" maxMenuHeight={this.props.maxMenuHeight} value={value}
 								filterOption={this.handleFilter.bind(this)}
 								onChange={this.handleChange.bind(this)}
@@ -184,22 +272,22 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 									...theme,
 									colors: {
 										...theme.colors,
-										text: isDark ? 'blue' : theme.colors.text,
-										primary: isDark ? "gray" : theme.colors.primary,//Border and Background dropdown color
-										primary25: isDark ? "gray" : theme.colors.primary25,//Background hover dropdown color
-										primary50: isDark ? "gray" : theme.colors.primary50,//after select dropdown option
-										primary75: isDark ? "gray" : theme.colors.primary75,//after select dropdown option
-										neutral0: isDark ? "#222" : theme.colors.neutral0,//Background color
-										neutral5: isDark ? "#222" : theme.colors.neutral5,//Background color
-										neutral10: isDark ? "#777" : theme.colors.neutral10,//Background color
-										neutral20: isDark ? "#444" : theme.colors.neutral20,//Border before select
-										neutral30: isDark ? "#777" : theme.colors.neutral30,//Hover border
-										neutral40: isDark ? "white" : theme.colors.neutral40,//No options color
-										neutral50: isDark ? "#F4FFFD" : theme.colors.neutral50,//Select color
-										neutral60: isDark ? "white" : theme.colors.neutral60,//arrow icon when click select
-										neutral70: isDark ? "white" : theme.colors.neutral60,//arrow icon when click select
-										neutral80: isDark ? "#F4FFFD" : theme.colors.neutral80,//Text color
-										neutral90: isDark ? "#F4FFFD" : theme.colors.neutral90,//Text color
+										text: isDark ? "#e2e8f0" : theme.colors.text,
+										primary: isDark ? "#90caf9" : theme.colors.primary,
+										primary25: isDark ? "rgba(27,36,47,0.98)" : theme.colors.primary25,
+										primary50: isDark ? "rgba(16,43,71,0.92)" : theme.colors.primary50,
+										primary75: isDark ? "#90caf9" : theme.colors.primary75,
+										neutral0: isDark ? "#141b24" : theme.colors.neutral0,
+										neutral5: isDark ? "#141b24" : theme.colors.neutral5,
+										neutral10: isDark ? "#1b242f" : theme.colors.neutral10,
+										neutral20: isDark ? "rgba(148,163,184,0.28)" : theme.colors.neutral20,
+										neutral30: isDark ? "rgba(191,219,254,0.42)" : theme.colors.neutral30,
+										neutral40: isDark ? "rgba(226,232,240,0.62)" : theme.colors.neutral40,
+										neutral50: isDark ? "#cbd5e1" : theme.colors.neutral50,
+										neutral60: isDark ? "#e2e8f0" : theme.colors.neutral60,
+										neutral70: isDark ? "#e2e8f0" : theme.colors.neutral60,
+										neutral80: isDark ? "#f8fafc" : theme.colors.neutral80,
+										neutral90: isDark ? "#f8fafc" : theme.colors.neutral90,
 									},
 								})}
 						/>
@@ -241,7 +329,7 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 	renderMultiValueLabel = (props) => {
 		const { classes } = this.props;
 		const theme = Theme.get();
-		const color = theme.isDark() ? "#ffffffb3" : "black";
+		const color = theme != null && theme.palette != null && theme.palette.mode === "dark" ? "#ffffffb3" : "black";
 		const background = this.state.readonly ? "none !important" : "inherited";
 		return (<a className={classnames(classes.multiValueLabel, this.state.readonly ? classes.multiValueLabelReadonly : undefined)} style={{color:color,background:background}}>{props.data.label}</a>);
 	};

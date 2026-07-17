@@ -1,5 +1,5 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractDesktop from "../../gen/displays/AbstractDesktop";
 import DesktopNotifier from "../../gen/displays/notifiers/DesktopNotifier";
 import DesktopRequester from "../../gen/displays/requesters/DesktopRequester";

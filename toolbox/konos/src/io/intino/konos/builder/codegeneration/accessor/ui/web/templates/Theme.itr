@@ -1,5 +1,5 @@
 rule type(theme)
-	import { createTheme } from '@material-ui/core/styles';
+	import { createTheme } from '@mui/material/styles';
 
 	const Theme = (function () {
 		var theme = null;
@@ -27,10 +27,10 @@ rule type(theme)
 					}
 				});
                 theme.isLight = () => {
-                    return theme.palette.type == "light";
+                    return theme.palette.mode == "light";
                 };
                 theme.isDark = () => {
-                    return theme.palette.type == "dark";
+                    return theme.palette.mode == "dark";
                 };
                 theme.onChangeMode = (listener) => {
                     theme.changeModeListener = listener;
@@ -73,7 +73,7 @@ rule type(palette) and trigger(vars)
     const error = mode == "dark" ? "$darkError" : "$error";
 
 rule type(palette)
-	type : mode,
+	mode : mode,
     <<primary : { main: primary },
 	>><<secondary : { main: secondary },
 	>><<error : { main: error },
@@ -99,4 +99,3 @@ rule type(format) and trigger(dark)
 
 rule type(format)
 	$name: { $content }
-

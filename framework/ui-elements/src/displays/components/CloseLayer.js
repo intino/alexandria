@@ -1,10 +1,9 @@
-import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractCloseLayer from "../../../gen/displays/components/AbstractCloseLayer";
 import CloseLayerNotifier from "../../../gen/displays/notifiers/CloseLayerNotifier";
 import CloseLayerRequester from "../../../gen/displays/requesters/CloseLayerRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 
 const styles = theme => ({});
 

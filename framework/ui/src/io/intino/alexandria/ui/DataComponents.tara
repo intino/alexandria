@@ -67,7 +67,7 @@ Component fileEditable as ExtensionOf(baseFile)
 	Request notifyDownload
 
 Component baseImage
-	Notification refresh as Text
+	Notification refresh as Object(ImageInfo)
 
 Component image as ExtensionOf(baseImage)
 Component imageAvatar as ExtensionOf(baseImage)

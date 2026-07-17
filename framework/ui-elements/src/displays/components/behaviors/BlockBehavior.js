@@ -1,5 +1,5 @@
 import React from "react";
-import {Fade, Grow, Slide, Zoom} from '@material-ui/core';
+import {Fade, Grow, Slide, Zoom} from '@mui/material';
 
 const BlockBehavior = (function () {
 

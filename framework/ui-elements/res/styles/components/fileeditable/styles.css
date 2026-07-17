@@ -1,69 +1,204 @@
 .MuiDropzoneArea-root {
-    background: none !important;
+    background: var(--alex-field-bg) !important;
+    border: none !important;
+    outline: 1px solid var(--alex-field-border) !important;
+    outline-offset: -1px !important;
+    box-shadow: none !important;
+    color: var(--alex-field-text) !important;
+    border-radius: 16px !important;
+    transition: background-color 160ms ease, box-shadow 160ms ease, outline-color 160ms ease !important;
+}
+
+.MuiDropzoneArea-root:hover,
+.MuiDropzoneArea-root.fileeditable-dropzone:hover,
+.MuiDropzoneArea-root.fileeditable-dropzone-dark:hover,
+.MuiDropzoneArea-root.fileeditable-dropzone-readonly:hover,
+.MuiDropzoneArea-root.fileeditable-dropzone-readonly-dark:hover {
+    background: var(--alex-field-bg-hover) !important;
+    outline-color: var(--alex-field-border-hover) !important;
+}
+
+.alex-fileeditable-paste-input {
+    background: var(--alex-field-bg) !important;
+    color: var(--alex-field-text) !important;
+}
+
+.alex-fileeditable-paste-input::placeholder {
+    color: var(--alex-field-placeholder) !important;
+}
+
+.file-editable.dark .alex-fileeditable-paste-input {
+    background: var(--alex-field-bg) !important;
+    color: var(--alex-field-text) !important;
+    box-shadow: none !important;
+    outline-color: var(--alex-field-border) !important;
+}
+
+.file-editable.dark .alex-fileeditable-paste-input[disabled],
+.file-editable.dark .alex-fileeditable-paste-input.alex-fileeditable-paste-input-readonly,
+.file-editable.dark .alex-fileeditable-paste-input.Mui-disabled {
+    background: rgba(15,23,42,0.52) !important;
+    color: rgba(226,232,240,0.36) !important;
+    outline-color: rgba(148, 163, 184, 0.16) !important;
+    box-shadow: none !important;
+    cursor: default !important;
+}
+
+.file-editable.dark .alex-fileeditable-paste-input[disabled]::placeholder,
+.file-editable.dark .alex-fileeditable-paste-input.alex-fileeditable-paste-input-readonly::placeholder,
+.file-editable.dark .alex-fileeditable-paste-input.Mui-disabled::placeholder {
+    color: rgba(226,232,240,0.28) !important;
+}
+
+.file-editable.dark .alex-fileeditable-paste-input:hover {
+    background: var(--alex-field-bg-hover) !important;
+    outline-color: var(--alex-field-border-hover) !important;
+}
+
+.file-editable.dark .alex-fileeditable-paste-input[disabled]:hover,
+.file-editable.dark .alex-fileeditable-paste-input.alex-fileeditable-paste-input-readonly:hover,
+.file-editable.dark .alex-fileeditable-paste-input.Mui-disabled:hover {
+    background: rgba(15,23,42,0.52) !important;
+    outline-color: rgba(148, 163, 184, 0.16) !important;
+    box-shadow: none !important;
+    cursor: default !important;
+}
+
+.file-editable.dark .alex-fileeditable-paste-input:focus {
+    background: var(--alex-field-bg-focus) !important;
+    color: var(--alex-field-text) !important;
+    outline-color: var(--alex-field-focus) !important;
+    box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.22) !important;
+}
+
+.file-editable.dark .alex-fileeditable-paste-input::placeholder {
+    color: var(--alex-field-placeholder) !important;
+}
+
+.dark .MuiDropzoneArea-root {
+    box-shadow: none !important;
+    background: var(--alex-field-bg) !important;
+    color: var(--alex-field-text) !important;
+}
+
+.file-editable.dark .MuiDropzoneArea-root,
+.file-editable.dark .fileeditable-dropzone-dark,
+.file-editable.dark .fileeditable-dropzone-readonly-dark {
+    background: var(--alex-field-bg) !important;
+    color: var(--alex-field-text) !important;
+    border-color: var(--alex-field-border) !important;
+}
+
+.file-editable .MuiDropzoneArea-root:hover,
+.file-editable .MuiDropzoneArea-root.fileeditable-dropzone:hover,
+.file-editable .MuiDropzoneArea-root.fileeditable-dropzone-dark:hover {
+    background: var(--alex-field-bg-hover) !important;
+    outline-color: var(--alex-field-border-hover) !important;
+}
+
+.file-editable.dark .MuiDropzoneArea-root.fileeditable-dropzone-readonly-dark:hover,
+.file-editable.dark .fileeditable-dropzone-readonly-dark:hover {
+    background: rgba(15,23,42,0.52) !important;
+    outline-color: rgba(255, 255, 255, 0.1) !important;
+    box-shadow: none !important;
+    cursor: default !important;
+}
+
+.MuiDropzoneArea-root:focus-within {
+    outline-color: var(--alex-field-focus) !important;
+    box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.14) !important;
 }
 
 .fileeditable-dropzone {
-    border-color: #555 !important;
-}
-
-.fileeditable-dropzone-dark {
-    border-color: #aaaaaa !important;
-}
-
-.fileeditable-dropzone {
-    background: #f5ffff !important;
-}
-
-.fileeditable-dropzone-dark {
-    background: #424242 !important;
+    background: var(--alex-field-bg) !important;
 }
 
 .fileeditable-dropzone:hover {
-    background: #d2f1fe !important;
+    background: var(--alex-field-bg-hover) !important;
+    outline-color: var(--alex-field-border-hover) !important;
+}
+
+.fileeditable-dropzone-dark {
+    background: var(--alex-field-bg) !important;
 }
 
 .fileeditable-dropzone-dark:hover {
-    background: #353535 !important;
-}
-
-.fileeditable-dropzone-readonly {
-    border-color: #d7d7d7 !important;
+    background: var(--alex-field-bg-hover) !important;
+    outline-color: var(--alex-field-border-hover) !important;
 }
 
 .fileeditable-dropzone-readonly-dark {
-    border-color: #ffffff1f !important;
+    outline-color: rgba(148, 163, 184, 0.16) !important;
+    background: rgba(15,23,42,0.52) !important;
 }
 
 .fileeditable-dropzone-readonly:hover {
     background: inherit !important;
 }
 
+.fileeditable-dropzone-readonly-dark:hover,
+.MuiDropzoneArea-root.fileeditable-dropzone-readonly-dark:hover {
+    background: rgba(15,23,42,0.52) !important;
+    outline-color: rgba(148, 163, 184, 0.16) !important;
+}
+
 .fileeditable-dropzone, .fileeditable-dropzone-dark, .fileeditable-dropzone-readonly, .fileeditable-dropzone-readonly-dark {
     height: 100%;
     min-height: 175px !important;
-    border-radius: 14px !important;
+    border-radius: 16px !important;
+    transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease !important;
+}
+
+.fileeditable-dropzone-readonly {
+    outline: 1px solid #e7e7e9 !important;
+    border: 0 !important;
+}
+
+.dark .fileeditable-dropzone,
+.dark .fileeditable-dropzone-dark,
+.dark .fileeditable-dropzone-readonly {
+    background: var(--alex-field-bg) !important;
+    outline-color: var(--alex-field-border) !important;
+}
+
+.dark .fileeditable-dropzone-readonly-dark,
+.dark .MuiDropzoneArea-root.fileeditable-dropzone-readonly-dark {
+    background: rgba(15,23,42,0.52) !important;
+    outline-color: rgba(148, 163, 184, 0.16) !important;
+}
+
+.file-editable.dark .fileeditable-dropzone-paragraph-dark,
+.file-editable.dark .fileeditable-dropzone-paragraph {
+    color: rgba(226, 232, 240, 0.82) !important;
 }
 
 .fileeditable-dropzone-paragraph, .fileeditable-dropzone-paragraph-dark {
-    font-size: 10pt !important;
+    font-size: 0.95rem !important;
     padding: 0 20px;
+    font-weight: 500 !important;
 }
 
 .fileeditable-dropzone-paragraph {
-    color: #757575 !important;
+    color: rgba(15, 23, 42, 0.62) !important;
 }
 
 .fileeditable-dropzone-paragraph-dark {
-    color: #aaa !important;
+    color: rgba(226, 232, 240, 0.82) !important;
 }
 
 .fileeditable-dropzone-readonly .fileeditable-dropzone-paragraph, .fileeditable-dropzone-readonly-dark .fileeditable-dropzone-paragraph {
     color: #00000030 !important;
 }
 
+.fileeditable-dropzone-readonly .MuiChip-root {
+    background: rgba(15, 23, 42, 0.04) !important;
+    color: rgba(15, 23, 42, 0.42) !important;
+}
+
 .MuiDropzoneArea-icon {
-    height: 32px !important;
-    width: 32px !important;
+    height: 36px !important;
+    width: 36px !important;
+    color: var(--alex-field-focus) !important;
 }
 
 .fileeditable-dropzone-readonly .MuiDropzoneArea-icon, .fileeditable-dropzone-readonly-dark .MuiDropzoneArea-icon {

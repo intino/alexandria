@@ -14,7 +14,7 @@ public class SortColumnEvent extends Event {
 		None, Ascendant, Descendant;
 
 		public static Mode from(String mode) {
-			String lowerMode = mode.toLowerCase();
+			String lowerMode = mode != null ? mode.toLowerCase() : Mode.None.name().toLowerCase();
 			return Arrays.stream(values()).filter(m -> m.name().equalsIgnoreCase(mode) || m.name().toLowerCase().startsWith(lowerMode)).findFirst().orElse(null);
 		}
 	}

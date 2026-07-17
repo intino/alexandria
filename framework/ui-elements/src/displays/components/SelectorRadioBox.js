@@ -1,6 +1,6 @@
 import React from "react";
-import {withStyles} from '@material-ui/core/styles';
-import {FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Typography} from '@material-ui/core';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
+import {FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Typography} from '@mui/material';
 import AbstractSelectorRadioBox from "../../../gen/displays/components/AbstractSelectorRadioBox";
 import SelectorRadioBoxNotifier from "../../../gen/displays/notifiers/SelectorRadioBoxNotifier";
 import SelectorRadioBoxRequester from "../../../gen/displays/requesters/SelectorRadioBoxRequester";

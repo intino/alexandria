@@ -5,7 +5,6 @@ import io.intino.alexandria.ui.displays.components.collection.Collection;
 import io.intino.alexandria.ui.displays.components.collection.loaders.PageItemLoader;
 import io.intino.alexandria.ui.model.datasource.PageDatasource;
 
-import java.util.Collections;
 import java.util.List;
 
 public class PageCollectionBehavior<DS extends PageDatasource<Item>, Item> extends CollectionBehavior<DS, Item, PageItemLoader<DS, Item>> {
@@ -76,7 +75,7 @@ public class PageCollectionBehavior<DS extends PageDatasource<Item>, Item> exten
 	protected void update() {
 		PageItemLoader<DS, Item> itemLoader = itemLoader();
 		int count = itemLoader.pageCount();
-		while (page > count && page > 0) page--;
+		while (page >= count && page > 0) page--;
 		if (count == 0) return;
 		collection().add(itemLoader.page(page));
 	}

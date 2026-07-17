@@ -44,7 +44,7 @@ public class Datasources {
 
 			@Override
 			public List<Item> items(int start, int count, String condition, List<Filter> filters, List<String> sortings) {
-				List<Item> items = population;
+				List<Item> items = new ArrayList<>(population);
 				if (sortings.size() > 0) Collections.sort(items, sortingComparator(sortings));
 				return page(items, start, count);
 			}
@@ -168,7 +168,7 @@ public class Datasources {
 
 			@Override
 			public List<Person> items(int start, int count, String condition, List<Filter> filters, List<String> sortings) {
-				List<Person> persons = filterPersonPopulation(population, condition, filters);
+				List<Person> persons = new ArrayList<>(filterPersonPopulation(population, condition, filters));
 				if (sortings.size() > 0) persons.sort(sortingComparator(sortings));
 				return page(persons, start, count);
 			}

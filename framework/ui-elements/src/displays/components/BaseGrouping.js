@@ -1,8 +1,9 @@
 import React from "react";
 import AbstractBaseGrouping from "../../../gen/displays/components/AbstractBaseGrouping";
-import {Typography, Input } from "@material-ui/core";
+import {Input, Typography} from "@mui/material";
 import classNames from "classnames";
 import 'alexandria-ui-elements/res/styles/layout.css';
+import {linkPalette} from "./ThemeTokens";
 
 export const BaseGroupingStyles = theme => ({
     container : {
@@ -14,7 +15,7 @@ export const BaseGroupingStyles = theme => ({
         padding: "0 7px"
     },
     count : {
-        color: theme.isDark() ? "white" : theme.palette.grey.A700
+        color: theme.palette.mode === "dark" ? "white" : theme.palette.grey.A700
     },
     group : {
         paddingLeft : "0",
@@ -32,7 +33,10 @@ export const BaseGroupingStyles = theme => ({
         margin: "0 10px 20px",
         cursor: "pointer",
         display: "inline-block",
-        color: theme.palette.primary.main,
+        color: linkPalette(theme).color,
+        "&:hover": {
+            color: linkPalette(theme).hoverColor,
+        },
     },
     colorBox : {
         width: "16px",

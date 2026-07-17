@@ -554,3 +554,7 @@ Schema HtmlViewerOperation
 Schema SelectorTabsOptionVisibility
 	Attribute index as Integer
 	Attribute visible as Bool
+
+Schema ImageInfo
+	Attribute value as Text
+	Attribute darkValue as Text
