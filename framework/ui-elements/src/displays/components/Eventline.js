@@ -1,13 +1,13 @@
-import React, { Suspense } from "react";
-import { withStyles } from '@material-ui/core/styles';
+import React, {Suspense} from "react";
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractEventline from "../../../gen/displays/components/AbstractEventline";
 import EventlineNotifier from "../../../gen/displays/notifiers/EventlineNotifier";
 import EventlineRequester from "../../../gen/displays/requesters/EventlineRequester";
 import Spinner from "alexandria-ui-elements/src/displays/components/Spinner";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { Typography, Paper, Popover, IconButton } from "@material-ui/core";
-import { Adjust } from '@material-ui/icons';
-import { withSnackbar } from 'notistack';
+import {IconButton, Paper, Popover, Typography} from "@mui/material";
+import {Adjust} from '@mui/icons-material';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import EventlineToolbar from './eventline/toolbar';
 import classnames from 'classnames';
 import AutoSizer from 'react-virtualized-auto-sizer';
@@ -221,11 +221,12 @@ class Eventline extends AbstractEventline {
         const { classes } = this.props;
         const arrangement = this.state.arrangement.toLowerCase() == "horizontal" ? "vertical" : "horizontal";
         const blockClass = this.state.arrangement.toLowerCase() == "horizontal" ? classes.groupBlockHorizontal : classes.groupBlockVertical;
-        const layout = this.state.arrangement.toLowerCase() == "vertical" ? "layout vertical flex" : "";
-        const id = this.props.id + "_eventgroup_" + index;
-        const theme = Theme.get();
-        const isSelected = this.state.selectedElement != null && this.state.selectedElement.id == id;
-        const style = isSelected ? { background: theme.isDark() ? "#000b59" : "#fffbd4", cursor: "pointer", paddingTop: arrangement == "horizontal" ? "5px" : "0" } : { cursor: "pointer", paddingTop: "0" };
+	        const layout = this.state.arrangement.toLowerCase() == "vertical" ? "layout vertical flex" : "";
+	        const id = this.props.id + "_eventgroup_" + index;
+	        const theme = Theme.get();
+	        const isSelected = this.state.selectedElement != null && this.state.selectedElement.id == id;
+	        const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
+	        const style = isSelected ? { background: isDark ? "#000b59" : "#fffbd4", cursor: "pointer", paddingTop: arrangement == "horizontal" ? "5px" : "0" } : { cursor: "pointer", paddingTop: "0" };
         const previousDate = index > 0 ? this.state.eventsGroups[index-1].date : null;
         this.toolbarInfo[index] = { date: group.date, longDate: group.longDate, page: group.page, id: id };
         return (

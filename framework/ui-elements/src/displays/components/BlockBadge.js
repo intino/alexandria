@@ -1,6 +1,6 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
-import Badge from '@material-ui/core/Badge';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
+import Badge from '@mui/material/Badge';
 import AbstractBlockBadge from "../../../gen/displays/components/AbstractBlockBadge";
 import BlockBadgeNotifier from "../../../gen/displays/notifiers/BlockBadgeNotifier";
 import BlockBadgeRequester from "../../../gen/displays/requesters/BlockBadgeRequester";

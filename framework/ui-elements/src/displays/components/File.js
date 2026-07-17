@@ -3,13 +3,14 @@ import AbstractFile from "../../../gen/displays/components/AbstractFile";
 import FileNotifier from "../../../gen/displays/notifiers/FileNotifier";
 import FileRequester from "../../../gen/displays/requesters/FileRequester";
 import classNames from 'classnames';
-import {withStyles} from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import 'alexandria-ui-elements/res/styles/layout.css';
 import Block from "./Block";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
-import Button from '@material-ui/core/Button';
-import SaveAltIcon from '@material-ui/icons/SaveAlt';
+import Button from '@mui/material/Button';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import {dialogPrimaryButtonStyles} from "./ButtonStyles";
 
 const styles = theme => ({
 	label: {
@@ -22,6 +23,32 @@ const styles = theme => ({
 	},
 	message : {
 		color: theme.palette.secondary.main
+	},
+	toolbar: {
+		height: "56px",
+		background: theme.palette.mode === "dark" ? "rgba(15,23,42,0.82)" : "#f8fafc",
+		borderBottom: `1px solid ${theme.palette.mode === "dark" ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.08)"}`,
+		padding: "0 12px",
+	},
+	surface: {
+		background: theme.palette.mode === "dark" ? "linear-gradient(180deg, rgba(30,41,59,0.92) 0%, rgba(15,23,42,0.92) 100%)" : "linear-gradient(180deg, #f8fbff 0%, #eef4fb 100%)",
+		borderRadius: "18px",
+		overflow: "hidden",
+		border: `1px solid ${theme.palette.mode === "dark" ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.08)"}`,
+		boxShadow: theme.palette.mode === "dark" ? "0 14px 40px rgba(0,0,0,0.28)" : "0 12px 32px rgba(15,23,42,0.08)",
+	},
+	emptyState: {
+		padding: "50px 70px",
+		background: theme.palette.mode === "dark" ? "rgba(15,23,42,0.72)" : "rgba(255,255,255,0.92)",
+		borderRadius: "16px",
+		fontSize: "12pt",
+		boxShadow: theme.palette.mode === "dark" ? "0 12px 30px rgba(0,0,0,0.24)" : "0 12px 24px rgba(15,23,42,0.08)",
+		border: `1px solid ${theme.palette.mode === "dark" ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.06)"}`,
+	},
+	emptyTitle: {
+		marginBottom: "10px",
+		fontSize: "15pt",
+		color: theme.palette.mode === "dark" ? "white" : theme.palette.text.primary,
 	}
 });
 
@@ -67,13 +94,13 @@ class File extends AbstractFile {
 		const downloadTitle = this.translate("Download");
 
 		return (
-			<div style={{height:"100%", width:"100%"}} className="layout vertical flex">
-				<div style={{height:"50px", background:"#26282B"}}></div>
-				<div style={{background:"#414447"}} className="layout vertical flex">
+			<div style={{height:"100%", width:"100%"}} className={classNames(classes.surface, "layout vertical flex")}>
+				<div className={classNames(classes.toolbar, "layout horizontal center")}></div>
+				<div className="layout vertical flex">
 					<div style={this.style()} className={classNames(classes.message, "layout vertical center-center")}>
-						<div style={{padding:"50px 70px",background:"#4C494C",borderRadius:"10px",fontSize:"12pt",boxShadow:"3px 3px 25px black"}} className="layout vertical center-center">
-							<div style={{marginBottom:"10px",fontSize:"15pt",color:"white"}}>{notAvailable}</div>
-							<Button variant="contained" color="primary" onClick={this._downloadFile.bind(this, file)}><SaveAltIcon style={{marginRight:"5px"}}/>{downloadTitle}</Button>
+						<div className={classNames(classes.emptyState, "layout vertical center-center")}>
+							<div className={classes.emptyTitle}>{notAvailable}</div>
+							<Button sx={dialogPrimaryButtonStyles} variant="contained" color="primary" onClick={this._downloadFile.bind(this, file)}><SaveAltIcon style={{marginRight:"5px"}}/>{downloadTitle}</Button>
 						</div>
 					</div>
 				</div>
@@ -104,11 +131,11 @@ class File extends AbstractFile {
 		window.setTimeout(() => this._adjustImageSize(imageId), 10);
 		return (
 			<div style={{width:'100%',height:'100%'}} ref={this.container}>
-				<div style={{height:"100%", width:"100%"}} className="layout vertical flex">
-					<div style={{height:"50px", background:"#26282B"}} className="layout horizontal start-justified">
-						<Button style={{margin:'8px'}} variant="contained" color="primary" onClick={this._downloadFile.bind(this, file)}><SaveAltIcon style={{marginRight:"5px"}}/>{downloadTitle}</Button>
+				<div className={classNames(classes.surface, "layout vertical flex")} style={{height:"100%", width:"100%"}}>
+					<div className={classNames(classes.toolbar, "layout horizontal start-justified center")}>
+						<Button sx={dialogPrimaryButtonStyles} style={{margin:'8px'}} variant="contained" color="primary" onClick={this._downloadFile.bind(this, file)}><SaveAltIcon style={{marginRight:"5px"}}/>{downloadTitle}</Button>
 					</div>
-					<div style={{background:"#414447"}} className="layout vertical flex">
+					<div className="layout vertical flex">
 						<div style={this.style()} className={classNames(classes.message, "layout vertical center-center")}>
 							<div className="layout vertical center-center">
 								<img id={imageId} src={file} title={this.state.filename} style={{display:"none"}}/>
@@ -133,17 +160,18 @@ class File extends AbstractFile {
 	};
 
 	_renderXml = (file) => {
+		const { classes } = this.props;
 		const downloadTitle = this.translate("Download");
 		this.width = this.container.current != null ? this.container.current.offsetWidth + "px" : (this.width != null ? this.width : "100%");
 		this.height = this.container.current != null ? this.container.current.offsetHeight-60 + "px" : (this.height != null ? this.height : "100%");
 		if (this.state.data != null) {
 			return (
-				<div style={{overflow:'auto',height:'100%',width:'100%'}}>
-					<div style={{height:"50px", background:"#26282B"}} className="layout horizontal start-justified">
-						<Button style={{margin:'8px'}} variant="contained" color="primary" onClick={this._downloadFile.bind(this, file)}><SaveAltIcon style={{marginRight:"5px"}}/>{downloadTitle}</Button>
+				<div className={classes.surface} style={{overflow:'auto',height:'100%',width:'100%'}}>
+					<div className={classNames(classes.toolbar, "layout horizontal start-justified center")}>
+						<Button sx={dialogPrimaryButtonStyles} style={{margin:'8px'}} variant="contained" color="primary" onClick={this._downloadFile.bind(this, file)}><SaveAltIcon style={{marginRight:"5px"}}/>{downloadTitle}</Button>
 					</div>
 					<div className="layout vertical flex">
-						<pre style={{width:this.width,height:this.height,border:0,fontSize:'10pt',background:'#eee',padding:'10px',marginTop:'0',overflow:'auto'}}><code>{this.state.data}</code></pre>
+						<pre style={{width:this.width,height:this.height,border:0,fontSize:'10pt',background:'transparent',padding:'16px',marginTop:'0',overflow:'auto'}}><code>{this.state.data}</code></pre>
 					</div>
 				</div>
 			);

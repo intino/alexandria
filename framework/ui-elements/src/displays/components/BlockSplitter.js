@@ -1,11 +1,11 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
+import Button from '@mui/material/Button';
 import AbstractBlockSplitter from "../../../gen/displays/components/AbstractBlockSplitter";
 import BlockSplitterNotifier from "../../../gen/displays/notifiers/BlockSplitterNotifier";
 import BlockSplitterRequester from "../../../gen/displays/requesters/BlockSplitterRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import Block from "./Block";
 import BlockBehavior from "./behaviors/BlockBehavior";
 import BrowserUtil from "../../util/BrowserUtil";

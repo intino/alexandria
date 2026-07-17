@@ -1,6 +1,6 @@
 import React from "react";
 import ConnectionLost from "./ConnectionLost";
-import {withSnackbar} from "notistack";
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 
 class ConnectionChecker extends React.Component {
 

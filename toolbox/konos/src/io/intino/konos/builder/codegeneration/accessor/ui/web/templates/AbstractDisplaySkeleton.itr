@@ -26,7 +26,7 @@ rule type(display, exposed)
 
 rule type(display, noAbstract)
 	import React from "react";
-	import { withStyles } from '@material-ui/core/styles';
+	import { withStyles } from 'alexandria-ui-elements/src/util/muiStylesCompat';
 	<<$alexandriaBlockImport>>
 	<<$alexandriaTemplateStampImport>>
 	<<$alexandriaDisplayStampImport>>
@@ -36,7 +36,7 @@ rule type(display, noAbstract)
 	$exposedNotifierImport
 	import $name+firstUpperCase~Requester from "alexandria-ui-elements/gen/displays/requesters/$requester~Requester";
 	import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-	import { withSnackbar } from 'notistack';
+	import { withSnackbar } from 'alexandria-ui-elements/src/util/notistackCompat';
 
 	const styles = theme => ({});
 

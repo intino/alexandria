@@ -1,13 +1,13 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractMultipleImage from "../../../gen/displays/components/AbstractMultipleImage";
 import MultipleImageNotifier from "../../../gen/displays/notifiers/MultipleImageNotifier";
 import MultipleImageRequester from "../../../gen/displays/requesters/MultipleImageRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
-import { IconButton, Button } from '@material-ui/core';
-import { Clear } from '@material-ui/icons';
+import {IconButton} from '@mui/material';
+import {Clear} from '@mui/icons-material';
 import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/css/image-gallery.css';
 import 'alexandria-ui-elements/res/styles/components/multipleimage/styles.css';

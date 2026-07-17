@@ -4,9 +4,9 @@ import ProxyDisplayNotifier from "../../gen/displays/notifiers/ProxyDisplayNotif
 import ProxyDisplayRequester from "../../gen/displays/requesters/ProxyDisplayRequester";
 import Spinner from "alexandria-ui-elements/src/displays/components/Spinner";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 import 'alexandria-ui-elements/res/styles/layout.css';
-import { OwnerUnitContext } from 'alexandria-ui-elements/src/displays/PassiveView'
+import {OwnerUnitContext} from 'alexandria-ui-elements/src/displays/PassiveView'
 
 export default class ProxyDisplay extends AbstractProxyDisplay {
 

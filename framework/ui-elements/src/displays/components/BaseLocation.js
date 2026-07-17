@@ -2,7 +2,7 @@ import React from "react";
 import AbstractBaseLocation from "../../../gen/displays/components/AbstractBaseLocation";
 import BaseLocationNotifier from "../../../gen/displays/notifiers/BaseLocationNotifier";
 import BaseLocationRequester from "../../../gen/displays/requesters/BaseLocationRequester";
-import { GoogleMap } from '@react-google-maps/api'
+import {GoogleMap} from '@react-google-maps/api'
 import PlaceMark from "./geo/PlaceMark";
 import SearchDialog from "./geo/SearchDialog";
 import GeoBehavior from "./behaviors/GeoBehavior";
@@ -108,7 +108,9 @@ export default class BaseLocation extends AbstractBaseLocation {
     mapOptions = () => {
         const controls = this.props.controls != null ? this.props.controls : "";
         const all = controls.indexOf("all") != -1;
+        const mapId = this.props.mapId != null ? this.props.mapId : Application.configuration.googleMapId;
 		return {
+            mapId: mapId,
             zoomControl: controls.indexOf("zoom") != -1 || all,
             mapTypeControl: controls.indexOf("maptype") != -1 || all,
             scaleControl: controls.indexOf("scale") != -1 || all,

@@ -6,34 +6,59 @@ import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import Block from "./Block";
 import ProgressBar from "./ProgressBar";
 import Theme from "app-elements/gen/Theme";
-import {DropzoneArea} from 'material-ui-dropzone';
-import {Box} from "@material-ui/core";
-import {Add} from "@material-ui/icons";
+import {DropzoneArea} from './upload/DropzoneArea';
+import {Box} from "@mui/material";
+import {Add} from "@mui/icons-material";
 import 'alexandria-ui-elements/res/styles/components/fileeditable/styles.css';
 import 'alexandria-ui-elements/res/styles/layout.css';
-import {withStyles} from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import NumberUtil from 'alexandria-ui-elements/src/util/NumberUtil';
 import classnames from 'classnames';
 import 'alexandria-ui-elements/res/styles/components/fields.css';
 import ComponentBehavior from "./behaviors/ComponentBehavior";
+import {fieldPalette, outlinedFieldStyles, outlinedSurfaceStyles} from "./FieldStyles";
+import {linkPalette} from "./ThemeTokens";
 
 const styles = theme => ({
+	field: outlinedFieldStyles(theme),
+	surface: {
+		...outlinedSurfaceStyles(theme),
+		position: "relative",
+		overflow: "hidden",
+		minHeight: "52px",
+		background: fieldPalette(theme).background,
+		boxShadow: fieldPalette(theme).shadow,
+		border: "none",
+		outlineOffset: "-1px",
+		transition: "background-color 160ms ease, box-shadow 160ms ease, outline-color 160ms ease",
+		"&:hover": {
+			background: fieldPalette(theme).hoverBackground,
+		},
+		"&:focus-within": {
+			background: fieldPalette(theme).focusBackground,
+			outline: "1px solid " + fieldPalette(theme).focusColor,
+			boxShadow: "0 0 0 4px " + fieldPalette(theme).focusRing,
+		},
+	},
 	info: {
-		color: theme.isDark() ? '#799deb' : '#2563EB',
-		margin: '2px 10px 0 2px'
+		color: theme.palette.mode === "dark" ? '#93c5fd' : '#2563EB',
+		margin: '2px 10px 0 2px',
+		fontSize: "0.85rem",
+		fontWeight: 500,
 	},
 	errorMessage: {
-		margin: "5px 0 0",
-		background: theme.isDark() ? '#910000' : '#fdecec',
-		color: theme.isDark() ? 'white' : '#e13939',
-		padding: "2px 10px",
-		borderRadius: "6px",
+		margin: "8px 0 0",
+		background: theme.palette.mode === "dark" ? '#910000' : '#fdecec',
+		color: theme.palette.mode === "dark" ? 'white' : '#e13939',
+		padding: "8px 12px",
+		borderRadius: "12px",
 	},
 	dropzoneText: {
 		background: "red",
 	},
 	readonlyDropzone: {
 		position: "absolute",
+		outline: 0,
 		top: 0,
 		left: 0,
 		width: "100%",
@@ -41,37 +66,71 @@ const styles = theme => ({
 		zIndex: 10,
 		opacity: 0.05
 	},
-	pasteInput: {
-		border: theme.isDark() ? "1px solid #ffffffde" : "1px solid #555",
-		borderRadius: "14px",
-		marginTop: "5px",
-		padding: "14px 10px",
-		background: theme.isDark() ? "#404040" : "#f5ffff",
+	readonlySurface: {
+		background: theme.palette.mode === "dark" ? "rgba(15,23,42,0.52) !important" : "rgba(15,23,42,0.03) !important",
+		outline: "1px solid " + (theme.palette.mode === "dark" ? "rgba(148,163,184,0.16)" : "rgba(15,23,42,0.1)"),
+		boxShadow: "none !important",
 		"&:hover": {
-			background: theme.isDark() ? "#222" : "#d2f1fe",
+			background: theme.palette.mode === "dark" ? "rgba(15,23,42,0.52) !important" : "rgba(15,23,42,0.03) !important",
+			outline: "1px solid " + (theme.palette.mode === "dark" ? "rgba(148,163,184,0.16)" : "rgba(15,23,42,0.1)"),
+			boxShadow: "none !important",
+		},
+	},
+	pasteInput: {
+		border: "none",
+		borderRadius: "16px",
+		marginTop: "5px",
+		height: "52px",
+		boxSizing: "border-box",
+		padding: "0 16px",
+		lineHeight: "52px",
+		background: fieldPalette(theme).background,
+		boxShadow: fieldPalette(theme).shadow,
+		outline: "1px solid " + fieldPalette(theme).borderColor,
+		color: fieldPalette(theme).textColor,
+		transition: "background-color 160ms ease, box-shadow 160ms ease, outline-color 160ms ease",
+		"&:hover": {
+			background: fieldPalette(theme).hoverBackground + "!important",
+			outline: "1px solid " + fieldPalette(theme).hoverBorderColor,
 		},
 		"&:focus": {
-			border: theme.isDark() ? "1px solid #ffffffde" : "1px solid #00000023",
-			background: theme.isDark() ? "#222" : "#d2f1fe",
+			background: fieldPalette(theme).focusBackground + "!important",
+			outline: "1px solid " + fieldPalette(theme).focusColor + " !important",
+			boxShadow: "0 0 0 4px " + fieldPalette(theme).focusRing + " !important",
+		},
+		"&:focus-visible": {
+			outlineStyle: "solid",
+			outlineWidth: "1px !important",
+			outlineColor: fieldPalette(theme).focusColor + " !important",
 		}
 	},
 	readonlyPasteInput: {
-		border: theme.isDark() ? "1px solid #ffffffde" : "1px solid #d7d7d7",
-		background: 'none !important',
+		outline: "1px solid " + (theme.palette.mode === "dark" ? "rgba(148,163,184,0.16)" : "rgba(15,23,42,0.1)"),
+		boxShadow: "none",
+		color: theme.palette.mode === "dark" ? "rgba(226,232,240,0.36)" : "#00000030",
 		"&::placeholder": {
-			color: "#00000030 !important"
+			color: theme.palette.mode === "dark" ? "rgba(226,232,240,0.28)" : "#00000030 !important"
+		},
+		"&:hover": {
+			background: theme.palette.mode === "dark" ? "rgba(15,23,42,0.52) !important" : "none !important",
+			outline: "1px solid " + (theme.palette.mode === "dark" ? "rgba(148,163,184,0.16)" : "rgba(15,23,42,0.1)"),
+			boxShadow: "none",
 		},
 	},
 	empty : {
-		fontSize: '12pt',
+		fontSize: '0.95rem',
+		color: theme.palette.text.secondary,
 	},
 	link : {
 		cursor: 'pointer',
-		width: '70px',
-		textAlign: 'center',
+		minWidth: '82px',
+		textAlign: 'left',
 		marginRight: '10px',
-		fontSize: '11pt',
-		color: theme.palette.primary.main,
+		fontSize: '0.9rem',
+		color: linkPalette(theme).color,
+		"&:hover": {
+			color: linkPalette(theme).hoverColor,
+		},
 	},
 });
 
@@ -133,22 +192,24 @@ class FileEditable extends AbstractFile {
 	render() {
 		if (!this.state.visible) return (<React.Fragment/>);
 		const { classes, progress } = this.props;
-		const theme = Theme.get();
+		const runtimeTheme = Theme.get();
+		const activeTheme = runtimeTheme != null ? runtimeTheme : this.props.theme;
 		const label = this.props.label !== "" ? this.props.label : undefined;
 		const width = this.props.width != null ? this.props.width : "100%";
 		const height = this.props.height != null ? this.props.height : "100%";
-		const color = this.state.readonly ? theme.palette.grey.A700 : theme.isDark() ? "#ffffffb3" : "#0000008a";
 		return (
-			<Block layout="vertical" style={{...this.style(),width:width,height:height}} className={classnames("file-editable", theme.isDark() ? "dark" : undefined)}>
-				<div className={classnames("layout ", this._isInlineComponent() ? "horizontal center" : "vertical")}>
-					{ ComponentBehavior.labelBlock(this.props, "body1", { marginRight: '15px', color: theme.palette.grey.primary, fontSize: this._isInlineComponent() ? "14pt" : "9pt"}) }
-					{this._renderPreview()}
-					{this._renderComponent()}
-					{this._renderInfoMessage()}
-					{this._renderErrorMessage()}
-				</div>
-				{(progress && this._isUploadingFiles()) && this._renderProgress()}
-			</Block>
+			<div className={classnames("file-editable", activeTheme.palette.mode === "dark" ? "dark" : undefined)} style={this.style()}>
+				<Block layout="vertical" style={{width:width,height:height}}>
+					<div className={classnames("layout ", this._isInlineComponent() ? "horizontal center" : "vertical")}>
+						{ ComponentBehavior.labelBlock(this.props, "body1", { marginRight: '15px', color: activeTheme.palette.grey.primary, fontSize: this._isInlineComponent() ? "14pt" : "9pt"}) }
+						{this._renderPreview()}
+						{this._renderComponent()}
+						{this._renderInfoMessage()}
+						{this._renderErrorMessage()}
+					</div>
+					{(progress && this._isUploadingFiles()) && this._renderProgress()}
+				</Block>
+			</div>
 		);
 	};
 
@@ -180,7 +241,7 @@ class FileEditable extends AbstractFile {
 		}
 		else result.push(this._renderInput());
 
-		return result;
+		return <React.Fragment>{result.map((item, index) => <React.Fragment key={index}>{item}</React.Fragment>)}</React.Fragment>;
 	};
 
 	_isInlineComponent = () => {
@@ -199,33 +260,36 @@ class FileEditable extends AbstractFile {
 		const { dropZoneLimit } = this.props;
 		const maxSize = this.state.maxSize;
 		const { classes } = this.props;
-		const theme = Theme.get();
-		const modeSuffix = theme.isDark() ? "-dark" : "";
+		const runtimeTheme = Theme.get();
+		const theme = runtimeTheme != null ? runtimeTheme : this.props.theme;
+		const modeSuffix = theme.palette.mode === "dark" ? "-dark" : "";
 		return (
 			<div style={{position:'relative'}}>
 				{this.state.readonly && <div className={classes.readonlyDropzone}></div>}
-				<DropzoneArea
-					key={this.state.key}
-					Icon={Add}
-					acceptedFiles={this._allowedTypes()}
-					dropzoneText={!this.state.readonly ? this.translate("Drag and drop a file here or click") : ""}
-					fileObjects={this.state.files}
-					dropzoneClass={(this.state.readonly ? "fileeditable-dropzone-readonly" : "fileeditable-dropzone") + modeSuffix}
-					dropzoneParagraphClass={"fileeditable-dropzone-paragraph" + modeSuffix}
-					dropzoneIconClass={"fileeditable-dropzone-icon" + modeSuffix}
-					filesLimit={ dropZoneLimit || 1 }
-					maxFileSize={maxSize != null && maxSize !== -1 ? maxSize : 20971520000}
-					showPreviews={false}
-					showPreviewsInDropzone={this.state.value != null}
-					useChipsForPreview
-					previewGridProps={{container: { spacing: 1, direction: 'row' }}}
-					previewText={this.translate("Selected file")}
-					showAlerts={true}
-					getDropRejectMessage={(file) => this._errorMessage(file)}
-					showFilenames={true}
-					onDelete={(file) => { this.saveFile(null, null) }}
-					onChange={(files) => { for (let i=0; i<files.length; i++) this.saveFile(files[i], files[i].name); }}
-				/>
+					<div className={classnames("fileeditable-surface", classes.surface, this.state.readonly ? classes.readonlySurface : undefined, this.state.readonly ? "fileeditable-surface-readonly" : undefined)}>
+					<DropzoneArea
+						key={this.state.key}
+						Icon={Add}
+						acceptedFiles={this._allowedTypes()}
+						dropzoneText={!this.state.readonly ? this.translate("Drag and drop a file here or click") : ""}
+						fileObjects={this.state.files}
+						dropzoneClass={(this.state.readonly ? "fileeditable-dropzone-readonly" : "fileeditable-dropzone") + modeSuffix}
+						dropzoneParagraphClass={"fileeditable-dropzone-paragraph" + modeSuffix}
+						dropzoneIconClass={"fileeditable-dropzone-icon" + modeSuffix}
+						filesLimit={ dropZoneLimit || 1 }
+						maxFileSize={maxSize != null && maxSize !== -1 ? maxSize : 20971520000}
+						showPreviews={false}
+						showPreviewsInDropzone={this.state.value != null}
+						useChipsForPreview
+						previewGridProps={{container: { spacing: 1, direction: 'row' }}}
+						previewText={this.translate("Selected file")}
+						showAlerts={true}
+						getDropRejectMessage={(file) => this._errorMessage(file)}
+						showFilenames={true}
+						onDelete={(file) => { this.saveFile(null, null) }}
+						onChange={(files) => { for (let i=0; i<files.length; i++) this.saveFile(files[i], files[i].name); }}
+					/>
+				</div>
 			</div>
 		);
 	};
@@ -250,10 +314,12 @@ class FileEditable extends AbstractFile {
 		if (!this.props.pasteZone) return (<React.Fragment/>);
 		const { classes } = this.props;
 		return (
-			<input className={classnames(classes.pasteInput, this.state.readonly ? classes.readonlyPasteInput : undefined)}
+			<input className={classnames("alex-fileeditable-paste-input", this.state.readonly ? "alex-fileeditable-paste-input-readonly" : undefined, classes.pasteInput, this.state.readonly ? classes.readonlyPasteInput : undefined)}
 			       placeholder={!this.state.readonly ? this.translate("Paste content here from clipboard") : ""}
 			       disabled={this.state.readonly ? true : undefined}
-			       onPaste={this.handlePaste.bind(this)} value="" ></input>
+			       readOnly
+			       onPaste={this.handlePaste.bind(this)}
+			       defaultValue="" ></input>
 		);
 	};
 
@@ -297,7 +363,7 @@ class FileEditable extends AbstractFile {
 			<React.Fragment>
 				{!this.state.readonly && <label htmlFor={inputId}><a className={classes.link}>{this.translate("Select")}</a></label>}
 				<input id={inputId} style={{display:"none"}} ref={this.inputRef} type="file" disabled={this.state.readonly ? true : undefined}
-				       onChange={this.handleChange.bind(this)} value="" accept={allowedTypes != null ? allowedTypes.toString() : undefined}></input>
+				       onChange={this.handleChange.bind(this)} accept={allowedTypes != null ? allowedTypes.toString() : undefined}></input>
 			</React.Fragment>
 		);
 	};
@@ -344,7 +410,7 @@ class FileEditable extends AbstractFile {
 		return (
 			<Box>
 				{Object.entries(uploadingFiles).map(([fileId, fileData]) => {
-					if (this._isMaxSizeExceeded({size: fileData.fileSize})) return (<React.Fragment/>);
+					if (this._isMaxSizeExceeded({size: fileData.fileSize})) return (<React.Fragment key={fileId}/>);
 					else return (
 						<ProgressBar
 							key={fileId}

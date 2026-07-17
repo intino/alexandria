@@ -3,6 +3,7 @@ package io.intino.alexandria.ui.displays.components;
 import io.intino.alexandria.MimeTypes;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.logger.Logger;
+import io.intino.alexandria.schemas.ImageInfo;
 import io.intino.alexandria.ui.File;
 import io.intino.alexandria.ui.displays.notifiers.BaseImageNotifier;
 
@@ -13,6 +14,7 @@ public class BaseImage<DN extends BaseImageNotifier, B extends Box> extends Abst
     private URL value;
     private String filename;
     private String mimeType;
+    private URL darkValue;
 
     public BaseImage(B box) {
         super(box);
@@ -23,7 +25,7 @@ public class BaseImage<DN extends BaseImageNotifier, B extends Box> extends Abst
     }
 
     public void value(URL value) {
-        value(value, null);
+        value(value, (String)null);
     }
 
     public void value(URL value, String mimeType) {
@@ -43,6 +45,62 @@ public class BaseImage<DN extends BaseImageNotifier, B extends Box> extends Abst
 
     public void value(io.intino.alexandria.ui.File file) {
         _value(file);
+        refresh();
+    }
+
+    public void value(URL value, URL darkValue) {
+        value(value, darkValue, null);
+    }
+
+    public void value(URL value, URL darkValue, String mimeType) {
+        _value(value, mimeType != null ? mimeType : typeOf(value), null);
+        _darkValue(darkValue, mimeType != null ? mimeType : typeOf(value), null);
+        refresh();
+    }
+
+    public void value(URL value, URL darkValue, String mimeType, String filename) {
+        _value(value, mimeType != null ? mimeType : typeOf(value), filename);
+        _darkValue(darkValue, mimeType != null ? mimeType : typeOf(value), filename);
+        refresh();
+    }
+
+    public void value(java.io.File value, java.io.File darkValue) {
+        _value(value);
+        _darkValue(darkValue);
+        refresh();
+    }
+
+    public void value(io.intino.alexandria.ui.File value, io.intino.alexandria.ui.File darkValue) {
+        _value(value);
+        _darkValue(darkValue);
+        refresh();
+    }
+
+    public URL darkValue() {
+        return darkValue;
+    }
+
+    public void darkValue(URL value) {
+        darkValue(value, null);
+    }
+
+    public void darkValue(URL value, String mimeType) {
+        _darkValue(value, mimeType != null ? mimeType : typeOf(value), null);
+        refresh();
+    }
+
+    public void darkValue(URL value, String mimeType, String filename) {
+        _darkValue(value, mimeType != null ? mimeType : typeOf(value), filename);
+        refresh();
+    }
+
+    public void darkValue(java.io.File file) {
+        _darkValue(file);
+        refresh();
+    }
+
+    public void darkValue(io.intino.alexandria.ui.File file) {
+        _darkValue(file);
         refresh();
     }
 
@@ -78,6 +136,28 @@ public class BaseImage<DN extends BaseImageNotifier, B extends Box> extends Abst
         return this;
     }
 
+    protected BaseImage<DN, B> _darkValue(java.io.File file) {
+        try {
+            return _darkValue(file != null ? file.toURI().toURL() : null);
+        } catch (MalformedURLException e) {
+            Logger.error(e);
+            return this;
+        }
+    }
+
+    protected BaseImage<DN, B> _darkValue(File file) {
+        return file != null ? _darkValue(file.value(), file.mimeType(), file.filename()) : _value(null, null, null);
+    }
+
+    protected BaseImage<DN, B> _darkValue(URL value) {
+        return _darkValue(value, typeOf(value), null);
+    }
+
+    protected BaseImage<DN, B> _darkValue(URL value, String mimeType, String filename) {
+        this.darkValue = value;
+        return this;
+    }
+
     @Override
     public void init() {
         super.init();
@@ -85,7 +165,7 @@ public class BaseImage<DN extends BaseImageNotifier, B extends Box> extends Abst
     }
 
     public void refresh() {
-        notifier.refresh(serializedValue());
+        notifier.refresh(new ImageInfo().value(serializedValue()).darkValue(serializedDarkValue()));
     }
 
     protected String typeOf(URL value) {
@@ -93,6 +173,10 @@ public class BaseImage<DN extends BaseImageNotifier, B extends Box> extends Abst
     }
 
     String serializedValue() {
+        return null;
+    }
+
+    String serializedDarkValue() {
         return null;
     }
 

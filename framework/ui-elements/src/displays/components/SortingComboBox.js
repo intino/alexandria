@@ -1,5 +1,4 @@
-import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractSortingComboBox from "../../../gen/displays/components/AbstractSortingComboBox";
 import SortingComboBoxNotifier from "../../../gen/displays/notifiers/SortingComboBoxNotifier";
 import SortingComboBoxRequester from "../../../gen/displays/requesters/SortingComboBoxRequester";

@@ -1,6 +1,6 @@
 import React from "react";
-import AppBar from '@material-ui/core/AppBar';
-import { withStyles } from '@material-ui/core/styles';
+import AppBar from '@mui/material/AppBar';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractHeader from "../../../gen/displays/components/AbstractHeader";
 import HeaderNotifier from "../../../gen/displays/notifiers/HeaderNotifier";
 import HeaderRequester from "../../../gen/displays/requesters/HeaderRequester";
@@ -10,7 +10,7 @@ import Theme from 'app-elements/gen/Theme';
 
 const styles = theme => ({
 	color: {
-		color: theme.isDark() ? "white" : "black"
+		color: theme.palette.mode === "dark" ? "white" : "black"
 	}
 });
 
@@ -40,7 +40,8 @@ class Header extends AbstractHeader {
 		var result = super.style();
 		const theme = Theme.get();
 		if (result == null) result = {};
-		if (this.props.color != null) result.backgroundColor = theme.isDark() ? ColorUtil.invertColor(this.props.color, true) : this.props.color;
+		const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
+		if (this.props.color != null) result.backgroundColor = isDark ? ColorUtil.invertColor(this.props.color, true) : this.props.color;
 		if (this._widthDefined()) result.width = this.props.width;
 		if (this._heightDefined()) result.height = this.props.height;
 		return result;

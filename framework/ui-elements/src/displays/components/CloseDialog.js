@@ -1,10 +1,8 @@
-import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractCloseDialog from "../../../gen/displays/components/AbstractCloseDialog";
 import CloseDialogNotifier from "../../../gen/displays/notifiers/CloseDialogNotifier";
 import CloseDialogRequester from "../../../gen/displays/requesters/CloseDialogRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
 import Actionable from "./Actionable";
 
 const styles = theme => ({});

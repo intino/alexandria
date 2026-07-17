@@ -1,6 +1,6 @@
 import React from "react";
-import Typography from "@material-ui/core/Typography";
-import { withStyles } from '@material-ui/core/styles';
+import Typography from "@mui/material/Typography";
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractEventsDisplay from "../../gen/displays/AbstractEventsDisplay";
 import EventsDisplayNotifier from "../../gen/displays/notifiers/EventsDisplayNotifier";
 import EventsDisplayRequester from "../../gen/displays/requesters/EventsDisplayRequester";

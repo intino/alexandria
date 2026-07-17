@@ -2,7 +2,7 @@ import React from "react";
 import AbstractImage from "../../../gen/displays/components/AbstractImage";
 import ImageNotifier from "../../../gen/displays/notifiers/ImageNotifier";
 import ImageRequester from "../../../gen/displays/requesters/ImageRequester";
-import {withStyles} from "@material-ui/core";
+import {withStyles} from "alexandria-ui-elements/src/util/muiStylesCompat";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import BrowserUtil from "alexandria-ui-elements/src/util/BrowserUtil";
 import ImageGallery from 'react-image-gallery';
@@ -10,9 +10,13 @@ import Theme from "app-elements/gen/Theme";
 import 'react-image-gallery/styles/css/image-gallery.css';
 
 const styles = theme => ({
+	surface: {
+		position: "relative",
+		overflow: "hidden",
+	},
 	image: {
 		display: "block",
-		height: "calc(100% - 20px)",
+		height: "100%",
 		width: "100%",
 		objectFit: 'contain',
 	},
@@ -43,19 +47,29 @@ class Image extends AbstractImage {
 
 	render() {
 		if (!this.state.visible) return (<React.Fragment/>);
-		if (this.state.value == null) return (<div style={{...this.style(),position:'relative'}}></div>);
-		const source = this.state.value + this.forceParameter();
+		const value = this.value();
+		if (value == null) return (<div style={{...this.style(),position:'relative'}}></div>);
+		const source = value + this.forceParameter();
 		const { classes } = this.props;
+		const imageClassName = [this.cssRuleSelectors(), classes.image].filter(Boolean).join(" ");
 		return (
-			<div style={{...this.style(),position:'relative'}}>
-				{this.props.allowFullscreen && <ImageGallery className={this.cssRuleSelectors()} items={[this._galleryItems()]} showThumbnails={false} showBullets={false} showPlayButton={false} /> }
-				{!this.props.allowFullscreen && <img className={this.cssRuleSelectors()} style={this.style()} alt={this.props.label} title={this.props.label} src={source}/> }
+			<div style={{...this.style(),position:'relative'}} className={classes.surface}>
+				{this.props.allowFullscreen && <ImageGallery className={imageClassName} items={[this._galleryItems()]} showThumbnails={false} showBullets={false} showPlayButton={false} /> }
+				{!this.props.allowFullscreen && <img className={imageClassName} style={{height: "100%", width: "100%"}} alt={this.props.label} title={this.props.label} src={source}/> }
 			</div>
 		);
 	};
 
 	forceParameter = () => {
-		return (this.state.value.indexOf("?") != -1 ? "&" : "?") + "r=" + Math.random();
+		const value = this.value();
+		if (value == null) return "";
+		return (value.indexOf("?") !== -1 ? "&" : "?") + "r=" + Math.random();
+	};
+
+	value = () => {
+		const theme = Theme.get();
+		const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
+		return isDark && this.state.darkValue != null ? this.state.darkValue : this.state.value;
 	};
 
 	resize = () => {
@@ -64,8 +78,8 @@ class Image extends AbstractImage {
 
 	_galleryItems = () => {
 		return {
-			original: this.state.value,
-			thumbnail: this.state.value
+			original: this.value(),
+			thumbnail: this.value()
 		};
 	};
 
@@ -107,7 +121,9 @@ class Image extends AbstractImage {
 			result.minHeight = height;
 		}
 		result.imageOrientation = "none";
-		if (this.props.colorInvertedWithDarkMode && Theme.get().isDark()) result.filter = "invert(1)";
+		const theme = Theme.get();
+		const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
+		if (this.props.colorInvertedWithDarkMode && isDark) result.filter = "invert(1)";
 		return result;
 	};
 

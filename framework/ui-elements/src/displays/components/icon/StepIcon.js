@@ -1,7 +1,7 @@
-import React, { Suspense } from "react";
-import CheckCircle from '@material-ui/icons/CheckCircle';
-import Warning from '@material-ui/icons/Warning';
-import { withStyles } from '@material-ui/core/styles';
+import React, {Suspense} from "react";
+import CheckCircle from '@mui/icons-material/CheckCircle';
+import Warning from '@mui/icons-material/Warning';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 
 const styles = theme => ({
     root: {

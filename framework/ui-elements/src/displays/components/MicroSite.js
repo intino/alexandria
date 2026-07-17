@@ -1,13 +1,13 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractMicroSite from "../../../gen/displays/components/AbstractMicroSite";
 import MicroSiteNotifier from "../../../gen/displays/notifiers/MicroSiteNotifier";
 import MicroSiteRequester from "../../../gen/displays/requesters/MicroSiteRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import {RiseLoader} from "react-spinners";
-import { Button } from "@material-ui/core";
+import {Button} from "@mui/material";
 
 const styles = theme => ({
     download: {

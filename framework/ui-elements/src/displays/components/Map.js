@@ -1,5 +1,5 @@
 import React from "react";
-import {withStyles} from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractMap from "../../../gen/displays/components/AbstractMap";
 import MapNotifier from "../../../gen/displays/notifiers/MapNotifier";
 import MapRequester from "../../../gen/displays/requesters/MapRequester";
@@ -17,7 +17,7 @@ export const MapStyles = theme => ({
 		position: "absolute",
 		top: 0,
 		left: 0,
-		color: theme.isDark() ? "black" : "white",
+		color: theme.palette.mode === "dark" ? "black" : "white",
 		fontSize: "13pt",
 		margin: "25% 20%",
 		background: "#ca991e",
@@ -169,7 +169,9 @@ export class EmbeddedMap extends AbstractMap {
 	mapOptions = () => {
 		const controls = this.props.controls != null ? this.props.controls : "";
 		const all = controls.indexOf("all") != -1;
+        const mapId = this.props.mapId != null ? this.props.mapId : Application.configuration.googleMapId;
 		return {
+            mapId: mapId,
 			zoomControl: controls.indexOf("zoom") != -1 || all,
 			mapTypeControl: controls.indexOf("maptype") != -1 || all,
 			scaleControl: controls.indexOf("scale") != -1 || all,

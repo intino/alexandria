@@ -1,10 +1,9 @@
-import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractOpenDrawer from "../../../gen/displays/components/AbstractOpenDrawer";
 import OpenDrawerNotifier from "../../../gen/displays/notifiers/OpenDrawerNotifier";
 import OpenDrawerRequester from "../../../gen/displays/requesters/OpenDrawerRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import Actionable from "./Actionable";
 
 class OpenDrawer extends AbstractOpenDrawer {

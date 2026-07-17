@@ -1,12 +1,12 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
-import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
+import {ToggleButton, ToggleButtonGroup} from '@mui/material';
 import AbstractSelectorToggleBox from "../../../gen/displays/components/AbstractSelectorToggleBox";
 import SelectorToggleBoxNotifier from "../../../gen/displays/notifiers/SelectorToggleBoxNotifier";
 import SelectorToggleBoxRequester from "../../../gen/displays/requesters/SelectorToggleBoxRequester";
 import Divider from './Divider';
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 
 const styles = theme => ({});
 

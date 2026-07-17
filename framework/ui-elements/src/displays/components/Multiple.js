@@ -1,6 +1,6 @@
 import React from "react";
-import {Button, IconButton, Tooltip, Typography} from '@material-ui/core';
-import {Clear} from '@material-ui/icons';
+import {Button, IconButton, Tooltip, Typography} from '@mui/material';
+import {Clear} from '@mui/icons-material';
 import AbstractMultiple from "../../../gen/displays/components/AbstractMultiple";
 import MultipleNotifier from "../../../gen/displays/notifiers/MultipleNotifier";
 import MultipleRequester from "../../../gen/displays/requesters/MultipleRequester";
@@ -8,10 +8,10 @@ import 'alexandria-ui-elements/res/styles/layout.css';
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
 import {enrichDisplayProperties} from "../Display";
-import Accordion from '@material-ui/core/Accordion';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Theme from "app-elements/gen/Theme";
 import Spinner from "./Spinner"
 import 'alexandria-ui-elements/res/styles/components/multiple/styles.css';
@@ -53,12 +53,21 @@ export default class Multiple extends AbstractMultiple {
 	};
 
 	renderExpanded = (container, props, style) => {
-	    return this.renderInstances(container, props, style);
+	    const instances = this.instances(container);
+	    if (instances.length <= 0) return this.renderEmptyInstances(props);
+	    return instances.map((instance, index) => {
+            if (instance == null) return null;
+            enrichDisplayProperties(instance);
+            this.copyProps(props, instance.pl);
+            this.prepareInstance(instance);
+            return this.renderInstance(instance, props, style, index);
+        });
 	};
 
 	renderCollapsed = (container, props, style) => {
         let instances = this.instances(container);
         return instances.map((instance, index) => {
+            if (instance == null) return null;
             return this.renderAccordion(instance, props, style, index);
         });
 	};
@@ -67,10 +76,12 @@ export default class Multiple extends AbstractMultiple {
 	    const theme = Theme.get();
 	    const expandedItem = this.state.expandedItem;
 	    const id = instance.pl.id;
+	    const key = this._instanceKey(instance, index);
         enrichDisplayProperties(instance);
         this.copyProps(props, instance.pl);
+        this.prepareInstance(instance);
 	    return (
-	        <Accordion expanded={expandedItem === id} onChange={this.handleSelect.bind(this, id)}>
+	        <Accordion key={key} expanded={expandedItem === id} onChange={this.handleSelect.bind(this, id)}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1bh-content" id="panel1bh-header">
                     <div className="layout horizontal center flex">
                         <div style={{minWidth:"33%"}}><Typography style={{fontWeight:"bold"}}>{instance.pl.label}</Typography></div>
@@ -91,8 +102,9 @@ export default class Multiple extends AbstractMultiple {
 		const multiple = this.props.multiple;
 		const fixedStyle = {...this.style(),...style};
 		if (fixedStyle.width == null) fixedStyle.width = 'auto';
+        const key = this._instanceKey(instance, index);
         return (
-            <div key={index} className="layout horizontal center" style={fixedStyle}>
+            <div key={key} className="layout horizontal center" style={fixedStyle}>
                 <div className="layout flex" style={{...style,...this.style(),height:'100%',marginBottom:'0'}}>{React.createElement(DisplayFactory.get(instance.tp), instance.pl)}</div>
                 { multiple.editable && this._removeAllowed(index) && this._renderRemove(index) }
             </div>
@@ -156,6 +168,37 @@ export default class Multiple extends AbstractMultiple {
         this.requester.select(panel);
     };
 
+    addInstance = (instance) => {
+        this._updateInstances(instance.c, (instances) => [...instances, instance]);
+    };
+
+    addInstances = (params) => {
+        this._updateInstances(params.c, (instances) => [...instances, ...params.value]);
+    };
+
+    insertInstance = (instance) => {
+        this._updateInstances(instance.c, (instances) => {
+            const nextInstances = [...instances];
+            nextInstances[instance.idx] = instance;
+            return nextInstances;
+        });
+    };
+
+    insertInstances = (params) => {
+        this._updateInstances(params.c, (instances) => {
+            const nextInstances = [...instances];
+            params.value.forEach(instance => nextInstances[instance.idx] = instance);
+            return nextInstances;
+        });
+    };
+
+    removeInstance = (params) => {
+        this._updateInstances(params.c, (instances) => {
+            const id = params.id;
+            return instances.filter(instance => instance != null && instance.pl.id !== id);
+        });
+    };
+
     _instanceProps = () => {
 		var result = {};
 		const noItemsMessage = this.props.multiple.noItemsMessage;
@@ -174,6 +217,27 @@ export default class Multiple extends AbstractMultiple {
 		let spacingSize = multiple.spacing;
 		if (spacingSize === 0) return undefined;
 		return { right: spacingSize, bottom: spacingSize };
+	};
+
+	clearContainer(params) {
+		super.clearContainer(params);
+	};
+
+	_instanceKey = (instance, index) => {
+		if (instance == null || instance.pl == null) return index;
+		const id = instance.pl.id != null ? instance.pl.id : "";
+		const context = instance.pl.o != null ? instance.pl.o : "";
+		const type = instance.tp != null ? instance.tp : "";
+		return `${type}:${id}:${context}:${index}`;
+	};
+
+	prepareInstance = (instance) => {
+		if (instance == null || instance.pl == null) return;
+		const rawOwnerPath = instance.pl.o;
+		const rawId = instance.pl.id;
+		if (rawOwnerPath != null && rawOwnerPath !== "" && rawId != null && rawId.indexOf(".") === -1 && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(rawId)) {
+			instance.pl.rootContextPath = rawOwnerPath + "." + rawId;
+		}
 	};
 
 }

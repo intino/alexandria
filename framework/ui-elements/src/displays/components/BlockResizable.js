@@ -1,13 +1,12 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractBlockResizable from "../../../gen/displays/components/AbstractBlockResizable";
 import BlockResizableNotifier from "../../../gen/displays/notifiers/BlockResizableNotifier";
 import BlockResizableRequester from "../../../gen/displays/requesters/BlockResizableRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import Block from "./Block";
-import BlockBehavior from "./behaviors/BlockBehavior";
-import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels";
+import {Panel, PanelGroup, PanelResizeHandle} from "react-resizable-panels";
 import 'alexandria-ui-elements/res/styles/components/blockresizable/styles.css';
 import Theme from "app-elements/gen/Theme";
 
@@ -108,9 +107,10 @@ class BlockResizable extends AbstractBlockResizable {
 
 	_color = () => {
 		const theme = Theme.get();
-	    const defaultColor = theme.isDark() ? "black" : "#aaa";
+	    const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
+	    const defaultColor = isDark ? "black" : "#aaa";
 	    if (this.props.color == null) return defaultColor;
-	    if (theme.isDark()) return this.props.darkColor != null ? this.props.darkColor : defaultColor;
+	    if (isDark) return this.props.darkColor != null ? this.props.darkColor : defaultColor;
 	    else return this.props.color != null ? this.props.color : defaultColor;
 	};
 

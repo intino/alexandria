@@ -8,9 +8,9 @@ import io.intino.alexandria.ui.displays.events.SelectionListener;
 import io.intino.alexandria.ui.displays.notifiers.BaseGroupingNotifier;
 import io.intino.alexandria.ui.model.datasource.Group;
 
+import java.util.*;
 import java.util.List;
 import java.util.Map;
-import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -112,7 +112,7 @@ public class BaseGrouping<DN extends BaseGroupingNotifier, B extends Box> extend
 		this.collections = Arrays.stream(collections).filter(Objects::nonNull).collect(toList());
 		if (this.collections.size() > 0) {
 			Collection collection = this.collections.get(0);
-			if (collection.ready()) loadGroups();
+			if (collection.isReady()) loadGroups();
 			else collection.onReady((event) -> loadGroups());
 		}
 		return this;

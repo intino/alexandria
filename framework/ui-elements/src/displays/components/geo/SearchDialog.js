@@ -1,6 +1,6 @@
 import React from "react";
-import IconButton from '@material-ui/core/IconButton';
-import Search from '@material-ui/icons/Search';
+import IconButton from '@mui/material/IconButton';
+import Search from '@mui/icons-material/Search';
 import I18nComponent from "../../I18nComponent";
 
 const SearchDialogStyles = {
@@ -31,7 +31,7 @@ export default class SearchDialog extends I18nComponent {
 
     constructor(props) {
         super(props);
-	    this.geocoder = (typeof google != "undefined") ? new google.maps.Geocoder() : null;
+	    this.geocoder = null;
         this.state = {
             opened: false,
             search: { address: '', error: null }
@@ -97,8 +97,13 @@ export default class SearchDialog extends I18nComponent {
 
 	updateCoordinates = (e) => {
 	    e.preventDefault();
-	    if (this.geocoder == null || this.state.search.address == "") return;
-        const encodedAddress = encodeURI(this.state.search.address);
+	    if (this.state.search.address == "") return;
+        if (this.geocoder == null && typeof google !== "undefined" && google.maps != null && typeof google.maps.Geocoder === "function")
+            this.geocoder = new google.maps.Geocoder();
+	    if (this.geocoder == null) {
+            this.setState({search: { address: this.state.search.address, error: this.translate("Map search is not available yet") }});
+            return;
+        }
         this.geocoder.geocode({address: this.state.search.address, language: this.language()}, this.handleCoordinatesArrival.bind(this));
 	};
 

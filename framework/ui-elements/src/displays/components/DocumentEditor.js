@@ -1,10 +1,7 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
 import AbstractDocumentEditor from "../../../gen/displays/components/AbstractDocumentEditor";
 import DocumentEditorNotifier from "../../../gen/displays/notifiers/DocumentEditorNotifier";
 import DocumentEditorRequester from "../../../gen/displays/requesters/DocumentEditorRequester";
-import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
 
 const styles = theme => ({});
 

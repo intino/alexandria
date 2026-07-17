@@ -1,12 +1,12 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
-import { Typography, IconButton } from '@material-ui/core';
-import { FirstPage, NavigateBefore, NavigateNext, LastPage } from "@material-ui/icons";
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
+import {IconButton, Typography} from '@mui/material';
+import {FirstPage, LastPage, NavigateBefore, NavigateNext} from "@mui/icons-material";
 import AbstractDateNavigator from "../../../gen/displays/components/AbstractDateNavigator";
 import DateNavigatorNotifier from "../../../gen/displays/notifiers/DateNavigatorNotifier";
 import DateNavigatorRequester from "../../../gen/displays/requesters/DateNavigatorRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import Theme from "app-elements/gen/Theme";
 import classnames from "classnames";

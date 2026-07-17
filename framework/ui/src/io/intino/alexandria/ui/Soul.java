@@ -195,8 +195,18 @@ public abstract class Soul implements DisplayRepository {
 
     private boolean containsAll(List<String> contextList, String owner) {
         List<String> ownerList = owner != null ? Arrays.asList(owner.split("\\.")) : Collections.emptyList();
-        if (ownerList.size() > 0 && ownerList.size() < contextList.size()) return contextList.containsAll(ownerList);
-        else return ownerList.containsAll(contextList);
+        if (ownerList.isEmpty() || contextList.isEmpty()) return ownerList.equals(contextList);
+        if (ownerList.size() > contextList.size()) return hasSameTail(contextList, ownerList);
+        return hasSameTail(contextList, ownerList);
+    }
+
+    private boolean hasSameTail(List<String> expected, List<String> actual) {
+        if (expected.size() == 0 || expected.size() > actual.size()) return false;
+        int offset = actual.size() - expected.size();
+        for (int i = 0; i < expected.size(); i++) {
+            if (!Objects.equals(expected.get(i), actual.get(i + offset))) return false;
+        }
+        return true;
     }
 
     private void indexDisplay(String prefix, String id, Display display) {

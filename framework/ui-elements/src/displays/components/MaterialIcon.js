@@ -1,10 +1,10 @@
-import React, { Suspense } from "react";
-import { withStyles } from '@material-ui/core/styles';
+import React, {Suspense} from "react";
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractMaterialIcon from "../../../gen/displays/components/AbstractMaterialIcon";
 import MaterialIconNotifier from "../../../gen/displays/notifiers/MaterialIconNotifier";
 import MaterialIconRequester from "../../../gen/displays/requesters/MaterialIconRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 
 const styles = theme => ({});
 

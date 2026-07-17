@@ -2,9 +2,9 @@ dsl Konos
 
 Theme theme1
 	type = Light
-	Primary("#3f51b5")
-	Secondary("#ff9100")
-	Error("#f44336")
+	Primary(color="#0f6cbd", darkColor="#7dd3fc")
+	Secondary(color="#c2410c", darkColor="#fb923c")
+	Error(color="#dc2626", darkColor="#f87171")
 
 Format("color:'#B71C1C',textShadow:'2px 2px 2px #fff'") h1
 Format("color:'black',textShadow:'2px 2px 2px #fff'") h2

@@ -1,16 +1,25 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
-import { IconButton, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@material-ui/core";
-import Settings from "@material-ui/icons/Settings";
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    TextField,
+    Typography
+} from "@mui/material";
+import {dialogActionButtonStyles} from "./ButtonStyles";
+import Settings from "@mui/icons-material/Settings";
 import AbstractDashboard from "../../../gen/displays/components/AbstractDashboard";
 import DashboardNotifier from "../../../gen/displays/notifiers/DashboardNotifier";
 import DashboardRequester from "../../../gen/displays/requesters/DashboardRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { Typography } from "@material-ui/core";
 import Spinner from "./Spinner";
 import classNames from "classnames";
 import StringUtil from "../../util/StringUtil";
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 
 const styles = theme => ({
 	container : {
@@ -80,7 +89,7 @@ class Dashboard extends AbstractDashboard {
 								   onChange={this.handleUiScriptChange.bind(this)}/>
 					</DialogContent>
 					<DialogActions>
-						<Button onClick={this.handleClose.bind(this)} color="primary">{this.translate("Close")}</Button>
+						<Button sx={dialogActionButtonStyles} onClick={this.handleClose.bind(this)} color="primary">{this.translate("Close")}</Button>
 					</DialogActions>
 				</Dialog>
 			</div>

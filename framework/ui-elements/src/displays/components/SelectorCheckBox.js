@@ -1,12 +1,12 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
-import { FormControl, FormGroup, FormControlLabel, Checkbox } from '@material-ui/core';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
+import {Checkbox, FormControl, FormControlLabel, FormGroup} from '@mui/material';
 import AbstractSelectorCheckBox from "../../../gen/displays/components/AbstractSelectorCheckBox";
 import SelectorCheckBoxNotifier from "../../../gen/displays/notifiers/SelectorCheckBoxNotifier";
 import SelectorCheckBoxRequester from "../../../gen/displays/requesters/SelectorCheckBoxRequester";
 import Divider from './Divider';
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import 'alexandria-ui-elements/res/styles/layout.css';
 
 const styles = theme => ({
@@ -41,7 +41,7 @@ class SelectorCheckBox extends AbstractSelectorCheckBox {
 	    if (!this.state.visible) return (<React.Fragment/>);
 		const { classes, theme } = this.props;
 		const label = this.props.label;
-		const color = this.state.readonly ? theme.palette.grey.A700 : theme.isDark() ? "#ffffffb3" : "#0000008a";
+		const color = this.state.readonly ? theme.palette.grey.A700 : (theme != null && theme.palette != null && theme.palette.mode === "dark" ? "#ffffffb3" : "#0000008a");
 		return (
 		    <div style={this.style()}>
                 {label != null && label !== "" ? <div className={classes.label} style={{color:color}}>{label}</div> : undefined }

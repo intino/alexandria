@@ -1,11 +1,10 @@
-import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractSignText from "../../../gen/displays/components/AbstractSignText";
 import SignTextNotifier from "../../../gen/displays/notifiers/SignTextNotifier";
 import SignTextRequester from "../../../gen/displays/requesters/SignTextRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import Actionable from "./Actionable";
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 
 const styles = theme => ({});
 

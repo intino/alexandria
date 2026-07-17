@@ -15,6 +15,11 @@ rule type(display)
 		};
 	}
 
+rule type(noHistory) and trigger(request)
+	$name = (<<$parameterSignature>><<, $progressCallback>>) => {
+		$method({ app: this.element.context, op: "$name", s: "$display+lowercase", d: this.element.shortId(), o: this.element.props.owner(), c: this.element.props.context()<<, v: $parameter>>}, this.element.ownerUnit()<<, undefined, $progressCallback>>);
+	};
+
 rule attribute(extensionOf) and trigger(import)
 	import $parent+firstUpperCase~Requester from "./$parent+firstUpperCase~Requester"
 

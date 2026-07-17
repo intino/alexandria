@@ -35,14 +35,19 @@ public class CollectionDialog<DN extends CollectionDialogNotifier, B extends Box
 		createSearchBox();
 	}
 
-	@	Override
+	@Override
 	public void open() {
 		super.open();
 		selection = new ArrayList<>();
+	}
+
+	@Override
+	public void ready() {
 		notifier.refreshSelectionCount(selection.size());
-		searchBox().ifPresent(sb -> sb.search(""));
+		searchBox().ifPresent(sb -> {
+			if (sb.condition() != null && !sb.condition().isEmpty()) sb.search("");
+		});
 		if (collection != null) {
-			collection.init();
 			collection.reload();
 		}
 	}

@@ -1,12 +1,12 @@
 import React from "react";
-import { Typography } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import {Typography} from '@mui/material';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractDashboardMetabase from "../../../gen/displays/components/AbstractDashboardMetabase";
 import DashboardMetabaseNotifier from "../../../gen/displays/notifiers/DashboardMetabaseNotifier";
 import DashboardMetabaseRequester from "../../../gen/displays/requesters/DashboardMetabaseRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import Spinner from "alexandria-ui-elements/src/displays/components/Spinner";
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import 'alexandria-ui-elements/res/styles/layout.css';
 
 const styles = theme => ({

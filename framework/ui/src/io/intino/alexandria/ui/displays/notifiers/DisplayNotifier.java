@@ -5,6 +5,7 @@ import io.intino.alexandria.http.pushservice.MessageCarrier;
 import io.intino.alexandria.ui.Message;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.PropertyList;
+import io.intino.alexandria.ui.displays.components.Multiple;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,19 +90,19 @@ public class DisplayNotifier {
     }
 
     protected void put(String message, Map<String, Object> parameters) {
-        carrier.notifyClient(Json.toString(new Message(message, addMetadata(parameters))));
+        notifyClient(Json.toString(new Message(message, addMetadata(parameters))));
     }
 
     protected void put(String message, Object parameter) {
-        carrier.notifyClient(Json.toString(new Message(message, addMetadata(singletonMap(message, parameter)))));
+        notifyClient(Json.toString(new Message(message, addMetadata(singletonMap(message, parameter)))));
     }
 
     protected void put(String message, String parameter, Object value) {
-        carrier.notifyClient(Json.toString(new Message(message, addMetadata(singletonMap(parameter, value)))));
+        notifyClient(Json.toString(new Message(message, addMetadata(singletonMap(parameter, value)))));
     }
 
     protected void putToDisplay(String message, Map<String, Object> parameters) {
-        carrier.notifyClient(Json.toString(new Message(message, addMetadata(parameters))));
+        notifyClient(Json.toString(new Message(message, addMetadata(parameters))));
     }
 
     protected void putToDisplay(String message) {
@@ -109,11 +110,11 @@ public class DisplayNotifier {
     }
 
     protected void putToDisplay(String message, Object parameter) {
-        carrier.notifyClient(Json.toString(new Message(message, addMetadata(singletonMap(message, parameter)))));
+        notifyClient(Json.toString(new Message(message, addMetadata(singletonMap(message, parameter)))));
     }
 
     protected void putToDisplay(String message, String parameter, Object value) {
-        carrier.notifyClient(Json.toString(new Message(message, addMetadata(singletonMap(parameter, value)))));
+        notifyClient(Json.toString(new Message(message, addMetadata(singletonMap(parameter, value)))));
     }
 
     protected void putToAll(String message) {
@@ -121,15 +122,15 @@ public class DisplayNotifier {
     }
 
     protected void putToAll(String message, Map<String, Object> parameters) {
-        carrier.notifyAll(Json.toString(new Message(message, addMetadata(parameters))));
+        notifyAll(Json.toString(new Message(message, addMetadata(parameters))));
     }
 
     protected void putToAll(String message, Object parameter) {
-        carrier.notifyAll(Json.toString(new Message(message, addMetadata(singletonMap(message, parameter)))));
+        notifyAll(Json.toString(new Message(message, addMetadata(singletonMap(message, parameter)))));
     }
 
     protected void putToAll(String message, String parameter, Object value) {
-        carrier.notifyAll(Json.toString(new Message(message, addMetadata(singletonMap(parameter, value)))));
+        notifyAll(Json.toString(new Message(message, addMetadata(singletonMap(parameter, value)))));
     }
 
     private Map<String, Object> addMetadata(Map<String, Object> parameters) {
@@ -160,5 +161,34 @@ public class DisplayNotifier {
         return parameters;
     }
 
-}
+    private void notifyClient(String message) {
+        Multiple<?, ?, ?> batchingOwner = batchingOwner();
+        if (batchingOwner != null) {
+            batchingOwner.deferNotification(() -> carrier.notifyClient(message));
+            return;
+        }
+        carrier.notifyClient(message);
+    }
 
+    private void notifyAll(String message) {
+        Multiple<?, ?, ?> batchingOwner = batchingOwner();
+        if (batchingOwner != null) {
+            batchingOwner.deferNotification(() -> carrier.notifyAll(message));
+            return;
+        }
+        carrier.notifyAll(message);
+    }
+
+    private Multiple<?, ?, ?> batchingOwner() {
+        Display current = display;
+        while (current != null) {
+            if (current instanceof Multiple<?, ?, ?>) {
+                Multiple<?, ?, ?> multiple = (Multiple<?, ?, ?>) current;
+                if (multiple.isBatchingChildren()) return multiple;
+            }
+            current = current.parent();
+        }
+        return null;
+    }
+
+}

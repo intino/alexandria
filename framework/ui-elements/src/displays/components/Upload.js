@@ -1,13 +1,14 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {createPortal} from "react-dom";
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractUpload from "../../../gen/displays/components/AbstractUpload";
 import UploadNotifier from "../../../gen/displays/notifiers/UploadNotifier";
 import UploadRequester from "../../../gen/displays/requesters/UploadRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import classNames from "classnames";
 import ProgressBar from "./ProgressBar";
-import { Backdrop, Box, CircularProgress, IconButton } from "@material-ui/core";
+import {Backdrop, Box, CircularProgress, IconButton} from "@mui/material";
 
 const styles = theme => ({
     label : {
@@ -50,15 +51,15 @@ class Upload extends AbstractUpload {
     withWrapper = (content) => {
         const { classes, progress } = this.props;
         const { uploadingFiles } = this.state;
-        const isUploading = Object.entries(uploadingFiles).length > 0;
+	    const isUploading = Object.entries(uploadingFiles).length > 0;
         return (
 	        <React.Fragment>
-    	        <div class="layout horizontal center">
+    	        <span className="layout horizontal center">
                     <input type="file" id={this.props.id + "_input"} onChange={this.handleChange.bind(this)} multiple={this.allowMultiple()} hidden disabled={this.state.readonly ? true : undefined} accept={this._allowedTypes()}/>
-                    <label className={classNames(classes.label, this.state.readonly ? classes.disabled : undefined)} id={this.props.id + "_inputLabel"} disabled={this.state.readonly ? true : undefined} for={this.props.id + "_input"}>{content}</label>
+                    <label className={classNames(classes.label, this.state.readonly ? classes.disabled : undefined)} id={this.props.id + "_inputLabel"} htmlFor={this.props.id + "_input"}>{content}</label>
                     {progress && isUploading && this._renderProgressIcon()}
-                    {progress && this._renderProgressBar()}
-                </div>
+                </span>
+                {progress && this._renderProgressBar()}
             </React.Fragment>
         );
     };
@@ -66,19 +67,22 @@ class Upload extends AbstractUpload {
     _renderProgressBar = () => {
         const { classes } = this.props;
         const { showProgress, uploadingFiles } = this.state;
-        return (
-        <Backdrop className={classes.backdrop} open={showProgress} onClick={this.closeProgress}>
-            <Box className={classes.progressContainer}>
-                {Object.entries(uploadingFiles).map(([fileId, fileData]) => (
-                    <ProgressBar
-                        key={fileId}
-                        label={fileData.fileName}
-                        info={this._formatFileSize(fileData.fileSize)}
-                        progress={fileData.progress}
-                    />
-                ))}
-            </Box>
-        </Backdrop>);
+        if (typeof document === "undefined") return null;
+        return createPortal(
+            <Backdrop className={classes.backdrop} open={showProgress} onClick={this.closeProgress}>
+                <Box className={classes.progressContainer}>
+                    {Object.entries(uploadingFiles).map(([fileId, fileData]) => (
+                        <ProgressBar
+                            key={fileId}
+                            label={fileData.fileName}
+                            info={this._formatFileSize(fileData.fileSize)}
+                            progress={fileData.progress}
+                        />
+                    ))}
+                </Box>
+            </Backdrop>,
+            document.body
+        );
     };
 
     _renderProgressIcon = () => {
@@ -89,7 +93,7 @@ class Upload extends AbstractUpload {
                 title={this.translate("Show progress")}
                 aria-label={this.translate("Show progress")}
                 style={{marginRight:'5px'}}>
-                <CircularProgress size={20}/>
+                <CircularProgress size={20} color="secondary"/>
             </IconButton>
         );
     };

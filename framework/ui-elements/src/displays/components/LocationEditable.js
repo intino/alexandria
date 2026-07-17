@@ -1,10 +1,10 @@
 import React from "react";
-import {withStyles} from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractLocationEditable from "../../../gen/displays/components/AbstractLocationEditable";
 import LocationEditableNotifier from "../../../gen/displays/notifiers/LocationEditableNotifier";
 import LocationEditableRequester from "../../../gen/displays/requesters/LocationEditableRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import {withSnackbar} from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import {Marker, Polygon, Polyline} from '@react-google-maps/api'
 import GeometryUtil from "../../util/GeometryUtil";
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractHeading from "../../../gen/displays/components/AbstractHeading";
 import HeadingNotifier from "../../../gen/displays/notifiers/HeadingNotifier";
 import HeadingRequester from "../../../gen/displays/requesters/HeadingRequester";

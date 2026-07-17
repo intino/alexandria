@@ -1,10 +1,9 @@
-import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractSingleValueSlider from "../../../gen/displays/components/AbstractSingleValueSlider";
 import SingleValueSliderNotifier from "../../../gen/displays/notifiers/SingleValueSliderNotifier";
 import SingleValueSliderRequester from "../../../gen/displays/requesters/SingleValueSliderRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 
 const styles = theme => ({});
 

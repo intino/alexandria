@@ -1,16 +1,16 @@
 import React from "react";
 import I18nComponent from "./I18nComponent";
 import classnames from 'classnames';
-import { withStyles } from '@material-ui/core/styles';
-import Collapse from '@material-ui/core/Collapse';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import RefreshIcon from '@material-ui/icons/Refresh';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
+import Collapse from '@mui/material/Collapse';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 const styles = theme => ({
     card: {
@@ -76,7 +76,7 @@ class ConnectionLost extends I18nComponent {
         const unit = this.props.unit != null ? this.props.unit : "server";
 
         return (
-            <Card className={classes.card}>
+            <Card ref={this.props.snackbarRef} className={classes.card} style={this.props.style}>
                 <CardActions classes={{ root: classes.actionRoot }}>
                     <Typography variant="subtitle2" className={classes.typography}>{this.translate("Connection lost")}</Typography>
                     <div className={classes.icons}>
@@ -103,4 +103,8 @@ class ConnectionLost extends I18nComponent {
     };
 }
 
-export default withStyles(styles, { withTheme: true })(ConnectionLost);
+const StyledConnectionLost = withStyles(styles, { withTheme: true })(ConnectionLost);
+
+export default React.forwardRef((props, ref) => (
+    <StyledConnectionLost {...props} snackbarRef={ref} />
+));

@@ -1,23 +1,26 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import AbstractList from "../../../gen/displays/components/AbstractList";
 import ListNotifier from "../../../gen/displays/notifiers/ListNotifier";
 import ListRequester from "../../../gen/displays/requesters/ListRequester";
 import 'alexandria-ui-elements/res/styles/layout.css';
-import {CollectionStyles} from "./Collection";
+import {collectionPalette, CollectionStyles} from "./Collection";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 export const ListStyles = theme => ({
 	...CollectionStyles(theme),
 	itemView : {
 		height: "100%",
-		padding: "0 10px",
+		padding: "2px 12px",
+		borderRadius: "14px",
+		transition: "background-color 140ms ease, box-shadow 140ms ease",
 		'&:hover' : {
-			background: theme.isDark() ? "#444" : "#ddd"
+			background: collectionPalette(theme).rowHoverBackground
 		},
 		'&:hover $selector' : {
-			display: 'block'
+			opacity: 1,
+			pointerEvents: "auto"
 		}
 	},
 });
@@ -31,7 +34,8 @@ export class EmbeddedList extends AbstractList {
 	};
 
 	render() {
-		return (<div ref={this.container} className="flex" style={{width:"100%",position:'relative'}}><AutoSizer>{({ height, width }) => (this.behavior.renderCollection(height, width))}</AutoSizer></div>);
+		const { classes } = this.props;
+		return (<div ref={this.container} className={classes.collectionViewport + " flex"} style={{width:"100%",position:'relative',borderRadius:"18px"}}><AutoSizer>{({ height, width }) => (this.behavior.renderCollection(height, width))}</AutoSizer></div>);
 	};
 
 }

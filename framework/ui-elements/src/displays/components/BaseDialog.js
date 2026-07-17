@@ -1,17 +1,71 @@
 import React from "react";
-import {Typography, DialogTitle, AppBar, Fade, Grow, Slide, Zoom, DialogContent, Paper, IconButton } from "@material-ui/core"
+import {AppBar, DialogContent, DialogTitle, Fade, Grow, IconButton, Paper, Slide, Typography, Zoom} from "@mui/material"
 import AbstractBaseDialog from "../../../gen/displays/components/AbstractBaseDialog";
-import { Close } from "@material-ui/icons";
+import {Close} from "@mui/icons-material";
 import 'alexandria-ui-elements/res/styles/layout.css';
-import Draggable from 'react-draggable';
+import {containerPalette, dialogPaperStyles} from "./ContainerStyles";
+import Theme from "app-elements/gen/Theme";
 
-export const makeDraggable = (id, style, props) => {
+const createDraggablePaper = (id, sizeStyle, owner) => React.forwardRef(function DraggablePaper(props, ref) {
+  const paperRef = React.useRef(null);
+  const dragStateRef = React.useRef({ dragging: false, startX: 0, startY: 0, baseX: 0, baseY: 0 });
+  const [position, setPosition] = React.useState({ x: 0, y: 0 });
+  React.useImperativeHandle(ref, () => paperRef.current);
+
+  React.useEffect(() => {
+    const stopDragging = () => {
+      dragStateRef.current.dragging = false;
+    };
+    const handleMove = (event) => {
+      if (!dragStateRef.current.dragging) return;
+      event.preventDefault();
+      const dx = event.clientX - dragStateRef.current.startX;
+      const dy = event.clientY - dragStateRef.current.startY;
+      setPosition({
+        x: dragStateRef.current.baseX + dx,
+        y: dragStateRef.current.baseY + dy,
+      });
+    };
+    window.addEventListener("mousemove", handleMove);
+    window.addEventListener("mouseup", stopDragging);
+    window.addEventListener("mouseleave", stopDragging);
+    return () => {
+      window.removeEventListener("mousemove", handleMove);
+      window.removeEventListener("mouseup", stopDragging);
+      window.removeEventListener("mouseleave", stopDragging);
+    };
+  }, []);
+
+  const handleMouseDown = (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    if (target.closest(".dialog-draggable-handle") == null) return;
+    dragStateRef.current.dragging = true;
+    dragStateRef.current.startX = event.clientX;
+    dragStateRef.current.startY = event.clientY;
+    dragStateRef.current.baseX = position.x;
+    dragStateRef.current.baseY = position.y;
+    event.preventDefault();
+  };
+
   return (
-    <Draggable handle={"#" + id + "_draggable"} cancel={'[class*="MuiDialogContent-root"]'}>
-      <Paper {...props} style={style}/>
-    </Draggable>
+    <Paper
+      ref={paperRef}
+      {...props}
+      onMouseDown={handleMouseDown}
+      style={{
+        ...(props.style != null ? props.style : {}),
+        ...sizeStyle.call(owner),
+        ...dialogPaperStyles(Theme.get() || owner.props.theme),
+        transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
+        transition: dragStateRef.current.dragging ? "none" : "transform 0.05s linear",
+        willChange: "transform",
+      }}
+    />
   );
-}
+});
+
+export const makeDraggable = (sizeStyle, owner) => createDraggablePaper(null, sizeStyle, owner);
 
 export default class BaseDialog extends AbstractBaseDialog {
 	state = {
@@ -22,15 +76,35 @@ export default class BaseDialog extends AbstractBaseDialog {
 	};
 
 	static Styles = theme => ({
+		dialogPaper: {
+			...dialogPaperStyles(theme),
+			backgroundColor: `${containerPalette(theme).surface} !important`,
+			backgroundImage: `${dialogPaperStyles(theme).backgroundImage} !important`,
+			color: containerPalette(theme).text,
+		},
 		header : {
-			padding: "2px 15px",
+			padding: "10px 18px",
+			background: containerPalette(theme).surfaceMuted,
+			color: containerPalette(theme).title,
+			boxShadow: "none",
+			borderBottom: `1px solid ${containerPalette(theme).headerBorder}`,
 		},
 		fullscreen : {
 		    overflow: "hidden",
-			marginTop: "61px"
+			marginTop: "74px"
+		},
+		content: {
+			padding: "18px 20px 20px !important",
+			background: `${containerPalette(theme).surface} !important`,
+			color: containerPalette(theme).text,
+		},
+		title: {
+			fontWeight: 600,
+			letterSpacing: "-0.01em",
+			color: containerPalette(theme).title,
 		},
 		icon : {
-			color: theme.isDark() ? "black" : "white"
+			color: containerPalette(theme).text
 		},
 	});
 
@@ -52,6 +126,7 @@ export default class BaseDialog extends AbstractBaseDialog {
 
 	constructor(props) {
 		super(props);
+		this.DraggablePaper = createDraggablePaper(this.props.id, this.sizeStyle, this);
 	};
 
 	handleClose = () => {
@@ -60,21 +135,31 @@ export default class BaseDialog extends AbstractBaseDialog {
 
 	renderTitle = () => {
 		const { classes } = this.props;
-		const style = this.props.color != null ? { backgroundColor: this.props.color } : undefined;
+		const theme = Theme.get() || this.props.theme;
+		const palette = containerPalette(theme);
+		const style = this.props.color != null ? { backgroundColor: this.props.color } : { background: palette.surfaceMuted, color: palette.title };
 		if (this.props.fullscreen) return (
 			<AppBar style={style} className={classes.header}>
 				<div className="layout horizontal flex center">
-					<Typography variant="h5">{this.translate(this.state.title)}</Typography>
+					<Typography component="div" variant="h5" className={classes.title}>{this.translate(this.state.title)}</Typography>
 					<div className="layout horizontal end-justified flex"><IconButton onClick={this.handleClose.bind(this)} className={classes.icon}><Close fontSize="large"/></IconButton></div>
 				</div>
 			</AppBar>
 		);
-		return (<DialogTitle style={{cursor:'move'}} id={this.props.id + "_draggable"}>{this.translate(this.state.title)}</DialogTitle>);
+		return (<DialogTitle className="dialog-draggable-handle" style={{cursor:'move', padding:"18px 20px 12px", ...style}} id={this.props.id + "_draggable"}><Typography component="span" variant="h5" className={classes.title}>{this.translate(this.state.title)}</Typography></DialogTitle>);
 	};
 
 	renderContent = (content) => {
 		const { classes } = this.props;
-		return (<DialogContent className={this.props.fullscreen && classes.fullscreen} style={this.style()}>{content != null && content()}</DialogContent>);
+		const theme = Theme.get() || this.props.theme;
+		const palette = containerPalette(theme);
+		const className = this.props.fullscreen ? classes.fullscreen : classes.content;
+		const contentStyle = { ...(this.style() || {}) };
+		delete contentStyle.background;
+		delete contentStyle.backgroundColor;
+		delete contentStyle.backgroundImage;
+		delete contentStyle.color;
+		return (<DialogContent className={className} style={{ ...contentStyle, background: palette.surface, color: palette.text }}>{content != null && content()}</DialogContent>);
 	};
 
 	open = () => {

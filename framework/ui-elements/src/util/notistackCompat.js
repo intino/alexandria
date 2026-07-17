@@ -7,7 +7,7 @@ import {
     SnackbarProvider,
     Transition,
     useSnackbar
-} from "notistack/notistack.esm.js";
+} from "notistack";
 
 const withSnackbar = (Component) => {
 	const WithSnackbar = React.forwardRef((props, ref) => {

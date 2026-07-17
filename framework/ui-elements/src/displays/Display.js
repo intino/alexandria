@@ -1,6 +1,6 @@
 import React from "react";
 import PassiveView from "./PassiveView";
-import Typography from "@material-ui/core/Typography";
+import Typography from "@mui/material/Typography";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import CookieConsent, {Cookies} from "react-cookie-consent";
 import Theme from 'app-elements/gen/Theme';
@@ -8,7 +8,11 @@ import history from "alexandria-ui-elements/src/util/History";
 
 export const enrichDisplayProperties = (instance) => {
     instance.pl.context = () => { return instance.pl.o };
-    instance.pl.owner = () => { return instance.i != null ? instance.i : instance.pl.id };
+    instance.pl.owner = () => {
+        const ownerPath = instance.pl.o;
+        if (ownerPath == null || ownerPath === "") return instance.i != null ? instance.i : instance.pl.id;
+        return ownerPath.substring(ownerPath.lastIndexOf(".") + 1);
+    };
 };
 
 export default class Display extends PassiveView {
@@ -24,37 +28,35 @@ export default class Display extends PassiveView {
         }
     };
 
-	componentDidMount() {
-	    if (this.props.id == null) return;
-	    if (this.props.owner == null) return;
-	    if (this.props.context == null) return;
-	    this.requester.didMount();
+    componentDidMount() {
+        if (this.props.id == null) return;
+        if (this.props.owner == null) return;
+        if (this.props.context == null) return;
+        this.requester.didMount();
     };
 
     addInstance = (instance) => {
-        let instances = this.instances(instance.c);
-        instances.push(instance);
-        this._registerInstances(instance.c, instances);
+        this._updateInstances(instance.c, (instances) => [...instances, instance]);
     };
 
     addInstances = (params) => {
-        let container = params.c;
-        let currentInstances = this.instances(container);
-        params.value.forEach(instance => currentInstances.push(instance));
-        this._registerInstances(container, currentInstances);
+        this._updateInstances(params.c, (instances) => [...instances, ...params.value]);
     };
 
     insertInstance = (instance) => {
-        let instances = this.instances(instance.c);
-        instances[instance.idx] = instance;
-        this._registerInstances(instance.c, instances);
+        this._updateInstances(instance.c, (instances) => {
+            const nextInstances = [...instances];
+            nextInstances[instance.idx] = instance;
+            return nextInstances;
+        });
     };
 
     insertInstances = (params) => {
-        let container = params.c;
-        let currentInstances = this.instances(container);
-        params.value.forEach(instance => currentInstances[instance.idx] = instance);
-        this._registerInstances(container, currentInstances);
+        this._updateInstances(params.c, (instances) => {
+            const nextInstances = [...instances];
+            params.value.forEach(instance => nextInstances[instance.idx] = instance);
+            return nextInstances;
+        });
     };
 
     hiddenClass = () => {
@@ -64,15 +66,10 @@ export default class Display extends PassiveView {
     };
 
     removeInstance = (params) => {
-        let id = params.id;
-        let container = params.c;
-        const instances = this.instances(container);
-        let newInstances = [];
-        for (var i = 0; i < instances.length; i++) {
-            if (instances[i].pl.id === id) continue;
-            newInstances.push(instances[i]);
-        }
-        this._registerInstances(container, newInstances);
+        this._updateInstances(params.c, (instances) => {
+            const id = params.id;
+            return instances.filter(instance => instance != null && instance.pl.id !== id);
+        });
     };
 
     clearContainer = (params) => {
@@ -87,8 +84,8 @@ export default class Display extends PassiveView {
     };
 
     dispatch = (params) => {
-		history.push(params.path);
-		return true;
+        history.push(params.path);
+        return true;
     };
 
     addressed = (params) => {
@@ -123,7 +120,8 @@ export default class Display extends PassiveView {
     };
 
     renderInstance = (instance, props, style, index) => {
-        return (<div key={index} style={style}>{React.createElement(DisplayFactory.get(instance.tp), instance.pl)}</div>);
+        const key = instance != null && instance.pl != null && instance.pl.id != null ? instance.pl.id : index;
+        return (<div key={key} style={style}>{React.createElement(DisplayFactory.get(instance.tp), instance.pl)}</div>);
     };
 
     buildApplicationUrl = (path) => {
@@ -132,7 +130,7 @@ export default class Display extends PassiveView {
 
     copyProps = (from, to, excludedList) => {
         excludedList = excludedList != null ? excludedList : "";
-        excludedList += "id,context";
+        excludedList += "id,context,owner";
         for (var index in from) {
             if (excludedList != null && excludedList.indexOf(index) !== -1) continue;
             to[index] = from[index];
@@ -206,19 +204,36 @@ export default class Display extends PassiveView {
     };
 
     _context() {
+        const id = this.props.id;
+        if (id != null) {
+            const bareUuid = id.indexOf(".") === -1 && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+            if (bareUuid && this.props.rootContextPath != null) return this.props.rootContextPath;
+            const hasPathSegments = id.indexOf(".") !== -1;
+            const root = hasPathSegments ? id.substring(0, id.indexOf(".")) : id;
+            const absolutePath = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(root);
+            if (absolutePath) return id;
+        }
         const context = this.props.context != null ? this.props.context() + "." : "";
-        const owner = this.props.owner != null ? this.props.owner() + "." : "";
-        return context + this.props.id;
+        return context + id;
     };
 
     _owner() {
-        return this.props.id;
+        return this.shortId();
     };
 
     _registerInstances = (container, instances) => {
         let object = {};
         object[container] = instances;
         this.setState(object);
+    };
+
+    _updateInstances = (container, updater) => {
+        const key = container == null ? "__elements" : container;
+        this.setState((prevState) => {
+            const currentInstances = prevState[key] != null ? prevState[key] : [];
+            const nextInstances = updater(currentInstances);
+            return { [key]: nextInstances };
+        });
     };
 
     _cookieConsentAccepted = () => {
@@ -241,7 +256,7 @@ export default class Display extends PassiveView {
         return window.matchMedia('(prefers-color-scheme: dark)') ? 'dark' : 'light';
     };
 
-	_saveAppModeInCookies = (mode) => {
+    _saveAppModeInCookies = (mode) => {
         this.updateCookie(mode, encodeURI(Application.configuration.baseUrl + "/appmode"));
-	};
+    };
 }

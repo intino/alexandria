@@ -27,3 +27,26 @@ Template(layout=Vertical, spacing=DP8) searchBoxExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) gender<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) age as Labeled("age")
 						=========
+
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="No facets. Small size")
+			Block(spacing=DP8, format=filledNoAir)
+				SearchBox(format=air,collections=list2,size=Small) searchBox2 as Labeled("female population")
+					placeholder = "filter elements..."
+				List(itemClass="io.intino.alexandria.ui.documentation.Person") list2
+					Mold > Item(height=60px,relativeWidth=30%) searchBox2Mold
+							Text firstName2
+							Block(layout=Horizontal, spacing=DP16)
+								Text(format=description) gender2
+								Text(format=description) age2 as Labeled("age")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						SearchBox(collections\=list,placeholder\="filter elements...", size\=Small) searchBox
+						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,relativeWidth\=30%) sortingMold<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text firstName<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal, spacing\=DP16)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) gender<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(format\=description) age as Labeled("age")
+						=========

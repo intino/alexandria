@@ -1,6 +1,3 @@
-import React from "react";
-import { Slide, Fade, Grow, Zoom } from '@material-ui/core';
-
 const BlockBehavior = (function () {
 
     function center(component) {

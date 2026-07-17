@@ -1,15 +1,15 @@
-import React from "react";
-import { withStyles } from '@material-ui/core/styles';
 import AbstractBaseSorting from "../../../gen/displays/components/AbstractBaseSorting";
 import BaseSortingNotifier from "../../../gen/displays/notifiers/BaseSortingNotifier";
 import BaseSortingRequester from "../../../gen/displays/requesters/BaseSortingRequester";
-import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {linkPalette} from "./ThemeTokens";
 
 export const BaseSortingStyles = theme => ({
 	link : {
-		color: theme.palette.primary.main,
+		color: linkPalette(theme).color,
 		cursor: "pointer",
+		"&:hover": {
+			color: linkPalette(theme).hoverColor,
+		},
 	},
 });
 

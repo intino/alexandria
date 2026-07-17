@@ -39,11 +39,15 @@ public class SearchBox<DN extends SearchBoxNotifier, B extends Box> extends Abst
         return this;
     }
 
-    public SearchBox<DN, B> condition(String condition) {
-        this.condition = condition;
-        notifier.refreshCondition(condition);
-        return this;
-    }
+	public SearchBox<DN, B> condition(String condition) {
+		this.condition = condition;
+		notifier.refreshCondition(condition);
+		return this;
+	}
+
+	public String condition() {
+		return condition;
+	}
 
     public synchronized void search(String condition) {
 		this.condition = condition;

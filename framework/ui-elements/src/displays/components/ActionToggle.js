@@ -1,12 +1,12 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import AbstractActionToggle from "../../../gen/displays/components/AbstractActionToggle";
 import ActionToggleNotifier from "../../../gen/displays/notifiers/ActionToggleNotifier";
 import ActionToggleRequester from "../../../gen/displays/requesters/ActionToggleRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 
 const styles = theme => ({});
 

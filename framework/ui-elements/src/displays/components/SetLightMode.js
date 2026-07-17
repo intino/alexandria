@@ -1,10 +1,10 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractSetLightMode from "../../../gen/displays/components/AbstractSetLightMode";
 import SetLightModeNotifier from "../../../gen/displays/notifiers/SetLightModeNotifier";
 import SetLightModeRequester from "../../../gen/displays/requesters/SetLightModeRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import Theme from 'app-elements/gen/Theme';
 import Actionable from "./Actionable";
 

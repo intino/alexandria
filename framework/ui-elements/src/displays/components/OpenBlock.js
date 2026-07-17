@@ -1,10 +1,9 @@
-import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractOpenBlock from "../../../gen/displays/components/AbstractOpenBlock";
 import OpenBlockNotifier from "../../../gen/displays/notifiers/OpenBlockNotifier";
 import OpenBlockRequester from "../../../gen/displays/requesters/OpenBlockRequester";
 import Actionable from "./Actionable"
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
 class OpenBlock extends AbstractOpenBlock {

@@ -4,40 +4,88 @@
     outline-color: #0b487f !important;
 }
 
-.MuiFormLabel-root {
-    color: black !important;
-    transform: translate(14px, -6px) scale(0.8) !important;
+:root {
+    --alex-field-bg: #f8fbff;
+    --alex-field-bg-hover: #eef6ff;
+    --alex-field-bg-focus: #e3f2fd;
+    --alex-field-border: rgba(15, 23, 42, 0.18);
+    --alex-field-border-hover: rgba(15, 23, 42, 0.36);
+    --alex-field-focus: #1976d2;
+    --alex-field-label: rgba(15, 23, 42, 0.62);
+    --alex-field-text: rgba(15, 23, 42, 0.92);
+    --alex-field-placeholder: rgba(15, 23, 42, 0.46);
+    --alex-field-height: 52px;
+    --alex-collection-bg: rgba(248, 251, 255, 0.72);
+    --alex-collection-header-bg: rgba(248, 251, 255, 0.96);
+    --alex-collection-row-hover-bg: rgba(15, 23, 42, 0.05);
+    --alex-collection-border: rgba(15, 23, 42, 0.08);
+    --alex-collection-row-border: rgba(15, 23, 42, 0.06);
+    --alex-collection-scroll-thumb: rgba(15, 23, 42, 0.08);
 }
 
-.dark .MuiFormLabel-root {
-    color: white !important;
-    transform: translate(14px, -6px) scale(0.8) !important;
+.dark {
+    --alex-field-bg: rgba(20, 27, 36, 0.96);
+    --alex-field-bg-hover: rgba(27, 36, 47, 0.98);
+    --alex-field-bg-focus: rgba(16, 43, 71, 0.92);
+    --alex-field-border: rgba(148, 163, 184, 0.28);
+    --alex-field-border-hover: rgba(191, 219, 254, 0.42);
+    --alex-field-focus: #90caf9;
+    --alex-field-label: rgba(226, 232, 240, 0.72);
+    --alex-field-text: rgba(255, 255, 255, 0.92);
+    --alex-field-placeholder: rgba(226, 232, 240, 0.5);
+    --alex-collection-bg: rgba(15, 23, 34, 0.98);
+    --alex-collection-header-bg: rgba(18, 28, 42, 0.98);
+    --alex-collection-row-hover-bg: rgba(34, 48, 68, 0.9);
+    --alex-collection-border: rgba(148, 163, 184, 0.14);
+    --alex-collection-row-border: rgba(71, 85, 105, 0.34);
+    --alex-collection-scroll-thumb: rgba(100, 116, 139, 0.34);
 }
 
-.MuiOutlinedInput-notchedOutline {
-    border-radius: 14px !important;
-    border-color: #555 !important;
+.selector-combo-box.readonly .MuiOutlinedInput-notchedOutline,
+.selector-collection-box.readonly .MuiOutlinedInput-notchedOutline,
+.Mui-disabled .MuiOutlinedInput-notchedOutline,
+.date-editable.readonly .MuiPickersOutlinedInput-notchedOutline,
+.image-editable.readonly .fileeditable-dropzone,
+.text-editable-rich-editor.readonly .rsw-editor,
+.fileeditable-surface-readonly,
+.fileeditable-dropzone-readonly {
+    border-color: #e7e7e9 !important;
+    outline: 0 !important;
 }
 
-.Mui-focused .MuiOutlinedInput-notchedOutline {
-    border-width: 2px !important;
-    border-color: #0b487f !important;
+.alex-fileeditable-paste-input-readonly {
+    border: 1px solid #e7e7e9 !important;
+    outline: 0 !important;
 }
 
-.selector-combo-box.readonly .MuiOutlinedInput-notchedOutline, .selector-collection-box.readonly .MuiOutlinedInput-notchedOutline, .Mui-disabled .MuiOutlinedInput-notchedOutline {
-    border-color: #d7d7d7 !important;
+.image-editable.readonly .fileeditable-dropzone,
+.fileeditable-dropzone-readonly,
+.alex-fileeditable-paste-input-readonly {
+    background: none !important;
+}
+
+.dark.selector-combo-box.readonly .MuiOutlinedInput-notchedOutline,
+.dark.selector-collection-box.readonly .MuiOutlinedInput-notchedOutline,
+.dark .Mui-disabled .MuiOutlinedInput-notchedOutline,
+.dark.date-editable.readonly .MuiPickersOutlinedInput-notchedOutline,
+.dark.image-editable.readonly .fileeditable-dropzone,
+.dark.text-editable-rich-editor.readonly .rsw-editor,
+.dark .alex-fileeditable-paste-input-readonly {
+    border-color: rgba(148, 163, 184, 0.16) !important;
 }
 
 .selector-combo-box.text-view .MuiOutlinedInput-notchedOutline {
     border: 0 !important;
 }
 
-.MuiInputBase-root legend {
+.selector-combo-box .MuiInputBase-root legend,
+.selector-collection-box .MuiInputBase-root legend {
     font-size: 1em !important;
     max-width: 100% !important;
 }
 
-.MuiInputBase-root legend > span {
+.selector-combo-box .MuiInputBase-root legend > span,
+.selector-collection-box .MuiInputBase-root legend > span {
     display: block !important;
 }
 
@@ -45,10 +93,16 @@
     /*font-size: 12pt !important;*/
 }
 
-.MuiOutlinedInput-input, .selector-combo-box .MuiInputBase-formControl, .selector-collection-box .MuiInputBase-formControl  {
-    min-height: 38px;
-    padding-top: 4px !important;
-    padding-bottom: 4px !important;
+.MuiOutlinedInput-input {
+    min-height: 28px;
+    padding-top: 11px !important;
+    padding-bottom: 11px !important;
+}
+
+.selector-combo-box .MuiInputBase-formControl, .selector-collection-box .MuiInputBase-formControl  {
+    min-height: 28px;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
 }
 
 .selector-combo-box.text-view .MuiInputBase-formControl {
@@ -63,45 +117,199 @@
     padding-bottom: 0 !important;
 }
 
+.selector-combo-box.filter-view .MuiFormControl-root {
+    min-height: 38px;
+    height: 38px;
+}
+
+.selector-combo-box.filter-view .MuiInputBase-root {
+    min-height: 38px;
+    height: 38px;
+}
+
 .Mui-focused.MuiInputBase-formControl, .selector-combo-box.focus .MuiInputBase-formControl, .selector-collection-box.focus .MuiInputBase-formControl {
-    background: #d2f1fe !important;
+    background: var(--alex-field-bg-focus) !important;
 }
 
 .dark .Mui-focused.MuiInputBase-formControl, .selector-combo-box.dark.focus .MuiInputBase-formControl, .selector-collection-box.dark.focus .MuiInputBase-formControl {
-    background: #222 !important;
+    background: var(--alex-field-bg-focus) !important;
 }
 
 .Mui-disabled.MuiInputBase-formControl, .selector-combo-box.readonly .MuiInputBase-formControl, .selector-collection-box.readonly .MuiInputBase-formControl {
     background: none !important;
 }
 
+.dark .Mui-disabled.MuiInputBase-formControl,
+.dark.selector-combo-box.readonly .MuiInputBase-formControl,
+.dark.selector-collection-box.readonly .MuiInputBase-formControl {
+    background: rgba(15, 23, 42, 0.52) !important;
+}
+
 .MuiInputBase-formControl {
-    background: #f5ffff !important;
-    border-radius: 14px !important;
+    background: var(--alex-field-bg) !important;
+    border-radius: 16px !important;
+    color: var(--alex-field-text) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.75);
+    min-height: var(--alex-field-height);
 }
 
 .dark .MuiInputBase-formControl {
-    background: #404040 !important;
-    border-radius: 14px !important;
+    background: var(--alex-field-bg) !important;
+    border-radius: 16px !important;
+    box-shadow: none !important;
+}
+
+.dark .MuiInputBase-root,
+.dark .MuiOutlinedInput-root,
+.dark .MuiTextField-root .MuiInputBase-root {
+    color: var(--alex-field-text) !important;
+}
+
+.dark .MuiInputLabel-root {
+    color: var(--alex-field-label) !important;
+}
+
+.dark .MuiInputLabel-root.Mui-focused {
+    color: var(--alex-field-focus) !important;
+}
+
+.dark .MuiOutlinedInput-notchedOutline,
+.dark .MuiPickersOutlinedInput-notchedOutline {
+    border-color: var(--alex-field-border) !important;
+}
+
+.dark .MuiInputBase-root:hover .MuiOutlinedInput-notchedOutline,
+.dark .MuiInputBase-root:hover .MuiPickersOutlinedInput-notchedOutline {
+    border-color: var(--alex-field-border-hover) !important;
+}
+
+.dark .MuiInputBase-root.Mui-focused .MuiOutlinedInput-notchedOutline,
+.dark .MuiInputBase-root.Mui-focused .MuiPickersOutlinedInput-notchedOutline {
+    border-color: var(--alex-field-focus) !important;
+    box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.22);
+}
+
+.dark .MuiOutlinedInput-input::placeholder,
+.dark .MuiInputBase-input::placeholder {
+    color: rgba(226, 232, 240, 0.42) !important;
 }
 
 .MuiInputBase-formControl:hover {
-    background: #d2f1fe !important;
-    border-radius: 14px;
+    background: var(--alex-field-bg-hover) !important;
+    border-radius: 16px;
 }
 
 .dark .MuiInputBase-formControl:hover {
-    background: #222 !important;
-    border-radius: 14px;
+    background: var(--alex-field-bg-hover) !important;
+    border-radius: 16px;
+}
+
+.export-selector .MuiInputBase-formControl:hover,
+.export-selector .MuiOutlinedInput-root:hover,
+.export-selector .MuiInputBase-root:hover {
+    background: var(--alex-field-bg-hover) !important;
+    background-color: var(--alex-field-bg-hover) !important;
+}
+
+.export-selector.dark .MuiInputBase-formControl:hover,
+.export-selector.dark .MuiOutlinedInput-root:hover,
+.export-selector.dark .MuiInputBase-root:hover {
+    background: var(--alex-field-bg-hover) !important;
+    background-color: var(--alex-field-bg-hover) !important;
+}
+
+.export-selector .MuiInputBase-formControl.Mui-focused,
+.export-selector .MuiOutlinedInput-root.Mui-focused,
+.export-selector .MuiInputBase-root.Mui-focused {
+    background: var(--alex-field-bg-focus) !important;
+    background-color: var(--alex-field-bg-focus) !important;
+}
+
+.export-selector.dark .MuiInputBase-formControl.Mui-focused,
+.export-selector.dark .MuiOutlinedInput-root.Mui-focused,
+.export-selector.dark .MuiInputBase-root.Mui-focused {
+    background: var(--alex-field-bg-focus) !important;
+    background-color: var(--alex-field-bg-focus) !important;
+}
+
+.export-selector .MuiInputBase-formControl,
+.export-selector .MuiOutlinedInput-root,
+.export-selector .MuiInputBase-root {
+    background: var(--alex-field-bg) !important;
+    background-color: var(--alex-field-bg) !important;
+    border-radius: 16px !important;
+    color: var(--alex-field-text) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.75);
+    min-height: var(--alex-field-height);
+}
+
+.export-selector.dark .MuiInputBase-formControl,
+.export-selector.dark .MuiOutlinedInput-root,
+.export-selector.dark .MuiInputBase-root {
+    background: var(--alex-field-bg) !important;
+    background-color: var(--alex-field-bg) !important;
+    box-shadow: none !important;
+}
+
+.export-selector .MuiOutlinedInput-notchedOutline {
+    border-color: var(--alex-field-border) !important;
+    border-radius: 16px !important;
+}
+
+.export-selector .MuiInputBase-root:hover .MuiOutlinedInput-notchedOutline {
+    border-color: var(--alex-field-border-hover) !important;
+}
+
+.export-selector .MuiInputBase-root.Mui-focused .MuiOutlinedInput-notchedOutline,
+.export-selector .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: var(--alex-field-focus) !important;
+}
+
+.export-selector .MuiSelect-select {
+    color: var(--alex-field-text) !important;
+    display: flex !important;
+    align-items: center;
+    min-height: 28px !important;
+    padding-top: 11px !important;
+    padding-bottom: 11px !important;
+}
+
+.export-selector .MuiSvgIcon-root {
+    color: var(--alex-field-placeholder) !important;
 }
 
 .selector-combo-box .MuiInputBase-formControl:hover, .selector-collection-box .MuiInputBase-formControl:hover  {
     cursor: text;
 }
 
-.Mui-disabled.MuiInputBase-formControl:hover, .selector-combo-box.readonly .MuiInputBase-formControl:hover, .selector-collection-box.readonly .MuiInputBase-formControl:hover {
+.Mui-disabled.MuiInputBase-formControl:hover,
+.selector-combo-box.readonly .MuiInputBase-formControl:hover,
+.selector-collection-box.readonly .MuiInputBase-formControl:hover,
+.Mui-disabled .MuiInputBase-formControl:hover,
+.date-editable.readonly .MuiPickersOutlinedInput-notchedOutline,
+.image-editable.readonly .fileeditable-dropzone:hover,
+.text-editable-rich-editor.readonly .rsw-editor:hover {
     background: none !important;
     cursor: default;
+}
+
+.dark .Mui-disabled.MuiInputBase-formControl:hover,
+.dark.selector-combo-box.readonly .MuiInputBase-formControl:hover,
+.dark.selector-collection-box.readonly .MuiInputBase-formControl:hover,
+.dark .Mui-disabled .MuiInputBase-formControl:hover,
+.dark.date-editable.readonly .MuiPickersOutlinedInput-notchedOutline,
+.dark.image-editable.readonly .fileeditable-dropzone:hover,
+.dark.text-editable-rich-editor.readonly .rsw-editor:hover {
+    background: rgba(15, 23, 42, 0.52) !important;
+    cursor: default;
+}
+
+.dark .Mui-disabled:hover .MuiOutlinedInput-notchedOutline,
+.dark .Mui-disabled:hover .MuiPickersOutlinedInput-notchedOutline,
+.dark.selector-combo-box.readonly .MuiInputBase-root:hover .MuiOutlinedInput-notchedOutline,
+.dark.selector-collection-box.readonly .MuiInputBase-root:hover .MuiOutlinedInput-notchedOutline,
+.dark.date-editable.readonly .MuiInputBase-root:hover .MuiPickersOutlinedInput-notchedOutline {
+    border-color: rgba(148, 163, 184, 0.16) !important;
 }
 
 .MuiInputBase-input::placeholder {
@@ -110,6 +318,11 @@
 
 .MuiInputBase-input.Mui-disabled {
     color: black;
+}
+
+.dark .MuiInputBase-input.Mui-disabled {
+    color: rgba(226, 232, 240, 0.36) !important;
+    -webkit-text-fill-color: rgba(226, 232, 240, 0.36) !important;
 }
 
 .basic-multi-select {
@@ -125,13 +338,33 @@
 }
 
 .selector-combo-box.focus fieldset, .selector-collection-box.focus fieldset {
-    border: 2px solid #3f51b5 !important;
-    border-radius: 14px;
+    border: 1px solid var(--alex-field-focus) !important;
+    border-radius: 16px;
+    box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.14);
+}
+
+.dark.selector-combo-box.focus fieldset, .dark.selector-collection-box.focus fieldset {
+    box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.22);
+}
+
+.dark .selector-combo-box .PrivateNotchedOutline-root-46,
+.dark .selector-collection-box .PrivateNotchedOutline-root-46 {
+    border-color: var(--alex-field-border) !important;
+    background: transparent;
+}
+
+.dark .selector-combo-box.focus .PrivateNotchedOutline-root-46,
+.dark .selector-collection-box.focus .PrivateNotchedOutline-root-46,
+.dark .selector-combo-box .Mui-focused .PrivateNotchedOutline-root-46,
+.dark .selector-collection-box .Mui-focused .PrivateNotchedOutline-root-46 {
+    border-color: var(--alex-field-focus) !important;
+    box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.22);
 }
 
 .basic-multi-select .select__control, .basic-multi-select .select__control:hover {
     background: transparent;
     border: 0;
+    box-shadow: none;
 }
 
 .select__control--is-focused {
@@ -145,22 +378,28 @@
 }
 
 .selector-combo-box .PrivateNotchedOutline-root-46, .selector-collection-box .PrivateNotchedOutline-root-46 {
-    top: -5px;
+    top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     margin: 0;
-    padding: 0 8px;
+    padding: 0 10px;
     overflow: hidden;
     position: absolute;
     border-style: solid;
     border-width: 1px;
+    border-color: var(--alex-field-border);
+    border-radius: 16px;
     pointer-events: none;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
 }
 
 .selector-combo-box.filter-view .PrivateNotchedOutline-root-46 {
     padding: 0 !important;
-    height: 38px;
+    top: 6px;
+    height: auto;
+    transform: none;
+    border-radius: 19px;
 }
 
 .PrivateNotchedOutline-legendLabelled-48 {
@@ -169,7 +408,7 @@
     display: block;
     padding: 0;
     font-size: 0.75em;
-    max-width: 0.01px;
+    max-width: 1000px;
     text-align: left;
     transition: max-width 50ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
     visibility: hidden;
@@ -210,4 +449,275 @@
 
 .MuiFormHelperText-root, .MuiFormHelperText-contained {
     color: #f89802 !important;
+}
+
+.dark .MuiFormHelperText-root, .dark .MuiFormHelperText-contained {
+    color: rgba(251, 191, 36, 0.92) !important;
+}
+
+.MuiPickersInputBase-sectionsContainer {
+    padding-left: 4px;
+}
+
+.date-editable .MuiInputBase-formControl,
+.date-editable .MuiPickersTextField-root .MuiInputBase-formControl,
+.date-editable .MuiPickersOutlinedInput-root,
+.date-editable .MuiPickersInputBase-root {
+    min-height: var(--alex-field-height);
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.date-editable .MuiPickersOutlinedInput-notchedOutline,
+.date-editable .MuiOutlinedInput-notchedOutline {
+    border-width: 1px !important;
+}
+
+.date-editable .MuiInputBase-root:hover .MuiPickersOutlinedInput-notchedOutline,
+.date-editable .MuiInputBase-root:hover .MuiOutlinedInput-notchedOutline,
+.date-editable .MuiPickersOutlinedInput-root:hover .MuiPickersOutlinedInput-notchedOutline,
+.date-editable .MuiPickersOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    border-color: var(--alex-field-border-hover) !important;
+}
+
+.date-editable.readonly .MuiInputBase-root:hover,
+.date-editable.readonly .MuiPickersOutlinedInput-root:hover,
+.date-editable.readonly .MuiInputBase-formControl:hover {
+    background: none !important;
+    box-shadow: none !important;
+    cursor: default !important;
+}
+
+.date-editable.readonly .MuiInputBase-root:hover .MuiPickersOutlinedInput-notchedOutline,
+.date-editable.readonly .MuiInputBase-root:hover .MuiOutlinedInput-notchedOutline,
+.date-editable.readonly .MuiPickersOutlinedInput-root:hover .MuiPickersOutlinedInput-notchedOutline,
+.date-editable.readonly .MuiPickersOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    border-color: #e7e7e9 !important;
+}
+
+.dark .date-editable .MuiPickersOutlinedInput-notchedOutline,
+.dark .date-editable .MuiOutlinedInput-notchedOutline {
+    border-color: var(--alex-field-border) !important;
+}
+
+.dark.date-editable.readonly .MuiInputBase-root:hover,
+.dark.date-editable.readonly .MuiPickersOutlinedInput-root:hover,
+.dark.date-editable.readonly .MuiInputBase-formControl:hover {
+    background: rgba(15, 23, 42, 0.52) !important;
+    box-shadow: none !important;
+    cursor: default !important;
+}
+
+.dark.date-editable.readonly .MuiInputBase-root:hover .MuiPickersOutlinedInput-notchedOutline,
+.dark.date-editable.readonly .MuiInputBase-root:hover .MuiOutlinedInput-notchedOutline,
+.dark.date-editable.readonly .MuiPickersOutlinedInput-root:hover .MuiPickersOutlinedInput-notchedOutline,
+.dark.date-editable.readonly .MuiPickersOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    border-color: rgba(148, 163, 184, 0.16) !important;
+}
+
+.date-editable .Mui-focused .MuiPickersOutlinedInput-notchedOutline,
+.date-editable .Mui-focused .MuiOutlinedInput-notchedOutline,
+.date-editable .MuiPickersOutlinedInput-root.Mui-focused .MuiPickersOutlinedInput-notchedOutline,
+.date-editable .MuiPickersOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-width: 1px !important;
+}
+
+.MuiInputLabel-root {
+    line-height: 1.2;
+}
+
+.dark .MuiInputLabel-root {
+    color: var(--alex-field-label) !important;
+}
+
+.dark .MuiInputBase-input {
+    color: var(--alex-field-text) !important;
+}
+
+.selector-combo-box .MuiFormControl-root > label, .selector-collection-box .MuiFormControl-root > label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    padding: 0 6px;
+    margin-left: 10px;
+    transform: translateY(-8px) scale(0.85);
+    transform-origin: top left;
+    line-height: 1;
+    background: var(--alex-field-bg);
+    color: var(--alex-field-label) !important;
+    font-weight: 500;
+    pointer-events: none;
+}
+
+.dark.selector-combo-box .MuiFormControl-root > label,
+.dark.selector-collection-box .MuiFormControl-root > label {
+    background: #161d26 !important;
+    color: var(--alex-field-label) !important;
+}
+
+.selector-combo-box .MuiOutlinedInput-notchedOutline legend,
+.selector-collection-box .MuiOutlinedInput-notchedOutline legend,
+.selector-combo-box .MuiOutlinedInput-notchedOutline legend span,
+.selector-collection-box .MuiOutlinedInput-notchedOutline legend span {
+    background: transparent !important;
+    color: inherit !important;
+}
+
+.dark .basic-multi-select .select__control,
+.dark .basic-multi-select .select__control:hover,
+.dark .basic-multi-select .select__value-container,
+.dark .basic-multi-select .select__menu,
+.dark .basic-multi-select .select__menu-list {
+    background: var(--alex-field-bg) !important;
+    color: var(--alex-field-text) !important;
+}
+
+.selector-combo-box.dark .basic-multi-select .select__control,
+.selector-combo-box.dark .basic-multi-select .select__control:hover,
+.selector-combo-box.dark .basic-multi-select .select__value-container,
+.selector-combo-box.dark .basic-multi-select .select__menu,
+.selector-combo-box.dark .basic-multi-select .select__menu-list,
+.selector-collection-box.dark .basic-multi-select .select__control,
+.selector-collection-box.dark .basic-multi-select .select__control:hover,
+.selector-collection-box.dark .basic-multi-select .select__value-container,
+.selector-collection-box.dark .basic-multi-select .select__menu,
+.selector-collection-box.dark .basic-multi-select .select__menu-list {
+    background: var(--alex-field-bg) !important;
+    color: var(--alex-field-text) !important;
+}
+
+.dark .basic-multi-select .select__input-container,
+.dark .basic-multi-select .select__single-value,
+.dark .basic-multi-select .select__placeholder,
+.dark .basic-multi-select .select__multi-value__label {
+    color: var(--alex-field-text) !important;
+}
+
+.selector-combo-box.dark .basic-multi-select .select__input-container,
+.selector-combo-box.dark .basic-multi-select .select__single-value,
+.selector-combo-box.dark .basic-multi-select .select__placeholder,
+.selector-combo-box.dark .basic-multi-select .select__multi-value__label,
+.selector-collection-box.dark .basic-multi-select .select__input-container,
+.selector-collection-box.dark .basic-multi-select .select__single-value,
+.selector-collection-box.dark .basic-multi-select .select__placeholder,
+.selector-collection-box.dark .basic-multi-select .select__multi-value__label {
+    color: var(--alex-field-text) !important;
+}
+
+.dark .basic-multi-select .select__placeholder {
+    color: var(--alex-field-placeholder) !important;
+}
+
+.selector-combo-box.dark .basic-multi-select .select__placeholder,
+.selector-collection-box.dark .basic-multi-select .select__placeholder {
+    color: var(--alex-field-placeholder) !important;
+}
+
+.fileeditable-dropzone-dark .ace_content,
+.fileeditable-dropzone-dark .ace_editor,
+.fileeditable-dropzone-dark .ace_gutter,
+.fileeditable-dropzone-dark .ace_scroller,
+.fileeditable-dropzone-dark .ace_layer,
+.fileeditable-dropzone-dark .ace_marker-layer,
+.fileeditable-dropzone-dark .ace_text-layer {
+    background: var(--alex-field-bg) !important;
+    background-color: var(--alex-field-bg) !important;
+    color: var(--alex-field-text) !important;
+}
+
+.texteditable-code.dark .ace_editor,
+.texteditable-code.dark .ace_gutter,
+.texteditable-code.dark .ace_scroller,
+.texteditable-code.dark .ace_layer,
+.texteditable-code.dark .ace_marker-layer,
+.texteditable-code.dark .ace_text-layer,
+.texteditable-code.dark .ace_content {
+    background: var(--alex-field-bg) !important;
+    background-color: var(--alex-field-bg) !important;
+    color: var(--alex-field-text) !important;
+}
+
+.fileeditable-dropzone-dark .ace_gutter {
+    border-right: 1px solid var(--alex-field-border) !important;
+}
+
+.texteditable-code.dark .ace_gutter {
+    border-right: 1px solid var(--alex-field-border) !important;
+}
+
+.fileeditable-dropzone-dark .ace_gutter-cell {
+    color: rgba(226, 232, 240, 0.5) !important;
+}
+
+.texteditable-code.dark .ace_gutter-cell {
+    color: rgba(226, 232, 240, 0.5) !important;
+}
+
+.fileeditable-dropzone-dark .ace_cursor {
+    color: var(--alex-field-text) !important;
+}
+
+.texteditable-code.dark .ace_cursor {
+    color: var(--alex-field-text) !important;
+}
+
+.alexandria-table-header-dark,
+.alexandria-table-header-dark > div,
+.alexandria-table-header-dark > div > div,
+.alexandria-table-header-dark * {
+    background: var(--alex-collection-header-bg) !important;
+    color: rgba(241, 245, 249, 0.96) !important;
+}
+
+.alexandria-table-header-dark {
+    border-bottom: 1px solid var(--alex-collection-border) !important;
+}
+
+.dark .alexandria-searchbox .MuiInputBase-root {
+    background: var(--alex-field-bg) !important;
+    background-color: var(--alex-field-bg) !important;
+}
+
+.dark .alexandria-searchbox .MuiInputBase-root:hover {
+    background: var(--alex-field-bg-hover) !important;
+    background-color: var(--alex-field-bg-hover) !important;
+}
+
+.dark .alexandria-searchbox .MuiInputBase-root.Mui-focused {
+    background: var(--alex-field-bg-focus) !important;
+    background-color: var(--alex-field-bg-focus) !important;
+}
+
+.dark .alexandria-searchbox .MuiOutlinedInput-notchedOutline {
+    border-color: var(--alex-field-border) !important;
+}
+
+.dark .alexandria-searchbox .MuiInputBase-root:hover .MuiOutlinedInput-notchedOutline {
+    border-color: var(--alex-field-border-hover) !important;
+}
+
+.dark .alexandria-searchbox .MuiInputBase-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: var(--alex-field-focus) !important;
+}
+
+.dark .alexandria-searchbox svg,
+.dark .alexandria-searchbox .MuiSvgIcon-root {
+    color: var(--alex-field-label) !important;
+    fill: currentColor !important;
+}
+
+.alexandria-dialog-paper-dark {
+    background: #161d26 !important;
+    background-color: #161d26 !important;
+    background-image: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, #161d26 18%) !important;
+    color: rgba(226,232,240,0.82) !important;
+    border: 1px solid rgba(148,163,184,0.18) !important;
+}
+
+.alexandria-dialog-paper-dark .MuiDialogTitle-root,
+.alexandria-dialog-paper-dark .MuiDialogContent-root,
+.alexandria-dialog-paper-dark .MuiDialogActions-root {
+    background: transparent !important;
+    color: rgba(226,232,240,0.82) !important;
 }

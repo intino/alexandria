@@ -1,9 +1,7 @@
-import React, { createRef, useRef, useState } from "react";
-import { useDrag, useDrop } from "react-dnd";
+import React, {createRef, useRef, useState} from "react";
+import {useDrag, useDrop} from "react-dnd";
 import ItemTypes from "./ItemTypes";
-import classnames from "classnames";
-import { ArrowDropDown, ArrowDropUp, DragIndicator } from "@material-ui/icons";
-import { Tooltip, Typography, Icon, Popover } from '@material-ui/core';
+import {Popover, Tooltip, Typography} from '@mui/material';
 
 const DefaultStyle = {
   margin: "0",

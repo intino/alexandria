@@ -1,22 +1,22 @@
 import React from "react";
 import {NumericFormat} from "react-number-format";
-import {withStyles} from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractNumberEditable from "../../../gen/displays/components/AbstractNumberEditable";
 import NumberEditableNotifier from "../../../gen/displays/notifiers/NumberEditableNotifier";
 import NumberEditableRequester from "../../../gen/displays/requesters/NumberEditableRequester";
-import TextField from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
-import {withSnackbar} from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import Delayer from '../../util/Delayer';
 import 'alexandria-ui-elements/res/styles/components/fields.css';
 import classnames from 'classnames';
 import Theme from "app-elements/gen/Theme";
+import {errorFieldStyles, fieldErrorStyles, outlinedFieldStyles} from "./FieldStyles";
 
 const styles = theme => ({
-	default : {
-		width: "100%",
-	},
+	default : outlinedFieldStyles(theme),
+	errorField: errorFieldStyles(theme),
 	input: {
 		'&[type=number]': {
 			'-moz-appearance': 'textfield',
@@ -30,20 +30,7 @@ const styles = theme => ({
 			margin: 0,
 		},
 	},
-	error : {
-		top: '0px',
-		left: '0px',
-		color: theme.isDark() ? 'white' : '#e13939',
-		width: 'calc(100% - 4px)',
-		height: "calc(100% - 14px)",
-		margin: '12px 2px',
-		position: 'absolute',
-		background: theme.isDark() ? '#910000' : '#fdecec',
-		padding: '14px 15px 0',
-		borderRadius: '14px',
-		fontSize: '12pt',
-		zIndex: 1,
-	}
+	error : fieldErrorStyles(theme)
 });
 
 class NumberEditable extends AbstractNumberEditable {
@@ -78,16 +65,6 @@ class NumberEditable extends AbstractNumberEditable {
 		if (element != null) element.style.display = "none";
 	};
 
-	handleMouseEnter() {
-		const element = document.getElementById(this.props.id + "-error");
-		if (element != null) element.style.display = "none";
-	};
-
-	handleMouseLeave() {
-		const element = document.getElementById(this.props.id + "-error");
-		if (element != null && document.activeElement !== this.inputRef.current) element.style.display = "block";
-	};
-
 	handleBlur(e) {
 		const element = document.getElementById(this.props.id + "-error");
 		if (element != null) element.style.display = "block";
@@ -97,39 +74,46 @@ class NumberEditable extends AbstractNumberEditable {
 		if (!this.state.visible) return (<React.Fragment/>);
 
 		const { classes } = this.props;
-		const label = this.props.label !== "" ? this.translate(this.props.label) : undefined;
-		const error = this.state.error;
-		const value = this.state.value != null ? this.state.value : (this.state.min !== -1 ? this.state.min : 0);
-		const { thousandSeparator, decimalSeparator } = this.separators();
-		const theme = Theme.get();
+			const label = this.props.label !== "" ? this.translate(this.props.label) : undefined;
+			const error = this.state.error;
+			const shrink = error != null ? true : (this.props.shrink !== null ? this.props.shrink : undefined);
+			const value = this.state.value != null ? this.state.value : (this.state.min !== -1 ? this.state.min : 0);
+			const { thousandSeparator, decimalSeparator } = this.separators();
+			const theme = Theme.get();
+			const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
+			const fieldThemeClass = isDark ? "dark" : undefined;
 
-		return (
-			<div style={{position:"relative"}} className={theme.isDark() ? "dark" : undefined}>
-				{(!this.state.readonly && error != null) && <div id={this.props.id + "-error"} className={classes.error} style={this._errorStyle()} onMouseEnter={this.handleMouseEnter.bind(this)}>{error}</div>}
+			return (
+				<div style={{position:"relative"}} className={fieldThemeClass}>
+				{(!this.state.readonly && error != null) && <div id={this.props.id + "-error"} className={classes.error} style={this._errorStyle()}>{error}</div>}
 				<NumericFormat
 					value={value}
 					customInput={TextField}
 					thousandSeparator={thousandSeparator}
 					decimalSeparator={decimalSeparator}
 					decimalScale={this.props.decimals != null ? this.props.decimals : 0}
-					format={this.variant("body1")} style={this.style()} className={classnames(classes.default, "number-editable")} label={label} type="text"
+					format={this.variant("body1")} style={this.style()} className={classnames(classes.default, error != null ? classes.errorField : undefined, "number-editable")} label={label} type="text"
 					onChange={this.handleChange.bind(this)} autoFocus={this.props.focused}
-					onMouseLeave={this.handleMouseLeave.bind(this)}
 					autoComplete="off" disabled={this.state.readonly} size="Small" variant="outlined"
-					InputLabelProps={{ shrink: this.props.shrink !== null ? this.props.shrink : undefined }}
 					inputRef={this.inputRef}
 					onFocus={this.handleFocus.bind(this)}
 					onBlur={this.handleBlur.bind(this)}
-					inputProps={{
-						min: this.state.min !== -1 ? this.state.min : undefined,
-						max: this.state.max !== -1 ? this.state.max : undefined,
-						step: this.props.step !== -1 ? this.props.step : undefined,
-						className: classes.input
-					}}
-					InputProps={{
-						readOnly: this.state.readonly,
-						startAdornment: this.state.prefix !== undefined ? <InputAdornment position="start">{this.translate(this.state.prefix)}</InputAdornment> : undefined,
-						endAdornment: this.state.suffix !== undefined ? <InputAdornment position="end">{this.translate(this.state.suffix)}</InputAdornment> : undefined
+					slotProps={{
+						inputLabel: {
+							shrink: shrink
+						},
+						htmlInput: {
+							min: this.state.min !== -1 ? this.state.min : undefined,
+							max: this.state.max !== -1 ? this.state.max : undefined,
+							step: this.props.step !== -1 ? this.props.step : undefined,
+							className: classes.input
+						},
+						input: {
+							style: { borderRadius: "16px" },
+							readOnly: this.state.readonly,
+							startAdornment: this.state.prefix !== undefined ? <InputAdornment position="start">{this.translate(this.state.prefix)}</InputAdornment> : undefined,
+							endAdornment: this.state.suffix !== undefined ? <InputAdornment position="end">{this.translate(this.state.suffix)}</InputAdornment> : undefined
+						}
 					}}>
 				</NumericFormat>
 			</div>
@@ -146,7 +130,7 @@ class NumberEditable extends AbstractNumberEditable {
     }
 
 	refresh = (value) => {
-		this.setState({ "value": value });
+		this.setState({ "value": value != null ? value : "" });
 	};
 
 	refreshReadonly = (readonly) => {
@@ -166,14 +150,7 @@ class NumberEditable extends AbstractNumberEditable {
 	};
 
 	_errorStyle = () => {
-		const style = this.style();
-		let current = style.marginTop;
-		if (!current) return { marginTop: "2px" };
-		const match = current.match(/^([\d.]+)px$/);
-		if (!match) return { marginTop: "2px" };
-		let marginTop = parseFloat(match[1]);
-		marginTop += 2;
-		return { marginTop: marginTop + "px" }
+		return {};
 	};
 }
 

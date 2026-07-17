@@ -1,5 +1,5 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import AbstractMagazine from "../../../gen/displays/components/AbstractMagazine";
 import MagazineNotifier from "../../../gen/displays/notifiers/MagazineNotifier";
@@ -14,7 +14,8 @@ export const MagazineStyles = theme => ({
 		height: "100%",
 		padding: "0 10px",
 		'&:hover $selector' : {
-			display: 'block'
+			opacity: 1,
+			pointerEvents: "auto"
 		}
 	},
 });
@@ -28,7 +29,8 @@ export class EmbeddedMagazine extends AbstractMagazine {
 	};
 
 	render() {
-		return (<div ref={this.container} className="flex" style={{width:"100%",position:'relative'}}><AutoSizer>{({ height, width }) => (this.behavior.renderCollection(height, width, "Column"))}</AutoSizer></div>);
+		const { classes } = this.props;
+		return (<div ref={this.container} className={classes.collectionViewport + " flex"} style={{width:"100%",position:'relative'}}><AutoSizer>{({ height, width }) => (this.behavior.renderCollection(height, width, "Column"))}</AutoSizer></div>);
 	};
 
 }

@@ -1,10 +1,9 @@
-import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractTemporalSlider from "../../../gen/displays/components/AbstractTemporalSlider";
 import TemporalSliderNotifier from "../../../gen/displays/notifiers/TemporalSliderNotifier";
 import TemporalSliderRequester from "../../../gen/displays/requesters/TemporalSliderRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import BaseSlider from "./BaseSlider";
 
 const styles = theme => ({...BaseSlider.Styles(theme)});

@@ -1,11 +1,11 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
-import { Tooltip, Typography } from "@material-ui/core";
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
+import {Tooltip, Typography} from "@mui/material";
 import AbstractKpi from "../../../gen/displays/components/AbstractKpi";
 import KpiNotifier from "../../../gen/displays/notifiers/KpiNotifier";
 import KpiRequester from "../../../gen/displays/requesters/KpiRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import classnames from "classnames";
 

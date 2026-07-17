@@ -1,15 +1,29 @@
-import React, { Suspense } from "react";
-import { withStyles } from '@material-ui/core/styles';
+import React, {Suspense} from "react";
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractExport from "../../../gen/displays/components/AbstractExport";
 import ExportNotifier from "../../../gen/displays/notifiers/ExportNotifier";
 import ExportRequester from "../../../gen/displays/requesters/ExportRequester";
 import Actionable from "./Actionable";
-import { Select, MenuItem, FormControl, FormHelperText, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@material-ui/core";
-import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import MomentUtils from "@date-io/moment";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    FormControl,
+    FormHelperText,
+    MenuItem,
+    TextField
+} from "@mui/material";
+import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
+import {AdapterMoment} from '@mui/x-date-pickers/AdapterMoment';
 import DateUtil from "../../util/DateUtil";
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
+import moment from "moment";
+import Theme from "app-elements/gen/Theme";
+import {fieldPalette, outlinedFieldStyles} from "./FieldStyles";
+import {dialogActionButtonStyles, dialogPrimaryButtonStyles} from "./ButtonStyles";
 
 const styles = theme => ({
 	...Actionable.Styles,
@@ -17,6 +31,29 @@ const styles = theme => ({
 		marginBottom: "20px",
 		width: "100%"
 	},
+	select: outlinedFieldStyles(theme),
+	menuPaper: {
+		background: fieldPalette(theme).background,
+		color: fieldPalette(theme).textColor,
+		border: `1px solid ${fieldPalette(theme).borderColor}`,
+		borderRadius: "16px",
+		boxShadow: fieldPalette(theme).dark ? "0 16px 36px rgba(2,6,23,0.46)" : "0 12px 28px rgba(15,23,42,0.12)",
+	},
+	menuItem: {
+		color: `${fieldPalette(theme).textColor} !important`,
+		"&.Mui-selected": {
+			background: `${fieldPalette(theme).focusColor} !important`,
+			color: `${fieldPalette(theme).dark ? "#08111d" : "white"} !important`,
+		},
+		"&.Mui-selected:hover": {
+			background: `${fieldPalette(theme).focusColor} !important`,
+			color: `${fieldPalette(theme).dark ? "#08111d" : "white"} !important`,
+		},
+		"&:hover": {
+			background: `${fieldPalette(theme).hoverBackground} !important`,
+		},
+	},
+	field: outlinedFieldStyles(theme),
 	picker : {
 		width: "calc(50% - 10px)"
 	},
@@ -56,26 +93,45 @@ class Export extends AbstractExport {
 		const openRange = this.state.openRange != null ? this.state.openRange : false;
 		return (<Dialog onClose={this.handleExportClose} open={openRange}>
 				<DialogTitle onClose={this.handleExportClose}>{this._title()}</DialogTitle>
-				<DialogContent style={{position:"relative",overflow:"hidden"}}>
+				<DialogContent style={{position:"relative",overflow:"hidden",paddingTop:'15px'}}>
 					{this.renderOptions()}
 					{this.renderRangePickers()}
 				</DialogContent>
 				<DialogActions>
-					<Button onClick={this.handleExportClose} color="primary">{this.translate("Cancel")}</Button>
-					<Button variant="contained" onClick={this.handleExportAccept} color="primary" disabled={this.state.exportDisabled}>{this.translate("OK")}</Button>
+					<Button sx={dialogActionButtonStyles} onClick={this.handleExportClose} color="primary">{this.translate("Cancel")}</Button>
+					<Button sx={dialogPrimaryButtonStyles} variant="contained" onClick={this.handleExportAccept} color="primary" disabled={this.state.exportDisabled}>{this.translate("OK")}</Button>
 				</DialogActions>
 			</Dialog>
 		);
 	};
 
 	renderOptions = () => {
+		const theme = Theme.get();
+		const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
+		const { classes } = this.props;
 		const options = this._options();
 		if (options.length <= 1) return;
-		return (<FormControl className={this.props.classes.options}>
-					<Select value={this.state.option} style={{width:"100%"}} displayEmpty onChange={this.handleOptionChange.bind(this)}>
-						<MenuItem value="" disabled>{this.translate("Select an option")}</MenuItem>
-						{options.map((option, i) => <MenuItem key={i} value={option}>{option}</MenuItem>)}
-					</Select>
+		return (<FormControl className={`${this.props.classes.options} export-selector ${isDark ? "dark" : ""}`}>
+					<TextField
+						select
+						value={this.state.option}
+						className={classes.select}
+						variant="outlined"
+						size="Small"
+						onChange={this.handleOptionChange.bind(this)}
+						slotProps={{
+							input: {
+								style: { borderRadius: "16px" }
+							},
+							select: {
+								displayEmpty: true,
+								MenuProps: isDark ? { PaperProps: { className: classes.menuPaper } } : undefined
+							}
+						}}
+					>
+						<MenuItem className={classes.menuItem} value="" disabled>{this.translate("Select an option")}</MenuItem>
+						{options.map((option, i) => <MenuItem className={classes.menuItem} key={i} value={option}>{option}</MenuItem>)}
+					</TextField>
 				</FormControl>
 		);
 	};
@@ -83,20 +139,44 @@ class Export extends AbstractExport {
 	renderRangePickers = () => {
 		const bounds = this._bounds();
 		const { classes } = this.props;
+		const textFieldSlotProps = {
+			className: classes.field,
+			size: "small",
+			variant: "outlined",
+			sx: {
+				width: "100%",
+				"& .MuiInputBase-root, & .MuiOutlinedInput-root, & .MuiPickersOutlinedInput-root, & .MuiPickersInputBase-root": {
+					minHeight: "52px",
+					height: "52px",
+					alignItems: "center",
+				},
+				"& .MuiOutlinedInput-input, & .MuiInputBase-input, & .MuiPickersInputBase-sectionsContainer": {
+					minHeight: "28px",
+					paddingTop: "11px",
+					paddingBottom: "11px",
+					boxSizing: "content-box",
+					display: "flex",
+					alignItems: "center",
+				}
+			},
+			slotProps: {
+				input: {
+					style: { borderRadius: "16px" }
+				}
+			}
+		};
 		return (<React.Fragment>
-					<MuiPickersUtilsProvider utils={MomentUtils}><KeyboardDatePicker variant="inline" autoOk format={this._format()}
+					<LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={Application.configuration.language}><DatePicker format={this._format()}
 									 	className={classes.picker}
-										value={this.state.from} onChange={this.handleFromChange.bind(this)}
-										minDate={bounds.min} maxDate={bounds.max} label={this.translate("from")}
-										minDateMessage={this.translate("Date should not be before minimal date")}
-										maxDateMessage={this.translate("Date should not be after maximal date")}/></MuiPickersUtilsProvider>
+										value={this.state.from != null ? moment(this.state.from) : null} onChange={this.handleFromChange.bind(this)}
+										minDate={bounds.min != null ? moment(bounds.min) : undefined} maxDate={bounds.max != null ? moment(bounds.max) : undefined} label={this.translate("from")}
+										slotProps={{ textField: textFieldSlotProps }}/></LocalizationProvider>
 					<span className={classes.pickerSeparator}></span>
-					<MuiPickersUtilsProvider utils={MomentUtils}><KeyboardDatePicker variant="inline" autoOk format={this._format()}
+					<LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={Application.configuration.language}><DatePicker format={this._format()}
 									    className={classes.picker}
-										value={this.state.to} onChange={this.handleToChange.bind(this)}
-										minDate={bounds.min} maxDate={bounds.max} label={this.translate("to")}
-										minDateMessage={this.translate("Date should not be before minimal date")}
-										maxDateMessage={this.translate("Date should not be after maximal date")}/></MuiPickersUtilsProvider>
+										value={this.state.to != null ? moment(this.state.to) : null} onChange={this.handleToChange.bind(this)}
+										minDate={bounds.min != null ? moment(bounds.min) : undefined} maxDate={bounds.max != null ? moment(bounds.max) : undefined} label={this.translate("to")}
+										slotProps={{ textField: textFieldSlotProps }}/></LocalizationProvider>
 					{this.renderMessages()}
 				</React.Fragment>
 		);

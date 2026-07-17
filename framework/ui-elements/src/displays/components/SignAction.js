@@ -1,13 +1,20 @@
 import React from "react";
-import { Snackbar, Dialog, DialogTitle, DialogContent, DialogActions, Button, IconButton, List, ListItem, ListItemText } from "@material-ui/core";
-import { Close } from "@material-ui/icons";
-import { withStyles } from '@material-ui/core/styles';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    List,
+    ListItemButton,
+    ListItemText,
+    Snackbar
+} from "@mui/material";
+import {Close} from "@mui/icons-material";
 import AbstractSignAction from "../../../gen/displays/components/AbstractSignAction";
-import SignActionNotifier from "../../../gen/displays/notifiers/SignActionNotifier";
-import SignActionRequester from "../../../gen/displays/requesters/SignActionRequester";
-import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
 import AutoFirmaBehavior from "./autofirma/AutoFirmaBehavior";
+import {dialogActionButtonStyles} from "./ButtonStyles";
 
 const styles = theme => ({});
 
@@ -87,12 +94,12 @@ export default class SignAction extends AbstractSignAction {
                 <DialogTitle id="alert-dialog-title">{this.translate("Select linux distribution")}</DialogTitle>
                 <DialogContent>
                     <List component="nav">
-                        <ListItem button onClick={this.handleDownloadDistribution.bind(this, "linux_deb")}><ListItemText>Debian</ListItemText></ListItem>
-                        <ListItem button onClick={this.handleDownloadDistribution.bind(this, "linux_rpm")}><ListItemText>Red Hat</ListItemText></ListItem>
+                        <ListItemButton onClick={this.handleDownloadDistribution.bind(this, "linux_deb")}><ListItemText>Debian</ListItemText></ListItemButton>
+                        <ListItemButton onClick={this.handleDownloadDistribution.bind(this, "linux_rpm")}><ListItemText>Red Hat</ListItemText></ListItemButton>
                     </List>
                 </DialogContent>
                 <DialogActions>
-                  <Button onClick={this.closeDownloadDialog.bind(this)} color="primary">{this.translate("Close")}</Button>
+                  <Button sx={dialogActionButtonStyles} onClick={this.closeDownloadDialog.bind(this)} color="primary">{this.translate("Close")}</Button>
                 </DialogActions>
             </Dialog>
         );

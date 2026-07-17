@@ -1,82 +1,76 @@
 import React from "react";
-import {withStyles} from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractImageEditable from "../../../gen/displays/components/AbstractImageEditable";
 import ImageEditableNotifier from "../../../gen/displays/notifiers/ImageEditableNotifier";
 import ImageEditableRequester from "../../../gen/displays/requesters/ImageEditableRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import {withSnackbar} from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
 import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/css/image-gallery.css';
 import Theme from "app-elements/gen/Theme";
 import classnames from 'classnames';
 import 'alexandria-ui-elements/res/styles/components/fields.css';
-import {Fullscreen} from '@material-ui/icons';
+import {Fullscreen} from '@mui/icons-material';
+import {fieldPalette, outlinedSurfaceStyles} from "./FieldStyles";
+import {linkPalette} from "./ThemeTokens";
 
 const styles = theme => ({
 	input: {
 		display: "none"
 	},
+	surface: {
+		...outlinedSurfaceStyles(theme),
+		background: fieldPalette(theme).background,
+		position: "relative",
+		overflow: "hidden",
+		minHeight: "52px",
+	},
+	emptySurface: {
+		border: `1px solid ${fieldPalette(theme).borderColor}`,
+		boxSizing: "border-box",
+		background: fieldPalette(theme).background,
+		boxShadow: fieldPalette(theme).shadow,
+	},
 	image: {
-		border: theme.isDark() ? "1px solid #0a0a0a" : "1px solid #555",
 		display: "block",
 		objectFit: 'contain',
 		position: "absolute",
-		borderRadius: "14px",
-		background: theme.isDark() ? "#404040" : "#f5ffff",
-		"&:hover": {
-			background: theme.isDark() ? "#222" : "#d2f1fe",
-			border: "1px solid #555"
-		},
-		"&:focus": {
-			background: theme.isDark() ? "#222" : "#d2f1fe",
-			border: "1px solid #555"
-		},
+		inset: "0",
+		borderRadius: "15px",
+		background: "transparent",
 	},
 	disabledImage: {
-		border: theme.isDark() ? "1px solid #0a0a0a" : "1px solid #efefef",
-		background: "none !important",
-		"&:hover": {
-			border: "0 !important",
-			background: "none !important",
-		},
-		"&:focus": {
-			border: "0 !important",
-			background: "none !important",
-		}
+		background: "transparent !important",
 	},
 	overlay: {
-		borderRadius: "14px",
+		borderRadius: "16px",
 		"justify-content": "center",
 		"align-items": "center",
 		top: "0",
-		background: theme.isDark() ? "#404040" : "#f5ffff",
-		"&:hover": {
-			border: theme.isDark() ? "1px solid #ffffff00" : "1px solid #555",
-			background: theme.isDark() ? "#222" : "#d2f1fe",
-		},
-		"&:focus": {
-			border: theme.isDark() ? "1px solid #ffffffde" : "1px solid #00000023",
-		}
+		background: fieldPalette(theme).background,
 	},
 	borderedOverlay: {
-		border: theme.isDark() ? "1px solid #0a0a0a" : "1px solid #555",
+		border: `1px solid ${fieldPalette(theme).borderColor}`,
+		boxSizing: "border-box",
+		background: fieldPalette(theme).background,
+		boxShadow: fieldPalette(theme).shadow,
 	},
 	disabledOverlay: {
-		border: theme.isDark() ? "1px solid #0a0a0a" : "1px solid #efefef",
-		background: "none !important",
+		background: `${fieldPalette(theme).background} !important`,
+	},
+	readonlySurface: {
+		background: `${theme.palette.mode === "dark" ? "rgba(15,23,42,0.52)" : fieldPalette(theme).background} !important`,
+		borderColor: `${theme.palette.mode === "dark" ? "rgba(255, 255, 255, 0.1)" : fieldPalette(theme).borderColor} !important`,
+		boxShadow: `${theme.palette.mode === "dark" ? "none" : fieldPalette(theme).shadow} !important`,
 		"&:hover": {
-			border: theme.isDark() ? "1px solid #0a0a0a" : "1px solid #efefef",
-			background: "none !important",
-		},
-		"&:focus": {
-			border: theme.isDark() ? "1px solid #0a0a0a" : "1px solid #efefef",
-			background: "none !important",
+			background: `${theme.palette.mode === "dark" ? "rgba(15,23,42,0.52)" : fieldPalette(theme).background} !important`,
+			borderColor: `${theme.palette.mode === "dark" ? "rgba(255, 255, 255, 0.1)" : fieldPalette(theme).borderColor} !important`,
+			boxShadow: `${theme.palette.mode === "dark" ? "none" : fieldPalette(theme).shadow} !important`,
 		},
 	},
 	bordered: {
 		position: "absolute",
-		border: "1px solid #efefef",
 		width: "100%",
 		height: "calc(100% - 20px)",
 		"justify-content": "center",
@@ -86,16 +80,21 @@ const styles = theme => ({
 	icon: {
 		color: "#005ba4"
 	},
-	empty : {
-		fontSize: '12pt',
+		empty : {
+		fontSize: '0.95rem',
+		color: theme.palette.mode === "dark" ? "rgba(226,232,240,0.72)" : theme.palette.text.secondary,
 	},
 	link : {
         cursor: 'pointer',
-        width: '70px',
+        minWidth: '82px',
         textAlign: 'center',
 		marginRight: '10px',
-		fontSize: '11pt',
-        color: theme.palette.primary.main,
+		fontSize: '0.9rem',
+        color: linkPalette(theme).color,
+        textDecoration: "none",
+		"&:hover": {
+			color: linkPalette(theme).hoverColor,
+		},
 	},
 });
 
@@ -114,8 +113,8 @@ class ImageEditable extends AbstractImageEditable {
         }
 	};
 
-	refresh = (value) => {
-		this.setState({ "value": this.forceReload(value) });
+	refresh = (info) => {
+		this.setState({ "value": this.forceReload(info.value) });
 	};
 
 	forceReload = (value) => {
@@ -198,19 +197,24 @@ class ImageEditable extends AbstractImageEditable {
 		const inputId = this._inputId();
 		const showImageGallery = this._showImageGallery();
 		const theme = Theme.get();
+		const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
 		const url = this.state.value != null ? this.state.value + (this.state.value.indexOf("?") === -1 ? "?" : "&") + Math.random() : null;
-        const removeStyle = this.state.readonly ? { display: 'none', pointerEvents: 'none' } : {};
+	        const removeStyle = this.state.readonly ? { display: 'none', pointerEvents: 'none' } : {};
+		const darkSurfaceStyle = isDark ? { boxShadow: "none" } : undefined;
+		const dropzoneClass = this.state.readonly
+			? (isDark ? "fileeditable-dropzone-readonly-dark" : "fileeditable-dropzone-readonly")
+			: (isDark ? "fileeditable-dropzone-dark" : "fileeditable-dropzone");
 
-		return (
-			<div style={{position:'relative',...this.style()}} className={classnames("image-editable layout ", this.state.showPreview ? "vertical" : "horizontal center", theme.isDark() ? "dark" : undefined)}>
+			return (
+				<div style={{position:'relative',...this.style()}} className={classnames("image-editable layout ", this.state.showPreview ? "vertical" : "horizontal center", isDark ? "dark" : undefined, this.state.readonly ? "readonly" : undefined)}>
 			    { ComponentBehavior.labelBlock(this.props, "body1", { marginRight: '15px', color: theme.palette.grey.primary, fontSize: this.state.showPreview ? "9pt" : "14pt" }) }
 				{this.state.showPreview &&
-					<label htmlFor={inputId} className={classnames(classes.overlay, this.state.readonly ? classes.disabledOverlay : undefined, !showImageGallery || this.state.value == null ? classes.borderedOverlay : undefined)} style={{display:'flex',cursor: this.state.readonly ? 'default' : 'pointer',...this.sizeStyle()}} >
+					<label htmlFor={inputId} className={classnames(classes.surface, classes.overlay, dropzoneClass, !this.state.value ? classes.emptySurface : undefined, this.state.readonly ? classes.disabledOverlay : undefined, this.state.readonly ? classes.readonlySurface : undefined, !this.state.value ? classes.borderedOverlay : undefined)} style={{display:'flex',cursor: this.state.readonly ? 'default' : 'pointer',...darkSurfaceStyle,...this.sizeStyle()}} >
 						{this.state.showPreview && !showImageGallery && this.state.value && <img className={classnames(classes.image, this.state.readonly ? classes.disabledImage : undefined)} alt={this.props.label} title={this.props.label} src={url} style={this.sizeStyle()}/>}
 					</label>
 				}
 			    {(this.state.showPreview && showImageGallery && this.state.value != null) &&
-					<div className={classnames(classes.image, this.state.readonly ? classes.disabledImage : undefined)} style={{top: this.props.label != null && this.props.label !== "" ? '19px' : '0',...this.sizeStyle()}} >
+					<div className={classnames(classes.surface, classes.image, dropzoneClass, this.state.readonly ? classes.disabledImage : undefined, this.state.readonly ? classes.readonlySurface : undefined)} style={{top: this.props.label != null && this.props.label !== "" ? '19px' : '0',...darkSurfaceStyle,...this.sizeStyle()}} >
 						<ImageGallery items={[this._galleryItems()]} showThumbnails={false} showBullets={false} showPlayButton={false} renderFullscreenButton={this.renderFullScreen.bind(this)}/>
 					</div>
 				}

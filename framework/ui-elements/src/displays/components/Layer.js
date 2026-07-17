@@ -1,13 +1,26 @@
-import React, { Suspense } from "react";
-import { Dialog as MuiDialog, DialogContent, Fade, Grow, Slide, Zoom, Typography, AppBar, IconButton } from "@material-ui/core"
-import { Home, Close, NavigateBefore, NavigateNext } from "@material-ui/icons";
-import { withStyles } from '@material-ui/core/styles';
+import React, {Suspense} from "react";
+import {
+	AppBar,
+	Dialog as MuiDialog,
+	DialogContent,
+	Fade,
+	Grow,
+	IconButton,
+	Slide,
+	Typography,
+	Zoom
+} from "@mui/material"
+import {Close, NavigateBefore, NavigateNext} from "@mui/icons-material";
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractLayer from "../../../gen/displays/components/AbstractLayer";
 import LayerNotifier from "../../../gen/displays/notifiers/LayerNotifier";
 import LayerRequester from "../../../gen/displays/requesters/LayerRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import history from "alexandria-ui-elements/src/util/History";
+import {containerPalette, dialogPaperStyles} from "./ContainerStyles";
+import {linkPalette} from "./ThemeTokens";
+import Theme from "app-elements/gen/Theme";
 
 const LayerIcon = React.lazy(() => {
 	return new Promise(resolve => {
@@ -17,21 +30,38 @@ const LayerIcon = React.lazy(() => {
 
 const styles = theme => ({
     header : {
-        padding: "2px 15px",
+        padding: "10px 18px",
+        background: containerPalette(theme).surfaceMuted,
+        color: containerPalette(theme).title,
+        boxShadow: "none",
+        borderBottom: `1px solid ${containerPalette(theme).headerBorder}`,
+        borderTopLeftRadius: "0",
+        borderTopRightRadius: "0",
     },
     contentWithHeader : {
         overflow: "hidden",
-        marginTop: "61px",
+        marginTop: "74px",
     },
     content : {
         padding: "0 !important",
+        background: theme.palette.mode === "dark" ? `${containerPalette(theme).surface} !important` : "#f6f8fb",
     },
     link : {
         cursor: "pointer",
+        color: linkPalette(theme).color,
+        textDecoration: "none",
+        "&:hover": {
+            color: linkPalette(theme).hoverColor,
+        },
     },
     icon : {
         cursor: "pointer",
-        color: "white",
+        color: containerPalette(theme).text,
+    },
+    title: {
+        fontWeight: 600,
+        letterSpacing: "-0.01em",
+        color: containerPalette(theme).title,
     },
 });
 
@@ -71,12 +101,29 @@ class Layer extends AbstractLayer {
 	};
 
 	renderLayer = () => {
+		const runtimeTheme = Theme.get() || this.props.theme;
+		const isDark = runtimeTheme != null && runtimeTheme.palette != null && runtimeTheme.palette.mode === "dark";
+		const palette = containerPalette(runtimeTheme);
+		const slotProps = isDark ? {
+			paper: {
+				style: {
+					...dialogPaperStyles(runtimeTheme),
+					borderTopLeftRadius: "0",
+					borderTopRightRadius: "0",
+				},
+			},
+			backdrop: {
+				style: {
+					backgroundColor: palette.backdrop,
+					backdropFilter: "blur(8px) saturate(120%)",
+				},
+			},
+		} : undefined;
 		return (
 			<MuiDialog fullScreen={true} open={this.state.opened}
 					   onClose={this.handleClose.bind(this)}
-					   disableBackdropClick={false}
-					   disableEscapeKeyDown={false}
-					   TransitionComponent={this._transition()}
+					   slots={{ transition: this._transition() }}
+					   slotProps={slotProps}
                        aria-labelledby={this.props.id + "_draggable"}>
 				{this.renderHeader()}
 				{this.renderContent()}
@@ -87,7 +134,9 @@ class Layer extends AbstractLayer {
 	renderHeader = () => {
 	    if (!this._showHeader()) return (<React.Fragment/>);
 		const { classes } = this.props;
-		const style = this.props.color != null ? { backgroundColor: this.props.color } : undefined;
+		const theme = Theme.get() || this.props.theme;
+		const palette = containerPalette(theme);
+		const style = this.props.color != null ? { backgroundColor: this.props.color } : { background: palette.surfaceMuted, color: palette.title };
 		const showHome = this.state.toolbar.home.visible;
 		const showPrevious = this.state.toolbar.previous.visible;
 		const previousDisabled = !this.state.toolbar.previous.enabled;
@@ -96,8 +145,8 @@ class Layer extends AbstractLayer {
 		return (
 			<AppBar style={style} className={classes.header}>
 				<div className="layout horizontal flex center">
-					{showHome && <a onClick={this.handleShowHome.bind(this)} className={classes.link}><Typography variant="h5">{this.translate(this.state.title)}</Typography></a>}
-					{!showHome && <Typography variant="h5">{this.translate(this.state.title)}</Typography>}
+					{showHome && <a onClick={this.handleShowHome.bind(this)} className={classes.link}><Typography variant="h5" className={classes.title}>{this.translate(this.state.title)}</Typography></a>}
+					{!showHome && <Typography variant="h5" className={classes.title}>{this.translate(this.state.title)}</Typography>}
 					{showPrevious && <IconButton onClick={this.handlePrevious.bind(this)} disabled={previousDisabled} className={classes.icon} style={{marginLeft:'10px'}}><NavigateBefore fontSize="large"/></IconButton>}
 					{showNext && <IconButton onClick={this.handleNext.bind(this)} disabled={nextDisabled} className={classes.icon}><NavigateNext fontSize="large"/></IconButton>}
 					<div className="layout horizontal end-justified flex">

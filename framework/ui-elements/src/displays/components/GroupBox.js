@@ -1,9 +1,17 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractGroupBox from "../../../gen/displays/components/AbstractGroupBox";
 import GroupBoxNotifier from "../../../gen/displays/notifiers/GroupBoxNotifier";
 import GroupBoxRequester from "../../../gen/displays/requesters/GroupBoxRequester";
-import { List, ListItem, ListItemText, ListItemSecondaryAction, Checkbox, Typography } from "@material-ui/core";
+import {
+    Checkbox,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemSecondaryAction,
+    ListItemText,
+    Typography
+} from "@mui/material";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 
@@ -46,10 +54,12 @@ class GroupBox extends AbstractGroupBox {
 	renderGroup = (group, index) => {
 		const { classes } = this.props;
 		return (
-			<ListItem key={index} className={classes.group} role={undefined} dense button onClick={this.handleToggle(group)}>
+			<ListItem key={index} className={classes.group} role={undefined} dense disablePadding>
+                <ListItemButton onClick={this.handleToggle(group)} className={classes.group}>
 				<Checkbox className={classes.checkbox} checked={this.state.selection.indexOf(group.label) !== -1} tabIndex={-1} disableRipple/>
 				<ListItemText>{group.label}</ListItemText>
 				<ListItemSecondaryAction className={classes.count}>{group.count}</ListItemSecondaryAction>
+                </ListItemButton>
 			</ListItem>
 		);
 	};

@@ -1,12 +1,11 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
-import { Popover } from '@material-ui/core';
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
+import {Popover} from '@mui/material';
 import AbstractBlockPopover from "../../../gen/displays/components/AbstractBlockPopover";
 import BlockPopoverNotifier from "../../../gen/displays/notifiers/BlockPopoverNotifier";
 import BlockPopoverRequester from "../../../gen/displays/requesters/BlockPopoverRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
-import classNames from "classnames";
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 
 const styles = theme => ({
     noInteractions: {

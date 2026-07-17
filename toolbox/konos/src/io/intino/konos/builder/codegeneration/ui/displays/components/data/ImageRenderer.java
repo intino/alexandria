@@ -20,6 +20,10 @@ public class ImageRenderer extends SizedRenderer<Image> {
 			result.add("value", resourceMethodFrame("value", element.value()));
 		if (element.defaultValue() != null && !element.defaultValue().isEmpty())
 			result.add("defaultValue", resourceMethodFrame("defaultValue", element.defaultValue()));
+		if (element.darkValue() != null && !element.darkValue().isEmpty())
+			result.add("darkValue", resourceMethodFrame("darkValue", element.darkValue()));
+		if (element.defaultDarkValue() != null && !element.defaultDarkValue().isEmpty())
+			result.add("defaultDarkValue", resourceMethodFrame("defaultDarkValue", element.defaultDarkValue()));
 		if (element.mobileReduceFactor() != 0) result.add("mobileReduceFactor", element.mobileReduceFactor());
 		if (element.allowFullscreen()) result.add("allowFullScreen", element.allowFullscreen());
 		if (element.colorInvertedWithDarkMode()) result.add("colorInvertedWithDarkMode", element.colorInvertedWithDarkMode());

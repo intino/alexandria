@@ -1,21 +1,36 @@
 import React from "react";
-import {Checkbox, Typography} from "@material-ui/core";
+import {Checkbox, Typography} from "@mui/material";
 import classNames from "classnames";
-import TablePagination from '@material-ui/core/TablePagination';
+import TablePagination from '@mui/material/TablePagination';
 import 'alexandria-ui-elements/res/styles/layout.css';
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
 import {enrichDisplayProperties} from 'alexandria-ui-elements/src/displays/Display';
 import {BeatLoader, RiseLoader} from "react-spinners";
 import Theme from "app-elements/gen/Theme";
 import InfiniteScroll from "react-infinite-scroll-component";
+import {syncThemeCssVariables, themeFormatValue} from "../ThemeTokens";
+
+const collectionBehaviorPalette = (theme) => ({
+    viewportBackground: themeFormatValue(theme, "filled", "background", theme.isDark() ? "rgba(11,18,27,0.86)" : "rgba(248,251,255,0.72)"),
+    sectionBackground: themeFormatValue(theme, "filledNoAir", "background", theme.isDark() ? "rgba(17,24,39,0.94)" : "#efefef"),
+    selectedBackground: theme.isDark() ? "rgba(30,41,59,0.72)" : "rgba(227,242,253,0.7)",
+});
 
 const CollectionBehaviorCheckbox = (props) => {
-    let [checked, setChecked] = React.useState(props.checked ? true : false);
     const handleCheck = (e) => {
-        setChecked(e.target.checked);
         if (props.onCheck) props.onCheck(e);
     }
-    return (<Checkbox checked={checked} className={props.classes.selector} onChange={handleCheck} />);
+    return (
+        <Checkbox
+            checked={props.checked ? true : false}
+            className={props.classes.selector}
+            onChange={handleCheck}
+            size="small"
+            disableRipple
+            tabIndex={-1}
+            style={{padding: 0, margin: 0}}
+        />
+    );
 }
 
 const CollectionBehavior = (collection) => {
@@ -46,15 +61,18 @@ const CollectionBehavior = (collection) => {
         let itemHeight = self.collection.props.itemHeight;
         const hasMore = items.length < self.collection.state.itemCount;
         const scrollableTarget = self.collection.props.id + "_infinite";
+        const theme = Theme.get();
+        syncThemeCssVariables(theme);
+        const viewportBackground = collectionBehaviorPalette(theme).viewportBackground;
         if (width <= 800) itemHeight += (itemHeight/4.5);
         self.notifyItemsRendered(items);
         self.loadingNextPage = false;
         window.setTimeout(() => self.loadNextPageIfRequired(hasMore, scrollableTarget), 1000);
         return (
-            <div id={scrollableTarget} style={{ height: height, width: width, overflow: "auto" }}>
+            <div id={scrollableTarget} style={{ height: height, width: width, overflow: "auto", borderRadius: "18px" }}>
                 <InfiniteScroll dataLength={items.length} next={self.loadNextPage.bind(self)}
                                 scrollThreshold={0.9} hasMore={hasMore} loader={self.renderLoadingMore()}
-                                height={height} style={{height:height+"px",width:width+'px'}} scrollableTarget={scrollableTarget}>
+                                height={height} style={{height:height+"px",width:width+'px',borderRadius:"18px"}} scrollableTarget={scrollableTarget}>
                     {header != null && header}
                     {self.renderItems(items, mode, itemHeight, "layout horizontal flex center item")}
                 </InfiniteScroll>
@@ -85,12 +103,15 @@ const CollectionBehavior = (collection) => {
         const itemCount = self.collection.props.navigable == null ? self.collection.state.itemCount : self.collection.state.pageSize;
         const hasMore = self.collection.props.navigable == null ? items.length < itemCount : false;
         const scrollableTarget = self.collection.props.id + "_infinite";
+        const theme = Theme.get();
+        syncThemeCssVariables(theme);
+        const viewportBackground = collectionBehaviorPalette(theme).viewportBackground;
         self.notifyItemsRendered(items);
         return (
-            <div id={scrollableTarget} style={{ height: height, width: width, overflow: "auto" }}>
+            <div id={scrollableTarget} style={{ height: height, width: width, overflow: "auto", borderRadius: "18px" }}>
                 <InfiniteScroll dataLength={items.length} next={self.loadNextPage.bind(self)}
                                 scrollThreshold={0.9} hasMore={hasMore} loader={self.renderLoadingMore()}
-                                height={height} style={{height:(height+offsetHeight)+"px",width:itemWidth+'px',overflowX:self.collection.props.itemWidth!=null?"hidden":"auto"}} scrollableTarget={scrollableTarget}>
+                                height={height} style={{height:(height+offsetHeight)+"px",width:itemWidth+'px',overflowX:self.collection.props.itemWidth!=null?"hidden":"auto",borderRadius:"18px"}} scrollableTarget={scrollableTarget}>
                     {header != null && header}
                     {self.renderItems(items, mode, itemHeight, "")}
                 </InfiniteScroll>
@@ -104,6 +125,7 @@ const CollectionBehavior = (collection) => {
         const defaultPageSize = self.collection.defaultPageSize != null ? self.collection.defaultPageSize : self.collection.state.pageSize;
         const page = self.collection.state.page;
         const pageSizes = [defaultPageSize];//[defaultPageSize, defaultPageSize*2, defaultPageSize*3];
+        syncThemeCssVariables(Theme.get());
 
         self.collection.defaultPageSize = defaultPageSize;
 
@@ -115,10 +137,14 @@ const CollectionBehavior = (collection) => {
                                  count={itemCount}
                                  rowsPerPage={pageSize}
                                  page={page}
-                                 backIconButtonProps={{'aria-label': 'Previous Page'}}
-                                 nextIconButtonProps={{'aria-label': 'Next Page'}}
-                                 onChangePage={self.handlePage.bind(self)}
-                                 onChangeRowsPerPage={self.handlePageSize.bind(self)}
+                                 slotProps={{
+                                     actions: {
+                                         previousButton: { 'aria-label': 'Previous Page' },
+                                         nextButton: { 'aria-label': 'Next Page' }
+                                     }
+                                 }}
+                                 onPageChange={self.handlePage.bind(self)}
+                                 onRowsPerPageChange={self.handlePageSize.bind(self)}
                                  labelDisplayedRows={self.displayedRowsLabel.bind(self)}
                                  labelRowsPerPage={self.rowsPerPageLabel()}/>
             </div>
@@ -127,12 +153,20 @@ const CollectionBehavior = (collection) => {
 
     self.renderLoading = () => {
         const theme = Theme.get();
-        return (<div style={{position:'absolute',top:'50%',left:'43%'}}><RiseLoader color={theme.palette.secondary.main} loading={true}/></div>);
+        return (
+            <div style={{position:'absolute',inset:0,zIndex:1}} className="layout vertical flex center-center">
+                <RiseLoader color={theme.palette.secondary.main} loading={true}/>
+            </div>
+        );
     };
 
     self.renderLoadingMore = () => {
         const theme = Theme.get();
-        return (<div style={{marginTop:'10px',marginLeft:'10px'}}><BeatLoader color={theme.palette.secondary.main} loading={true}/></div>);
+        return (
+            <div style={{marginTop:'14px',marginBottom:'8px'}} className="layout horizontal center-center">
+                <BeatLoader color={theme.palette.secondary.main} loading={true}/>
+            </div>
+        );
     };
 
     self.renderEmpty = (height, width, header) => {
@@ -177,17 +211,26 @@ const CollectionBehavior = (collection) => {
 
     self.renderItems = (items, mode, itemHeight, customItemClasses) => {
         const theme = Theme.get();
-        const background = theme.isDark() ? "#999" : "#efefef";
+        const background = collectionBehaviorPalette(theme).sectionBackground;
         const sections = self.sections(items);
         const index = [-1];
         const result = [];
+        let sectionIndex = 0;
         for (const [section, elements] of sections) {
             const content = elements.map((i, idx) => {
                 index[0]++;
                 return self.renderItem(items, mode, { index: index[0], isScrolling: false, customClasses: customItemClasses, itemHeight: itemHeight });
             });
-            if (section != "__default") result.push(<div><Typography variant="h6" style={{paddingLeft:'10px', marginTop:'10px',marginBottom:'10px',background:background}}>{section}</Typography></div>);
-            result.push(mode != "Column" ? content : <div className="layout horizontal wrap">{content}</div>);
+            const sectionKey = section != null ? `section-${section}` : `section-${sectionIndex}`;
+            if (section != "__default") {
+                result.push(
+                    <div key={`${sectionKey}-title`}>
+                        <Typography variant="h6" style={{padding:'10px 14px', marginTop:'12px', marginBottom:'8px', background:background, borderRadius:'14px'}}>{section}</Typography>
+                    </div>
+                );
+            }
+            result.push(mode != "Column" ? content : <div key={`${sectionKey}-content`} className="layout horizontal wrap">{content}</div>);
+            sectionIndex++;
         }
         return result;
     };
@@ -206,8 +249,10 @@ const CollectionBehavior = (collection) => {
 
     self.renderItem = (items, mode, properties) => {
         const classes = "layout vertical" + (mode != "Column" ? " flex" : "");
+        const item = items[properties.index];
+        const key = item != null && item.pl != null && item.pl.id != null ? item.pl.id : properties.index;
         return (
-            <div className={classes} style={{minHeight:properties.itemHeight,position:'relative'}}>
+            <div key={key} className={classes} style={{minHeight:properties.itemHeight,position:'relative'}}>
                 {self.renderItemContent(items, mode, properties)}
             </div>
         );
@@ -232,7 +277,7 @@ const CollectionBehavior = (collection) => {
         const widthStyle = self.collection.props.itemWidth != null ? {width: self.collection.props.itemWidth + "px"} : {};
         return (
             <React.Fragment>
-                <div id={self.elementId(id)} style={{...selectableStyle,...finalStyle,...widthStyle}} key={index} onClick={selectable && !multiple ? self.handleSelect.bind(self, id) : undefined} className={classNamesValue}>
+                <div id={self.elementId(id)} style={{...selectableStyle,...finalStyle,...widthStyle}} onClick={selectable && !multiple ? self.handleSelect.bind(self, id) : undefined} className={classNamesValue}>
                     {/*{multiple ? <Checkbox checked={self.isItemSelected(item)} className={classes.selector} onChange={self.handleSelect.bind(self, id)} /> : undefined}*/}
                     {multiple ? <CollectionBehaviorCheckbox checked={self.isItemSelected(item)} classes={classes} onCheck={self.handleSelect.bind(self, id)} /> : undefined}
                     {view}
@@ -279,17 +324,18 @@ const CollectionBehavior = (collection) => {
     };
 
     self.handleSelect = (item, e) => {
-        e.preventDefault();
-        e.stopPropagation();
-
         const selectable = self.collection.props.selection != null;
         const multiple = self.allowMultiSelection();
+
+        if (e != null && !multiple) e.preventDefault();
+        if (e != null) e.stopPropagation();
 
         if (!selectable) return;
 
         const prevSelectionCount = self.collection.selectionCount != null ? self.collection.selectionCount : 0;
         const selection = self.updateSelection(item);
         if (multiple) self.collection.selectionCount = selection.length;
+        if (typeof self.collection.forceUpdate === "function") self.collection.forceUpdate();
 
         if (self.collection.selectTimeout != null) window.clearTimeout(self.collection.selectTimeout);
         self.collection.selectTimeout = window.setTimeout(() => self.collection.requester.selection(selection), 50);
@@ -361,8 +407,9 @@ const CollectionBehavior = (collection) => {
         const theme = Theme.get();
         return {
             border: "1px solid " + theme.palette.secondary.main,
-            borderRadius: "5px",
-            background: theme.isDark() ? "transparent" : "white",
+            borderRadius: "18px",
+            background: collectionBehaviorPalette(theme).selectedBackground,
+            boxShadow: "none",
         };
     };
 
@@ -379,8 +426,9 @@ const CollectionBehavior = (collection) => {
         if (style == null) return;
         const theme = Theme.get();
         style.border = "1px solid " + theme.palette.secondary.main;
-        style.borderRadius = "5px";
-        style.background = theme.isDark() ? "transparent" : "white";
+        style.borderRadius = "18px";
+        style.background = collectionBehaviorPalette(theme).selectedBackground;
+        style.boxShadow = "none";
         return style;
     };
 
@@ -389,6 +437,7 @@ const CollectionBehavior = (collection) => {
         element.style.border = "0";
         element.style.borderRadius = "0";
         element.style.background = "transparent";
+        element.style.boxShadow = "none";
     };
 
     self.findSelectedItem = () => {

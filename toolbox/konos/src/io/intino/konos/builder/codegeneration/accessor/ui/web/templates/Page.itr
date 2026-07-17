@@ -1,10 +1,11 @@
 rule type(resource, js)
 import React from "react";
-import { MuiThemeProvider, withStyles } from '@material-ui/core/styles';
-import { IconButton } from "@material-ui/core";
-import { Close } from '@material-ui/icons';
-import { SnackbarProvider, useSnackbar } from "notistack";
-import CssBaseline from '@material-ui/core/CssBaseline';
+import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider as MuiStylesThemeProvider, withStyles } from 'alexandria-ui-elements/src/util/muiStylesCompat';
+import { IconButton } from "@mui/material";
+import { Close } from '@mui/icons-material';
+import { SnackbarProvider, useSnackbar } from "alexandria-ui-elements/src/util/notistackCompat";
+import CssBaseline from '@mui/material/CssBaseline';
 import Theme from '../../gen/Theme';
 import Page from "alexandria-ui-elements/src/displays/Page";
 import ConnectionChecker from "alexandria-ui-elements/src/displays/ConnectionChecker";
@@ -25,13 +26,17 @@ export default class $pageDisplay+firstUpperCase~Page extends Page {
         theme = Theme.create(this.state.appMode);
         theme.onChangeMode(mode => this.setState({appMode:mode}));
 		return (
-			<MuiThemeProvider theme={theme}>
-				<SnackbarProvider maxSnack={3} action={key => <$pageDisplay+firstUpperCase~PageDismissAction id={key}/>}>
-					<CssBaseline />
-					<$pageDisplay+firstUpperCase id="$pageDisplayId"></$pageDisplay+firstUpperCase>
-					<ConnectionChecker></ConnectionChecker>
-				</SnackbarProvider>
-			</MuiThemeProvider>
+			<StyledEngineProvider injectFirst>
+				<MuiStylesThemeProvider theme={theme}>
+					<ThemeProvider theme={theme}>
+						<SnackbarProvider maxSnack={3} action={key => <$pageDisplay+firstUpperCase~PageDismissAction id={key}/>}>
+							<CssBaseline />
+							<$pageDisplay+firstUpperCase id="$pageDisplayId"></$pageDisplay+firstUpperCase>
+							<ConnectionChecker></ConnectionChecker>
+						</SnackbarProvider>
+					</ThemeProvider>
+				</MuiStylesThemeProvider>
+			</StyledEngineProvider>
 		);
 	}
 }

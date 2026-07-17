@@ -1,11 +1,10 @@
-import React from "react";
-import { useRef, useEffect  } from "react";
-import { withStyles } from '@material-ui/core/styles';
+import React, {useRef} from "react";
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractHtmlViewer from "../../../gen/displays/components/AbstractHtmlViewer";
 import HtmlViewerNotifier from "../../../gen/displays/notifiers/HtmlViewerNotifier";
 import HtmlViewerRequester from "../../../gen/displays/requesters/HtmlViewerRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import Theme from 'app-elements/gen/Theme';
 
 const styles = theme => ({});
@@ -80,7 +79,8 @@ class HtmlViewer extends AbstractHtmlViewer {
 
     content = () => {
         const result = this.state.content;
-        const isDark = Theme.get().isDark();
+        const theme = Theme.get();
+        const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
         return isDark ? this.addDark(result) : result;
     };
 

@@ -1,9 +1,9 @@
-import React, { createRef, useRef, useState } from "react";
-import { useDrag, useDrop } from "react-dnd";
+import React, {createRef, useRef, useState} from "react";
+import {useDrag, useDrop} from "react-dnd";
 import ItemTypes from "./ItemTypes";
 import classnames from "classnames";
-import { ArrowDropDown, ArrowDropUp, DragIndicator } from "@material-ui/icons";
-import { Typography, Icon, Popover } from '@material-ui/core';
+import {DragIndicator} from "@mui/icons-material";
+import {Icon, Popover, Typography} from '@mui/material';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import TimelineSummary from './Summary';

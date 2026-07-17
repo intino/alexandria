@@ -1,13 +1,13 @@
 import React from "react";
-import {withStyles} from '@material-ui/core/styles';
-import {Link, Popover, Typography} from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton'
-import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew'
+import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
+import {Link, Popover, Typography} from '@mui/material';
+import IconButton from '@mui/material/IconButton'
+import PowerSettingsNew from '@mui/icons-material/PowerSettingsNew'
 import AbstractUser from "../../../gen/displays/components/AbstractUser";
 import UserNotifier from "../../../gen/displays/notifiers/UserNotifier";
 import UserRequester from "../../../gen/displays/requesters/UserRequester";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
-import {withSnackbar} from 'notistack';
+import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import Divider from "./Divider";
 import classnames from "classnames";
 import 'alexandria-ui-elements/res/styles/layout.css';
