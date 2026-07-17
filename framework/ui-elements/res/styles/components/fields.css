@@ -9,8 +9,8 @@
     --alex-field-bg-hover: #e8f2ff;
     --alex-field-bg-focus: #ddefff;
     --alex-field-shell-bg: rgba(59, 130, 246, 0.06);
-    --alex-field-border: rgba(59, 130, 246, 0.42);
-    --alex-field-border-hover: rgba(59, 130, 246, 0.34);
+    --alex-field-border: rgba(15, 23, 42, 0.42);
+    --alex-field-border-hover: rgba(15, 23, 42, 0.56);
     --alex-field-focus: #1976d2;
     --alex-field-label: rgba(15, 23, 42, 0.62);
     --alex-field-text: rgba(15, 23, 42, 0.92);
@@ -29,8 +29,8 @@
     --alex-field-bg-hover: rgba(31, 43, 56, 0.99);
     --alex-field-bg-focus: rgba(18, 47, 77, 0.92);
     --alex-field-shell-bg: rgba(148, 163, 184, 0.08);
-    --alex-field-border: rgba(148, 163, 184, 0.32);
-    --alex-field-border-hover: rgba(191, 219, 254, 0.46);
+    --alex-field-border: rgba(15, 23, 42, 0.76);
+    --alex-field-border-hover: rgba(15, 23, 42, 0.88);
     --alex-field-focus: #90caf9;
     --alex-field-label: rgba(226, 232, 240, 0.72);
     --alex-field-text: rgba(255, 255, 255, 0.92);

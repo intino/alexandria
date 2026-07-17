@@ -53,8 +53,8 @@ const styles = theme => ({
 		height: '26px',
 	},
 	inputRoot: {
+		backgroundColor: theme.palette.mode === "dark" ? "rgba(44, 57, 72, 0.86)" : fieldPalette(theme).background,
 		color: fieldPalette(theme).textColor,
-		backgroundColor: fieldPalette(theme).background,
 		borderRadius: "16px",
 		boxShadow: "none",
 		transition: "background-color 160ms ease, box-shadow 160ms ease, border-color 160ms ease",
@@ -63,14 +63,14 @@ const styles = theme => ({
 			borderWidth: "1px",
 		},
 		"&:hover": {
-			backgroundColor: fieldPalette(theme).hoverBackground,
+			backgroundColor: theme.palette.mode === "dark" ? "rgba(49, 64, 80, 0.92)" : fieldPalette(theme).hoverBackground,
 		},
 		"&:hover .MuiOutlinedInput-notchedOutline": {
 			borderColor: fieldPalette(theme).hoverBorderColor,
 		},
 		"&.Mui-focused": {
-			backgroundColor: fieldPalette(theme).focusBackground,
-			boxShadow: `0 0 0 3px ${fieldPalette(theme).focusRing}`,
+			backgroundColor: theme.palette.mode === "dark" ? "rgba(18, 47, 77, 0.92)" : fieldPalette(theme).focusBackground,
+			boxShadow: `0 0 0 4px ${fieldPalette(theme).focusRing}`,
 		},
 		"&.Mui-focused .MuiOutlinedInput-notchedOutline": {
 			borderColor: fieldPalette(theme).focusColor,
@@ -79,8 +79,8 @@ const styles = theme => ({
 		width: '100%',
 	},
 	inputRootSmall: {
+		backgroundColor: theme.palette.mode === "dark" ? "rgba(44, 57, 72, 0.86)" : fieldPalette(theme).background,
 		color: fieldPalette(theme).textColor,
-		backgroundColor: fieldPalette(theme).background,
 		borderRadius: "16px",
 		boxShadow: "none",
 		transition: "background-color 160ms ease, box-shadow 160ms ease, border-color 160ms ease",
@@ -89,14 +89,14 @@ const styles = theme => ({
 			borderWidth: "1px",
 		},
 		"&:hover": {
-			backgroundColor: fieldPalette(theme).hoverBackground,
+			backgroundColor: theme.palette.mode === "dark" ? "rgba(49, 64, 80, 0.92)" : fieldPalette(theme).hoverBackground,
 		},
 		"&:hover .MuiOutlinedInput-notchedOutline": {
 			borderColor: fieldPalette(theme).hoverBorderColor,
 		},
 		"&.Mui-focused": {
-			backgroundColor: fieldPalette(theme).focusBackground,
-			boxShadow: `0 0 0 3px ${fieldPalette(theme).focusRing}`,
+			backgroundColor: theme.palette.mode === "dark" ? "rgba(18, 47, 77, 0.92)" : fieldPalette(theme).focusBackground,
+			boxShadow: `0 0 0 4px ${fieldPalette(theme).focusRing}`,
 		},
 		"&.Mui-focused .MuiOutlinedInput-notchedOutline": {
 			borderColor: fieldPalette(theme).focusColor,
@@ -185,25 +185,6 @@ class SearchBox extends AbstractSearchBox {
 		const activeTheme = runtimeTheme != null ? runtimeTheme : providedTheme;
 		const palette = fieldPalette(activeTheme);
 		const isDark = activeTheme != null && activeTheme.palette != null && activeTheme.palette.mode === "dark";
-		const darkInputSx = isDark ? {
-			backgroundColor: `${palette.background} !important`,
-			"& .MuiOutlinedInput-notchedOutline": {
-				borderColor: `${palette.borderColor} !important`,
-			},
-			"&:hover": {
-				backgroundColor: `${palette.hoverBackground} !important`,
-			},
-			"&:hover .MuiOutlinedInput-notchedOutline": {
-				borderColor: `${palette.hoverBorderColor} !important`,
-			},
-			"&.Mui-focused": {
-				backgroundColor: `${palette.focusBackground} !important`,
-				boxShadow: `0 0 0 3px ${palette.focusRing}`,
-			},
-			"&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-				borderColor: `${palette.focusColor} !important`,
-			},
-		} : undefined;
 		const placeholder = this.translate(this.props.placeholder != null && this.props.placeholder !== "" ? this.props.placeholder : "Search...");
 		return (
 			<div className={classNames(classes.root, "layout horizontal", "alexandria-searchbox", isDark ? "dark" : undefined)} style={{...this.style(),position:'relative'}}>
@@ -220,7 +201,6 @@ class SearchBox extends AbstractSearchBox {
 							onChange={this.handleSearch.bind(this)}
 							ref={this.input}
 							fullWidth
-							sx={darkInputSx}
 							classes={{
 								root: this.props.size === "Small" ? classes.inputRootSmall : classes.inputRoot,
 								input: this.props.size === "Small" ? classes.inputInputSmall : classes.inputInput,
