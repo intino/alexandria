@@ -121,7 +121,12 @@ export default class Display extends PassiveView {
 
     renderInstance = (instance, props, style, index) => {
         const key = instance != null && instance.pl != null && instance.pl.id != null ? instance.pl.id : index;
-        return (<div key={key} style={style}>{React.createElement(DisplayFactory.get(instance.tp), instance.pl)}</div>);
+        const Component = DisplayFactory.get(instance.tp);
+        if (Component == null) {
+            console.error("DisplayFactory component not registered", instance != null ? instance.tp : instance, instance);
+            return null;
+        }
+        return (<div key={key} style={style}>{React.createElement(Component, instance.pl)}</div>);
     };
 
     buildApplicationUrl = (path) => {
