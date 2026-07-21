@@ -195,6 +195,7 @@ class Grid extends AbstractGrid {
             ...this.state,
             key: 0,
             name: this.props.id,
+            contentCleared: false,
             columns: [],
             modes: [],
             selectedIndexes: [],
@@ -320,7 +321,7 @@ class Grid extends AbstractGrid {
                             maxWidth:'100%'
                         }}
                     >
-                        {this.state.rows.length === 0 ? this.emptyRowsView() :
+                        {this.state.contentCleared || this.state.rows.length === 0 ? this.emptyRowsView() :
                             <Table size="small" stickyHeader className={classes.gridTable} style={{minWidth:'100%', width:'max-content', background:isDark ? palette.viewportBackground : undefined}}>
                                 <TableHead>
                                     <TableRow style={isDark ? { background: palette.headerBackground } : undefined}>
@@ -1000,22 +1001,24 @@ class Grid extends AbstractGrid {
             return;
         }
         const columns = this.state.columns;
-        const rows = [...this.state.rows];
-        let offset = rows.length;
-        for (let i=0; i<newRows.length; i++) {
-            let row = { selectable: newRows[i].selectable };
-            for (let j=0; j<columns.length; j++) {
-                const address = newRows[i].cells[j].address != null ? newRows[i].cells[j].address : null;
-                const color = newRows[i].cells[j].color != null ? newRows[i].cells[j].color : null;
-                const backgroundColor = newRows[i].cells[j].backgroundColor != null ? newRows[i].cells[j].backgroundColor : null;
-                row[columns[j].name] = this.rowInfo(i+offset, newRows[i].cells[j].value, address, color, backgroundColor);
+        this.setState((prevState) => {
+            const rows = [...prevState.rows];
+            let offset = rows.length;
+            for (let i=0; i<newRows.length; i++) {
+                let row = { selectable: newRows[i].selectable };
+                for (let j=0; j<columns.length; j++) {
+                    const address = newRows[i].cells[j].address != null ? newRows[i].cells[j].address : null;
+                    const color = newRows[i].cells[j].color != null ? newRows[i].cells[j].color : null;
+                    const backgroundColor = newRows[i].cells[j].backgroundColor != null ? newRows[i].cells[j].backgroundColor : null;
+                    row[columns[j].name] = this.rowInfo(i+offset, newRows[i].cells[j].value, address, color, backgroundColor);
+                }
+                rows.push(row);
             }
-            rows.push(row);
-        }
-        const page = this.pageOf(rows.length-1);
-        this.lastLoadedPage[page] = true;
-        this.loadingNextPage = false;
-        this.setState({ rows: rows, loading: false }, () => window.setTimeout(() => this.loadNextPageIfRequired(), 0));
+            const page = this.pageOf(rows.length-1);
+            this.lastLoadedPage[page] = true;
+            this.loadingNextPage = false;
+            return { rows: rows, loading: false, contentCleared: false };
+        }, () => window.setTimeout(() => this.loadNextPageIfRequired(), 0));
     };
 
     pageOf = (index) => {
@@ -1154,7 +1157,18 @@ class Grid extends AbstractGrid {
         this.lastRow = 0;
         this.loadingNextPage = false;
         this.pendingRows = [];
-        this.setState({rows:[]});
+        this.horizontalScroll = 0;
+        this.numericColumnCache = {};
+        this.numericColumnCacheRows = null;
+        this.numericColumnCacheRowsLength = null;
+        this.setState((prevState) => ({
+            rows: [],
+            selectedIndexes: [],
+            itemCount: 0,
+            loading: false,
+            contentCleared: true,
+            key: prevState.key + 1,
+        }));
     };
 
     resize = () => {
