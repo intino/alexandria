@@ -139,10 +139,10 @@ const styles = theme => ({
 		},
 	},
 	resizeHandleLeft: {
-		left: '100%',
+		right: 0,
 	},
 	resizeHandleRight: {
-		right: '100%',
+		left: 0,
 	},
 	resizeHandleIndicator: {
 		position: 'relative',
@@ -211,9 +211,9 @@ class BlockDrawer extends AbstractBlockDrawer {
 								<div className={classes.drawerContent}>
 									{this.props.children}
 								</div>
+								{this.renderResizeHandle(anchor)}
 							</div>
 						</Drawer>
-				{this.renderResizeHandle(anchor)}
 			</div>
 		);
 	};
