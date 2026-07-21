@@ -12,6 +12,7 @@ Service(title = "", favicon = "") UiElements as UI(targets=Web Android, port = "
 	Resource(path = "/widgets") widgets as Page(docsTemplate)
 	Resource(path = "/widgets/:type/") widgetType as Page(widgetTypeTemplate)
 	Resource(path = "/widgets/microsite/:page") microSite as Page(widgetTypeTemplate)
+	Resource(path = "/fullgrid") fullGridContent as Page(fullGridTemplate)
 	Resource(path = "/static/example.html") exampleContent as StaticPage(content="<div>This is a static page</div>")
 
 Service(title = "", favicon = "") UiMobile as UI(targets=Android, port = "9000", url="http://10.0.2.2:9000")
