@@ -21,6 +21,10 @@ public class RouteDispatcher extends AbstractRouteDispatcher {
     }
 
     @Override
+    public void dispatchFullGridContent(Soul soul) {
+    }
+
+    @Override
     public void dispatchMobileHome(Soul soul) {
     }
 

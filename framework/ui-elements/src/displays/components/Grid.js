@@ -49,6 +49,13 @@ const styles = theme => ({
         background: collectionPalette(theme).viewportBackground,
         border: `1px solid ${collectionPalette(theme).borderColor}`,
         borderRadius: "18px",
+        boxSizing: "border-box",
+        position: "absolute",
+        inset: 0,
+        display: "block",
+        minWidth: 0,
+        minHeight: 0,
+        maxWidth: "100%",
         overflow: "hidden",
     },
     gridTable: {
@@ -244,13 +251,15 @@ class Grid extends AbstractGrid {
             position:'relative',
             display:'flex',
             flexDirection:'column',
-            flex:'1 1 auto',
+            flex:'1 1 0',
             alignSelf:'stretch',
+            boxSizing:'border-box',
             minHeight:0,
             minWidth:0,
             maxWidth:'100%',
+            overflow:'hidden',
             width: componentStyle.width != null ? componentStyle.width : '100%',
-            height: componentStyle.height != null ? componentStyle.height : 'auto',
+            height: componentStyle.height != null ? componentStyle.height : '100%',
             ...componentStyle,
             ...(this.props.style != null ? this.props.style : {})
         };
@@ -297,7 +306,7 @@ class Grid extends AbstractGrid {
         const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
         const palette = collectionPalette(theme);
         return (
-            <div key={this.state.key} className="layout vertical flex self-stretch" style={{height:'100%',width:'100%',flex:'1 1 auto',alignSelf:'stretch',minHeight:0,minWidth:0,maxWidth:'100%'}}>
+            <div key={this.state.key} className="layout vertical flex self-stretch" style={{height:'100%',width:'100%',flex:'1 1 0',alignSelf:'stretch',boxSizing:'border-box',minHeight:0,minWidth:0,maxWidth:'100%',overflow:'hidden'}}>
                 {this.props.showToolbar &&
                     <div style={{flex:'0 0 auto', width:'100%', marginBottom:'8px'}}>
                         <div className="layout horizontal flex center">
@@ -309,44 +318,50 @@ class Grid extends AbstractGrid {
                         </div>
                     </div>
                 }
-                <div ref={this.gridViewportContainerRef} style={{flex:'1 1 auto',minHeight:0,minWidth:0,width:'100%',maxWidth:'100%',position:'relative'}}>
+                <div ref={this.gridViewportContainerRef} style={{flex:'1 1 0',minHeight:0,minWidth:0,width:'100%',maxWidth:'100%',boxSizing:'border-box',position:'relative',overflow:'hidden'}}>
                     <div
                         className={classes.gridSurface}
                         ref={this.gridCanvasRef}
                         onScroll={this.handleScroll.bind(this)}
                         style={{
                             overflow:'auto',
-                            height:this.state.viewportHeight > 0 ? `${this.state.viewportHeight}px` : '100%',
-                            width:this.state.viewportWidth > 0 ? `${this.state.viewportWidth}px` : '100%',
-                            maxWidth:'100%'
+                            overscrollBehavior:'contain',
+                            width:'100%',
+                            height:'100%',
+                            minWidth:0,
+                            minHeight:0,
+                            maxWidth:'100%',
+                            maxHeight:'100%'
                         }}
                     >
                         {this.state.contentCleared || this.state.rows.length === 0 ? this.emptyRowsView() :
-                            <Table size="small" stickyHeader className={classes.gridTable} style={{minWidth:'100%', width:'max-content', background:isDark ? palette.viewportBackground : undefined}}>
-                                <TableHead>
-                                    <TableRow style={isDark ? { background: palette.headerBackground } : undefined}>
-                                        {showCheckbox &&
-                                            <TableCell padding="checkbox" style={isDark ? { background: palette.headerBackground, color: "rgba(241,245,249,0.96)" } : undefined}>
-                                                <Checkbox
-                                                    checked={this.isAllRowsSelected()}
-                                                    indeterminate={!this.isAllRowsSelected() && this.state.selectedIndexes.length > 0}
-                                                    onChange={this.handleToggleAllRows.bind(this)}
-                                                    sx={isDark ? {
-                                                        color: "rgba(226,232,240,0.84)",
-                                                        backgroundColor: "transparent",
-                                                        "&.Mui-checked": { color: theme.palette.primary.main },
-                                                        "&.MuiCheckbox-indeterminate": { color: theme.palette.primary.main }
-                                                    } : undefined}
-                                                />
-                                            </TableCell>
-                                        }
-                                        {columns.map((column, idx) => this.renderHeaderCell(column, idx))}
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {this.state.rows.map((row, rowIndex) => this.renderGridRow(columns, row, rowIndex, showCheckbox))}
-                                </TableBody>
-                            </Table>
+                            <div style={{display:'inline-block', minWidth:'100%', width:'max-content', maxWidth:'none', verticalAlign:'top'}}>
+                                <Table size="small" stickyHeader className={classes.gridTable} style={{minWidth:'100%', width:'max-content', background:isDark ? palette.viewportBackground : undefined}}>
+                                    <TableHead>
+                                        <TableRow style={isDark ? { background: palette.headerBackground } : undefined}>
+                                            {showCheckbox &&
+                                                <TableCell padding="checkbox" style={isDark ? { background: palette.headerBackground, color: "rgba(241,245,249,0.96)" } : undefined}>
+                                                    <Checkbox
+                                                        checked={this.isAllRowsSelected()}
+                                                        indeterminate={!this.isAllRowsSelected() && this.state.selectedIndexes.length > 0}
+                                                        onChange={this.handleToggleAllRows.bind(this)}
+                                                        sx={isDark ? {
+                                                            color: "rgba(226,232,240,0.84)",
+                                                            backgroundColor: "transparent",
+                                                            "&.Mui-checked": { color: theme.palette.primary.main },
+                                                            "&.MuiCheckbox-indeterminate": { color: theme.palette.primary.main }
+                                                        } : undefined}
+                                                    />
+                                                </TableCell>
+                                            }
+                                            {columns.map((column, idx) => this.renderHeaderCell(column, idx))}
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {this.state.rows.map((row, rowIndex) => this.renderGridRow(columns, row, rowIndex, showCheckbox))}
+                                    </TableBody>
+                                </Table>
+                            </div>
                         }
                     </div>
                 </div>
@@ -368,7 +383,7 @@ class Grid extends AbstractGrid {
         const container = this.gridViewportContainerRef.current;
         if (container == null) return;
         const viewportWidth = container.clientWidth;
-        const viewportHeight = container.clientHeight - 25;
+        const viewportHeight = container.clientHeight;
         if (viewportWidth === this.state.viewportWidth && viewportHeight === this.state.viewportHeight) return;
         this.setState({ viewportWidth, viewportHeight });
     };
@@ -698,6 +713,7 @@ class Grid extends AbstractGrid {
         const result = {};
         const columns = this.state.columns;
         const gridCanvas = this.gridCanvasRef.current;
+        const viewportWidth = this.state.viewportWidth > 0 ? this.state.viewportWidth : (gridCanvas != null ? gridCanvas.clientWidth : 0);
         const configuredWidths = this.state.columnWidths || {};
 
         for (let i=0; i<columns.length; i++)
@@ -724,8 +740,8 @@ class Grid extends AbstractGrid {
             if (configuredWidths[columns[j].name] == null && columns[j].type !== "Number" && columns[j].type !== "Date" && columns[j].type !== "Icon" && columns[j].type !== "MaterialIcon") lastVisibleColumn = columns[j];
         }
 
-        if (gridCanvas != null && gridCanvas.clientWidth > totalWidth && lastVisibleColumn != null)
-            result[lastVisibleColumn.name] = result[lastVisibleColumn.name] + gridCanvas.clientWidth - totalWidth - (result[lastVisibleColumn.name]/3);
+        if (viewportWidth > totalWidth && lastVisibleColumn != null)
+            result[lastVisibleColumn.name] = result[lastVisibleColumn.name] + viewportWidth - totalWidth - (result[lastVisibleColumn.name]/3);
 
         return result;
     };
