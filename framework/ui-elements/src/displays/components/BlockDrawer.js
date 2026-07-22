@@ -168,6 +168,7 @@ class BlockDrawer extends AbstractBlockDrawer {
 		this.notifier = new BlockDrawerNotifier(this);
 		this.requester = new BlockDrawerRequester(this);
 		this.paperRef = React.createRef();
+		this.handleRef = React.createRef();
 		this.resizeState = null;
 		this.state = {
     		opened: false,
@@ -226,11 +227,15 @@ class BlockDrawer extends AbstractBlockDrawer {
 		const indicatorClass = this.state.dragging ? classes.resizeHandleIndicatorActive : undefined;
 		return (
 			<div
+				ref={this.handleRef}
 				className={classNames(classes.resizeHandle, handleClass, activeClass)}
 				style={{"--drawer-resize-color": this._handleColor()}}
 				onMouseEnter={this.handleResizeHandleEnter}
 				onMouseLeave={this.handleResizeHandleLeave}
-				onMouseDown={this.handleResizeStart}
+				onPointerDown={this.handleResizeStart}
+				onPointerMove={this.handleResizeMove}
+				onPointerUp={this.handleResizeEnd}
+				onPointerCancel={this.handleResizeEnd}
 			>
 				<div className={classNames(classes.resizeHandleIndicator, indicatorClass)}/>
 			</div>
@@ -271,11 +276,16 @@ class BlockDrawer extends AbstractBlockDrawer {
 		event.preventDefault();
 		event.stopPropagation();
 		Delayer.stop(this);
+		if (event.currentTarget != null && event.currentTarget.setPointerCapture != null && event.pointerId != null) {
+			event.currentTarget.setPointerCapture(event.pointerId);
+		}
 		const width = this._resolvedWidthValue();
-		this.resizeState = { originX: event.clientX, width };
+		this.resizeState = { originX: event.clientX, width, pointerId: event.pointerId };
 		this.setState({dragging: true, resizedWidth: width});
-		window.addEventListener("mousemove", this.handleResizeMove);
-		window.addEventListener("mouseup", this.handleResizeEnd);
+		window.addEventListener("pointermove", this.handleResizeMove);
+		window.addEventListener("pointerup", this.handleResizeEnd);
+		window.addEventListener("pointercancel", this.handleResizeEnd);
+		window.addEventListener("blur", this.handleResizeEnd);
 	};
 
 	handleResizeHandleEnter = () => {
@@ -301,6 +311,13 @@ class BlockDrawer extends AbstractBlockDrawer {
 
 	handleResizeEnd = () => {
 		const width = this.state.resizedWidth;
+		if (this.handleRef.current != null && this.handleRef.current.hasPointerCapture != null) {
+			try {
+				const pointerId = this.resizeState != null ? this.resizeState.pointerId : undefined;
+				if (pointerId != null && this.handleRef.current.hasPointerCapture(pointerId)) this.handleRef.current.releasePointerCapture(pointerId);
+			} catch (e) {
+			}
+		}
 		this.removeResizeListeners();
 		if (width != null) this.updateCookie(width, this._widthCookieName());
 		this.resizeState = null;
@@ -310,8 +327,10 @@ class BlockDrawer extends AbstractBlockDrawer {
 	};
 
 	removeResizeListeners = () => {
-		window.removeEventListener("mousemove", this.handleResizeMove);
-		window.removeEventListener("mouseup", this.handleResizeEnd);
+		window.removeEventListener("pointermove", this.handleResizeMove);
+		window.removeEventListener("pointerup", this.handleResizeEnd);
+		window.removeEventListener("pointercancel", this.handleResizeEnd);
+		window.removeEventListener("blur", this.handleResizeEnd);
 	};
 
 	style() {

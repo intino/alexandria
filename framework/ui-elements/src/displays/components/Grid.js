@@ -198,6 +198,7 @@ class Grid extends AbstractGrid {
         this.pendingRows = [];
         this.handleWindowResize = this.resize.bind(this);
         this.gridViewportContainerRef = React.createRef();
+        this.columnResizeHandleRef = React.createRef();
         this.state = {
             ...this.state,
             key: 0,
@@ -237,8 +238,10 @@ class Grid extends AbstractGrid {
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.handleWindowResize);
-        window.removeEventListener('mousemove', this.handleColumnResizeMove);
-        window.removeEventListener('mouseup', this.handleColumnResizeEnd);
+        window.removeEventListener('pointermove', this.handleColumnResizeMove);
+        window.removeEventListener('pointerup', this.handleColumnResizeEnd);
+        window.removeEventListener('pointercancel', this.handleColumnResizeEnd);
+        window.removeEventListener('blur', this.handleColumnResizeEnd);
         if (this.viewportResizeObserver != null) this.viewportResizeObserver.disconnect();
         super.componentWillUnmount();
     };
@@ -418,7 +421,11 @@ class Grid extends AbstractGrid {
                 </div>
                 <div
                     className={classes.resizeHandle}
-                    onMouseDown={this.handleColumnResizeStart.bind(this, column)}
+                    ref={this.columnResizeHandleRef}
+                    onPointerDown={this.handleColumnResizeStart.bind(this, column)}
+                    onPointerMove={this.handleColumnResizeMove}
+                    onPointerUp={this.handleColumnResizeEnd}
+                    onPointerCancel={this.handleColumnResizeEnd}
                     onDoubleClick={this.handleColumnResizeReset.bind(this, column)}
                     onClick={(event) => event.stopPropagation()}
                 />
@@ -1195,14 +1202,20 @@ class Grid extends AbstractGrid {
     handleColumnResizeStart = (column, event) => {
         event.preventDefault();
         event.stopPropagation();
+        if (event.currentTarget != null && event.currentTarget.setPointerCapture != null && event.pointerId != null) {
+            event.currentTarget.setPointerCapture(event.pointerId);
+        }
         this.saveHorizontalScroll(this.horizontalScroll);
         this.resizingColumn = {
             name: column.key,
             startX: event.clientX,
             startWidth: column.width,
+            pointerId: event.pointerId,
         };
-        window.addEventListener('mousemove', this.handleColumnResizeMove);
-        window.addEventListener('mouseup', this.handleColumnResizeEnd);
+        window.addEventListener('pointermove', this.handleColumnResizeMove);
+        window.addEventListener('pointerup', this.handleColumnResizeEnd);
+        window.addEventListener('pointercancel', this.handleColumnResizeEnd);
+        window.addEventListener('blur', this.handleColumnResizeEnd);
     };
 
     handleColumnResizeMove = (event) => {
@@ -1220,8 +1233,17 @@ class Grid extends AbstractGrid {
 
     handleColumnResizeEnd = () => {
         if (this.resizingColumn == null) return;
-        window.removeEventListener('mousemove', this.handleColumnResizeMove);
-        window.removeEventListener('mouseup', this.handleColumnResizeEnd);
+        if (this.columnResizeHandleRef.current != null && this.columnResizeHandleRef.current.hasPointerCapture != null) {
+            try {
+                const pointerId = this.resizingColumn.pointerId;
+                if (pointerId != null && this.columnResizeHandleRef.current.hasPointerCapture(pointerId)) this.columnResizeHandleRef.current.releasePointerCapture(pointerId);
+            } catch (e) {
+            }
+        }
+        window.removeEventListener('pointermove', this.handleColumnResizeMove);
+        window.removeEventListener('pointerup', this.handleColumnResizeEnd);
+        window.removeEventListener('pointercancel', this.handleColumnResizeEnd);
+        window.removeEventListener('blur', this.handleColumnResizeEnd);
         const { name } = this.resizingColumn;
         this.resizingColumn = null;
         if (this.state.columnWidths[name] != null) this.saveState("columnWidths", this.state.columnWidths);
