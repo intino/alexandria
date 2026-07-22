@@ -103,20 +103,6 @@ const styles = theme => ({
 			minHeight: 0,
 		},
 	},
-	resizeHandleOverlay: {
-		position: 'absolute',
-		top: 0,
-		bottom: 0,
-		width: 0,
-		pointerEvents: 'none',
-		zIndex: 3,
-	},
-	resizeHandleOverlayLeft: {
-		right: 0,
-	},
-	resizeHandleOverlayRight: {
-		left: 0,
-	},
 	resizeHandle: {
 		position: 'absolute',
 		top: theme.spacing(2),
@@ -154,10 +140,10 @@ const styles = theme => ({
 		},
 	},
 	resizeHandleLeft: {
-		right: 0,
+		left: '100%',
 	},
 	resizeHandleRight: {
-		left: 0,
+		right: '100%',
 	},
 	resizeHandleIndicator: {
 		position: 'relative',
@@ -227,9 +213,9 @@ class BlockDrawer extends AbstractBlockDrawer {
 								<div className={classes.drawerContent}>
 									{this.props.children}
 								</div>
-								{this.renderResizeHandle(anchor)}
 							</div>
 						</Drawer>
+				{this.renderResizeHandle(anchor)}
 			</div>
 		);
 	};
@@ -237,25 +223,22 @@ class BlockDrawer extends AbstractBlockDrawer {
 	renderResizeHandle = (anchor) => {
 		if (!this._isResizable()) return null;
 		const {classes} = this.props;
-		const overlayClass = anchor === "right" ? classes.resizeHandleOverlayRight : classes.resizeHandleOverlayLeft;
 		const handleClass = anchor === "right" ? classes.resizeHandleRight : classes.resizeHandleLeft;
 		const activeClass = this.state.dragging ? classes.resizeHandleActive : undefined;
 		const indicatorClass = this.state.dragging ? classes.resizeHandleIndicatorActive : undefined;
 		return (
-			<div className={classNames(classes.resizeHandleOverlay, overlayClass)}>
-				<div
-					ref={this.handleRef}
-					className={classNames(classes.resizeHandle, handleClass, activeClass)}
-					style={{"--drawer-resize-color": this._handleColor()}}
-					onMouseEnter={this.handleResizeHandleEnter}
-					onMouseLeave={this.handleResizeHandleLeave}
-					onPointerDown={this.handleResizeStart}
-					onPointerMove={this.handleResizeMove}
-					onPointerUp={this.handleResizeEnd}
-					onPointerCancel={this.handleResizeEnd}
-				>
-					<div className={classNames(classes.resizeHandleIndicator, indicatorClass)}/>
-				</div>
+			<div
+				ref={this.handleRef}
+				className={classNames(classes.resizeHandle, handleClass, activeClass)}
+				style={{"--drawer-resize-color": this._handleColor()}}
+				onMouseEnter={this.handleResizeHandleEnter}
+				onMouseLeave={this.handleResizeHandleLeave}
+				onPointerDown={this.handleResizeStart}
+				onPointerMove={this.handleResizeMove}
+				onPointerUp={this.handleResizeEnd}
+				onPointerCancel={this.handleResizeEnd}
+			>
+				<div className={classNames(classes.resizeHandleIndicator, indicatorClass)}/>
 			</div>
 		);
 	};
