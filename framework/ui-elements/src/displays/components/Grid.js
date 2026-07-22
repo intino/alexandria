@@ -957,7 +957,11 @@ class Grid extends AbstractGrid {
         if (this.state.rows.length === 0) return;
         const hasMore = this.state.rows.length < this.state.itemCount;
         const scrollableTarget = this.gridCanvasRef.current;
-        const scrollIsVisible = scrollableTarget == null || scrollableTarget.offsetHeight === 0 || scrollableTarget.scrollHeight-100 > scrollableTarget.offsetHeight;
+        if (scrollableTarget == null || scrollableTarget.offsetHeight === 0) {
+            window.setTimeout(() => this.loadNextPageIfRequired(), 100);
+            return;
+        }
+        const scrollIsVisible = scrollableTarget.scrollHeight - 100 > scrollableTarget.offsetHeight;
         if (!hasMore || scrollIsVisible) return;
         this.loadingNextPage = true;
         this.requester.loadNextPage();
@@ -1138,16 +1142,20 @@ class Grid extends AbstractGrid {
 
     refreshColumnsOrdering = (value) => {
         const index = this.lastRow > 0 ? this.lastRow - 1 : 0;
-        this.setState({columnsOrdering: value});
-        window.dispatchEvent(new Event('resize'));
-        this.scrollToRow(index);
+        this.setState({columnsOrdering: value}, () => {
+            window.dispatchEvent(new Event('resize'));
+            this.scrollToRow(index);
+            window.setTimeout(() => this.loadNextPageIfRequired(), 0);
+        });
     };
 
     refreshVisibleColumns = (value) => {
         const index = this.lastRow > 0 ? this.lastRow - 1 : 0;
-        this.setState({visibleColumns: this.visibleColumnsArrayOf(value)});
-        window.dispatchEvent(new Event('resize'));
-        this.scrollToRow(index);
+        this.setState({visibleColumns: this.visibleColumnsArrayOf(value)}, () => {
+            window.dispatchEvent(new Event('resize'));
+            this.scrollToRow(index);
+            window.setTimeout(() => this.loadNextPageIfRequired(), 0);
+        });
     };
 
     visibleColumnsArrayOf = (value) => {

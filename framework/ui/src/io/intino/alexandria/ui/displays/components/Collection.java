@@ -183,14 +183,17 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
 
     public void sortings(List<String> sortings) {
         behavior.sortings(sortings);
+        notifyRefreshItemCount();
     }
 
     public void addSorting(String sorting) {
         behavior.addSorting(sorting);
+        notifyRefreshItemCount();
     }
 
     public void removeSorting(String sorting) {
         behavior.removeSorting(sorting);
+        notifyRefreshItemCount();
     }
 
     @SuppressWarnings("unchecked")

@@ -45,10 +45,10 @@ const styles = theme => ({
 		minHeight: '100%',
 		boxSizing: 'border-box',
 		background: theme.palette.mode === 'dark'
-			? 'linear-gradient(180deg, rgba(24,31,45,0.96) 0%, rgba(15,21,32,0.98) 100%)'
-			: 'linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(246,249,253,0.98) 100%)',
-		backdropFilter: 'blur(18px)',
+			? 'rgba(15, 23, 42, 0.98)'
+			: 'rgba(255, 255, 255, 0.98)',
 		boxShadow: 'none',
+		willChange: 'width',
 	},
 	drawerPaperLeft: {
 		borderTopLeftRadius: 0,
@@ -84,7 +84,7 @@ const styles = theme => ({
 		width: '100%',
 		height: '100%',
 		minHeight: 0,
-		overflow: 'visible',
+		overflow: 'hidden',
 	},
 	drawerContent: {
 		position: 'relative',
@@ -103,6 +103,20 @@ const styles = theme => ({
 			minHeight: 0,
 		},
 	},
+	resizeHandleOverlay: {
+		position: 'absolute',
+		top: 0,
+		bottom: 0,
+		width: 0,
+		pointerEvents: 'none',
+		zIndex: 3,
+	},
+	resizeHandleOverlayLeft: {
+		right: 0,
+	},
+	resizeHandleOverlayRight: {
+		left: 0,
+	},
 	resizeHandle: {
 		position: 'absolute',
 		top: theme.spacing(2),
@@ -118,6 +132,7 @@ const styles = theme => ({
 		background: 'transparent',
 		opacity: 0.9,
 		transition: 'background-color 0.2s ease, opacity 0.2s ease',
+		pointerEvents: 'auto',
 		'&::before': {
 			content: '""',
 			position: 'absolute',
@@ -139,10 +154,10 @@ const styles = theme => ({
 		},
 	},
 	resizeHandleLeft: {
-		left: '100%',
+		right: 0,
 	},
 	resizeHandleRight: {
-		right: '100%',
+		left: 0,
 	},
 	resizeHandleIndicator: {
 		position: 'relative',
@@ -212,9 +227,9 @@ class BlockDrawer extends AbstractBlockDrawer {
 								<div className={classes.drawerContent}>
 									{this.props.children}
 								</div>
+								{this.renderResizeHandle(anchor)}
 							</div>
 						</Drawer>
-				{this.renderResizeHandle(anchor)}
 			</div>
 		);
 	};
@@ -222,22 +237,25 @@ class BlockDrawer extends AbstractBlockDrawer {
 	renderResizeHandle = (anchor) => {
 		if (!this._isResizable()) return null;
 		const {classes} = this.props;
+		const overlayClass = anchor === "right" ? classes.resizeHandleOverlayRight : classes.resizeHandleOverlayLeft;
 		const handleClass = anchor === "right" ? classes.resizeHandleRight : classes.resizeHandleLeft;
 		const activeClass = this.state.dragging ? classes.resizeHandleActive : undefined;
 		const indicatorClass = this.state.dragging ? classes.resizeHandleIndicatorActive : undefined;
 		return (
-			<div
-				ref={this.handleRef}
-				className={classNames(classes.resizeHandle, handleClass, activeClass)}
-				style={{"--drawer-resize-color": this._handleColor()}}
-				onMouseEnter={this.handleResizeHandleEnter}
-				onMouseLeave={this.handleResizeHandleLeave}
-				onPointerDown={this.handleResizeStart}
-				onPointerMove={this.handleResizeMove}
-				onPointerUp={this.handleResizeEnd}
-				onPointerCancel={this.handleResizeEnd}
-			>
-				<div className={classNames(classes.resizeHandleIndicator, indicatorClass)}/>
+			<div className={classNames(classes.resizeHandleOverlay, overlayClass)}>
+				<div
+					ref={this.handleRef}
+					className={classNames(classes.resizeHandle, handleClass, activeClass)}
+					style={{"--drawer-resize-color": this._handleColor()}}
+					onMouseEnter={this.handleResizeHandleEnter}
+					onMouseLeave={this.handleResizeHandleLeave}
+					onPointerDown={this.handleResizeStart}
+					onPointerMove={this.handleResizeMove}
+					onPointerUp={this.handleResizeEnd}
+					onPointerCancel={this.handleResizeEnd}
+				>
+					<div className={classNames(classes.resizeHandleIndicator, indicatorClass)}/>
+				</div>
 			</div>
 		);
 	};
@@ -281,6 +299,8 @@ class BlockDrawer extends AbstractBlockDrawer {
 		}
 		const width = this._resolvedWidthValue();
 		this.resizeState = { originX: event.clientX, width, pointerId: event.pointerId };
+		document.body.style.cursor = "col-resize";
+		document.body.style.userSelect = "none";
 		this.setState({dragging: true, resizedWidth: width});
 		window.addEventListener("pointermove", this.handleResizeMove);
 		window.addEventListener("pointerup", this.handleResizeEnd);
@@ -303,6 +323,7 @@ class BlockDrawer extends AbstractBlockDrawer {
 
 	handleResizeMove = (event) => {
 		if (this.resizeState == null) return;
+		event.preventDefault();
 		const delta = event.clientX - this.resizeState.originX;
 		const direction = this._anchor() === "right" ? -1 : 1;
 		const width = this._clampWidth(this.resizeState.width + (delta * direction));
@@ -311,6 +332,8 @@ class BlockDrawer extends AbstractBlockDrawer {
 
 	handleResizeEnd = () => {
 		const width = this.state.resizedWidth;
+		document.body.style.cursor = "";
+		document.body.style.userSelect = "";
 		if (this.handleRef.current != null && this.handleRef.current.hasPointerCapture != null) {
 			try {
 				const pointerId = this.resizeState != null ? this.resizeState.pointerId : undefined;
