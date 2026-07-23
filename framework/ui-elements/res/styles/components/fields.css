@@ -437,7 +437,7 @@
 }
 
 .basic-multi-select .select__indicators {
-    padding-right: 20px;
+    padding-right: 8px;
 }
 
 .selector-combo-box.focus fieldset, .selector-collection-box.focus fieldset {
