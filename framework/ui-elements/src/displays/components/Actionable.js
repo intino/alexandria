@@ -1,14 +1,14 @@
 import React, {Suspense} from "react";
 import AbstractActionable from "../../../gen/displays/components/AbstractActionable";
 import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    IconButton,
-    Typography
+	Button,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogContentText,
+	DialogTitle,
+	IconButton,
+	Typography
 } from "@mui/material";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import TextField from '@mui/material/TextField';
@@ -338,21 +338,20 @@ export default class Actionable extends AbstractActionable {
         const large = this._size() === "large";
         const width = style.width != null ? style.width : (large ? "48px" : "24px");
         const height = style.height != null ? style.height : (large ? "48px" : "24px");
-        const color = highlighted ? "white" : "inherit";
+        const color = highlighted ? "white" : "black";
         const background = highlighted ? (this.props.color != null ? this.props.color : "#3f51b5") : "transparent";
         const border = highlighted ? "0" : "1px solid " + (this.props.color != null ? this.props.color : "#3f51b5");
         const fontSize = large ? "18pt" : "12pt";
-        const paddingLeft = large ? "1px" : "0";
-        const paddingTop = large ? "10px" : "3px";
         const title = StringUtil.initials(this.state.title, 1);
+		const letterImage = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' height='256' width='256' style='background: " + background.replace("#", "%23") + "'><text text-anchor='middle' x='50%' y='50%' dy='0.35em' fill='" + color + "' font-size='103.0' font-family='Proxima Nova, proxima-nova, HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif'>" + title + "</text></svg>";
 		if (this.state.color != null) style.color = this.state.color;
 		const button = (
             <IconButton id={this.triggerId()} color="primary" disabled={this._readonly()}
                             onClick={this.clickEvent()} onMouseEnter={this.mouseEnterEvent()} onMouseLeave={this.mouseLeaveEvent()}
                             className={classes.materialIconButton} style={style} size={this._size()}>
-                <div style={{width:width,height:height,background:background,border:border,
-                             borderRadius:'40px',color:color,fontSize:fontSize,
-                             paddingTop:paddingTop,paddingLeft:paddingLeft}}>{title}</div>
+                <img style={{width:width,height:height,background:background,border:border,
+                             borderRadius:'40px',color:color,fontSize:fontSize}}
+					src={letterImage}/>
             </IconButton>
 		);
 		return button;
