@@ -74,17 +74,17 @@ class NumberEditable extends AbstractNumberEditable {
 		if (!this.state.visible) return (<React.Fragment/>);
 
 		const { classes } = this.props;
-			const label = this.props.label !== "" ? this.translate(this.props.label) : undefined;
-			const error = this.state.error;
-			const shrink = error != null ? true : (this.props.shrink !== null ? this.props.shrink : undefined);
-			const value = this.state.value != null ? this.state.value : (this.state.min !== -1 ? this.state.min : 0);
-			const { thousandSeparator, decimalSeparator } = this.separators();
-			const theme = Theme.get();
-			const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
-			const fieldThemeClass = isDark ? "dark" : undefined;
+		const label = this.props.label !== "" ? this.translate(this.props.label) : undefined;
+		const error = this.state.error;
+		const shrink = error != null ? true : (this.props.shrink !== null ? this.props.shrink : undefined);
+		const value = this.state.value != null ? this.state.value : (this.state.min !== -1 ? this.state.min : 0);
+		const { thousandSeparator, decimalSeparator } = this.separators();
+		const theme = Theme.get();
+		const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
+		const fieldThemeClass = isDark ? "dark" : undefined;
 
-			return (
-				<div style={{position:"relative"}} className={fieldThemeClass}>
+		return (
+			<div style={{position:"relative",...this.style()}} className={fieldThemeClass}>
 				{(!this.state.readonly && error != null) && <div id={this.props.id + "-error"} className={classes.error} style={this._errorStyle()}>{error}</div>}
 				<NumericFormat
 					value={value}
@@ -92,7 +92,7 @@ class NumberEditable extends AbstractNumberEditable {
 					thousandSeparator={thousandSeparator}
 					decimalSeparator={decimalSeparator}
 					decimalScale={this.props.decimals != null ? this.props.decimals : 0}
-					format={this.variant("body1")} style={this.style()} className={classnames(classes.default, error != null ? classes.errorField : undefined, "number-editable")} label={label} type="text"
+					format={this.variant("body1")} className={classnames(classes.default, error != null ? classes.errorField : undefined, "number-editable")} label={label} type="text"
 					onChange={this.handleChange.bind(this)} autoFocus={this.props.focused}
 					autoComplete="off" disabled={this.state.readonly} size="Small" variant="outlined"
 					inputRef={this.inputRef}
@@ -106,6 +106,7 @@ class NumberEditable extends AbstractNumberEditable {
 							min: this.state.min !== -1 ? this.state.min : undefined,
 							max: this.state.max !== -1 ? this.state.max : undefined,
 							step: this.props.step !== -1 ? this.props.step : undefined,
+							style: {...this.style(), margin:'0'},
 							className: classes.input
 						},
 						input: {
@@ -120,14 +121,14 @@ class NumberEditable extends AbstractNumberEditable {
 		);
 	};
 
-    separators = () => {
+	separators = () => {
 		const language = window.Application.configuration.language;
-        const parts = new Intl.NumberFormat(language).formatToParts(1234567.89);
-        return {
-            thousandSeparator: parts.find(p => p.type === 'group')?.value || null,
-            decimalSeparator: parts.find(p => p.type === 'decimal')?.value || null
-        };
-    }
+		const parts = new Intl.NumberFormat(language).formatToParts(1234567.89);
+		return {
+			thousandSeparator: parts.find(p => p.type === 'group')?.value || null,
+			decimalSeparator: parts.find(p => p.type === 'decimal')?.value || null
+		};
+	}
 
 	refresh = (value) => {
 		this.setState({ "value": value != null ? value : "" });

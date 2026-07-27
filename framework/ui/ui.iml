@@ -128,6 +128,5 @@
     <orderEntry type="library" scope="PROVIDED" name="Intino: io.intino.alexandria:proxy:3.0.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:http:3.0.3" level="project" />
     <orderEntry type="library" name="Intino: log4j:log4j:1.2.14" level="project" />
-    <orderEntry type="module" module-name="ui-elements" />
   </component>
 </module>
