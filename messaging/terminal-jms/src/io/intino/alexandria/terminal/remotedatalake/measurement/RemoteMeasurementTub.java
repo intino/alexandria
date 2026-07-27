@@ -10,8 +10,8 @@ import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.terminal.remotedatalake.DatalakeAccessor;
 import org.apache.activemq.BlobMessage;
 
-import javax.jms.JMSException;
-import javax.jms.Message;
+import jakarta.jms.JMSException;
+import jakarta.jms.Message;
 import java.io.IOException;
 import java.util.List;
 
