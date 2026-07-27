@@ -3,11 +3,11 @@ package io.intino.alexandria.terminal;
 import io.intino.alexandria.event.Event;
 import io.intino.alexandria.jms.*;
 import io.intino.alexandria.logger.Logger;
+import jakarta.jms.*;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQSession;
 import org.apache.activemq.command.ActiveMQDestination;
 
-import javax.jms.*;
 import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
@@ -20,10 +20,10 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static io.intino.alexandria.jms.MessageReader.textFrom;
+import static jakarta.jms.Session.AUTO_ACKNOWLEDGE;
+import static jakarta.jms.Session.SESSION_TRANSACTED;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static javax.jms.Session.AUTO_ACKNOWLEDGE;
-import static javax.jms.Session.SESSION_TRANSACTED;
 
 public class JmsConnector implements Connector {
 	private final Map<String, JmsProducer> producers;
@@ -40,9 +40,9 @@ public class JmsConnector implements Connector {
 	private MessageOutBox messageOutBox;
 	private Connection connection;
 	private Session session;
-	private ScheduledExecutorService scheduler;
-	private final ExecutorService eventDispatcher;
-	private final ExecutorService messageDispatcher;
+	private volatile ScheduledExecutorService scheduler;
+	private volatile ExecutorService eventDispatcher;
+	private volatile ExecutorService messageDispatcher;
 	private TemporaryQueue temporaryQueue;
 
 	public JmsConnector(ConnectionConfig config, File outboxDirectory) {
@@ -62,8 +62,7 @@ public class JmsConnector implements Connector {
 			this.eventOutBox = new EventOutBox(new File(outBoxDirectory, "events"));
 			this.messageOutBox = new MessageOutBox(new File(outBoxDirectory, "requests"));
 		}
-		eventDispatcher = Executors.newSingleThreadExecutor(new NamedThreadFactory("JmsConnector-events"));
-		messageDispatcher = Executors.newSingleThreadExecutor(r -> new Thread(r, "JmsConnector-messages"));
+		ensureDispatchers();
 	}
 
 	@Override
@@ -71,24 +70,25 @@ public class JmsConnector implements Connector {
 		return config.clientId();
 	}
 
-	public void start() {
+	public synchronized void start() {
 		if (config.url() == null || config.url().isEmpty()) {
+			started.set(false);
+			connected.set(false);
 			Logger.warn("Invalid broker URL (" + config.url() + "). Connection aborted");
 			return;
 		}
+		ensureDispatchers();
+		started.set(true);
+		ensureScheduler();
 		try {
 			connect();
 		} catch (JMSException e) {
 			Logger.error(e);
 		}
-		started.set(true);
-		if (scheduler == null) {
-			scheduler = Executors.newScheduledThreadPool(1);
-			scheduler.scheduleAtFixedRate(this::checkConnection, 15, 10, MINUTES);
-		}
 	}
 
-	private void connect() throws JMSException {
+	private synchronized void connect() throws JMSException {
+		connected.set(false);
 		if (!Broker.isRunning(config.url())) {
 			Logger.warn("Broker (" + config.url() + ") unreachable. Connection aborted");
 			return;
@@ -108,8 +108,10 @@ public class JmsConnector implements Connector {
 	public synchronized void sendEvent(String path, Event event) {
 		ArrayList<Consumer<Event>> consumers = new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList()));
 		for (Consumer<Event> c : consumers) c.accept(event);
-		eventDispatcher.execute(() -> {
+		dispatchEvent(() -> {
 			if (!doSendEvent(path, event) && eventOutBox != null) eventOutBox.push(path, event);
+		}, () -> {
+			if (eventOutBox != null) eventOutBox.push(path, event);
 		});
 	}
 
@@ -117,17 +119,21 @@ public class JmsConnector implements Connector {
 	public synchronized void sendEvents(String path, List<Event> events) {
 		ArrayList<Consumer<Event>> consumers = new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList()));
 		consumers.forEach(events::forEach);
-		eventDispatcher.execute(() -> {
+		dispatchEvent(() -> {
 			if (!doSendEvents(path, events) && eventOutBox != null) events.forEach(e -> eventOutBox.push(path, e));
+		}, () -> {
+			if (eventOutBox != null) events.forEach(e -> eventOutBox.push(path, e));
 		});
 	}
 
 	public synchronized void sendEvents(String path, List<Event> events, int expirationInSeconds) {
 		ArrayList<Consumer<Event>> consumers = new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList()));
 		consumers.forEach(events::forEach);
-		eventDispatcher.execute(() -> {
+		dispatchEvent(() -> {
 			if (!doSendEvents(path, events, expirationInSeconds) && eventOutBox != null)
 				events.forEach(e -> eventOutBox.push(path, e));
+		}, () -> {
+			if (eventOutBox != null) events.forEach(e -> eventOutBox.push(path, e));
 		});
 	}
 
@@ -135,8 +141,10 @@ public class JmsConnector implements Connector {
 	public synchronized void sendEvent(String path, Event event, int expirationInSeconds) {
 		ArrayList<Consumer<Event>> consumers = new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList()));
 		for (Consumer<Event> eventConsumer : consumers) eventConsumer.accept(event);
-		eventDispatcher.execute(() -> {
+		dispatchEvent(() -> {
 			if (!doSendEvent(path, event, expirationInSeconds) && eventOutBox != null) eventOutBox.push(path, event);
+		}, () -> {
+			if (eventOutBox != null) eventOutBox.push(path, event);
 		});
 	}
 
@@ -177,7 +185,7 @@ public class JmsConnector implements Connector {
 		registerEventConsumer(path, subscriberId, messageSelector, onEventReceived);
 		JmsConsumer consumer = this.consumers.get(path);
 		if (consumer == null) return;
-		Consumer<javax.jms.Message> eventConsumer = m -> {
+		Consumer<jakarta.jms.Message> eventConsumer = m -> {
 			final Instant timestamp = timestamp(m);
 			if (timestamp != null && filter != null && filter.test(timestamp))
 				MessageTranslator.deserialize(m).forEach(onEventReceived);
@@ -207,7 +215,7 @@ public class JmsConnector implements Connector {
 	private void attach(String path, MessageConsumer onMessageReceived) {
 		JmsConsumer consumer = this.consumers.get(path);
 		if (consumer == null) return;
-		Consumer<javax.jms.Message> messageConsumer = m -> onMessageReceived.accept(textFrom(m), callback(m));
+		Consumer<jakarta.jms.Message> messageConsumer = m -> onMessageReceived.accept(textFrom(m), callback(m));
 		jmsMessageConsumers.put(onMessageReceived, messageConsumer.hashCode());
 		consumer.listen(messageConsumer);
 	}
@@ -215,12 +223,12 @@ public class JmsConnector implements Connector {
 	private void attach(String path, Consumer<Event> onEventReceived) {
 		JmsConsumer consumer = this.consumers.get(path);
 		if (consumer == null) return;
-		Consumer<javax.jms.Message> eventConsumer = m -> MessageTranslator.deserialize(m).forEach(onEventReceived);
+		Consumer<jakarta.jms.Message> eventConsumer = m -> MessageTranslator.deserialize(m).forEach(onEventReceived);
 		jmsEventConsumers.put(onEventReceived, eventConsumer.hashCode());
 		consumer.listen(eventConsumer);
 	}
 
-	private Instant timestamp(javax.jms.Message m) {
+	private Instant timestamp(jakarta.jms.Message m) {
 		try {
 			return Instant.ofEpochMilli(m.getJMSTimestamp());
 		} catch (JMSException e) {
@@ -244,7 +252,7 @@ public class JmsConnector implements Connector {
 	private void detach(Integer consumerCode) {
 		if (consumerCode == null) return;
 		for (JmsConsumer jc : consumers.values()) {
-			List<Consumer<javax.jms.Message>> toRemove = jc.listeners().stream().filter(l -> l.hashCode() == consumerCode).collect(Collectors.toList());
+			List<Consumer<jakarta.jms.Message>> toRemove = jc.listeners().stream().filter(l -> l.hashCode() == consumerCode).collect(Collectors.toList());
 			toRemove.forEach(jc::removeListener);
 		}
 	}
@@ -274,12 +282,12 @@ public class JmsConnector implements Connector {
 	}
 
 	@Override
-	public synchronized javax.jms.Message requestResponse(String path, javax.jms.Message message) {
+	public synchronized jakarta.jms.Message requestResponse(String path, jakarta.jms.Message message) {
 		return requestResponse(path, message, config.defaultTimeoutAmount(), config.defaultTimeoutUnit());
 	}
 
 	@Override
-	public synchronized javax.jms.Message requestResponse(String path, javax.jms.Message message, long timeout, TimeUnit timeUnit) {
+	public synchronized jakarta.jms.Message requestResponse(String path, jakarta.jms.Message message, long timeout, TimeUnit timeUnit) {
 		if (session == null) {
 			Logger.error("Connection lost. Invalid session");
 			return null;
@@ -289,8 +297,8 @@ public class JmsConnector implements Connector {
 			if (this.temporaryQueue == null) temporaryQueue = session.createTemporaryQueue();
 			message.setJMSReplyTo(temporaryQueue);
 			message.setJMSCorrelationID(createRandomString());
-			try (javax.jms.MessageConsumer consumer = session.createConsumer(temporaryQueue)) {
-				CompletableFuture<javax.jms.Message> future = new CompletableFuture<>();
+			try (jakarta.jms.MessageConsumer consumer = session.createConsumer(temporaryQueue)) {
+				CompletableFuture<jakarta.jms.Message> future = new CompletableFuture<>();
 				consumer.setMessageListener(future::complete);
 				sendMessage(producer, message, 100);
 				producer.close();
@@ -307,13 +315,13 @@ public class JmsConnector implements Connector {
 		return null;
 	}
 
-	private static javax.jms.Message waitFor(Future<javax.jms.Message> future, long timeout, TimeUnit timeUnit) throws ExecutionException, InterruptedException, TimeoutException {
+	private static jakarta.jms.Message waitFor(Future<jakarta.jms.Message> future, long timeout, TimeUnit timeUnit) throws ExecutionException, InterruptedException, TimeoutException {
 		return timeout <= 0 || timeUnit == null ? future.get() : future.get(timeout, timeUnit);
 	}
 
 
 	@Override
-	public void requestResponse(String path, javax.jms.Message message, String responsePath) {
+	public void requestResponse(String path, jakarta.jms.Message message, String responsePath) {
 		try {
 			message.setJMSReplyTo(this.session.createQueue(responsePath));
 			message.setJMSCorrelationID(createRandomString());
@@ -341,21 +349,12 @@ public class JmsConnector implements Connector {
 		return session;
 	}
 
-	public void stop() {
-		try {
-			consumers.values().forEach(JmsConsumer::close);
-			consumers.clear();
-			messageDispatcher.shutdown();
-			messageDispatcher.awaitTermination(1, MINUTES);
-			producers.values().forEach(JmsProducer::close);
-			producers.clear();
-			if (session != null) session.close();
-			if (connection != null) connection.close();
-			session = null;
-			connection = null;
-		} catch (Throwable e) {
-			Logger.error(e);
-		}
+	public synchronized void stop() {
+		started.set(false);
+		connected.set(false);
+		shutdownScheduler();
+		shutdownDispatchers();
+		closeJmsResources();
 	}
 
 	private Session createSession(boolean transactedSession) throws JMSException {
@@ -451,15 +450,21 @@ public class JmsConnector implements Connector {
 		return session == null || !connected.get();
 	}
 
-	private boolean sendMessage(JmsProducer producer, javax.jms.Message message) {
+	private boolean sendMessage(JmsProducer producer, jakarta.jms.Message message) {
 		return sendMessage(producer, message, 0);
 	}
 
-	private boolean sendMessage(JmsProducer producer, javax.jms.Message message, int expirationTimeInSeconds) {
+	private boolean sendMessage(JmsProducer producer, jakarta.jms.Message message, int expirationTimeInSeconds) {
+		ExecutorService dispatcher = messageDispatcher;
+		if (dispatcher == null || dispatcher.isShutdown()) return false;
 		try {
-			Future<Boolean> result = messageDispatcher.submit(() -> producer.produce(message, expirationTimeInSeconds));
+			Future<Boolean> result = dispatcher.submit(() -> producer.produce(message, expirationTimeInSeconds));
 			return result.get(1, SECONDS);
-		} catch (InterruptedException | TimeoutException ignored) {
+		} catch (RejectedExecutionException e) {
+			Logger.warn("Message dispatcher is stopped. Message rejected");
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		} catch (TimeoutException ignored) {
 		} catch (ExecutionException e) {
 			Logger.error(e);
 		}
@@ -528,7 +533,7 @@ public class JmsConnector implements Connector {
 			for (String path : messageConsumers.keySet()) {
 				if (!consumers.containsKey(path) && session != null) consumers.put(path, queueConsumer(path));
 				for (MessageConsumer mConsumer : messageConsumers.get(path)) {
-					Consumer<javax.jms.Message> messageConsumer = m -> mConsumer.accept(textFrom(m), callback(m));
+					Consumer<jakarta.jms.Message> messageConsumer = m -> mConsumer.accept(textFrom(m), callback(m));
 					jmsMessageConsumers.put(mConsumer, messageConsumer.hashCode());
 					consumers.get(path).listen(messageConsumer);
 				}
@@ -566,7 +571,8 @@ public class JmsConnector implements Connector {
 		}
 	}
 
-	private void checkConnection() {
+	private synchronized void checkConnection() {
+		if (!started.get()) return;
 		if (session != null && config.url().startsWith("failover") && !connected.get()) {
 			Logger.debug("Data-hub currently disconnected. Waiting for reconnection...");
 			return;
@@ -576,12 +582,84 @@ public class JmsConnector implements Connector {
 			return;
 		}
 		Logger.debug("Restarting data-hub connection...");
-		stop();
+		closeJmsResources();
 		try {
 			connect();
 		} catch (JMSException ignored) {
 		}
-		connected.set(true);
+	}
+
+	private synchronized void ensureDispatchers() {
+		if (eventDispatcher == null || eventDispatcher.isShutdown())
+			eventDispatcher = Executors.newSingleThreadExecutor(new NamedThreadFactory("JmsConnector-events"));
+		if (messageDispatcher == null || messageDispatcher.isShutdown())
+			messageDispatcher = Executors.newSingleThreadExecutor(new NamedThreadFactory("JmsConnector-messages"));
+	}
+
+	private synchronized void ensureScheduler() {
+		if (scheduler != null && !scheduler.isShutdown()) return;
+		scheduler = Executors.newScheduledThreadPool(1, new NamedThreadFactory("JmsConnector-scheduler"));
+		scheduler.scheduleAtFixedRate(this::checkConnection, 15, 10, MINUTES);
+	}
+
+	private void dispatchEvent(Runnable action, Runnable onRejected) {
+		ExecutorService dispatcher = eventDispatcher;
+		if (dispatcher == null || dispatcher.isShutdown()) {
+			onRejected.run();
+			return;
+		}
+		try {
+			dispatcher.execute(action);
+		} catch (RejectedExecutionException e) {
+			Logger.warn("Event dispatcher is stopped. Event rejected");
+			onRejected.run();
+		}
+	}
+
+	private synchronized void shutdownDispatchers() {
+		shutdownDispatcher(eventDispatcher);
+		eventDispatcher = null;
+		shutdownDispatcher(messageDispatcher);
+		messageDispatcher = null;
+	}
+
+	private void shutdownDispatcher(ExecutorService dispatcher) {
+		if (dispatcher == null) return;
+		dispatcher.shutdown();
+		try {
+			dispatcher.awaitTermination(1, MINUTES);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
+	}
+
+	private synchronized void shutdownScheduler() {
+		if (scheduler == null) return;
+		scheduler.shutdown();
+		try {
+			scheduler.awaitTermination(1, MINUTES);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
+		scheduler = null;
+	}
+
+	private synchronized void closeJmsResources() {
+		try {
+			consumers.values().forEach(JmsConsumer::close);
+			consumers.clear();
+			producers.values().forEach(JmsProducer::close);
+			producers.clear();
+			if (session != null) session.close();
+			if (connection != null) connection.close();
+		} catch (Throwable e) {
+			Logger.error(e);
+		} finally {
+			temporaryQueue = null;
+			session = null;
+			connection = null;
+			connected.set(false);
+		}
 	}
 
 	private void initConnection() {
@@ -597,7 +675,7 @@ public class JmsConnector implements Connector {
 		}
 	}
 
-	private String callback(javax.jms.Message m) {
+	private String callback(jakarta.jms.Message m) {
 		try {
 			ActiveMQDestination replyTo = (ActiveMQDestination) m.getJMSReplyTo();
 			return replyTo == null ? null : replyTo.getPhysicalName();

@@ -12,7 +12,7 @@ import io.intino.alexandria.terminal.remotedatalake.measurement.RemoteMeasuremen
 import io.intino.alexandria.terminal.remotedatalake.message.RemoteMessageTank;
 import io.intino.alexandria.terminal.remotedatalake.resource.RemoteResourceTank;
 
-import javax.jms.Message;
+import jakarta.jms.Message;
 import java.util.Optional;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
