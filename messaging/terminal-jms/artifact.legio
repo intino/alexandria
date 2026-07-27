@@ -7,6 +7,7 @@ Artifact("io.intino.alexandria", "6.1.0") terminal-jms
 		Compile("io.intino.alexandria", "jms", "2.0.0")
 		Compile("io.intino.alexandria", "logger4j", "1.0.1")
 		Test("junit", "junit", "4.13.2")
+		Test("org.apache.activemq", "activemq-broker", "6.0.0")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true, createMavenPom =true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
 

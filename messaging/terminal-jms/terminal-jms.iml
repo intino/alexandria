@@ -32,5 +32,11 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:zit:1.0.2" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.1.2" level="project" />
     <orderEntry type="library" name="Intino: org.slf4j:slf4j-api:2.0.9" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: org.apache.activemq:activemq-broker:6.0.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: org.apache.activemq:activemq-openwire-legacy:6.0.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: jakarta.annotation:jakarta.annotation-api:2.1.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: com.fasterxml.jackson.core:jackson-databind:2.15.3" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: com.fasterxml.jackson.core:jackson-annotations:2.15.3" level="project" />
+    <orderEntry type="library" scope="TEST" name="Intino: com.fasterxml.jackson.core:jackson-core:2.15.3" level="project" />
   </component>
 </module>
