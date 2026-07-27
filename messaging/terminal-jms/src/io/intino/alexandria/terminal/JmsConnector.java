@@ -40,9 +40,9 @@ public class JmsConnector implements Connector {
 	private MessageOutBox messageOutBox;
 	private Connection connection;
 	private Session session;
-	private ScheduledExecutorService scheduler;
-	private final ExecutorService eventDispatcher;
-	private final ExecutorService messageDispatcher;
+	private volatile ScheduledExecutorService scheduler;
+	private volatile ExecutorService eventDispatcher;
+	private volatile ExecutorService messageDispatcher;
 	private TemporaryQueue temporaryQueue;
 
 	public JmsConnector(ConnectionConfig config, File outboxDirectory) {
@@ -62,8 +62,7 @@ public class JmsConnector implements Connector {
 			this.eventOutBox = new EventOutBox(new File(outBoxDirectory, "events"));
 			this.messageOutBox = new MessageOutBox(new File(outBoxDirectory, "requests"));
 		}
-		eventDispatcher = Executors.newSingleThreadExecutor(new NamedThreadFactory("JmsConnector-events"));
-		messageDispatcher = Executors.newSingleThreadExecutor(r -> new Thread(r, "JmsConnector-messages"));
+		ensureDispatchers();
 	}
 
 	@Override
@@ -71,24 +70,25 @@ public class JmsConnector implements Connector {
 		return config.clientId();
 	}
 
-	public void start() {
+	public synchronized void start() {
 		if (config.url() == null || config.url().isEmpty()) {
+			started.set(false);
+			connected.set(false);
 			Logger.warn("Invalid broker URL (" + config.url() + "). Connection aborted");
 			return;
 		}
+		ensureDispatchers();
+		started.set(true);
+		ensureScheduler();
 		try {
 			connect();
 		} catch (JMSException e) {
 			Logger.error(e);
 		}
-		started.set(true);
-		if (scheduler == null) {
-			scheduler = Executors.newScheduledThreadPool(1);
-			scheduler.scheduleAtFixedRate(this::checkConnection, 15, 10, MINUTES);
-		}
 	}
 
-	private void connect() throws JMSException {
+	private synchronized void connect() throws JMSException {
+		connected.set(false);
 		if (!Broker.isRunning(config.url())) {
 			Logger.warn("Broker (" + config.url() + ") unreachable. Connection aborted");
 			return;
@@ -108,8 +108,10 @@ public class JmsConnector implements Connector {
 	public synchronized void sendEvent(String path, Event event) {
 		ArrayList<Consumer<Event>> consumers = new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList()));
 		for (Consumer<Event> c : consumers) c.accept(event);
-		eventDispatcher.execute(() -> {
+		dispatchEvent(() -> {
 			if (!doSendEvent(path, event) && eventOutBox != null) eventOutBox.push(path, event);
+		}, () -> {
+			if (eventOutBox != null) eventOutBox.push(path, event);
 		});
 	}
 
@@ -117,17 +119,21 @@ public class JmsConnector implements Connector {
 	public synchronized void sendEvents(String path, List<Event> events) {
 		ArrayList<Consumer<Event>> consumers = new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList()));
 		consumers.forEach(events::forEach);
-		eventDispatcher.execute(() -> {
+		dispatchEvent(() -> {
 			if (!doSendEvents(path, events) && eventOutBox != null) events.forEach(e -> eventOutBox.push(path, e));
+		}, () -> {
+			if (eventOutBox != null) events.forEach(e -> eventOutBox.push(path, e));
 		});
 	}
 
 	public synchronized void sendEvents(String path, List<Event> events, int expirationInSeconds) {
 		ArrayList<Consumer<Event>> consumers = new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList()));
 		consumers.forEach(events::forEach);
-		eventDispatcher.execute(() -> {
+		dispatchEvent(() -> {
 			if (!doSendEvents(path, events, expirationInSeconds) && eventOutBox != null)
 				events.forEach(e -> eventOutBox.push(path, e));
+		}, () -> {
+			if (eventOutBox != null) events.forEach(e -> eventOutBox.push(path, e));
 		});
 	}
 
@@ -135,8 +141,10 @@ public class JmsConnector implements Connector {
 	public synchronized void sendEvent(String path, Event event, int expirationInSeconds) {
 		ArrayList<Consumer<Event>> consumers = new ArrayList<>(eventConsumers.getOrDefault(path, Collections.emptyList()));
 		for (Consumer<Event> eventConsumer : consumers) eventConsumer.accept(event);
-		eventDispatcher.execute(() -> {
+		dispatchEvent(() -> {
 			if (!doSendEvent(path, event, expirationInSeconds) && eventOutBox != null) eventOutBox.push(path, event);
+		}, () -> {
+			if (eventOutBox != null) eventOutBox.push(path, event);
 		});
 	}
 
@@ -341,21 +349,12 @@ public class JmsConnector implements Connector {
 		return session;
 	}
 
-	public void stop() {
-		try {
-			consumers.values().forEach(JmsConsumer::close);
-			consumers.clear();
-			messageDispatcher.shutdown();
-			messageDispatcher.awaitTermination(1, MINUTES);
-			producers.values().forEach(JmsProducer::close);
-			producers.clear();
-			if (session != null) session.close();
-			if (connection != null) connection.close();
-			session = null;
-			connection = null;
-		} catch (Throwable e) {
-			Logger.error(e);
-		}
+	public synchronized void stop() {
+		started.set(false);
+		connected.set(false);
+		shutdownScheduler();
+		shutdownDispatchers();
+		closeJmsResources();
 	}
 
 	private Session createSession(boolean transactedSession) throws JMSException {
@@ -456,10 +455,16 @@ public class JmsConnector implements Connector {
 	}
 
 	private boolean sendMessage(JmsProducer producer, jakarta.jms.Message message, int expirationTimeInSeconds) {
+		ExecutorService dispatcher = messageDispatcher;
+		if (dispatcher == null || dispatcher.isShutdown()) return false;
 		try {
-			Future<Boolean> result = messageDispatcher.submit(() -> producer.produce(message, expirationTimeInSeconds));
+			Future<Boolean> result = dispatcher.submit(() -> producer.produce(message, expirationTimeInSeconds));
 			return result.get(1, SECONDS);
-		} catch (InterruptedException | TimeoutException ignored) {
+		} catch (RejectedExecutionException e) {
+			Logger.warn("Message dispatcher is stopped. Message rejected");
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		} catch (TimeoutException ignored) {
 		} catch (ExecutionException e) {
 			Logger.error(e);
 		}
@@ -566,7 +571,8 @@ public class JmsConnector implements Connector {
 		}
 	}
 
-	private void checkConnection() {
+	private synchronized void checkConnection() {
+		if (!started.get()) return;
 		if (session != null && config.url().startsWith("failover") && !connected.get()) {
 			Logger.debug("Data-hub currently disconnected. Waiting for reconnection...");
 			return;
@@ -576,12 +582,84 @@ public class JmsConnector implements Connector {
 			return;
 		}
 		Logger.debug("Restarting data-hub connection...");
-		stop();
+		closeJmsResources();
 		try {
 			connect();
 		} catch (JMSException ignored) {
 		}
-		connected.set(true);
+	}
+
+	private synchronized void ensureDispatchers() {
+		if (eventDispatcher == null || eventDispatcher.isShutdown())
+			eventDispatcher = Executors.newSingleThreadExecutor(new NamedThreadFactory("JmsConnector-events"));
+		if (messageDispatcher == null || messageDispatcher.isShutdown())
+			messageDispatcher = Executors.newSingleThreadExecutor(new NamedThreadFactory("JmsConnector-messages"));
+	}
+
+	private synchronized void ensureScheduler() {
+		if (scheduler != null && !scheduler.isShutdown()) return;
+		scheduler = Executors.newScheduledThreadPool(1, new NamedThreadFactory("JmsConnector-scheduler"));
+		scheduler.scheduleAtFixedRate(this::checkConnection, 15, 10, MINUTES);
+	}
+
+	private void dispatchEvent(Runnable action, Runnable onRejected) {
+		ExecutorService dispatcher = eventDispatcher;
+		if (dispatcher == null || dispatcher.isShutdown()) {
+			onRejected.run();
+			return;
+		}
+		try {
+			dispatcher.execute(action);
+		} catch (RejectedExecutionException e) {
+			Logger.warn("Event dispatcher is stopped. Event rejected");
+			onRejected.run();
+		}
+	}
+
+	private synchronized void shutdownDispatchers() {
+		shutdownDispatcher(eventDispatcher);
+		eventDispatcher = null;
+		shutdownDispatcher(messageDispatcher);
+		messageDispatcher = null;
+	}
+
+	private void shutdownDispatcher(ExecutorService dispatcher) {
+		if (dispatcher == null) return;
+		dispatcher.shutdown();
+		try {
+			dispatcher.awaitTermination(1, MINUTES);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
+	}
+
+	private synchronized void shutdownScheduler() {
+		if (scheduler == null) return;
+		scheduler.shutdown();
+		try {
+			scheduler.awaitTermination(1, MINUTES);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
+		scheduler = null;
+	}
+
+	private synchronized void closeJmsResources() {
+		try {
+			consumers.values().forEach(JmsConsumer::close);
+			consumers.clear();
+			producers.values().forEach(JmsProducer::close);
+			producers.clear();
+			if (session != null) session.close();
+			if (connection != null) connection.close();
+		} catch (Throwable e) {
+			Logger.error(e);
+		} finally {
+			temporaryQueue = null;
+			session = null;
+			connection = null;
+			connected.set(false);
+		}
 	}
 
 	private void initConnection() {

@@ -7,12 +7,12 @@ import io.intino.alexandria.event.message.MessageEvent;
 import io.intino.alexandria.event.resource.ResourceEvent;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.message.MessageReader;
-import jakarta.jms.BytesMessage;
-import jakarta.jms.JMSException;
-import jakarta.jms.TextMessage;
 import org.apache.activemq.command.ActiveMQBytesMessage;
 import org.apache.activemq.command.ActiveMQTextMessage;
 
+import jakarta.jms.BytesMessage;
+import jakarta.jms.JMSException;
+import jakarta.jms.TextMessage;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
