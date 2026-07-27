@@ -10,5 +10,3 @@ Artifact("io.intino.alexandria", "6.1.0") terminal-jms
 		Test("org.apache.activemq", "activemq-broker", "6.0.0")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true, createMavenPom =true)
 	Distribution > Artifactory("intino-maven") > Release("https://artifactory.intino.io/artifactory/release-libraries")
-
-Repository("intino-maven") > Release("https://artifactory.intino.io/artifactory/releases")
