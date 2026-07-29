@@ -1,4 +1,5 @@
 import React from "react";
+import {createPortal} from "react-dom";
 import PassiveView from "./PassiveView";
 import Typography from "@mui/material/Typography";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
@@ -201,11 +202,12 @@ export default class Display extends PassiveView {
     renderCookieConsent = () => {
         if (Display.CookieConsentRendered != undefined && Display.CookieConsentRendered != this.props.id) return (<React.Fragment/>);
         Display.CookieConsentRendered = this.props.id;
-        return (
-            <CookieConsent onAccept={this._handleCookieConsentAccepted.bind(this)} cookieName={this._traceConsentVariable()} buttonText={this.translate("I understand")} buttonStyle={{fontSize:'11pt'}}>
+        const consent = (
+            <CookieConsent onAccept={this._handleCookieConsentAccepted.bind(this)} cookieName={this._traceConsentVariable()} buttonText={this.translate("I understand")} buttonStyle={{fontSize:'11pt'}} style={{zIndex: 20000}}>
                 <div style={{textAlign:'left',fontSize:'11pt'}}>{this.translate("This website uses cookies to enhance the user experience.")}</div>
             </CookieConsent>
         );
+        return typeof document !== "undefined" ? createPortal(consent, document.body) : consent;
     };
 
     _context() {
