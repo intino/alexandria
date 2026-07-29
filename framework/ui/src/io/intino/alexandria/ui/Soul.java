@@ -172,14 +172,17 @@ public abstract class Soul implements DisplayRepository {
 
     private Display lookupDisplay(String owner, String context, String id) {
         if (id == null) return null;
-        Display display = lookupBy(owner, id);
-        if (matchesContext(display, context)) return display;
-        display = lookupBy(context, id);
+        Display ownerDisplay = lookupBy(owner, id);
+        if (matchesContext(ownerDisplay, context)) return ownerDisplay;
+        Display display = lookupBy(context, id);
         if (matchesContext(display, context)) return display;
         if (isUUID(id)) {
             display = displays.get(id);
             if (matchesContext(display, context)) return display;
         }
+        // The view can be recreated while the client still holds its previous full path.
+        // An exact owner/id match is still unambiguous when the context ends at that owner.
+        if (matchesOwner(ownerDisplay, owner) && contextEndsWithOwner(context, owner)) return ownerDisplay;
         return null;
     }
 
@@ -230,6 +233,16 @@ public abstract class Soul implements DisplayRepository {
         if (display == null || display.owner() == null) return display != null;
         List<String> contextList = context != null && !context.isEmpty() ? Arrays.asList(context.split("\\.")) : Collections.emptyList();
         return containsAll(contextList, display.owner().path());
+    }
+
+    private boolean matchesOwner(Display display, String owner) {
+        return display != null && display.owner() != null && Objects.equals(display.owner().id(), owner);
+    }
+
+    private boolean contextEndsWithOwner(String context, String owner) {
+        if (context == null || context.isEmpty() || owner == null || owner.isEmpty()) return false;
+        String[] segments = context.split("\\.");
+        return segments.length > 0 && Objects.equals(segments[segments.length - 1], owner);
     }
 
     private String lookupKey(String prefix, String id) {
