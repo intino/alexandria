@@ -1,9 +1,10 @@
 import React from "react";
-import {createPortal} from "react-dom";
 import PassiveView from "./PassiveView";
 import Typography from "@mui/material/Typography";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
-import CookieConsent, {Cookies} from "react-cookie-consent";
+import Cookies from "js-cookie";
+import * as CookieConsent from "vanilla-cookieconsent";
+import "vanilla-cookieconsent/dist/cookieconsent.css";
 import Theme from 'app-elements/gen/Theme';
 import history from "alexandria-ui-elements/src/util/History";
 
@@ -18,6 +19,7 @@ export const enrichDisplayProperties = (instance) => {
 
 export default class Display extends PassiveView {
     static CookieConsentRendered;
+    static CookieConsentInitialized = false;
     address = null;
 
     constructor(props) {
@@ -202,12 +204,12 @@ export default class Display extends PassiveView {
     renderCookieConsent = () => {
         if (Display.CookieConsentRendered != undefined && Display.CookieConsentRendered != this.props.id) return (<React.Fragment/>);
         Display.CookieConsentRendered = this.props.id;
-        const consent = (
-            <CookieConsent onAccept={this._handleCookieConsentAccepted.bind(this)} cookieName={this._traceConsentVariable()} buttonText={this.translate("I understand")} buttonStyle={{fontSize:'11pt'}} style={{zIndex: 20000}}>
-                <div style={{textAlign:'left',fontSize:'11pt'}}>{this.translate("This website uses cookies to enhance the user experience.")}</div>
-            </CookieConsent>
-        );
-        return typeof document !== "undefined" ? createPortal(consent, document.body) : consent;
+        this._initializeCookieConsent();
+        return (<React.Fragment/>);
+    };
+
+    static showCookiePreferences = () => {
+        if (Display.CookieConsentInitialized) CookieConsent.showPreferences();
     };
 
     _context() {
@@ -244,16 +246,89 @@ export default class Display extends PassiveView {
     };
 
     _cookieConsentAccepted = () => {
-        return Cookies.get(this._traceConsentVariable()) != null;
+        return Display.CookieConsentInitialized && CookieConsent.acceptedCategory("preferences");
     };
 
     _traceConsentVariable = () => {
         return Application.configuration.url.replace(/[^\w\s]/gi, '');
     };
 
-    _handleCookieConsentAccepted = () => {
-        const elements = window.document.querySelectorAll(".CookieConsent");
-        for(let i=0; i<elements.length; i++) elements[i].style.display = "none";
+    _initializeCookieConsent = () => {
+        if (Display.CookieConsentInitialized || typeof document === "undefined") return;
+        Display.CookieConsentInitialized = true;
+        CookieConsent.run({
+            cookie: {
+                name: this._traceConsentVariable() + "_consent",
+                expiresAfterDays: 182,
+                sameSite: "Lax",
+            },
+            guiOptions: {
+                consentModal: {
+                    layout: "cloud inline",
+                    position: "bottom center",
+                    equalWeightButtons: true,
+                    flipButtons: false,
+                },
+                preferencesModal: {
+                    layout: "box",
+                    equalWeightButtons: true,
+                    flipButtons: false,
+                },
+            },
+            categories: {
+                necessary: { enabled: true, readOnly: true },
+                preferences: {},
+                analytics: {},
+                marketing: {},
+            },
+            language: {
+                default: "es",
+                translations: {
+                    es: {
+                        consentModal: {
+                            title: "Tu privacidad",
+                            description: "Utilizamos cookies necesarias para el funcionamiento del sitio y, con tu consentimiento, cookies de preferencias, analítica y marketing.",
+                            acceptAllBtn: "Aceptar todas",
+                            acceptNecessaryBtn: "Rechazar",
+                            showPreferencesBtn: "Configurar",
+                        },
+                        preferencesModal: {
+                            title: "Preferencias de cookies",
+                            acceptAllBtn: "Aceptar todas",
+                            acceptNecessaryBtn: "Rechazar",
+                            savePreferencesBtn: "Guardar selección",
+                            closeIconLabel: "Cerrar",
+                            sections: [
+                                {
+                                    title: "Gestiona tus preferencias",
+                                    description: "Puedes cambiar o retirar tu consentimiento en cualquier momento desde la opción de configuración de cookies.",
+                                },
+                                {
+                                    title: "Cookies necesarias",
+                                    description: "Permiten el funcionamiento básico y seguro del sitio. No se pueden desactivar.",
+                                    linkedCategory: "necessary",
+                                },
+                                {
+                                    title: "Preferencias",
+                                    description: "Permiten recordar opciones como el idioma o el modo de visualización.",
+                                    linkedCategory: "preferences",
+                                },
+                                {
+                                    title: "Analítica",
+                                    description: "Nos ayudan a comprender el uso del sitio para mejorarlo.",
+                                    linkedCategory: "analytics",
+                                },
+                                {
+                                    title: "Marketing",
+                                    description: "Permiten mostrar contenidos o comunicaciones más relevantes.",
+                                    linkedCategory: "marketing",
+                                },
+                            ],
+                        },
+                    },
+                },
+            },
+        });
     };
 
     _loadAppMode = () => {

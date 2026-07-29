@@ -198,7 +198,7 @@ class Grid extends AbstractGrid {
         this.pendingRows = [];
         this.handleWindowResize = this.resize.bind(this);
         this.gridViewportContainerRef = React.createRef();
-        this.columnResizeHandleRef = React.createRef();
+        this.activeColumnResizeHandle = null;
         this.state = {
             ...this.state,
             key: 0,
@@ -217,7 +217,6 @@ class Grid extends AbstractGrid {
             openColumnsDialog: false,
             columnsOrdering: [],
             visibleColumns: [],
-            maxColumnSize: 350,
             minColumnSize: 60,
             columnWidths: {},
             viewportWidth: 0,
@@ -394,6 +393,7 @@ class Grid extends AbstractGrid {
     renderHeaderCell = (column, idx) => {
         const { classes } = this.props;
         const active = this.state.sortColumn === column.key;
+        const isIconColumn = this.isIconColumn(column);
         const direction = this.state.sortDirection;
         const theme = Theme.get();
         const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
@@ -403,6 +403,7 @@ class Grid extends AbstractGrid {
         return (
             <TableCell
                 key={column.key}
+                className={isIconColumn ? "column-type-" + column.type : undefined}
                 onClick={column.sortable ? this.handleHeaderSortClick.bind(this, column) : undefined}
                 style={{
                     cursor: column.sortable ? 'pointer' : 'default',
@@ -419,16 +420,17 @@ class Grid extends AbstractGrid {
                     {active && direction === 'ASC' && <ArrowUpward fontSize="inherit" style={{marginLeft:'4px'}}/>}
                     {active && direction === 'DESC' && <ArrowDownward fontSize="inherit" style={{marginLeft:'4px'}}/>}
                 </div>
-                <div
-                    className={classes.resizeHandle}
-                    ref={this.columnResizeHandleRef}
-                    onPointerDown={this.handleColumnResizeStart.bind(this, column)}
-                    onPointerMove={this.handleColumnResizeMove}
-                    onPointerUp={this.handleColumnResizeEnd}
-                    onPointerCancel={this.handleColumnResizeEnd}
-                    onDoubleClick={this.handleColumnResizeReset.bind(this, column)}
-                    onClick={(event) => event.stopPropagation()}
-                />
+                {!isIconColumn &&
+                    <div
+                        className={classes.resizeHandle}
+                        onPointerDown={this.handleColumnResizeStart.bind(this, column)}
+                        onPointerMove={this.handleColumnResizeMove}
+                        onPointerUp={this.handleColumnResizeEnd}
+                        onPointerCancel={this.handleColumnResizeEnd}
+                        onDoubleClick={this.handleColumnResizeReset.bind(this, column)}
+                        onClick={(event) => event.stopPropagation()}
+                    />
+                }
             </TableCell>
         );
     };
@@ -460,10 +462,12 @@ class Grid extends AbstractGrid {
     renderGridBodyCell = (column, row, rowIndex) => {
         const theme = Theme.get();
         const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
+        const isIconColumn = this.isIconColumn(column);
         const value = row[column.key];
         return (
             <TableCell
                 key={`${rowIndex}-${column.key}`}
+                className={isIconColumn ? "column-type-" + column.type : undefined}
                 onClick={this.handleRowClick.bind(this, rowIndex, row, column)}
                 style={{
                     minWidth: column.width,
@@ -702,7 +706,7 @@ class Grid extends AbstractGrid {
     handleSelectGroupByMode = (mode) => {
         this.setState({groupByMode: mode != null ? { name: mode.value, label: mode.label } : null, groupByOption: null});
         let modeName = mode != null ? mode.value : null;
-        this.saveState("groupBy", { column: this.state.groupBy.name, group: null, mode: modeName, group: null, groupIndex: null });
+        this.saveState("groupBy", { column: this.state.groupBy.name, mode: modeName, group: null, groupIndex: null });
         this.requester.updateGroupByOptions({ column: this.state.groupBy != null ? this.state.groupBy.name : null, mode: modeName });
     };
 
@@ -721,22 +725,24 @@ class Grid extends AbstractGrid {
         const columns = this.state.columns;
         const gridCanvas = this.gridCanvasRef.current;
         const viewportWidth = this.state.viewportWidth > 0 ? this.state.viewportWidth : (gridCanvas != null ? gridCanvas.clientWidth : 0);
+        const checkboxWidth = this.props.selection != null && this.allowMultiSelection() ? 48 : 0;
+        const columnsViewportWidth = Math.max(0, viewportWidth - checkboxWidth);
         const configuredWidths = this.state.columnWidths || {};
 
         for (let i=0; i<columns.length; i++)
-            result[columns[i].name] = columns[i].type === "Icon" || columns[i].type === "MaterialIcon" ? 29 : this.state.rows.length > 0 ? this.getWidth(columns[i].label, 10) : undefined;
+            result[columns[i].name] = this.isIconColumn(columns[i]) ? 32 : this.state.rows.length > 0 ? this.getWidth(columns[i].label, 10) : undefined;
 
         for (let i=0; i<this.state.rows.length; i++) {
             for (let j=0; j<columns.length; j++) {
-                if (columns[j].type === "Icon" || columns[j].type === "MaterialIcon") continue;
+                if (this.isIconColumn(columns[j])) continue;
                 const width = columns[j].width != -1 ? columns[j].width : Math.max(this.getWidth(this.rowValue(this.state.rows[i][columns[j].name]), 9), result[columns[j].name]);
-                result[columns[j].name] = Math.min(width, this.state.maxColumnSize);
+                result[columns[j].name] = width;
             }
         }
 
         for (let i=0; i<columns.length; i++) {
             const configuredWidth = configuredWidths[columns[i].name];
-            if (configuredWidth != null) result[columns[i].name] = configuredWidth;
+            if (!this.isIconColumn(columns[i]) && configuredWidth != null) result[columns[i].name] = configuredWidth;
         }
 
         let totalWidth = 0;
@@ -744,11 +750,11 @@ class Grid extends AbstractGrid {
         for (let j=0; j<columns.length; j++) {
             if (this.state.visibleColumns.length > 0 && this.state.visibleColumns.length === columns.length && !this.state.visibleColumns[j]) continue;
             totalWidth += result[columns[j].name];
-            if (configuredWidths[columns[j].name] == null && columns[j].type !== "Number" && columns[j].type !== "Date" && columns[j].type !== "Icon" && columns[j].type !== "MaterialIcon") lastVisibleColumn = columns[j];
+            if (configuredWidths[columns[j].name] == null && columns[j].type !== "Number" && columns[j].type !== "Date" && !this.isIconColumn(columns[j])) lastVisibleColumn = columns[j];
         }
 
-        if (viewportWidth > totalWidth && lastVisibleColumn != null)
-            result[lastVisibleColumn.name] = result[lastVisibleColumn.name] + viewportWidth - totalWidth - (result[lastVisibleColumn.name]/3);
+        if (columnsViewportWidth > totalWidth && lastVisibleColumn != null)
+            result[lastVisibleColumn.name] = result[lastVisibleColumn.name] + columnsViewportWidth - totalWidth;
 
         return result;
     };
@@ -772,6 +778,8 @@ class Grid extends AbstractGrid {
         if (value == null) return 0;
         return String(value).length * (factor != null ? factor : 6);
     }
+
+    isIconColumn = (column) => column.type === "Icon" || column.type === "MaterialIcon";
 
     selectorColumns = () => {
         const originalIndexes = {};
@@ -1210,6 +1218,7 @@ class Grid extends AbstractGrid {
     handleColumnResizeStart = (column, event) => {
         event.preventDefault();
         event.stopPropagation();
+        this.activeColumnResizeHandle = event.currentTarget;
         if (event.currentTarget != null && event.currentTarget.setPointerCapture != null && event.pointerId != null) {
             event.currentTarget.setPointerCapture(event.pointerId);
         }
@@ -1230,7 +1239,7 @@ class Grid extends AbstractGrid {
         if (this.resizingColumn == null) return;
         const { name, startX, startWidth } = this.resizingColumn;
         const delta = event.clientX - startX;
-        const width = Math.max(this.state.minColumnSize, Math.min(this.state.maxColumnSize, startWidth + delta));
+        const width = Math.max(this.state.minColumnSize, startWidth + delta);
         this.setState((prevState) => ({
             columnWidths: {
                 ...prevState.columnWidths,
@@ -1241,10 +1250,10 @@ class Grid extends AbstractGrid {
 
     handleColumnResizeEnd = () => {
         if (this.resizingColumn == null) return;
-        if (this.columnResizeHandleRef.current != null && this.columnResizeHandleRef.current.hasPointerCapture != null) {
+        if (this.activeColumnResizeHandle != null && this.activeColumnResizeHandle.hasPointerCapture != null) {
             try {
                 const pointerId = this.resizingColumn.pointerId;
-                if (pointerId != null && this.columnResizeHandleRef.current.hasPointerCapture(pointerId)) this.columnResizeHandleRef.current.releasePointerCapture(pointerId);
+                if (pointerId != null && this.activeColumnResizeHandle.hasPointerCapture(pointerId)) this.activeColumnResizeHandle.releasePointerCapture(pointerId);
             } catch (e) {
             }
         }
@@ -1254,6 +1263,7 @@ class Grid extends AbstractGrid {
         window.removeEventListener('blur', this.handleColumnResizeEnd);
         const { name } = this.resizingColumn;
         this.resizingColumn = null;
+        this.activeColumnResizeHandle = null;
         if (this.state.columnWidths[name] != null) this.saveState("columnWidths", this.state.columnWidths);
     };
 
