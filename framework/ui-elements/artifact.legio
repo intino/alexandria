@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "7.4.17") ui-framework-elements
+Artifact("io.intino.alexandria", "7.4.18") ui-framework-elements
 
 	WebImports
 		WebComponent("@emotion/react", "^11.14.0")
@@ -26,7 +26,7 @@ Artifact("io.intino.alexandria", "7.4.17") ui-framework-elements
 		WebComponent("react-virtualized-auto-sizer", "^1.0.2")
 		WebComponent("react-window", "^1.8.2")
 		WebComponent("react-window-infinite-loader", "^1.0.3")
-		WebComponent("react-cookie-consent", "^8.0.1")
+		WebComponent("vanilla-cookieconsent", "3.1.0")
 		WebComponent("history", "^4.10.1")
 		WebComponent("react-image-gallery", "^1.2.7")
 		WebComponent("react-infinite-scroll-component", "^6.1.0")
