@@ -1,10 +1,13 @@
 const PushService = (function () {
+    const PendingIncomingMessageMaxAge = 2000;
+    const PendingIncomingRetryMaxDelay = 250;
     var callbacks = {};
     var service = {};
 
     service.pendingMessages = [];
     service.pendingIncomingMessages = [];
     service.pendingIncomingFlush = false;
+    service.pendingIncomingFlushTimer = null;
     service.flushingIncomingMessages = false;
     service.connections = [];
     service.retries = [];
@@ -36,6 +39,10 @@ const PushService = (function () {
         socket.onmessage = function (event) {
             if (event.data instanceof Blob) return;
             var data = JSON.parse(event.data);
+            if (shouldQueueIncomingMessage()) {
+                queueIncomingMessage(data.n, data.p);
+                return;
+            }
             var listeners = callback(data.n).slice(0);
             if (listeners.length > 0) {
                 if (dispatchToListeners(listeners, data.p)) return;
@@ -82,10 +89,7 @@ const PushService = (function () {
         if (!(name in callbacks))
             callbacks[name] = [];
         callbacks[name].push(callback);
-        if (service.pendingIncomingMessages.length > 0 && !service.pendingIncomingFlush) {
-            service.pendingIncomingFlush = true;
-            window.setTimeout(() => flushPendingIncomingMessages(), 0);
-        }
+        scheduleIncomingFlush(0, true);
         return {
             deregister: function () {
                 if (callbacks[name] == null) return;
@@ -126,16 +130,14 @@ const PushService = (function () {
     }
 
     function queueIncomingMessage(name, payload) {
-        service.pendingIncomingMessages.push({ name, payload });
-        if (service.pendingIncomingFlush) return;
-        service.pendingIncomingFlush = true;
-        window.setTimeout(() => flushPendingIncomingMessages(), 0);
+        const now = Date.now();
+        service.pendingIncomingMessages.push({ name, payload, queuedAt: now, attempts: 0, nextRetryAt: now });
+        scheduleIncomingFlush(0);
     }
 
     function flushPendingIncomingMessages() {
         if (service.flushingIncomingMessages) return;
         if (service.pendingIncomingMessages.length === 0) {
-            service.pendingIncomingFlush = false;
             return;
         }
 
@@ -144,24 +146,33 @@ const PushService = (function () {
         service.pendingIncomingMessages = [];
         const remaining = [];
         const blockedTargets = new Set();
-        service.pendingIncomingFlush = false;
+        const now = Date.now();
         queuedMessages.forEach(function (pendingMessage) {
             const name = pendingMessage.name;
             const payload = pendingMessage.payload;
             const target = targetKey(name, payload);
+            normalizePendingIncomingMessage(pendingMessage, now);
+            if (isExpiredPendingIncomingMessage(pendingMessage, now)) return;
             if (blockedTargets.has(target)) {
+                remaining.push(pendingMessage);
+                return;
+            }
+            if (pendingMessage.nextRetryAt > now) {
+                blockedTargets.add(target);
                 remaining.push(pendingMessage);
                 return;
             }
             const listeners = callback(name).slice(0);
             if (listeners.length === 0) {
                 blockedTargets.add(target);
+                deferPendingIncomingMessage(pendingMessage, now);
                 remaining.push(pendingMessage);
                 return;
             }
             const handled = dispatchToListeners(listeners, payload);
             if (!handled) {
                 blockedTargets.add(target);
+                deferPendingIncomingMessage(pendingMessage, now);
                 remaining.push(pendingMessage);
                 return;
             }
@@ -169,10 +180,56 @@ const PushService = (function () {
         service.pendingIncomingMessages = remaining.concat(service.pendingIncomingMessages);
         service.flushingIncomingMessages = false;
 
-        if (service.pendingIncomingMessages.length > 0 && !service.pendingIncomingFlush) {
-            service.pendingIncomingFlush = true;
-            window.setTimeout(() => flushPendingIncomingMessages(), 0);
+        if (service.pendingIncomingMessages.length > 0) scheduleIncomingFlush(nextIncomingRetryDelay());
+    }
+
+    function scheduleIncomingFlush(delay, force) {
+        if (service.pendingIncomingMessages.length === 0) return;
+        if (force && service.pendingIncomingFlushTimer != null) {
+            window.clearTimeout(service.pendingIncomingFlushTimer);
+            service.pendingIncomingFlushTimer = null;
+            service.pendingIncomingFlush = false;
         }
+        if (service.pendingIncomingFlush) return;
+        service.pendingIncomingFlush = true;
+        service.pendingIncomingFlushTimer = window.setTimeout(function () {
+            service.pendingIncomingFlushTimer = null;
+            service.pendingIncomingFlush = false;
+            flushPendingIncomingMessages();
+        }, delay);
+    }
+
+    function normalizePendingIncomingMessage(message, now) {
+        if (message.queuedAt == null) message.queuedAt = now;
+        if (message.attempts == null) message.attempts = 0;
+        if (message.nextRetryAt == null) message.nextRetryAt = now;
+    }
+
+    function isExpiredPendingIncomingMessage(message, now) {
+        return now - message.queuedAt >= PendingIncomingMessageMaxAge;
+    }
+
+    function deferPendingIncomingMessage(message, now) {
+        message.attempts++;
+        const delay = Math.min(PendingIncomingRetryMaxDelay, 16 * Math.pow(2, Math.min(message.attempts - 1, 4)));
+        message.nextRetryAt = now + delay;
+    }
+
+    function nextIncomingRetryDelay() {
+        const now = Date.now();
+        const scheduledTargets = new Set();
+        return service.pendingIncomingMessages.reduce(function (delay, message) {
+            normalizePendingIncomingMessage(message, now);
+            const target = targetKey(message.name, message.payload);
+            if (scheduledTargets.has(target)) return delay;
+            scheduledTargets.add(target);
+            const expiration = message.queuedAt + PendingIncomingMessageMaxAge;
+            return Math.min(delay, Math.max(0, Math.min(message.nextRetryAt, expiration) - now));
+        }, PendingIncomingRetryMaxDelay);
+    }
+
+    function shouldQueueIncomingMessage() {
+        return service.flushingIncomingMessages || service.pendingIncomingFlush || service.pendingIncomingMessages.length > 0;
     }
 
     function targetKey(name, payload) {
