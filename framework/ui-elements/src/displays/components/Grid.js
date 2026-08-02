@@ -310,7 +310,7 @@ class Grid extends AbstractGrid {
         return (
             <div key={this.state.key} className="layout vertical flex self-stretch" style={{height:'100%',width:'100%',flex:'1 1 0',alignSelf:'stretch',boxSizing:'border-box',minHeight:0,minWidth:0,maxWidth:'100%',overflow:'hidden'}}>
                 {this.props.showToolbar &&
-                    <div style={{flex:'0 0 auto', width:'100%', marginBottom:'8px'}}>
+                    <div style={{flex:'0 0 auto', width:'100%', marginTop:'4px', marginBottom:'8px'}}>
                         <div className="layout horizontal flex center">
                             {this.selectorColumns().length > 1 && <div><a className={classes.columnsAction} onClick={this.handleOpenColumnsDialog.bind(this)} disabled={selectorColumnsDisabled}>{this.translate("Show columns...")}</a></div>}
                             {this.renderGroupBySelector()}
