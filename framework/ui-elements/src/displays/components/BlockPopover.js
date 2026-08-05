@@ -33,20 +33,23 @@ class BlockPopover extends AbstractBlockPopover {
     };
 
 	render() {
-		const { classes } = this.props;
 		const opened = this.state.triggerId != null;
 		const trigger = this.state.triggerId != null ? document.getElementById(this.state.triggerId) : null;
-		const drawerClass = this.props.variant === "PersistentAndMini" ? (opened ? classes.drawerOpen : classes.drawerClose) : undefined;
-		const className = this.state.interactionsEnabled ? null : classes.noInteractions;
 		window.setTimeout(() => this.relocate(), 100);
 		return (
-			<Popover className={className} open={opened}
+			<Popover open={opened}
 			        onClose={this.handleClose.bind(this)}
 					anchorEl={trigger != null ? trigger : undefined}
 					anchorOrigin={{vertical: this._anchorOriginVertical(),horizontal: this._anchorOriginHorizontal()}}
                     transformOrigin={{vertical: this._transformOriginVertical(), horizontal: this._transformOriginHorizontal()}}
 					disableRestoreFocus>
-                <div ref={this.popover} className="layout vertical flexible" style={{width:"100%",height:"100%",...this.style()}}>
+                <div ref={this.popover}
+					 data-popover-trigger-id={this.state.triggerId != null ? this.state.triggerId : undefined}
+					 onMouseEnter={this.handleMouseEnter}
+					 onMouseLeave={this.handleMouseLeave}
+					 onFocus={this.handleFocus}
+					 onBlur={this.handleBlur}
+					 className="layout vertical flexible" style={{width:"100%",height:"100%",...this.style()}}>
 					{this.props.children}
                 </div>
             </Popover>
@@ -87,6 +90,31 @@ class BlockPopover extends AbstractBlockPopover {
 
 	handleClose = () => {
 	    this.requester.close();
+	};
+
+	handleMouseEnter = () => {
+		this.dispatchPopoverEvent("alexandria-popover-enter");
+	};
+
+	handleMouseLeave = () => {
+		this.dispatchPopoverEvent("alexandria-popover-leave");
+	};
+
+	handleFocus = () => {
+		this.dispatchPopoverEvent("alexandria-popover-focus");
+	};
+
+	handleBlur = (event) => {
+		if (this.popover.current != null && this.popover.current.contains(event.relatedTarget)) return;
+		this.dispatchPopoverEvent("alexandria-popover-blur");
+	};
+
+	dispatchPopoverEvent = (type) => {
+		if (this.state.triggerId == null || this.popover.current == null) return;
+		this.popover.current.dispatchEvent(new CustomEvent(type, {
+			bubbles: true,
+			detail: { triggerId: this.state.triggerId },
+		}));
 	};
 
 	_anchorOriginVertical = () => {
