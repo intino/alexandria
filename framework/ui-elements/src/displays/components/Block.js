@@ -18,13 +18,34 @@ export default class Block extends AbstractBlock {
 		super(props);
 		this.notifier = new BlockNotifier(this);
 		this.requester = new BlockRequester(this);
+		this.containerRef = React.createRef();
 		this.state = {
 			hidden: false,
 			layout: this.props.layout,
 			spacing: this.props.spacing,
 			autoSize: this.props.autoSize != null ? this.props.autoSize : false,
+			hoverContainerActive: false,
 			...this.state
 		}
+	};
+
+	componentDidMount() {
+		super.componentDidMount();
+		if (!this.isHoverContainer()) return;
+		document.addEventListener("alexandria-popover-enter", this.handlePopoverActivity);
+		document.addEventListener("alexandria-popover-leave", this.handlePopoverActivity);
+		document.addEventListener("alexandria-popover-focus", this.handlePopoverActivity);
+		document.addEventListener("alexandria-popover-blur", this.handlePopoverActivity);
+	};
+
+	componentWillUnmount() {
+		if (this.isHoverContainer()) {
+			document.removeEventListener("alexandria-popover-enter", this.handlePopoverActivity);
+			document.removeEventListener("alexandria-popover-leave", this.handlePopoverActivity);
+			document.removeEventListener("alexandria-popover-focus", this.handlePopoverActivity);
+			document.removeEventListener("alexandria-popover-blur", this.handlePopoverActivity);
+		}
+		super.componentWillUnmount();
 	};
 
 	render() {
@@ -76,7 +97,7 @@ export default class Block extends AbstractBlock {
 			const paperStyle = theme != null ? paperSurfaceStyles(theme) : {};
 			const hasLabel = this.props.label != null && this.props.label !== "";
 			return (
-				<Paper style={{...paperStyle, ...style}} className={classNames}>
+				<Paper ref={this.containerRef} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave} style={{...paperStyle, ...style}} className={classNames}>
 					{ ComponentBehavior.labelBlock(this.props, "h5", {padding:"18px 20px 6px"}) }
 					<div style={{padding: hasLabel ? "0 20px 20px" : "20px",height:"100%"}} className={classNames}>{this._renderChildren()}</div>
 				</Paper>
@@ -84,7 +105,7 @@ export default class Block extends AbstractBlock {
 		}
 
 		return (
-			<div style={style} className={classNames}>
+			<div ref={this.containerRef} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave} style={style} className={classNames}>
 				{ ComponentBehavior.labelBlock(this.props, "h5", {padding:"0 0 5px"}) }
 				{this._renderChildren()}
 			</div>
@@ -132,6 +153,63 @@ export default class Block extends AbstractBlock {
 
 	_hasSpacing = () => {
 		return this.state.spacing != null || this.props.spacing != null;
+	};
+
+	isHoverContainer = () => {
+		return this.props.isHoverContainer != null;
+	};
+
+	handleMouseEnter = () => {
+		if (!this.isHoverContainer()) return;
+		this.setHoverContainerActive(true);
+	};
+
+	handleMouseLeave = (event) => {
+		if (!this.isHoverContainer()) return;
+		if (this.isLeavingTowardAssociatedPopover(event)) return;
+		this.evaluateHoverContainerState();
+	};
+
+	handlePopoverActivity = (event) => {
+		if (!this.matchesAssociatedPopoverEvent(event)) return;
+		this.evaluateHoverContainerState();
+	};
+
+	matchesAssociatedPopoverEvent = (event) => {
+		const triggerId = event.detail != null ? event.detail.triggerId : null;
+		if (triggerId == null || this.containerRef.current == null) return false;
+		const trigger = document.getElementById(triggerId);
+		return trigger != null && this.containerRef.current.contains(trigger);
+	};
+
+	isLeavingTowardAssociatedPopover = (event) => {
+		const nextTarget = event.relatedTarget;
+		if (nextTarget == null) return false;
+		return this.associatedPopovers().some((popover) => popover.contains(nextTarget));
+	};
+
+	evaluateHoverContainerState = () => {
+		if (this.containerRef.current == null) return;
+		const hovered = this.containerRef.current.matches(":hover");
+		const popoverActive = this.associatedPopovers().some((popover) =>
+			popover.matches(":hover") || popover.contains(document.activeElement)
+		);
+		this.setHoverContainerActive(hovered || popoverActive);
+	};
+
+	associatedPopovers = () => {
+		if (this.containerRef.current == null) return [];
+		return Array.from(document.querySelectorAll("[data-popover-trigger-id]")).filter((popover) => {
+			const triggerId = popover.getAttribute("data-popover-trigger-id");
+			if (triggerId == null) return false;
+			const trigger = document.getElementById(triggerId);
+			return trigger != null && this.containerRef.current.contains(trigger);
+		});
+	};
+
+	setHoverContainerActive = (value) => {
+		if (this.state.hoverContainerActive === value) return;
+		this.setState({ hoverContainerActive: value });
 	};
 
 }
