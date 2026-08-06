@@ -26,7 +26,8 @@ const BlockBehavior = (function () {
 
     function hoverContainerClass(block) {
         const hoverContainer = block.props.isHoverContainer;
-        return hoverContainer != null ? "hovercontainer" : "";
+        if (hoverContainer == null) return "";
+        return "hovercontainer" + (block.state != null && block.state.hoverContainerActive ? " hovercontainer-active" : "");
     }
 
     function directionOf(animation) {
