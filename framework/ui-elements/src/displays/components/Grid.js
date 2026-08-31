@@ -219,6 +219,7 @@ class Grid extends AbstractGrid {
             visibleColumns: [],
             minColumnSize: 60,
             columnWidths: {},
+            relativeColumnOverrides: {},
             viewportWidth: 0,
             viewportHeight: 0,
         };
@@ -304,6 +305,7 @@ class Grid extends AbstractGrid {
         const { classes } = this.props;
         const selectorColumnsDisabled = this.selectorColumns().length <= 0;
         const columns = this.columns();
+        const hasFullRelativeWidth = this.hasFullRelativeWidth(columns);
         const theme = Theme.get();
         const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
         const palette = collectionPalette(theme);
@@ -326,7 +328,8 @@ class Grid extends AbstractGrid {
                         ref={this.gridCanvasRef}
                         onScroll={this.handleScroll.bind(this)}
                         style={{
-                            overflow:'auto',
+                            overflowX: hasFullRelativeWidth ? 'hidden' : 'auto',
+                            overflowY:'auto',
                             overscrollBehavior:'contain',
                             width:'100%',
                             height:'100%',
@@ -337,8 +340,8 @@ class Grid extends AbstractGrid {
                         }}
                     >
                         {this.state.contentCleared || this.state.rows.length === 0 ? this.emptyRowsView() :
-                            <div style={{display:'inline-block', minWidth:'100%', width:'max-content', maxWidth:'none', verticalAlign:'top'}}>
-                                <Table size="small" stickyHeader className={classes.gridTable} style={{minWidth:'100%', width:'max-content', background:isDark ? palette.viewportBackground : undefined}}>
+                            <div style={this.gridContentStyle(columns)}>
+                                <Table size="small" stickyHeader className={classes.gridTable} style={{...this.tableStyle(columns, showCheckbox), tableLayout:'fixed', background:isDark ? palette.viewportBackground : undefined}}>
                                     <TableHead>
                                         <TableRow style={isDark ? { background: palette.headerBackground } : undefined}>
                                             {showCheckbox &&
@@ -407,8 +410,9 @@ class Grid extends AbstractGrid {
                 onClick={column.sortable ? this.handleHeaderSortClick.bind(this, column) : undefined}
                 style={{
                     cursor: column.sortable ? 'pointer' : 'default',
-                    minWidth: column.width,
-                    width: column.width,
+                    minWidth: column.relativeWidth != null ? 0 : column.cssWidth,
+                    width: column.cssWidth,
+                    boxSizing: column.relativeWidth != null ? "border-box" : undefined,
                     whiteSpace: 'nowrap',
                     textAlign: rightAligned ? 'right' : undefined,
                     position: 'relative',
@@ -470,8 +474,9 @@ class Grid extends AbstractGrid {
                 className={isIconColumn ? "column-type-" + column.type : undefined}
                 onClick={this.handleRowClick.bind(this, rowIndex, row, column)}
                 style={{
-                    minWidth: column.width,
-                    width: column.width,
+                    minWidth: column.relativeWidth != null ? 0 : column.cssWidth,
+                    width: column.cssWidth,
+                    boxSizing: column.relativeWidth != null ? "border-box" : undefined,
                     backgroundColor: isDark ? "rgba(15, 23, 42, 0.72)" : undefined
                 }}
             >
@@ -724,20 +729,27 @@ class Grid extends AbstractGrid {
         const result = {};
         const columns = this.state.columns;
         const gridCanvas = this.gridCanvasRef.current;
-        const viewportWidth = this.state.viewportWidth > 0 ? this.state.viewportWidth : (gridCanvas != null ? gridCanvas.clientWidth : 0);
+        const viewportWidth = gridCanvas != null && gridCanvas.clientWidth > 0 ? gridCanvas.clientWidth : this.state.viewportWidth;
         const checkboxWidth = this.props.selection != null && this.allowMultiSelection() ? 48 : 0;
         const columnsViewportWidth = Math.max(0, viewportWidth - checkboxWidth);
         const configuredWidths = this.state.columnWidths || {};
 
         for (let i=0; i<columns.length; i++)
-            result[columns[i].name] = this.isIconColumn(columns[i]) ? 32 : this.state.rows.length > 0 ? this.getWidth(columns[i].label, 10) : undefined;
+            result[columns[i].name] = this.isIconColumn(columns[i]) ? 32 : this.getWidth(columns[i].label, 10);
 
         for (let i=0; i<this.state.rows.length; i++) {
             for (let j=0; j<columns.length; j++) {
                 if (this.isIconColumn(columns[j])) continue;
-                const width = columns[j].width != -1 ? columns[j].width : Math.max(this.getWidth(this.rowValue(this.state.rows[i][columns[j].name]), 9), result[columns[j].name]);
+                const configuredWidth = this.columnWidth(columns[j], columnsViewportWidth);
+                const width = configuredWidth != null ? configuredWidth : Math.max(this.getWidth(this.rowValue(this.state.rows[i][columns[j].name]), 9), result[columns[j].name]);
                 result[columns[j].name] = width;
             }
+        }
+
+        for (let i=0; i<columns.length; i++) {
+            if (this.isIconColumn(columns[i])) continue;
+            const width = this.columnWidth(columns[i], columnsViewportWidth);
+            if (width != null) result[columns[i].name] = width;
         }
 
         for (let i=0; i<columns.length; i++) {
@@ -750,7 +762,7 @@ class Grid extends AbstractGrid {
         for (let j=0; j<columns.length; j++) {
             if (this.state.visibleColumns.length > 0 && this.state.visibleColumns.length === columns.length && !this.state.visibleColumns[j]) continue;
             totalWidth += result[columns[j].name];
-            if (configuredWidths[columns[j].name] == null && columns[j].type !== "Number" && columns[j].type !== "Date" && !this.isIconColumn(columns[j])) lastVisibleColumn = columns[j];
+            if (configuredWidths[columns[j].name] == null && this.columnWidth(columns[j], columnsViewportWidth) == null && columns[j].type !== "Number" && columns[j].type !== "Date" && !this.isIconColumn(columns[j])) lastVisibleColumn = columns[j];
         }
 
         if (columnsViewportWidth > totalWidth && lastVisibleColumn != null)
@@ -761,6 +773,7 @@ class Grid extends AbstractGrid {
 
     columns = () => {
         const widths = this.columnsWidths();
+        const relativeColumnOverrides = this.state.relativeColumnOverrides || {};
         return this._sortColumns(this.state.columns.filter((column, idx) => this.isColumnVisible(idx))).map((column, idx) => ({
             key: column.name,
             name: column.label,
@@ -768,11 +781,30 @@ class Grid extends AbstractGrid {
             filterable: true, editable: false,
             sortable: column.sortable, draggable: false,
             resizable: true, frozen: column.fixed, width: widths[column.name],
+            cssWidth: relativeColumnOverrides[column.name] ? widths[column.name] : this.cssColumnWidth(column, widths[column.name]),
+            relativeWidth: relativeColumnOverrides[column.name] ? null : this.relativeColumnWidth(column),
+            declaredRelativeWidth: this.relativeColumnWidth(column),
             headerRenderer : this.columnRenderer(column, idx),
             formatter : this.rowFormatter.bind(this, column),
             cellClass: "column-type-" + column.type
         }));
     };
+
+    tableWidth = (columns, showCheckbox) => columns.reduce((total, column) => total + (Number(column.width) || 0), showCheckbox ? 48 : 0);
+
+    gridContentStyle = (columns) => this.hasDeclaredFullRelativeWidth(columns)
+        ? { display: "block", minWidth: "100%", width: "100%", maxWidth: "none", verticalAlign: "top" }
+        : { display: "inline-block", minWidth: "100%", width: "max-content", maxWidth: "none", verticalAlign: "top" };
+
+    tableStyle = (columns, showCheckbox) => {
+        const width = this.tableWidth(columns, showCheckbox);
+        if (!this.hasDeclaredFullRelativeWidth(columns)) return { width };
+        return this.hasFullRelativeWidth(columns) ? { width: "100%", boxSizing: "border-box" } : { width: "100%", minWidth: width, boxSizing: "border-box" };
+    };
+
+    hasFullRelativeWidth = (columns) => Math.abs(columns.reduce((total, column) => total + (column.relativeWidth || 0), 0) - 100) < 0.01;
+
+    hasDeclaredFullRelativeWidth = (columns) => Math.abs(columns.reduce((total, column) => total + (column.declaredRelativeWidth || 0), 0) - 100) < 0.01;
 
     getWidth = (value, factor) => {
         if (value == null) return 0;
@@ -780,6 +812,35 @@ class Grid extends AbstractGrid {
     }
 
     isIconColumn = (column) => column.type === "Icon" || column.type === "MaterialIcon";
+
+    columnWidth = (column, availableWidth) => {
+        const width = column.width;
+        if (width == null || width === -1 || width === "-1") return null;
+        if (typeof width === "number") return width;
+
+        const value = String(width).trim();
+        const pixels = value.match(/^(\d+(?:\.\d+)?)px$/i);
+        if (pixels != null) return Number(pixels[1]);
+
+        const percentage = value.match(/^(\d+(?:\.\d+)?)%$/);
+        if (percentage != null) return availableWidth * Number(percentage[1]) / 100;
+
+        const legacyPixels = value.match(/^\d+(?:\.\d+)?$/);
+        return legacyPixels != null ? Number(value) : null;
+    };
+
+    cssColumnWidth = (column, calculatedWidth) => this.relativeColumnWidth(column) != null ? String(column.width).trim() : calculatedWidth;
+
+    relativeColumnWidth = (column) => {
+        if (column.width == null) return null;
+        const match = String(column.width).trim().match(/^(\d+(?:\.\d+)?)%$/);
+        return match != null ? Number(match[1]) : null;
+    };
+
+    isRelativeColumn = (name) => {
+        const column = this.state.columns.find((candidate) => candidate.name === name);
+        return column != null && this.relativeColumnWidth(column) != null;
+    };
 
     selectorColumns = () => {
         const originalIndexes = {};
@@ -1088,11 +1149,13 @@ class Grid extends AbstractGrid {
     refreshInfo = (info) => {
         const cookieState = this.getCookie(this.cookieName(info.name));
         const columnWidths = cookieState != null && cookieState.columnWidths != null ? cookieState.columnWidths : this.state.columnWidths;
+        const relativeColumnOverrides = cookieState != null && cookieState.relativeColumnOverrides != null ? cookieState.relativeColumnOverrides : this.state.relativeColumnOverrides;
         this.setState({
             columns: info.columns,
             modes: info.modes,
             name: info.name,
             columnWidths: columnWidths != null ? columnWidths : {},
+            relativeColumnOverrides: relativeColumnOverrides != null ? relativeColumnOverrides : {},
         }, () => {
             if (this.pendingRows.length === 0) return;
             const pendingRows = this.pendingRows;
@@ -1244,7 +1307,11 @@ class Grid extends AbstractGrid {
             columnWidths: {
                 ...prevState.columnWidths,
                 [name]: width,
-            }
+            },
+            relativeColumnOverrides: this.isRelativeColumn(name) ? {
+                ...prevState.relativeColumnOverrides,
+                [name]: true,
+            } : prevState.relativeColumnOverrides,
         }));
     };
 
@@ -1265,6 +1332,7 @@ class Grid extends AbstractGrid {
         this.resizingColumn = null;
         this.activeColumnResizeHandle = null;
         if (this.state.columnWidths[name] != null) this.saveState("columnWidths", this.state.columnWidths);
+        if (this.state.relativeColumnOverrides[name]) this.saveState("relativeColumnOverrides", this.state.relativeColumnOverrides);
     };
 
     handleColumnResizeReset = (column, event) => {
@@ -1273,9 +1341,14 @@ class Grid extends AbstractGrid {
         const key = column.key;
         this.setState((prevState) => {
             const columnWidths = { ...(prevState.columnWidths || {}) };
+            const relativeColumnOverrides = { ...(prevState.relativeColumnOverrides || {}) };
             delete columnWidths[key];
-            return { columnWidths };
-        }, () => this.saveState("columnWidths", this.state.columnWidths));
+            delete relativeColumnOverrides[key];
+            return { columnWidths, relativeColumnOverrides };
+        }, () => {
+            this.saveState("columnWidths", this.state.columnWidths);
+            this.saveState("relativeColumnOverrides", this.state.relativeColumnOverrides);
+        });
     };
 
     rowHeight = () => {

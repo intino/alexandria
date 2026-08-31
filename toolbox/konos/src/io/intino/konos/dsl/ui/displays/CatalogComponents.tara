@@ -61,6 +61,7 @@ Concept CatalogComponents
 				var word:{Text Number Date Icon MaterialIcon} type
 				var boolean sortable = false
 				var integer:{px} width = -1px
+				var integer:{%} relativeWidth = -1%
 				var boolean fixed = false
 				var string pattern = empty
 				Facet Clickable

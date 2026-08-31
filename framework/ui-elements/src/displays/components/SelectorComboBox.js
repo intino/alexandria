@@ -75,8 +75,8 @@ export function selectorComboBoxStyles(theme) {
 			background: controlBackground,
 			borderRadius: "16px",
 			boxShadow: "none",
-			minHeight: "0",
-			height: "52px",
+			minHeight: state.isMulti ? "52px" : "0",
+			height: state.isMulti ? "auto" : "52px",
 			borderColor: palette.borderColor,
 			cursor: state.isDisabled ? "default" : provided.cursor,
 			":hover": {
@@ -86,8 +86,9 @@ export function selectorComboBoxStyles(theme) {
 		}),
 		valueContainer: (provided, state) => ({
 			...provided,
-			padding: "0 13px",
-			height: "50px",
+			padding: state.isMulti ? "7px 13px" : "0 13px",
+			minHeight: state.isMulti ? "50px" : undefined,
+			height: state.isMulti ? "auto" : "50px",
 		}),
 		singleValue: (provided, state) => ({
 			...provided,
@@ -101,9 +102,10 @@ export function selectorComboBoxStyles(theme) {
 		}),
 		multiValue: (provided, state) => ({
 			...provided,
-			borderRadius:'4px',
-			margin: "0 8px 0 0",
-			background: state.isDisabled ? "none" : provided.background
+			borderRadius: "8px",
+			margin: "3px 6px 3px 0",
+			background: state.isDisabled ? "none" : palette.dark ? "rgba(144, 202, 249, 0.16)" : "rgba(25, 118, 210, 0.10)",
+			boxShadow: "none",
 		}),
 		multiValueRemove: (provided, state) => ({
 			...provided,
@@ -118,7 +120,8 @@ export function selectorComboBoxStyles(theme) {
 		indicatorsContainer: (provided, state) => ({
 			...provided,
 			display: state.isDisabled ? 'none' : 'inherit',
-			height: "50px",
+			alignSelf: state.isMulti ? "stretch" : undefined,
+			height: state.isMulti ? "auto" : "50px",
 			paddingRight: '8px !important',
 		}),
 		placeholder: (provided, state) => ({
