@@ -52,6 +52,29 @@ public class GridExamplesMold extends AbstractGridExamplesMold<UiFrameworkBox> {
             notifyUser("Sort by " + e.column().label() + " with mode " + e.mode().name(), UserMessage.Type.Info);
         });
         grid.source(new ExampleDatasource(session()));
+
+
+        grid2.itemResolver(new Grid.ItemResolver<>() {
+            @Override
+            public GridItem build(GridItem gridItem) {
+                return gridItem;
+            }
+
+            @Override
+            public String address(GridColumn<GridItem> column, GridItem gridItem) {
+                return null;
+            }
+        });
+        grid2.onSelect(e -> {
+            List<GridItem> selection = e.selection();
+            String message = "Selected rows: " + selection.stream().map(e1 -> e1.values().get(0).asText()).collect(Collectors.joining(", "));
+            notifyUser(message, UserMessage.Type.Info);
+        });
+        grid2.onSortColumn(e -> {
+            grid.sortings(Collections.emptyList());
+            notifyUser("Sort by " + e.column().label() + " with mode " + e.mode().name(), UserMessage.Type.Info);
+        });
+        grid2.source(new Example2Datasource(session()));
     }
 
     @Override
@@ -140,6 +163,72 @@ public class GridExamplesMold extends AbstractGridExamplesMold<UiFrameworkBox> {
             } catch (MalformedURLException e) {
                 return null;
             }
+        }
+
+        private List<GridItem> groupBy(List<GridItem> items) {
+            return items;
+        }
+
+    }
+
+    private static class Example2Datasource extends GridDatasource<GridItem> {
+        private final UISession session;
+
+        private static final int ColumnCount = 3;
+        private static final int RowCount = 1000;
+
+        private Example2Datasource(UISession session) {
+            this.session = session;
+        }
+
+        @Override
+        public String name() {
+            return "grid1";
+        }
+
+        @Override
+        public List<GridItem> items(int start, int count, String condition, List<Filter> filters, List<String> sortings, GridGroupBy groupBy) {
+            List<GridItem> items = groupBy(load(condition, filters));
+            int from = Math.min(start, items.size());
+            int end = Math.min(start + count, items.size());
+            return items.subList(from, end);
+        }
+
+        @Override
+        public long itemCount(String condition, List<Filter> filters) {
+            return load(condition, filters).size();
+        }
+
+        @Override
+        public long itemCount(String condition, List<Filter> filters, GridGroupBy groupBy) {
+            return groupBy(load(condition, filters)).size();
+        }
+
+        @Override
+        public List<String> columnGroups(GridColumn<GridItem> column, String mode, String condition, List<Filter> filters) {
+            return List.of();
+        }
+
+        @Override
+        public List<GridColumnMode> columnModes() {
+            return List.of();
+        }
+
+        @Override
+        public List<Group> groups(String key) {
+            return Collections.emptyList();
+        }
+
+        private List<GridItem> load(String condition, List<Filter> filters) {
+            List<GridItem> result = new ArrayList<>();
+            for (int i=0; i<RowCount; i++) {
+                GridItem item = new GridItem();
+                for (int j=0; j<ColumnCount; j++) {
+                    item.add(i + "." + j);
+                }
+                result.add(item);
+            }
+            return result;
         }
 
         private List<GridItem> groupBy(List<GridItem> items) {

@@ -297,7 +297,7 @@ Schema GridColumn
 	Attribute fixed as Bool
 	Attribute address as Text
 	Attribute visible as Bool
-	Attribute width as Integer
+	Attribute width as Text
 	Attribute textColor as Text
 	Attribute backgroundColor as Text
 	Attribute type as Word("Link" "Text" "Number" "Date" "Icon" "MaterialIcon")

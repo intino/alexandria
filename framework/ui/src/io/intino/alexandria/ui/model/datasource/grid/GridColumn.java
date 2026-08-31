@@ -10,7 +10,7 @@ public class GridColumn<T> {
 	private String label;
 	private Type type = Type.Text;
 	private String address;
-	private int width = -1;
+	private String width;
 	private boolean sortable = false;
 	private boolean visible;
 	private boolean fixed;
@@ -66,11 +66,16 @@ public class GridColumn<T> {
 		return this;
 	}
 
-	public int width() {
+	public String width() {
 		return width;
 	}
 
 	public GridColumn width(int width) {
+		this.width = width < 0 ? null : width + "px";
+		return this;
+	}
+
+	public GridColumn width(String width) {
 		this.width = width;
 		return this;
 	}

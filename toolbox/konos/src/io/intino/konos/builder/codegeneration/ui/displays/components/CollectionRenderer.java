@@ -104,7 +104,8 @@ public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 		FrameBuilder result = new FrameBuilder("column");
 		result.add("name", column.name$());
 		result.add("label", column.label());
-		if (column.width() != -1) result.add("width", column.width());
+ 		if (column.width() != -1) result.add("absoluteWidth", column.width());
+ 		if (column.relativeWidth() != -1) result.add("relativeWidth", column.relativeWidth());
 		if (column.sortable()) result.add("sortable", column.sortable());
 		if (column.fixed()) result.add("fixed", column.fixed());
 		if (column.pattern() != null) result.add("pattern", column.pattern());
