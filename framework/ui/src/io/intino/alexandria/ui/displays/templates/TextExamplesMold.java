@@ -26,6 +26,7 @@ public class TextExamplesMold extends AbstractTextExamplesMold<AlexandriaUiBox> 
         text4.onChange((event) -> text3.notifyUser(String.format("Value: %s", (String)event.value()), UserMessage.Type.Info));
         text4.patternMatcher(new DelphiPatternMatcher());
         text5.error("Field value is wrong");
+        //text5.onChange(e -> text5.error("Field value is wrong"));
         textCode2.onChange((event) -> textCode2.notifyUser(String.format("Value: %s", (String)event.value()), UserMessage.Type.Info));
         textCode3.onChange((event) -> textCode2.notifyUser(String.format("Value: %s", (String)event.value()), UserMessage.Type.Info));
     }
