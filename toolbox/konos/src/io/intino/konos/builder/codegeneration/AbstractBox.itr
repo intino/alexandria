@@ -239,7 +239,7 @@ rule type(terminal) and trigger(setup)
 	this.terminal = new $qn(connector);
 
 rule type(connector) and trigger(setup)
-	this.connector = systems.intino.eventsourcing.datahubterminal.ConnectorFactory.createConnector(new io.intino.alexandria.jms.ConnectionConfig($parameter...[, ]), $additionalParameter...[,]);
+	this.connector = systems.intino.eventsourcing.datahubterminal.ConnectorFactory.createConnector(new systems.intino.eventsourcing.jms.ConnectionConfig($parameter...[, ]), $additionalParameter...[,]);
 
 rule type(service, jmx) and trigger(jmx)
 	this.$name+CamelCase = new JMX$name+PascalCase().init((($configuration+PascalCase~Box) this));
