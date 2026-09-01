@@ -29,33 +29,33 @@ Template(layout=Vertical, spacing=DP8) textExamplesMold
 		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Editable facet")
 			Block(format=filled)
-				Text(format=body1 widgetDemo) text3 as Editable(helperText="Some important helper text") Labeled("campo editable")
+				Text(format=body1 widgetDemo) text3 as Editable(helperText="Some important helper text") Labeled("editable field")
 				Block > Text as Code(language=Html)
 						value
 							=========
-							Text(value\="lorem ipsum") text3 as Editable(helperText\="Some important helper text") Labeled("campo editable")
+							Text(value\="lorem ipsum") text3 as Editable(helperText\="Some important helper text") Labeled("editable field")
 							=========
 
 		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Editable facet with pattern")
 			Block(format=filled)
-				Text(format=body1 widgetDemo) text4 as Editable(helperText="Some important helper text") Labeled("campo editable")
+				Text(format=body1 widgetDemo) text4 as Editable(helperText="Some important helper text") Labeled("editable field")
 					//Validation(pattern="0N0/00")
 					Validation(pattern="00.00.000M.000.00c99m") > Length(min=0, max=21)
 				Block > Text as Code(language=Html)
 						value
 							=========
-							Text(value\="lorem ipsum") text3 as Editable(helperText\="Some important helper text",pattern\="AAAAAAAA") Labeled("campo editable")
+							Text(value\="lorem ipsum") text3 as Editable(helperText\="Some important helper text",pattern\="AAAAAAAA") Labeled("editable field")
 							=========
 
 		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="Editable facet with error")
 			Block(format=filled)
-				Text(format=body1 widgetDemo) text5 as Editable Labeled("campo editable")
+				Text(format=body1 widgetDemo) text5 as Editable Labeled("editable field")
 				Block > Text as Code(language=Html)
 						value
 							=========
-							Text(value\="lorem ipsum") text3 as Editable Labeled("campo editable")
+							Text(value\="lorem ipsum") text3 as Editable Labeled("editable field")
 							=========
 
 		Block as Relative(width=48%, height=100%)

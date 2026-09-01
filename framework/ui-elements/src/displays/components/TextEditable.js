@@ -41,11 +41,12 @@ class TextEditable extends AbstractTextEditable {
 		this.requester = new TextEditableRequester(this);
 		this.inputRef = React.createRef();
 		this.state = {
-			...this.state,
-			value: '',
-			pattern: null,
-			readonly : this.props.readonly
-		};
+            ...this.state,
+            value: '',
+            pattern: null,
+            isFocused: false,
+            readonly : this.props.readonly
+        };
 	};
 
 	handleChange(e) {
@@ -61,14 +62,12 @@ class TextEditable extends AbstractTextEditable {
 	};
 
 	handleFocus(e) {
-		const element = document.getElementById(this.props.id + "-error");
-		if (element != null) element.style.display = "none";
+		this.setState({ isFocused: true });
 		this.requester.notifyFocus();
 	};
 
 	handleBlur(e) {
-		const element = document.getElementById(this.props.id + "-error");
-		if (element != null) element.style.display = "block";
+		this.setState({ isFocused: false });
 		Delayer.stop(this);
 		this.requester.notifyBlur(this.state.value);
 	};
@@ -120,7 +119,7 @@ class TextEditable extends AbstractTextEditable {
 
 		return (
 			<div style={{position:"relative",...this.style()}} className={theme.palette.mode === "dark" ? "dark" : undefined}>
-				{(!this.state.readonly && error != null) && <div id={this.props.id + "-error"} className={classes.error}>{error}</div>}
+				{(!this.state.readonly && error != null && !this.state.isFocused) && <div id={this.props.id + "-error"} className={classes.error}>{error}</div>}
 				<TextField {...props} format={this.variant("body1")} className={classnames(classes.default, error != null ? classes.errorField : undefined)} label={label}
 						   onKeyPress={this.handleKeypress.bind(this)} type={type} autoFocus={this.props.focused}
 						   placeholder={placeholder} multiline={this._multiline()} rows={this._rowsCount()}
@@ -159,7 +158,7 @@ class TextEditable extends AbstractTextEditable {
 
 		return (
 			<div style={{position:"relative",...this.style()}} className={theme.palette.mode === "dark" ? "dark" : undefined}>
-				{(!this.state.readonly && error != null) && <div id={this.props.id + "-error"} className={classes.error}>{error}</div>}
+				{(!this.state.readonly && error != null && !this.state.isFocused) && <div id={this.props.id + "-error"} className={classes.error}>{error}</div>}
 				<MaskedTextField {...props} format={this.variant("body1")} className={classnames(classes.default, error != null ? classes.errorField : undefined)} label={label}
 								onKeyPress={this.handleKeypress.bind(this)} type={type} autoFocus={this.props.focused}
 								placeholder={placeholder} multiline={this._multiline()} rows={this._rowsCount()}
