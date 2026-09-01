@@ -1,7 +1,7 @@
 rule type(messaging)
 	package $package;
 
-	import io.intino.alexandria.terminal.Connector;
+	import systems.intino.eventsourcing.datahubterminal.Connector;
 	import io.intino.alexandria.logger.Logger;
 
 	import java.io.ByteArrayOutputStream;
