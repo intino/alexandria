@@ -41,13 +41,27 @@ Template(layout=Vertical, spacing=DP8) gridExamplesMold
 
 	Block(layout=Horizontal Wrap, spacing=DP24)
 		Block as Relative(width=100%, height=100%)
-			Text(format=h6, value="No facets")
+			Text(format=h6, value="No facets. Relative widths")
 			Block(layout=Vertical Flexible, spacing=DP8, format=filledNoAir)
 				Grid(itemClass="io.intino.alexandria.ui.model.datasource.grid.GridItem", noItemsMessage="No elements") grid2 as Selectable
 					pageSize = 24
 					Column(label="Columna 1", type=Text, sortable=true, relativeWidth=20%) columna21 as Clickable Addressable(UiElements.widgets)
 					Column(label="Columna 2", type=Text, sortable=true, relativeWidth=20%) columna22
 					Column(label="Columna 3", type=Date, relativeWidth=60%) columna23
+			Block > Text as Code(language=Html)
+					value
+						=========
+						=========
+
+	Block(layout=Horizontal Wrap, spacing=DP24)
+		Block as Relative(width=100%, height=100%)
+			Text(format=h6, value="No facets. No widths defined")
+			Block(layout=Vertical Flexible, spacing=DP8, format=filledNoAir)
+				Grid(itemClass="io.intino.alexandria.ui.model.datasource.grid.GridItem", noItemsMessage="No elements") grid3 as Selectable
+					pageSize = 24
+					Column(label="Columna 1", type=Text, sortable=true) columna31 as Clickable Addressable(UiElements.widgets)
+					Column(label="Columna 2", type=Text, sortable=true) columna32
+					Column(label="Columna 3", type=Date) columna33
 			Block > Text as Code(language=Html)
 					value
 						=========

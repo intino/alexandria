@@ -81,6 +81,30 @@ const styles = theme => ({
             background: "transparent",
             color: theme.palette.mode === "dark" ? "rgba(255,255,255,0.88)" : "inherit",
         },
+        "& .grid-cell-content": {
+            display: "block",
+            width: "100%",
+            minWidth: 0,
+            maxWidth: "100%",
+            boxSizing: "border-box",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+        },
+        "& .grid-cell-content > a": {
+            display: "block",
+            maxWidth: "100%",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+        },
+        "& .grid-header-content": {
+            flex: "1 1 auto",
+            minWidth: 0,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+        },
         "& .MuiTableHead-root .MuiTableCell-root": {
             background: theme.palette.mode === "dark" ? "rgba(18, 28, 42, 0.82)" : "rgba(239, 246, 255, 0.78)",
             color: theme.palette.mode === "dark" ? "rgba(241,245,249,0.96)" : "inherit",
@@ -345,7 +369,13 @@ class Grid extends AbstractGrid {
                                     <TableHead>
                                         <TableRow style={isDark ? { background: palette.headerBackground } : undefined}>
                                             {showCheckbox &&
-                                                <TableCell padding="checkbox" style={isDark ? { background: palette.headerBackground, color: "rgba(241,245,249,0.96)" } : undefined}>
+                                                <TableCell padding="checkbox" style={{
+                                                    width: 48,
+                                                    minWidth: 48,
+                                                    maxWidth: 48,
+                                                    boxSizing: "border-box",
+                                                    ...(isDark ? { background: palette.headerBackground, color: "rgba(241,245,249,0.96)" } : {})
+                                                }}>
                                                     <Checkbox
                                                         checked={this.isAllRowsSelected()}
                                                         indeterminate={!this.isAllRowsSelected() && this.state.selectedIndexes.length > 0}
@@ -419,8 +449,8 @@ class Grid extends AbstractGrid {
                     ...(isDark ? { background: palette.headerBackground, color: "rgba(241,245,249,0.96)" } : {})
                 }}
             >
-                <div className={classNames("layout horizontal center", rightAligned ? "end-justified" : undefined)} style={rightAligned ? { width: "100%" } : undefined}>
-                    <div>{column.headerRenderer != null ? column.headerRenderer : column.name}</div>
+                <div className={classNames("layout horizontal center", rightAligned ? "end-justified" : undefined)} style={{width: "100%", minWidth: 0}}>
+                    <div className="grid-header-content" style={{textAlign: rightAligned ? "right" : undefined}}>{column.headerRenderer != null ? column.headerRenderer : column.name}</div>
                     {active && direction === 'ASC' && <ArrowUpward fontSize="inherit" style={{marginLeft:'4px'}}/>}
                     {active && direction === 'DESC' && <ArrowDownward fontSize="inherit" style={{marginLeft:'4px'}}/>}
                 </div>
@@ -446,7 +476,13 @@ class Grid extends AbstractGrid {
         return (
             <TableRow key={rowIndex} hover className={classes.gridRow}>
                 {showCheckbox &&
-                    <TableCell padding="checkbox" style={isDark ? { background: "rgba(15, 23, 42, 0.72)" } : undefined}>
+                    <TableCell padding="checkbox" style={{
+                        width: 48,
+                        minWidth: 48,
+                        maxWidth: 48,
+                        boxSizing: "border-box",
+                        ...(isDark ? { background: "rgba(15, 23, 42, 0.72)" } : {})
+                    }}>
                         <Checkbox
                             checked={this.state.selectedIndexes.indexOf(rowIndex) !== -1}
                             onChange={this.handleToggleRowSelection.bind(this, rowIndex)}
@@ -477,10 +513,12 @@ class Grid extends AbstractGrid {
                     minWidth: column.relativeWidth != null ? 0 : column.cssWidth,
                     width: column.cssWidth,
                     boxSizing: column.relativeWidth != null ? "border-box" : undefined,
+                    overflow: "hidden",
                     backgroundColor: isDark ? "rgba(15, 23, 42, 0.72)" : undefined
                 }}
             >
-                {column.formatter({ row, value })}
+                {isIconColumn ? column.formatter({ row, value }) :
+                    <div className="grid-cell-content">{column.formatter({ row, value })}</div>}
             </TableCell>
         );
     };
@@ -726,6 +764,7 @@ class Grid extends AbstractGrid {
     };
 
     columnsWidths = () => {
+        const maxAutomaticColumnWidth = 400;
         const result = {};
         const columns = this.state.columns;
         const gridCanvas = this.gridCanvasRef.current;
@@ -734,14 +773,26 @@ class Grid extends AbstractGrid {
         const columnsViewportWidth = Math.max(0, viewportWidth - checkboxWidth);
         const configuredWidths = this.state.columnWidths || {};
 
-        for (let i=0; i<columns.length; i++)
-            result[columns[i].name] = this.isIconColumn(columns[i]) ? 32 : this.getWidth(columns[i].label, 10);
+        for (let i=0; i<columns.length; i++) {
+            if (this.isIconColumn(columns[i])) {
+                result[columns[i].name] = 32;
+                continue;
+            }
+            const configuredWidth = this.columnWidth(columns[i], columnsViewportWidth);
+            const headerWidth = this.getWidth(this.translate(columns[i].label || ""), 10) + 16;
+            result[columns[i].name] = configuredWidth != null ? configuredWidth : Math.min(headerWidth, maxAutomaticColumnWidth);
+        }
 
         for (let i=0; i<this.state.rows.length; i++) {
             for (let j=0; j<columns.length; j++) {
                 if (this.isIconColumn(columns[j])) continue;
                 const configuredWidth = this.columnWidth(columns[j], columnsViewportWidth);
-                const width = configuredWidth != null ? configuredWidth : Math.max(this.getWidth(this.rowValue(this.state.rows[i][columns[j].name]), 9), result[columns[j].name]);
+                const cellValue = this.state.rows[i][columns[j].name];
+                const hasCellBackground = columns[j].backgroundColor !== undefined || this.rowBackgroundColor(cellValue) !== undefined;
+                const badgePadding = hasCellBackground ? 20 : 0;
+                const cellPadding = 16;
+                const naturalWidth = Math.max(this.getWidth(this.rowValue(cellValue), 9) + cellPadding + badgePadding, result[columns[j].name]);
+                const width = configuredWidth != null ? configuredWidth : Math.min(naturalWidth, maxAutomaticColumnWidth);
                 result[columns[j].name] = width;
             }
         }
@@ -758,15 +809,23 @@ class Grid extends AbstractGrid {
         }
 
         let totalWidth = 0;
-        let lastVisibleColumn = null;
+        const automaticVisibleColumns = [];
         for (let j=0; j<columns.length; j++) {
             if (this.state.visibleColumns.length > 0 && this.state.visibleColumns.length === columns.length && !this.state.visibleColumns[j]) continue;
             totalWidth += result[columns[j].name];
-            if (configuredWidths[columns[j].name] == null && this.columnWidth(columns[j], columnsViewportWidth) == null && columns[j].type !== "Number" && columns[j].type !== "Date" && !this.isIconColumn(columns[j])) lastVisibleColumn = columns[j];
+            if (this.isIconColumn(columns[j])) continue;
+
+            const hasConfiguredWidth = configuredWidths[columns[j].name] != null || this.columnWidth(columns[j], columnsViewportWidth) != null;
+            if (hasConfiguredWidth) continue;
+
+            automaticVisibleColumns.push(columns[j]);
         }
 
-        if (columnsViewportWidth > totalWidth && lastVisibleColumn != null)
-            result[lastVisibleColumn.name] = result[lastVisibleColumn.name] + columnsViewportWidth - totalWidth;
+        if (columnsViewportWidth > totalWidth && automaticVisibleColumns.length > 0) {
+            const remainingWidth = columnsViewportWidth - totalWidth;
+            const firstTextColumn = automaticVisibleColumns.find(column => column.type === "Text" || column.type === "Link");
+            if (firstTextColumn != null) result[firstTextColumn.name] = result[firstTextColumn.name] + remainingWidth;
+        }
 
         return result;
     };
@@ -951,13 +1010,20 @@ class Grid extends AbstractGrid {
         const color = this.rowColor(data.value);
         const value = this.rowValue(data.value);
         const style = this.cellStyle(column, data);
+        const truncationStyle = {
+            maxWidth: "100%",
+            boxSizing: "border-box",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap"
+        };
         const numericColumnInfo = this._getNumericColumnInfo(column.name);
         const formattedValue = this._formatNumericValue(value, column, numericColumnInfo);
         if (type === "Icon") return (<Icon icon={value} color={color}/>);
         else if (type === "MaterialIcon") return (<MaterialIcon icon={value} color={color}/>);
-        else if (type === "Link" && data.row.selectable) return (<Link className={classNames(classes.link)} style={style} component="button" onClick={this.handleCellClick.bind(this, column, data)}>{value}</Link>);
-        else if (this._isRightAlignedColumn(column, numericColumnInfo)) return (<div style={{textAlign:'right',...style}}>{formattedValue}</div>);
-        return (<div style={style}>{value}</div>);
+        else if (type === "Link" && data.row.selectable) return (<Link className={classNames(classes.link)} style={{display: "block", ...style, ...truncationStyle}} component="button" onClick={this.handleCellClick.bind(this, column, data)}>{value}</Link>);
+        else if (this._isRightAlignedColumn(column, numericColumnInfo)) return (<div style={{textAlign:'right',...style,...truncationStyle}}>{formattedValue}</div>);
+        return (<div style={{...style,...truncationStyle}}>{value}</div>);
     };
 
     cellStyle = (column, data) => {
