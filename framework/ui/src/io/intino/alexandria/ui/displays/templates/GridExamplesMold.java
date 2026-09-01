@@ -52,8 +52,6 @@ public class GridExamplesMold extends AbstractGridExamplesMold<UiFrameworkBox> {
             notifyUser("Sort by " + e.column().label() + " with mode " + e.mode().name(), UserMessage.Type.Info);
         });
         grid.source(new ExampleDatasource(session()));
-
-
         grid2.itemResolver(new Grid.ItemResolver<>() {
             @Override
             public GridItem build(GridItem gridItem) {
@@ -74,7 +72,28 @@ public class GridExamplesMold extends AbstractGridExamplesMold<UiFrameworkBox> {
             grid.sortings(Collections.emptyList());
             notifyUser("Sort by " + e.column().label() + " with mode " + e.mode().name(), UserMessage.Type.Info);
         });
-        grid2.source(new Example2Datasource(session()));
+        grid2.source(new Example2And3Datasource(session()));
+        grid3.itemResolver(new Grid.ItemResolver<>() {
+            @Override
+            public GridItem build(GridItem gridItem) {
+                return gridItem;
+            }
+
+            @Override
+            public String address(GridColumn<GridItem> column, GridItem gridItem) {
+                return null;
+            }
+        });
+        grid3.onSelect(e -> {
+            List<GridItem> selection = e.selection();
+            String message = "Selected rows: " + selection.stream().map(e1 -> e1.values().get(0).asText()).collect(Collectors.joining(", "));
+            notifyUser(message, UserMessage.Type.Info);
+        });
+        grid3.onSortColumn(e -> {
+            grid.sortings(Collections.emptyList());
+            notifyUser("Sort by " + e.column().label() + " with mode " + e.mode().name(), UserMessage.Type.Info);
+        });
+        grid3.source(new Example2And3Datasource(session()));
     }
 
     @Override
@@ -171,13 +190,13 @@ public class GridExamplesMold extends AbstractGridExamplesMold<UiFrameworkBox> {
 
     }
 
-    private static class Example2Datasource extends GridDatasource<GridItem> {
+    private static class Example2And3Datasource extends GridDatasource<GridItem> {
         private final UISession session;
 
         private static final int ColumnCount = 3;
         private static final int RowCount = 1000;
 
-        private Example2Datasource(UISession session) {
+        private Example2And3Datasource(UISession session) {
             this.session = session;
         }
 
@@ -224,7 +243,7 @@ public class GridExamplesMold extends AbstractGridExamplesMold<UiFrameworkBox> {
             for (int i=0; i<RowCount; i++) {
                 GridItem item = new GridItem();
                 for (int j=0; j<ColumnCount; j++) {
-                    item.add(i + "." + j);
+                    item.add(i + "." + j + ": Lorem ipsum dolor sit amet lorem, lorem ipsum dolor sit amet lorem, lorem ipsum dolor sit amet lorem");
                 }
                 result.add(item);
             }
@@ -236,4 +255,6 @@ public class GridExamplesMold extends AbstractGridExamplesMold<UiFrameworkBox> {
         }
 
     }
+
+
 }
