@@ -7,14 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static io.intino.itrules.template.condition.predicates.Predicates.*;
-import static io.intino.itrules.template.outputs.Outputs.literal;
-import static io.intino.itrules.template.outputs.Outputs.placeholder;
+import static io.intino.itrules.template.outputs.Outputs.*;
 
 public class MounterTemplate extends Template {
 
 	public List<Rule> ruleSet() {
 		List<Rule> rules = new ArrayList<>();
-		rules.add(rule().condition(allTypes("mounter")).output(literal("package ")).output(placeholder("package", "validPackage")).output(literal(".")).output(placeholder("datamart", "validPackage", "lowercase")).output(literal(".mounters;\n\nimport ")).output(placeholder("package", "validPackage")).output(literal(".")).output(placeholder("box", "firstUpperCase")).output(literal("Box;\nimport io.intino.alexandria.event.Event;\n\nimport ")).output(placeholder("package", "validPackage")).output(literal(".mounters.Mounter;\n\npublic class ")).output(placeholder("name", "FirstUpperCase")).output(literal(" implements Mounter {\n\tprivate final ")).output(placeholder("box", "validName", "firstUpperCase")).output(literal("Box box;\n\n\tpublic ")).output(placeholder("name", "FirstUpperCase")).output(literal("(")).output(placeholder("box", "validName", "firstUpperCase")).output(literal("Box box) {\n\t\tthis.box = box;\n\t}\n\n\t")).output(placeholder("type", "method").multiple("\n\n")).output(literal("\n\n\tpublic void handle(Event event) {\n\t\t")).output(placeholder("type", "switch").multiple("\nelse ")).output(literal("\n\t}\n}")));
+		rules.add(rule().condition(allTypes("mounter")).output(literal("package ")).output(placeholder("package", "validPackage")).output(literal(".")).output(placeholder("datamart", "validPackage", "lowercase")).output(literal(".mounters;\n\nimport ")).output(placeholder("package", "validPackage")).output(literal(".")).output(placeholder("box", "firstUpperCase")).output(literal("Box;\nimport systems.intino.eventsourcing.event.Event;\n\nimport ")).output(placeholder("package", "validPackage")).output(literal(".mounters.Mounter;\n\npublic class ")).output(placeholder("name", "FirstUpperCase")).output(literal(" implements Mounter {\n\tprivate final ")).output(placeholder("box", "validName", "firstUpperCase")).output(literal("Box box;\n\n\tpublic ")).output(placeholder("name", "FirstUpperCase")).output(literal("(")).output(placeholder("box", "validName", "firstUpperCase")).output(literal("Box box) {\n\t\tthis.box = box;\n\t}\n\n\t")).output(placeholder("type", "method").multiple("\n\n")).output(literal("\n\n\tpublic void handle(Event event) {\n\t\t")).output(placeholder("type", "switch").multiple("\nelse ")).output(literal("\n\t}\n}")));
 		rules.add(rule().condition(trigger("switch")).output(literal("if (event.type().equals(\"")).output(placeholder("name")).output(literal("\")) handle((")).output(placeholder("fullType")).output(literal(") event);")));
 		rules.add(rule().condition(trigger("method")).output(literal("public void handle(")).output(placeholder("fullType")).output(literal(" event) {\n\n}")));
 		rules.add(rule().condition(all(allTypes("tank"), trigger("field"))).output(literal("io.intino.alexandria.datalake.Datalake.EventStore.Tank ")).output(placeholder("name", "CamelCase")).output(literal(";")));

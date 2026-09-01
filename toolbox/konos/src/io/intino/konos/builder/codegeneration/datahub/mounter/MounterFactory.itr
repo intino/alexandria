@@ -1,7 +1,7 @@
 rule type(factory)
 	package $package.mounters;
 
-	import io.intino.alexandria.event.Event;
+	import systems.intino.eventsourcing.event.Event;
 	import $package+validPackage.$box+firstUpperCase~Box;
 
 	import java.util.HashMap;
