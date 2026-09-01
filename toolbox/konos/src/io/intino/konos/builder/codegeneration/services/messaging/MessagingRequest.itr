@@ -5,7 +5,7 @@ rule type(request)
 	import $package.*;
 	import com.google.gson.Gson;
 	import io.intino.alexandria.core.Box;
-	import io.intino.alexandria.terminal.Connector;
+	import systems.intino.eventsourcing.datahubterminal.Connector;
 
 	import javax.jms.*;
 	import java.util.List;

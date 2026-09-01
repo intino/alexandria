@@ -204,7 +204,7 @@ rule type(logger) and trigger(logger)
 	io.intino.alexandria.logger4j.Logger.init();
 
 rule type(connector) and trigger(import)
-	import io.intino.alexandria.terminal.Connector;
+	import systems.intino.eventsourcing.datahubterminal.Connector;
 
 rule trigger(uiBox)
 	io.intino.alexandria.ui.AlexandriaUiBox
@@ -239,7 +239,7 @@ rule type(terminal) and trigger(setup)
 	this.terminal = new $qn(connector);
 
 rule type(connector) and trigger(setup)
-	this.connector = io.intino.alexandria.terminal.ConnectorFactory.createConnector(new io.intino.alexandria.jms.ConnectionConfig($parameter...[, ]), $additionalParameter...[,]);
+	this.connector = systems.intino.eventsourcing.datahubterminal.ConnectorFactory.createConnector(new systems.intino.eventsourcing.jms.ConnectionConfig($parameter...[, ]), $additionalParameter...[,]);
 
 rule type(service, jmx) and trigger(jmx)
 	this.$name+CamelCase = new JMX$name+PascalCase().init((($configuration+PascalCase~Box) this));
@@ -297,8 +297,8 @@ rule type(workflow) and trigger(init)
 	this.workflow = new $package.bpm.Workflow(($box+PascalCase~Box)this<<, $parameter>>);
 
 rule type(connector) and trigger(init)
-	if (!(this.connector instanceof io.intino.alexandria.terminal.JmsConnector) || ((io.intino.alexandria.terminal.JmsConnector) this.connector).connection() != null) return;
-	final io.intino.alexandria.terminal.JmsConnector connector = (io.intino.alexandria.terminal.JmsConnector) this.connector;
+	if (!(this.connector instanceof systems.intino.eventsourcing.datahubterminal.JmsConnector) || ((systems.intino.eventsourcing.datahubterminal.JmsConnector) this.connector).connection() != null) return;
+	final systems.intino.eventsourcing.datahubterminal.JmsConnector connector = (systems.intino.eventsourcing.datahubterminal.JmsConnector) this.connector;
 	if (connector.connection() == null) connector.start();
 	if (configuration().get("datahub_url") != null)
 		while (connector.connection() == null) try {
@@ -345,7 +345,7 @@ rule type(sentinel) and trigger(field)
 	private io.intino.alexandria.scheduler.AlexandriaScheduler scheduler = new io.intino.alexandria.scheduler.AlexandriaScheduler();
 
 rule type(connector) and trigger(field)
-	protected io.intino.alexandria.terminal.Connector connector;
+	protected systems.intino.eventsourcing.datahubterminal.Connector connector;
 
 rule type(terminal) and trigger(field)
 	protected $qn terminal;
@@ -369,7 +369,7 @@ rule type(terminal) and trigger(getter)
 		return this.terminal;
 	}
 
-	protected io.intino.alexandria.terminal.Connector datahubConnector() {
+	protected systems.intino.eventsourcing.datahubterminal.Connector datahubConnector() {
 		return this.connector;
 	}
 
@@ -395,7 +395,7 @@ rule trigger(server)
 	io.intino.alexandria.http.AlexandriaHttpServerBuilder.instance().stop();
 
 rule type(connector) and trigger(stop)
-	if (connector instanceof io.intino.alexandria.terminal.JmsConnector) ((io.intino.alexandria.terminal.JmsConnector) connector).stop();
+	if (connector instanceof systems.intino.eventsourcing.datahubterminal.JmsConnector) ((systems.intino.eventsourcing.datahubterminal.JmsConnector) connector).stop();
 
 rule type(service, slack) and trigger(stop)
 	this.$name+CamelCase.disconnect();

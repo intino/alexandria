@@ -86,7 +86,7 @@ public class KonosCompiler {
 		if (graph.messagingServiceList().isEmpty()) remove(dependencies, ":jms");
 		if (graph.sentinelList().isEmpty()) remove(dependencies, "scheduler");
 		if (graph.messagingServiceList().isEmpty() || context.dataHubManifest() != null)
-			remove(dependencies, "terminal-jms");
+			remove(dependencies, "datahub-terminal");
 		if (graph.uiServiceList().isEmpty()) remove(dependencies, "ui");
 		if (graph.restServiceList().isEmpty()) remove(dependencies, "rest");
 		if (graph.soapServiceList().isEmpty()) remove(dependencies, "soap");

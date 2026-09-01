@@ -8,10 +8,10 @@ rule type(accessor)
 	$schemaImport
 
 	public class $name+PascalCase~Accessor {
-		private final io.intino.alexandria.terminal.JmsConnector connector;
+		private final systems.intino.eventsourcing.datahubterminal.JmsConnector connector;
 		private final String context;
 
-		public $name+PascalCase~Accessor(io.intino.alexandria.terminal.JmsConnector connector, String context) {
+		public $name+PascalCase~Accessor(systems.intino.eventsourcing.datahubterminal.JmsConnector connector, String context) {
 			this.connector = connector;
 			this.context = context;
 		}

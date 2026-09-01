@@ -6,15 +6,14 @@ import io.intino.itrules.template.Template;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.intino.itrules.template.condition.predicates.Predicates.allTypes;
-import static io.intino.itrules.template.outputs.Outputs.literal;
-import static io.intino.itrules.template.outputs.Outputs.placeholder;
+import static io.intino.itrules.template.condition.predicates.Predicates.*;
+import static io.intino.itrules.template.outputs.Outputs.*;
 
 public class IMounterTemplate extends Template {
 
 	public List<Rule> ruleSet() {
 		List<Rule> rules = new ArrayList<>();
-		rules.add(rule().condition(allTypes("factory")).output(literal("package ")).output(placeholder("package")).output(literal(".mounters;\n\nimport io.intino.alexandria.event.Event;\n\npublic interface Mounter {\n\tvoid handle(Event event);\n}")));
+		rules.add(rule().condition(allTypes("factory")).output(literal("package ")).output(placeholder("package")).output(literal(".mounters;\n\nimport systems.intino.eventsourcing.event.Event;\n\npublic interface Mounter {\n\tvoid handle(Event event);\n}")));
 		return rules;
 	}
 
