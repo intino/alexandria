@@ -48,7 +48,7 @@
     "io.intino.alexandria:soap": "2.2.0",
     "io.intino.alexandria:bpm-framework": "3.1.4",
     "io.intino.alexandria:jmx": "1.0.7",
-    "io.intino.alexandria:terminal-jms": "6.0.1",
+    "systems.intino.eventsourcing:datahub-terminal": "6.3.2",
     "io.intino.alexandria:driver-r": "1.1.0",
     "io.intino.alexandria:driver-shiny": "1.1.0",
     "io.intino.icod:core": "2.0.2"
