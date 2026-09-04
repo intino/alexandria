@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "7.4.25") ui-framework-elements
+Artifact("io.intino.alexandria", "7.4.26") ui-framework-elements
 
 	WebImports
 		WebComponent("@emotion/react", "^11.14.0")
