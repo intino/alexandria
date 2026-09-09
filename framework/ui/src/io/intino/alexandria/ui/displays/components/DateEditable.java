@@ -19,7 +19,7 @@ public class DateEditable<DN extends DateEditableNotifier, B extends Box> extend
 	private boolean readonly;
 	private ChangeListener changeListener = null;
 	private ReadonlyListener readonlyListener = null;
-	private KeyPressListener enterPressListener = e -> value(Instant.now().minus(session().timezoneOffset(), ChronoUnit.MINUTES));
+	private KeyPressListener enterPressListener = defaultKeyPressListener();
 
 	public enum View {
 		Year, Month, Week, Date;
@@ -165,6 +165,13 @@ public class DateEditable<DN extends DateEditableNotifier, B extends Box> extend
 	private void notifyReadonly(boolean value) {
 		if (readonlyListener != null) readonlyListener.accept(new ReadonlyEvent(this, value));
 		notifier.refreshReadonly(value);
+	}
+
+	private KeyPressListener defaultKeyPressListener() {
+		return e -> {
+			if (e.value() != null) return;
+			value(Instant.now().minus(session().timezoneOffset(), ChronoUnit.MINUTES));
+		};
 	}
 
 }
