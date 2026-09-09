@@ -1,15 +1,14 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.schemas.KeyPressEventData;
 import io.intino.alexandria.schemas.Range;
 import io.intino.alexandria.ui.displays.components.editable.Editable;
-import io.intino.alexandria.ui.displays.events.ChangeEvent;
-import io.intino.alexandria.ui.displays.events.ChangeListener;
-import io.intino.alexandria.ui.displays.events.ReadonlyEvent;
-import io.intino.alexandria.ui.displays.events.ReadonlyListener;
+import io.intino.alexandria.ui.displays.events.*;
 import io.intino.alexandria.ui.displays.notifiers.DateEditableNotifier;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.stream.Collectors;
 
 public class DateEditable<DN extends DateEditableNotifier, B extends Box> extends AbstractDateEditable<DN, B> implements Editable<DN, B> {
@@ -20,6 +19,7 @@ public class DateEditable<DN extends DateEditableNotifier, B extends Box> extend
 	private boolean readonly;
 	private ChangeListener changeListener = null;
 	private ReadonlyListener readonlyListener = null;
+	private KeyPressListener enterPressListener = e -> value(Instant.now().minus(session().timezoneOffset(), ChronoUnit.MINUTES));
 
 	public enum View {
 		Year, Month, Week, Date;
@@ -117,6 +117,17 @@ public class DateEditable<DN extends DateEditableNotifier, B extends Box> extend
 	public DateEditable<DN, B> onReadonly(ReadonlyListener listener) {
 		this.readonlyListener = listener;
 		return this;
+	}
+
+	public DateEditable<DN, B> onEnterPress(KeyPressListener listener) {
+		this.enterPressListener = listener;
+		return this;
+	}
+
+	private static final String EnterKeyCode = "Enter";
+	public void notifyKeyPress(KeyPressEventData data) {
+		KeyPressEvent event = new KeyPressEvent(this, data.value(), data.keyCode());
+		if (enterPressListener != null && data.keyCode().equals(EnterKeyCode)) enterPressListener.accept(event);
 	}
 
 	public void notifyChange(Instant value) {
