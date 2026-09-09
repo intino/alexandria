@@ -13,6 +13,7 @@ import classNames from 'classnames';
 import 'alexandria-ui-elements/res/styles/components/fields.css';
 import Theme from "app-elements/gen/Theme";
 import {errorFieldStyles, fieldErrorStyles, fieldPalette, outlinedFieldStyles} from "./FieldStyles";
+import TextBehavior from "ui-elements/src/displays/components/behaviors/TextBehavior";
 
 const styles = theme => ({
 	date : outlinedFieldStyles(theme),
@@ -116,6 +117,11 @@ class DateEditable extends AbstractDateEditable {
 		this._notifyChange(moment != null ? this.noZoneDate(moment) : null);
 	};
 
+    handleKeyDown = (event) => {
+        if (event.key !== "Enter" || this.state.readonly) return;
+        window.setTimeout(() => this.requester.notifyKeyPress({ keyCode: event.key, value: TextBehavior.mode(event.target.value, this.props) }), 0);
+    };
+
     render() {
         if (!this.state.visible) return (<React.Fragment/>);
 
@@ -164,6 +170,7 @@ class DateEditable extends AbstractDateEditable {
             disabled: this.state.readonly,
             onFocus: this.handleFocus.bind(this),
             onBlur: this.handleBlur.bind(this),
+            onKeyDown: this.handleKeyDown,
             slotProps: {
                 inputLabel: {
                     shrink: hasError ? true : (this.state.readonly ? true : this.props.shrink !== null ? this.props.shrink : undefined),

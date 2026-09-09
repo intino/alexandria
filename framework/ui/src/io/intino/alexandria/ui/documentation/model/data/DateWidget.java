@@ -36,6 +36,7 @@ public class DateWidget extends BaseWidget {
 	protected void addEvents() {
 		super.addEvents();
 		addEvent(Model.method("onChange", singletonList(Model.methodParameter("listener", "io.intino.alexandria.ui.displays.events.ChangeListener")), "This event is fired when widget value changes", "void").facets(singletonList("Editable")));
+		addEvent(Model.method("onEnterPress", singletonList(Model.methodParameter("listener", "io.intino.alexandria.ui.displays.events.KeyPressListener")), "This event is fired when user press 'Enter' key", "void").facets(singletonList("Editable")));
 	}
 
 }

@@ -32,6 +32,7 @@ Component dateEditable as ExtensionOf(baseDate)
 	Notification refreshViews as Text List
 	Notification refreshFocused as Bool
 	Request notifyChange as DateTime
+	Request notifyKeyPress as Object(KeyPressEventData)
 
 Component baseText
 	Notification refresh as Text

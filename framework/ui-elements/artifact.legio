@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "7.4.26") ui-framework-elements
+Artifact("io.intino.alexandria", "7.4.27") ui-framework-elements
 
 	WebImports
 		WebComponent("@emotion/react", "^11.14.0")
@@ -73,8 +73,8 @@ Artifact("io.intino.alexandria", "7.4.26") ui-framework-elements
         PackDependency("style-loader", "^0.23.1")
         PackDependency("styled-components", "^4.3.1")
 		PackDependency("babel-plugin-styled-components", "^2.3.0")
-        PackDependency("webpack", "^5.106.2")
-        PackDependency("webpack-cli", "^7.0.2")
+        PackDependency("webpack", "5.106.2")
+        PackDependency("webpack-cli", "7.0.2")
         PackDependency("webpack-dev-server", "^5.2.4")
 
 	Package(LibrariesLinkedByManifest)
