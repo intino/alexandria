@@ -13,7 +13,6 @@ import classNames from 'classnames';
 import 'alexandria-ui-elements/res/styles/components/fields.css';
 import Theme from "app-elements/gen/Theme";
 import {errorFieldStyles, fieldErrorStyles, fieldPalette, outlinedFieldStyles} from "./FieldStyles";
-import TextBehavior from "ui-elements/src/displays/components/behaviors/TextBehavior";
 
 const styles = theme => ({
 	date : outlinedFieldStyles(theme),
@@ -119,7 +118,7 @@ class DateEditable extends AbstractDateEditable {
 
     handleKeyDown = (event) => {
         if (event.key !== "Enter" || this.state.readonly) return;
-        window.setTimeout(() => this.requester.notifyKeyPress({ keyCode: event.key, value: TextBehavior.mode(event.target.value, this.props) }), 0);
+        window.setTimeout(() => this.requester.notifyKeyPress({ keyCode: event.key, value: this.state.value }), 0);
     };
 
     render() {
