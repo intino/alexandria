@@ -187,13 +187,23 @@ export default class Display extends PassiveView {
 
     updateCookie = (value, name) => {
         if (!this._cookieConsentAccepted()) return;
-        Cookies.set(name != null ? name : this.props.id, JSON.stringify(value));
+        Cookies.set(name != null ? name : this.props.id, JSON.stringify(value), {
+            expires: 182,
+            path: "/",
+            sameSite: "Lax",
+        });
     };
 
     getCookie = (name) => {
         if (!this._cookieConsentAccepted()) return null;
         const value = Cookies.get(name != null ? name : this.props.id);
-        return value != null ? JSON.parse(value) : null;
+        if (value == null) return null;
+        try {
+            return JSON.parse(value);
+        } catch (error) {
+            // Supports preferences written by previous versions without JSON encoding.
+            return value;
+        }
     };
 
     renderTraceConsent = () => {
@@ -332,10 +342,11 @@ export default class Display extends PassiveView {
     };
 
     _loadAppMode = () => {
+        this._initializeCookieConsent();
         var mode = this.getCookie(encodeURI(Application.configuration.baseUrl + "/appmode"));
         if (mode != null) return mode;
         if (!Theme.isAutoMode()) return Theme.defaultMode();
-        return window.matchMedia('(prefers-color-scheme: dark)') ? 'dark' : 'light';
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     };
 
     _saveAppModeInCookies = (mode) => {
