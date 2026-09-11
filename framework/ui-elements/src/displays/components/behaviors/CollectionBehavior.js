@@ -275,15 +275,14 @@ const CollectionBehavior = (collection) => {
         const selectableStyle = selectable ? {cursor: "pointer"} : {};
         const finalStyle = selectable && !multiple && self.isItemSelected(item) ? { ...style, ...self.getSelectedStyleRules() } : style;
         const widthStyle = self.collection.props.itemWidth != null ? {width: self.collection.props.itemWidth + "px"} : {};
-        return (
-            <React.Fragment>
-                <div id={self.elementId(id)} style={{...selectableStyle,...finalStyle,...widthStyle}} onClick={selectable && !multiple ? self.handleSelect.bind(self, id) : undefined} className={classNamesValue}>
-                    {/*{multiple ? <Checkbox checked={self.isItemSelected(item)} className={classes.selector} onChange={self.handleSelect.bind(self, id)} /> : undefined}*/}
-                    {multiple ? <CollectionBehaviorCheckbox checked={self.isItemSelected(item)} classes={classes} onCheck={self.handleSelect.bind(self, id)} /> : undefined}
-                    {view}
-                </div>
-            </React.Fragment>
+        const itemContent = (
+            <div id={self.elementId(id)} style={{...selectableStyle,...finalStyle,...widthStyle}} onClick={selectable && !multiple ? self.handleSelect.bind(self, id) : undefined} className={classNamesValue}>
+                {/*{multiple ? <Checkbox checked={self.isItemSelected(item)} className={classes.selector} onChange={self.handleSelect.bind(self, id)} /> : undefined}*/}
+                {multiple ? <CollectionBehaviorCheckbox checked={self.isItemSelected(item)} classes={classes} onCheck={self.handleSelect.bind(self, id)} /> : undefined}
+                {view}
+            </div>
         );
+        return self.collection.wrapCollectionItem != null ? self.collection.wrapCollectionItem(itemContent, item, index) : itemContent;
     };
 
     self.allowMultiSelection = () => {

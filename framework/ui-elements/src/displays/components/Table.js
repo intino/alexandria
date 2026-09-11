@@ -1,5 +1,5 @@
 import React from "react";
-import {Checkbox} from "@mui/material";
+import {Checkbox, Tooltip} from "@mui/material";
 import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import {withSnackbar} from "alexandria-ui-elements/src/util/notistackCompat";
 import AbstractTable from "../../../gen/displays/components/AbstractTable";
@@ -53,6 +53,46 @@ export const TableStyles = theme => ({
             opacity: 1
         }
     },
+    rowTooltip: {
+        maxWidth: "min(520px, calc(100vw - 32px))",
+        maxHeight: "min(320px, calc(100vh - 48px))",
+        padding: "10px 12px",
+        boxSizing: "border-box",
+        overflowX: "hidden",
+        overflowY: "auto",
+        border: theme.palette.mode === "dark" ? "1px solid rgba(148,163,184,0.24)" : "1px solid rgba(15,23,42,0.14)",
+        backgroundColor: theme.palette.mode === "dark" ? "rgba(15,23,42,0.98)" : "rgba(255,255,255,0.98)",
+        color: theme.palette.mode === "dark" ? "#ffffff" : "#1e293b",
+        boxShadow: theme.palette.mode === "dark" ? "0 12px 28px rgba(0,0,0,0.32)" : "0 12px 28px rgba(15,23,42,0.2)",
+        "&::-webkit-scrollbar": {
+            width: "6px",
+        },
+        "&::-webkit-scrollbar-thumb": {
+            borderRadius: "999px",
+            backgroundColor: theme.palette.mode === "dark" ? "rgba(148,163,184,0.42)" : "rgba(71,85,105,0.35)",
+        },
+    },
+    rowTooltipArrow: {
+        color: theme.palette.mode === "dark" ? "rgba(15,23,42,0.98)" : "rgba(255,255,255,0.98)",
+    },
+    rowTooltipEntry: {
+        display: "grid",
+        gridTemplateColumns: "minmax(110px, 38%) minmax(0, 1fr)",
+        gap: "10px",
+        alignItems: "start",
+        padding: "3px 0",
+        lineHeight: 1.35,
+    },
+    rowTooltipLabel: {
+        color: theme.palette.mode === "dark" ? "rgba(226,232,240,0.7)" : "rgba(51,65,85,0.68)",
+        fontSize: "0.75rem",
+        fontWeight: 700,
+    },
+    rowTooltipValue: {
+        color: theme.palette.mode === "dark" ? "#ffffff" : "#1e293b",
+        fontSize: "0.78rem",
+        overflowWrap: "anywhere",
+    },
     selectAll : {
         display: "none",
         position: "absolute",
@@ -68,6 +108,18 @@ export class EmbeddedTable extends AbstractTable {
         this.notifier = new TableNotifier(this);
         this.requester = new TableRequester(this);
         this.header = React.createRef();
+        this.rowTooltipTimer = null;
+        this.rowTooltipCloseTimer = null;
+        this.state = {...this.state, tooltipItemIndex: null, tooltipEntries: []};
+    };
+
+    componentWillUnmount() {
+        if (this.rowTooltipTimer != null) {
+            window.clearTimeout(this.rowTooltipTimer);
+            this.rowTooltipTimer = null;
+        }
+        if (this.rowTooltipCloseTimer != null) window.clearTimeout(this.rowTooltipCloseTimer);
+        super.componentWillUnmount();
     };
 
     handleCheck = () => {
@@ -133,6 +185,112 @@ export class EmbeddedTable extends AbstractTable {
             </div>
         );
     }
+
+    wrapCollectionItem = (content, item, index) => {
+        if (!this.showTooltipForRows()) return content;
+        const { classes } = this.props;
+        return (
+            <Tooltip
+                key={`tooltip-${index}`}
+                title={this.renderRowTooltip()}
+                placement="bottom-start"
+                arrow
+                enterDelay={0}
+                leaveDelay={0}
+                open={this.state.tooltipItemIndex === index}
+                classes={{ tooltip: classes.rowTooltip, arrow: classes.rowTooltipArrow }}
+                slotProps={{ tooltip: { onMouseEnter: this.keepRowTooltipOpen, onMouseLeave: this.hideRowTooltip } }}
+            >
+                {React.cloneElement(content, {
+                    onMouseEnter: this.showRowTooltip.bind(this, index),
+                    onMouseOver: this.showRowTooltip.bind(this, index),
+                    onMouseLeave: this.hideRowTooltip,
+                })}
+            </Tooltip>
+        );
+    };
+
+    showTooltipForRows = () => {
+        return this.props.showTooltipForRows === true || this.props.showTooltipForRows === "true";
+    };
+
+    showRowTooltip = (index, event) => {
+        this.keepRowTooltipOpen();
+        if (this.state.tooltipItemIndex === index) return;
+        if (this.rowTooltipTimer != null) {
+            window.clearTimeout(this.rowTooltipTimer);
+            this.rowTooltipTimer = null;
+        }
+        const entries = this.rowTooltipEntries(event.currentTarget);
+        if (entries.length === 0) return;
+        this.rowTooltipTimer = window.setTimeout(() => {
+            this.rowTooltipTimer = null;
+            this.setState({tooltipItemIndex: index, tooltipEntries: entries});
+        }, 350);
+    };
+
+    hideRowTooltip = () => {
+        if (this.rowTooltipCloseTimer != null) window.clearTimeout(this.rowTooltipCloseTimer);
+        this.rowTooltipCloseTimer = window.setTimeout(() => {
+            this.rowTooltipCloseTimer = null;
+            this.closeRowTooltip();
+        }, 150);
+    };
+
+    keepRowTooltipOpen = () => {
+        if (this.rowTooltipCloseTimer != null) {
+            window.clearTimeout(this.rowTooltipCloseTimer);
+            this.rowTooltipCloseTimer = null;
+        }
+    };
+
+    closeRowTooltip = () => {
+        if (this.rowTooltipTimer != null) {
+            window.clearTimeout(this.rowTooltipTimer);
+            this.rowTooltipTimer = null;
+        }
+        if (this.state.tooltipItemIndex != null) this.setState({tooltipItemIndex: null, tooltipEntries: []});
+    };
+
+    rowTooltipEntries = (element) => {
+        const row = element.querySelector(".layout.horizontal.center.flex") || element;
+        const labels = this.headerLabels();
+        return Array.from(row.children)
+            .map((cell, index) => ({ label: labels[index], value: cell.textContent.trim() }))
+            .filter(entry => entry.label != null && entry.label !== "" && entry.value !== "");
+    };
+
+    headerLabels = () => {
+        const headerContent = this.header.current != null ? this.header.current.firstElementChild : null;
+        if (headerContent != null) {
+            return Array.from(headerContent.children)
+                .filter(cell => !cell.classList.contains(this.props.classes.selectAll))
+                .map(cell => cell.textContent.trim());
+        }
+        return React.Children.toArray(this.props.children).map(this.elementText);
+    };
+
+    elementText = (element) => {
+        if (element == null || typeof element === "boolean") return "";
+        if (typeof element === "string" || typeof element === "number") return String(element);
+        if (!React.isValidElement(element)) return "";
+        if (element.props.value != null) return String(element.props.value);
+        return React.Children.toArray(element.props.children).map(this.elementText).join("");
+    };
+
+    renderRowTooltip = () => {
+        const { classes } = this.props;
+        return (
+            <div>
+                {this.state.tooltipEntries.map((entry, index) =>
+                    <div className={classes.rowTooltipEntry} key={`${entry.label}-${index}`}>
+                        <span className={classes.rowTooltipLabel}>{entry.label}</span>
+                        <span className={classes.rowTooltipValue}>{entry.value}</span>
+                    </div>
+                )}
+            </div>
+        );
+    };
 
 }
 

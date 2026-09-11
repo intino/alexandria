@@ -72,7 +72,7 @@ public class GridExamplesMold extends AbstractGridExamplesMold<UiFrameworkBox> {
             grid.sortings(Collections.emptyList());
             notifyUser("Sort by " + e.column().label() + " with mode " + e.mode().name(), UserMessage.Type.Info);
         });
-        grid2.source(new Example2And3Datasource(session()));
+        grid2.source(new OtherDatasource(session()));
         grid3.itemResolver(new Grid.ItemResolver<>() {
             @Override
             public GridItem build(GridItem gridItem) {
@@ -93,7 +93,28 @@ public class GridExamplesMold extends AbstractGridExamplesMold<UiFrameworkBox> {
             grid.sortings(Collections.emptyList());
             notifyUser("Sort by " + e.column().label() + " with mode " + e.mode().name(), UserMessage.Type.Info);
         });
-        grid3.source(new Example2And3Datasource(session()));
+        grid3.source(new OtherDatasource(session()));
+        grid4.itemResolver(new Grid.ItemResolver<>() {
+            @Override
+            public GridItem build(GridItem gridItem) {
+                return gridItem;
+            }
+
+            @Override
+            public String address(GridColumn<GridItem> column, GridItem gridItem) {
+                return null;
+            }
+        });
+        grid4.onSelect(e -> {
+            List<GridItem> selection = e.selection();
+            String message = "Selected rows: " + selection.stream().map(e1 -> e1.values().get(0).asText()).collect(Collectors.joining(", "));
+            notifyUser(message, UserMessage.Type.Info);
+        });
+        grid4.onSortColumn(e -> {
+            grid.sortings(Collections.emptyList());
+            notifyUser("Sort by " + e.column().label() + " with mode " + e.mode().name(), UserMessage.Type.Info);
+        });
+        grid4.source(new OtherDatasource(session()));
     }
 
     @Override
@@ -190,13 +211,13 @@ public class GridExamplesMold extends AbstractGridExamplesMold<UiFrameworkBox> {
 
     }
 
-    private static class Example2And3Datasource extends GridDatasource<GridItem> {
+    private static class OtherDatasource extends GridDatasource<GridItem> {
         private final UISession session;
 
         private static final int ColumnCount = 3;
         private static final int RowCount = 1000;
 
-        private Example2And3Datasource(UISession session) {
+        private OtherDatasource(UISession session) {
             this.session = session;
         }
 

@@ -33,6 +33,8 @@ Concept CatalogComponents
 				Facet Navigable extends Navigable
 					var word:{Top Bottom} position = Bottom
 			sub Table
+				var boolean showTooltipForRows = false
+
 				Facet Navigable extends Navigable
 					var word:{Top Bottom} position = Bottom
 			sub Map
@@ -55,6 +57,7 @@ Concept CatalogComponents
 
 		sub Grid
 			var boolean showToolbar = true
+			var boolean showTooltipForRows = false
 
 			Concept:Named:{1..*} Column extends Component
 				var string label

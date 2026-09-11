@@ -23,7 +23,7 @@ Template(layout=Vertical, spacing=DP8) tableExamplesMold
 		Block example2 as Relative(width=48%, height=100%)
 			Text(format=h6, value="No facets with heading")
 			Block(spacing=DP8, format=filledNoAir) block2
-				Table(itemClass="io.intino.alexandria.ui.documentation.Person") table2 as Selectable(multiple=false)
+				Table(itemClass="io.intino.alexandria.ui.documentation.Person", showTooltipForRows=true) table2 as Selectable(multiple=false)
 					Mold
 						Heading firstNameHeading > Text(value="first name")
 						Item(height=60px,relativeWidth=30%) table21Mold > Text firstName
