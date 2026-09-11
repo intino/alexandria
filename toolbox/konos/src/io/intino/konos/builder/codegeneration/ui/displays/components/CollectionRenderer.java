@@ -33,6 +33,8 @@ public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 		if (element.noItemsMessage() != null) result.add("noItemsMessage", element.noItemsMessage());
 		if (element.noItemsFoundMessage() != null) result.add("noItemsFoundMessage", element.noItemsFoundMessage());
 		if (element.i$(CatalogComponents.Grid.class)) result.add("showToolbar", element.a$(CatalogComponents.Grid.class).showToolbar());
+		if (element.i$(CatalogComponents.Table.class) && element.a$(CatalogComponents.Table.class).showTooltipForRows()) result.add("showTooltipForRows", element.a$(CatalogComponents.Table.class).showTooltipForRows());
+		if (element.i$(CatalogComponents.Grid.class) && element.a$(CatalogComponents.Grid.class).showTooltipForRows()) result.add("showTooltipForRows", element.a$(CatalogComponents.Grid.class).showTooltipForRows());
 		addColumns(result);
 		return result;
 	}
