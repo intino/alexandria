@@ -94,7 +94,7 @@ export default class BaseDialog extends AbstractBaseDialog {
 			marginTop: "74px"
 		},
 		content: {
-			padding: "18px 20px 20px !important",
+			padding: "18px 20px 10px !important",
 			background: `${containerPalette(theme).surface} !important`,
 			color: containerPalette(theme).text,
 		},
