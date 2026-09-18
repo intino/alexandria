@@ -79,7 +79,19 @@ class Text extends AbstractText {
 	};
 
 	valueStyle() {
-		return {...this.style(), ...this.highlightBackgroundStyle(), ...this.highlightStyle()};
+		const highlighted = this.state.highlighted;
+		return {
+			...this.style(),
+			...(highlighted != null && highlighted.accent != null ? { background: highlighted.accent } : {}),
+			...(highlighted != null && highlighted.text != null ? { color: highlighted.text } : {}),
+			...(highlighted != null ? {
+				display: "inline-flex",
+				alignItems: "center",
+				borderRadius: "999px",
+				padding: "2px 9px",
+				lineHeight: 1.35
+			} : {})
+		};
 	};
 
 }

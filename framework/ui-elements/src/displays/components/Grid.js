@@ -17,7 +17,7 @@ import {
     TableRow,
     Tooltip
 } from '@mui/material';
-import {ArrowDownward, ArrowUpward} from '@mui/icons-material';
+import {ArrowDownward, ArrowUpward, NavigateBefore, NavigateNext} from '@mui/icons-material';
 import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
 import AbstractGrid from "../../../gen/displays/components/AbstractGrid";
 import GridNotifier from "../../../gen/displays/notifiers/GridNotifier";
@@ -144,12 +144,12 @@ const styles = theme => ({
         },
     },
     rowTooltip: {
-        maxWidth: "min(520px, calc(100vw - 32px))",
+        maxWidth: "calc(100vw - 32px)",
         maxHeight: "min(320px, calc(100vh - 48px))",
         padding: "10px 12px",
         boxSizing: "border-box",
         overflowX: "hidden",
-        overflowY: "auto",
+        overflowY: "hidden",
         border: theme.palette.mode === "dark" ? "1px solid rgba(148,163,184,0.24)" : "1px solid rgba(15,23,42,0.14)",
         backgroundColor: theme.palette.mode === "dark" ? "rgba(15,23,42,0.98)" : "rgba(255,255,255,0.98)",
         color: theme.palette.mode === "dark" ? "#ffffff" : "#1e293b",
@@ -173,6 +173,25 @@ const styles = theme => ({
         padding: "3px 0",
         lineHeight: 1.35,
     },
+    rowTooltipScrollable: {
+        maxHeight: "calc(min(320px, calc(100vh - 48px)) - 70px)",
+        overflowX: "hidden",
+        overflowY: "auto",
+        paddingRight: "4px",
+        "&::-webkit-scrollbar": {
+            width: "6px",
+        },
+        "&::-webkit-scrollbar-thumb": {
+            borderRadius: "999px",
+            backgroundColor: theme.palette.mode === "dark" ? "rgba(148,163,184,0.42)" : "rgba(71,85,105,0.35)",
+        },
+    },
+    rowTooltipTitle: {
+        marginBottom: "6px",
+        color: theme.palette.mode === "dark" ? "#ffffff" : "#1e293b",
+        fontSize: "0.84rem",
+        fontWeight: 800,
+    },
     rowTooltipLabel: {
         color: theme.palette.mode === "dark" ? "rgba(226,232,240,0.7)" : "rgba(51,65,85,0.68)",
         fontSize: "0.75rem",
@@ -182,6 +201,22 @@ const styles = theme => ({
         color: theme.palette.mode === "dark" ? "#ffffff" : "#1e293b",
         fontSize: "0.78rem",
         overflowWrap: "anywhere",
+    },
+    rowTooltipNavigation: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "8px",
+        marginTop: "8px",
+        paddingTop: "8px",
+        borderTop: theme.palette.mode === "dark" ? "1px solid rgba(148,163,184,0.2)" : "1px solid rgba(15,23,42,0.1)",
+    },
+    rowTooltipPosition: {
+        minWidth: "76px",
+        textAlign: "center",
+        color: theme.palette.mode === "dark" ? "rgba(226,232,240,0.78)" : "rgba(51,65,85,0.72)",
+        fontSize: "0.75rem",
+        fontWeight: 700,
     },
     link : {
         color: linkPalette(theme).color,
@@ -290,6 +325,7 @@ class Grid extends AbstractGrid {
             viewportWidth: 0,
             viewportHeight: 0,
             tooltipRowIndex: null,
+            tooltipAnchorRowIndex: null,
         };
     };
 
@@ -523,14 +559,15 @@ class Grid extends AbstractGrid {
         const theme = Theme.get();
         const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
         const showTooltipForRows = this.showTooltipForRows();
-        const tooltipOpen = this.state.tooltipRowIndex === rowIndex;
+        const tooltipColumns = this.rowTooltipColumns(columns);
+        const tooltipOpen = this.state.tooltipAnchorRowIndex === rowIndex;
         const gridRow = (
             <TableRow key={rowIndex}
                 hover
                 className={classes.gridRow}
                 onMouseEnter={showTooltipForRows ? this.showRowTooltip.bind(this, rowIndex) : undefined}
                 onMouseOver={showTooltipForRows ? this.showRowTooltip.bind(this, rowIndex) : undefined}
-                onMouseLeave={showTooltipForRows ? this.hideRowTooltip : undefined}
+                onMouseLeave={showTooltipForRows ? this.hideRowTooltip.bind(this, rowIndex) : undefined}
             >
                 {showCheckbox &&
                     <TableCell padding="checkbox" style={{
@@ -558,14 +595,14 @@ class Grid extends AbstractGrid {
         return (
             <Tooltip
                 key={rowIndex}
-                title={this.renderRowTooltip(columns, row)}
+                title={this.renderRowTooltip(tooltipColumns, row, rowIndex)}
                 placement="bottom-start"
                 arrow
                 enterDelay={0}
                 leaveDelay={0}
                 open={tooltipOpen}
                 classes={{ tooltip: classes.rowTooltip, arrow: classes.rowTooltipArrow }}
-                slotProps={{ tooltip: { onMouseEnter: this.keepRowTooltipOpen, onMouseLeave: this.hideRowTooltip } }}
+                slotProps={{ tooltip: { style: this.rowTooltipStyle(), onMouseEnter: this.keepRowTooltipOpen, onMouseLeave: this.hideRowTooltip.bind(this, rowIndex) } }}
             >
                 {gridRow}
             </Tooltip>
@@ -598,22 +635,28 @@ class Grid extends AbstractGrid {
 
     showRowTooltip = (rowIndex) => {
         this.keepRowTooltipOpen();
-        if (this.state.tooltipRowIndex === rowIndex) return;
+        if (this.state.tooltipRowIndex === rowIndex && this.state.tooltipAnchorRowIndex === rowIndex) return;
         if (this.rowTooltipTimer != null) {
             window.clearTimeout(this.rowTooltipTimer);
             this.rowTooltipTimer = null;
         }
         this.rowTooltipTimer = window.setTimeout(() => {
             this.rowTooltipTimer = null;
-            this.setState({tooltipRowIndex: rowIndex});
+            this.setState({tooltipRowIndex: rowIndex, tooltipAnchorRowIndex: rowIndex});
         }, 350);
     };
 
-    hideRowTooltip = () => {
+    hideRowTooltip = (rowIndex) => {
+        if (this.rowTooltipTimer != null) {
+            window.clearTimeout(this.rowTooltipTimer);
+            this.rowTooltipTimer = null;
+        }
+        const anchorIndex = this.state.tooltipAnchorRowIndex;
+        if (anchorIndex == null) return;
         if (this.rowTooltipCloseTimer != null) window.clearTimeout(this.rowTooltipCloseTimer);
         this.rowTooltipCloseTimer = window.setTimeout(() => {
             this.rowTooltipCloseTimer = null;
-            this.closeRowTooltip();
+            this.closeRowTooltip(anchorIndex);
         }, 150);
     };
 
@@ -624,40 +667,92 @@ class Grid extends AbstractGrid {
         }
     };
 
-    closeRowTooltip = () => {
+    closeRowTooltip = (rowIndex) => {
+        if (rowIndex != null && this.state.tooltipAnchorRowIndex !== rowIndex) return;
         if (this.rowTooltipTimer != null) {
             window.clearTimeout(this.rowTooltipTimer);
             this.rowTooltipTimer = null;
         }
-        if (this.state.tooltipRowIndex != null) this.setState({tooltipRowIndex: null});
+        if (this.state.tooltipRowIndex != null) this.setState({tooltipRowIndex: null, tooltipAnchorRowIndex: null});
+    };
+
+    moveRowTooltip = (direction) => {
+        const currentIndex = this.state.tooltipRowIndex;
+        const nextIndex = currentIndex != null ? currentIndex + direction : null;
+        if (nextIndex == null || nextIndex < 0 || nextIndex >= this.state.rows.length) return;
+        this.keepRowTooltipOpen();
+        this.setState({tooltipRowIndex: nextIndex});
+    };
+
+    handleRowTooltipControlMouseDown = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        this.keepRowTooltipOpen();
     };
 
     showTooltipForRows = () => {
         return this.props.showTooltipForRows === true || this.props.showTooltipForRows === "true";
     };
 
-    rowTooltipValues = (columns, row) => {
-        return columns
-            .filter((column) => !this.isIconColumn(column))
-            .map((column) => {
-                const value = this.rowValue(row[column.key]);
-                const numericColumnInfo = this._getNumericColumnInfo(column.key);
-                const formattedValue = this._formatNumericValue(value, column, numericColumnInfo);
-                return formattedValue != null && formattedValue !== "" ? { label: column.name, value: formattedValue } : null;
-            })
-            .filter((value) => value != null)
+    rowTooltipStyle = () => {
+        const width = this.gridViewportContainerRef.current != null ? this.gridViewportContainerRef.current.clientWidth : 0;
+        return {
+            width: width > 0 ? `min(${width}px, calc(100vw - 32px))` : "min(720px, calc(100vw - 32px))",
+            maxWidth: "calc(100vw - 32px)",
+        };
     };
 
-    renderRowTooltip = (columns, row) => {
+    rowTooltipColumns = (columns) => {
+        return columns
+            .filter((column) => !this.isIconColumn(column))
+            .map((column) => ({key: column.key, label: column.name, column}));
+    };
+
+    rowTooltipValues = (columns, row) => {
+        return columns
+            .map(({key, label, column}) => {
+                const value = this.rowValue(row[key]);
+                const numericColumnInfo = this._getNumericColumnInfo(key);
+                const formattedValue = this._formatNumericValue(value, column, numericColumnInfo);
+                return {label, value: formattedValue != null ? formattedValue : ""};
+            });
+    };
+
+    renderRowTooltip = (columns, row, rowIndex) => {
         const { classes } = this.props;
+        const rowCount = this.state.rows.length;
+        const tooltipRowIndex = this.state.tooltipRowIndex != null ? this.state.tooltipRowIndex : rowIndex;
+        const tooltipRow = this.state.rows[tooltipRowIndex] != null ? this.state.rows[tooltipRowIndex] : row;
         return (
             <div>
-                {this.rowTooltipValues(columns, row).map((entry) =>
-                    <div className={classes.rowTooltipEntry} key={entry.label}>
-                        <span className={classes.rowTooltipLabel}>{entry.label}</span>
-                        <span className={classes.rowTooltipValue}>{entry.value}</span>
-                    </div>
-                )}
+                <div className={classes.rowTooltipScrollable}>
+                    <div className={classes.rowTooltipTitle}>{`${this.translate("Row")} ${tooltipRowIndex + 1}`}</div>
+                    {this.rowTooltipValues(columns, tooltipRow).map((entry) =>
+                        <div className={classes.rowTooltipEntry} key={entry.label}>
+                            <span className={classes.rowTooltipLabel}>{entry.label}</span>
+                            <span className={classes.rowTooltipValue}>{entry.value}</span>
+                        </div>
+                    )}
+                </div>
+                <div className={classes.rowTooltipNavigation} onMouseEnter={this.keepRowTooltipOpen} onMouseDown={this.handleRowTooltipControlMouseDown}>
+                    <IconButton
+                        size="small"
+                        aria-label={this.translate("Previous row")}
+                        disabled={tooltipRowIndex <= 0}
+                        onClick={() => this.moveRowTooltip(-1)}
+                    >
+                        <NavigateBefore fontSize="small" />
+                    </IconButton>
+                    <span className={classes.rowTooltipPosition}>{`${tooltipRowIndex + 1} / ${rowCount}`}</span>
+                    <IconButton
+                        size="small"
+                        aria-label={this.translate("Next row")}
+                        disabled={tooltipRowIndex >= rowCount - 1}
+                        onClick={() => this.moveRowTooltip(1)}
+                    >
+                        <NavigateNext fontSize="small" />
+                    </IconButton>
+                </div>
             </div>
         );
     };
