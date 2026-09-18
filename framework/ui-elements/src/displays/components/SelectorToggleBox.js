@@ -31,7 +31,7 @@ class SelectorToggleBox extends AbstractSelectorToggleBox {
 		if (children.length <= 0) return (<div></div>);
 		return (
             <ToggleButtonGroup exclusive={!multi} orientation={this.props.layout.toLowerCase()}
-                               style={this.style()} size={this._size()}
+                               style={{...this.style(), ...this.highlightBackgroundStyle(), ...this.highlightStyle()}} size={this._size()}
                                value={this.state.selection} onChange={this.handleChange.bind(this)}>
 				{React.Children.map(children, (child, i) => { return this.renderChild(child, i); })}
             </ToggleButtonGroup>

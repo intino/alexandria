@@ -22,6 +22,7 @@ public class FormExamplesMold extends AbstractFormExamplesMold<UiFrameworkBox> {
 	@Override
 	public void init() {
 		super.init();
+		editableText1.highlight("yellow");
 		editableText1.onChange(e -> text1.value(e.value()));
 		editableText2.onChange(e -> text2.value(e.value()));
 		editableText3.onChange(e -> text3.value(e.value()));
@@ -32,24 +33,33 @@ public class FormExamplesMold extends AbstractFormExamplesMold<UiFrameworkBox> {
 		editableText7.onChange(e -> text7.value(e.value()));
 		editableText7.error("Lorem ipsum dolor sit amet");
 		editableText8.onChange(e -> text8.value(e.value()));
+		editableMemo1.highlight("yellow");
 		editableMemo1.onChange(e -> memo1.value(e.value()));
 		editableMemo2.onChange(e -> memo2.value(e.value()));
+		editableNumber1.highlight("yellow");
 		editableNumber1.onChange(e -> number1.value(e.value()));
 		editableNumber2.onChange(e -> number2.value(e.value()));
 		number3.error("Lorem ipsum dolor sit amet");
 		editableNumber3.onChange(e -> number3.value(e.value()));
 		editableNumber3.error("Lorem ipsum dolor sit amet");
+		editableDate1.highlight("yellow");
 		editableDate1.onChange(e -> date1.value(e.value()));
 		editableDate2.onChange(e -> date2.value(e.value()));
 		editableDate3.onChange(e -> date3.value(e.value()));
 //		editableDate4.onChange(e -> date4.value(e.value()));
+		editableImage1.highlight("yellow");
 		editableImage1.onChange(e -> update(e, image1, editableImage1));
 		editableImage2.onChange(e -> update(e, image2, editableImage2));
+		editableImage3.highlight("yellow");
 		editableImage3.onChange(e -> update(e, image3, editableImage3));
 		editableImage4.onChange(e -> update(e, image4, editableImage4));
 		editableImage5.onChange(e -> update(e, image5, editableImage5));
 		//editableFile1.maxSize(100);
+		editableFile1.highlight("yellow");
 		editableFile1.onChange(e -> update(e, file1, editableFile1));
+		editableFile2.highlight("yellow");
+		editableFile3.highlight("yellow");
+		editableSelector1.highlight("yellow");
 		editableSelector1.onSelect(e -> {
 			if (e.selection().isEmpty()) selector1.select();
 			else selector1.select(firstLowerCase(((String) e.selection().get(0)).replace("editable", "")));

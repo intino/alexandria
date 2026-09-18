@@ -62,9 +62,9 @@ class Text extends AbstractText {
 				{this.props.prefix !== undefined ? <Typography variant={variant} className={classes.prefix}>{this.props.prefix}:</Typography> : undefined }
                 {this._requireEllipsis(value) ?
                     <Tooltip title={this.state.title} placement="top">
-                        <Typography variant={variant} className={classes.value} style={this.style()}>{value}</Typography>
+                        <Typography variant={variant} className={classes.value} style={this.valueStyle()}>{value}</Typography>
                     </Tooltip> :
-                    <Typography variant={variant} className={classes.value} style={this.style()}>{value}</Typography>
+                    <Typography variant={variant} className={classes.value} style={this.valueStyle()}>{value}</Typography>
                 }
 				{this.props.suffix !== undefined ? <Typography variant="caption" className={classes.suffix}>{this.props.suffix}</Typography> : undefined}
 			</Block>
@@ -75,12 +75,11 @@ class Text extends AbstractText {
 		var result = super.style();
 		if (this.props.color != null) result.color = this.props.color;
 		if (this.state.color != null) result.color = this.state.color;
-		if (!this.state.highlighted) return result;
-		result.color = this.state.highlighted.text;
-		result.background = this.state.highlighted.background;
-		if (result.padding == null) result.padding = "0 10px";
-		if (result.borderRadius == null) result.borderRadius = "3px";
 		return result;
+	};
+
+	valueStyle() {
+		return {...this.style(), ...this.highlightBackgroundStyle(), ...this.highlightStyle()};
 	};
 
 }

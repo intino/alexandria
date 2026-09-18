@@ -218,11 +218,11 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
                         {label != null && label !== "" ? this.translate(label) : ""}
                     </label>
 
-                    <div className={inputClasses} style={{width:"100%"}}>
+                    <div className={inputClasses} style={{width:"100%", position:"relative"}}>
                         <OutlinedInput style={{display:"none"}}></OutlinedInput>
                         <InputLabel style={{display:"none"}}></InputLabel>
 
-                        <Select ref={this.searchComponent} isMulti={multiple} isDisabled={this.state.readonly} isSearchable
+                        <Select ref={this.searchComponent} isMulti={multiple} isDisabled={this.state.readonly} isSearchable highlighted={this.state.highlighted}
                                 closeMenuOnSelect={!multiple} autoFocus={this.props.focused} menuIsOpen={this.state.opened}
                                 placeholder={this.selectMessage()}
                                 className="basic-multi-select" classNamePrefix="select"
@@ -266,11 +266,25 @@ class SelectorCollectionBox extends AbstractSelectorCollectionBox {
                                 <legend className="PrivateNotchedOutline-legendLabelled-48 PrivateNotchedOutline-legendNotched-49"><span>{this.translate(label)}</span></legend>
                             }
                         </fieldset>
+                        {this.renderHighlightSurface()}
                     </div>
                 </div>
                 {this.props.allowOther && !this.state.readonly && <div className="layout vertical end"><a className={classes.other} onClick={this.handleAllowOther.bind(this)}>{label != null ? this.translate("Add") + " " + this.translate(label).toLowerCase() : this.translate("Add other")}</a></div>}
             </div>
         );
+    };
+
+    renderHighlightSurface = () => {
+        if (this.state.highlighted == null) return null;
+        return <div style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 2,
+            pointerEvents: "none",
+            borderRadius: "16px",
+            ...this.highlightBackgroundStyle(),
+            ...this.highlightStyle()
+        }}/>;
     };
 
     renderOption = (options) => {

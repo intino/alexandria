@@ -269,7 +269,7 @@ class FileEditable extends AbstractFile {
 		return (
 			<div style={{position:'relative'}}>
 				{this.state.readonly && <div className={classes.readonlyDropzone}></div>}
-					<div className={classnames("fileeditable-surface", classes.surface, !this.state.readonly ? classes.editableSurface : undefined, this.state.readonly ? classes.readonlySurface : undefined, this.state.readonly ? "fileeditable-surface-readonly" : undefined)}>
+				<div className={classnames("fileeditable-surface", classes.surface, !this.state.readonly ? classes.editableSurface : undefined, this.state.readonly ? classes.readonlySurface : undefined, this.state.readonly ? "fileeditable-surface-readonly" : undefined)}>
 					<DropzoneArea
 						key={this.state.key}
 						Icon={Add}
@@ -293,6 +293,7 @@ class FileEditable extends AbstractFile {
 						onChange={(files) => { for (let i=0; i<files.length; i++) this.saveFile(files[i], files[i].name); }}
 					/>
 				</div>
+				{this.renderHighlightSurface()}
 			</div>
 		);
 	};
@@ -317,22 +318,39 @@ class FileEditable extends AbstractFile {
 		if (!this.props.pasteZone) return (<React.Fragment/>);
 		const { classes } = this.props;
 		return (
-			<input className={classnames("alex-fileeditable-paste-input", this.state.readonly ? "alex-fileeditable-paste-input-readonly" : undefined, classes.pasteInput, this.state.readonly ? classes.readonlyPasteInput : undefined)}
-			       placeholder={!this.state.readonly ? this.translate("Paste content here from clipboard") : ""}
-			       disabled={this.state.readonly ? true : undefined}
-			       readOnly
-			       onPaste={this.handlePaste.bind(this)}
-			       defaultValue="" ></input>
+			<div style={{position: "relative", isolation: "isolate", marginTop: "5px"}}>
+				<input className={classnames("alex-fileeditable-paste-input", this.state.readonly ? "alex-fileeditable-paste-input-readonly" : undefined, classes.pasteInput, this.state.readonly ? classes.readonlyPasteInput : undefined)}
+				       placeholder={!this.state.readonly ? this.translate("Paste content here from clipboard") : ""}
+				       disabled={this.state.readonly ? true : undefined}
+				       readOnly
+				       onPaste={this.handlePaste.bind(this)}
+				       defaultValue=""
+				       style={{marginTop: 0, display: "block", width: "100%", position: "relative", zIndex: 0}}></input>
+				{this.renderHighlightSurface(1)}
+			</div>
 		);
 	};
 
 	_renderInput = () => {
 		return (
-			<React.Fragment>
+			<div style={{position: "relative", display: "inline-flex", alignItems: "center", ...this.highlightBackgroundStyle(), ...this.highlightStyle()}}>
 				{(this.state.readonly || this.state.value != null) && this._renderInputValue()}
 				{(!this.state.readonly && this.state.value == null) && this._renderInputField()}
-			</React.Fragment>
+			</div>
 		);
+	};
+
+	renderHighlightSurface = (zIndex = 20) => {
+		if (this.state.highlighted == null) return null;
+		return <div style={{
+			position: "absolute",
+			inset: 0,
+			zIndex,
+			pointerEvents: "none",
+			borderRadius: "16px",
+			...this.highlightBackgroundStyle(),
+			...this.highlightStyle()
+		}}/>;
 	};
 
 	_renderInputValue = () => {

@@ -54,10 +54,10 @@ class Number extends AbstractNumber {
 		if (value == null || value === "" || !this.state.visible) return (<React.Fragment/>);
 
 		return (
-			<Block layout="horizontal center" style={this.style()}>
+			<Block layout="horizontal center">
 				{ ComponentBehavior.labelBlock(this.props, 'body1', {...this.style(),margin:'0 5px 0 0'}) }
 				{this.state.prefix !== undefined ? <Typography variant="caption" className={classes.prefix}>{this.translate(this.state.prefix)}</Typography> : undefined }
-				<Typography className={classnames(expandedClass, classes.value)} onClick={this.handleToggleExpanded.bind(this)} variant={variant} style={this.style()}>{NumberUtil.format(value, this.translate(format))}</Typography>
+				<Typography className={classnames(expandedClass, classes.value)} onClick={this.handleToggleExpanded.bind(this)} variant={variant} style={{...this.style(), ...this.highlightBackgroundStyle(), ...this.highlightStyle()}}>{NumberUtil.format(value, this.translate(format))}</Typography>
 				{ this.state.suffix !== undefined ? <Typography variant="caption" className={classes.suffix}>{this.translate(this.state.suffix)}</Typography> : undefined }
 			</Block>
 		);

@@ -191,8 +191,9 @@ class DateEditable extends AbstractDateEditable {
 		const theme = runtimeTheme;
 		const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
 			return (
-				<div style={{...this.style(),position:'relative'}} className={classNames("date-editable", classes.container, !this.state.readonly ? classes.editable : undefined, this.state.readonly ? "readonly" : undefined, isDark ? "dark" : undefined)}>
+				<div style={{...this.style(), position:'relative'}} className={classNames("date-editable", classes.container, !this.state.readonly ? classes.editable : undefined, this.state.readonly ? "readonly" : undefined, isDark ? "dark" : undefined)}>
                 {!this.state.readonly && <div id={this.props.id + "-error"} className={classes.error} style={{display:'none'}}></div>}
+				<div style={{position: "relative"}}>
 				{ !showTimePicker ? <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={Application.configuration.language}>
                                     <DatePicker
                                             format={pattern} className={classes.date}
@@ -224,6 +225,8 @@ class DateEditable extends AbstractDateEditable {
                                 </LocalizationProvider>
                              : undefined
                 }
+					{this.renderHighlightSurface(palette.borderRadius)}
+				</div>
 				{(!this.state.readonly && this.props.allowEmpty) && <FormControlLabel control={<Checkbox disabled={this.state.readonly} checked={this.state.empty} onChange={this.handleAllowEmpty.bind(this)} />} label={this.translate("sin definir")} />}
 			</div>
 		);
@@ -231,6 +234,19 @@ class DateEditable extends AbstractDateEditable {
 
 	_variant = () => {
 	    return this._isEmbedded() ? "static" : "inline";
+	};
+
+	renderHighlightSurface = (borderRadius) => {
+		if (this.state.highlighted == null) return null;
+		return <div style={{
+			position: "absolute",
+			inset: 0,
+			zIndex: 2,
+			pointerEvents: "none",
+			borderRadius,
+			...this.highlightBackgroundStyle(),
+			...this.highlightStyle()
+		}}/>;
 	};
 
 	_isEmbedded = () => {

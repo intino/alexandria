@@ -204,17 +204,26 @@ class ImageEditable extends AbstractImageEditable {
 		const dropzoneClass = this.state.readonly
 			? (isDark ? "fileeditable-dropzone-readonly-dark" : "fileeditable-dropzone-readonly")
 			: (isDark ? "fileeditable-dropzone-dark" : "fileeditable-dropzone");
+		const controlsStyle = {
+			marginTop: '4px',
+			zIndex: 6,
+			position: 'relative',
+			...(!this.state.showPreview ? this.highlightBackgroundStyle() : {}),
+			...(!this.state.showPreview ? this.highlightStyle() : {})
+		};
 
 			return (
 				<div style={{position:'relative',...this.style()}} className={classnames("image-editable layout ", this.state.showPreview ? "vertical" : "horizontal center", isDark ? "dark" : undefined, this.state.readonly ? "readonly" : undefined)}>
 			    { ComponentBehavior.labelBlock(this.props, "body1", { marginRight: '15px', color: theme.palette.grey.primary, fontSize: this.state.showPreview ? "9pt" : "14pt" }) }
 				{this.state.showPreview &&
-					<label htmlFor={inputId} className={classnames(classes.surface, classes.overlay, dropzoneClass, !this.state.value ? classes.emptySurface : undefined, this.state.readonly ? classes.disabledOverlay : undefined, this.state.readonly ? classes.readonlySurface : undefined, !this.state.value ? classes.borderedOverlay : undefined)} style={{display:'flex',cursor: this.state.readonly ? 'default' : 'pointer',...darkSurfaceStyle,...this.sizeStyle()}} >
-						{this.state.showPreview && !showImageGallery && this.state.value && <img className={classnames(classes.image, this.state.readonly ? classes.disabledImage : undefined)} alt={this.props.label} title={this.props.label} src={url} style={this.sizeStyle()}/>}
+					<label htmlFor={inputId} className={classnames(classes.surface, classes.overlay, dropzoneClass, !this.state.value ? classes.emptySurface : undefined, this.state.readonly ? classes.disabledOverlay : undefined, this.state.readonly ? classes.readonlySurface : undefined, !this.state.value ? classes.borderedOverlay : undefined)} style={{display:'flex',cursor: this.state.readonly ? 'default' : 'pointer',position:'relative',...darkSurfaceStyle,...this.sizeStyle()}} >
+						{this.renderHighlightSurface()}
+						{this.state.showPreview && !showImageGallery && this.state.value && <img className={classnames(classes.image, this.state.readonly ? classes.disabledImage : undefined)} alt={this.props.label} title={this.props.label} src={url} style={{...this.sizeStyle(), zIndex: 1}}/>}
 					</label>
 				}
 			    {(this.state.showPreview && showImageGallery && this.state.value != null) &&
 					<div className={classnames(classes.surface, classes.image, dropzoneClass, this.state.readonly ? classes.disabledImage : undefined, this.state.readonly ? classes.readonlySurface : undefined)} style={{top: this.props.label != null && this.props.label !== "" ? '19px' : '0',...darkSurfaceStyle,...this.sizeStyle()}} >
+						{this.renderHighlightSurface()}
 						<ImageGallery items={[this._galleryItems()]} showThumbnails={false} showBullets={false} showPlayButton={false} renderFullscreenButton={this.renderFullScreen.bind(this)}/>
 					</div>
 				}
@@ -223,7 +232,7 @@ class ImageEditable extends AbstractImageEditable {
 					   className={classes.input} onChange={this.handleChange.bind(this)}
 					   disabled={this.state.readonly} value="" />
 				</React.Fragment>
-				<div style={{marginTop:'4px',zIndex:'6',position:'relative'}}>
+				<div style={controlsStyle}>
 					{(this.state.readonly && !this.state.value && !this.state.showPreview) && <div className={classes.empty}>{this.translate("No image")}</div>}
 					{(!this.state.readonly && !this.state.value) && <a className={classes.link} onClick={this.handleEdit.bind(this)}>{this.translate("Select")}</a>}
 					{!this.state.showPreview && this.state.value && <a className={classes.link} onClick={this.handlePreview.bind(this)}>{this.translate("Preview")}</a>}
@@ -232,6 +241,19 @@ class ImageEditable extends AbstractImageEditable {
 				</div>
 			</div>
 		);
+	};
+
+	renderHighlightSurface = () => {
+		if (this.state.highlighted == null) return null;
+		return <div style={{
+			position: "absolute",
+			inset: 0,
+			zIndex: 2,
+			pointerEvents: "none",
+			borderRadius: "inherit",
+			...this.highlightBackgroundStyle(),
+			...this.highlightStyle()
+		}}/>;
 	};
 
 	_galleryItems = () => {

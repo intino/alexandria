@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.schemas.Highlight;
 import io.intino.alexandria.schemas.LocationCenter;
 import io.intino.alexandria.schemas.LocationSetup;
 import io.intino.alexandria.schemas.LocationZoomRange;
@@ -21,6 +22,19 @@ public class BaseLocation<DN extends BaseLocationNotifier, B extends Box> extend
 
     public Geometry value() {
         return value;
+    }
+
+    public BaseLocation<DN, B> highlight(String textColor, String backgroundColor) {
+        notifier.refreshHighlight(new Highlight().textColor(textColor).backgroundColor(backgroundColor));
+        return this;
+    }
+
+    public BaseLocation<DN, B> highlight(String color) {
+        return highlight(null, color);
+    }
+
+    public BaseLocation<DN, B> clearHighlight() {
+        return highlight(null, null);
     }
 
     public BaseLocation<DN, B> value(String value) {

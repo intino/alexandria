@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.schemas.Highlight;
 import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.PropertyList;
@@ -13,8 +14,8 @@ import io.intino.alexandria.ui.displays.events.SelectionListener;
 import io.intino.alexandria.ui.displays.notifiers.BaseSelectorNotifier;
 import io.intino.alexandria.ui.displays.notifiers.TextNotifier;
 
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Box> extends AbstractBaseSelector<DN, B> implements io.intino.alexandria.ui.displays.components.selector.Selector, Addressable {
@@ -56,6 +57,19 @@ public abstract class BaseSelector<DN extends BaseSelectorNotifier, B extends Bo
     public BaseSelector<DN, B> focus() {
         notifier.refreshFocused(true);
         return this;
+    }
+
+    public BaseSelector<DN, B> highlight(String textColor, String backgroundColor) {
+        notifier.refreshHighlight(new Highlight().textColor(textColor).backgroundColor(backgroundColor));
+        return this;
+    }
+
+    public BaseSelector<DN, B> highlight(String color) {
+        return highlight(null, color);
+    }
+
+    public BaseSelector<DN, B> clearHighlight() {
+        return highlight(null, null);
     }
 
     @Override

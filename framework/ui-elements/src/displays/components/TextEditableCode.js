@@ -99,7 +99,7 @@ class TextEditableCode extends AbstractTextEditableCode {
 
 		return (
 			<Suspense fallback={<div className="layout horizontal center-center" style={ {margin: "10px", height: "100%"} }><Spinner/></div>}>
-				<div style={this.style()} className={classnames("texteditable-code", isDark ? "dark" : undefined, this.state.readonly ? "readonly" : undefined, classes.container, containerClass)}><TextEditableCodeAce language={this.props.language} theme={editorTheme} className={classes.editor}
+				<div style={{...this.style(), ...this.highlightStyle()}} className={classnames("texteditable-code", isDark ? "dark" : undefined, this.state.readonly ? "readonly" : undefined, classes.container, containerClass)}><TextEditableCodeAce language={this.props.language} theme={editorTheme} className={classes.editor}
 															   width="100%" height="100%" readonly={this.state.readonly}
 															   value={value} onChange={this.handleChange.bind(this)}/></div>
 			</Suspense>

@@ -37,9 +37,10 @@ class TextCode extends AbstractTextCode {
 			const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
 		const style = {
 			...this.style(),
-			background: isDark ? "rgba(15,23,42,0.72)" : "#f4f4f4",
+			...this.highlightStyle(),
+			background: this.state.highlighted != null && this.state.highlighted.accent != null ? `color-mix(in srgb, ${this.state.highlighted.accent} 14%, ${isDark ? "rgba(15,23,42,0.72)" : "#f4f4f4"})` : (isDark ? "rgba(15,23,42,0.72)" : "#f4f4f4"),
 			border: isDark ? "1px solid rgba(148,163,184,0.22)" : "1px solid #ddd",
-			color: isDark ? "rgba(226,232,240,0.92)" : "inherit"
+			color: this.state.highlighted != null && this.state.highlighted.text != null ? this.state.highlighted.text : (isDark ? "rgba(226,232,240,0.92)" : "inherit")
 		};
 
 		return (

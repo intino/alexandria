@@ -31,7 +31,7 @@ class ImageAvatar extends AbstractImageAvatar {
 	render() {
 		const { classes } = this.props;
 		return (
-			<img className={classes.value} style={this.style()} title={this.props.label} src={this.state.value}/>
+			<img className={classes.value} style={{...this.style(), ...this.highlightBackgroundStyle(), ...this.highlightStyle()}} title={this.props.label} src={this.state.value}/>
 		);
 	};
 

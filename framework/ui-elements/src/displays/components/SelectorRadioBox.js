@@ -33,7 +33,7 @@ class SelectorRadioBox extends AbstractSelectorRadioBox {
 		const layout = this.props.layout != null ? "layout " + this.props.layout.toLowerCase() + " wrap" : "layout vertical";
 		this._index = -1;
 		return (
-			<FormControl component="fieldset" variant="outlined" style={{ border: '1px solid rgba(0, 0, 0, 0.23)', borderRadius: '4px', padding: '10px' }}>
+			<FormControl component="fieldset" variant="outlined" style={{...this.style(), ...this.highlightBackgroundStyle(), ...this.highlightStyle(), border: '1px solid rgba(0, 0, 0, 0.23)', borderRadius: '4px', padding: '10px' }}>
 				{label != null && label !== "" ? <FormLabel component="legend" className={classes.label}><Typography variant={this.variant("subtitle1")} style={{color:this.props.color}}>{this.translate(label)}</Typography></FormLabel> : undefined }
 				<RadioGroup className={layout} value={selected} onChange={this.handleSelect.bind(this)}>
 					{React.Children.map(children, (child, i) => { return this.renderItem(child); })}

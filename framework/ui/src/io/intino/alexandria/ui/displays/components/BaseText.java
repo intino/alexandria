@@ -38,6 +38,20 @@ public class BaseText<DN extends BaseTextNotifier, B extends Box> extends Abstra
         notifier.refreshError(error);
     }
 
+    public BaseText<DN, B> highlight(String textColor, String backgroundColor) {
+        _textColor(textColor);
+        _backgroundColor(backgroundColor);
+        return _refreshHighlight();
+    }
+
+    public BaseText<DN, B> highlight(String color) {
+        return highlight(null, color);
+    }
+
+    public BaseText<DN, B> clearHighlight() {
+        return highlight(null, null);
+    }
+
     protected BaseText<DN, B> _value(String value) {
         this.value = value;
         return this;
@@ -54,7 +68,6 @@ public class BaseText<DN extends BaseTextNotifier, B extends Box> extends Abstra
     }
 
     protected BaseText<DN, B> _refreshHighlight() {
-        if (textColor == null && backgroundColor == null) return this;
         notifier.refreshHighlight(new Highlight().textColor(textColor).backgroundColor(backgroundColor));
         return this;
     }

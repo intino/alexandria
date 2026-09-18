@@ -4,6 +4,7 @@ import io.intino.alexandria.MimeTypes;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.schemas.FileInfo;
+import io.intino.alexandria.schemas.Highlight;
 import io.intino.alexandria.ui.File;
 import io.intino.alexandria.ui.displays.notifiers.BaseFileNotifier;
 import io.intino.alexandria.ui.resources.Asset;
@@ -22,6 +23,19 @@ public class BaseFile<DN extends BaseFileNotifier, B extends Box> extends Abstra
 
     public URL value() {
         return value;
+    }
+
+    public BaseFile<DN, B> highlight(String textColor, String backgroundColor) {
+        notifier.refreshHighlight(new Highlight().textColor(textColor).backgroundColor(backgroundColor));
+        return this;
+    }
+
+    public BaseFile<DN, B> highlight(String color) {
+        return highlight(null, color);
+    }
+
+    public BaseFile<DN, B> clearHighlight() {
+        return highlight(null, null);
     }
 
     public void value(URL value) {

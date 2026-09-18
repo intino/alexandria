@@ -10,6 +10,7 @@ Component baseNumber
 	Notification refreshPrefix as Text
 	Notification refreshSuffix as Text
 	Notification refreshStyle as Text
+	Notification refreshHighlight as Object(Highlight)
 
 Component number as ExtensionOf(baseNumber)
 Component numberEditable as ExtensionOf(baseNumber)
@@ -21,6 +22,7 @@ Component numberEditable as ExtensionOf(baseNumber)
 Component baseDate
 	Notification refresh as DateTime
 	Notification refreshError as Text
+	Notification refreshHighlight as Object(Highlight)
 
 Component date as ExtensionOf(baseDate)
 	Notification refreshPattern as Text
@@ -55,6 +57,7 @@ Component textEditableCode as ExtensionOf(baseText)
 
 Component baseFile
 	Notification refresh as Object(FileInfo)
+	Notification refreshHighlight as Object(Highlight)
 Component file as ExtensionOf(baseFile)
 Component fileEditable as ExtensionOf(baseFile)
 	Notification refreshReadonly as Bool
@@ -69,6 +72,7 @@ Component fileEditable as ExtensionOf(baseFile)
 
 Component baseImage
 	Notification refresh as Object(ImageInfo)
+	Notification refreshHighlight as Object(Highlight)
 
 Component image as ExtensionOf(baseImage)
 Component imageAvatar as ExtensionOf(baseImage)
@@ -86,6 +90,7 @@ Component baseLocation
 	Notification refreshZoom as Integer
 	Notification refreshZoomRange as Object(LocationZoomRange)
 	Notification refreshCenter as Object(LocationCenter)
+	Notification refreshHighlight as Object(Highlight)
 
 Component location as ExtensionOf(baseLocation)
 Component locationEditable as ExtensionOf(baseLocation)

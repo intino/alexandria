@@ -36,7 +36,7 @@ class SelectorListBox extends AbstractSelectorListBox {
 		const palette = fieldPalette(theme);
 		const color = this.state.readonly ? theme.palette.grey.A700 : palette.textColor;
 		return (
-		    <div style={this.style()}>
+		    <div style={{...this.style(), ...this.highlightBackgroundStyle(), ...this.highlightStyle()}}>
                 {label != null && label !== "" ? <div className={classes.label} style={{color:color}}>{this.translate(label)}</div> : undefined }
                 {this.renderChildren()}
 		    </div>
