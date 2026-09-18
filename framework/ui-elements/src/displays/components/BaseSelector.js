@@ -1,6 +1,7 @@
 import React from "react";
 import AbstractBaseSelector from "../../../gen/displays/components/AbstractBaseSelector";
 import DisplayFactory from 'alexandria-ui-elements/src/displays/DisplayFactory';
+import {normalizeHighlight, withHighlight, withHighlightBackground} from "./Highlight";
 
 export default class BaseSelector extends AbstractBaseSelector {
 
@@ -12,8 +13,25 @@ export default class BaseSelector extends AbstractBaseSelector {
             readonly: this.props.readonly,
     		selection: this.traceValue() ? this.traceValue() : [],
     		hiddenOptions: [],
-    		options : null,
+			options : null,
+			highlighted: normalizeHighlight(this.props.highlighted),
 		};
+	};
+
+	refreshHighlight = (highlighted) => {
+		this.setState({ highlighted: normalizeHighlight(highlighted, this.props.highlighted) });
+	};
+
+	style() {
+		return super.style();
+	};
+
+	highlightStyle() {
+		return withHighlight({}, this.state.highlighted);
+	};
+
+	highlightBackgroundStyle() {
+		return withHighlightBackground({}, this.state.highlighted);
 	};
 
 	refreshReadonly = (readonly) => {

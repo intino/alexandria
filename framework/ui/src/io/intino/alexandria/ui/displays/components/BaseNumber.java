@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.schemas.Highlight;
 import io.intino.alexandria.ui.displays.notifiers.BaseNumberNotifier;
 
 public class BaseNumber<DN extends BaseNumberNotifier, B extends Box> extends AbstractBaseNumber<DN, B> {
@@ -40,6 +41,19 @@ public class BaseNumber<DN extends BaseNumberNotifier, B extends Box> extends Ab
     public BaseNumber<DN, B> error(String error) {
         notifier.refreshError(error);
         return this;
+    }
+
+    public BaseNumber<DN, B> highlight(String textColor, String backgroundColor) {
+        notifier.refreshHighlight(new Highlight().textColor(textColor).backgroundColor(backgroundColor));
+        return this;
+    }
+
+    public BaseNumber<DN, B> highlight(String color) {
+        return highlight(null, color);
+    }
+
+    public BaseNumber<DN, B> clearHighlight() {
+        return highlight(null, null);
     }
 
     public BaseNumber<DN, B> style(Style style) {

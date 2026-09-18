@@ -48,12 +48,12 @@ class Image extends AbstractImage {
 	render() {
 		if (!this.state.visible) return (<React.Fragment/>);
 		const value = this.value();
-		if (value == null) return (<div style={{...this.style(),position:'relative'}}></div>);
+		if (value == null) return (<div style={{...this.style(), ...this.highlightBackgroundStyle(), ...this.highlightStyle(), position:'relative'}}></div>);
 		const source = value + this.forceParameter();
 		const { classes } = this.props;
 		const imageClassName = [this.cssRuleSelectors(), classes.image].filter(Boolean).join(" ");
 		return (
-			<div style={{...this.style(),position:'relative'}} className={classes.surface}>
+			<div style={{...this.style(), ...this.highlightBackgroundStyle(), ...this.highlightStyle(), position:'relative'}} className={classes.surface}>
 				{this.props.allowFullscreen && <ImageGallery className={imageClassName} items={[this._galleryItems()]} showThumbnails={false} showBullets={false} showPlayButton={false} /> }
 				{!this.props.allowFullscreen && <img className={imageClassName} style={{height: "100%", width: "100%"}} alt={this.props.label} title={this.props.label} src={source}/> }
 			</div>

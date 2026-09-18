@@ -50,7 +50,7 @@ class SelectorMenu extends AbstractSelectorMenu {
 		const children = this.children();
 		this._index = -1;
 		return (
-			<List component="nav">
+			<List component="nav" style={{...this.style(), ...this.highlightBackgroundStyle(), ...this.highlightStyle()}}>
 				{React.Children.map(children, (child, i) => { return this.renderItem(child); })}
 			</List>
 		);

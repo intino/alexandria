@@ -72,16 +72,17 @@ export function selectorComboBoxStyles(theme) {
 	return {
 		control: (provided, state) => ({
 			...provided,
-			background: controlBackground,
+			background: state.selectProps.highlighted != null && state.selectProps.highlighted.accent != null ? `color-mix(in srgb, ${state.selectProps.highlighted.accent} 14%, ${controlBackground})` : controlBackground,
+			color: state.selectProps.highlighted != null && state.selectProps.highlighted.text != null ? state.selectProps.highlighted.text : provided.color,
 			borderRadius: "16px",
-			boxShadow: "none",
+			boxShadow: state.selectProps.highlighted != null && state.selectProps.highlighted.accent != null ? `inset 0 0 0 1px color-mix(in srgb, ${state.selectProps.highlighted.accent} 72%, transparent), 0 0 0 2px color-mix(in srgb, ${state.selectProps.highlighted.accent} 16%, transparent)` : "none",
 			minHeight: state.isMulti ? "52px" : "0",
 			height: state.isMulti ? "auto" : "52px",
-			borderColor: palette.borderColor,
+			borderColor: state.selectProps.highlighted != null && state.selectProps.highlighted.accent != null ? state.selectProps.highlighted.accent : palette.borderColor,
 			cursor: state.isDisabled ? "default" : provided.cursor,
 			":hover": {
-				background: state.isDisabled ? controlBackground : controlHoverBackground,
-				borderColor: state.isDisabled ? palette.borderColor : palette.hoverBorderColor,
+				background: state.isDisabled ? controlBackground : (state.selectProps.highlighted != null && state.selectProps.highlighted.accent != null ? `color-mix(in srgb, ${state.selectProps.highlighted.accent} 20%, ${controlHoverBackground})` : controlHoverBackground),
+				borderColor: state.isDisabled ? palette.borderColor : (state.selectProps.highlighted != null && state.selectProps.highlighted.accent != null ? state.selectProps.highlighted.accent : palette.hoverBorderColor),
 			},
 		}),
 		valueContainer: (provided, state) => ({
@@ -92,7 +93,7 @@ export function selectorComboBoxStyles(theme) {
 		}),
 		singleValue: (provided, state) => ({
 			...provided,
-			color: palette.textColor,
+			color: state.selectProps.highlighted != null && state.selectProps.highlighted.text != null ? state.selectProps.highlighted.text : palette.textColor,
 		}),
 		input: (provided) => ({
 			...provided,
@@ -256,11 +257,11 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 						{label != null && label !== "" ? this.translate(label) : ""}
 					</label>
 
-					<div className={inputClasses} style={{width:"100%"}}>
+					<div className={inputClasses} style={{width:"100%", position:"relative"}}>
 						<OutlinedInput style={{display:"none"}}></OutlinedInput>
 						<InputLabel style={{display:"none"}}></InputLabel>
 
-						<Select isMulti={multiple} isDisabled={this.state.readonly} isSearchable
+						<Select isMulti={multiple} isDisabled={this.state.readonly} isSearchable highlighted={this.state.highlighted}
 								ref={!this.state.readonly ? this.selectorRef : undefined}
 								closeMenuOnSelect={!multiple} autoFocus={this.props.focused}
 								placeholder={this.selectMessage()} options={items}
@@ -303,16 +304,38 @@ class SelectorComboBox extends AbstractSelectorComboBox {
 								})}
 						/>
 
-						<fieldset className="PrivateNotchedOutline-root-46 MuiOutlinedInput-notchedOutline">
+						<fieldset className="PrivateNotchedOutline-root-46 MuiOutlinedInput-notchedOutline" style={this.highlightOutlineStyle()}>
 							{(label != null && label !== "") &&
 								<legend className="PrivateNotchedOutline-legendLabelled-48 PrivateNotchedOutline-legendNotched-49"><span>{this.translate(label)}</span></legend>
 							}
+							{this.renderHighlightBackground()}
 						</fieldset>
 					</div>
 				</div>
 
 			</div>
 		);
+	};
+
+	renderHighlightBackground = () => {
+		if (this.state.highlighted == null) return null;
+		return <div style={{
+			position: "absolute",
+			inset: 0,
+			zIndex: 0,
+			pointerEvents: "none",
+			borderRadius: "inherit",
+			...this.highlightBackgroundStyle()
+		}}/>;
+	};
+
+	highlightOutlineStyle = () => {
+		const highlighted = this.state.highlighted;
+		if (highlighted == null || highlighted.accent == null) return {};
+		return {
+			...this.highlightStyle(),
+			borderColor: `color-mix(in srgb, ${highlighted.accent} 72%, var(--alex-field-border))`
+		};
 	};
 
 	items = () => {

@@ -99,6 +99,7 @@ Component baseSelector
 	Notification refreshReadonly as Bool
 	Notification refreshFocused as Bool
 	Notification refreshOptions as Text List
+	Notification refreshHighlight as Object(Highlight)
 	Request optionsRendered
 
 Component selectorMenu as ExtensionOf(baseSelector)

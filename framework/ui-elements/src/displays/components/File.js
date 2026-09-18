@@ -97,7 +97,7 @@ class File extends AbstractFile {
 			<div style={{height:"100%", width:"100%"}} className={classNames(classes.surface, "layout vertical flex")}>
 				<div className={classNames(classes.toolbar, "layout horizontal center")}></div>
 				<div className="layout vertical flex">
-					<div style={this.style()} className={classNames(classes.message, "layout vertical center-center")}>
+					<div style={{...this.style(), ...this.highlightStyle()}} className={classNames(classes.message, "layout vertical center-center")}>
 						<div className={classNames(classes.emptyState, "layout vertical center-center")}>
 							<div className={classes.emptyTitle}>{notAvailable}</div>
 							<Button sx={dialogPrimaryButtonStyles} variant="contained" color="primary" onClick={this._downloadFile.bind(this, file)}><SaveAltIcon style={{marginRight:"5px"}}/>{downloadTitle}</Button>
@@ -115,7 +115,7 @@ class File extends AbstractFile {
 		const notSupportedLinkMessage = this.translate("click here to download file");
 
 		return (
-			<object className={classes.value} style={this.style()} data={file} type="application/pdf" download={this.state.filename}>
+			<object className={classes.value} style={{...this.style(), ...this.highlightStyle()}} data={file} type="application/pdf" download={this.state.filename}>
 				<a href={this.state.filename}>{this.state.filename}</a>
 				<div className="layout horizontal center-center">
 					<p>{notSupportedMessage}</p>&nbsp;<a href={file} target="_blank">{notSupportedLinkMessage}</a>

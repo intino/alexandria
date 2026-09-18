@@ -1,4 +1,5 @@
 import AbstractBaseText from "../../../gen/displays/components/AbstractBaseText";
+import {normalizeHighlight, withHighlight, withHighlightBackground} from "./Highlight";
 
 export default class BaseText extends AbstractBaseText {
 
@@ -9,7 +10,7 @@ export default class BaseText extends AbstractBaseText {
 			error: null,
 			value : this.props.value,
 			title : this.props.value,
-            highlighted : this.props.highlighted,
+			highlighted : normalizeHighlight(this.props.highlighted),
         }
     };
 
@@ -23,21 +24,23 @@ export default class BaseText extends AbstractBaseText {
     };
 
     refreshHighlight = (highlighted) => {
-        this.setState({ highlighted: { text: this._textColor(highlighted), background: this._backgroundColor(highlighted) }});
+        this.setState({ highlighted: normalizeHighlight(highlighted, this.props.highlighted) });
     };
 
     _requireEllipsis = (value) => {
         return this.props.cropWithEllipsis != null && value != null && value.length > this.props.cropWithEllipsis;
     };
 
-    _textColor = (highlighted) => {
-        if (highlighted != null && highlighted.textColor != null) return highlighted.textColor;
-        return this.props.highlighted != null ? this.props.highlighted.text : null;
+    style() {
+        return super.style();
     };
 
-    _backgroundColor = (highlighted) => {
-        if (highlighted != null && highlighted.backgroundColor != null) return highlighted.backgroundColor;
-        return this.props.highlighted != null ? this.props.highlighted.background : null;
+    highlightStyle() {
+        return withHighlight({}, this.state.highlighted);
+    };
+
+    highlightBackgroundStyle() {
+        return withHighlightBackground({}, this.state.highlighted);
     };
 
 }

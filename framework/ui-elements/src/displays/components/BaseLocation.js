@@ -7,6 +7,7 @@ import PlaceMark from "./geo/PlaceMark";
 import SearchDialog from "./geo/SearchDialog";
 import GeoBehavior from "./behaviors/GeoBehavior";
 import 'alexandria-ui-elements/res/styles/layout.css';
+import {normalizeHighlight, withHighlight} from "./Highlight";
 
 const styles = theme => ({
 	map : {
@@ -28,8 +29,13 @@ export default class BaseLocation extends AbstractBaseLocation {
             icon: null,
             center: null,
             zoom: null,
+            highlighted: normalizeHighlight(this.props.highlighted),
         }
 	};
+
+    refreshHighlight = (highlighted) => {
+        this.setState({ highlighted: normalizeHighlight(highlighted, this.props.highlighted) });
+    };
 
 	renderLayer = (content) => {
 		const { classes } = this.props;
@@ -37,7 +43,7 @@ export default class BaseLocation extends AbstractBaseLocation {
 		window.setTimeout(() => this.resize(), 100);
 
 		return (
-			<div ref={this.container} className="layout flex" style={{position:'relative',height:"100%"}}>
+			<div ref={this.container} className="layout flex" style={withHighlight({position:'relative',height:"100%"}, this.state.highlighted)}>
 			    {this.renderSearch()}
 				<GoogleMap className={classes.map} zoom={GeoBehavior.zoom(this).defaultZoom}
 						   center={GeoBehavior.center(this)} options={this.mapOptions()}

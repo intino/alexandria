@@ -1,5 +1,5 @@
-import React from "react";
 import AbstractBaseNumber from "../../../gen/displays/components/AbstractBaseNumber";
+import {normalizeHighlight, withHighlight, withHighlightBackground} from "./Highlight";
 
 export default class BaseNumber extends AbstractBaseNumber {
 
@@ -14,7 +14,24 @@ export default class BaseNumber extends AbstractBaseNumber {
 			prefix : this.props.prefix,
 			suffix : this.props.suffix,
 			...this.state,
+			highlighted: normalizeHighlight(this.props.highlighted),
 		}
+	};
+
+	refreshHighlight = (highlighted) => {
+		this.setState({ highlighted: normalizeHighlight(highlighted, this.props.highlighted) });
+	};
+
+	style() {
+		return super.style();
+	};
+
+	highlightStyle() {
+		return withHighlight({}, this.state.highlighted);
+	};
+
+	highlightBackgroundStyle() {
+		return withHighlightBackground({}, this.state.highlighted);
 	};
 
 	refresh = (value) => {

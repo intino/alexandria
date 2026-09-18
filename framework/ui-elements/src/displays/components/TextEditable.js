@@ -99,9 +99,11 @@ class TextEditable extends AbstractTextEditable {
 
 	renderRichEditor = (props) => {
 		const theme = Theme.get();
+		const highlightStyle = this.highlightStyle();
+		const highlightSurfaceStyle = this._highlightSurfaceStyle(highlightStyle);
 		return (
-			<div className={classnames("text-editable-rich-editor", this.state.readonly ? "readonly" : undefined, theme.palette.mode === "dark" ? "dark" : undefined)} style={this.style()}>
-				<Editor {...props} containerProps={{ style: { ...this.style(), resize: 'vertical', height:'100%'/*, fontSize: '14pt'*/ } }}
+			<div className={classnames("text-editable-rich-editor", this.state.readonly ? "readonly" : undefined, theme.palette.mode === "dark" ? "dark" : undefined)} style={{...this.style(), ...this.highlightBackgroundStyle()}}>
+				<Editor {...props} containerProps={{ style: { ...highlightStyle, resize: 'vertical', height:'100%'/*, fontSize: '14pt'*/ } }}
 						value={this.state.value} disabled={this.state.readonly}
 						onChange={this.handleChange.bind(this)} />
 			</div>
@@ -116,11 +118,14 @@ class TextEditable extends AbstractTextEditable {
 		const placeholder = !this.state.readonly && error == null && this.props.placeholder !== "" ? this.translate(this.props.placeholder) : undefined;
 		const shrink = error != null ? true : (this.state.readonly ? true : this.props.shrink !== null ? this.props.shrink : undefined);
 		const theme = Theme.get();
+		const highlightStyle = this.highlightStyle();
+		const highlightSurfaceStyle = this._highlightSurfaceStyle(highlightStyle);
 
 		return (
-			<div style={{position:"relative",...this.style()}} className={theme.palette.mode === "dark" ? "dark" : undefined}>
+			<div style={{position:"relative",...this.style(), ...this.highlightBackgroundStyle()}} className={theme.palette.mode === "dark" ? "dark" : undefined}>
 				{(!this.state.readonly && error != null && !this.state.isFocused) && <div id={this.props.id + "-error"} className={classes.error}>{error}</div>}
 				<TextField {...props} format={this.variant("body1")} className={classnames(classes.default, error != null ? classes.errorField : undefined)} label={label}
+						   sx={{"& .MuiOutlinedInput-root": highlightSurfaceStyle}}
 						   onKeyPress={this.handleKeypress.bind(this)} type={type} autoFocus={this.props.focused}
 						   placeholder={placeholder} multiline={this._multiline()} rows={this._rowsCount()}
 						   helperText={this.state.readonly ? undefined : this.props.helperText}
@@ -132,11 +137,11 @@ class TextEditable extends AbstractTextEditable {
 								   shrink: shrink
 							   },
 							   htmlInput: {
-								   style: {...this.style(), margin:'0'},
+								   style: {margin:'0'},
 								   maxLength: props != null ? props.maxLength : undefined
 							   },
 							   input: {
-								   style: { borderRadius: "16px" },
+							   style: { borderRadius: "16px", ...this.highlightBackgroundStyle(), ...highlightStyle },
 								   readOnly: this.state.readonly,
 								   startAdornment: this.props.prefix !== undefined ? <InputAdornment position="start">{this.props.prefix}</InputAdornment> : undefined,
 								   endAdornment: this.props.suffix !== undefined ? <InputAdornment position="end">{this.props.suffix}</InputAdornment> : undefined
@@ -155,11 +160,14 @@ class TextEditable extends AbstractTextEditable {
 		const shrink = error != null ? true : (this.state.readonly ? true : this.props.shrink !== null ? this.props.shrink : undefined);
 		const theme = Theme.get();
 		const definitions = this._maskDefinitions();
+		const highlightStyle = this.highlightStyle();
+		const highlightSurfaceStyle = {...this.highlightBackgroundStyle(), ...highlightStyle};
 
 		return (
-			<div style={{position:"relative",...this.style()}} className={theme.palette.mode === "dark" ? "dark" : undefined}>
+			<div style={{position:"relative",...this.style(), ...this.highlightBackgroundStyle()}} className={theme.palette.mode === "dark" ? "dark" : undefined}>
 				{(!this.state.readonly && error != null && !this.state.isFocused) && <div id={this.props.id + "-error"} className={classes.error}>{error}</div>}
 				<MaskedTextField {...props} format={this.variant("body1")} className={classnames(classes.default, error != null ? classes.errorField : undefined)} label={label}
+								sx={{"& .MuiOutlinedInput-root": highlightSurfaceStyle}}
 								onKeyPress={this.handleKeypress.bind(this)} type={type} autoFocus={this.props.focused}
 								placeholder={placeholder} multiline={this._multiline()} rows={this._rowsCount()}
 								helperText={this.state.readonly ? undefined : this.props.helperText}
@@ -171,11 +179,11 @@ class TextEditable extends AbstractTextEditable {
 										shrink: shrink
 									},
 									htmlInput: {
-										style: {...this.style(), margin:'0'},
+										style: {margin:'0'},
 										maxLength: props != null ? props.maxLength : undefined
 									},
 									input: {
-										style: { borderRadius: "16px" },
+										style: { borderRadius: "16px", ...this.highlightBackgroundStyle(), ...highlightStyle },
 										readOnly: this.state.readonly,
 										startAdornment: this.props.prefix !== undefined ? <InputAdornment position="start">{this.props.prefix}</InputAdornment> : undefined,
 										endAdornment: this.props.suffix !== undefined ? <InputAdornment position="end">{this.props.suffix}</InputAdornment> : undefined
@@ -200,6 +208,12 @@ class TextEditable extends AbstractTextEditable {
 	_rowsCount = () => {
 		const rows = this.props.rows;
 		return rows != null ? rows : undefined;
+	};
+
+	_highlightSurfaceStyle = (highlightStyle) => {
+		const result = {...this.highlightBackgroundStyle(), ...highlightStyle};
+		if (result.background != null) result.background += " !important";
+		return result;
 	};
 
 	refreshReadonly = (readonly) => {

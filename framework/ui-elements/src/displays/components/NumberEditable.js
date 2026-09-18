@@ -82,9 +82,11 @@ class NumberEditable extends AbstractNumberEditable {
 		const theme = Theme.get();
 		const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
 		const fieldThemeClass = isDark ? "dark" : undefined;
+		const highlightStyle = this.highlightStyle();
+		const highlightSurfaceStyle = this._highlightSurfaceStyle(highlightStyle);
 
 		return (
-			<div style={{position:"relative",...this.style()}} className={fieldThemeClass}>
+			<div style={{position:"relative",...this.style(), ...this.highlightBackgroundStyle()}} className={fieldThemeClass}>
 				{(!this.state.readonly && error != null) && <div id={this.props.id + "-error"} className={classes.error} style={this._errorStyle()}>{error}</div>}
 				<NumericFormat
 					value={value}
@@ -93,6 +95,7 @@ class NumberEditable extends AbstractNumberEditable {
 					decimalSeparator={decimalSeparator}
 					decimalScale={this.props.decimals != null ? this.props.decimals : 0}
 					format={this.variant("body1")} className={classnames(classes.default, error != null ? classes.errorField : undefined, "number-editable")} label={label} type="text"
+					sx={{"& .MuiOutlinedInput-root": highlightSurfaceStyle}}
 					onChange={this.handleChange.bind(this)} autoFocus={this.props.focused}
 					autoComplete="off" disabled={this.state.readonly} size="Small" variant="outlined"
 					inputRef={this.inputRef}
@@ -106,11 +109,11 @@ class NumberEditable extends AbstractNumberEditable {
 							min: this.state.min !== -1 ? this.state.min : undefined,
 							max: this.state.max !== -1 ? this.state.max : undefined,
 							step: this.props.step !== -1 ? this.props.step : undefined,
-							style: {...this.style(), margin:'0'},
+							style: {margin:'0'},
 							className: classes.input
 						},
 						input: {
-							style: { borderRadius: "16px" },
+							style: { borderRadius: "16px", ...this.highlightBackgroundStyle(), ...highlightStyle },
 							readOnly: this.state.readonly,
 							startAdornment: this.state.prefix !== undefined ? <InputAdornment position="start">{this.translate(this.state.prefix)}</InputAdornment> : undefined,
 							endAdornment: this.state.suffix !== undefined ? <InputAdornment position="end">{this.translate(this.state.suffix)}</InputAdornment> : undefined
@@ -152,6 +155,12 @@ class NumberEditable extends AbstractNumberEditable {
 
 	_errorStyle = () => {
 		return {};
+	};
+
+	_highlightSurfaceStyle = (highlightStyle) => {
+		const result = {...this.highlightBackgroundStyle(), ...highlightStyle};
+		if (result.background != null) result.background += " !important";
+		return result;
 	};
 }
 

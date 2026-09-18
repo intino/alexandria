@@ -54,7 +54,7 @@ class SelectorTabs extends AbstractSelectorTabs {
 	    const variant = scrollButtons !== "off" ? "scrollable" : undefined;
         return (
             <Tabs value={selected} variant="fullWidth" variant={variant} scrollButtons={scrollButtons}
-                  onChange={this.handleChange.bind(this)} color={this.props.color} style={this.style()}
+				  onChange={this.handleChange.bind(this)} color={this.props.color} style={{...this.style(), ...this.highlightBackgroundStyle(), ...this.highlightStyle()}}
                   className={classes.root} classes={{ indicator: classes.indicator }}>
                 {React.Children.map(children, (child, i) => { return this.renderTab(child, i); })}
             </Tabs>

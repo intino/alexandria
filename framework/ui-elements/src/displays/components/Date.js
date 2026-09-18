@@ -43,7 +43,7 @@ class Date extends AbstractDate {
 		return (
 			<Block layout="horizontal center">
 				{ ComponentBehavior.labelBlock(this.props, 'body1', {...this.style(),margin:'0 5px 0 0'}) }
-				<Typography variant={this.variant("body1")} className={classes.value} style={this.style()}>
+				<Typography variant={this.variant("body1")} className={classes.value} style={{...this.style(), ...this.highlightBackgroundStyle(), ...this.highlightStyle()}}>
 					{this.state.value && this.renderValue(pattern, hasMode, language)}
 					{!this.state.value && <React.Fragment>-</React.Fragment>}
 				</Typography>

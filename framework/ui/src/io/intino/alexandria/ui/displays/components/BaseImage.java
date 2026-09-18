@@ -3,6 +3,7 @@ package io.intino.alexandria.ui.displays.components;
 import io.intino.alexandria.MimeTypes;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.logger.Logger;
+import io.intino.alexandria.schemas.Highlight;
 import io.intino.alexandria.schemas.ImageInfo;
 import io.intino.alexandria.ui.File;
 import io.intino.alexandria.ui.displays.notifiers.BaseImageNotifier;
@@ -22,6 +23,19 @@ public class BaseImage<DN extends BaseImageNotifier, B extends Box> extends Abst
 
     public URL value() {
         return value;
+    }
+
+    public BaseImage<DN, B> highlight(String textColor, String backgroundColor) {
+        notifier.refreshHighlight(new Highlight().textColor(textColor).backgroundColor(backgroundColor));
+        return this;
+    }
+
+    public BaseImage<DN, B> highlight(String color) {
+        return highlight(null, color);
+    }
+
+    public BaseImage<DN, B> clearHighlight() {
+        return highlight(null, null);
     }
 
     public void value(URL value) {
