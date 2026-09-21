@@ -149,6 +149,7 @@ Component selectorCollectionBox as ExtensionOf(baseSelector)
 
 Component multiple
 	Notification refreshReadonly as Bool
+	Notification refreshHighlight as Object(Highlight)
 	Request add
 	Request select as Text
 	Request remove as Integer

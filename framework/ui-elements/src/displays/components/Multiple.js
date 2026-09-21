@@ -14,6 +14,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Theme from "app-elements/gen/Theme";
 import Spinner from "./Spinner"
+import {normalizeHighlight, withHighlight, withHighlightBackground} from "./Highlight";
 import 'alexandria-ui-elements/res/styles/components/multiple/styles.css';
 
 export default class Multiple extends AbstractMultiple {
@@ -26,6 +27,7 @@ export default class Multiple extends AbstractMultiple {
 		    ...this.state,
 		    readonly: false,
 		    expandedItem : false,
+			highlighted: normalizeHighlight(this.props.highlighted),
 		};
 	};
 
@@ -36,8 +38,9 @@ export default class Multiple extends AbstractMultiple {
 		const wrap = multiple.wrap;
 		const style = this._style(multiple);
 		const height = layout === "horizontal" ? '100%' : 'auto';
+		const highlightStyle = {...this.highlightBackgroundStyle(), ...this.highlightStyle()};
 		return (
-		    <div style={{height:height,...this.style()}}>
+		    <div style={{height:height,...this.style(),...highlightStyle}}>
                 { ComponentBehavior.labelBlock(this.props, "body1", { fontSize:"10pt",color:"#0000008a",marginBottom: "5px" }) }
                 <div className={"layout flex " + (wrap ? "wrap " : "") + layout} style={{height:height,...this.style(),marginBottom:'0'}}>
                     {this.renderItems(multiple.instances, this._instanceProps(), style)}
@@ -159,6 +162,14 @@ export default class Multiple extends AbstractMultiple {
 	refreshReadonly = (readonly) => {
 	    this.setState({ readonly });
 	};
+
+	refreshHighlight = (highlighted) => {
+		this.setState({ highlighted: normalizeHighlight(highlighted, this.props.highlighted) });
+	};
+
+	highlightStyle = () => withHighlight({}, this.state.highlighted);
+
+	highlightBackgroundStyle = () => withHighlightBackground({}, this.state.highlighted);
 
     handleAdd = () => {
         this.requester.add();
