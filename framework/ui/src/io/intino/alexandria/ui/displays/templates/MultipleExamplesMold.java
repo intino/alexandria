@@ -27,6 +27,7 @@ public class MultipleExamplesMold extends AbstractMultipleExamplesMold<UiFramewo
     @Override
     public void init() {
         super.init();
+        // multiple1.highlight("yellow");
         multiple1.addAll(List.of("Value 1", "Value 2", "Value 3"));
         multiple3.add("Value 1", "lorem ipsum dolor sit amet");
         multiple3.add("Value 2");

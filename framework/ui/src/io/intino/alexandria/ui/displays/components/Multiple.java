@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.schemas.Highlight;
 import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.collection.Selectable;
@@ -25,6 +26,8 @@ public abstract class Multiple<B extends Box, C extends Component, V> extends Ab
         return thread;
     });
     private boolean readonly;
+    private String textColor;
+    private String backgroundColor;
     private AddItemListener addItemListener;
     private ChangeItemListener changeItemListener;
     private RemoveItemListener removeItemListener;
@@ -53,6 +56,21 @@ public abstract class Multiple<B extends Box, C extends Component, V> extends Ab
 
     public boolean readonly() {
         return readonly;
+    }
+
+    public Multiple<B, C, V> highlight(String textColor, String backgroundColor) {
+        this.textColor = textColor;
+        this.backgroundColor = backgroundColor;
+        notifier.refreshHighlight(new Highlight().textColor(textColor).backgroundColor(backgroundColor));
+        return this;
+    }
+
+    public Multiple<B, C, V> highlight(String color) {
+        return highlight(null, color);
+    }
+
+    public Multiple<B, C, V> clearHighlight() {
+        return highlight(null, null);
     }
 
     @Override
