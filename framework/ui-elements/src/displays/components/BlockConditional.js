@@ -34,10 +34,11 @@ export default class BlockConditional extends AbstractBlockConditional {
 		let styles = this.style();
 		if (this.props.style != null) this.applyStyles(this.props.style, styles);
 		const classNames = BlockBehavior.classNames(this);
+		const firefoxContentStyle = BrowserUtil.isFirefox() ? {width:"100%",height:"100%",minWidth:0,minHeight:0} : undefined;
 		return (
 			<div style={styles} className={classNames}>
 				<Block ref={this.blockRef} label={this.props.label}
-					   /*style={this.style()}*/
+					   style={firefoxContentStyle}
 					   layout={this.props.layout}
 					   /*width={this.props.width}
 					   height={this.props.height}*/
@@ -54,7 +55,10 @@ export default class BlockConditional extends AbstractBlockConditional {
 		result.display = this.state.visible ? "" : "none";
 		if (this._widthDefined()) result.width = this.props.width;
 		if (this._heightDefined()) result.height = this.props.height;
-		if (result.height === "100.0%" && BrowserUtil.isFirefox()) result.height = "100vh";
+		if (BrowserUtil.isFirefox()) {
+			result.minWidth = 0;
+			result.minHeight = 0;
+		}
 		return result;
 	};
 

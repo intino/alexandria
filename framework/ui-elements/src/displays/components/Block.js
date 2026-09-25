@@ -11,6 +11,7 @@ import 'alexandria-ui-elements/res/styles/hidden.css';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import Theme from "app-elements/gen/Theme";
 import {paperSurfaceStyles} from "./ContainerStyles";
+import BrowserUtil from "../../util/BrowserUtil";
 
 export default class Block extends AbstractBlock {
 
@@ -134,6 +135,11 @@ export default class Block extends AbstractBlock {
 		if (this.props.margin != null) result.margin = this.props.margin;
 		if (this._widthDefined() && result.width == null) result.width = this.props.width;
 		if (this._heightDefined() && result.height == null) result.height = this.props.height;
+		if (BrowserUtil.isFirefox() && this._is("flexible")) {
+			// Firefox otherwise keeps the content's intrinsic minimum size in flex layouts.
+			result.minWidth = 0;
+			result.minHeight = 0;
+		}
 		return result;
 	};
 
