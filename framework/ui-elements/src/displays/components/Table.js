@@ -146,7 +146,13 @@ export class EmbeddedTable extends AbstractTable {
         this.header = React.createRef();
         this.rowTooltipTimer = null;
         this.rowTooltipCloseTimer = null;
-        this.state = {...this.state, tooltipItemIndex: null, tooltipAnchorItemIndex: null, tooltipEntries: []};
+        this.state = {
+            ...this.state,
+            tooltipItemIndex: null,
+            tooltipAnchorItemIndex: null,
+            tooltipEntries: [],
+            showTooltipForRows: this.props.showTooltipForRows
+        };
     };
 
     componentWillUnmount() {
@@ -247,8 +253,12 @@ export class EmbeddedTable extends AbstractTable {
         );
     };
 
+    refreshShowTooltipForRows = (value) => {
+        this.setState({showTooltipForRows: value});
+    };
+
     showTooltipForRows = () => {
-        return this.props.showTooltipForRows === true || this.props.showTooltipForRows === "true";
+        return this.state.showTooltipForRows === true || this.state.showTooltipForRows === "true";
     };
 
     rowTooltipStyle = () => {

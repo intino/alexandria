@@ -54,4 +54,9 @@ public abstract class Table<B extends Box, ItemComponent extends Row, Item> exte
 		insertPromise(components, from, "rows");
 		return components;
 	}
+
+	public void showTooltipForRows(boolean value) {
+		notifier.refreshShowTooltipForRows(value);
+	}
+
 }

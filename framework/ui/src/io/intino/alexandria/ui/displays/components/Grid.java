@@ -81,6 +81,10 @@ public class Grid<DN extends GridNotifier, B extends Box, Item> extends Abstract
         notifier.refreshVisibleColumns(visibleColumns);
     }
 
+    public void showTooltipForRows(boolean value) {
+        notifier.refreshShowTooltipForRows(value);
+    }
+
     public java.util.Map<String, Integer> columnsOrdering() {
         if (columnsOrdering != null) return columnsOrdering.stream().collect(Collectors.toMap(GridColumnOrdering::name, GridColumnOrdering::index));
         java.util.Map<String, Integer> result = new HashMap<>();

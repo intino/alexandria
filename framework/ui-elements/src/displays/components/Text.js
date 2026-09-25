@@ -83,6 +83,7 @@ class Text extends AbstractText {
 		return {
 			...this.style(),
 			...(highlighted != null && highlighted.accent != null ? { background: highlighted.accent } : {}),
+			...(highlighted != null && highlighted.text == null ? { color: "white" } : {}),
 			...(highlighted != null && highlighted.text != null ? { color: highlighted.text } : {}),
 			...(highlighted != null ? {
 				display: "inline-flex",
