@@ -46,6 +46,8 @@ Component map as ExtensionOf(collection)
 
 Component list as ExtensionOf(pageCollection)
 Component table as ExtensionOf(pageCollection)
+	Notification refreshShowTooltipForRows as Bool
+
 Component magazine as ExtensionOf(pageCollection)
 Component grid as ExtensionOf(pageCollection)
 	Notification refreshInfo as Object(GridInfo)
@@ -54,6 +56,7 @@ Component grid as ExtensionOf(pageCollection)
 	Notification refreshSort as Object(GridSortInfo)
 	Notification refreshGroupBy as Object(GridGroupByInfo)
 	Notification refreshGroupByOptions as Text List
+	Notification refreshShowTooltipForRows as Bool
 	Notification loadState as Text
 	Notification addRow as Object(GridRow)
 	Notification addRows as Object(GridRow) List

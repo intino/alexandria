@@ -326,6 +326,7 @@ class Grid extends AbstractGrid {
             viewportHeight: 0,
             tooltipRowIndex: null,
             tooltipAnchorRowIndex: null,
+            showTooltipForRows: this.props.showTooltipForRows
         };
     };
 
@@ -691,7 +692,7 @@ class Grid extends AbstractGrid {
     };
 
     showTooltipForRows = () => {
-        return this.props.showTooltipForRows === true || this.props.showTooltipForRows === "true";
+        return this.state.showTooltipForRows === true || this.state.showTooltipForRows === "true";
     };
 
     rowTooltipStyle = () => {
@@ -1509,6 +1510,10 @@ class Grid extends AbstractGrid {
 
     refreshGroupByOptions = (options) => {
         this.setState({groupByOptions: options});
+    };
+
+    refreshShowTooltipForRows = (value) => {
+        this.setState({showTooltipForRows: value});
     };
 
     refreshColumnsOrdering = (value) => {
