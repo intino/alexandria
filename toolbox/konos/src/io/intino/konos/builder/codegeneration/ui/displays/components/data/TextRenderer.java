@@ -4,8 +4,8 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.dsl.DataComponents.Text;
 
+import static io.intino.konos.dsl.DataComponents.Text;
 import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
 
 public class TextRenderer extends ComponentRenderer<Text> {

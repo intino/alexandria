@@ -47,10 +47,14 @@ public class SelectorExamplesMold extends AbstractSelectorExamplesMold<UiFramewo
 		selector11.selector11List.onAddItem(this::onAddItemSelector11);
 		selector11.onSelect(e -> notifyPerson(e.selection()));
 		selector11.valueProvider(person -> ((Person)person).firstName());
+		selector12.addAll(List.of("Option 1", "Option 2", "Option 3", "Option 4"));
+		selector12.onSelect(e -> notify(e.selection()));
+		selector13.addAll(List.of("Option 1", "Option 2", "Option 3", "Option 4"));
+		selector13.onSelect(e -> notify(e.selection()));
     }
 
     private void notify(List<String> selection) {
-        if (selection.size() <= 0) {
+        if (selection.isEmpty()) {
             selector1.notifyUser("no option selected", UserMessage.Type.Info);
             return;
         }
@@ -58,7 +62,7 @@ public class SelectorExamplesMold extends AbstractSelectorExamplesMold<UiFramewo
     }
 
     private void notifyPerson(List<Person> selection) {
-        if (selection.size() <= 0) {
+        if (selection.isEmpty()) {
             selector1.notifyUser("no option selected", UserMessage.Type.Info);
             return;
         }

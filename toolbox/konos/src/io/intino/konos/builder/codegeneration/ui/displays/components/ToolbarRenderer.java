@@ -4,9 +4,10 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.dsl.CatalogComponents;
-import io.intino.konos.dsl.InteractionComponents.Toolbar;
 
 import java.util.Arrays;
+
+import static io.intino.konos.dsl.InteractionComponents.Toolbar;
 
 public class ToolbarRenderer extends ComponentRenderer<Toolbar> {
 

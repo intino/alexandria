@@ -4,7 +4,8 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.dsl.VisualizationComponents.Spinner;
+
+import static io.intino.konos.dsl.VisualizationComponents.Spinner;
 
 public class SpinnerRenderer extends ComponentRenderer<Spinner> {
 

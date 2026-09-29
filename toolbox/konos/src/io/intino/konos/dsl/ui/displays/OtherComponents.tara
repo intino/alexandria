@@ -89,6 +89,7 @@ Concept OtherComponents
 			!! The value(s) that should initially be selected. Defaults to the first value, or no values if Multiple facet is present
 			var string[] selected = empty
 			var word:{Horizontal Vertical} layout = Vertical
+		Facet TransferBox
 		Facet ComboBox
 			var string placeholder = ""
 			var integer:{px} maxMenuHeight = 300px
