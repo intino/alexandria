@@ -13,7 +13,6 @@ import io.intino.konos.dsl.ActionableComponents.IconToggle;
 import io.intino.konos.dsl.ActionableComponents.MaterialIconToggle;
 import io.intino.konos.dsl.ActionableComponents.Switch;
 import io.intino.konos.dsl.ActionableComponents.Toggle;
-import io.intino.konos.dsl.OtherComponents.*;
 import io.intino.konos.dsl.PassiveView.Notification;
 import io.intino.konos.dsl.PassiveView.Request;
 import io.intino.konos.dsl.VisualizationComponents.Dashboard;
@@ -158,6 +157,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (passiveView.i$(conceptOf(Selector.ToggleBox.class))) result.add("ToggleBox");
 		if (passiveView.i$(conceptOf(Selector.ComboBox.class))) result.add("ComboBox");
 		if (passiveView.i$(conceptOf(Selector.CollectionBox.class))) result.add("CollectionBox");
+		if (passiveView.i$(conceptOf(Selector.TransferBox.class))) result.add("TransferBox");
 		if (passiveView.i$(conceptOf(CatalogComponents.Grouping.ComboBox.class))) result.add("ComboBox");
 		if (passiveView.i$(conceptOf(Selector.ListBox.class))) result.add("ListBox");
 		if (passiveView.i$(conceptOf(Selector.RadioBox.class))) result.add("RadioBox");

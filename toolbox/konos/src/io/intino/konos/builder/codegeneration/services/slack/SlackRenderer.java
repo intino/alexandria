@@ -10,7 +10,6 @@ import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.dsl.KonosGraph;
 import io.intino.konos.dsl.Service;
-import io.intino.konos.dsl.Service.SlackBot.Request;
 
 import java.io.File;
 import java.util.LinkedHashMap;
@@ -21,6 +20,7 @@ import java.util.stream.Collectors;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
+import static io.intino.konos.dsl.Service.SlackBot.Request;
 
 public class SlackRenderer extends Renderer {
 	private final List<Service.SlackBot> services;

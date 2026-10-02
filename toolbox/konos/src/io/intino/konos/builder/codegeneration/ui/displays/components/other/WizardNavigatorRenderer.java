@@ -4,7 +4,8 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.dsl.VisualizationComponents.WizardNavigator;
+
+import static io.intino.konos.dsl.VisualizationComponents.WizardNavigator;
 
 public class WizardNavigatorRenderer extends ComponentRenderer<WizardNavigator> {
 

@@ -8,7 +8,7 @@ public class SelectorWidget extends BaseWidget {
 
 	public SelectorWidget() {
 		super("This widget renders a list of options using style defined in facet.");
-		facets(Arrays.asList("Menu", "RadioBox", "ListBox", "ComboBox", "Tabs"));
+		facets(Arrays.asList("Menu", "RadioBox", "ListBox", "ComboBox", "TransferBox", "Tabs"));
 	}
 
 	protected void addProperties() {

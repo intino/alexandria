@@ -120,6 +120,11 @@ Component selectorComboBox as ExtensionOf(baseSelector)
 	Request updateSelection as Text List
 	Request opened
 
+Component selectorTransferBox as ExtensionOf(baseSelector)
+	Notification refreshSelection as Text List
+	Notification refreshMultipleSelection as Bool
+	Request updateSelection as Text List
+
 Component selectorToggleBox as ExtensionOf(baseSelector)
 	Notification refreshSelection as Text List
 	Notification refreshDisabledOptions as Text List

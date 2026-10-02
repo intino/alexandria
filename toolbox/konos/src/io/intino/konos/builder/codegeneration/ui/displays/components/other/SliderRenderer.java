@@ -4,11 +4,9 @@ import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.ui.RendererWriter;
 import io.intino.konos.builder.codegeneration.ui.displays.components.collection.BindingCollectionRenderer;
 import io.intino.konos.builder.context.CompilationContext;
-import io.intino.konos.dsl.VisualizationComponents.AbstractSlider;
-import io.intino.konos.dsl.VisualizationComponents.Slider;
-import io.intino.konos.dsl.VisualizationComponents.TemporalSlider;
 
 import static io.intino.konos.builder.helpers.ElementHelper.conceptOf;
+import static io.intino.konos.dsl.VisualizationComponents.*;
 
 public class SliderRenderer extends BindingCollectionRenderer<AbstractSlider> {
 

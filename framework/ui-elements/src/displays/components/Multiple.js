@@ -38,9 +38,8 @@ export default class Multiple extends AbstractMultiple {
 		const wrap = multiple.wrap;
 		const style = this._style(multiple);
 		const height = layout === "horizontal" ? '100%' : 'auto';
-		const highlightStyle = {...this.highlightBackgroundStyle(), ...this.highlightStyle()};
 		return (
-		    <div style={{height:height,...this.style(),...highlightStyle}}>
+		    <div style={{height:height,...this.style()}}>
                 { ComponentBehavior.labelBlock(this.props, "body1", { fontSize:"10pt",color:"#0000008a",marginBottom: "5px" }) }
                 <div className={"layout flex " + (wrap ? "wrap " : "") + layout} style={{height:height,...this.style(),marginBottom:'0'}}>
                     {this.renderItems(multiple.instances, this._instanceProps(), style)}

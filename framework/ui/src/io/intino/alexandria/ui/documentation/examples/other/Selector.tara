@@ -1,5 +1,6 @@
 dsl Konos
 
+use Components
 use Theme
 
 Template(layout=Vertical, spacing=DP8) selectorExamplesMold
@@ -206,4 +207,26 @@ Template(layout=Vertical, spacing=DP8) selectorExamplesMold
 					value
 						=========
 						Selector as CollectionBox(openMode\=Input)<br/>
+						=========
+
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="TransferBox facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Selector selector12 as TransferBox
+
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Selector as TransferBox<br/>
+						=========
+
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="TransferBox facet. Multiple selection")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Selector selector13 as TransferBox(multipleSelection=true)
+
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Selector as TransferBox(multipleSelection\=true)<br/>
 						=========

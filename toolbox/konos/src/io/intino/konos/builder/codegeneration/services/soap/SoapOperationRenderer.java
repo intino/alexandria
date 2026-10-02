@@ -11,9 +11,7 @@ import io.intino.konos.builder.context.CompilationContext;
 import io.intino.konos.builder.context.KonosException;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.dsl.KonosGraph;
-import io.intino.konos.dsl.Schema;
 import io.intino.konos.dsl.Service;
-import io.intino.konos.dsl.Service.Soap.Operation;
 
 import java.io.File;
 import java.util.List;
@@ -22,6 +20,7 @@ import java.util.stream.Collectors;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
+import static io.intino.konos.dsl.Service.Soap.Operation;
 
 public class SoapOperationRenderer extends Renderer {
 	private static final String OPERATIONS_PACKAGE = "soap/operations";
@@ -73,7 +72,7 @@ public class SoapOperationRenderer extends Renderer {
 		builder.add("box", boxName());
 	}
 
-	private String type(Schema schema) {
+	private String type(io.intino.konos.dsl.Schema schema) {
 		return String.join(".", packageName(), "schemas") + "." + firstUpperCase(schema.name$());
 	}
 
