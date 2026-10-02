@@ -28,7 +28,7 @@ const styles = theme => ({
 		},
 	},
 	panel: {
-		minHeight: "240px",
+		height: "240px",
 		display: "flex",
 		flexDirection: "column",
 		borderRadius: "16px",
@@ -41,6 +41,7 @@ const styles = theme => ({
 	},
 	list: {
 		flex: 1,
+		minHeight: 0,
 		overflow: "auto",
 		paddingTop: 0,
 		paddingBottom: 0,
@@ -60,12 +61,15 @@ const styles = theme => ({
 		borderRadius: "12px",
 	},
 	item: {
-		margin: "4px 8px",
+		minHeight: "32px",
+		margin: "2px 6px",
+		padding: "4px 10px",
 		borderRadius: "10px",
 	},
 	itemText: {
 		"& .MuiListItemText-primary": {
-			fontSize: "0.95rem",
+			fontSize: "0.875rem",
+			lineHeight: 1.3,
 		},
 	},
 	empty: {
@@ -103,6 +107,8 @@ class SelectorTransferBox extends AbstractSelectorTransferBox {
 		const panelStyle = {
 			background: palette.background,
 			border: "1px solid " + palette.borderColor,
+			...this.highlightBackgroundStyle(),
+			...this.highlightStyle(),
 		};
 
 		return (
