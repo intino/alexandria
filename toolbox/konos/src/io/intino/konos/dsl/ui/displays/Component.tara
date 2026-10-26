@@ -17,6 +17,7 @@ Concept Component extends Display
 	var Format[] format = empty
 	var boolean visible = true
 	Facet Option
+		var string description = empty
 	Facet Labeled
 		var string label
     	var word:{Top Bottom Left Right} position = Left
@@ -106,6 +107,7 @@ Concept ActionableComponents
 			sub AbstractSplitButton
 				var string[] options
 				var string defaultOption
+				var boolean sticky = true
 				sub SplitButton
 				sub IconSplitButton
 					var string icon

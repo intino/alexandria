@@ -155,7 +155,10 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (element.backgroundColor() != null && !element.backgroundColor().isEmpty()) result.add("backgroundColor", element.backgroundColor());
 		if (element.backgroundDarkColor() != null && !element.backgroundDarkColor().isEmpty()) result.add("backgroundDarkColor", element.backgroundDarkColor());
 		if (element.cssSelectors() != null) result.add("cssSelectors", element.cssSelectors().toArray(String[]::new));
-		if (element.isOption()) result.add("name", element.asOption().name$());
+		if (element.isOption()) {
+			Component.Option option = element.asOption();
+			result.add("name", option.name$());
+		}
 		if (element.i$(conceptOf(Component.Labeled.class)))
 			result.add("label", element.a$(Component.Labeled.class).label());
 		if (!element.visible()) result.add("visible", element.visible());

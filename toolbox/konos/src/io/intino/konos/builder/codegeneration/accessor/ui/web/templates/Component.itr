@@ -83,7 +83,7 @@ rule type(properties, materialicon) and trigger(specific)
 	<< title="$title">><< icon="$icon">><< darkIcon="$darkIcon">><< titlePosition="$titlePosition">>
 
 rule type(properties, selector) and trigger(specific)
-	<< multipleSelection={$multipleSelection}>><< readonly={$readonly}>><< focused={$focused}>><< placeholder="$placeholder">><< selected="$selected">><< layout="$layout">><< size="$size">><< maxMenuHeight={$maxMenuHeight}>><< allowOther="$allowOther">><< openMode="$openMode">><< scrollButtons="$scrollButtons">><< hiddenOptions={["$hiddenOption...[","]"]}>><< view="$view">>
+	<< optionDescriptions={$optionDescriptions}>><< multipleSelection={$multipleSelection}>><< readonly={$readonly}>><< focused={$focused}>><< placeholder="$placeholder">><< selected="$selected">><< layout="$layout">><< indicatorPosition="$indicatorPosition">><< size="$size">><< maxMenuHeight={$maxMenuHeight}>><< allowOther="$allowOther">><< openMode="$openMode">><< scrollButtons="$scrollButtons">><< hiddenOptions={["$hiddenOption...[","]"]}>><< view="$view">>
 
 rule type(properties, image) and trigger(specific)
 	<< width="$width">><< height="$height">><< mobileReduceFactor={$mobileReduceFactor}>><< allowFullscreen={$allowFullscreen}>><< colorInvertedWithDarkMode={$colorInvertedWithDarkMode}>><< readonly={$readonly}>><< showPreview={$showPreview}>>
@@ -128,7 +128,7 @@ rule type(properties, map) and trigger(specific)
 	<< pageSize={$pageSize}>><< type="$type">><< itemHeight={$itemHeight}>><< itemWidth={$itemWidth}>><< center={{lat:$centerLat,lng:$centerLng}}>><< zoom={{min:$zoomMin,max:$zoomMax,defaultZoom:$zoomDefault}}>><< controls="$controls">><< selection="$selection">>
 
 rule type(properties, collection) and trigger(specific)
-	<< noItemsMessage="$noItemsMessage">><< noItemsFoundMessage="$noItemsFoundMessage">><< pageSize={$pageSize}>><< itemHeight={$itemHeight}>><< itemWidth={$itemWidth}>><< scrollingMark={$scrollingMark}>><< navigable="$navigable">><< selection="$selection">><< showToolbar={$showToolbar}>><< showTooltipForRows={$showTooltipForRows}>>
+	<< noItemsMessage="$noItemsMessage">><< noItemsFoundMessage="$noItemsFoundMessage">><< pageSize={$pageSize}>><< itemHeight={$itemHeight}>><< itemWidth={$itemWidth}>><< scrollingMark={$scrollingMark}>><< infiniteScrollTarget="$infiniteScrollTarget">><< navigable="$navigable">><< selection="$selection">><< showToolbar={$showToolbar}>><< showTooltipForRows={$showTooltipForRows}>>
 
 rule type(properties, heading) and trigger(specific)
 	 style={{<<width:"$absoluteWidth~px",>><<width:"$relativeWidth~%",>>paddingRight:"10px"<<,$paddingLeft:"10px">>}}<< hidden="$hidden">>
@@ -146,7 +146,7 @@ rule type(properties, toggle) and trigger(specific)
 	<< state="$state">>
 
 rule type(properties, splitbutton) and trigger(specific)
-	<< options={["$option...[","]"]}>><< defaultOption="$default">><< icon="$icon">><< titlePosition="$titlePosition">>
+	<< options={["$option...[","]"]}>><< defaultOption="$default">><< sticky={$sticky}>><< icon="$icon">><< titlePosition="$titlePosition">>
 
 rule type(properties, export) and trigger(specific)
 	<< from={$from}>><< to={$to}>><< min={$min}>><< max={$max}>><< range={{min:$rangeMin,max:$rangeMax}}>><< options={["$option...[","]"]}>>
