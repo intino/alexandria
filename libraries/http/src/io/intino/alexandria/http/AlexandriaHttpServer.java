@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class AlexandriaHttpServer<R extends AlexandriaHttpRouter<?>> {
+	private static final int MaxRequestHeaderSize = 32 * 1024;
 	private AlexandriaSecurityManager securityManager = new NullSecurityManager();
 	protected final List<String> webDirectories = new ArrayList<>();
 	protected final long maxResourceSize;
@@ -160,6 +161,7 @@ public class AlexandriaHttpServer<R extends AlexandriaHttpRouter<?>> {
 			ctx.req().setAttribute("org.eclipse.jetty.multipartConfig", multipartConfig);
 		});
 		result.unsafe.routes.exception(Exception.class, (exception, context) -> Logger.error(exception));
+		result.unsafe.jetty.modifyHttpConfiguration(configuration -> configuration.setRequestHeaderSize(MaxRequestHeaderSize));
 		return result;
 	}
 
