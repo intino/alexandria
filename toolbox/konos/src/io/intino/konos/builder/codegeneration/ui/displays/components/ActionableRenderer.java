@@ -58,6 +58,7 @@ public class ActionableRenderer extends ComponentRenderer<ActionableComponents.A
 			if (materialIconToggle.titlePosition() != ActionableComponents.MaterialIconToggle.TitlePosition.None) properties.add("titlePosition", materialIconToggle.titlePosition().name());
 		}
 		else if (element.i$(conceptOf(ActionableComponents.AbstractSplitButton.class))) {
+			if (!element.a$(ActionableComponents.AbstractSplitButton.class).sticky()) properties.add("sticky", false);
 			if (element.i$(conceptOf(ActionableComponents.IconSplitButton.class)) && element.a$(ActionableComponents.IconSplitButton.class).titlePosition() != ActionableComponents.IconSplitButton.TitlePosition.None) {
 				properties.add("titlePosition", element.a$(ActionableComponents.IconSplitButton.class).titlePosition().name());
 			}
@@ -103,6 +104,7 @@ public class ActionableRenderer extends ComponentRenderer<ActionableComponents.A
 		else if (element.i$(conceptOf(ActionableComponents.IconToggle.class))) addIcons(element.a$(ActionableComponents.IconToggle.class), result);
 		else if (element.i$(conceptOf(ActionableComponents.MaterialIconToggle.class))) addIcons(element.a$(ActionableComponents.MaterialIconToggle.class), result);
 		else if (element.i$(conceptOf(ActionableComponents.AbstractSplitButton.class))) {
+			if (!element.a$(ActionableComponents.AbstractSplitButton.class).sticky()) result.add("sticky", element.a$(ActionableComponents.AbstractSplitButton.class).sticky());
 			result.add("option", element.a$(ActionableComponents.AbstractSplitButton.class).options().toArray());
 			result.add("default", element.a$(ActionableComponents.AbstractSplitButton.class).defaultOption());
 			if (element.i$(conceptOf(ActionableComponents.IconSplitButton.class))) addIcons(element.a$(ActionableComponents.IconSplitButton.class), result);

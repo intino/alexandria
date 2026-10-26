@@ -28,6 +28,7 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 	public FrameBuilder properties() {
 		FrameBuilder result = super.properties();
 		result.add("multipleSelection", element.multipleSelection() ? "true" : "false");
+		addOptionDescriptions(result);
 		if (element.isReadonly()) result.add("readonly", element.isReadonly());
 		if (element.isFocused()) result.add("readonly", element.isFocused());
 		addTabsProperties(result);
@@ -43,11 +44,29 @@ public class SelectorRenderer extends ComponentRenderer<Selector> {
 
 	private void addTabsProperties(FrameBuilder builder) {
 		if (!element.isTabs()) return;
+		Selector.Tabs.Layout layout = element.asTabs().layout();
+		if (layout != null && layout != Selector.Tabs.Layout.Horizontal) builder.add("layout", layout.name());
+		Selector.Tabs.IndicatorPosition indicatorPosition = element.asTabs().indicatorPosition();
+		if (indicatorPosition != null && indicatorPosition != Selector.Tabs.IndicatorPosition.Auto) builder.add("indicatorPosition", indicatorPosition.name());
 		Selector.Tabs.ScrollButtons scrollButtons = element.asTabs().scrollButtons();
 		List<String> hiddenOptions = element.asTabs().componentList().stream().filter(Component::isOption).filter(o -> !o.visible()).map(Layer::name$).toList();
 		if (!hiddenOptions.isEmpty()) hiddenOptions.forEach(o -> builder.add("hiddenOption", o));
 		if (scrollButtons == Selector.Tabs.ScrollButtons.Off) return;
 		builder.add("scrollButtons", scrollButtons);
+	}
+
+	private void addOptionDescriptions(FrameBuilder builder) {
+		if (!element.isTabs()) return;
+		String descriptions = element.asTabs().componentList().stream()
+				.filter(Component::isOption)
+				.filter(option -> option.asOption().description() != null && !option.asOption().description().isEmpty())
+				.map(option -> json(option.asOption().name$()) + ":" + json(option.asOption().description()))
+				.collect(java.util.stream.Collectors.joining(","));
+		if (!descriptions.isEmpty()) builder.add("optionDescriptions", "{" + descriptions + "}");
+	}
+
+	private String json(String value) {
+		return "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r") + "\"";
 	}
 
 	private void addMenuProperties(FrameBuilder builder) {

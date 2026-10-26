@@ -29,6 +29,7 @@ public class CollectionRenderer<T extends Collection> extends SizedRenderer<T> {
 		result.add("itemHeight", itemHeight());
 		if (width != null) result.add("itemWidth", width);
 		result.add("scrollingMark", element.scrollingMark());
+		result.add("infiniteScrollTarget", element.infiniteScrollTarget().name());
 		if (element.isSelectable()) result.add("selection", element.asSelectable().multiple() ? "multiple" : "single");
 		if (element.noItemsMessage() != null) result.add("noItemsMessage", element.noItemsMessage());
 		if (element.noItemsFoundMessage() != null) result.add("noItemsFoundMessage", element.noItemsFoundMessage());

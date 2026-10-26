@@ -72,6 +72,8 @@ Concept OtherComponents
 		Facet Addressable extends Addressable
 		Facet Tabs
 			var word:{Off On Auto} scrollButtons = Off
+			var word:{Horizontal Vertical} layout = Horizontal
+			var word:{Auto Left Right Top Bottom} indicatorPosition = Auto
 		Facet Menu
 			var word:{Horizontal Vertical} layout = Vertical
 		Facet ListBox

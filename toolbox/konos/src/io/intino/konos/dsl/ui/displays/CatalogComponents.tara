@@ -11,6 +11,7 @@ Concept CatalogComponents
 		var string noItemsFoundMessage = empty
 		var integer pageSize = 20
 		var boolean scrollingMark = true
+		var word:{Container Page} infiniteScrollTarget = Container
 
 		Facet Selectable
 			var boolean multiple = false
