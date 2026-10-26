@@ -230,7 +230,7 @@ export default class Multiple extends AbstractMultiple {
 
 	_spacingStyle = (multiple) => {
 		let spacingSize = multiple.spacing;
-		if (spacingSize === 0) return undefined;
+		if (spacingSize === undefined) return undefined;
 		return { right: spacingSize, bottom: spacingSize };
 	};
 

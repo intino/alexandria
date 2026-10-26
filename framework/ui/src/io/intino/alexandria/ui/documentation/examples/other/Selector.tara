@@ -10,7 +10,7 @@ Template(layout=Vertical, spacing=DP8) selectorExamplesMold
 			Text(format=h6, value="Tabs facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
 				Selector selector1 as Tabs(scrollButtons=On)
-					Text(value="option 1") tabOption1 as Option
+					Text(value="option 1") tabOption1 as Option(description="Hello world")
 					Text(value="option 2") tabOption2 as Option
 					Text(value="option 3") tabOption3 as Option
 					Text(value="option 4") tabOption4 as Option
@@ -24,6 +24,38 @@ Template(layout=Vertical, spacing=DP8) selectorExamplesMold
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") tabOption3 as Option
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 4") tabOption4 as Option
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 5") tabOption5 as Option
+						=========
+
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="Vertical tabs")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Selector selectorVerticalTabs as Tabs(layout=Vertical, indicatorPosition=Left)
+					Text(value="option 1") verticalTabOption1 as Option
+					Text(value="option 2") verticalTabOption2 as Option
+					Text(value="option 3") verticalTabOption3 as Option
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Selector as Tabs(layout\=Vertical, indicatorPosition\=Left)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 1") tabOption1 as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 2") tabOption2 as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") tabOption3 as Option
+						=========
+
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="Vertical tabs with icons")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Selector selectorVerticalTabs2 as Tabs(layout=Vertical, indicatorPosition=Left)
+					Icon(title="option 1", icon="icons/chat-incoming.png") verticalTabOption21 as Option
+					MaterialIcon(title="option 2", icon="Language") verticalTabOption22 as Option
+					MaterialIcon(title="option 3", icon="Settings") verticalTabOption23 as Option
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Selector as Tabs(layout\=Vertical, indicatorPosition\=Left)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 1") tabOption1 as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 2") tabOption2 as Option<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="option 3") tabOption3 as Option
 						=========
 
 		Block as Relative(width=48%, height=100%)

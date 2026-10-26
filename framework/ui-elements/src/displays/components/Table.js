@@ -191,6 +191,12 @@ export class EmbeddedTable extends AbstractTable {
         const { classes } = this.props;
         const headerHeight = this.header.current != null ? this.header.current.offsetHeight : 0;
         const header = this.headerContent();
+		if (this.usesPageInfiniteScroll()) return (
+			<div ref={this.container} style={{width:"100%",position:'relative'}} className={classes.collectionViewport}>
+				{ ComponentBehavior.labelBlock(this.props) }
+				<AutoSizer disableHeight>{({ width }) => (this.behavior.renderCollection(undefined, width, null, header))}</AutoSizer>
+			</div>
+		);
 
         return (
             <div ref={this.container} style={{height:"100%",width:"100%",position:'relative'}} className={classNames(classes.collectionViewport, "layout vertical flex")}>

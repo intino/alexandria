@@ -68,6 +68,14 @@ const CollectionBehavior = (collection) => {
         self.notifyItemsRendered(items);
         self.loadingNextPage = false;
         window.setTimeout(() => self.loadNextPageIfRequired(hasMore, scrollableTarget), 1000);
+        if (self.collection.usesPageInfiniteScroll()) return (
+            <InfiniteScroll dataLength={items.length} next={self.loadNextPage.bind(self)}
+                            scrollThreshold="200px" hasMore={hasMore} loader={self.renderLoadingMore()}
+                            style={{width: width != null ? width + "px" : "100%", overflow: "visible"}}>
+                {header != null && header}
+                {self.renderItems(items, mode, itemHeight, "layout horizontal flex center item")}
+            </InfiniteScroll>
+        );
         return (
             <div id={scrollableTarget} style={{ height: height, width: width, overflow: "auto", borderRadius: "18px" }}>
                 <InfiniteScroll dataLength={items.length} next={self.loadNextPage.bind(self)}
@@ -82,6 +90,13 @@ const CollectionBehavior = (collection) => {
 
     self.loadNextPageIfRequired = (hasMore, scrollableTargetId) => {
         if (self.loadingNextPage) return;
+        if (self.collection.usesPageInfiniteScroll()) {
+            const documentHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+            if (!hasMore || documentHeight - window.innerHeight > 100) return;
+            self.loadingNextPage = true;
+            self.loadNextPage();
+            return;
+        }
         const scrollableTarget = document.getElementById(scrollableTargetId);
         const scrollContainer = scrollableTarget != null && scrollableTarget.childNodes[0] != null ? scrollableTarget.childNodes[0].firstChild : null;
         const scrollIsVisible = scrollContainer == null || scrollContainer.offsetHeight == 0 || scrollContainer.scrollHeight-100 > scrollContainer.offsetHeight;
@@ -404,6 +419,7 @@ const CollectionBehavior = (collection) => {
 
     self.getSelectedStyleRules = () => {
         const theme = Theme.get();
+        if (typeof self.collection.selectedStyleRules === "function") return self.collection.selectedStyleRules(theme);
         return {
             border: "1px solid " + theme.palette.secondary.main,
             borderRadius: "18px",

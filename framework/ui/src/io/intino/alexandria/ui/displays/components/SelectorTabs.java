@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class SelectorTabs<DN extends SelectorTabsNotifier, B extends Box> extends AbstractSelectorTabs<DN, B> {
-	private int selected = -1;
+	private Integer selected;
 
     public SelectorTabs(B box) {
         super(box);
@@ -19,13 +19,13 @@ public class SelectorTabs<DN extends SelectorTabsNotifier, B extends Box> extend
 	@Override
 	public void didMount() {
 		super.didMount();
-		selection(selected);
+		if (selected != null) selection(selected);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> selection() {
-		if (selected == -1) return Collections.emptyList();
+		if (selected == null || selected == -1) return Collections.emptyList();
 		return Collections.singletonList(nameOf(selected));
 	}
 
@@ -37,7 +37,7 @@ public class SelectorTabs<DN extends SelectorTabsNotifier, B extends Box> extend
 
 	public void selection(int option) {
 		notifier.refreshSelected(option);
-		if (this.selected == option) return;
+		if (Integer.valueOf(option).equals(this.selected)) return;
 		this.selected = option;
 	}
 
