@@ -73,6 +73,10 @@ public abstract class Actionable<DN extends ActionableNotifier, B extends Box> e
         return this;
     }
 
+    public boolean isReadonly() {
+        return readonly;
+    }
+
     public Actionable<DN, B> readonly(boolean readonly) {
         if (readonly) disable();
         else enable();

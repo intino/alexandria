@@ -1,0 +1,45 @@
+dsl Konos
+
+use Collection
+use Theme
+
+Template(layout=Vertical, spacing=DP8) magazineExamplesMold
+
+	Block(layout=Horizontal Wrap, spacing=DP24)
+		Block as Relative(width=100%, height=100%)
+			Text(format=h6, value="Magazine cards")
+			Block(spacing=DP8, format=filledNoAirLarge)
+				Magazine(itemClass="io.intino.alexandria.ui.documentation.Item") magazine1
+					Mold > Item(height=160px, relativeWidth=32%) magazine1Mold > TemplateStamp(template=magazineItemMold) stamp
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Magazine(itemClass\="io.intino.alexandria.ui.documentation.Item") magazine<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=160px, relativeWidth\=32%) itemMold > TemplateStamp(template\=magazineItemMold) stamp<br/><br/>
+						Template(modelClass\="io.intino.alexandria.ui.documentation.Item") magazineItemMold<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Vertical Flexible, spacing\=DP8) as Paper<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text label
+						=========
+
+		Block as Relative(width=100%, height=100%)
+			Text(format=h6, value="Selectable magazine")
+			Block(spacing=DP8, format=filledNoAirLarge)
+				Magazine(itemClass="io.intino.alexandria.ui.documentation.Person") magazine2 as Selectable
+					Mold > Item(height=160px, relativeWidth=32%) magazine2Mold > TemplateStamp(template=personMagazineItemMold) stamp
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Magazine(itemClass\="io.intino.alexandria.ui.documentation.Person") magazine as Selectable<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=160px, relativeWidth\=32%) itemMold > TemplateStamp(template\=personMagazineItemMold) stamp
+						=========
+
+Template(layout=Vertical Flexible, modelClass="io.intino.alexandria.ui.documentation.Item", spacing=DP8) magazineItemMold
+	Block(layout=Vertical Flexible, spacing=DP8, format=filledNoAir) as Paper
+		Text(format=h6) label
+		Block(layout=Flexible) > Text(value="Hover this card to preview the magazine interaction.")
+
+Template(layout=Vertical Flexible, modelClass="io.intino.alexandria.ui.documentation.Person", spacing=DP8) personMagazineItemMold
+	Block(layout=Vertical Flexible, spacing=DP8, format=filledNoAir) as Paper
+		Text(format=h6) firstName
+		Text lastName
+		Block(layout=Flexible) > Text(value="Select this card to inspect its selection border.")

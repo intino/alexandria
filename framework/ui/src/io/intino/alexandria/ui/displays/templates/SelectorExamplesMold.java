@@ -52,6 +52,7 @@ public class SelectorExamplesMold extends AbstractSelectorExamplesMold<UiFramewo
 		selector13.addAll(List.of("Option 1", "Option 2", "Option 3", "Option 4", "Option 5", "Option 6", "Option 7", "Option 8", "Option 9"));
 		selector13.onSelect(e -> notify(e.selection()));
 //		selector13.highlight("yellow");
+		verticalTabOption21.icon(SelectorExamplesMold.class.getResource("/icons/chat-incoming.png"));
     }
 
     private void notify(List<String> selection) {

@@ -18,17 +18,34 @@ import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 const styles = theme => ({
 	item: {
 		padding: "6px 16px",
+		border: "1px solid transparent",
+		borderRadius: "16px",
+		boxSizing: "border-box",
 		'&:focus': {
-			backgroundColor: theme.palette.primary.main,
-			color: "white"
+			backgroundColor: "transparent",
+			color: "inherit",
+			outline: "none"
 		},
 	},
+	hovered: {
+		backgroundColor: `color-mix(in srgb, ${theme.palette.primary.main} 10%, ${theme.palette.mode === "dark" ? "#1e293b" : "white"}) !important`,
+		color: theme.palette.mode === "dark" ? theme.palette.primary.light : theme.palette.primary.dark
+	},
 	selected : {
-		backgroundColor: theme.palette.primary.main + " !important",
-		color: "white",
+		backgroundColor: `color-mix(in srgb, ${theme.palette.primary.main} 10%, ${theme.palette.mode === "dark" ? "#1e293b" : "white"}) !important`,
+		border: `1px solid ${theme.palette.primary.main}`,
+		borderRadius: "16px",
+		boxSizing: "border-box",
+		color: theme.palette.mode === "dark" ? theme.palette.primary.light : theme.palette.primary.dark,
 		'&:hover': {
-			backgroundColor: theme.palette.grey.secondary
+			backgroundColor: `color-mix(in srgb, ${theme.palette.primary.main} 14%, ${theme.palette.mode === "dark" ? "#1e293b" : "white"}) !important`
 		},
+		'&:focus, &.Mui-focusVisible': {
+			backgroundColor: `color-mix(in srgb, ${theme.palette.primary.main} 10%, ${theme.palette.mode === "dark" ? "#1e293b" : "white"}) !important`,
+			color: `${theme.palette.mode === "dark" ? theme.palette.primary.light : theme.palette.primary.dark} !important`,
+			outline: "none",
+			boxShadow: "none"
+		}
 	}
 });
 
@@ -42,6 +59,7 @@ class SelectorMenu extends AbstractSelectorMenu {
 		    ...this.state,
             selected : -1,
             open : [],
+			hovered: -1,
 		}
 	};
 
@@ -67,9 +85,14 @@ class SelectorMenu extends AbstractSelectorMenu {
 		const { classes } = this.props;
 
 		this._index++;
-		return (<ListItemButton className={classNames(this._index === this.state.selected ? classes.selected : undefined, classes.item)}
-						  selected={this._index === this.state.selected}
-						  onClick={this.handleSelect.bind(this, this._index)}>{item}</ListItemButton>);
+		const index = this._index;
+		return (<ListItemButton className={classNames(classes.item, index === this.state.selected ? classes.selected : undefined, this.state.hovered === index && index !== this.state.selected ? classes.hovered : undefined)}
+						  selected={index === this.state.selected}
+						  onClick={this.handleSelect.bind(this, index)}
+						  onMouseEnter={() => this.setState({hovered: index})}
+						  onMouseLeave={() => this.setState({hovered: -1})}
+						  onFocus={() => this.setState({hovered: index})}
+						  onBlur={() => this.setState({hovered: -1})}>{item}</ListItemButton>);
 	};
 
 	renderBlock = (block) => {

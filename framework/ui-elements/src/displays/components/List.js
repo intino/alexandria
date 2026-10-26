@@ -35,6 +35,11 @@ export class EmbeddedList extends AbstractList {
 
 	render() {
 		const { classes } = this.props;
+		if (this.usesPageInfiniteScroll()) return (
+			<div ref={this.container} className={classes.collectionViewport} style={{width:"100%",position:"relative",borderRadius:"18px"}}>
+				<AutoSizer disableHeight>{({ width }) => (this.behavior.renderCollection(undefined, width))}</AutoSizer>
+			</div>
+		);
 		return (<div ref={this.container} className={classes.collectionViewport + " flex"} style={{width:"100%",position:'relative',borderRadius:"18px"}}><AutoSizer>{({ height, width }) => (this.behavior.renderCollection(height, width))}</AutoSizer></div>);
 	};
 

@@ -1,5 +1,6 @@
 import React from "react";
 import {withStyles} from 'alexandria-ui-elements/src/util/muiStylesCompat';
+import classNames from "classnames";
 import {List, ListItemButton, ListSubheader} from '@mui/material';
 import AbstractSelectorListBox from "../../../gen/displays/components/AbstractSelectorListBox";
 import SelectorListBoxNotifier from "../../../gen/displays/notifiers/SelectorListBoxNotifier";
@@ -15,7 +16,21 @@ const styles = theme => ({
         fontSize: "10pt",
         color: theme.palette.mode === "dark" ? "rgba(226,232,240,0.78)" : "#0000008a",
         marginBottom: "5px",
-    }
+	},
+	item: {
+		border: "1px solid transparent",
+		borderRadius: "16px",
+		boxSizing: "border-box"
+	},
+	hovered: {
+		background: `color-mix(in srgb, ${theme.palette.primary.main} 10%, ${theme.palette.mode === "dark" ? "#1e293b" : "white"}) !important`,
+		color: theme.palette.mode === "dark" ? theme.palette.primary.light : theme.palette.primary.dark
+	},
+	selected: {
+		background: `color-mix(in srgb, ${theme.palette.primary.main} 10%, ${theme.palette.mode === "dark" ? "#1e293b" : "white"}) !important`,
+		borderColor: theme.palette.primary.main,
+		color: theme.palette.mode === "dark" ? theme.palette.primary.light : theme.palette.primary.dark
+	}
 });
 
 class SelectorListBox extends AbstractSelectorListBox {
@@ -26,6 +41,7 @@ class SelectorListBox extends AbstractSelectorListBox {
 		this.requester = new SelectorListBoxRequester(this);
 		this.state = {
     		...this.state,
+			hovered: null,
 		}
 	};
 
@@ -54,6 +70,7 @@ class SelectorListBox extends AbstractSelectorListBox {
     };
 
 	renderChild = (child, key) => {
+		const { classes } = this.props;
 		const hidden = this.isHidden(child.props.id);
 		if (hidden) return (<React.Fragment/>);
 		const className = child.props.className;
@@ -61,9 +78,13 @@ class SelectorListBox extends AbstractSelectorListBox {
 		if (className != null && className.indexOf("divider") !== -1) return (<Divider/>);
 		if (className != null && className.indexOf("sub-header") !== -1) return (<ListSubheader component="div" style={{margin:'0',padding:'0',height:'30px',lineHeight:'30px',background:(theme != null && theme.palette != null && theme.palette.mode === "dark") ? 'rgba(15,23,42,0.72)' : 'white', color:(theme != null && theme.palette != null && theme.palette.mode === "dark") ? 'rgba(226,232,240,0.78)' : 'inherit'}}>{child.props.name}</ListSubheader>);
 		const selected = this.isInSelection(child.props.name);
-		const style = selected ? { background: theme.palette.primary.main, color: (theme != null && theme.palette != null && theme.palette.mode === "dark") ? '#08111d' : 'white' } : {};
+		const style = {};
 		style.display = hidden ? "none" : "block";
-		return (<ListItemButton disabled={this.state.readonly} key={key} style={style} onClick={this.handleSelect.bind(this, child.props.name)}>{child}</ListItemButton>);
+		return (<ListItemButton disabled={this.state.readonly} key={key} style={style} className={classNames(classes.item, selected ? classes.selected : undefined, this.state.hovered === child.props.name && !selected ? classes.hovered : undefined)} onClick={this.handleSelect.bind(this, child.props.name)}
+			onMouseEnter={() => this.setState({hovered: child.props.name})}
+			onMouseLeave={() => this.setState({hovered: null})}
+			onFocus={() => this.setState({hovered: child.props.name})}
+			onBlur={() => this.setState({hovered: null})}>{child}</ListItemButton>);
 	};
 
 	handleSelect = (name) => {

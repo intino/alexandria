@@ -95,6 +95,10 @@ export default class Collection extends AbstractCollection {
 		return this.props.selection != null && this.props.selection === "multiple";
 	};
 
+	usesPageInfiniteScroll = () => {
+		return this.props.navigable == null && this.props.infiniteScrollTarget != null && this.props.infiniteScrollTarget.toLowerCase() === "page";
+	};
+
 	clearSelection = () => {
 		if (this.allowMultiSelection()) this.selection = [];
 	};

@@ -37,6 +37,7 @@ use Export
 use Actionable
 use Table
 use List
+use Magazine
 use Block
 use Chart
 use Date
@@ -67,6 +68,7 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block chartExamples as Conditional > TemplateStamp(template=chartExamplesMold) chartExamplesMold
 			Block blockExamples as Conditional > TemplateStamp(template=blockExamplesMold) blockExamplesMold
 			Block listExamples as Conditional > TemplateStamp(template=listExamplesMold) listExamplesMold
+			Block magazineExamples as Conditional > TemplateStamp(template=magazineExamplesMold) magazineExamplesMold
 			Block tableExamples as Conditional > TemplateStamp(template=tableExamplesMold) tableExamplesMold
 			Block dynamicTableExamples as Conditional > TemplateStamp(template=dynamicTableExamplesMold) dynamicTableExamplesMold
 			Block gridExamples as Conditional > TemplateStamp(template=gridExamplesMold) gridExamplesMold

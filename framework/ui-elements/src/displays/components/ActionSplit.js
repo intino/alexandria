@@ -43,10 +43,13 @@ class ActionSplit extends AbstractActionSplit {
 	};
 
 	renderSplitButton = () => {
+	    const selectedOption = this.state.options[this.state.selectedIndex];
+	    // Non-sticky actions keep their operation label stable; selected options only belong to their menu.
+	    const label = this.props.sticky !== false ? selectedOption : this._title() || selectedOption;
 	    return (
             <ButtonGroup variant={this._highlightVariant()} style={this.style()} size={this._size()}
-                         color="primary" ref={this.anchorRef} aria-label={this.props.label}>
-              <Button onClick={this.handleClick.bind(this)} style={{width:'100%'}}><div style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{this.state.options[this.state.selectedIndex]}</div></Button>
+                         color="primary" ref={this.anchorRef} aria-label={label}>
+              <Button onClick={this.handleClick.bind(this)} style={{width:'100%'}}><div style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{label}</div></Button>
               <Button color="primary" size="small" aria-controls={this.state.open ? 'split-button-menu' : undefined}
                       aria-expanded={this.state.open ? 'true' : undefined} aria-label="select merge strategy" aria-haspopup="menu"
                       onClick={this.handleToggle.bind(this)}>
@@ -91,20 +94,28 @@ class ActionSplit extends AbstractActionSplit {
 		this.setState({ selectedIndex: this._indexOf(value) });
 	};
 
-    handleClick = () => {
+    stopPropagation = (event) => {
+        event?.stopPropagation();
+    };
+
+    handleClick = (event) => {
+        this.stopPropagation(event);
         this.executeOption(this.state.selectedIndex);
     };
 
-    handleMenuItemClick = (index) => {
+    handleMenuItemClick = (index, event) => {
+        this.stopPropagation(event);
         this.setState({selectedIndex : index, open: false});
         this.executeOption(index);
     };
 
-    handleToggle = () => {
+    handleToggle = (event) => {
+        this.stopPropagation(event);
         this.setState({ open: !this.state.open});
     };
 
     handleOpen = (event) => {
+        this.stopPropagation(event);
         this.setState({open: true});
     };
 

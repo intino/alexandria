@@ -14,6 +14,10 @@ public interface SelectorOption {
 	<T extends Component> T visible(boolean value);
 	<T extends Display> T parent(Class<T> type);
 
+	default String description() {
+		return this instanceof Component ? ((Component<?, ?>) this).properties().getOrDefault("description", "") : "";
+	}
+
 	default List<Block> ancestors() {
 		List<Block> result = new ArrayList<>();
 		Block parent = parent(Block.class);

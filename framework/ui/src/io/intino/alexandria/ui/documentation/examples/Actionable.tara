@@ -133,11 +133,11 @@ Template(layout=Vertical, spacing=DP8) actionableExamplesMold
 		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="SplitButton")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
-				SplitButton(title="edition", options = "option 1" "option 2", defaultOption="option 1") operation14 as Action
+				SplitButton(title="Edition", options = "option 1" "option 2", defaultOption="option 1", sticky=true) operation14 as Action
 			Block > Text as Code(language=Html)
 					value
 						=========
-						SplitButton(title\="edition", options\="option 1" "option 2", defaultOption\="option 1") as Action
+						SplitButton(title\="", options\="option 1" "option 2", defaultOption\="option 1") as Action
 						=========
 
 		Block as Relative(width=48%, height=100%)

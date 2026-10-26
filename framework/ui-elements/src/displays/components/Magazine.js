@@ -13,11 +13,19 @@ export const MagazineStyles = theme => ({
 	itemView : {
 		height: "100%",
 		padding: "0 10px",
+		boxSizing: "border-box",
+		position: "relative",
+		transition: "transform 160ms ease",
+		willChange: "transform",
 		'&:hover $selector' : {
 			opacity: 1,
 			pointerEvents: "auto"
+		},
+		'&:hover': {
+			transform: "translateY(-3px)",
+			zIndex: 1
 		}
-	},
+	}
 });
 
 export class EmbeddedMagazine extends AbstractMagazine {
@@ -25,11 +33,23 @@ export class EmbeddedMagazine extends AbstractMagazine {
 	constructor(props) {
 		super(props);
 		this.notifier = new MagazineNotifier(this);
-		this.requester = new MagazineRequester(this);
+	this.requester = new MagazineRequester(this);
 	};
+
+	selectedStyleRules = () => ({
+		border: "0",
+		borderRadius: "0",
+		background: "transparent",
+		boxShadow: "none"
+	});
 
 	render() {
 		const { classes } = this.props;
+		if (this.usesPageInfiniteScroll()) return (
+			<div ref={this.container} className={classes.collectionViewport} style={{width:"100%",position:"relative"}}>
+				<AutoSizer disableHeight>{({ width }) => (this.behavior.renderCollection(undefined, width, "Column"))}</AutoSizer>
+			</div>
+		);
 		return (<div ref={this.container} className={classes.collectionViewport + " flex"} style={{width:"100%",position:'relative'}}><AutoSizer>{({ height, width }) => (this.behavior.renderCollection(height, width, "Column"))}</AutoSizer></div>);
 	};
 

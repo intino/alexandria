@@ -85,6 +85,8 @@ public class WidgetMold extends AbstractWidgetMold<AlexandriaUiBox> {
         if (blockExamples.isVisible()) blockExamples.blockExamplesMold.refresh();
         listExamples.visible(widget instanceof ListWidget);
         if (listExamples.isVisible()) listExamples.listExamplesMold.refresh();
+        magazineExamples.visible(widget instanceof MagazineWidget);
+        if (magazineExamples.isVisible()) magazineExamples.magazineExamplesMold.refresh();
         tableExamples.visible(widget instanceof TableWidget);
         if (tableExamples.isVisible()) tableExamples.tableExamplesMold.refresh();
         dynamicTableExamples.visible(widget instanceof DynamicTableWidget);
