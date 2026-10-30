@@ -258,7 +258,7 @@ const styles = theme => ({
     resizeHandle: {
         position: "absolute",
         top: 0,
-        right: "-4px",
+        right: 0,
         width: "8px",
         height: "100%",
         cursor: "col-resize",
@@ -518,7 +518,7 @@ class Grid extends AbstractGrid {
         const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
         const palette = collectionPalette(theme);
         const numericColumnInfo = this._getNumericColumnInfo(column.key);
-        const rightAligned = this._isRightAlignedColumn(column, numericColumnInfo) || column.type === "Integer";
+        const rightAligned = column.type !== "Date" && (this._isRightAlignedColumn(column, numericColumnInfo) || column.type === "Integer");
         return (
             <TableCell
                 key={column.key}
@@ -1163,7 +1163,7 @@ class Grid extends AbstractGrid {
         const type = column.type;
         const style = { display: 'inline-block' };
         const numericColumnInfo = this._getNumericColumnInfo(column.name);
-        if (this._isRightAlignedColumn(column, numericColumnInfo)) style.float = 'right';
+        if (column.type !== "Date" && this._isRightAlignedColumn(column, numericColumnInfo)) style.float = 'right';
         return (<div style={style}>{this.translate(column.label)}</div>);
     };
 
@@ -1282,7 +1282,11 @@ class Grid extends AbstractGrid {
             const tagName = e.target.tagName != null ? e.target.tagName.toLowerCase() : "";
             if (tagName === "input" || tagName === "button" || tagName === "a") return;
         }
-        const columnIndex = this.findColumn(gridColumn.key);
+        if (this.props.linkTextOnly && gridColumn.type === "Link") {
+            this.selectRowFromCell(rowIndex, data);
+            return;
+        }
+        const columnIndex = this.state.columns.findIndex(column => column.name === gridColumn.key);
         const sourceColumn = this.state.columns[columnIndex];
         if (sourceColumn == null) return;
         const dataValue = data[sourceColumn.name];
@@ -1296,9 +1300,35 @@ class Grid extends AbstractGrid {
         return this.state.columns.filter(c => c.type === "Link");
     };
 
+    selectRowFromCell = (rowIndex, row) => {
+        if (!row.selectable || !["single", "multiple"].includes(this.props.selection)) return;
+        if (this.allowMultiSelection()) {
+            this.handleToggleRowSelection(rowIndex, {target: {checked: !this.state.selectedIndexes.includes(rowIndex)}});
+            return;
+        }
+        this.setState({selectedIndexes: [rowIndex]});
+        this.requester.selection([rowIndex]);
+    };
+
+    isLinkTextHit = (event) => {
+        const walker = document.createTreeWalker(event.currentTarget, NodeFilter.SHOW_TEXT);
+        const range = document.createRange();
+        let node;
+        while ((node = walker.nextNode()) != null) {
+            if (!node.textContent.trim() || node.parentElement.closest('[aria-hidden="true"]')) continue;
+            range.selectNodeContents(node);
+            if (Array.from(range.getClientRects()).some(rect => event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom)) return true;
+        }
+        return false;
+    };
+
     handleCellClick = (column, data, e) => {
         if (e != null && e.nativeEvent != null && e.nativeEvent.isTrusted === false) return;
         e.stopPropagation();
+        if (this.props.linkTextOnly && e.detail > 0 && !this.isLinkTextHit(e)) {
+            this.selectRowFromCell(Number(this.rowIndex(data.value)), data.row);
+            return;
+        }
         const index = this.rowIndex(data.value);
         const value = this.rowValue(data.value);
         const address = this.rowAddress(data.value);
@@ -1696,6 +1726,8 @@ class Grid extends AbstractGrid {
     };
 
 }
+
+export {Grid, styles as gridStyles};
 
 export default withStyles(styles, { withTheme: true })(withSnackbar(Grid));
 DisplayFactory.register("Grid", withStyles(styles, { withTheme: true })(withSnackbar(Grid)));
