@@ -43,7 +43,7 @@ Concept OtherComponents
 			var Service.UI.Use owner
 			var string template
 
-		!! Stamps template that belongs to alexandria library
+		!! Stamps template that belongs to project made with alexandria library
 		sub LibraryTemplateStamp
 			var Service.UI.Import import
 			var string template
