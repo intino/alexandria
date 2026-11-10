@@ -1008,11 +1008,11 @@ class Grid extends AbstractGrid {
         const configuredWidths = this.state.columnWidths || {};
 
         for (let i=0; i<columns.length; i++) {
+            const configuredWidth = this.columnWidth(columns[i], columnsViewportWidth);
             if (this.isIconColumn(columns[i])) {
-                result[columns[i].name] = 32;
+                result[columns[i].name] = configuredWidth != null ? configuredWidth : 32;
                 continue;
             }
-            const configuredWidth = this.columnWidth(columns[i], columnsViewportWidth);
             const headerWidth = this.getWidth(this.translate(columns[i].label || ""), 10) + 16;
             result[columns[i].name] = configuredWidth != null ? configuredWidth : Math.min(headerWidth, maxAutomaticColumnWidth);
         }
