@@ -68,8 +68,6 @@
 
 .MuiTableCell-root.column-type-MaterialIcon,
 .MuiTableCell-root.column-type-Icon {
-    max-width: 32px;
-    min-width: 32px;
     padding-left: 3px !important;
     padding-right: 3px !important;
     text-align: center;
