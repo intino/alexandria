@@ -9,24 +9,50 @@ import TableRequester from "../../../gen/displays/requesters/TableRequester";
 import AutoSizer from 'react-virtualized-auto-sizer';
 import classNames from "classnames";
 import 'alexandria-ui-elements/res/styles/layout.css';
-import {collectionPalette, CollectionStyles} from "./Collection";
+import {collectionPalette, CollectionStyles, tabularPalette} from "./Collection";
 import DisplayFactory from "alexandria-ui-elements/src/displays/DisplayFactory";
 import ComponentBehavior from "./behaviors/ComponentBehavior";
 import Theme from 'alexandria-ui-elements/gen/Theme';
+import {mapTableColumns, MIN_COLUMN_WIDTH, TableColumnContext} from "./TableColumnLayout";
 
 export const TableStyles = theme => ({
     ...CollectionStyles(theme),
+    collectionViewport: {
+        ...CollectionStyles(theme).collectionViewport,
+        background: tabularPalette(theme).bodyBackground,
+        border: `1px solid ${collectionPalette(theme).borderColor}`,
+        boxSizing: "border-box",
+        minWidth: 0,
+        maxWidth: "100%",
+        overflow: "hidden",
+        "& .infinite-scroll-component, & [id$='_infinite']": {
+            borderRadius: "0 !important",
+        },
+    },
     label: {
         color: theme.palette.grey.A700,
         marginRight: "5px"
     },
     headerView : {
-        background: collectionPalette(theme).headerBackground,
+        background: tabularPalette(theme).headerBackground,
         borderBottom: `1px solid ${collectionPalette(theme).borderColor}`,
-        backdropFilter: "blur(6px)",
+        backdropFilter: "blur(12px)",
+        boxSizing: "border-box",
+        position: "sticky",
+        top: 0,
+        zIndex: 4,
+        "& > div > div:not($selectAll)": {
+            padding: "2px 8px !important",
+            boxSizing: "border-box",
+            height: "auto !important",
+            minHeight: "26px",
+            minWidth: 0,
+            overflow: "hidden",
+            fontWeight: 500,
+        },
         color: theme.palette.mode === "dark" ? "rgba(241,245,249,0.96)" : "inherit",
         "& .MuiTableCell-root": {
-            padding: "1px 6px",
+            padding: "2px 8px",
         },
         "& *": {
             color: theme.palette.mode === "dark" ? "rgba(241,245,249,0.96)" : "inherit",
@@ -42,10 +68,20 @@ export const TableStyles = theme => ({
     itemView : {
         borderBottom: `1px solid ${collectionPalette(theme).rowBorderColor}`,
         height: "100%",
-        borderRadius: "14px",
+        minHeight: "26px",
+        borderRadius: 0,
+        boxSizing: "border-box",
+        background: "transparent",
+        color: tabularPalette(theme).textColor,
+        "& .alexandria-table-row > div": {
+            padding: "2px 8px !important",
+            boxSizing: "border-box",
+            minWidth: 0,
+            overflow: "hidden",
+        },
         transition: "background-color 140ms ease, box-shadow 140ms ease",
         "& .MuiTableCell-root": {
-            padding: "1px 6px",
+            padding: "2px 8px",
         },
         '&:hover' : {
             background: collectionPalette(theme).rowHoverBackground
@@ -134,7 +170,35 @@ export const TableStyles = theme => ({
         position: "absolute",
         top: "0",
         left: "0",
-    }
+    },
+    columnResizeHandle: {
+        position: "absolute",
+        right: 0,
+        top: 0,
+        height: "100%",
+        width: "8px",
+        zIndex: 5,
+        cursor: "col-resize",
+        touchAction: "none",
+        userSelect: "none",
+        "&::after": {
+            content: "\"\"",
+            position: "absolute",
+            top: "20%",
+            bottom: "20%",
+            left: "3px",
+            width: "2px",
+            borderRadius: "999px",
+            background: theme.palette.mode === "dark" ? "rgba(148,163,184,0.28)" : "rgba(15,23,42,0.12)",
+            transition: "background-color 120ms ease",
+        },
+        "&:hover::after, &:focus-visible::after": {
+            background: theme.palette.primary.main,
+        },
+        "&:focus-visible": {
+            outline: "none",
+        },
+    },
 });
 
 export class EmbeddedTable extends AbstractTable {
@@ -148,6 +212,7 @@ export class EmbeddedTable extends AbstractTable {
         this.rowTooltipCloseTimer = null;
         this.state = {
             ...this.state,
+            columnWidths: null,
             tooltipItemIndex: null,
             tooltipAnchorItemIndex: null,
             tooltipEntries: [],
@@ -156,6 +221,7 @@ export class EmbeddedTable extends AbstractTable {
     };
 
     componentWillUnmount() {
+        this.columnResize = null;
         if (this.rowTooltipTimer != null) {
             window.clearTimeout(this.rowTooltipTimer);
             this.rowTooltipTimer = null;
@@ -167,6 +233,85 @@ export class EmbeddedTable extends AbstractTable {
     handleCheck = () => {
         this.requester.selectAll();
     };
+
+    measuredColumnWidths = () => {
+        const content = this.header.current != null ? this.header.current.firstElementChild : null;
+        if (content == null) return [];
+        return Array.from(content.children)
+            .filter(cell => !cell.classList.contains(this.props.classes.selectAll))
+            .map(cell => Math.max(MIN_COLUMN_WIDTH, cell.getBoundingClientRect().width));
+    };
+
+    beginColumnLayout = () => {
+        const widths = this.state.columnWidths || this.measuredColumnWidths();
+        if (this.originalColumnWidths == null) this.originalColumnWidths = widths.slice();
+        return widths;
+    };
+
+    startColumnResize = (index, event) => {
+        if (event.button !== 0) return;
+        event.preventDefault();
+        event.stopPropagation();
+        const widths = this.beginColumnLayout();
+        if (widths[index] == null) return;
+        this.columnResize = {index, startX: event.clientX, widths, pointerId: event.pointerId};
+        event.currentTarget.setPointerCapture(event.pointerId);
+        this.setState({columnWidths: widths});
+    };
+
+    moveColumnResize = event => {
+        const resize = this.columnResize;
+        if (resize == null || event.pointerId !== resize.pointerId) return;
+        event.preventDefault();
+        const widths = resize.widths.slice();
+        widths[resize.index] = Math.max(MIN_COLUMN_WIDTH, resize.widths[resize.index] + event.clientX - resize.startX);
+        this.setState({columnWidths: widths});
+    };
+
+    endColumnResize = event => {
+        if (this.columnResize == null || event.pointerId !== this.columnResize.pointerId) return;
+        this.columnResize = null;
+        if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+    };
+
+    resetColumnWidth = index => {
+        if (this.originalColumnWidths == null) return;
+        this.setState(state => {
+            const widths = (state.columnWidths || this.originalColumnWidths).slice();
+            widths[index] = this.originalColumnWidths[index];
+            return {columnWidths: widths};
+        });
+    };
+
+    handleColumnResizeKeyDown = (index, event) => {
+        if (event.key === "Home") {
+            event.preventDefault();
+            event.stopPropagation();
+            this.resetColumnWidth(index);
+            return;
+        }
+        if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+        event.preventDefault();
+        event.stopPropagation();
+        const widths = this.beginColumnLayout().slice();
+        if (widths[index] == null) return;
+        widths[index] = Math.max(MIN_COLUMN_WIDTH, widths[index] + (event.key === "ArrowRight" ? 1 : -1) * (event.shiftKey ? 24 : 8));
+        this.setState({columnWidths: widths});
+    };
+
+    columnLayout = () => ({
+        widths: this.state.columnWidths,
+        handleClassName: this.props.classes.columnResizeHandle,
+        start: this.startColumnResize,
+        move: this.moveColumnResize,
+        end: this.endColumnResize,
+        reset: this.resetColumnWidth,
+        keyDown: this.handleColumnResizeKeyDown,
+    });
+
+    resizedTableWidth = () => this.state.columnWidths == null ? undefined :
+        this.state.columnWidths.reduce((sum, width) => sum + width, 0) +
+        (this.props.selection != null && this.allowMultiSelection() ? 42 : 0);
 
     normalizeHeaderChildren = (children, isDark) => {
         if (!isDark) return children;
@@ -216,13 +361,16 @@ export class EmbeddedTable extends AbstractTable {
         const headerClass = height <= minHeight ? classes.withScroller : classes.withoutScroller;
         const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
         const headerInlineStyle = isDark ? {
-            position: "relative",
+            position: "sticky",
             background: "var(--alex-collection-header-bg)",
             color: "rgba(241,245,249,0.96)",
             borderBottom: "1px solid var(--alex-collection-border)",
-        } : { position: "relative" };
-        const normalizedChildren = this.normalizeHeaderChildren(this.props.children, isDark);
+        } : { position: "sticky" };
+        const normalizedChildren = mapTableColumns(this.normalizeHeaderChildren(this.props.children, isDark),
+            (child, index) => React.cloneElement(child, {tableColumnIndex: index}));
+        headerInlineStyle.minWidth = this.resizedTableWidth();
         return (
+            <TableColumnContext.Provider value={this.columnLayout()}>
             <div className={classNames("layout vertical flex", isDark ? "dark" : undefined)}>
                 <div ref={this.header} className={classNames(classes.headerView, headerClass, "layout horizontal flex center", selectable && multiple ? classes.selectable : {}, isDark ? "alexandria-table-header-dark" : undefined)} style={headerInlineStyle}>
                     <div className="layout horizontal flex center" style={isDark ? {color:"rgba(241,245,249,0.96)"} : undefined}>
@@ -231,10 +379,21 @@ export class EmbeddedTable extends AbstractTable {
                     </div>
                 </div>
             </div>
+            </TableColumnContext.Provider>
         );
     }
 
     wrapCollectionItem = (content, item, index) => {
+        const width = this.resizedTableWidth();
+        const resizedContent = width == null ? content : React.cloneElement(content, {
+            style: {...content.props.style, minWidth: width, width},
+        });
+        return <TableColumnContext.Provider key={content.key} value={this.columnLayout()}>
+            {this.renderCollectionItem(resizedContent, item, index)}
+        </TableColumnContext.Provider>;
+    };
+
+    renderCollectionItem = (content, item, index) => {
         if (!this.showTooltipForRows()) return content;
         const { classes } = this.props;
         return (

@@ -35,7 +35,7 @@ import {RiseLoader} from "react-spinners";
 import Theme from "app-elements/gen/Theme";
 import classNames from "classnames";
 import {selectorComboBoxStyles, SelectorComboBoxTextViewStyles} from "./SelectorComboBox";
-import {collectionPalette} from "./Collection";
+import {collectionPalette, tabularPalette} from "./Collection";
 import {linkPalette} from "./ThemeTokens";
 
 const GridSelectorStyles = {
@@ -80,7 +80,7 @@ const styles = theme => ({
             fontSize: "inherit",
             borderBottomColor: collectionPalette(theme).rowBorderColor,
             background: "transparent",
-            color: theme.palette.mode === "dark" ? "rgba(255,255,255,0.88)" : "inherit",
+            color: tabularPalette(theme).textColor,
         },
         "& .grid-cell-content": {
             display: "block",
@@ -132,10 +132,11 @@ const styles = theme => ({
             background: theme.palette.mode === "dark" ? "rgba(18, 28, 42, 0.82)" : "rgba(239, 246, 255, 0.78)",
         },
         "& .MuiTableBody-root .MuiTableCell-paddingCheckbox": {
-            background: theme.palette.mode === "dark" ? "rgba(15, 23, 42, 0.72)" : "transparent",
+            background: "transparent",
         },
     },
     gridRow: {
+        backgroundColor: tabularPalette(theme).bodyBackground,
         "&:hover": {
             backgroundColor: `${collectionPalette(theme).rowHoverBackground} !important`,
         },
@@ -418,7 +419,7 @@ class Grid extends AbstractGrid {
         const hasFullRelativeWidth = this.hasFullRelativeWidth(columns);
         const theme = Theme.get();
         const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
-        const palette = collectionPalette(theme);
+        const palette = tabularPalette(theme);
         return (
             <div key={this.state.key} className="layout vertical flex self-stretch" style={{height:'100%',width:'100%',flex:'1 1 0',alignSelf:'stretch',boxSizing:'border-box',minHeight:0,minWidth:0,maxWidth:'100%',overflow:'hidden'}}>
                 {this.props.showToolbar &&
@@ -516,7 +517,7 @@ class Grid extends AbstractGrid {
         const direction = this.state.sortDirection;
         const theme = Theme.get();
         const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
-        const palette = collectionPalette(theme);
+        const palette = tabularPalette(theme);
         const numericColumnInfo = this._getNumericColumnInfo(column.key);
         const rightAligned = column.type !== "Date" && (this._isRightAlignedColumn(column, numericColumnInfo) || column.type === "Integer");
         return (
@@ -576,7 +577,7 @@ class Grid extends AbstractGrid {
                         minWidth: 48,
                         maxWidth: 48,
                         boxSizing: "border-box",
-                        ...(isDark ? { background: "rgba(15, 23, 42, 0.72)" } : {})
+                        background: "transparent",
                     }}>
                         <Checkbox
                             checked={this.state.selectedIndexes.indexOf(rowIndex) !== -1}
@@ -611,8 +612,6 @@ class Grid extends AbstractGrid {
     };
 
     renderGridBodyCell = (column, row, rowIndex) => {
-        const theme = Theme.get();
-        const isDark = theme != null && theme.palette != null && theme.palette.mode === "dark";
         const isIconColumn = this.isIconColumn(column);
         const value = row[column.key];
         return (
@@ -625,7 +624,7 @@ class Grid extends AbstractGrid {
                     width: column.cssWidth,
                     boxSizing: column.relativeWidth != null ? "border-box" : undefined,
                     overflow: "hidden",
-                    backgroundColor: isDark ? "rgba(15, 23, 42, 0.72)" : undefined
+                    backgroundColor: "transparent"
                 }}
             >
                 {isIconColumn ? column.formatter({ row, value }) :

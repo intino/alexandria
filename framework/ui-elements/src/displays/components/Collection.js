@@ -20,6 +20,15 @@ export const collectionPalette = (theme) => {
 	};
 };
 
+// Shared visual tokens for the grid and the mold-based table.
+export const tabularPalette = theme => ({
+	...collectionPalette(theme),
+	headerBackground: theme.palette.mode === "dark" ? collectionPalette(theme).headerBackground : "rgba(239, 246, 255, 0.78)",
+	bodyBackground: theme.palette.mode === "dark" ? "rgba(15, 23, 42, 0.72)" : "#ffffff",
+	headerColor: theme.palette.mode === "dark" ? "rgba(241,245,249,0.96)" : "inherit",
+	textColor: theme.palette.mode === "dark" ? "rgba(255,255,255,0.88)" : "inherit",
+});
+
 export const CollectionStyles = theme => ({
 	collectionViewport: {
 		borderRadius: "18px",
