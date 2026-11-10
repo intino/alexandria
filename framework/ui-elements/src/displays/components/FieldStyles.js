@@ -91,14 +91,14 @@ export const outlinedFieldStyles = (theme) => {
 			borderColor: hoverBorderColor,
 		},
 		"& .MuiInputBase-root.Mui-disabled:hover .MuiOutlinedInput-notchedOutline": {
-			borderColor: dark ? "rgba(255,255,255,0.1)" : "rgba(15,23,42,0.1)",
+			borderColor: dark ? "var(--alex-field-border-disabled)" : "rgba(15,23,42,0.1)",
 		},
 		"& .MuiInputBase-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
 			borderColor: focusColor,
 			borderWidth: "1px",
 		},
 		"& .MuiInputBase-root.Mui-disabled .MuiOutlinedInput-notchedOutline": {
-			borderColor: dark ? "rgba(255,255,255,0.1)" : "rgba(15,23,42,0.1)",
+			borderColor: dark ? "var(--alex-field-border-disabled)" : "rgba(15,23,42,0.1)",
 		},
 		"& .MuiOutlinedInput-input": {
 			minHeight: "28px",
