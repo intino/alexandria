@@ -100,8 +100,9 @@ class SelectorTabs extends AbstractSelectorTabs {
 	    const { classes } = this.props;
 	    const selected = this.state.selected >= 0 ? this.state.selected : false;
 	    const children = this._visibleOptions();
-	    const scrollButtons = this.props.scrollButtons != undefined ? this.props.scrollButtons.toLowerCase() : "off";
-	    const variant = scrollButtons !== "off" ? "scrollable" : undefined;
+	    const scrollButtonsMode = this.props.scrollButtons != null ? String(this.props.scrollButtons).toLowerCase() : "off";
+	    const scrollButtons = ["on", "auto", "true"].includes(scrollButtonsMode) ? "auto" : false;
+	    const variant = scrollButtons !== false ? "scrollable" : "standard";
 		const vertical = this.props.layout != null && this.props.layout.toLowerCase() === "vertical";
 		const indicatorPosition = this.props.indicatorPosition != null ? this.props.indicatorPosition.toLowerCase() : (vertical ? "right" : "bottom");
 		const indicatorClass = vertical ? (indicatorPosition === "left" ? classes.verticalLeftIndicator : classes.verticalIndicator) : (indicatorPosition === "top" ? classes.horizontalTopIndicator : classes.indicator);
