@@ -29,8 +29,9 @@
     --alex-field-bg-hover: rgba(31, 43, 56, 0.99);
     --alex-field-bg-focus: rgba(18, 47, 77, 0.92);
     --alex-field-shell-bg: rgba(148, 163, 184, 0.08);
-    --alex-field-border: rgba(15, 23, 42, 0.76);
-    --alex-field-border-hover: rgba(15, 23, 42, 0.88);
+    --alex-field-border: #8496b0;
+    --alex-field-border-hover: #b4c7df;
+    --alex-field-border-disabled: #596b83;
     --alex-field-focus: #90caf9;
     --alex-field-label: rgba(226, 232, 240, 0.72);
     --alex-field-text: rgba(255, 255, 255, 0.92);
@@ -73,7 +74,7 @@
 .dark.image-editable.readonly .fileeditable-dropzone,
 .dark.text-editable-rich-editor.readonly .rsw-editor,
 .dark .alex-fileeditable-paste-input-readonly {
-    border-color: rgba(148, 163, 184, 0.16) !important;
+    border-color: var(--alex-field-border-disabled) !important;
 }
 
 .selector-combo-box.text-view .MuiOutlinedInput-notchedOutline {
@@ -412,7 +413,7 @@
 .dark.selector-combo-box.readonly .MuiInputBase-root:hover .MuiOutlinedInput-notchedOutline,
 .dark.selector-collection-box.readonly .MuiInputBase-root:hover .MuiOutlinedInput-notchedOutline,
 .dark.date-editable.readonly .MuiInputBase-root:hover .MuiPickersOutlinedInput-notchedOutline {
-    border-color: rgba(148, 163, 184, 0.16) !important;
+    border-color: var(--alex-field-border-disabled) !important;
 }
 
 .MuiInputBase-input::placeholder {
@@ -481,7 +482,7 @@
 }
 
 .selector-combo-box .PrivateNotchedOutline-root-46, .selector-collection-box .PrivateNotchedOutline-root-46 {
-    top: 0;
+    top: -5px;
     left: 0;
     right: 0;
     bottom: 0;
@@ -615,7 +616,7 @@
 .dark.date-editable.readonly .MuiInputBase-root:hover .MuiOutlinedInput-notchedOutline,
 .dark.date-editable.readonly .MuiPickersOutlinedInput-root:hover .MuiPickersOutlinedInput-notchedOutline,
 .dark.date-editable.readonly .MuiPickersOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
-    border-color: rgba(148, 163, 184, 0.16) !important;
+    border-color: var(--alex-field-border-disabled) !important;
 }
 
 .date-editable .Mui-focused .MuiPickersOutlinedInput-notchedOutline,
@@ -655,7 +656,7 @@
 
 .dark.selector-combo-box .MuiFormControl-root > label,
 .dark.selector-collection-box .MuiFormControl-root > label {
-    background: #161d26 !important;
+    background: transparent !important;
     color: var(--alex-field-label) !important;
 }
 
@@ -667,23 +668,36 @@
     color: inherit !important;
 }
 
-.dark .basic-multi-select .select__control,
-.dark .basic-multi-select .select__control:hover,
-.dark .basic-multi-select .select__value-container,
+/* Only the rounded input shell paints the dark selector surface. */
+.dark .selector-combo-box > .MuiFormControl-root,
+.selector-combo-box.dark > .MuiFormControl-root {
+    background: transparent !important;
+}
+
+.dark .selector-combo-box .basic-multi-select .select__control,
+.dark .selector-combo-box .basic-multi-select .select__control:hover,
+.dark .selector-combo-box .basic-multi-select .select__value-container,
+.selector-combo-box.dark .basic-multi-select .select__control,
+.selector-combo-box.dark .basic-multi-select .select__control:hover,
+.selector-combo-box.dark .basic-multi-select .select__value-container {
+    background: transparent !important;
+}
+
+.dark .selector-combo-box .MuiInputBase-formControl,
+.selector-combo-box.dark .MuiInputBase-formControl {
+    border-radius: var(--alex-field-radius, 16px) !important;
+    background-clip: padding-box;
+    box-sizing: border-box;
+}
+
 .dark .basic-multi-select .select__menu,
 .dark .basic-multi-select .select__menu-list {
     background: var(--alex-field-bg) !important;
     color: var(--alex-field-text) !important;
 }
 
-.selector-combo-box.dark .basic-multi-select .select__control,
-.selector-combo-box.dark .basic-multi-select .select__control:hover,
-.selector-combo-box.dark .basic-multi-select .select__value-container,
 .selector-combo-box.dark .basic-multi-select .select__menu,
 .selector-combo-box.dark .basic-multi-select .select__menu-list,
-.selector-collection-box.dark .basic-multi-select .select__control,
-.selector-collection-box.dark .basic-multi-select .select__control:hover,
-.selector-collection-box.dark .basic-multi-select .select__value-container,
 .selector-collection-box.dark .basic-multi-select .select__menu,
 .selector-collection-box.dark .basic-multi-select .select__menu-list {
     background: var(--alex-field-bg) !important;
