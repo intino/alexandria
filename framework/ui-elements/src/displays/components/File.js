@@ -26,6 +26,7 @@ const styles = theme => ({
 	},
 	toolbar: {
 		height: "56px",
+		flexShrink: 0,
 		background: theme.palette.mode === "dark" ? "rgba(15,23,42,0.82)" : "#f8fafc",
 		borderBottom: `1px solid ${theme.palette.mode === "dark" ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.08)"}`,
 		padding: "0 12px",
@@ -127,37 +128,20 @@ class File extends AbstractFile {
 	_renderImage = (file) => {
 		const { classes } = this.props;
 		const downloadTitle = this.translate("Download");
-		const imageId = this.props.id + "_" + Math.random();
-		window.setTimeout(() => this._adjustImageSize(imageId), 10);
+		const filename = this._downloadFilename();
 		return (
-			<div style={{width:'100%',height:'100%'}} ref={this.container}>
-				<div className={classNames(classes.surface, "layout vertical flex")} style={{height:"100%", width:"100%"}}>
+			<div style={{width: '100%', height: '100%', minHeight: 0, minWidth: 0}}>
+				<div className={classes.surface} style={{display: "grid", gridTemplateRows: "56px minmax(0, 1fr)", height: "100%", width: "100%", minHeight: 0, boxSizing: "border-box"}}>
 					<div className={classNames(classes.toolbar, "layout horizontal start-justified center")}>
-						<Button sx={dialogPrimaryButtonStyles} style={{margin:'8px'}} variant="contained" color="primary" onClick={this._downloadFile.bind(this, file)}><SaveAltIcon style={{marginRight:"5px"}}/>{downloadTitle}</Button>
+						<Button sx={dialogPrimaryButtonStyles} style={{margin: '8px'}} variant="contained" color="primary" onClick={this._downloadFile.bind(this, file)}><SaveAltIcon style={{marginRight: "5px"}}/>{downloadTitle}</Button>
 					</div>
-					<div className="layout vertical flex">
-						<div style={this.style()} className={classNames(classes.message, "layout vertical center-center")}>
-							<div className="layout vertical center-center">
-								<img id={imageId} src={file} title={this.state.filename} style={{display:"none"}}/>
-							</div>
-						</div>
+					<div style={{position: 'relative', minHeight: 0, minWidth: 0, margin: '16px', overflow: 'hidden'}}>
+						<img src={file} alt={filename} title={filename} style={{position: 'absolute', inset: 0, display: 'block', width: '100%', height: '100%', objectFit: 'scale-down', objectPosition: 'center'}}/>
 					</div>
 				</div>
 			</div>
 		);
 	}
-
-	_adjustImageSize = (imageId) => {
-		const width = this.container.current.offsetWidth - 20;
-		const height = this.container.current.offsetHeight - 20;
-		const element = document.getElementById(imageId);
-		element.style.display = "block";
-		element.style.width = width + "px";
-		if (element.offsetHeight > height) {
-			element.style.width = "100%";
-			element.style.height = height + "px";
-		}
-	};
 
 	_renderXml = (file) => {
 		const { classes } = this.props;
@@ -199,7 +183,7 @@ class File extends AbstractFile {
 		var url = this.state.value != null ? this.state.value : undefined;
 		if (url == undefined) return url;
 		url += (url.indexOf("?") != -1 ? "&" : "?") + "embedded=true";
-		if (this.state.filename != null) url += "&label=" + this.state.filename;
+		if (this.state.filename != null) url += "&label=" + encodeURIComponent(this._downloadFilename());
 		return url;
 	};
 
@@ -259,7 +243,7 @@ class File extends AbstractFile {
 	};
 
 	_downloadFilename = () => {
-		return this.state.filename;
+		return this.state.filename != null ? this.state.filename.split(/[\\/]/).pop() : "";
 	}
 }
 

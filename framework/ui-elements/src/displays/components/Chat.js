@@ -45,13 +45,13 @@ const styles = theme => ({
     day : {
         padding: "3px 15px",
         background: theme.palette.mode === "light" ? "#dfdfdf" : "#535353",
-        fontSize: "9pt",
+        fontSize: "var(--chat-meta-font-size, 9pt)",
         borderRadius: "10px",
         marginBottom: "5px"
     },
     date : {
         color: "#888",
-        fontSize: "8pt",
+        fontSize: "var(--chat-meta-font-size, 8pt)",
         marginTop: "4px",
         marginLeft: "10px",
     },
@@ -70,7 +70,8 @@ const styles = theme => ({
         background: "none",
         border: "0",
         padding: "3px 5px",
-        fontSize: "11pt",
+        fontSize: "var(--chat-font-size, 11pt)",
+        lineHeight: "var(--chat-line-height, normal)",
     },
     input : {
         marginRight: "10px",
@@ -84,7 +85,8 @@ const styles = theme => ({
         },
         "& .MuiOutlinedInput-input": {
             ...outlinedFieldStyles(theme)["& .MuiOutlinedInput-input"],
-            fontSize: "11pt",
+            fontSize: "var(--chat-font-size, 11pt)",
+            lineHeight: "var(--chat-line-height, normal)",
         }
     },
     attachmentDescriptionField: {
