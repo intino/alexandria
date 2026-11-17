@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "7.4.45") ui-framework-elements
+Artifact("io.intino.alexandria", "7.4.46") ui-framework-elements
 
 	WebImports
 		WebComponent("@emotion/react", "^11.14.0")
@@ -15,7 +15,7 @@ Artifact("io.intino.alexandria", "7.4.45") ui-framework-elements
 		WebComponent("moment", "^2.29.2")
 		WebComponent("notistack", "^3.0.2")
 		WebComponent("numeral", "^2.0.6")
-		WebComponent("plotly.js", "^3.5.1")
+		WebComponent("plotly.js", "^4.1.1")
 		WebComponent("react", "^19.1.1")
 		WebComponent("react-dom", "^19.1.1")
 		WebComponent("react-is", "^19.1.1")

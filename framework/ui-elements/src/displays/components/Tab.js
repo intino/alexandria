@@ -21,7 +21,7 @@ export const TabContent = React.forwardRef(({children, highlighted, theme, style
 			<span aria-hidden="true" style={{
 				position: "absolute",
 				inset: surfaceInset || "-9px -18px",
-				borderRadius: "16px",
+				borderRadius: "16px 16px 0 0",
 				background: isDark ? `color-mix(in srgb, ${primary} 28%, #1e293b)` : `color-mix(in srgb, ${primary} 10%, white)`,
 				opacity: highlighted ? 1 : 0,
 				pointerEvents: "none",
