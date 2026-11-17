@@ -12,6 +12,10 @@ public interface RestAccessor {
 
 	Response get(URL url, String path, Map<String, String> parameters) throws RestfulFailure;
 
+	Response head(URL url, String path) throws RestfulFailure;
+
+	Response head(URL url, String path, Map<String, String> parameters) throws RestfulFailure;
+
 	Resource getResource(URL url, String path) throws RestfulFailure;
 
 	Resource getResource(URL url, String path, Map<String, String> parameters) throws RestfulFailure;
@@ -51,6 +55,10 @@ public interface RestAccessor {
 	RestfulSecureConnection secure(URL url, String authHeaderName, String token);
 
 	interface RestfulSecureConnection {
+		Response head(String path) throws RestfulFailure;
+
+		Response head(String path, Map<String, String> parameters) throws RestfulFailure;
+
 		Response get(String path) throws RestfulFailure;
 
 		Response get(String path, Map<String, String> parameters) throws RestfulFailure;

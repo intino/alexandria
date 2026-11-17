@@ -2,6 +2,7 @@ package io.intino.alexandria.restaccessor.core;
 
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.logger.Logger;
+import io.intino.alexandria.restaccessor.RequestBuilder.RestResponse;
 import io.intino.alexandria.restaccessor.Response;
 import io.intino.alexandria.restaccessor.exceptions.RestfulFailure;
 import org.apache.http.*;
@@ -41,6 +42,16 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 
 	public RestAccessor(int timeOutMillis) {
 		this.timeOutMillis = timeOutMillis;
+	}
+
+	@Override
+	public Response head(URL url, String path) throws RestfulFailure {
+		return head(url, path, emptyMap());
+	}
+
+	@Override
+	public Response head(URL url, String path, Map<String, String> parameters) throws RestfulFailure {
+		return doHead(url, path, parametersToNameValuePairs(parameters), emptyMap());
 	}
 
 	@Override
@@ -138,6 +149,18 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 	@Override
 	public RestfulSecureConnection secure(URL url, URL certificate, String password) {
 		return new RestfulSecureConnection() {
+			@Override
+			public Response head(String path) throws RestfulFailure {
+				return head(path, emptyMap());
+			}
+
+			@Override
+			public Response head(String path, Map<String, String> parameters) throws RestfulFailure {
+				List<NameValuePair> queryParameters = parametersToNameValuePairs(parameters);
+				queryParameters.addAll(parametersToNameValuePairs(secureParameters(new HashMap<>(parameters), certificate, password)));
+				return doHead(url, path, queryParameters, emptyMap());
+			}
+
 			@Override
 			public Response get(String path) throws RestfulFailure {
 				return get(path, emptyMap());
@@ -261,6 +284,16 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 	@Override
 	public RestfulSecureConnection secure(URL url, String authHeaderName, String token) {
 		return new RestfulSecureConnection() {
+			@Override
+			public Response head(String path) throws RestfulFailure {
+				return head(path, emptyMap());
+			}
+
+			@Override
+			public Response head(String path, Map<String, String> parameters) throws RestfulFailure {
+				return doHead(url, path, parametersToNameValuePairs(parameters), headers());
+			}
+
 			@Override
 			public Response get(String path) throws RestfulFailure {
 				return get(path, emptyMap());
@@ -406,6 +439,15 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 		}
 	}
 
+	private Response doHead(URL url, String path, List<NameValuePair> parameters, Map<String, String> headers) throws RestfulFailure {
+		try {
+			URIBuilder uriBuilder = new URIBuilder(pathUrl(url, path)).setParameters(parameters);
+			return executeMethod(new HttpHead(uriBuilder.build()), headers);
+		} catch (URISyntaxException e) {
+			throw new RestfulFailure(e.getMessage());
+		}
+	}
+
 	private Resource doGetFile(URL url, String path, List<NameValuePair> parameters) throws RestfulFailure {
 		return doGetFile(url, path, parameters, emptyMap());
 	}
@@ -481,12 +523,15 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 
 		int status = response.getStatusLine().getStatusCode();
 		if (status < 200 || status >= 300) throw new RestfulFailure(String.valueOf(status), getErrorMessage(response));
+		if (method instanceof HttpHead) return new RestResponse(status, response.getAllHeaders(), null);
 		return responseOf(response);
 	}
 
 	private String getErrorMessage(HttpResponse response) {
+		HttpEntity entity = response.getEntity();
+		if (entity == null) return "";
 		try {
-			InputStream content = response.getEntity().getContent();
+			InputStream content = entity.getContent();
 			return RestAccessor.this.toString(content);
 		} catch (IOException e) {
 			return "";

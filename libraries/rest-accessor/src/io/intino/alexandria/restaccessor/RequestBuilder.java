@@ -42,7 +42,7 @@ import static org.apache.http.entity.mime.HttpMultipartMode.BROWSER_COMPATIBLE;
 
 public class RequestBuilder {
 	public enum Method {
-		GET, POST, PUT, PATCH, DELETE
+		HEAD, GET, POST, PUT, PATCH, DELETE
 	}
 
 	private final URL url;
@@ -179,6 +179,7 @@ public class RequestBuilder {
 	}
 
 	private HttpRequestBase method(String methodName) {
+		if (HttpHead.METHOD_NAME.equals(methodName)) return new HttpHead();
 		if (HttpGet.METHOD_NAME.equals(methodName)) return new HttpGet();
 		if (HttpPost.METHOD_NAME.equals(methodName)) return new HttpPost();
 		if (HttpPatch.METHOD_NAME.equals(methodName)) return new HttpPatch();
@@ -196,7 +197,8 @@ public class RequestBuilder {
 		try {
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode < 200 || statusCode >= 300) throw exception(statusCode, bodyContent(response));
-			return new RestResponse(statusCode, response.getAllHeaders(), response.getEntity().getContent());
+			HttpEntity entity = response.getEntity();
+			return new RestResponse(statusCode, response.getAllHeaders(), entity == null ? null : entity.getContent());
 		} catch (IOException e) {
 			return new RestResponse(response.getStatusLine().getStatusCode(), response.getAllHeaders(), null);
 		}
@@ -223,8 +225,10 @@ public class RequestBuilder {
 	}
 
 	private String bodyContent(HttpResponse response) {
+		HttpEntity entity = response.getEntity();
+		if (entity == null) return "";
 		try {
-			InputStream content = response.getEntity().getContent();
+			InputStream content = entity.getContent();
 			String value = new String(content.readAllBytes(), UTF_8);
 			content.close();
 			return value;
@@ -286,6 +290,7 @@ public class RequestBuilder {
 
 		@Override
 		public String content() {
+			if (content == null) return "";
 			try {
 				String value = new String(content.readAllBytes(), UTF_8);
 				content.close();
@@ -298,7 +303,7 @@ public class RequestBuilder {
 
 		@Override
 		public InputStream contentAsStream() {
-			return content;
+			return content == null ? InputStream.nullInputStream() : content;
 		}
 	}
 }
