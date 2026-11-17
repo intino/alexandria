@@ -8,6 +8,7 @@ import java.util.function.Function;
 
 public interface AlexandriaHttpRouter<SM extends AlexandriaHttpManager<?>> {
 	AlexandriaHttpRouter<SM> before(ResourceCaller<SM> caller);
+	AlexandriaHttpRouter<SM> head(ResourceCaller<SM> caller);
 	AlexandriaHttpRouter<SM> get(ResourceCaller<SM> caller);
 	AlexandriaHttpRouter<SM> post(ResourceCaller<SM> caller);
 	AlexandriaHttpRouter<SM> put(ResourceCaller<SM> caller);
