@@ -47,9 +47,16 @@ public class JavalinHttpRouter<SM extends AlexandriaHttpManager<?>> implements A
 	}
 
 	@Override
+	public JavalinHttpRouter<SM> head(ResourceCaller<SM> caller) {
+		if (!canRegister(path, "head")) return this;
+		service.unsafe.routes.head(adapt(path), (context) -> execute(caller, manager(context)));
+		return this;
+	}
+
+	@Override
 	public JavalinHttpRouter<SM> get(ResourceCaller<SM> caller) {
 		if (!canRegister(path, "get")) return this;
-		service.unsafe.routes.get(adapt(path), (context) -> JavalinHttpRouter.this.execute(caller, manager(context)));
+		service.unsafe.routes.get(adapt(path), (context) -> execute(caller, manager(context)));
 		return this;
 	}
 
