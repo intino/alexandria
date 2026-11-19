@@ -13,6 +13,7 @@ import {syncThemeCssVariables, themeFormatValue} from "../ThemeTokens";
 const collectionBehaviorPalette = (theme) => ({
     viewportBackground: themeFormatValue(theme, "filled", "background", theme.isDark() ? "rgba(11,18,27,0.86)" : "rgba(248,251,255,0.72)"),
     sectionBackground: themeFormatValue(theme, "filledNoAir", "background", theme.isDark() ? "rgba(17,24,39,0.94)" : "#efefef"),
+    selectedBorder: theme.isDark() ? "#46616f" : "#9bb3bf",
     selectedBackground: theme.isDark() ? "rgba(30,41,59,0.72)" : "rgba(227,242,253,0.7)",
 });
 
@@ -338,6 +339,7 @@ const CollectionBehavior = (collection) => {
     };
 
     self.handleSelect = (item, e) => {
+        if (e != null && e.currentTarget != null && e.target != null && !e.currentTarget.contains(e.target)) return;
         const selectable = self.collection.props.selection != null;
         const multiple = self.allowMultiSelection();
 
@@ -421,7 +423,7 @@ const CollectionBehavior = (collection) => {
         const theme = Theme.get();
         if (typeof self.collection.selectedStyleRules === "function") return self.collection.selectedStyleRules(theme);
         return {
-            border: "1px solid " + theme.palette.secondary.main,
+            border: "1px solid " + collectionBehaviorPalette(theme).selectedBorder,
             borderRadius: "18px",
             background: collectionBehaviorPalette(theme).selectedBackground,
             boxShadow: "none",
@@ -440,7 +442,7 @@ const CollectionBehavior = (collection) => {
     self.addSelectedStyleRules = (style) => {
         if (style == null) return;
         const theme = Theme.get();
-        style.border = "1px solid " + theme.palette.secondary.main;
+        style.border = "1px solid " + collectionBehaviorPalette(theme).selectedBorder;
         style.borderRadius = "18px";
         style.background = collectionBehaviorPalette(theme).selectedBackground;
         style.boxShadow = "none";

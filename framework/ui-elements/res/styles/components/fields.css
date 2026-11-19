@@ -838,3 +838,24 @@
     background: transparent !important;
     color: rgba(226,232,240,0.82) !important;
 }
+
+.MuiInputBase-input:-webkit-autofill,
+.MuiInputBase-input:autofill {
+    -webkit-box-shadow: inset 0 0 0 1000px var(--alex-field-bg) !important;
+    box-shadow: inset 0 0 0 1000px var(--alex-field-bg) !important;
+    -webkit-text-fill-color: var(--alex-field-text) !important;
+    caret-color: var(--alex-field-text);
+    border-radius: inherit;
+}
+
+.MuiInputBase-input:-webkit-autofill:hover,
+.MuiInputBase-input:autofill:hover {
+    -webkit-box-shadow: inset 0 0 0 1000px var(--alex-field-bg-hover) !important;
+    box-shadow: inset 0 0 0 1000px var(--alex-field-bg-hover) !important;
+}
+
+.MuiInputBase-input:-webkit-autofill:focus,
+.MuiInputBase-input:autofill:focus {
+    -webkit-box-shadow: inset 0 0 0 1000px var(--alex-field-bg-focus) !important;
+    box-shadow: inset 0 0 0 1000px var(--alex-field-bg-focus) !important;
+}
