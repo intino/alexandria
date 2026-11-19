@@ -38,6 +38,13 @@ class BlockPopover extends AbstractBlockPopover {
 		window.setTimeout(() => this.relocate(), 100);
 		return (
 			<Popover open={opened}
+                    slotProps={{ paper: { style: {
+                        borderRadius: this.style().borderRadius || 4,
+                        background: "transparent",
+                        backgroundImage: "none"
+                    } } }}
+                    onClick={this.stopPropagation}
+                    onMouseDown={this.stopPropagation}
 			        onClose={this.handleClose.bind(this)}
 					anchorEl={trigger != null ? trigger : undefined}
 					anchorOrigin={{vertical: this._anchorOriginVertical(),horizontal: this._anchorOriginHorizontal()}}
@@ -88,7 +95,12 @@ class BlockPopover extends AbstractBlockPopover {
         this.popover.current.parentElement.style.marginTop = "-" + (popoverHeight+40) + "px";
 	};
 
-	handleClose = () => {
+	stopPropagation = (event) => {
+		event.stopPropagation();
+	};
+
+	handleClose = (event) => {
+		if (event != null) event.stopPropagation();
 	    this.requester.close();
 	};
 
