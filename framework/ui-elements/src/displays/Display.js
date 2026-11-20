@@ -20,6 +20,7 @@ export const enrichDisplayProperties = (instance) => {
 export default class Display extends PassiveView {
     static CookieConsentRendered;
     static CookieConsentInitialized = false;
+    static AppModes = new Map();
     address = null;
 
     constructor(props) {
@@ -343,13 +344,23 @@ export default class Display extends PassiveView {
 
     _loadAppMode = () => {
         this._initializeCookieConsent();
-        var mode = this.getCookie(encodeURI(Application.configuration.baseUrl + "/appmode"));
-        if (mode != null) return mode;
+        const key = encodeURI(Application.configuration.baseUrl + "/appmode");
+        let mode = Display.AppModes.get(key);
+        if (mode !== "light" && mode !== "dark") {
+            try {mode = window.sessionStorage.getItem(key);} catch (ignored) {}
+        }
+        if (mode === "light" || mode === "dark") return mode;
+        mode = this.getCookie(key);
+        if (mode === "light" || mode === "dark") return mode;
         if (!Theme.isAutoMode()) return Theme.defaultMode();
         return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     };
 
     _saveAppModeInCookies = (mode) => {
-        this.updateCookie(mode, encodeURI(Application.configuration.baseUrl + "/appmode"));
+        if (mode !== "light" && mode !== "dark") return;
+        const key = encodeURI(Application.configuration.baseUrl + "/appmode");
+        Display.AppModes.set(key, mode);
+        try {window.sessionStorage.setItem(key, mode);} catch (ignored) {}
+        this.updateCookie(mode, key);
     };
 }
