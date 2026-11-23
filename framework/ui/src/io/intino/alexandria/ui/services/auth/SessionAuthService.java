@@ -81,11 +81,12 @@ public class SessionAuthService implements AuthService {
 	}
 
 	@Override
-	public void logout(Token accessToken, String callback) throws CouldNotLogout {
+	public String logoutUrl(Token token) {
+		return null;
 	}
 
 	@Override
-	public String logoutUrl(Token token) {
+	public String logoutUrl(Token accessToken, String callback) {
 		return null;
 	}
 
