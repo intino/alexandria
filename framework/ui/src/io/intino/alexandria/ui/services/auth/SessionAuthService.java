@@ -81,7 +81,7 @@ public class SessionAuthService implements AuthService {
 	}
 
 	@Override
-	public String logoutUrl() {
+	public String logoutUrl(Token token) {
 		return null;
 	}
 
