@@ -31,6 +31,11 @@ public class UIRouter implements AlexandriaHttpRouter<AlexandriaUiManager> {
 	}
 
 	@Override
+	public AlexandriaHttpRouter<AlexandriaUiManager> head(AlexandriaHttpServer.ResourceCaller<AlexandriaUiManager> caller) {
+		return router.head(caller);
+	}
+
+	@Override
 	public AlexandriaHttpRouter<AlexandriaUiManager> get(AlexandriaHttpServer.ResourceCaller<AlexandriaUiManager> caller) {
 		return router.get(caller);
 	}
