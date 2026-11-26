@@ -1,3 +1,5 @@
+import ClientErrorService from './ClientErrorService';
+
 const PushService = (function () {
     const PendingIncomingMessageMaxAge = 2000;
     const PendingIncomingRetryMaxDelay = 250;
@@ -16,6 +18,7 @@ const PushService = (function () {
     service.errorCallbacks = [];
 
     service.openConnection = function (name, url, successCallback, errorCallback) {
+        if (ClientErrorService) ClientErrorService.configure(url);
         registerCallbacks(this, successCallback, errorCallback);
         if (isConnecting(this, name)) return;
         this.pendingConnections.push(name);
