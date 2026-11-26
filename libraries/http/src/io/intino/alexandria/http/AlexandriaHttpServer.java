@@ -116,6 +116,15 @@ public class AlexandriaHttpServer<R extends AlexandriaHttpRouter<?>> {
 	protected void init() {
 		if (service != null) return;
 		service = create(webDirectories, maxResourceSize);
+		ClientErrorEndpoint.register(service, ctx -> {
+			if (ctx.req().getUserPrincipal() != null) return "user:" + ctx.req().getUserPrincipal().getName();
+			String path = ctx.header("X-Forwarded-Path");
+			String cookieName = path == null || path.replace("/", "").isEmpty() ? "federacion" : path.replace("/", "");
+			String sessionId = ctx.cookie(cookieName);
+			if (sessionId != null && pushService != null && pushService.existsSession(sessionId)) return "session:" + sessionId;
+			jakarta.servlet.http.HttpSession session = ctx.req().getSession(false);
+			return session == null ? null : "session:" + session.getId();
+		});
 	}
 
 	private Consumer<PushService<?, ?>> pushServiceConsumer() {
