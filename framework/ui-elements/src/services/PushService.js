@@ -209,7 +209,7 @@ const PushService = (function () {
     }
 
     function isExpiredPendingIncomingMessage(message, now) {
-        return now - message.queuedAt >= PendingIncomingMessageMaxAge;
+        return message.attempts > 0 && now - message.queuedAt >= PendingIncomingMessageMaxAge;
     }
 
     function deferPendingIncomingMessage(message, now) {
